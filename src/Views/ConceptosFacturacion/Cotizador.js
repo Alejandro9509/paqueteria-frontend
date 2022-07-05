@@ -88,6 +88,10 @@ class Cotizador extends Component {
             showSuccess("No se puede crear cotización sin paquetes.")
             return
         }
+        if (this.props.embarque.entregaEnSucursal && !this.props.embarque.zonaOperativaSucursal?.m_nIdZona){
+            showSuccess("Seleccione sucursal de entrega para poder realizar la cotizacion")
+            return
+        }
         if (this.props.embarque.entregaConCita || this.props.embarque.recoleccionConCita){
             if (!this.props.embarque.citaPendiente){
                 if (!esDatoValido(this.props.embarque.fechaCita)){

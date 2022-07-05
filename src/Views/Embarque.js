@@ -594,6 +594,7 @@ function Embarque(props) {
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
                 idSucursalEntrega: '',
+                zonaOperativaSucursal: null,
 
                 //Cita de recoleccion
                 entregaConCita: false,
@@ -1286,13 +1287,15 @@ function Embarque(props) {
             //Cita de recoleccion
             m_bEmbarqueConCita: state.entregaConCita,
         }
-
+            params.m_bEntregaEnSucursal = state.entregaEnSucursal
         /**Si es entrega en sucursal*/
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.entregarMismoDomicilio = false
+            params.m_nIdZonaOperativa = state.zonaOperativaSucursal.m_nIdZona
             /**Si es entrega en direfente domicilio*/
         }else if (state.diferenteEntrega) {
+            params.m_nIdSucursalEntrega = 0
             params.m_bEntregaEnSucursal = false
             params.codigoPostalEntrega = entregaDD.codigoPostal.m_nIdCP
             params.domicilioEntrega = entregaDD.domicilio
@@ -1306,6 +1309,7 @@ function Embarque(props) {
             params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitud
         }else{
             /**Si es entrega en domicilio de destinatario*/
+            params.m_nIdSucursalEntrega = 0
             params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
             params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
             params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
@@ -1729,6 +1733,14 @@ function Embarque(props) {
                     idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                     diferenteEntrega: false,
                 }
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaOperativaSucursal: data
+                    }
+                })
             })
         }else{
             //ENTREGA EN DIFERENTE DOMICILIO
@@ -3686,39 +3698,52 @@ function Embarque(props) {
                                                 {state.entregaEnSucursal ?
 
                                                     <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
-                                                                    <InputLabel id="idSucursalEntrega">Sucursal de
-                                                                        Entrega</InputLabel>
-                                                                    <Select
-                                                                        labelId={"idSucursalEntrega"}
-                                                                        label="Sucursal de Entrega"
-                                                                        className="form-control"
-                                                                        required={state.entregaEnSucursal}
-                                                                        onChange={handleChangeSucursalEntrega}
-                                                                        value={state.idSucursalEntrega}
-                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                        id="idSucursalEntrega"
-                                                                        name="idSucursalEntrega"
-                                                                        inputProps={{
-                                                                            name: "idSucursalEntrega"
-                                                                        }}
-                                                                    >
-                                                                        {dataSucursal.map((sucursal) => (
-                                                                            <option
-                                                                                key={sucursal.m_nIdSucursal}
-                                                                                value={sucursal.m_nIdSucursal}
-                                                                                // value={sucursal}
-                                                                            >
-                                                                                {sucursal.m_sSucursal}
-                                                                            </option>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </label>
-                                                        </div>
+                                                        <Grid container spacing={1}>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <label className="input select">
+                                                                    <FormControl fullWidth variant="outlined"
+                                                                                 margin="dense">
+                                                                        <InputLabel id="idSucursalEntrega">Sucursal de
+                                                                            Entrega</InputLabel>
+                                                                        <Select
+                                                                            labelId={"idSucursalEntrega"}
+                                                                            label="Sucursal de Entrega"
+                                                                            className="form-control"
+                                                                            required={state.entregaEnSucursal}
+                                                                            onChange={handleChangeSucursalEntrega}
+                                                                            value={state.idSucursalEntrega}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                            id="idSucursalEntrega"
+                                                                            name="idSucursalEntrega"
+                                                                            inputProps={{
+                                                                                name: "idSucursalEntrega"
+                                                                            }}
+                                                                        >
+                                                                            {dataSucursal.map((sucursal) => (
+                                                                                <MenuItem
+                                                                                    key={sucursal.m_nIdSucursal}
+                                                                                    value={sucursal.m_nIdSucursal}
+                                                                                    // value={sucursal}
+                                                                                >
+                                                                                    {sucursal.m_sSucursal}
+                                                                                </MenuItem>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </label>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <TextField variant="outlined"
+                                                                           margin="dense"
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Zona operativa"
+                                                                           value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
+                                                                           disabled
+                                                                />
+                                                            </Grid>
+
+                                                        </Grid>
                                                     </div>
 
                                                     :
