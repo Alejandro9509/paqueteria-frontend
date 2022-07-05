@@ -142,13 +142,12 @@ async function obtenerRutas(truck, guias, data) {
                 ))
         }
     } )
-    var token = await  axios.get(process.env.REACT_APP_API_URL_LOCAL + "/api/here/getToken",{})
+    //var token = await  axios.get(process.env.REACT_APP_API_URL_LOCAL + "/api/here/getToken",{})
 
     trackPromise(
         result = new Promise((resolve, reject) => {
-            axios.post("https://tourplanning.hereapi.com/v3/problems" ,object, {headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + token.data}}).then(({data}) => {
+            axios.post("https://tourplanning.hereapi.com/v3/problems?apiKey=" + process.env.REACT_APP_HERE_API_TOEKN ,object, {headers: {'Content-Type': 'application/json'}}).then(({data}) => {
                  resolve(data)
-
             })
 
         })
