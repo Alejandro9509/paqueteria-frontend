@@ -177,8 +177,9 @@ function CrearConceptoSAT(props) {
                                     className="form-control"
                                     label="Clave SAT"
                                     value={props.dataComplemento.claveProducto}
-                                    name="unidadMedia"
+                                    name="claveProducto"
                                     required
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                     aria-readonly={true}
                                     disabled={props.consulta}
                                 />
@@ -191,8 +192,9 @@ function CrearConceptoSAT(props) {
                                     className="form-control"
                                     label="Producto o Servicio"
                                     value={props.dataComplemento.ProductoSAT}
-                                    name="unidadMedia"
+                                    name="ProductoSAT"
                                     required
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                     aria-readonly={true}
                                 />
                             </Grid>
@@ -214,9 +216,10 @@ function CrearConceptoSAT(props) {
                                     className="form-control"
                                     label="Clave SAT"
                                     required
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                     disabled={props.consulta}
                                     value={props.dataComplemento.claveUnidad}
-                                    name="unidadMedia"
+                                    name="claveUnidad"
                                     aria-readonly={true}
                                 />
                             </Grid>
@@ -229,8 +232,9 @@ function CrearConceptoSAT(props) {
                                     label="Unidad Medida"
                                     disabled={props.consulta}
                                     required
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                     value={props.dataComplemento.UnidadSAT}
-                                    name="unidadMedida"
+                                    name="UnidadSAT"
                                     aria-readonly={true}
                                 />
                             </Grid>
@@ -275,6 +279,7 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     required
                                     value={props.dataComplemento.claveMaterialPeligroso}
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                     name="claveMaterialPeligroso"
                                 />
                             </Grid>
@@ -288,7 +293,8 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     required
                                     value={props.dataComplemento.materialPeligrosoSAT}
-                                    name="materialPeligroso"
+                                    name="materialPeligrosoSAT"
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -313,6 +319,7 @@ function CrearConceptoSAT(props) {
                                     required
                                     value={props.dataComplemento.claveEmbalaje}
                                     name="claveSATEmbalaje"
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -325,7 +332,8 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     required
                                     value={props.dataComplemento.embalajeSAT}
-                                    name="descripcionEmbalaje"
+                                    name="embalajeSAT"
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -337,8 +345,8 @@ function CrearConceptoSAT(props) {
                                     label="Descripción embalaje"
                                     disabled={props.consulta}
                                     value={props.dataComplemento.descripcionEmbalajeSAT}
-                                    onChange={handleChange}
                                     name="descripcionEmbalajeSAT"
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -361,7 +369,8 @@ function CrearConceptoSAT(props) {
                                     label="Clave SAT"
                                     aria-readonly={true}
                                     value={props.dataComplemento.claveFraccion}
-                                    name="claveFrraccion"
+                                    name="claveFraccion"
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8}>
@@ -374,6 +383,7 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     value={props.dataComplemento.fraccionSAT}
                                     name="fraccionSAT"
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
