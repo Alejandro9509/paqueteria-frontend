@@ -188,9 +188,10 @@ function apiPoint(x, y) {
 
 function calcularRuta(points, sucursal) {
     var result;
+    console.log(points.map(p => `&via=${p.lat},${p.lng}`).join(''))
     trackPromise(
         result = new Promise((resolve, reject) => {
-            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${sucursal.lat},${sucursal.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`)}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
+            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${sucursal.lat},${sucursal.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
                 resolve(data)
 
             })
@@ -203,9 +204,10 @@ function calcularRuta(points, sucursal) {
 
 function calcularRutaUltimaMilla(points, sucursal, camion) {
     var result;
+    console.log(points.map(p => `&via=${p.lat},${p.lng}`).join(''))
     trackPromise(
         result = new Promise((resolve, reject) => {
-            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${camion.lat},${camion.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`)}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
+            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${camion.lat},${camion.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
                 resolve(data)
 
             })
