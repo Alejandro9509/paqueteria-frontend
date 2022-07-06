@@ -6,6 +6,7 @@ import L from "leaflet";
 import {calcularRuta, randomColor} from "../../Util/Contexts/UltimaMillaContext";
 import Marker from 'react-leaflet-enhanced-marker'
 import {Grid, Typography} from "@material-ui/core"
+import {decodePolyline} from "../../Util/HereDecoading";
 
 
 
@@ -27,14 +28,14 @@ class Tour extends Component {
     getRoute() {
 
         var polygon = []
-        var guias = this.props.paquetes.filter((p, index) => this.props.tour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === index) != null)
+        var guias = this.props.paquetes.filter((p, index) => this.props.tour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").find((s, i) => parseInt(s.activities[0].jobId.replace('job_','')) === index) != null)
 
         var result = []
-        this.props.tour.trips[0].stops.forEach((item, index) => {
+        this.props.tour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").forEach((item, index) => {
             var found = false;
 
             guias = guias.filter(function (guia, i) {
-                if (!found && guia.index === parseInt(item.tasks[0].orderId)) {
+                if (!found && guia.index === parseInt(item.activities[0].jobId.replace('job_',''))) {
                     result.push(guia);
                     found = true;
                     return false;
@@ -45,8 +46,8 @@ class Tour extends Component {
         if (result.length !== 0) {
             calcularRuta(result, this.props.data).then((result) => {
                 if (result) {
-                    result.polyline.plain.polyline.map(c => {
-                        polygon.push([c.y, c.x])
+                    result.routes[0].sections.map((c, index) => {
+                        polygon = [...polygon, ...decodePolyline(c.polyline)]
                     })
                     this.setState({polygon: polygon})
                 }
@@ -60,11 +61,12 @@ class Tour extends Component {
         return (
             <div style={{backgroundColor: "transparent"}}>
                 {
-                    this.props.tour.trips[0].stops.map((s, index) => {
-                        const paquete = this.props.paquetes.find((p, i) => (parseInt(s.tasks[0].orderId)) === i )
-                        var tour = this.props.tourReport.tourReports.find(t => t.vehicleId === this.props.tour.vehicleId)
-                        var reportTime = tour.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && paquete.index === parseInt(t.orderId))
-                        var date = new Date(reportTime.startTime)
+                    this.props.tour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").map((s, index) => {
+                        let stop = ((s.activities[0].type === "delivery" || s.activities[0].type === "pickup")) ? s : null;
+                        const paquete = this.props.paquetes.find((p, i) => ((s.activities[0].type === "delivery" || s.activities[0].type === "pickup") && (parseInt(s.activities[0].jobId.replace('job_','')) === i) ) )
+                        // var tour = this.props.tourReport.tourReports.find(t => t.vehicleId === this.props.tour.vehicleId)
+                        // var reportTime = tour.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && paquete.index === parseInt(t.orderId))
+                        var date = new Date(stop?.arrival)
                         var userTimezoneOffset = date.getTimezoneOffset() * 60000;
                         date = new Date(date.getTime() + userTimezoneOffset);
                         var time = date.toLocaleTimeString()
