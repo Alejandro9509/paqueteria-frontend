@@ -27,14 +27,11 @@ import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
 import { obtenerTipoViaje } from "../Util/Contexts/TipoViajeContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
-const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
 
 
 
 
-var xlocate = new XLocateClient();
-xlocate.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 var xroute = new XRouteClient();
 xroute.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
@@ -548,11 +545,7 @@ function Rutas(props) {
     };
 
     function searchLocation(isOrigin) {
-        originFlag = isOrigin
-        xlocate.searchLocations({
-            "$type": "SearchByTextRequest",
-            "text": isOrigin ? state.origin : state.destiny
-        }, searchCompleted);
+        originFlag = isOrigin;
 
     }
     function handleSelectCP(id, dobleClick, e) {
