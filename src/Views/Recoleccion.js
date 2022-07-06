@@ -931,6 +931,10 @@ function Recoleccion() {
             showSuccess("Debe agregar al menos un paquete o sobre")
             return
         }
+        if (dataComplementosSAT.length === 0) {
+            showSuccess("Debe agregar al menos un complemento del SAT")
+            return
+        }
         if (dataConceptos.find(i => parseInt(i.idConcepto) === parseInt(configuraciones.idConceptoFlete)) === undefined){
             showSuccess("El embarque debe incluir el concepto flete")
             return;
