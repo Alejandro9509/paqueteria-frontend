@@ -313,7 +313,8 @@ function agregarRuta(idUltimaMilla, tour, data) {
         var tempTour = tour.tour.tours.find(t => t.typeId === ("vehicle" + u.m_nIdUnidad))
         console.log(tour)
         console.log(tempTour)
-        var guias = tour.paquetes.filter((p, index) => tempTour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").find((s, i) => parseInt(s.activities[0].jobId.replace('job_','')) === p.index) != null)
+        var guias = tour.paquetes.filter((p, index) => tempTour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").map(a => parseInt(a.jobId.replace('job_',''))).includes(p.index))
+        debugger
         guias = ordenarGuiasPorRuta(tempTour, guias)
         console.log(guias)
         ultimaMillaObject.rutas.push({
@@ -346,6 +347,7 @@ function agregarRuta(idUltimaMilla, tour, data) {
     data.zonasSeleccionada.forEach((z) => {
         ultimaMillaObject.zonas.push({id: z.m_nIdZona})
     })
+    console.log(ultimaMillaObject)
     trackPromise(
         result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
@@ -574,10 +576,10 @@ export {
 
 function ordenarGuiasPorRuta(tour, guias) {
     var result = []
-    tour.stops.forEach((item, index) => {
+    tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").forEach((item, index) => {
         var found = false;
         guias = guias.filter(function (guia, index) {
-            if (!found && guia.index == parseInt(item.activities[0].jobId.replace('job_',''))) {
+            if (!found && guia.index == parseInt(item.jobId.replace('job_',''))) {
                 guia.orden = index + 1
                 result.push(guia);
                 found = true;
