@@ -310,9 +310,10 @@ function agregarRuta(idUltimaMilla, tour, data) {
         rutas: []
     }
     tour.unidades.forEach((u) => {
-        var tempTour = tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+        var tempTour = tour.tour.tours.find(t => t.typeId === ("vehicle" + u.m_nIdUnidad))
         console.log(tour)
-        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.index) != null)
+        console.log(tempTour)
+        var guias = tour.paquetes.filter((p, index) => tempTour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").find((s, i) => parseInt(s.activities[0].jobId.replace('job_','')) === p.index) != null)
         guias = ordenarGuiasPorRuta(tempTour, guias)
         console.log(guias)
         ultimaMillaObject.rutas.push({
@@ -322,10 +323,11 @@ function agregarRuta(idUltimaMilla, tour, data) {
             idRemolque2: u.idRemolque2,
             idDolly: u.idDolly,
             guias: guias.map((g, index) => {
-                var tourReport = tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-                var distance = tourReport.legReports[index].distance
-                var reportTime = tourReport.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && g.index === parseInt(t.orderId))
-                var date = new Date(reportTime.startTime)
+                debugger
+                var tourReport = tour.tour.tours.find(t => t.typeId === ("vehicle" + u.m_nIdUnidad))
+                var distance = tourReport.statistic.distance
+                var reportTime = tourReport.statistic.duration
+                var date = new Date(tourReport.stops.find( s => (s.activities[0].type === "delivery" || s.activities[0].type === "pickup"))?.time.arrival)
                 var userTimezoneOffset = date.getTimezoneOffset() * 60000;
                 date = new Date(date.getTime() + userTimezoneOffset);
                 var time = date.toLocaleTimeString()
@@ -572,10 +574,10 @@ export {
 
 function ordenarGuiasPorRuta(tour, guias) {
     var result = []
-    tour.trips[0].stops.forEach((item, index) => {
+    tour.stops.forEach((item, index) => {
         var found = false;
         guias = guias.filter(function (guia, index) {
-            if (!found && guia.index == parseInt(item.tasks[0].orderId)) {
+            if (!found && guia.index == parseInt(item.activities[0].jobId.replace('job_',''))) {
                 guia.orden = index + 1
                 result.push(guia);
                 found = true;
