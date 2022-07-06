@@ -106,6 +106,7 @@ function TiposServicio() {
 
             eliminarTipoServicio(id, state.ModificadoPor).then(respuesta => {
                 console.log(respuesta)
+                showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
                 showSuccess(err)
@@ -193,11 +194,14 @@ function TiposServicio() {
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs" onClick={() =>   confirmAlert({
                                                         title: 'Confirmar Eliminar',
-                                                        message: '¿Está seguro de eliminar este tipo de servicio?',
+                                                        message: '¿Está seguro de eliminar este servicio?',
                                                         buttons: [
                                                             {
                                                                 label: 'Si',
-                                                                onClick: () =>  handleEliminar(row.original.m_nIdTipoServicio)
+                                                                onClick: () =>  {
+                                                                    handleEliminar(row.row.m_nIdTipoServicio)
+                                                                
+                                                                }
                                                             },
                                                             {
                                                                 label: 'No',
