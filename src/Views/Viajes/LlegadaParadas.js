@@ -49,7 +49,7 @@ export default function LlegadaParadas(props){
         operador: props.viaje.m_sOperador,
         liquidacion: "",
         unidad: props.viaje.m_sUnidad,
-        idEstatusUnidad: 1,
+        idEstatusUnidad: props.viaje.m_sEstatusUnidad,
         remolqueUno: props.viaje.m_sRemolque1,
         kmsRemolqueUno: "",
         millasRemolqueUno: "",
@@ -78,6 +78,10 @@ export default function LlegadaParadas(props){
         {
             id: 1,
             name: "No disponible"
+        },
+        {
+            id:2,
+            name:"OCUPADA"
         }
     ]
     const estatusListado = [
@@ -359,6 +363,7 @@ export default function LlegadaParadas(props){
                         disabled
                         variant={"outlined"}
                         value={data.idEstatusUnidad}
+                        disabled
                         onChange={handleEstatusUnidad}
                     >
                         {estatusUnidadListado.map((estatus) => (
