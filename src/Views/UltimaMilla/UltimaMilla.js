@@ -236,7 +236,7 @@ class UltimaMilla extends Component {
     async generarRuta(data) {
         console.log(data)
         this.setState({tour: null})
-        if (data.paquetesSeleccionadas.length !== 0 || data.unidadesSeleccionadas.length !== 0) {
+        if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
             let unidadYaAsignada = false
             let varible
