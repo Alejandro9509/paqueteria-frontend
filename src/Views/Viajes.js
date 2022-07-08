@@ -1328,7 +1328,7 @@ function Viajes() {
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
-                                                                        <div style={{height: `${70 + (informesFiltrados.length * 30)}px`}}>
+                                                                        <div style={{height: `${100 + (informesFiltrados.length * 30)}px`}}>
                                                                             <DataGrid
                                                                                 localeText={dataGridLocaleText}
                                                                                 rows={informesFiltrados}
