@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Typography} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -65,20 +65,14 @@ class CancelarSAT extends Component {
                                         name: "idCancelacionSAT"
                                     }}
                                 >
-                                    {
-                                        this.state.catalogoSAT.map((estatus) => {
-                                        if (estatus.m_nid == "01" && this.props.ultimaMilla){
-                                         return null
-                                        }
-                                        return (
-                                        <option
+                                    {this.state.catalogoSAT.map((estatus) => (
+                                        <MenuItem
                                             key={estatus.m_nid}
                                             value={estatus.m_nid}
                                         >
                                             {estatus.m_sDescripcion}
-                                        </option>
-                                    )})
-                                    }
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </label>
