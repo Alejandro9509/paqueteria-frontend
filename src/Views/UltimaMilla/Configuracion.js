@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Grid, Typography, RadioGroup, FormControlLabel, Radio} from "@material-ui/core"
+import {Grid, Typography, RadioGroup, FormControlLabel, Radio, FormLabel} from "@material-ui/core"
 
 class Configuracion extends Component {
     constructor(props) {
@@ -51,7 +51,7 @@ class Configuracion extends Component {
                         </Grid>
                     </RadioGroup>
                 </Grid>
-                <Grid item md={12}>
+                <Grid item md={6}>
                     <Typography variant={"h4"}>Creación de rutas</Typography>
 
                     <RadioGroup onChange={(e) => this.props.changeValue(e.target.name,e.target.value)} aria-label="tipoBusqueda" name="tipoBusqueda" value={this.props.values.tipoBusqueda}>
@@ -68,6 +68,18 @@ class Configuracion extends Component {
                         </Grid>
                     </RadioGroup>
                 </Grid>
+                <Grid item md={6}>
+                    <Typography variant={"h4"}>Unidades</Typography>
+                        <Grid container>
+                            <Grid item>
+
+                            <Radio style={{margin:"0px -11px"}} type="checkbox" onChange={(e) => this.props.changeValue(e.target.name,e.target.checked)} name="unidades" checked={this.props.values.unidades} />
+                            <FormLabel style={{color:"#878789",padding:"0 5px"}} >Una unidad</FormLabel>
+
+                           </Grid>
+                        </Grid>
+                </Grid>
+
                 <Grid item md={12}>
                     <Typography variant={"h4"}>Pantalla completa</Typography>
                     <Grid container spacing={2}>
