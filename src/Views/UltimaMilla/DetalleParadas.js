@@ -727,7 +727,8 @@ class DetalleParadas extends Component {
 
                                                         {
                                                             tour.m_bActiva &&
-                                                            <Button disabled={!validarDerecho(9101447)} variant={"contained"} color={"primary"}
+                                                            <Button disabled={!validarDerecho(9101447) || tour.m_arrClsProGuia.some(g=> 
+                                                                g.m_nEstatusUlimaMilla != 1)} variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,
                                                                         tour: tour,
