@@ -61,12 +61,11 @@ class Tour extends Component {
         return (
             <div style={{backgroundColor: "transparent"}}>
                 {
-                    this.props.tour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").map((s, index) => {
-                        let stop = ((s.activities[0].type === "delivery" || s.activities[0].type === "pickup")) ? s : null;
-                        const paquete = this.props.paquetes.find((p, i) => ((s.activities[0].type === "delivery" || s.activities[0].type === "pickup") && (parseInt(s.activities[0].jobId.replace('job_','')) === i) ) )
+                    this.props.tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").map((activity, index) => {
+                        const paquete = this.props.paquetes.find((p, i) => parseInt(activity.jobId.replace('job_','')) === i )
                         // var tour = this.props.tourReport.tourReports.find(t => t.vehicleId === this.props.tour.vehicleId)
                         // var reportTime = tour.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && paquete.index === parseInt(t.orderId))
-                        var date = new Date(stop?.arrival)
+                        var date = new Date(activity.time?.start)
                         var userTimezoneOffset = date.getTimezoneOffset() * 60000;
                         date = new Date(date.getTime() + userTimezoneOffset);
                         var time = date.toLocaleTimeString()
