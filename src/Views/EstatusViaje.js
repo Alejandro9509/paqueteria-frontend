@@ -63,17 +63,16 @@ function EstatusViaje() {
     const handleAceptar = (e) => {
         e.preventDefault()
         var params = {
-
-            "Estatus": state.estatusViaje,
-            "Color": state.colorViaje.slice(-6),
-            "ColorLetra": state.colorViaje.slice(-6),
-            "Abreviacion": state.abreviacionViaje,
-            "TipoEstatus": state.tipoEstatusViaje,
-            "noSeguimiento": state.noSeguimiento,
-            "archivo": state.archivo,
-            "carga": state.carga,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "m_sEstatus": state.estatusViaje,
+            "m_sColor": state.colorViaje.slice(-6),
+            "m_sColorLetra": state.colorViaje.slice(-6),
+            "m_sAbreviacion": state.abreviacionViaje,
+            "m_sTipoEstatus": state.tipoEstatusViaje,
+            "m_bnoSeguimiento": state.noSeguimiento,
+            "m_barchivo": state.archivo,
+            "m_bcarga": state.carga,
+            "m_sCreadoPor": state.CreadoPor,
+            "m_sModificadoPor": state.ModificadoPor
         }
         if (state.idEstatusViaje != 0) {
             modificarEstatusViaje(state.idEstatusViaje, params).then(respuesta => {
