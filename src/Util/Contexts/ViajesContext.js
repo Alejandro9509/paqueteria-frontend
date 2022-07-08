@@ -168,7 +168,7 @@ function validarSalidaParada(id){
 }
 
 function eliminarViaje(idViaje,idEstatus){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Viajes/Eliminar/${idViaje}/${idEstatus}`
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Eliminar/${idViaje}/${idEstatus}`
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({},{}), { headers })
