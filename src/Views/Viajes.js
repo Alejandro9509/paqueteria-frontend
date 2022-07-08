@@ -1429,7 +1429,11 @@ function Viajes() {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {
+                                                if (e.code === 13) {
+                                                    e.preventDefault()
+                                                }
+                                            }}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
@@ -1461,7 +1465,8 @@ function Viajes() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Fecha de cancelación"
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Fecha de cancelación"
                                                                        className="form-control"
                                                                        type="datetime-local"
                                                                        InputLabelProps={{shrink: true,}}
