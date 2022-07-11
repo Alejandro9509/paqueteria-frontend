@@ -40,7 +40,7 @@ function cancelarInformes(id, params){
 }
 
 function agregarInformes( params){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
