@@ -1815,6 +1815,10 @@ function Guia(props) {
     }
 
     const cambiarEstaus = (estatus) => {
+        let params = {}
+        params.m_nIdGuia = guiaSeleccionada.m_nIdGuia
+        params.m_nIdEstatusGuia = guiaSeleccionada.m_nIdEstatusGuia
+
         cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
             showSuccess(data)
             getAllData()
