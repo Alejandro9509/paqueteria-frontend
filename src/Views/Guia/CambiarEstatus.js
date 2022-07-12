@@ -7,7 +7,7 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
-    InputLabel, Select,
+    InputLabel, MenuItem, Select,
     Typography
 } from "@material-ui/core";
 
@@ -15,7 +15,7 @@ class MyComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            estatusGuia:"0"
+            estatusGuia:''
         }
     }
 
@@ -38,7 +38,6 @@ class MyComponent extends Component {
                                 <InputLabel id="idEstatusGuiaLabel"> Estatus de la
                                     Guia</InputLabel>
                                 <Select
-                                    native
                                     labelId="idEstatusGuiaLabel"
                                     label="Estatus de la Guia"
                                     className="form-control"
@@ -52,17 +51,20 @@ class MyComponent extends Component {
                                         shrink: true,
                                     }}
                                 >
-                                    <option key={0} value="0">Seleccionar</option>
-                                    {this.props.dataEstatusGuia.map(
-                                        (estatusGuia) => (
-                                           estatusGuia.m_nIdEstatusGuia!=8?
-                                            <option
-                                                key={estatusGuia.m_nIdEstatusGuia}
-                                                value={estatusGuia.m_nIdEstatusGuia}>
-                                                {estatusGuia.m_sEstatus}
-                                            </option>
-                                            :null
-                                        )
+                                    {this.props.dataEstatusGuia.filter(i => i.m_nIdEstatusGuia !== 8).map(
+                                        (estatusGuia) => {
+                                            if (this.props.guia.EntregaEnSucursal && (estatusGuia.m_nIdEstatusGuia === 14 || estatusGuia.m_nIdEstatusGuia === 17)){
+                                                return null
+                                            }else{
+                                                return (
+                                                    <MenuItem
+                                                        key={estatusGuia.m_nIdEstatusGuia}
+                                                        value={estatusGuia.m_nIdEstatusGuia}>
+                                                        {estatusGuia.m_sEstatus}
+                                                    </MenuItem>
+                                                )
+                                            }
+                                        }
                                     )}
                                 </Select>
                             </FormControl>
