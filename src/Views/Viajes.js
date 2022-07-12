@@ -167,7 +167,7 @@ function Viajes() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-        
+
         eliminarViaje(id,idEstatus).then(respuesta => {
            console.log(respuesta);
            getAllData();
@@ -177,8 +177,8 @@ function Viajes() {
         }).catch(err => {
             showSuccess(err)
         });
-        
-    
+
+
     }
 
     function handleShowModificar(id) {
@@ -1380,7 +1380,12 @@ function Viajes() {
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
+<<<<<<<<< Temporary merge branch 1
                                                                         <div style={{height: `${100 + (informesFiltrados.length * 30)}px`}}>
+=========
+                                                                        <div
+                                                                            style={{height: `${70 + (informesFiltrados.length * 30)}px`}}>
+>>>>>>>>> Temporary merge branch 2
                                                                             <DataGrid
                                                                                 localeText={dataGridLocaleText}
                                                                                 rows={informesFiltrados}
