@@ -455,13 +455,13 @@ async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo)
 }
 
 function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/EliminarParadaOperador`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/EliminarParadaOperador`;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {
-            EsRecoleccion: esRecoleccion,
-            IdGuia: idGuia,
-            IdParada: idParada,
+            esRecoleccion: esRecoleccion,
+            idGuia: idGuia,
+            idParada: idParada,
         }), {headers})
     );
     return result
