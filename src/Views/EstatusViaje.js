@@ -65,7 +65,7 @@ function EstatusViaje() {
         var params = {
             "m_sEstatus": state.estatusViaje,
             "m_sColor": state.colorViaje.slice(-6),
-            "m_sColorLetra": state.colorViaje.slice(-6),
+            "m_sColorLetra": parseInt(state.colorViaje.slice(-6)),
             "m_sAbreviacion": state.abreviacionViaje,
             "m_sTipoEstatus": state.tipoEstatusViaje,
             "m_bnoSeguimiento": state.noSeguimiento,
@@ -74,7 +74,8 @@ function EstatusViaje() {
             "m_sCreadoPor": state.CreadoPor,
             "m_sModificadoPor": state.ModificadoPor
         }
-        if (state.idEstatusViaje != 0) {
+        console.log(params)
+       if (state.idEstatusViaje != 0) {
             modificarEstatusViaje(state.idEstatusViaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
@@ -90,7 +91,7 @@ function EstatusViaje() {
                 console.log(err)
                 showSuccess(err)
             });
-        }
+        } 
 
     }
 
@@ -182,7 +183,7 @@ function EstatusViaje() {
     }
 
     const columns = React.useMemo(() => [
-        {
+       /* {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
@@ -218,7 +219,7 @@ function EstatusViaje() {
                     </div>
                 )
             }
-        },
+        }*/,
         {
             headerName: "Abreviación",
             field: "m_sAbreviacion",
@@ -238,19 +239,11 @@ function EstatusViaje() {
             headerName: "Creado El",
             field: "m_sCreadoEl",
             width: 200,
-        }, {
-            headerName: "Creado Por",
-            field: "m_sCreadoPor",
-            width: 200,
-        }, {
+        }, , {
             headerName: "Modificado El",
             field: "m_sModificadoEl",
             width: 200,
-        }, {
-            headerName: "Modificado Por",
-            field: "m_sModificadoPor",
-            width: 200,
-        }
+        }, 
 
     ]);
 
@@ -403,11 +396,11 @@ function EstatusViaje() {
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
-                        <li>
+                        {/*<li>
                             <a className= {validarDerecho(9101324)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
-                        </li>
+                        </li>*/}
                     </ul>
 
                     <div className="row" className="tab-content">
