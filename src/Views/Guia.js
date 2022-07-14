@@ -410,14 +410,30 @@ function Guia(props) {
             }
             validarEliminarGuia(id).then(respuesta=>{
                if(respuesta.data.sePuedeEliminar){
+
+                confirmAlert({
+                    title: 'Confirmar Eliminar',
+                    message: '¿Está seguro de eliminar guia?',
+                    buttons: [
+                        {
+                            label: 'Si',
+                            onClick: () =>{                                  
                 eliminarGuia(id, state.modificadoPor).then(respuesta => {
-                showSuccess(respuesta.data)
-                //console.log(respuesta)
-                if (respuesta.data.indexOf("fracaso:") <= 0)
-                    getAllData()
-            }).catch(function (err) {
-                console.log(err.data)
-            });
+                    showSuccess(respuesta.data)
+                    //console.log(respuesta)
+                    if (respuesta.data.indexOf("fracaso:") <= 0)
+                        getAllData()
+                }).catch(function (err) {
+                    console.log(err.data)
+                });
+                            }
+                        },
+                        {
+                            label: 'No',
+                        }
+                    ]
+                })
+             
                }else{
                    showSuccess("La guia no puede ser eliminada a menos que se cancele")
                }
@@ -787,19 +803,7 @@ function Guia(props) {
                          */}
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={() =>confirmAlert({
-                                title: 'Confirmar Eliminar',
-                                message: '¿Está seguro de eliminar guia?',
-                                buttons: [
-                                    {
-                                        label: 'Si',
-                                        onClick: () =>(handleEliminar(row.row.m_nIdGuia))
-                                    },
-                                    {
-                                        label: 'No',
-                                    }
-                                ]
-                            }) }><i className="zmdi zmdi-delete"
+                               onClick={() => handleEliminar(row.row.m_nIdGuia) }><i className="zmdi zmdi-delete"
                                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
