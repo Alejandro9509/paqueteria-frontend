@@ -487,6 +487,7 @@ function Embarque(props) {
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
     })
+    const [errores,setErrores] = React.useState([])
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
         idEmbarque: 0,
@@ -626,6 +627,7 @@ function Embarque(props) {
         setDataEmbarqueConsulta(undefined)
         setDataPaquetes([])
         resetEntregaDD()
+        setErrores([])
         setDataConceptos([])
         setDataComplementosSAT([])
         setRepetirConceptos(false)
@@ -1160,6 +1162,10 @@ function Embarque(props) {
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
+        if(errores.length>0){
+            showSuccess("Errores en conceptos de facturacion")
+            return;
+        }
         if(repetirConceptos && state.mostrarCotizador){
             showSuccess("Se requiere calcular tarifa otra vez")
             return;
@@ -1502,7 +1508,6 @@ function Embarque(props) {
 
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
-
         if(query.get("id")){
             handleShowConsultar(query.get("id"))
             }
@@ -2186,6 +2191,10 @@ function Embarque(props) {
         })
     }
 
+    function validarErrores(errores){
+            setErrores(errores)
+        }   
+     
     async function getAllEmbarque() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
@@ -4066,6 +4075,8 @@ function Embarque(props) {
                                                    onChangeConceptosList={actualizarConceptos}
                                                    conceptos={dataConceptos}
                                                    recoleccion={false}
+                                                   errores={errores}
+                                                   validarErrores={validarErrores}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    setCalculoTarifa={()=>setRepetirConceptos(false)}
@@ -4096,6 +4107,7 @@ function Embarque(props) {
                                             <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
                                                 event.stopPropagation();
                                                 setState({...state, agregar: "Agregar"});
+                                                setErrores([])
                                                 $('.nav-tabs li ').removeClass('active');
                                                 $('.nav-tabs li').eq(0).addClass('active');
                                                 $('.tab-content div ').removeClass('in show');
