@@ -13,7 +13,7 @@ function obtenerParametrosConfiguracion() {
 }
 
 function modificarParametrosConfiguracion(params){
-    const url = `${process.env.REACT_APP_API_URL}/ParametrosConfiguracion/Modificar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
