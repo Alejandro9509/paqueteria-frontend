@@ -403,15 +403,31 @@ function Guia(props) {
             }
             validarEliminarGuia(id).then(respuesta=>{
                if(respuesta.data.sePuedeEliminar){
-                eliminarGuia(id, state.modificadoPor).then(respuesta => {
-                showSuccess(respuesta.data)
-                //console.log(respuesta)
-                if (respuesta.data.indexOf("fracaso:") <= 0)
-                    getAllData()
-                    setGuiaSeleccionada(null)
-            }).catch(function (err) {
-                console.log(err.data)
-            });
+
+                   confirmAlert({
+                       title: 'Confirmar Eliminar',
+                       message: '¿Está seguro de eliminar guia?',
+                       buttons: [
+                           {
+                               label: 'Si',
+                               onClick: () => {
+                                   eliminarGuia(id, state.modificadoPor).then(respuesta => {
+                                       showSuccess(respuesta.data)
+                                       //console.log(respuesta)
+                                       if (respuesta.data.indexOf("fracaso:") <= 0)
+                                           getAllData()
+                                       setGuiaSeleccionada(null)
+                                   }).catch(function (err) {
+                                       console.log(err.data)
+                                   });
+                               }
+                           },
+                           {
+                               label: 'No',
+                           }
+                       ]
+                   })
+
                }else{
                    showSuccess("La guia no puede ser eliminada a menos que se cancele")
                }
@@ -1831,7 +1847,7 @@ function Guia(props) {
             showSuccess(data)
             getAllData()
             setGuiaSeleccionada(null)
-        }) 
+        })
 
     }
 

@@ -169,7 +169,7 @@ function Viajes() {
             }
 
         eliminarViaje(id,idEstatus).then(respuesta => {
-           console.log(respuesta);
+            showSuccess(respuesta.data)
            getAllData();
          }).catch(err => {
            showSuccess(err)
