@@ -166,9 +166,9 @@ function Viajes() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-        
+        console.log("id estatus "+idEstatus)
         eliminarViaje(id,idEstatus).then(respuesta => {
-           console.log(respuesta);
+            showSuccess(respuesta.data)
            getAllData();
          }).catch(err => {
            showSuccess(err)
