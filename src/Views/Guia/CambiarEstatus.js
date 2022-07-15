@@ -53,7 +53,7 @@ class MyComponent extends Component {
                                 >
                                     {this.props.dataEstatusGuia.filter(i => i.m_nIdEstatusGuia !== 8).map(
                                         (estatusGuia) => {
-                                            if (this.props.guia.EntregaEnSucursal && (estatusGuia.m_nIdEstatusGuia === 14 || estatusGuia.m_nIdEstatusGuia === 17)){
+                                            if (this.props.guia?.EntregaEnSucursal && (estatusGuia.m_nIdEstatusGuia === 14 || estatusGuia.m_nIdEstatusGuia === 17)){
                                                 return null
                                             }else{
                                                 return (

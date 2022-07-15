@@ -2194,10 +2194,10 @@ function Embarque(props) {
         })
     }
 
-    function validarErrores(errores){
-            setErrores(errores)
-        }
-
+    function validarErrores(errores) {
+        setErrores(errores)
+    }
+     
     async function getAllEmbarque() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
