@@ -227,6 +227,7 @@ function Recoleccion() {
     const [isAgregar, setIsAgregar] = useState(false);
     const [isModificar, setIsModificar] = useState(false);
     const [pagina, setPagina] = useState(0);
+    const [errores,setErrores] = React.useState([])
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
         estatusEmbarque: 0,
@@ -2967,7 +2968,6 @@ function Recoleccion() {
         });
     }
 
-    const [errores,setErrores] = React.useState([])
     function validarErrores(errores) {
         setErrores(errores)
     }
