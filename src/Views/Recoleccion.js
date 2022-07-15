@@ -949,6 +949,10 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        if(errores.length>0){
+            showSuccess("Errores en conceptos de facturacion")
+            return;
+        }
         if(repetirConceptos && state.mostrarCotizador){
             showSuccess("Se requiere calcular tarifa otra vez")
             return;
@@ -3133,6 +3137,10 @@ function Recoleccion() {
         });
     }
 
+    const [errores,setErrores] = React.useState([])
+    function validarErrores(errores) {
+        setErrores(errores)
+    }
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -4314,6 +4322,8 @@ function Recoleccion() {
                                                    conceptos={dataConceptos}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
+                                                   errores={errores}
+                                                   validarErrores={validarErrores}
                                                    recoleccionDiferenteDom={recoleccionDD}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    entregaDiferenteDom={entregaDD}
@@ -4338,6 +4348,7 @@ function Recoleccion() {
                                             <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
                                                 event.stopPropagation();
                                                 setState({...state, agregar: "Agregar"});
+                                                setErrores([])
                                                 $('.nav-tabs li ').removeClass('active');
                                                 $('.nav-tabs li').eq(0).addClass('active');
                                                 $('.tab-content div ').removeClass('in show');
