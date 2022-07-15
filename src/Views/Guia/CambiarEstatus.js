@@ -56,7 +56,7 @@ class MyComponent extends Component {
                                 >
                                     {this.props.dataEstatusGuia.filter(i => i.m_nIdEstatusGuia === 14).map(
                                         (estatusGuia) => {
-                                            if (this.props.guia.EntregaEnSucursal){
+                                            if (this.props.guia?.EntregaEnSucursal){
                                                 return (
                                                     <MenuItem
                                                         key={estatusGuia.m_nIdEstatusGuia}
@@ -238,7 +238,7 @@ function CambiarEstatus(props){
                             >
                                 {props.dataEstatusGuia.filter(i => i.m_nIdEstatusGuia === 14).map(
                                     (estatusGuia) => {
-                                        if (props.guia.EntregaEnSucursal){
+                                        if (props.guia?.EntregaEnSucursal){
                                             return (
                                                 <MenuItem
                                                     key={estatusGuia.m_nIdEstatusGuia}
