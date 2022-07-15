@@ -49,6 +49,7 @@ export default function DialogoNuevoPaquete(props) {
         errorAncho:false,
         errorPeso:false,
         errorCantidad:false,
+        nameInput:'',
         errorTexto:""
        
     })
@@ -673,6 +674,8 @@ export default function DialogoNuevoPaquete(props) {
                                                 margin="dense"
                                                 onClick={handleClickProducto}
                                                 {...params}
+                                                error={!paquete.producto}
+                                                helperText={!paquete.producto ? 'Producto inválido' : 'Producto válido'}
                                             />
                                         }
                                     />
