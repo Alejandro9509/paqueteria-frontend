@@ -1814,17 +1814,10 @@ function Guia(props) {
         })
     }
 
-    const cambiarEstaus = (estatus) => {
-        let params = {}
-        params.m_nIdGuia = guiaSeleccionada.m_nIdGuia
-        params.m_nIdEstatusGuia = guiaSeleccionada.m_nIdEstatusGuia
-
-        cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
-            showSuccess(data)
-            getAllData()
-            setGuiaSeleccionada(null)
-        }) 
-
+    const cambiarEstausExitoso = (data) => {
+        showSuccess(data)
+        getAllData()
+        setGuiaSeleccionada(null)
     }
 
     const handleAsignarTrayectos = (idGuia) => {
@@ -1848,7 +1841,7 @@ function Guia(props) {
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
                               open={state.openTipoCobro} dataTipoCobro={dataTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
-            <CambiarEstatus submit={(id) => cambiarEstaus(id)}
+            <CambiarEstatus submit={(data) => cambiarEstausExitoso(data)}
                             open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
                             close={() => setState({...state, openCambiarEstatus: false})}
                             guia={guiaSeleccionada}

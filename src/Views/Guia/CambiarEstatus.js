@@ -13,6 +13,18 @@ import {
 import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
+import {cambiarEstatusGuia} from "../../Util/Contexts/GuiaContext";
+import Noty from "noty";
+
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 
 class MyComponent extends Component {
     constructor(props) {
@@ -160,6 +172,13 @@ function CambiarEstatus(props){
         })
     }
 
+    const resetData = () =>{
+        setState({
+            idEstatusGuia:'',
+        })
+        resetEntregaDD()
+    }
+
     useEffect(() => {
         if (entregaDD.idEstado && entregaDD.idEstado.length > 0){
             obtenerMunicipiosByIdEstado(entregaDD.idEstado).then(({data}) =>{
@@ -189,6 +208,39 @@ function CambiarEstatus(props){
         mostrarDialogoMapa(false)
     }
 
+    const onSubmit = (e) => {
+        e.preventDefault()
+        if ((!entregaDD.latitud) || (!entregaDD.longitud)){
+            return
+        }
+        let params = {}
+        params.m_nIdEstatusGuia = state.idEstatusGuia
+
+        params.idPais =  entregaDD.idPais
+        params.m_nIdEstadoEntrega =  entregaDD.idEstado
+        params.m_sCodigoMunicipioEntrega =  entregaDD.idMunicipio
+        params.codigoPostalEntrega =  entregaDD.codigoPostal?.m_nIdCP
+        params.m_nIdZonaOperativa =  entregaDD.zonaOperativa?.m_nIdZona
+        params.domicilioEntrega =  entregaDD.domicilio
+        params.entregarEn =  entregaDD.detalles
+        params.datosAdicionales =  entregaDD.datosAdicionales
+        params.m_sLatitudD =  entregaDD.latitud
+        params.m_sLongitudD =  entregaDD.longitud
+        console.log(params)
+        console.log(JSON.stringify(params))
+        params.m_nIdGuia = props.guia.m_nIdGuia
+
+        cambiarEstatusGuia(params).then(({data}) => {
+            resetData()
+            props.submit(data)
+            props.close()
+        }).catch(err => {
+            showSuccess(err.response?.data)
+        })
+
+
+    }
+
     return (
         <>
             {
@@ -209,13 +261,12 @@ function CambiarEstatus(props){
                 </ConfirmarUbicacion>
             }
             <Dialog open={props.open} onClose={() => {
-            resetEntregaDD()
+                resetData()
             props.close()
         }} maxWidth={"md"} fullWidth>
             <DialogTitle>
                 <Typography variant={"h3"}>Cambiar Estatus</Typography>
             </DialogTitle>
-            <form onSubmit={(e) => {e.preventDefault();props.submit(state.estatusGuia);resetEntregaDD()}}>
                 <DialogContent>
                     <label className="input select" style={{width: "100%"}}>
                         <FormControl fullWidth variant="outlined"
@@ -270,16 +321,16 @@ function CambiarEstatus(props){
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {
-                        resetEntregaDD()
+                        resetData()
                         props.close()
                     }}>
                         Cancelar
                     </Button>
-                    <Button type={"submit"} onClick={() => props.close()}>
+                    <Button type={"submit"} onClick={(e) => onSubmit(e)}>
                         Aceptar
                     </Button>
                 </DialogActions>
-            </form>
+
 
         </Dialog>
         </>
