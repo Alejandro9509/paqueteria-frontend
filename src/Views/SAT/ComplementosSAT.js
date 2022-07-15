@@ -460,7 +460,7 @@ function ComplementosSAT(props) {
     return(
         <div>
             <Dialog open={openDialog} fullWidth maxWidth="md" >
-                <DialogTitle>Complemeto Carta Porte</DialogTitle>
+                <DialogTitle>Complemento Carta Porte</DialogTitle>
                 <DialogContent>
                     {
                         openDialog &&
