@@ -3,20 +3,13 @@ import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
 import Tour from "../../Views/UltimaMilla/Tour";
 import moment from "moment";
-import { API_HEADERS } from "../../Constants";
+import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
 
 const headers = API_HEADERS
 
-
 const XTourClient = window.XTourClient;
-const XLocateClient = window.XLocateClient;
-const XRouteClient = window.XRouteClient;
 var xtour = new XTourClient();
 xtour.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
-var xlocate = new XLocateClient();
-xlocate.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
-var xroute = new XRouteClient();
-xroute.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 const Depot = (id, x, y, startDate, finishDate) => ({
     "$type": "DepotSite",
@@ -35,28 +28,43 @@ const Depot = (id, x, y, startDate, finishDate) => ({
     }]
 })
 
-async function convertData(trucks, guias, dateFilter) {
+
+async function convertData(trucks, guias) {
     var array = []
-    var location = await searchLocation(dateFilter.sucursalSeleccionada.m_sMunicipio, dateFilter.sucursalSeleccionada.m_sCalle)
-    array = array.concat((trucks.map(t => Depot(t.m_nIdUnidad, location.x, location.y, dateFilter.startDate + "T" + dateFilter.startTime + ":00+00:00", dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"))));
     array = array.concat((guias.map((p, index) => (
         {
-            "$type": "CustomerSite",
-            "id": "Customer" + index,
-            "routeLocation": {
-                "$type": "OffRoadRouteLocation",
-                "offRoadCoordinate": {
-                    "x": p.lng,
-                    "y": p.lat
+            "id": "job_"+index,
+            "tasks":
+                p.m_bEsRecoleccion ? {
+                    "pickups": [{
+                        "places": [{
+                            "location": {
+                                "lat": parseFloat(p.lat),
+                                "lng": parseFloat(p.lng)
+                            },
+                            "duration": 6000,
+                            "tag": "Index_"+index
+                        }],
+
+                        "demand": [
+                            1
+                        ]
+                    }]
+                } : {
+                    "deliveries":[{
+                        "places": [{
+                            "location": {
+                                "lat": parseFloat(p.lat),
+                                "lng": parseFloat(p.lng)
+                            },
+                            "duration": 6000,
+                            "tag": "Index_"+index
+                        }],
+                        "demand": [
+                            1
+                        ]
+                    }]
                 }
-            },
-            "openingIntervals": [{
-                "$type": "StartEndInterval",
-                "start": dateFilter.startDate + "T" + dateFilter.startTime + ":00+00:00",
-                "end": dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"
-            }
-            ],
-            "serviceTimePerStop": "600.0"
         }
     ))))
     return array
@@ -102,42 +110,67 @@ async function obtenerGuiasUbicacion(paquetes) {
 }
 
 async function obtenerRutas(truck, guias, data) {
+    var location = await searchLocation(data.sucursalSeleccionada.m_sMunicipio, data.sucursalSeleccionada.m_sCalle)
     var converData = await convertData(truck, guias, data)
     var result;
+    var object = Object.assign({}, {
+        "plan": {
+            "jobs": converData
+        },
+        "fleet": {
+            "types":
+                truck.map(t => (
+                    {
+                        "id": "vehicle" + t.m_nIdUnidad,
+                        "profile": "car_" + t.m_nIdUnidad,
+                        "capacity": [
+                            100.0
+                        ],
+                        "costs": {
+                            "fixed": 5.0,
+                            "distance": 0.007,
+                            "time": 0.02
+                        },
+                        "amount": 1,
+                        "shifts": [
+                            {
+                                "start": {
+                                    "time": data.startDate + "T" + data.startTime + ":00+00:00",
+                                    "location": {
+                                        "lat": location.y,
+                                        "lng": location.x
+                                    }
+                                },
+                                "end": {
+                                    "time": data.finishDate + "T" + data.finishTime + ":00+00:00",
+                                    "location": {
+                                        "lat": location.y,
+                                        "lng": location.x
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                )),
+            "profiles": truck.map(t => (
+                {
+                    "type": "car",
+                    "name": "car_" + t.m_nIdUnidad
+                }
+            ))
+        }
+    })
+    //var token = await  axios.get(process.env.REACT_APP_API_URL_LOCAL + "/api/here/getToken",{})
+
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xtour.planTours({
-                "locations": converData,
-                "orders":
-                    guias.map((p, index) => (
-                        {
-                            "$type": "VisitOrder",
-                            "id": index,
-                            "locationId": "Customer" + index,
-                        }
-                    )),
-                "fleet": {
-                    "vehicles":
-                        truck.map(t => (
-                            {
-                                "ids": ["vehicle" + t.m_nIdUnidad],
-                                "maximumQuantityScenarios": [{
-                                    "quantities": [100.0]
-                                }],
-                                "startLocationId": "Depo" + t.m_nIdUnidad,
-                                "endLocationId": "Depo" + t.m_nIdUnidad
-                            }
-                        ))
-                },
-                "distanceMode": {
-                    "$type": "DirectDistance"
-                }
-            }, (r, e) => resolve(r))
+            axios.post("https://tourplanning.hereapi.com/v3/problems?apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, object, {headers: {'Content-Type': 'application/json'}}).then(({data}) => {
+                resolve(data)
+            })
+
         })
     )
     return result
-
-
 }
 
 function apiPoint(x, y) {
@@ -154,68 +187,31 @@ function apiPoint(x, y) {
 };
 
 function calcularRuta(points, sucursal) {
-    var array = []
-    array.push(apiPoint(sucursal.lng, sucursal.lat))
-    console.log(points)
-    array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
-    array.push(apiPoint(sucursal.lng, sucursal.lat))
     var result;
+    console.log(points.map(p => `&via=${p.lat},${p.lng}`).join(''))
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xroute.calculateRoute({
-                "waypoints": array,
-                "resultFields": {
-                    "polyline": true,
-                    "eventTypes": [
-                        "MANEUVER_EVENT"
-                    ],
-                    "encodedPath": true,
-                    "guidedNavigationRoute": false
-                },
-                "routeOptions": {
-                    "polylineOptions": {
-                        "elevations": true
-                    }
-                },
-                "requestProfile": {
-                    "userLanguage": "es"
-                }
+            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${sucursal.lat},${sucursal.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
+                resolve(data)
 
-            }, (r, e) => resolve(r))
+            })
+
         })
     )
     return result
 
 }
+
 function calcularRutaUltimaMilla(points, sucursal, camion) {
-    var array = []
-    array.push(apiPoint(camion.lng, camion.lat))
-    console.log(points)
-    array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
-    array.push(apiPoint(sucursal.lng, sucursal.lat))
     var result;
+    console.log(points.map(p => `&via=${p.lat},${p.lng}`).join(''))
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xroute.calculateRoute({
-                "waypoints": array,
-                "resultFields": {
-                    "polyline": true,
-                    "eventTypes": [
-                        "MANEUVER_EVENT"
-                    ],
-                    "encodedPath": true,
-                    "guidedNavigationRoute": false
-                },
-                "routeOptions": {
-                    "polylineOptions": {
-                        "elevations": true
-                    }
-                },
-                "requestProfile": {
-                    "userLanguage": "es"
-                }
+            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${camion.lat},${camion.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
+                resolve(data)
 
-            }, (r, e) => resolve(r))
+            })
+
         })
     )
     return result
@@ -223,13 +219,11 @@ function calcularRutaUltimaMilla(points, sucursal, camion) {
 }
 
 async function searchLocationAddress(address) {
-    var location = await xlocate.searchLocations({
-        "$type": "SearchByTextRequest",
-        "text": address
-    })
-    if (location.results) {
-        if (location.results.length !== 0) {
-            return location.results[0].location.referenceCoordinate
+    var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q=" + address + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
         } else {
             return {x: 0.0, y: 0.0}
         }
@@ -240,17 +234,13 @@ async function searchLocationAddress(address) {
 }
 
 async function searchLocationGuia(city, address, postalCode) {
-    var location = await xlocate.searchLocations({
-        "$type": "SearchByAddressRequest",
-        "address": {
-            "city": city,
-            "street": address,
-            "postalCode": postalCode
-        }
-    });
-    if (location.results) {
-        if (location.results.length !== 0) {
-            return location.results[0].location.referenceCoordinate
+    var addressComplete = address + ", " + city
+    var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+        + addressComplete + "&qq=postalCode=" + postalCode + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
         } else {
             return {x: 0.0, y: 0.0}
         }
@@ -259,29 +249,24 @@ async function searchLocationGuia(city, address, postalCode) {
     }
 }
 
-function searchAdressWithCoordinates(x,y){
-   
-console.log("searching...")
+function searchAdressWithCoordinates(x, y) {
+
+    console.log("searching...")
 }
+
 function searchLocationWeb(city, address, subdistrict, number, code) {
     var result;
+    var addressComplete = address + ", " + subdistrict + ", " + city
+
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xlocate.searchLocations({
-                "$type": "SearchByAddressRequest",
-                "address": {
-                    "city": city,
-                    "street": address,
-                    "subdistrict": subdistrict,
-                    "houseNumber": number,
-                    "postalCode" : code
-
-                }
-            }, (location) => {
-                if (location) {
-                    if (location.results) {
-                        if (location.results.length !== 0) {
-                            resolve(location.results[0].location.referenceCoordinate)
+            axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+                + addressComplete + "&qq=houseNumber=" + number + ";postalCode=" + code + "&apiKey="
+                + process.env.REACT_APP_HERE_API_TOEKN, {}).then(({data}) => {
+                if (data) {
+                    if (data.items) {
+                        if (data.items.length !== 0) {
+                            resolve({x: data.items[0].position.lng, y: data.items[0].position.lat})
                         } else {
                             resolve({x: 0.0, y: 0.0})
                         }
@@ -289,23 +274,22 @@ function searchLocationWeb(city, address, subdistrict, number, code) {
                         resolve({x: 0.0, y: 0.0})
                     }
                 }
-            });
+            })
+
         })
     )
     return result
 }
 
 async function searchLocation(city, address) {
-    var location = await xlocate.searchLocations({
-        "$type": "SearchByAddressRequest",
-        "address": {
-            "city": city,
-            "street": address,
-        }
-    });
-    if (location.results) {
-        if (location.results.length !== 0) {
-            return location.results[0].location.referenceCoordinate
+    var addressComplete = address + ", " + city
+    var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+        + addressComplete + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
         } else {
             return {x: 0.0, y: 0.0}
         }
@@ -326,22 +310,25 @@ function agregarRuta(idUltimaMilla, tour, data) {
         rutas: []
     }
     tour.unidades.forEach((u) => {
-        var tempTour = tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+        var tempTour = tour.tour.tours.find(t => t.typeId === ("vehicle" + u.m_nIdUnidad))
         console.log(tour)
-        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.index) != null)
+        console.log(tempTour)
+        var guias = tour.paquetes.filter((p, index) => tempTour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").map(a => parseInt(a.jobId.replace('job_',''))).includes(p.index))
+        debugger
         guias = ordenarGuiasPorRuta(tempTour, guias)
         console.log(guias)
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
             idRemolque1: u.idRemolque1,
-            idRemolque2:u.idRemolque2,
+            idRemolque2: u.idRemolque2,
             idDolly: u.idDolly,
             guias: guias.map((g, index) => {
-                var tourReport = tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-                var distance = tourReport.legReports[index].distance
-                var reportTime = tourReport.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && g.index === parseInt(t.orderId))
-                var date = new Date(reportTime.startTime)
+                debugger
+                var tourReport = tour.tour.tours.find(t => t.typeId === ("vehicle" + u.m_nIdUnidad))
+                var distance = tourReport.statistic.distance
+                var reportTime = tourReport.statistic.duration
+                var date = new Date(tourReport.stops.find( s => (s.activities[0].type === "delivery" || s.activities[0].type === "pickup"))?.time.arrival)
                 var userTimezoneOffset = date.getTimezoneOffset() * 60000;
                 date = new Date(date.getTime() + userTimezoneOffset);
                 var time = date.toLocaleTimeString()
@@ -351,7 +338,7 @@ function agregarRuta(idUltimaMilla, tour, data) {
                     lng: g.lng,
                     orden: index + 1,
                     horaEstimada: time,
-                    kilometros:distance/1000,
+                    kilometros: distance / 1000,
                     esRecoleccion: g.m_bEsRecoleccion
                 })
             })
@@ -360,24 +347,25 @@ function agregarRuta(idUltimaMilla, tour, data) {
     data.zonasSeleccionada.forEach((z) => {
         ultimaMillaObject.zonas.push({id: z.m_nIdZona})
     })
+    console.log(ultimaMillaObject)
     trackPromise(
         result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
     return result
 }
 
-function validarUnidadesSeleccionadas(unidades){
+function validarUnidadesSeleccionadas(unidades) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidades`;
     let result;
     var config = {
         method: 'post',
         url: url,
-        headers: { 
-          'RFC': 'ADI880815DA7', 
-          'Content-Type': 'application/json'
+        headers: {
+            'RFC': 'ADI880815DA7',
+            'Content-Type': 'application/json'
         },
-        data : JSON.stringify(unidades)
-      };
+        data: JSON.stringify(unidades)
+    };
     trackPromise(
         result = axios(config)
     )
@@ -385,6 +373,7 @@ function validarUnidadesSeleccionadas(unidades){
     return result
 
 }
+
 async function ordenarParada(idParada, guias) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/OrdenarParada/${idParada}`;
     let result;
@@ -422,6 +411,7 @@ function obtenerPaquetesInforme(idInforme, zonasIds) {
     );
     return result
 }
+
 function obtenerPaquetesViaje(idViaje, zonasIds) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByViaje/` + idViaje;
     let result;
@@ -430,14 +420,16 @@ function obtenerPaquetesViaje(idViaje, zonasIds) {
     );
     return result
 }
-function obtenerPaquetesUnidadOperador(idUnidad, idOperador,zonasIds ) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByUnidadOperador/${idUnidad}/${idOperador}` ;
+
+function obtenerPaquetesUnidadOperador(idUnidad, idOperador, zonasIds) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByUnidadOperador/${idUnidad}/${idOperador}`;
     let result;
     trackPromise(
-        result = axios.post(url,   Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
+        result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
     );
     return result
 }
+
 async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/RemplazarParada/${idParada}/${paqueteViejo.m_nId}`;
     let result;
@@ -467,7 +459,7 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
     return result
 }
 
-function confirmarUbicacion(coordenadas, id,esRecoleccion) {
+function confirmarUbicacion(coordenadas, id, esRecoleccion) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/CambiarUbicacion`;
     let result;
     trackPromise(
@@ -484,7 +476,7 @@ function obtenerUltimaMillaReporte(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/UltimaMilla/${id}`;
     let result;
     trackPromise(
-        result =  axios.get(url, { headers })
+        result = axios.get(url, {headers})
     );
     return result
 }
@@ -493,60 +485,65 @@ function cancelarRuta(id) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/EliminarRuta/${id}`;
     let result;
     trackPromise(
-        result =  axios.delete(url, { headers })
+        result = axios.delete(url, {headers})
     );
     return result
 }
 
-function obtenerCFDI(id,esRecolecion, IdSucursal){
+function obtenerCFDI(id, esRecolecion, IdSucursal) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
     let result;
     trackPromise(
-        result =  axios.get(url,  { headers })
+        result = axios.get(url, {headers})
     );
     return result
 }
 
-function obtenerXMLCFDI(id,esRecolecion, IdSucursal){
+function obtenerXMLCFDI(id, esRecolecion, IdSucursal) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
     let result;
     trackPromise(
-        result =  axios.get(url,  { headers })
+        result = axios.get(url, {headers})
     );
     return result
 }
-function obtenerXMLPermisionario(id,esRecolecion, IdSucursal){
+
+function obtenerXMLPermisionario(id, esRecolecion, IdSucursal) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLTrasladaPermisionario/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
     let result;
     trackPromise(
-        result =  axios.get(url,  { headers })
+        result = axios.get(url, {headers})
     );
     return result
 }
-function obtenerReporteCFDIGuia(id){
+
+function obtenerReporteCFDIGuia(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIGuia/${id}`;
     let result;
     trackPromise(
-        result =  axios.get(url,  { headers })
+        result = axios.get(url, {headers})
     );
     return result
 }
-function obtenerReporteCFDIRecoleccion(id){
+
+function obtenerReporteCFDIRecoleccion(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIRecoleccion/${id}`;
     let result;
     trackPromise(
-        result =  axios.get(url,  { headers })
+        result = axios.get(url, {headers})
     );
     return result
 }
-async function validarUnidadOcupada(idUnidad, fecha, idSucursal){
+
+async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidad/${idUnidad}/${fecha}/${idSucursal}`;
     let result;
     trackPromise(
-        result =  axios.get(url,  { headers })
+        result = axios.get(url, {headers})
     );
     return result
 }
+
 export {
     cancelarRuta,
     obtenerXMLPermisionario,
@@ -579,10 +576,10 @@ export {
 
 function ordenarGuiasPorRuta(tour, guias) {
     var result = []
-    tour.trips[0].stops.forEach((item, index) => {
+    tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").forEach((item, index) => {
         var found = false;
         guias = guias.filter(function (guia, index) {
-            if (!found && guia.index == parseInt(item.tasks[0].orderId)) {
+            if (!found && guia.index == parseInt(item.jobId.replace('job_',''))) {
                 guia.orden = index + 1
                 result.push(guia);
                 found = true;
