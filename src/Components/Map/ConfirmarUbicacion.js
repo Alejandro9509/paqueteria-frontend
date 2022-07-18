@@ -18,7 +18,12 @@ import {obtenerUbicacion} from "../../Util/Contexts/RemitenteDestinatarioContext
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/marker.png";
 import SearchIcon from "@material-ui/icons/Search";
-import {searchLocationAddress,searchAdressWithCoordinates, searchLocationGuia} from "../../Util/Contexts/UltimaMillaContext";
+import {
+    searchLocationAddress,
+    searchAdressWithCoordinates,
+    searchLocationGuia,
+    searchLocationGuiav2
+} from "../../Util/Contexts/UltimaMillaContext";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -55,12 +60,20 @@ class ConfirmarUbicacion extends Component {
                 })
 
             } else {//en cambio si esta haciendo recoleccion al remitente tomara sus valores
-                let municipio = this.props.direccion.municipioTexto;
+                /*let municipio = this.props.direccion.municipioTexto;
                 let calle = this.props.direccion.calleRemitente
                 let colonia = this.props.direccion.coloniaRemitente
                 let numeroExterior = this.props.direccion.numeroExtRemitente
-                let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP
-                searchLocationGuia(`${municipio}`,`${calle} ${colonia}`,`${codigoPostal}`).then(data => {
+                let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP*/
+                searchLocationGuiav2(
+                    this.props.direccion.calle,
+                    this.props.direccion.numeroExterior,
+                    this.props.direccion.numeroInterior,
+                    this.props.direccion.colonia,
+                    this.props.direccion.ciudad,
+                    this.props.direccion.codigoPostal,
+                    this.props.direccion.estado,
+                    this.props.direccion.pais).then(data => {
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
                     })
@@ -180,7 +193,7 @@ class ConfirmarUbicacion extends Component {
                         {!this.props.ultimaMilla &&
                             <Grid item sm={12}>
                                 <Typography
-                                    variant={"h3"}>Dirección:{this.props.remitente ? (this.props.esDiferenteRecoleccion ? this.props.recoleccionDD.domicilio : (`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)) : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilio : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
+                                    variant={"h3"}>Dirección:{this.props.remitente ? (this.props.esDiferenteRecoleccion ? this.props.recoleccionDD.domicilio : (`${this.props.direccion.calle},${this.props.direccion.numeroExterior},${this.props.direccion.colonia},${this.props.direccion.ciudad},${this.props.direccion.estado},${this.props.direccion.pais}`)) : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilio : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
                                 </Typography>
                             </Grid>
                         }

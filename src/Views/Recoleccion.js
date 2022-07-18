@@ -342,6 +342,7 @@ function Recoleccion() {
         numeroIntRemitente: '0',
         numeroExtRemitente: '',
         coloniaRemitente: '',
+        paisTexto: '',
         estadoRemitente: '',
         municipioRemitente: '',
         codigoPostalRemitente: '',
@@ -367,6 +368,8 @@ function Recoleccion() {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            estadoTexto: data.estadoTexto,
+            paisTexto: data.paisTexto,
             municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
@@ -2964,6 +2967,24 @@ function Recoleccion() {
         });
     }
 
+    const obtenerDatosDireccion = (esRecoleccion) => {
+        let esDiferenteDomicilio = state.diferenteRecoleccion
+        if (esRecoleccion){
+            if (esDiferenteDomicilio){
+                return {}
+            }else{
+                return {
+                    numeroInterior: remitente.numeroIntRemitente,
+                    numeroExterior: remitente.numeroExtRemitente,
+                    calle: remitente.calleRemitente,
+                    colonia: remitente.coloniaRemitente,
+                    ciudad: remitente.municipioTexto,
+                    estado: remitente.estadoTexto,
+                    pais: remitente.paisTexto
+                }
+            }
+        }
+    }
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -2974,12 +2995,11 @@ function Recoleccion() {
                                     titulo={state.titulo}
                                     recoleccion={true}
                                     remitente={true}
-                                    direccion={remitente}
+                                    direccion={obtenerDatosDireccion(true)}
                                     esDiferenteRecoleccion={state.diferenteRecoleccion}
                                     esDiferenteEntrega={state.diferenteEntrega}
                                     recoleccionDD={recoleccionDD}
-                >
-                </ConfirmarUbicacion>
+                />
             }
             <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} fullWidth
                     maxWidth="md">

@@ -73,6 +73,7 @@ function RemitenteDestinatario(props) {
     colonia: "",
     estado: "",
     estadoTexto: "",
+    paisTexto: "",
     municipio: "",
     municipioTexto: "",
     codigoPostal: "",
@@ -127,6 +128,7 @@ function RemitenteDestinatario(props) {
     colonia: "",
     estado: "",
     estadoTexto: "",
+    paisTexto: "",
     municipio: "",
     municipioTexto: "",
     codigoPostal: "",
@@ -594,6 +596,7 @@ if(input=="codigoPostal"){
               destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
               openDialog: false,
               zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+              paisTexto: row.data.m_sPais
             }));
 
             if (zonaOperativa.data.length === 0){
