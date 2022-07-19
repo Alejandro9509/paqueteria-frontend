@@ -79,6 +79,7 @@ import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
 import { RowingSharp } from "@material-ui/icons";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -562,59 +563,78 @@ function Viajes() {
     }
 
     function generarCFDI(id, folio, idViaje, sustituir) {
-        confirmAlert({
-            title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
-                        obtenerCFDI(id, sustituir).then((result) => {
-                            setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
-                        }).catch((error) => {
-                            if (error.response) {
-                                showError(error.response.data)
-                            }
-                        })
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar timbrado de prueba'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar timbrado ante el SAT'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            obtenerCFDI(id,sustituir).then((result) => {
+                                setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
     }
 
     function showCancelarCFDI(informe) {
         setState({...state, openCancelarSAT: true, informe: informe})
     }
+    function cancelarCFDI( data) {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar cancelación de prueba'
+                mensaje = '¿Está seguro de realizar la cancelación en modo prueba?\nPara timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar cancelación ante el SAT'
+                mensaje = '¿Está seguro de realizar la cancelación ante el SAT?'
 
-    function cancelarCFDI(data) {
-        console.log(data)
-        confirmAlert({
-            title: 'Confirmar Cancelación',
-            message: '¿Está seguro de realizar la cancelación ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
-                        cancelarInformeCFDI(state.informe.m_nIdInforme, data.idCancelacionSAT, data.motivoSAT, data.motivoCancelacion, data.folioRelacionado).then((result) => {
-                            getParadasListado(state.informe)
-                            showSuccess(result.data)
-                        }).catch((error) => {
-                            if (error.response) {
-                                showError(error.response.data)
-                            }
-                        })
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                getParadasListado(state.informe)
+                                showSuccess(result.data)
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
-
-
     }
 
 
