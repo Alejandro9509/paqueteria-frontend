@@ -283,7 +283,8 @@ function Recoleccion() {
         tipoCobro: '',
         clientePaga: {},
         observaciones: '',
-
+        aplicaEntrega:false,
+        deshabilitarDiferenteDomicilio:false,
         //Paquetes/Sobres
         countPaquetes: 1,
         countSobres: 1,
@@ -3132,7 +3133,22 @@ function Recoleccion() {
             }
         });
     }
-
+    function esEntregaSucursal(aplicaEntrega){
+        if(aplicaEntrega){
+        setState({
+            ...state,
+            aplicaEntrega:aplicaEntrega,
+            entregaEnSucursal:true,
+            deshabilitarDiferenteDomicilio:true
+        })}
+        else{
+            setState({
+                ...state,
+                aplicaEntrega:aplicaEntrega,
+                deshabilitarDiferenteDomicilio:false
+            })}  
+        
+      }
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -4125,6 +4141,7 @@ function Recoleccion() {
                                                                     dataPadreConsulta={dataRecoleccionConsulta}
                                                                     limpiarRemDes={limpiarRemDes}
                                                                     seCalculaTarifa={seCalculaTarifa}
+                                                                    soloEntregaSucursal={esEntregaSucursal}
                                                                     entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                 />
                                                             }
@@ -4135,7 +4152,7 @@ function Recoleccion() {
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
                                                                                 className="form-control"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.deshabilitarDiferenteDomicilio}
                                                                                 // value={state.diferenteEntrega}
                                                                                 checked={state.diferenteEntrega}
                                                                                 type="checkbox"
@@ -4159,11 +4176,13 @@ function Recoleccion() {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{ height: "20px" }}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.deshabilitarDiferenteDomicilio}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i />
                                                                         </label>
+                                                                        {state.aplicaEntrega &&
+                                                                        <div>No se realizará entrega de última milla</div>}
                                                                     </div></div>
                                                             </div>
                                                         </div>

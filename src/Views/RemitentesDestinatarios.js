@@ -565,6 +565,7 @@ if(input=="codigoPostal"){
     props.seCalculaTarifa()
       obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
           ( zonaOperativa ) => {
+            props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
             setState((state) => ({
               ...state,
               id: row.data.m_nIdRemitenteDestinatario,
