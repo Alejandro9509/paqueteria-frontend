@@ -351,21 +351,21 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                     </Grid>
                     <Grid item xs={2}>
                     <FormControl className="input select" fullWidth variant="outlined" margin="dense">
-                    <div className="row">
-                                                                <div style={{width:'80%'}}>
+                    <div className="row" style={{display:"flex",justifyContent:"space-evenly",marginLeft:"-60px"}}>
+
 
                     <label className="checkbox">
-                                                                            Aplica Entrega
-                    <input
+                                                                                No aplican entregas
+                   
+                    </label> <input
                                                                                 onChange={handleCheck}
                                                                                 type="checkbox"
                                                                                 checked={state.aplicaEntrega}
-                                                                                style={{ height: "20px",left:"150px",top:"1px",marginLeft:"-25px" }}
+                                                                                style={{ height: "20px",left:"150px",top:"1px"}}
                                                                                 name="aplicaEntrega"
                                                                                 id="aplicaEntrega"
                                                                             />
-                    </label>
-                                                                        </div>
+                                                                     
                     </div>
                     </FormControl>
                     </Grid>
