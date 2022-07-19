@@ -64,6 +64,7 @@ import {
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 import {validarDerecho} from "../../Util/Util";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 
 function showError(mensaje) {
     new Noty({
@@ -241,28 +242,41 @@ class DetalleParadas extends Component {
             }
     }
     generarCFDI(id,esRecoleccion, folio) {
-        confirmAlert({
-            title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar timbrado de prueba'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar timbrado ante el SAT'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
 
-                        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
-                            this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
-                            }
-                        })
+                            obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                                this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
+
+
 
 
     }
