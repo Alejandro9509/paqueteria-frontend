@@ -1805,7 +1805,8 @@ function Recoleccion() {
                 domicilioRecoleccion: '',
                 recogerEn: '',
                 datosAdicionalesRecoleccion: '',*/
-
+                aplicaEntrega:false,
+                deshabilitarDiferenteDomicilio:false,
                 //Operador
                 operador: '',
                 tipoUnidad: '',
@@ -3139,12 +3140,14 @@ function Recoleccion() {
             ...state,
             aplicaEntrega:aplicaEntrega,
             entregaEnSucursal:true,
-            deshabilitarDiferenteDomicilio:true
+            deshabilitarDiferenteDomicilio:true,
+            diferenteEntrega:false
         })}
         else{
             setState({
                 ...state,
                 aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:false,
                 deshabilitarDiferenteDomicilio:false
             })}  
         
@@ -4181,10 +4184,25 @@ function Recoleccion() {
                                                                             />
                                                                             <i />
                                                                         </label>
+                                                                       
+                                                                    </div>
+                                                                </div>
+                                                                    
+                                                                    <div className="col-sm-7" style={{
+                                                                            position: "relative",
+                                                                            marginBottom: "15px",
+                                                                            borderStyle: "ridge",
+                                                                            borderColor: "red",
+                                                                            padding: "3px",
+                                                                            width:"auto"
+                                                                    }} >
                                                                         {state.aplicaEntrega &&
-                                                                        <div>No se realizará entrega de última milla</div>}
-                                                                    </div></div>
+                                                                        <div style={{marginTop:"10px"}}>No se realizará entrega de última milla</div>}
+                                                                    </div>
                                                             </div>
+
+                                                                
+
                                                         </div>
                                                     </div>
                                                 </div>
