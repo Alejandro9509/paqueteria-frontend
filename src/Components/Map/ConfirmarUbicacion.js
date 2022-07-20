@@ -47,42 +47,20 @@ class ConfirmarUbicacion extends Component {
         }
 
         if(this.props.recoleccion){
-        if (this.props.remitente) {//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
-            if (this.props.esDiferenteRecoleccion) {//si es diferente de recoleccion consulta los valores de recoleccionDD
-                let municipioTexto = this.props.dataMunicipiosRecoleccionDD.filter(m => m.m_sCodigoMunicipio == this.props.recoleccionDD.idMunicipio)[0]?.m_sMunicipio
-                //this.props.recoleccionDD.domicilioRec es calle y numero
-                searchLocationGuia(`${municipioTexto}`,`${this.props.recoleccionDD.domicilio} ${this.props.recoleccionDD.codigoPostal.m_sColonia}`,`${this.props.recoleccionDD.codigoPostal.m_sCP}`).then(data => {
-
-                    this.setState({
-                        coordenadas: {lat: data.y, lng: data.x}
-                    })
-                    this.state.map.setView([data.y, data.x], 18)
+            searchLocationGuiav2(
+                this.props.direccion.calle,
+                this.props.direccion.numeroExterior,
+                this.props.direccion.numeroInterior,
+                this.props.direccion.colonia,
+                this.props.direccion.ciudad,
+                this.props.direccion.codigoPostal,
+                this.props.direccion.estado,
+                this.props.direccion.pais).then(data => {
+                this.setState({
+                    coordenadas: {lat: data.y, lng: data.x}
                 })
-
-            } else {//en cambio si esta haciendo recoleccion al remitente tomara sus valores
-                /*let municipio = this.props.direccion.municipioTexto;
-                let calle = this.props.direccion.calleRemitente
-                let colonia = this.props.direccion.coloniaRemitente
-                let numeroExterior = this.props.direccion.numeroExtRemitente
-                let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP*/
-                searchLocationGuiav2(
-                    this.props.direccion.calle,
-                    this.props.direccion.numeroExterior,
-                    this.props.direccion.numeroInterior,
-                    this.props.direccion.colonia,
-                    this.props.direccion.ciudad,
-                    this.props.direccion.codigoPostal,
-                    this.props.direccion.estado,
-                    this.props.direccion.pais).then(data => {
-                    this.setState({
-                        coordenadas: {lat: data.y, lng: data.x}
-                    })
-                    this.state.map.setView([data.y, data.x], 18)
-                })
-
-            }
-
-        }
+                this.state.map.setView([data.y, data.x], 18)
+            })
     }
         if (!this.props.recoleccion) {//Si es embarque
             // console.log("Entra en destinatario"+this.props.esDiferenteEntrega)
@@ -193,7 +171,15 @@ class ConfirmarUbicacion extends Component {
                         {!this.props.ultimaMilla &&
                             <Grid item sm={12}>
                                 <Typography
-                                    variant={"h3"}>Dirección:{this.props.remitente ? (this.props.esDiferenteRecoleccion ? this.props.recoleccionDD.domicilio : (`${this.props.direccion.calle},${this.props.direccion.numeroExterior},${this.props.direccion.colonia},${this.props.direccion.ciudad},${this.props.direccion.estado},${this.props.direccion.pais}`)) : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilio : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
+                                    variant={"h3"}>Dirección:{this.props.remitente ?
+                                    (`${this.props.direccion.calle}`
+                                        +`${this.props.direccion.numeroExterior?','+this.props.direccion.numeroExterior:''}`
+                                        +`${this.props.direccion.colonia?','+this.props.direccion.colonia:''}`
+                                        +`${this.props.direccion.codigoPostal?','+this.props.direccion.codigoPostal:''}`
+                                        +`${this.props.direccion.ciudad?','+this.props.direccion.ciudad:''}`
+                                        +`${this.props.direccion.estado?','+this.props.direccion.estado:''}`
+                                        +`${this.props.direccion.pais?','+this.props.direccion.pais:''}`)
+                                    : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilio : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
                                 </Typography>
                             </Grid>
                         }

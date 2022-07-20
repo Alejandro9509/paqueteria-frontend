@@ -537,8 +537,11 @@ function Recoleccion() {
 
     const [recoleccionDD, setRecoleccionDD] = useState({
         idPais: '',
+        pais: '',
         idEstado: '',
+        estado: '',
         idMunicipio: '',
+        municipio: '',
         codigoPostal: '',
         zonaOperativa: '',
         domicilio: '',
@@ -551,8 +554,11 @@ function Recoleccion() {
     const resetRecoleccionDD = () => {
         setRecoleccionDD({
             idPais: '',
+            pais: '',
             idEstado: '',
+            estado: '',
             idMunicipio: '',
+            municipio: '',
             codigoPostal: '',
             zonaOperativa: '',
             domicilio: '',
@@ -561,73 +567,6 @@ function Recoleccion() {
             latitud: '',
             longitud: ''
         })
-    }
-
-    const handleChangeRecoleccionDD = (event) => {
-
-        event.preventDefault();
-        setRecoleccionDD(recoleccionDD => {
-            return {
-                ...recoleccionDD,
-                [event.target.name]: event.target.value,
-            }
-        });
-        if (event.target.name === "estadoRec") {
-            setRepetirConceptos(true)
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
-                setDataMunicipiosRecoleccionDD(data)
-            })
-        }
-        if (event.target.name === "municipioRec") {
-            setRepetirConceptos(true)
-        }
-    };
-
-    const handleChangeAutocompleteRecoleccionDD = (input, newValue) => {
-        setRepetirConceptos(true)
-        setRecoleccionDD(recoleccionDD => {
-            return {
-                ...recoleccionDD,
-                [input]: newValue
-            }
-        })
-        if (input === "codigoPostalRec") {
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                if (data.length > 0){
-                    if (data.length === 1){
-                        setRecoleccionDD(recoleccionDD => {
-                            return {
-                                ...recoleccionDD,
-                                zonaOperativaRec: data[0]
-                            }
-                        })
-                    }
-                    setDataZonasOperativasRecoleccionDD(data)
-
-                }else{
-                    setRecoleccionDD(recoleccionDD => {
-                        return{
-                            ...recoleccionDD,
-                            zonaOperativaRec: {}
-                        }
-                    })
-                }
-
-            })
-            /*obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                if (data.length > 0){
-                    setDataZonasTarifaRecoleccionDD(data)
-                }else{
-                    setRecoleccionDD(recoleccionDD => {
-                        return{
-                            ...recoleccionDD,
-                            zonaTarifaRec: {}
-                        }
-                    })
-                }
-
-            })*/
-        }
     }
 
     const getAllEstados = () => {
@@ -648,7 +587,7 @@ function Recoleccion() {
         );
     }
 
-    useEffect(value => {
+    /*useEffect(value => {
 
         if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
             // console.log('tipo Unidad select: ', state.tipoUnidad)
@@ -672,7 +611,7 @@ function Recoleccion() {
 
         // getDataParaListado()
 
-    }, []);
+    }, []);*/
 
     const getDataParaListado = () => {
         // getAllSucursales();
@@ -2954,8 +2893,11 @@ function Recoleccion() {
             return{
                 ...recoleccionDD,
                 idPais: newValue.idPais,
+                pais: newValue.pais,
                 idEstado: newValue.idEstado,
+                estado: newValue.estado,
                 idMunicipio: newValue.idMunicipio,
+                municipio: newValue.municipio,
                 codigoPostal: newValue.codigoPostal,
                 zonaOperativa: newValue.zonaOperativa,
                 domicilio: newValue.domicilio,
@@ -2971,7 +2913,16 @@ function Recoleccion() {
         let esDiferenteDomicilio = state.diferenteRecoleccion
         if (esRecoleccion){
             if (esDiferenteDomicilio){
-                return {}
+                return {
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: recoleccionDD.domicilio,
+                    colonia: '',
+                    ciudad: recoleccionDD.municipio,
+                    estado: recoleccionDD.estado,
+                    pais: recoleccionDD.pais,
+                    codigoPostal: recoleccionDD.codigoPostal?.m_sCP
+                }
             }else{
                 return {
                     numeroInterior: remitente.numeroIntRemitente,
@@ -2980,7 +2931,8 @@ function Recoleccion() {
                     colonia: remitente.coloniaRemitente,
                     ciudad: remitente.municipioTexto,
                     estado: remitente.estadoTexto,
-                    pais: remitente.paisTexto
+                    pais: remitente.paisTexto,
+                    codigoPostal: remitente.codigoPostalRemitente?.m_sCP
                 }
             }
         }
