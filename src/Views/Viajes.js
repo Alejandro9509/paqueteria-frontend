@@ -168,13 +168,34 @@ function Viajes() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
+            if(idEstatus!=6){
+                showSuccess("Para eliminar debe estar cancelado");
+                return
+            }
 
-        eliminarViaje(id,idEstatus).then(respuesta => {
-            showSuccess(respuesta.data)
-           getAllData();
-         }).catch(err => {
-           showSuccess(err)
-         })
+
+            confirmAlert({
+                title: 'Confirmar Eliminar',
+                message: '¿Está seguro de eliminar viaje?',
+                buttons: [
+                    {
+                        label: 'Si',
+                        onClick: () => {
+
+                          eliminarViaje(id,idEstatus).then(respuesta => {
+                                   showSuccess(respuesta.data)
+                                  getAllData();
+                                }).catch(err => {
+                                  showSuccess(err)
+                                 })
+
+                        }
+                    },
+                    {
+                        label: 'No',
+                    }
+                ]
+            })
         }).catch(err => {
             showSuccess(err)
         });
@@ -344,19 +365,7 @@ function Viajes() {
 
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => confirmAlert({
-                                title: 'Confirmar Eliminar',
-                                message: '¿Está seguro de eliminar viaje?',
-                                buttons: [
-                                    {
-                                        label: 'Si',
-                                        onClick: () => (handleEliminar(row.row.m_nIdViaje,row.row.m_nIdEstatusViaje))
-                                    },
-                                    {
-                                        label: 'No',
-                                    }
-                                ]
-                            })}
+                               onClick={() => handleEliminar(row.row.m_nIdViaje,row.row.m_nIdEstatusViaje)}
                                disabled={!validarDerecho(9101442)}><i className="zmdi zmdi-delete"
                                                                       style={{color: "#F30B0B"}}/></a>
 
