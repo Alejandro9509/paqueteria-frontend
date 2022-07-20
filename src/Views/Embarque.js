@@ -3686,6 +3686,18 @@ function Embarque(props) {
                                                                     </label>
                                                                 </div>
                                                             </div>
+                                                            {  state.aplicaEntrega && <><div className="col-sm-7" style={{
+                                                                            position: "relative",
+                                                                            marginBottom: "15px",
+                                                                            borderStyle: "ridge",
+                                                                            borderColor: "red",
+                                                                            padding: "3px",
+                                                                            width:"auto"
+                                                                    }} >
+                                                                      
+                                                                        <div style={{marginTop:"10px"}}>No se realizará entrega de última milla</div>
+                                                                      
+                                                                    </div>  </>}
                                                             </div>
                                                             <div className="row">
                                                             <div style={{width:'70%'}}>
