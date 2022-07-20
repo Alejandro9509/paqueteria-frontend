@@ -552,7 +552,8 @@ function Embarque(props) {
 
         //Ruta
         idRuta: 0,
-
+        aplicaEntrega:false,
+        deshabilitarDiferenteDomicilio:false,
         DerechoBorrar: 139,
         identificadorModal: "",
         tipoModal: 0,
@@ -2729,7 +2730,24 @@ function Embarque(props) {
             showSuccess("Hubo un problema al tratar de generar la guia.")
         }
     }
-
+    function esEntregaSucursal(aplicaEntrega){
+        if(aplicaEntrega){
+        setState({
+            ...state,
+            aplicaEntrega:aplicaEntrega,
+            entregaEnSucursal:true,
+            deshabilitarDiferenteDomicilio:true,
+            diferenteEntrega:false
+        })}
+        else{
+            setState({
+                ...state,
+                aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:false,
+                deshabilitarDiferenteDomicilio:false
+            })}  
+        
+      }
     return (
         <div>
 
@@ -3645,6 +3663,7 @@ function Embarque(props) {
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
                                                                         seCalculaTarifa={seCalculaTarifa}
+                                                                        soloEntregaSucursal={esEntregaSucursal}
                                                                         entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                       
                                                                     />
