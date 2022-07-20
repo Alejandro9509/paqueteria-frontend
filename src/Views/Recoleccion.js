@@ -284,7 +284,8 @@ function Recoleccion() {
         tipoCobro: '',
         clientePaga: {},
         observaciones: '',
-
+        aplicaEntrega:false,
+        deshabilitarDiferenteDomicilio:false,
         //Paquetes/Sobres
         countPaquetes: 1,
         countSobres: 1,
@@ -1731,7 +1732,6 @@ function Recoleccion() {
 
                 //Recoleccion
                 diferenteRecoleccion: false,
-
                 //Operador
                 operador: '',
                 tipoUnidad: '',
@@ -2971,6 +2971,24 @@ function Recoleccion() {
     function validarErrores(errores) {
         setErrores(errores)
     }
+    function esEntregaSucursal(aplicaEntrega){
+        if(aplicaEntrega){
+        setState({
+            ...state,
+            aplicaEntrega:aplicaEntrega,
+            entregaEnSucursal:true,
+            deshabilitarDiferenteDomicilio:true,
+            diferenteEntrega:false
+        })}
+        else{
+            setState({
+                ...state,
+                aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:false,
+                deshabilitarDiferenteDomicilio:false
+            })}  
+        
+      }
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -3964,6 +3982,7 @@ function Recoleccion() {
                                                                     dataPadreConsulta={dataRecoleccionConsulta}
                                                                     limpiarRemDes={limpiarRemDes}
                                                                     seCalculaTarifa={seCalculaTarifa}
+                                                                    soloEntregaSucursal={esEntregaSucursal}
                                                                     entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                 />
                                                             }
@@ -3974,7 +3993,7 @@ function Recoleccion() {
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
                                                                                 className="form-control"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.deshabilitarDiferenteDomicilio}
                                                                                 // value={state.diferenteEntrega}
                                                                                 checked={state.diferenteEntrega}
                                                                                 type="checkbox"
@@ -3998,13 +4017,30 @@ function Recoleccion() {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{ height: "20px" }}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.deshabilitarDiferenteDomicilio}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i />
                                                                         </label>
-                                                                    </div></div>
+                                                                       
+                                                                    </div>
+                                                                </div>
+                                                                    
+                                                                    <div className="col-sm-7" style={{
+                                                                            position: "relative",
+                                                                            marginBottom: "15px",
+                                                                            borderStyle: "ridge",
+                                                                            borderColor: "red",
+                                                                            padding: "3px",
+                                                                            width:"auto"
+                                                                    }} >
+                                                                        {state.aplicaEntrega &&
+                                                                        <div style={{marginTop:"10px"}}>No se realizará entrega de última milla</div>}
+                                                                    </div>
                                                             </div>
+
+                                                                
+
                                                         </div>
                                                     </div>
                                                 </div>
