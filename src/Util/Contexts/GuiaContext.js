@@ -102,11 +102,11 @@ function cambiarTipoCobro(idGuia, tipoCobro) {
     return result
 }
 
-function cambiarEstatusGuia(idGuia, estatus) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/CambiarEstatusGuia/${idGuia}/${estatus}`;
+function cambiarEstatusGuia(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/CambiarEstatusGuia`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
