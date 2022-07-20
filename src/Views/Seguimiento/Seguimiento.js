@@ -168,6 +168,12 @@ class Seguimiento extends Component {
                                         })) : []} format="hh:mm a"/>
 
                                     </div>
+                                  <div>
+                                    <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
+                                    <Typography variant={"h4"} align={"center"}>Evidencias</Typography>
+                                    </div>
+                                    </div>
+                                    
                                 </Grid>
                                 <Grid item md={6}>
                                     <div style={{
