@@ -33,7 +33,7 @@ function eliminarZonaOperativa(id, idEliminadoPor) {
 
 
 function obtenerListadoZonaOperativa() {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaOperativa/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -58,7 +58,7 @@ function obtenerListadoZonaOperativaByOrigenDestino(id) {
 }
 
 function obtenerByIdZonaOperativa(id) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaOperativa/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
