@@ -4026,7 +4026,7 @@ function Recoleccion() {
                                                                     </div>
                                                                 </div>
                                                                     
-                                                                    <div className="col-sm-7" style={{
+                                                                   {  state.aplicaEntrega && <><div className="col-sm-7" style={{
                                                                             position: "relative",
                                                                             marginBottom: "15px",
                                                                             borderStyle: "ridge",
@@ -4034,9 +4034,10 @@ function Recoleccion() {
                                                                             padding: "3px",
                                                                             width:"auto"
                                                                     }} >
-                                                                        {state.aplicaEntrega &&
-                                                                        <div style={{marginTop:"10px"}}>No se realizará entrega de última milla</div>}
-                                                                    </div>
+                                                                      
+                                                                        <div style={{marginTop:"10px"}}>No se realizará entrega de última milla</div>
+                                                                      
+                                                                    </div>  </>}
                                                             </div>
 
                                                                 
