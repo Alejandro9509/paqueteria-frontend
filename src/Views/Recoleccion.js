@@ -1274,8 +1274,11 @@ function Recoleccion() {
             return {
                 ...recoleccionDD,
                 idPais: respuesta.data.m_nIdPaisRecoleccion || 0,
+                pais: respuesta.data.m_sPaisRecoleccion || 0,
                 idEstado: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                estado: respuesta.data.m_sEstadoRecoleccion || '',
                 idMunicipio: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                municipio: respuesta.data.m_sMunicipioRecoleccion || '',
                 codigoPostal: {
                     m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
                     m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
