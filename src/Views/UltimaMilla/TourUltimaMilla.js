@@ -142,7 +142,7 @@ class TourUltimaMilla extends Component {
                                                 g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
                                                 <Grid item md={12}>
                                                     <div align={"center"}>
-                                                        <img style={{width: "80px", height: "80px"}}
+                                                        <img style={{width: "80px", height: "80px",transform:"rotate(90deg)"}}
                                                              src={`data:image/jpeg;base64,${g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
                                                     </div>
                                                 </Grid>
