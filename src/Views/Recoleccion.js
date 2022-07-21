@@ -1274,7 +1274,7 @@ function Recoleccion() {
             return {
                 ...recoleccionDD,
                 idPais: respuesta.data.m_nIdPaisRecoleccion || 0,
-                pais: respuesta.data.m_sPaisRecoleccion || 0,
+                pais: respuesta.data.m_sPaisRecoleccion || '',
                 idEstado: respuesta.data.m_nIdEstadoRecoleccion || 0,
                 estado: respuesta.data.m_sEstadoRecoleccion || '',
                 idMunicipio: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,

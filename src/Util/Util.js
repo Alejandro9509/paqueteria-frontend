@@ -279,11 +279,11 @@ export function getAddressFormated(calle, numeroExterior, numeroInterior, coloni
     if (colonia){
         addressComplete += ","+colonia
     }
-    if (ciudad){
-        addressComplete += ","+ciudad
-    }
     if (codigoPostal){
         addressComplete += ","+codigoPostal
+    }
+    if (ciudad){
+        addressComplete += ","+ciudad
     }
     if (estado){
         addressComplete += ","+estado

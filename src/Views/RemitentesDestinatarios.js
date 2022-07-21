@@ -383,6 +383,7 @@ function RemitenteDestinatario(props) {
           m_sCP: respuesta.data.m_sCodigoPostalDestinatario,
           m_sColonia: respuesta.data.m_sColoniaDestinatario ? respuesta.data.m_sColoniaDestinatario : respuesta.data.m_sLocalidadDestinatario
         },
+        paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
