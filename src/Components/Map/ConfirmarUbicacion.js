@@ -26,6 +26,7 @@ import {
 } from "../../Util/Contexts/UltimaMillaContext";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import {getAddressFormated} from "../../Util/Util";
 
 class ConfirmarUbicacion extends Component {
     constructor(props) {
@@ -76,12 +77,28 @@ class ConfirmarUbicacion extends Component {
                 })
 
             } else {//en cambio si esta haciendo entrega al destinatario normal tomara sus valores
-                let municipio = this.props.direccion.municipioTexto;
+                /*let municipio = this.props.direccion.municipioTexto;
                 let calle = this.props.direccion.calleDestinatario;
                 let colonia = this.props.direccion.coloniaDestinatario;
                 let numeroExterior = this.props.direccion.numeroExtDestinatario
                 let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
                 searchLocationGuia(`${municipio}`,`${calle} ${colonia}`,`${codigoPostal}`).then(data => {
+                    this.setState({
+                        coordenadas: {lat: data.y, lng: data.x}
+                    })
+                    this.state.map.setView([data.y, data.x], 18)
+                })*/
+                searchLocationGuiav2(
+                    this.props.direccion.calle,
+                    this.props.direccion.numeroExterior,
+                    this.props.direccion.numeroInterior,
+                    this.props.direccion.colonia,
+                    this.props.direccion.ciudad,
+                    this.props.direccion.codigoPostal,
+                    this.props.direccion.estado,
+                    this.props.direccion.pais,
+                    this.props.direccion.direccionCompleta,
+                    ).then(data => {
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
                     })
@@ -179,7 +196,17 @@ class ConfirmarUbicacion extends Component {
                                         +`${this.props.direccion.ciudad?','+this.props.direccion.ciudad:''}`
                                         +`${this.props.direccion.estado?','+this.props.direccion.estado:''}`
                                         +`${this.props.direccion.pais?','+this.props.direccion.pais:''}`)
-                                    : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilio : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
+                                    : (this.props.esDiferenteEntrega ?
+                                        this.props.entregaDD.domicilio
+                                        : /*(`${this.props.direccion.calle}`
+                                            +`${this.props.direccion.numeroExterior?','+this.props.direccion.numeroExterior:''}`
+                                            +`${this.props.direccion.colonia?','+this.props.direccion.colonia:''}`
+                                            +`${this.props.direccion.codigoPostal?','+this.props.direccion.codigoPostal:''}`
+                                            +`${this.props.direccion.ciudad?','+this.props.direccion.ciudad:''}`
+                                            +`${this.props.direccion.estado?','+this.props.direccion.estado:''}`
+                                            +`${this.props.direccion.pais?','+this.props.direccion.pais:''}`)*/
+                                        (`${this.props.direccion.direccionCompleta}`)
+                                    )}
                                 </Typography>
                             </Grid>
                         }

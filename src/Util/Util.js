@@ -264,3 +264,32 @@ export const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
+
+export function getAddressFormated(calle, numeroExterior, numeroInterior, colonia, ciudad, codigoPostal, estado, pais){
+    let addressComplete = "";
+    if (calle){
+        addressComplete += calle
+    }
+    if (numeroExterior){
+        addressComplete += ","+numeroExterior
+    }
+    /*if (numeroInterior){
+        addressComplete += ","+numeroInterior
+    }*/
+    if (colonia){
+        addressComplete += ","+colonia
+    }
+    if (ciudad){
+        addressComplete += ","+ciudad
+    }
+    if (codigoPostal){
+        addressComplete += ","+codigoPostal
+    }
+    if (estado){
+        addressComplete += ","+estado
+    }
+    if (pais){
+        addressComplete += ","+pais
+    }
+    return addressComplete
+}

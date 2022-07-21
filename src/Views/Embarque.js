@@ -12,7 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {getCurrentDateTime,validarDerecho} from "../Util/Util"
+import {getAddressFormated, getCurrentDateTime, validarDerecho} from "../Util/Util"
 import {
     ReactTable,
     useTable,
@@ -749,7 +749,9 @@ function Embarque(props) {
             numeroIntDestinatario: data.numeroInt,
             numeroExtDestinatario: data.numeroExt,
             coloniaDestinatario: data.colonia,
+            paisTexto: data.paisTexto,
             estadoDestinatario: data.estado,
+            estadoTexto: data.estadoTexto,
             municipioDestinatario: data.municipio,
             municipioTexto:data.municipioTexto,
             codigoPostalDestinatario: data.codigoPostal,
@@ -758,7 +760,6 @@ function Embarque(props) {
             contactoDestinatario: data.contacto,
             destinoDestinatario: data.destino,
             zonaOperativaDestinatario: data.zonaOperativa,
-            zonaTarifaDestinatario: data.zonaTarifa,
             latitudD: data.latitud,
             longitudD: data.longitud
         }))
@@ -2718,6 +2719,36 @@ function Embarque(props) {
         }
     }
 
+    const obtenerDatosDireccion = (esRecoleccion) => {
+        let esDiferenteDomicilio = state.diferenteEntrega
+        if (!esRecoleccion){
+            if (esDiferenteDomicilio){
+                return entregaDD
+            }else{
+                return {
+                    numeroInterior: destinatario.numeroIntDestinatario,
+                    numeroExterior: destinatario.numeroExtDestinatario,
+                    calle: destinatario.calleDestinatario,
+                    colonia: destinatario.coloniaDestinatario,
+                    ciudad: destinatario.municipioTexto,
+                    estado: destinatario.estadoTexto,
+                    pais: destinatario.paisTexto,
+                    codigoPostal: destinatario.codigoPostalDestinatario?.m_sCP,
+                    direccionCompleta: getAddressFormated(
+                        destinatario.calleDestinatario,
+                        destinatario.numeroExtDestinatario,
+                        destinatario.numeroIntDestinatario,
+                        destinatario.coloniaDestinatario,
+                        destinatario.codigoPostalDestinatario?.m_sCP,
+                        destinatario.municipioTexto,
+                        destinatario.estadoTexto,
+                        destinatario.paisTexto
+                    )
+                }
+            }
+        }
+    }
+
     return (
         <div>
 
@@ -2728,16 +2759,13 @@ function Embarque(props) {
                                     recoleccion={false}
                                     remitente={false}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
-                                    direccion={state.diferenteEntrega ? entregaDD :destinatario}
+                                    direccion={state.diferenteEntrega ? entregaDD : obtenerDatosDireccion(false)}
                                     dataMunicipiosEntregaDD={dataMunicipiosEntregaDD}
                                     entregaDD={entregaDD}
                                     esDiferenteEntrega={state.diferenteEntrega}
                                     esDiferenteDomicilio={state.diferenteEntrega}
                                     dataDiferenteDomicilio={entregaDD}
-                >
-                                   
-
-                </ConfirmarUbicacion>
+                />
             }
 
 

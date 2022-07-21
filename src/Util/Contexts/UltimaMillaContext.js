@@ -4,6 +4,7 @@ import axios from "axios";
 import Tour from "../../Views/UltimaMilla/Tour";
 import moment from "moment";
 import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
+import {getAddressFormated} from "../Util";
 
 const headers = API_HEADERS
 
@@ -249,9 +250,18 @@ async function searchLocationGuia(city, address, postalCode) {
     }
 }
 
-async function searchLocationGuiav2(calle, numeroExterior, numeroInterior, colonia, ciudad, codigoPostal, estado, pais) {
-    let addressComplete = "";
-    if (calle){
+async function searchLocationGuiav2(calle, numeroExterior, numeroInterior, colonia, ciudad, codigoPostal, estado, pais, direccionCompleta) {
+    let addressComplete = direccionCompleta ? direccionCompleta : getAddressFormated(
+        calle,
+        numeroExterior,
+        numeroInterior,
+        colonia,
+        codigoPostal,
+        ciudad,
+        estado,
+        pais,
+    );
+    /*if (calle){
         addressComplete += calle
     }
     if (numeroExterior){
@@ -274,7 +284,7 @@ async function searchLocationGuiav2(calle, numeroExterior, numeroInterior, colon
     }
     if (pais){
         addressComplete += ","+pais
-    }
+    }*/
     let location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
         + addressComplete + "&qq=postalCode=" + codigoPostal + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
 
