@@ -1686,8 +1686,11 @@ function Embarque(props) {
                     return {
                         ...entregaDD,
                         idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
+                        estado: respuesta.data.m_sEstadoEntrega || '',
                         idPais: respuesta.data.m_nIdPaisEntrega || 0,
+                        pais: respuesta.data.m_sPaisEntrega || '',
                         idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                        municipio: respuesta.data.m_sMunicipioEntrega || '',
                         domicilio: respuesta.data.m_sDomicilioDetalleEntrega,
                         detalles: respuesta.data.m_sEntregarEnDetalleEntrega,
                         datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleEntrega,

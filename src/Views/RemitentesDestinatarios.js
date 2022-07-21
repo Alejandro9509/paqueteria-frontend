@@ -253,6 +253,7 @@ function RemitenteDestinatario(props) {
         contacto: respuesta.data.m_sContactoDestinatario,
         latitud: "",
         longitud:  "",
+        paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
