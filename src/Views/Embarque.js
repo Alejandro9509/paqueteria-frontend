@@ -766,20 +766,12 @@ function Embarque(props) {
     };
 
     const [entregaDD, setEntregaDD] = useState({
-        /*estadoEnt: '',
-        municipioEnt: '',
-        codigoPostalEnt: '',
-        zonaOperativaEnt: '',
-        zonaTarifaEnt: '',
-        domicilioEnt: '',
-        entregarEnEnt: '',
-        datosAdicionalesEnt: '',
-        latitudEnt: '',
-        longitudEnt: '',
-*/
         idPais: '',
+        pais: '',
         idEstado: '',
+        estado: '',
         idMunicipio: '',
+        municipio: '',
         codigoPostal: '',
         zonaOperativa: '',
         domicilio: '',
@@ -791,20 +783,12 @@ function Embarque(props) {
 
     const resetEntregaDD = () =>{
         setEntregaDD({
-            /*estadoEnt: '',
-            municipioEnt: '',
-            codigoPostalEnt: '',
-            zonaOperativaEnt: '',
-            zonaTarifaEnt: '',
-            domicilioEnt: '',
-            datosAdicionalesEnt: '',
-            entregarEnEnt: '',
-            latitudEnt: '',
-            longitudEnt: '',
-*/
             idPais: '',
+            pais: '',
             idEstado: '',
+            estado: '',
             idMunicipio: '',
+            municipio: '',
             codigoPostal: '',
             zonaOperativa: '',
             domicilio: '',
@@ -824,36 +808,17 @@ function Embarque(props) {
         })
     }
 
-    const handleChangeEntregaDD = (event) => {
-        event.preventDefault();
-        setEntregaDD(entregaDD => {
-            return{
-                ...entregaDD,
-                [event.target.name]: event.target.value,
-            }
-        });
-        if (event.target.name === "estadoEnt"){
-            setRepetirConceptos(true)
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
-                setDataMunicipiosEntregaDD(data)
-            })
-        }
-        if (event.target.name === "municipioEnt") {
-            setRepetirConceptos(true)
-            /*obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoRec, event.target.value).then(({data}) => {
-                setDataCodigosPostalesEntregaDD(data)
-            })*/
-        }
-    };
-
     const handleOnChangeEntregaDD = (newValue) => {
         setRepetirConceptos(true)
         setEntregaDD(entregaDD => {
             return{
                 ...entregaDD,
                 idPais: newValue.idPais,
+                pais: newValue.pais,
                 idEstado: newValue.idEstado,
+                estado: newValue.estado,
                 idMunicipio: newValue.idMunicipio,
+                municipio: newValue.municipio,
                 codigoPostal: newValue.codigoPostal,
                 zonaOperativa: newValue.zonaOperativa,
                 domicilio: newValue.domicilio,
@@ -863,39 +828,6 @@ function Embarque(props) {
                 longitud: newValue.longitud,
             }
         });
-    }
-
-    const handleChangeAutocompleteEntregaDD = (input, newValue) => {
-        setRepetirConceptos(true)
-        setEntregaDD({
-            ...entregaDD,
-            [input]: newValue
-        })
-        if (input === "codigoPostalEnt"){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                if (data.length > 0){
-                    if (data.length === 1){
-                        setEntregaDD(entregaDD => {
-                            return {
-                                ...entregaDD,
-                                zonaOperativaEnt: data[0]
-                            }
-                        })
-                    }
-                    setDataZonasOperativasEntregaDD(data)
-                }else{
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaOperativaEnt: {}
-                        }
-                    })
-                }
-            })
-            /*obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                setDataZonasTarifaEntregaDD(data)
-            })*/
-        }
     }
 
     const getAllEstados = () => {
@@ -2723,7 +2655,26 @@ function Embarque(props) {
         let esDiferenteDomicilio = state.diferenteEntrega
         if (!esRecoleccion){
             if (esDiferenteDomicilio){
-                return entregaDD
+                return {
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: entregaDD.domicilio,
+                    colonia: '',
+                    ciudad: entregaDD.municipio,
+                    estado: entregaDD.estado,
+                    pais: entregaDD.pais,
+                    codigoPostal: entregaDD.codigoPostal?.m_sCP,
+                    direccionCompleta: getAddressFormated(
+                        entregaDD.domicilio,
+                        null,
+                        null,
+                        null,
+                        entregaDD.codigoPostal?.m_sCP,
+                        entregaDD.municipio,
+                        entregaDD.estado,
+                        entregaDD.pais
+                    )
+                }
             }else{
                 return {
                     numeroInterior: destinatario.numeroIntDestinatario,
@@ -2759,7 +2710,7 @@ function Embarque(props) {
                                     recoleccion={false}
                                     remitente={false}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
-                                    direccion={state.diferenteEntrega ? entregaDD : obtenerDatosDireccion(false)}
+                                    direccion={obtenerDatosDireccion(false)}
                                     dataMunicipiosEntregaDD={dataMunicipiosEntregaDD}
                                     entregaDD={entregaDD}
                                     esDiferenteEntrega={state.diferenteEntrega}

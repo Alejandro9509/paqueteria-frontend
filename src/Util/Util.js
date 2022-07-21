@@ -265,7 +265,7 @@ export const currencyFormatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
 });
 
-export function getAddressFormated(calle, numeroExterior, numeroInterior, colonia, ciudad, codigoPostal, estado, pais){
+export function getAddressFormated(calle, numeroExterior, numeroInterior, colonia, codigoPostal,ciudad,  estado, pais){
     let addressComplete = "";
     if (calle){
         addressComplete += calle
