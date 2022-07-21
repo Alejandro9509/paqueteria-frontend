@@ -46,42 +46,22 @@ class ConfirmarUbicacion extends Component {
         if (this.props.ultimaMilla) {
             return
         }
-
-        if(this.props.recoleccion){
-            searchLocationGuiav2(
-                this.props.direccion.calle,
-                this.props.direccion.numeroExterior,
-                this.props.direccion.numeroInterior,
-                this.props.direccion.colonia,
-                this.props.direccion.ciudad,
-                this.props.direccion.codigoPostal,
-                this.props.direccion.estado,
-                this.props.direccion.pais).then(data => {
-                this.setState({
-                    coordenadas: {lat: data.y, lng: data.x}
-                })
-                this.state.map.setView([data.y, data.x], 18)
+        searchLocationGuiav2(
+            null,
+            null,
+            null,
+            null,
+            null,
+            this.props.direccion.codigoPostal,
+            null,
+            null,
+            this.props.direccion.direccionCompleta,
+        ).then(data => {
+            this.setState({
+                coordenadas: {lat: data.y, lng: data.x}
             })
-    }
-        if (!this.props.recoleccion) {//Si es embarque
-            searchLocationGuiav2(
-                null,
-                null,
-                null,
-                null,
-                null,
-                this.props.direccion.codigoPostal,
-                null,
-                null,
-                this.props.direccion.direccionCompleta,
-            ).then(data => {
-                this.setState({
-                    coordenadas: {lat: data.y, lng: data.x}
-                })
-                this.state.map.setView([data.y, data.x], 18)
-            })
-        }
-
+            this.state.map.setView([data.y, data.x], 18)
+        })
 
     }
 
@@ -155,22 +135,14 @@ class ConfirmarUbicacion extends Component {
                         {!this.props.ultimaMilla &&
                             <Grid item sm={12}>
                                 <Typography
-                                    variant={"h2"}>{this.props.remitente ? "Remitente:" : "Destinatario:"} {this.props.recoleccion ? this.props.direccion.nombreRemitente : this.props.direccion.nombreDestinatario}</Typography>
+                                    variant={"h2"}>{this.props.remitente ? "Remitente:" : "Destinatario:"} {this.props.direccion.nombreLugar}</Typography>
                             </Grid>
                         }
 
                         {!this.props.ultimaMilla &&
                             <Grid item sm={12}>
                                 <Typography
-                                    variant={"h3"}>Dirección:{this.props.remitente ?
-                                    (`${this.props.direccion.calle}`
-                                        +`${this.props.direccion.numeroExterior?','+this.props.direccion.numeroExterior:''}`
-                                        +`${this.props.direccion.colonia?','+this.props.direccion.colonia:''}`
-                                        +`${this.props.direccion.codigoPostal?','+this.props.direccion.codigoPostal:''}`
-                                        +`${this.props.direccion.ciudad?','+this.props.direccion.ciudad:''}`
-                                        +`${this.props.direccion.estado?','+this.props.direccion.estado:''}`
-                                        +`${this.props.direccion.pais?','+this.props.direccion.pais:''}`)
-                                    : (`${this.props.direccion.direccionCompleta}`)}
+                                    variant={"h3"}>Dirección:{`${this.props.direccion.direccionCompleta}`}
                                 </Typography>
                             </Grid>
                         }

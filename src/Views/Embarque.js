@@ -2662,6 +2662,7 @@ function Embarque(props) {
         if (!esRecoleccion){
             if (esDiferenteDomicilio){
                 return {
+                    nombreLugar: destinatario.nombreDestinatario,
                     numeroInterior: '',
                     numeroExterior: '',
                     calle: entregaDD.domicilio,
@@ -2683,6 +2684,7 @@ function Embarque(props) {
                 }
             }else{
                 return {
+                    nombreLugar: destinatario.nombreDestinatario,
                     numeroInterior: destinatario.numeroIntDestinatario,
                     numeroExterior: destinatario.numeroExtDestinatario,
                     calle: destinatario.calleDestinatario,
@@ -2713,15 +2715,9 @@ function Embarque(props) {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    recoleccion={false}
                                     remitente={false}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
                                     direccion={obtenerDatosDireccion(false)}
-                                    dataMunicipiosEntregaDD={dataMunicipiosEntregaDD}
-                                    entregaDD={entregaDD}
-                                    esDiferenteEntrega={state.diferenteEntrega}
-                                    esDiferenteDomicilio={state.diferenteEntrega}
-                                    dataDiferenteDomicilio={entregaDD}
                 />
             }
 

@@ -29,7 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getCurrentDateTime, validarDerecho} from "../Util/Util"
+import {getAddressFormated, getCurrentDateTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -2917,6 +2917,7 @@ function Recoleccion() {
         if (esRecoleccion){
             if (esDiferenteDomicilio){
                 return {
+                    nombreLugar: remitente.nombreRemitente,
                     numeroInterior: '',
                     numeroExterior: '',
                     calle: recoleccionDD.domicilio,
@@ -2924,10 +2925,21 @@ function Recoleccion() {
                     ciudad: recoleccionDD.municipio,
                     estado: recoleccionDD.estado,
                     pais: recoleccionDD.pais,
-                    codigoPostal: recoleccionDD.codigoPostal?.m_sCP
+                    codigoPostal: recoleccionDD.codigoPostal?.m_sCP,
+                    direccionCompleta: getAddressFormated(
+                        recoleccionDD.domicilio,
+                        null,
+                        null,
+                        null,
+                        recoleccionDD.codigoPostal?.m_sCP,
+                        recoleccionDD.municipio,
+                        recoleccionDD.estado,
+                        recoleccionDD.pais
+                    )
                 }
             }else{
                 return {
+                    nombreLugar: remitente.nombreRemitente,
                     numeroInterior: remitente.numeroIntRemitente,
                     numeroExterior: remitente.numeroExtRemitente,
                     calle: remitente.calleRemitente,
@@ -2935,7 +2947,17 @@ function Recoleccion() {
                     ciudad: remitente.municipioTexto,
                     estado: remitente.estadoTexto,
                     pais: remitente.paisTexto,
-                    codigoPostal: remitente.codigoPostalRemitente?.m_sCP
+                    codigoPostal: remitente.codigoPostalRemitente?.m_sCP,
+                    direccionCompleta: getAddressFormated(
+                        remitente.calleRemitente,
+                        remitente.numeroExtRemitente,
+                        remitente.numeroIntRemitente,
+                        remitente.coloniaRemitente,
+                        remitente.codigoPostalRemitente?.m_sCP,
+                        remitente.municipioTexto,
+                        remitente.estadoTexto,
+                        remitente.paisTexto
+                    )
                 }
             }
         }
@@ -2945,15 +2967,10 @@ function Recoleccion() {
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
             {state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
-                                    dataMunicipiosRecoleccionDD={dataMunicipiosRecoleccionDD}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
                                     titulo={state.titulo}
-                                    recoleccion={true}
                                     remitente={true}
                                     direccion={obtenerDatosDireccion(true)}
-                                    esDiferenteRecoleccion={state.diferenteRecoleccion}
-                                    esDiferenteEntrega={state.diferenteEntrega}
-                                    recoleccionDD={recoleccionDD}
                 />
             }
             <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} fullWidth

@@ -251,42 +251,8 @@ async function searchLocationGuia(city, address, postalCode) {
 }
 
 async function searchLocationGuiav2(calle, numeroExterior, numeroInterior, colonia, ciudad, codigoPostal, estado, pais, direccionCompleta) {
-    let addressComplete = direccionCompleta ? direccionCompleta : getAddressFormated(
-        calle,
-        numeroExterior,
-        numeroInterior,
-        colonia,
-        codigoPostal,
-        ciudad,
-        estado,
-        pais,
-    );
-    /*if (calle){
-        addressComplete += calle
-    }
-    if (numeroExterior){
-        addressComplete += ","+numeroExterior
-    }
-    if (numeroInterior){
-        addressComplete += ","+numeroInterior
-    }
-    if (colonia){
-        addressComplete += ","+colonia
-    }
-    if (ciudad){
-        addressComplete += ","+ciudad
-    }
-    if (codigoPostal){
-        addressComplete += ","+codigoPostal
-    }
-    if (estado){
-        addressComplete += ","+estado
-    }
-    if (pais){
-        addressComplete += ","+pais
-    }*/
     let location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
-        + addressComplete + "&qq=postalCode=" + codigoPostal + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+        + direccionCompleta + "&qq=postalCode=" + codigoPostal + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
 
     if (location.data.items) {
         if (location.data.items.length !== 0) {
