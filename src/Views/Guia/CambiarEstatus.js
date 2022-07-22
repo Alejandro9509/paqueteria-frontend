@@ -172,7 +172,7 @@ function CambiarEstatus(props){
     const obtenerDatosDireccion = (esRecoleccion) => {
         if (!esRecoleccion){
             return {
-                // nombreLugar: destinatario.nombreDestinatario,
+                nombreLugar: props.guia.m_sNombreDestinatario,
                 numeroInterior: '',
                 numeroExterior: '',
                 calle: entregaDD.domicilio,
