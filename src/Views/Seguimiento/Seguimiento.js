@@ -15,6 +15,7 @@ import ConceptosFacturacionGuias from "../Tarifas/ConceptosFacturacionGuias";
 import {obtenerInformeFolioTipo} from "../../Util/Contexts/SeguimientoContext";
 import moment from "moment";
 import 'moment/locale/es';
+import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
 
 const events = [
     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
@@ -30,7 +31,10 @@ class Seguimiento extends Component {
         this.state = {
             folioBusqueda: "",
             tipoBusqueda: "3",
-            data:{}
+            data:{},
+            imagenesEvidenciaRecoleccion:[],
+            imagenesEvidenciaEmbarque:[],
+            esRecoleccion:false
         }
         this.handleChage = this.handleChage.bind(this)
         this.buscarAction = this.buscarAction.bind(this)
@@ -39,7 +43,7 @@ class Seguimiento extends Component {
 
 
     componentDidMount() {
-
+        
     }
 
     handleChage(e){
@@ -53,7 +57,15 @@ class Seguimiento extends Component {
     buscarAction(e) {
         e.preventDefault()
         obtenerInformeFolioTipo(this.state.folioBusqueda,this.state.tipoBusqueda).then(({data}) => {
-            this.setState({data: data})
+            obtenerImagenEvidencia(data.m_nId,1).then(respuestaRec=>{
+                obtenerImagenEvidencia(data.m_nId,0).then(respuestaEmb=>{
+                    this.setState({
+                        imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
+                        imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
+                        data: data
+                    })
+                })
+            })
         })
     }
     render() {
@@ -170,7 +182,42 @@ class Seguimiento extends Component {
                                     </div>
                                   <div>
                                     <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                                    <Typography variant={"h4"} align={"center"}>Evidencias</Typography>
+                                     <Grid container spacing={3}>
+                                     <Grid item md={12}>
+                                        <Typography variant={"h4"} align={"center"}>Evidencias</Typography>
+                                     </Grid>
+                                     
+                                     <Grid item md={6}>
+                                        <Typography variant={"h4"} align={"center"}>Recolección</Typography>
+                                     </Grid>
+                                     <Grid item md={6}>
+                                        <Typography variant={"h4"} align={"center"}>Embarque</Typography>
+                                     </Grid>
+                                    {
+
+                                    this.state.imagenesEvidenciaRecoleccion.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
+                                    <Grid item md={6}>
+                                        <div align={"center"}>
+                                            {/*Nombre, firma y foto*/}
+                                            <img style={{width: "180px", height: "180px",transform:"rotate(90deg)"}}
+                                                 src={`data:image/jpeg;base64,${ this.state.imagenesEvidenciaRecoleccion.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
+                                        </div>
+                                    </Grid>
+                                    
+                                    }
+                                       {
+
+                                        this.state.imagenesEvidenciaEmbarque.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
+                                        <Grid item md={6}>
+                                           <div align={"center"}>
+                                                {/*Nombre, firma y foto*/}
+                                                <img style={{width: "180px", height: "180px",transform:"rotate(90deg)"}}
+                                                     src={`data:image/jpeg;base64,${ this.state.imagenesEvidenciaEmbarque.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
+                                            </div>
+                                        </Grid>
+
+                                        }
+                                        </Grid>
                                     </div>
                                     </div>
                                     
