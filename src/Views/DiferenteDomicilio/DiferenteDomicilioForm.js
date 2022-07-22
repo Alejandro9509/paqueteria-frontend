@@ -65,7 +65,7 @@ export default function DiferenteDomicilioForm(props){
                     return{
                         ...state,
                         [event.target.name]: event.target.value,
-                        estado: props.dataEstados.find(i => i.m_nIdEstado === event.target.value)?.m_sEstado,
+                        estado: props.listadoEstadosLocal ? dataEstados.find(i => i.m_nIdEstado === event.target.value)?.m_sEstado : props.dataEstados.find(i => i.m_nIdEstado === event.target.value)?.m_sEstado,
                         idMunicipio: null,
                         municipio: null,
                         codigoPostal: null,

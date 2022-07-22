@@ -15,6 +15,7 @@ import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {cambiarEstatusGuia} from "../../Util/Contexts/GuiaContext";
 import Noty from "noty";
+import {getAddressFormated} from "../../Util/Util";
 
 
 function showSuccess(mensaje) {
@@ -26,89 +27,6 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-class MyComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            estatusGuia:''
-        }
-    }
-
-    componentWillMount() {
-
-    }
-
-
-    render() {
-        return (
-            <Dialog open={this.props.open} onClose={() => this.props.close()} maxWidth={"md"} fullWidth>
-                <DialogTitle>
-                    <Typography variant={"h3"}>Cambiar Estatus</Typography>
-                </DialogTitle>
-                <form onSubmit={(e) => {e.preventDefault();this.props.submit(this.state.estatusGuia)}}>
-                    <DialogContent>
-                        <label className="input select" style={{width: "100%"}}>
-                            <FormControl fullWidth variant="outlined"
-                                         margin="dense">
-                                <InputLabel id="idEstatusGuiaLabel"> Estatus de la
-                                    Guia</InputLabel>
-                                <Select
-                                    labelId="idEstatusGuiaLabel"
-                                    label="Estatus de la Guia"
-                                    className="form-control"
-                                    required
-                                    onChange={(e) =>  this.setState({estatusGuia: e.target.value})}
-                                    id="idEstatusGuia"
-                                    name="idEstatusGuia"
-                                    read="true"
-                                    value={this.state.idEstatusGuia}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                >
-                                    {this.props.dataEstatusGuia.filter(i => i.m_nIdEstatusGuia === 14).map(
-                                        (estatusGuia) => {
-                                            if (this.props.guia?.EntregaEnSucursal){
-                                                return (
-                                                    <MenuItem
-                                                        key={estatusGuia.m_nIdEstatusGuia}
-                                                        value={estatusGuia.m_nIdEstatusGuia}>
-                                                        {estatusGuia.m_sEstatus}
-                                                    </MenuItem>
-                                                )
-                                            }else{
-                                                return null
-                                            }
-                                        }
-                                    )}
-                                </Select>
-                            </FormControl>
-                        </label>
-                        {/*<DiferenteDomicilioForm
-                            value={entregaDD}
-                            onChange={handleOnChangeEntregaDD}
-                            disabled={false}
-                            requiered={false}
-                            listadoEstadosLocal={true}
-                        />*/}
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => this.props.close()}>
-                            Cancelar
-                        </Button>
-                        <Button type={"submit"} onClick={() => this.props.close()}>
-                            Aceptar
-                        </Button>
-                    </DialogActions>
-                </form>
-
-            </Dialog>
-        );
-    }
-}
-
-MyComponent.propTypes = {};
-
 export default CambiarEstatus;
 
 function CambiarEstatus(props){
@@ -116,8 +34,11 @@ function CambiarEstatus(props){
 
     const [entregaDD, setEntregaDD] = useState({
         idPais: '',
+        pais: '',
         idEstado: '',
+        estado: '',
         idMunicipio: '',
+        municipio: '',
         codigoPostal: '',
         zonaOperativa: '',
         domicilio: '',
@@ -137,8 +58,11 @@ function CambiarEstatus(props){
             return{
                 ...entregaDD,
                 idPais: newValue.idPais,
+                pais: newValue.pais,
                 idEstado: newValue.idEstado,
+                estado: newValue.estado,
                 idMunicipio: newValue.idMunicipio,
+                municipio: newValue.municipio,
                 codigoPostal: newValue.codigoPostal,
                 zonaOperativa: newValue.zonaOperativa,
                 domicilio: newValue.domicilio,
@@ -160,8 +84,11 @@ function CambiarEstatus(props){
     const resetEntregaDD = () =>{
         setEntregaDD({
             idPais: '',
+            pais: '',
             idEstado: '',
+            estado: '',
             idMunicipio: '',
+            municipio: '',
             codigoPostal: '',
             zonaOperativa: '',
             domicilio: '',
@@ -211,6 +138,7 @@ function CambiarEstatus(props){
     const onSubmit = (e) => {
         e.preventDefault()
         if ((!entregaDD.latitud) || (!entregaDD.longitud)){
+            showSuccess("Confirme el punto de entrega con el mapa, presionando el botón CONFIRMAR UBICACION.")
             return
         }
         let params = {}
@@ -241,24 +169,42 @@ function CambiarEstatus(props){
 
     }
 
+    const obtenerDatosDireccion = (esRecoleccion) => {
+        if (!esRecoleccion){
+            return {
+                // nombreLugar: destinatario.nombreDestinatario,
+                numeroInterior: '',
+                numeroExterior: '',
+                calle: entregaDD.domicilio,
+                colonia: '',
+                ciudad: entregaDD.municipio,
+                estado: entregaDD.estado,
+                pais: entregaDD.pais,
+                codigoPostal: entregaDD.codigoPostal?.m_sCP,
+                direccionCompleta: getAddressFormated(
+                    entregaDD.domicilio,
+                    null,
+                    null,
+                    null,
+                    entregaDD.codigoPostal?.m_sCP,
+                    entregaDD.municipio,
+                    entregaDD.estado,
+                    entregaDD.pais
+                )
+            }
+        }
+    }
+
     return (
         <>
             {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={"entrega"}
-                                    recoleccion={false}
                                     remitente={false}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
-                                    direccion={entregaDD}
-                                    dataMunicipiosEntregaDD={dataMunicipios}
-                                    entregaDD={entregaDD}
-                                    esDiferenteDomicilio={true}
-                                    esDiferenteEntrega={true}
-                >
-
-
-                </ConfirmarUbicacion>
+                                    direccion={obtenerDatosDireccion(false)}
+                />
             }
             <Dialog open={props.open} onClose={() => {
                 resetData()
