@@ -124,7 +124,7 @@ class PaquetesList extends Component {
 
     render() {
         const {classes} = this.props;
-        const isSelected = (row) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row) != null;
+        const isSelected = (row, esRecoleccion) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row && u.m_bEsRecoleccion === esRecoleccion) != null;
 
 
         return (
@@ -254,7 +254,7 @@ class PaquetesList extends Component {
                     <TableBody>
                         {
                             this.stableSort(this.state.paquetes, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
-                                const isItemSelected = isSelected(u.m_nId);
+                                const isItemSelected = isSelected(u.m_nId, u.m_bEsRecoleccion);
                                 const labelId = `enhanced-table-checkbox-${index}`;
                                 return (
                                     <TableRow>

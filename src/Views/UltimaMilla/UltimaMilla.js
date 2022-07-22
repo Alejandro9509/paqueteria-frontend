@@ -236,7 +236,7 @@ class UltimaMilla extends Component {
     async generarRuta(data) {
         console.log(data)
         this.setState({tour: null})
-        if (data.paquetesSeleccionadas.length !== 0 || data.unidadesSeleccionadas.length !== 0) {
+        if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
             let unidadYaAsignada = false
             let varible
@@ -280,11 +280,11 @@ class UltimaMilla extends Component {
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
                     if (results) {
-                        if (results.vehicleIdsNotPlanned) {
+                        /*if (results.vehicleIdsNotPlanned) {
                             if (results.vehicleIdsNotPlanned.length > 0) {
                                 unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
                             }
-                        }
+                        }*/
                         results.tours.map(t => t.color = randomColor(10))
 
                         console.log(guias)
@@ -416,8 +416,8 @@ class UltimaMilla extends Component {
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
                                 <TileLayer style={{width: "100%", height: "100%"}}
-                                           url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
-                                           token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
+                                           url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/reduced.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
+                                           token={process.env.REACT_APP_HERE_API_TOEKN}
                                 />
                                 {
                                     !this.state.fullScreen &&
