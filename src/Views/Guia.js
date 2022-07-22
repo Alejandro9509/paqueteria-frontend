@@ -92,6 +92,7 @@ import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
 import ImprimirEtiquetas2 from "./Guia/ImprimirEtiquetas2";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
+import Evidencias from "./Evidencias";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -3053,7 +3054,11 @@ function Guia(props) {
                                         </div>
 
                                     </div>
-
+                                    {state.agregar === "Consultar" || state.agregar === "Modificar"? 
+                                    <div className="row">
+                                      <Evidencias esRecoleccion={0} idGuia={state.idGuia}/> 
+                                    </div> :""
+                                   }
                                     <div className="form-footer col-md-12">
 
                                         {/*<button

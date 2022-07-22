@@ -106,6 +106,7 @@ import Filtros from "./Filtros/Filtros";
 import Citas from "./Citas/Citas";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
+import Evidencias from "./Evidencias";
 
 let timer;
 
@@ -4163,6 +4164,9 @@ function Recoleccion() {
                                                    }))} />
                                     </div>
 
+                                                    <div classNae="row">
+                                                   <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion}/>
+                                                    </div>
                                     <div className="form-footer ol-md-12">
                                     <Grid container spacing={1}>
                                         <Grid item xs>

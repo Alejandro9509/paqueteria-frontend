@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import {
+    Box,
     Button,
     Checkbox, FormControlLabel, FormGroup, FormLabel, Grid, Radio, RadioGroup, TextField, Typography
 } from "@material-ui/core";
@@ -188,35 +189,45 @@ class Seguimiento extends Component {
                                      </Grid>
                                      
                                      <Grid item md={6}>
-                                        <Typography variant={"h4"} align={"center"}>Recolección</Typography>
-                                     </Grid>
-                                     <Grid item md={6}>
-                                        <Typography variant={"h4"} align={"center"}>Embarque</Typography>
-                                     </Grid>
+                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" alignItems="center">
+                                    <Typography variant={"h4"} >Recolección</Typography> 
                                     {
-
+                                    this.state.imagenesEvidenciaRecoleccion.length == 0?
+                                     <Typography variant={"h5"} style={{margin:"20%"}}>No hay evidencias</Typography>:
                                     this.state.imagenesEvidenciaRecoleccion.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
                                     <Grid item md={6}>
-                                        <div align={"center"}>
+                                        <div>
                                             {/*Nombre, firma y foto*/}
-                                            <img style={{width: "180px", height: "180px",transform:"rotate(90deg)"}}
+                                            <img style={{width: "180px", height: "180px",transform:"rotate(90deg)",margin: "0 0 0 -10px"}}
                                                  src={`data:image/jpeg;base64,${ this.state.imagenesEvidenciaRecoleccion.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
                                         </div>
                                     </Grid>
                                     
                                     }
-                                       {
+                                     </Box>
+                                        
+                                     </Grid>
+                                     <Grid item md={6}>
+                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"  alignItems="center">
+                                        <Typography variant={"h4"}>Embarque</Typography> 
+                                         {
+                                         this.state.imagenesEvidenciaEmbarque.length == 0?
+                                            <Typography variant={"h5"} >No hay evidencias</Typography>:
 
                                         this.state.imagenesEvidenciaEmbarque.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
                                         <Grid item md={6}>
-                                           <div align={"center"}>
+                                           <div>
                                                 {/*Nombre, firma y foto*/}
-                                                <img style={{width: "180px", height: "180px",transform:"rotate(90deg)"}}
+                                                <img style={{width: "180px", height: "180px",transform:"rotate(90deg)",margin: "0 0 0 -10px"}}
                                                      src={`data:image/jpeg;base64,${ this.state.imagenesEvidenciaEmbarque.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
                                             </div>
                                         </Grid>
 
                                         }
+                                        </Box>
+                                     </Grid>
+                                   
+                                     
                                         </Grid>
                                     </div>
                                     </div>
