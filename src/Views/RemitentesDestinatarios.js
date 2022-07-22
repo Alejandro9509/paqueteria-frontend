@@ -158,6 +158,7 @@ function RemitenteDestinatario(props) {
         numeroExt: respuesta.data.m_sNoExtRemitente,
         colonia: respuesta.data.m_sColoniaRemitente,
         codigoPostal: {
+          m_nIdCP: respuesta.data.m_sIdCodigoPostalRemitente,
           m_sCP: respuesta.data.m_sCodigoPostalRemitente || "No especificado",
           m_sColonia: respuesta.data.m_sColoniaRemitente || "No especificado",
         },
@@ -243,6 +244,7 @@ function RemitenteDestinatario(props) {
         municipio: respuesta.data.m_nIdCiudadDestinatario,
         municipioTexto: respuesta.data.m_sMunicipioDestinatario,
         codigoPostal: {
+          m_nIdCP: respuesta.data.m_sIdCodigoPostalDestinatario,
           m_sCP: respuesta.data.m_sCodigoPostalDestinatario || "No especificado",
           m_sColonia: respuesta.data.m_sColoniaDestinatario || "No especificado",
         },
@@ -574,6 +576,7 @@ if(input=="codigoPostal"){
               domicilio: row.data.m_sDomicilio || "No especificado",
               codigoPostal:
                   {
+                    m_nIdCP: row.data.m_nIdCP,
                     m_sCP: row.data.m_sCodigoPostal,
                     m_sColonia: row.data.m_sColonia || "No especificado",
                   },

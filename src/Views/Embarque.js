@@ -1015,10 +1015,10 @@ function Embarque(props) {
             showSuccess("El remitente es un dato requerido");
             return valid;
         }
-        /*if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
             showSuccess("El cÓdigo postal del remitente es un dato requerido");
             return valid;
-        }*/
+        }
         if(!esDatoValido(remitente.correoRemitente)){
             showSuccess("El correo del remitente es un dato requerido")
             return valid;
@@ -1033,10 +1033,10 @@ function Embarque(props) {
             showSuccess("El destinatario es un dato requerido");
             return valid;
         }
-        /*if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
             showSuccess("El código postal del destinatario es un dato requerido");
             return valid;
-        }*/
+        }
         if(!esDatoValido(destinatario.correoDestinatario)){
             showSuccess("El correo del destinatario es un dato requerido")
             return valid;
