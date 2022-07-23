@@ -138,21 +138,12 @@ class ConfirmarUbicacion extends Component {
                                     variant={"h2"}>{this.props.remitente ? "Remitente:" : "Destinatario:"} {this.props.direccion.nombreLugar}</Typography>
                             </Grid>
                         }
+                        <Grid item sm={12}>
+                            <Typography
+                                variant={"h3"}>Dirección:{`${this.props.direccion.direccionCompleta}`}
+                            </Typography>
+                        </Grid>
 
-                        {!this.props.ultimaMilla &&
-                            <Grid item sm={12}>
-                                <Typography
-                                    variant={"h3"}>Dirección:{`${this.props.direccion.direccionCompleta}`}
-                                </Typography>
-                            </Grid>
-                        }
-                        {this.props.ultimaMilla &&
-                            <Grid item sm={12}>
-                                <Typography
-                                    variant={"h3"}>Dirección: {this.props.remitente ? this.props.direccion.domicilioRemitente : this.props.direccion.domicilioDestinatario}
-                                </Typography>
-                            </Grid>
-                        }
                         <br/>
                         <br/>
                         <Grid item sm={12}> 
