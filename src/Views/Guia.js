@@ -1974,7 +1974,7 @@ function Guia(props) {
                             </li>
 
                         <li>
-                            <a className={((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) && state.cambioCobro && validarDerecho(9101459)) ? "" : classes.disabled}
+                            <a className={((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) && validarDerecho(9101459)) ? "" : classes.disabled}
                                onClick={() => {
                                    getAllDataEstatusGuia()
                                    setState({...state, openCambiarEstatus: true})
