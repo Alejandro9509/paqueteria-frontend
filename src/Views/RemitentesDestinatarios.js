@@ -73,6 +73,7 @@ function RemitenteDestinatario(props) {
     colonia: "",
     estado: "",
     estadoTexto: "",
+    paisTexto: "",
     municipio: "",
     municipioTexto: "",
     codigoPostal: "",
@@ -127,6 +128,7 @@ function RemitenteDestinatario(props) {
     colonia: "",
     estado: "",
     estadoTexto: "",
+    paisTexto: "",
     municipio: "",
     municipioTexto: "",
     codigoPostal: "",
@@ -253,6 +255,7 @@ function RemitenteDestinatario(props) {
         contacto: respuesta.data.m_sContactoDestinatario,
         latitud: "",
         longitud:  "",
+        paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
@@ -383,6 +386,7 @@ function RemitenteDestinatario(props) {
           m_sCP: respuesta.data.m_sCodigoPostalDestinatario,
           m_sColonia: respuesta.data.m_sColoniaDestinatario ? respuesta.data.m_sColoniaDestinatario : respuesta.data.m_sLocalidadDestinatario
         },
+        paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
@@ -605,6 +609,7 @@ if(input=="codigoPostal"){
               destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
               openDialog: false,
               zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+              paisTexto: row.data.m_sPais
             }));
 
             if (zonaOperativa.data.length === 0){

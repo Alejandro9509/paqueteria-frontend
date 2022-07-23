@@ -63,8 +63,8 @@ import {
     enviarCorreoCFDIViaje
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
-import {validarDerecho} from "../../Util/Util";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {getAddressFormated, validarDerecho} from "../../Util/Util";
 
 function showError(mensaje) {
     new Noty({
@@ -282,7 +282,7 @@ class DetalleParadas extends Component {
     }
     confirmUbicacionParada(id,esRecoleccion, data) {
 
-        const domicilioRecoleccion = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
+        /*const domicilioRecoleccion = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
         const domicilioEntrega = data.m_bEntregaDiferenteDomicilio ? data.m_sDomicilioDetalleEntrega : data.m_sDomicilioDestinatario
 
         const direccion = esRecoleccion ?
@@ -306,7 +306,101 @@ class DetalleParadas extends Component {
                 numeroIntDestinatario: data.m_bEntregaDiferenteDomicilio ? '' : '',
                 codigoPostalDestinatario: data.m_bEntregaDiferenteDomicilio ? {m_sCP: ''} : {m_sCP: data.m_sCodigoPostalDestinatario},
                 domicilioDestinatario: domicilioEntrega,
+            }*/
+        let direccion = '';
+        if (esRecoleccion){
+            if (data.m_bRecoleccionDiferenteDomicilio){
+                direccion = {
+                    nombreLugar: data.m_sNombreRemitente,
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: data.m_sDomicilioDetalleRecoleccion,
+                    colonia: '',
+                    ciudad: data.m_sMunicipioRemitente,
+                    estado: data.m_sEstadoRecoleccion,
+                    pais: data.m_sPaisRecoleccion,
+                    codigoPostal: '',
+                    direccionCompleta: getAddressFormated(
+                        data.m_sDomicilioDetalleRecoleccion,
+                        null,
+                        null,
+                        null,
+                        null,
+                        data.m_sMunicipioRemitente,
+                        data.m_sEstadoRecoleccion,
+                        data.m_sPaisRecoleccion
+                    )
+                }
+            }else{
+                direccion = {
+                    nombreLugar: data.m_sNombreRemitente,
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: data.m_sCalleRemitente,
+                    colonia: data.m_sColoniaRemitente,
+                    ciudad: data.m_sMunicipioRemitente,
+                    estado: data.m_sEstadoRemitente,
+                    pais: data.m_sPaisRemitente,
+                    codigoPostal: data.m_sCodigoPostalRemitente,
+                    direccionCompleta: getAddressFormated(
+                        data.m_sCalleRemitente,
+                        '',
+                        '',
+                        data.m_sColoniaRemitente,
+                        data.m_sCodigoPostalRemitente,
+                        data.m_sMunicipioRemitente,
+                        data.m_sEstadoRemitente,
+                        data.m_sPaisRemitente
+                    )
+                }
             }
+        }else{
+            if (data.m_bEntregaDiferenteDomicilio){
+                direccion = {
+                    nombreLugar: data.m_sNombreDestinatario,
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: data.m_sDomicilioDetalleEntrega,
+                    colonia: '',
+                    ciudad: data.m_sMunicipioEntrega,
+                    estado: data.m_sEstadoEntrega,
+                    pais: data.m_sPaisEntrega,
+                    codigoPostal: '',
+                    direccionCompleta: getAddressFormated(
+                        data.m_sDomicilioDetalleEntrega,
+                        null,
+                        null,
+                        null,
+                        null,
+                        data.m_sMunicipioEntrega,
+                        data.m_sEstadoEntrega,
+                        data.m_sPaisEntrega
+                    )
+                }
+            }else{
+                direccion = {
+                    nombreLugar: data.m_sNombreDestinatario,
+                    numeroInterior: null,
+                    numeroExterior: null,
+                    calle: data.m_sCalleDestinatario,
+                    colonia: data.m_sColoniaDestinatario,
+                    ciudad: data.m_sMunicipioDestinatario,
+                    estado: data.m_sEstadoDestinatario,
+                    pais: data.m_sPaisDestinatario,
+                    codigoPostal: data.m_sCodigoPostalDestinatario,
+                    direccionCompleta: getAddressFormated(
+                        data.m_sCalleDestinatario,
+                        null,
+                        null,
+                        data.m_sColoniaDestinatario,
+                        data.m_sCodigoPostalDestinatario,
+                        data.m_sMunicipioDestinatario,
+                        data.m_sEstadoDestinatario,
+                        data.m_sPaisDestinatario
+                    )
+                }
+            }
+        }
        this.setState({
            titulo: 'parada',
            showConfirmarUbicacion: true,

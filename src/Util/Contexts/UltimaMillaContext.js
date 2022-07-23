@@ -4,6 +4,7 @@ import axios from "axios";
 import Tour from "../../Views/UltimaMilla/Tour";
 import moment from "moment";
 import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
+import {getAddressFormated} from "../Util";
 
 const headers = API_HEADERS
 
@@ -237,6 +238,21 @@ async function searchLocationGuia(city, address, postalCode) {
     var addressComplete = address + ", " + city
     var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
         + addressComplete + "&qq=postalCode=" + postalCode + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
+        } else {
+            return {x: 0.0, y: 0.0}
+        }
+    } else {
+        return {x: 0.0, y: 0.0}
+    }
+}
+
+async function searchLocationGuiav2(calle, numeroExterior, numeroInterior, colonia, ciudad, codigoPostal, estado, pais, direccionCompleta) {
+    let location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+        + direccionCompleta + "&qq=postalCode=" + codigoPostal + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
 
     if (location.data.items) {
         if (location.data.items.length !== 0) {
@@ -570,7 +586,8 @@ export {
     searchAdressWithCoordinates,
     validarUnidadesSeleccionadas,
     validarUnidadOcupada,
-    searchLocationGuia
+    searchLocationGuia,
+    searchLocationGuiav2
 }
 
 
