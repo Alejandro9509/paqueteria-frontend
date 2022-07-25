@@ -271,13 +271,26 @@ function searchAdressWithCoordinates(x, y) {
 }
 
 function searchLocationWeb(city, address, subdistrict, number, code) {
-    var result;
-    var addressComplete = address + ", " + subdistrict + ", " + city
-
+    let arrayAddress = []
+    if (address){
+        arrayAddress.push(address)
+    }
+    if (subdistrict){
+        arrayAddress.push(subdistrict)
+    }
+    if (city){
+        arrayAddress.push(city)
+    }
+    let result;
+    let addressComplete = arrayAddress.join(', ')
+    let houseNumbre = ''
+    if (number){
+        houseNumbre = 'houseNumber=' + number
+    }
     trackPromise(
         result = new Promise((resolve, reject) => {
             axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
-                + addressComplete + "&qq=houseNumber=" + number + ";postalCode=" + code + "&apiKey="
+                + addressComplete + "&qq=" + houseNumbre + ";postalCode=" + code + "&apiKey="
                 + process.env.REACT_APP_HERE_API_TOEKN, {}).then(({data}) => {
                 if (data) {
                     if (data.items) {
