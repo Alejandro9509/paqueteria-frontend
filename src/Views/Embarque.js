@@ -1740,10 +1740,13 @@ function Embarque(props) {
                 }
             })
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                console.log("entra"+JSON.stringify(data))
                 setState(state => {
                     return {
                         ...state,
-                        zonaOperativaSucursal: data
+                        zonaOperativaSucursal: data,
+                        aplicaEntrega:data.m_bAplicaEntrega,
+                        deshabilitarDiferenteDomicilio:data.m_bAplicaEntrega,
                     }
                 })
             })
@@ -1775,7 +1778,7 @@ function Embarque(props) {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
-                            zonaOperativa: data
+                            zonaOperativa: data,
                         }
                     })
                 })
@@ -3673,18 +3676,9 @@ function Embarque(props) {
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                            {  state.aplicaEntrega && <><div className="col-sm-7" style={{
-                                                                            position: "relative",
-                                                                            marginBottom: "15px",
-                                                                            borderStyle: "ridge",
-                                                                            borderColor: "red",
-                                                                            padding: "3px",
-                                                                            width:"auto"
-                                                                    }} >
-                                                                      
-                                                                        <div style={{marginTop:"10px"}}>No se realizará entrega de última milla</div>
-                                                                      
-                                                                    </div>  </>}
+                                                            {  state.aplicaEntrega && <>
+                                                                      <div style={{marginTop:"10px",color:"red"}}>No se realizará entrega de última milla</div>
+                                                                    </>}
                                                             </div>
                                                             <div className="row">
                                                             <div style={{width:'70%'}}>
@@ -3698,7 +3692,7 @@ function Embarque(props) {
                                                                             checked={state.diferenteEntrega}
                                                                             value={state.diferenteEntrega}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.deshabilitarDiferenteDomicilio}
                                                                             id="diferenteEntrega"
                                                                         />
                                                                         <i/>
@@ -3718,7 +3712,7 @@ function Embarque(props) {
                                                                             checked={state.entregaConCita}
                                                                             value={state.entregaConCita}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.deshabilitarDiferenteDomicilio}
                                                                             id="entregaConCita"
                                                                         />
                                                                         <i/>
