@@ -42,7 +42,6 @@ class Seguimiento extends Component {
 
     }
 
-
     componentDidMount() {
         
     }
@@ -70,6 +69,12 @@ class Seguimiento extends Component {
         })
     }
     render() {
+        var imgsEmbarque =  this.state.imagenesEvidenciaEmbarque.map( img=>{
+              return `<img style={{width: "180px", height: "180px",transform:"rotate(90deg)",margin: "0 0 0 -10px"}}
+             src=data:image/jpeg;base64,${img.m_sImagen}`
+        }
+         ).join('')
+
         moment.locale("es");
         return (<div>
             <header className="topbar clearfix">
@@ -166,7 +171,7 @@ class Seguimiento extends Component {
 
                         {
                             Object.keys(this.state.data).length !== 0 &&
-                            <Grid container alignItems={"stretch"} justify={"flex-start"} spacing={1}>
+                            <Grid container alignItems={"stretch"} justify={"flex-start"} spacing={1} style={{margin:"0px"}}>
                                 <Grid item md={6}>
                                     <div lang={"es"} style={{
                                         marginTop: "4px",
@@ -188,39 +193,45 @@ class Seguimiento extends Component {
                                         <Typography variant={"h4"} align={"center"}>Evidencias</Typography>
                                      </Grid>
                                      
-                                     <Grid item md={6}>
+                                     <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
                                      <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" alignItems="center">
-                                    <Typography variant={"h4"} >Recolección</Typography> 
+                                    <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography> 
                                     {
                                     this.state.imagenesEvidenciaRecoleccion.length == 0?
                                      <Typography variant={"h5"} style={{margin:"20%"}}>No hay evidencias</Typography>:
-                                    this.state.imagenesEvidenciaRecoleccion.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
+                                    this.state.imagenesEvidenciaRecoleccion.length != 0 &&
                                     <Grid item md={6}>
-                                        <div>
-                                            {/*Nombre, firma y foto*/}
-                                            <img style={{width: "180px", height: "180px",transform:"rotate(90deg)",margin: "0 0 0 -10px"}}
-                                                 src={`data:image/jpeg;base64,${ this.state.imagenesEvidenciaRecoleccion.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
-                                        </div>
+                                       <div id="divRecoleccion">
+                                        
+                                        {this.state.imagenesEvidenciaRecoleccion.reverse().map( (img,index)=>(
+                                                    <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
+                                                     src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
+                                        }
+                                          </div>   
+                                                                      
                                     </Grid>
+                                       }
                                     
-                                    }
                                      </Box>
                                         
                                      </Grid>
                                      <Grid item md={6}>
                                      <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"  alignItems="center">
-                                        <Typography variant={"h4"}>Embarque</Typography> 
+                                        <Typography variant={"h4"} style={{marginBottom:"10px"}}>Embarque</Typography> 
                                          {
                                          this.state.imagenesEvidenciaEmbarque.length == 0?
                                             <Typography variant={"h5"} >No hay evidencias</Typography>:
 
-                                        this.state.imagenesEvidenciaEmbarque.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
                                         <Grid item md={6}>
-                                           <div>
-                                                {/*Nombre, firma y foto*/}
-                                                <img style={{width: "180px", height: "180px",transform:"rotate(90deg)",margin: "0 0 0 -10px"}}
-                                                     src={`data:image/jpeg;base64,${ this.state.imagenesEvidenciaEmbarque.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
-                                            </div>
+
+                                          <div id="divEmbarque">
+                                          {this.state.imagenesEvidenciaEmbarque.reverse().map( (img,index)=>(
+                                           <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
+                                            src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
+                                             }
+                                            Recibió: {this.state.data.m_sReceptor}
+                                          </div>
+                                       
                                         </Grid>
 
                                         }

@@ -24,15 +24,25 @@ function Evidencias(props) {
 
                                                 
 
+                                    esRecoleccion?
                                     imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
                                     <Grid item md={6} style={{flexBasis:"0"}}>
-                                        <div>
-                                            {/*Nombre, firma y foto*/}
-                                            <img style={{width: "180px", height: "180px",transform:"rotate(90deg)",margin: "0 0 0 -10px"}}
-                                                 src={`data:image/jpeg;base64,${imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
-                                        </div>
+                                         <div id="divRecoleccion">
+                                        
+                                       
+                                                    <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
+                                                     src={`data:image/jpeg;base64,${imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
+                                          </div>   
                                     </Grid>
-                                    
+                                    : 
+                                    <Grid item md={6} style={{flexBasis:"0"}}>
+                                         <div id="divEmbarque">
+                                  
+                                        <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
+                                         src={`data:image/jpeg;base64,${imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`} />
+                                         
+                                           </div>   
+                                    </Grid>  
                                     
                                     }
                     
