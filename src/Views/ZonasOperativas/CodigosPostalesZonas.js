@@ -137,7 +137,6 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
     }
 
     const handleCheck = (event) =>{
-        event.preventDefault()
         const {target} = event
         setState(state => {
             return {
