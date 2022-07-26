@@ -537,13 +537,16 @@ function Viajes() {
     }
 
     function descargarPDF(id, folio) {
-            obtenerReporteCFDIViaje(id).then(({data}) => {
+        obtenerReporteCFDIViaje(id).then(({data}) => {
+            try {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "CFDI_ " + folio;
-            })
-
+            } catch (e) {
+                showSuccess("No se pudo abrir el pdf")
+            }
+        })
     }
 
     function generarCFDI(id, folio, idViaje, sustituir) {
@@ -583,7 +586,9 @@ function Viajes() {
     }
 
     function showCancelarCFDI(informe){
-        setState({...state,openCancelarSAT: true, informe: informe})
+        setState(state => {
+            return {...state,openCancelarSAT: true, informe: informe}
+        })
     }
     function cancelarCFDI( data) {
         obtenerParametrosConfiguracion().then(respuesta => {
@@ -604,14 +609,27 @@ function Viajes() {
                     {
                         label: 'Sí',
                         onClick: () => {
-                            cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
-                                getParadasListado(state.informe)
-                                showSuccess(result.data)
-                            }).catch((error) => {
-                                if (error.response){
-                                    showError(error.response.data)
-                                }
-                            })
+                            if (parseInt(data.idCancelacionSAT) === 1){
+                                obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
+                                    setState(state => {
+                                        return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
+                                    })
+                                    getParadasListado(state.informe)
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
+                            }else{
+                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    getParadasListado(state.informe)
+                                    showSuccess(result.data)
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
+                            }
                         }
                     },
                     {
@@ -745,7 +763,7 @@ function Viajes() {
 
                             </Tooltip>
                         }
-                        {
+                        {/*{
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Sustituir CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
@@ -753,7 +771,7 @@ function Viajes() {
                                                                                                                                                                         style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
-                        }
+                        }*/}
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
