@@ -415,23 +415,23 @@ function Viajes() {
             headerName: "Unidad",
             field: "m_sUnidad",
             width: 200,
-        }, {
+        },{
             headerName: "Remolque 1",
             field: "m_sRemolque1",
             width: 200,
-        }, {
+        },{
             headerName: "Remolque2",
             field: "m_sRemolque2",
             width: 200,
-        }, {
+        },{
             headerName: "Fecha Cancelación",
             field: "FechaCancelacion",
             width: 200,
-        }, {
+        },{
             headerName: "Motivo de Cancelación",
             field: "MotivoCancelacion",
             width: 250,
-        }, {
+        },{
             headerName: "Usuario de cancelación",
             field: "UsuarioCancelacion",
             width: 250,
@@ -469,8 +469,8 @@ function Viajes() {
 
 
     useEffect(value => {
-        //console.log("Entro")
-        if (viajeSeleccionado) {
+       //console.log("Entro")
+        if(viajeSeleccionado){
             let rutaActiva = true
             viajeSeleccionado.m_arrTrayectos.map((p, index) => {
                 console.log(viajeSeleccionado)
@@ -495,6 +495,7 @@ function Viajes() {
     }, [viajeSeleccionado]);
 
 
+
     function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
@@ -508,7 +509,7 @@ function Viajes() {
 
     function descargarXML(id, folio) {
         obtenerXML(id).then(({data}) => {
-            var filename = folio + ".xml";
+            var filename = folio+".xml";
             var pom = document.createElement('a');
             var bb = new Blob([data], {type: 'text/plain'});
             pom.setAttribute('href', window.URL.createObjectURL(bb));
@@ -522,10 +523,9 @@ function Viajes() {
         })
 
     }
-
     function descargarXMLCFDI(id, folio) {
         obtenerXMLCFDI(id).then(({data}) => {
-            var filename = folio + ".xml";
+            var filename = folio+".xml";
             var pom = document.createElement('a');
             var bb = new Blob([data], {type: 'text/plain'});
             pom.setAttribute('href', window.URL.createObjectURL(bb));
@@ -537,36 +537,39 @@ function Viajes() {
 
             pom.click();
         }).catch((error) => {
-            if (error.response) {
+            if (error.response){
                 showError(error.response.data)
             }
 
         })
 
     }
+    function descargarXMLCFDITimbrado(id, folio,xml) {
+            var filename = folio+".xml";
+            var pom = document.createElement('a');
+            var bb = new Blob([xml], {type: 'text/plain'});
+            pom.setAttribute('href', window.URL.createObjectURL(bb));
+            pom.setAttribute('download', filename);
 
-    function descargarXMLCFDITimbrado(id, folio, xml) {
-        var filename = folio + ".xml";
-        var pom = document.createElement('a');
-        var bb = new Blob([xml], {type: 'text/plain'});
-        pom.setAttribute('href', window.URL.createObjectURL(bb));
-        pom.setAttribute('download', filename);
+            pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+            pom.draggable = true;
+            pom.classList.add('dragout');
 
-        pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
-        pom.draggable = true;
-        pom.classList.add('dragout');
-
-        pom.click();
+            pom.click();
 
 
     }
 
     function descargarPDF(id, folio) {
         obtenerReporteCFDIViaje(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "CFDI_ " + folio;
+            try {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI_ " + folio;
+            } catch (e) {
+                showSuccess("No se pudo abrir el pdf")
+            }
         })
 
     }
@@ -604,10 +607,13 @@ function Viajes() {
                 ]
             })
         })
+
     }
 
-    function showCancelarCFDI(informe) {
-        setState({...state, openCancelarSAT: true, informe: informe})
+    function showCancelarCFDI(informe){
+        setState(state => {
+            return {...state,openCancelarSAT: true, informe: informe}
+        })
     }
     function cancelarCFDI( data) {
         obtenerParametrosConfiguracion().then(respuesta => {
@@ -628,14 +634,27 @@ function Viajes() {
                     {
                         label: 'Sí',
                         onClick: () => {
-                            cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
-                                getParadasListado(state.informe)
-                                showSuccess(result.data)
-                            }).catch((error) => {
-                                if (error.response){
-                                    showError(error.response.data)
-                                }
-                            })
+                            if (parseInt(data.idCancelacionSAT) === 1){
+                                obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
+                                    setState(state => {
+                                        return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
+                                    })
+                                    getParadasListado(state.informe)
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
+                            }else{
+                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    getParadasListado(state.informe)
+                                    showSuccess(result.data)
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
+                            }
                         }
                     },
                     {
@@ -689,11 +708,7 @@ function Viajes() {
             renderCell: (row) => {
                 return (
                     <div align={"center"} style={{width: "100%"}}>
-                        <Chip size="small" style={{
-                            backgroundColor: `#${row.row.m_sColor}`,
-                            color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
-                            padding: "1px"
-                        }} label={row.row.m_sEstatus}/>
+                    <Chip size="small" style={{backgroundColor: `#${row.row.m_sColor}`, color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white", padding:"1px"}}  label={row.row.m_sEstatus}/>
                     </div>
                 )
             }
@@ -724,6 +739,7 @@ function Viajes() {
     });
 
 
+
     const showActualizarDispEquipo = (equipo) => {
         setEquipoSelected(equipo)
         setEventOptions({...eventOptions, showDispEquipoDialog: true});
@@ -749,20 +765,18 @@ function Viajes() {
                             (viajeSeleccionado.m_bEsPermisionario || viajeSeleccionado.m_bUnidadPermisionario) &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXML(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i
-                                    className="zmdi zmdi-download"
-                                    style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarXML(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i className="zmdi zmdi-download"
+                                                                                                                style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
 
                         {
                             !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
-                            <Tooltip title="Generar CFDI" >
+                            <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i
-                                    className="zmdi zmdi-file-text"
-                                    style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
+                                                                                                                                             style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
@@ -775,7 +789,7 @@ function Viajes() {
 
                             </Tooltip>
                         }
-                        {
+                        {/*{
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Sustituir CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
@@ -784,7 +798,7 @@ function Viajes() {
                                     style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
-                        }
+                        }*/}
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
@@ -814,6 +828,7 @@ function Viajes() {
 
                             </Tooltip>
                         }
+
 
 
                     </div>
@@ -899,30 +914,29 @@ function Viajes() {
             setParadasListado(respuesta.data);
         });
     }
-
     const showCancelarDialog = (data) => {
         setParadaData(data);
         setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
     }
     const showSalidaDialog = (data) => {
-        //validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
-        //  let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-        // let qr = respuesta.data.find(parada=>parada.Escaneado==false)
+          //validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+            //  let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+             // let qr = respuesta.data.find(parada=>parada.Escaneado==false)
 
-        //    if(encontrado){//si encontro valor falso en timbrado
-        //       showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-        //   }
+          //    if(encontrado){//si encontro valor falso en timbrado
+           //       showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+           //   }
 
-        //  if(qr){//si encontro valor falso en qr
-        //    showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
-        //}else{
-        setParadaData(data);
-        setEventOptions({...eventOptions, showSalidaParadasDialog: true});
-        //}
-        //}).catch((err)=>{
-        //   showSuccess(err)
-        //})
+            //  if(qr){//si encontro valor falso en qr
+            //    showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
+            //}else{
+               setParadaData(data);
+            setEventOptions({...eventOptions, showSalidaParadasDialog: true});
+            //}
+          //}).catch((err)=>{
+           //   showSuccess(err)
+          //})
     }
 
     const closeSalidaDialog = () => {
@@ -939,12 +953,12 @@ function Viajes() {
         //     if(encontrado){//si encontro valor falso en timbrado
         //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
         //     }else{
-        setParadaData(data);
-        setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
+                setParadaData(data);
+                setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
         //    }
-        //  }).catch((err)=>{
-        //     showSuccess(err)
-        // })
+       //  }).catch((err)=>{
+       //     showSuccess(err)
+       // })
 
     }
 
@@ -1073,7 +1087,7 @@ function Viajes() {
     }
 
     const handleCancelar = (e) => {
-        if (e) {
+        if (e){
             e.preventDefault();
         }
         let params = {
