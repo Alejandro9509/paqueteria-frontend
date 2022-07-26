@@ -88,7 +88,6 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -97,7 +96,6 @@ function showError(mensaje) {
         timeout: "8000"
     }).show()
 }
-
 const styles = {
     seleccionado: {
         backgroundColor: "#FCC88F",
@@ -142,6 +140,7 @@ function Viajes() {
 
 
     })
+
 
 
     function getAllEstatusDocumento() {
@@ -205,7 +204,7 @@ function Viajes() {
 
     function handleShowModificar(id) {
         let viaje = data.find(i => i.m_nIdViaje === id)
-        if (viaje?.m_nIdEstatusViaje === 6 || viaje?.m_nIdEstatusViaje === 10) {
+        if ( viaje?.m_nIdEstatusViaje === 6 || viaje?.m_nIdEstatusViaje === 10 ){
             showSuccess("No se puede editar un viaje terminado o cancelado")
             return
         }
@@ -278,7 +277,7 @@ function Viajes() {
     }
 
     const handleShowListado = (event) => {
-        if (event) {
+        if (event){
             event.stopPropagation();
         }
         getAllData()
@@ -312,7 +311,6 @@ function Viajes() {
             $('#Cancelar').addClass('in show');
         });
     }
-
     const clearData = () => {
         setState(state => {
             return {
@@ -352,7 +350,7 @@ function Viajes() {
                                 onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
                                 className="btn btn-default btn-xs"
                                 disabled={!validarDerecho(9101441)}><i className="fa fa-pencil-square-o"
-                                                                       style={{color: "#F9A03E"}}/></a>
+                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -394,15 +392,15 @@ function Viajes() {
                     </div>
                 )
             }
-        }, {
+        },  {
             headerName: "Folio Viaje",
             field: "m_sFolioViaje",
             width: 150,
-        }, {
+        },{
             headerName: "Origen",
             field: "m_sOringen",
             width: 180,
-        }, {
+        },{
             headerName: "Destino",
             field: "m_sDestino",
             width: 180,
@@ -411,7 +409,7 @@ function Viajes() {
             headerName: "Operador",
             field: "m_sOperador",
             width: 200,
-        }, {
+        },{
             headerName: "Unidad",
             field: "m_sUnidad",
             width: 200,
@@ -1095,7 +1093,7 @@ function Viajes() {
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
-        cancelarViaje(state.idViaje, params).then((respuesta) => {
+        cancelarViaje(state.idViaje,params).then((respuesta) => {
             showSuccess("El viaje ha sido cancelado")
             handleShowListado()
         });
@@ -1108,12 +1106,11 @@ function Viajes() {
             setState(state => {
                 return {...state, openEnvioCorreo: false}
             })
-            getParadasListado({m_nIdViaje: state.idViaje})
+            getParadasListado({m_nIdViaje:state.idViaje})
 
         })
     }
-
-    function cancelarTrayectos(params) {
+    function cancelarTrayectos(params){
         cancelarTrayecto(params.id, params).then(({data}) => {
             closeCancelarDialog()
             handleShowListado()

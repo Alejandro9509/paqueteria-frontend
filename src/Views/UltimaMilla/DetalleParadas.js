@@ -465,15 +465,26 @@ class DetalleParadas extends Component {
                 {
                     label: 'Sí',
                     onClick: () => {
-                        cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
-                            // showSuccess(result.data)
-                            showSuccess("Se canceló ante el SAT con éxito.")
-                            this.props.refresh()
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
-                            }
-                        })
+                        if (parseInt(data.idCancelacionSAT) === 1){
+                            obtenerCFDI(this.state.paqueteSeleccionado.m_nId,this.state.paqueteSeleccionado.m_bEsRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                                this.setState({idParada: this.state.paqueteSeleccionado.m_nId, esRecoleccion: this.state.paqueteSeleccionado.m_bEsRecoleccion, openEnvioCorreo: true, folio: this.state.paqueteSeleccionado.m_sFolio})
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }else{
+                            cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
+                                // showSuccess(result.data)
+                                showSuccess("Se canceló ante el SAT con éxito.")
+                                this.props.refresh()
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+
                     }
                 },
                 {
