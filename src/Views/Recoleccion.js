@@ -4017,19 +4017,16 @@ function Recoleccion() {
 
                                                                     </div>
                                                                 </div>
+                                                                    
+                                                                   {  state.aplicaEntrega && <>
 
-                                                                   {  state.aplicaEntrega && <><div className="col-sm-7" style={{
-                                                                            position: "relative",
-                                                                            marginBottom: "15px",
-                                                                            borderStyle: "ridge",
-                                                                            borderColor: "red",
-                                                                            padding: "3px",
-                                                                            width:"auto"
-                                                                    }} >
 
-                                                                        <div style={{marginTop:"10px"}}>No se realizará entrega de última milla</div>
 
-                                                                    </div>  </>}
+                                                                        <div style={{marginTop:"10px",color:"red"}}>No se realizará entrega de última milla</div>
+
+
+
+                                                                    </>}
                                                             </div>
 
 
