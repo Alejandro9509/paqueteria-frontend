@@ -31,471 +31,16 @@ import CrearTarifaRegion from "./CrearTarifaRegion";
 import TarifasRegion from "./TarifasRegion";
 
 window.jQuery = window.$ = $;
-const headers = API_HEADERS
-function showSuccess(mensaje) {
+/*function showSuccess(mensaje) {
     new Noty({
         type: "information",
         layout: "topCenter",
         text: mensaje,
         timeout: "3000"
     }).show()
-}
+}*/
 
-const styles = theme =>( {
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    }
-});
-
-const useStyles = makeStyles(styles);
-
-/**OBSOLETO DESDE MAYO 2022*/
-class Tarifas extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [],
-            agregar: "Agregar",
-            height: window.innerHeight,
-            CreadoPor: localStorage.getItem("UsuarioId"),
-            ModificadoPor: localStorage.getItem("UsuarioId"),
-            pantalla: 1,
-            selected: {},
-            DerechoBorrar: 1, //TODO: Definir id
-            dataSucursal: [],
-            columns: [],
-            mostrarColumnasPesoVolumen: false,
-            configuraciones: undefined
-        }
-        this.cambiarPantalla = this.cambiarPantalla.bind(this)
-        this.getAllData = this.getAllData.bind(this)
-        this.handleShowModificar = this.handleShowModificar.bind(this)
-        this.handleShowConsultar = this.handleShowConsultar.bind(this)
-        this.handleEliminar = this.handleEliminar.bind(this)
-        this.handleAceptar = this.handleAceptar.bind(this)
-        this.handleDefinirTarifas = this.handleDefinirTarifas.bind(this)
-        this.getParametrosConfiguracion = this.getParametrosConfiguracion.bind(this)
-    }
-
-    componentDidMount() {
-        this.getParametrosConfiguracion()
-        this.handleDefinirTarifas()
-    }
-
-    handleDefinirTarifas(){
-        let columns = []
-        if (this.state.mostrarColumnasPesoVolumen){
-            columns.push(
-                {
-                    headerName: "Precio m³",
-                    field: "m_cPrecioM3",
-                    flex: 1,
-                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    minWidth: 200,
-                },
-                {
-                    headerName: "Precio Kilo",
-                    field: "m_cPrecioKilo",
-                    flex: 1,
-                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    minWidth: 125,
-                },
-                {
-                    headerName: "Flete mínimo",
-                    field: "m_cFleteMinimo",
-                    flex: 1,
-                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    minWidth: 125,
-                },
-                {
-                    headerName: "Monto mínimo",
-                    field: "m_cMontoMinimo",
-                    flex: 1,
-                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    minWidth: 125,
-                },
-            )
-        }
-        columns.push(
-            {
-                headerName: "Acciones",
-                sortable: false, filterable: false,
-                field: "",
-                minWidth: 250,
-                renderCell: (row) => {
-                    return (
-                        <div>
-                            <Tooltip title="Modificar" >
-                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-
-                            </Tooltip>
-                            <Tooltip title="Consultar">
-                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-
-                            </Tooltip>
-                            <Tooltip title="Eliminar">
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                            </Tooltip>
-
-                        </div>
-                    )
-                }
-            },
-            {
-                headerName: "Código",
-                field: "m_sCodigo",
-                width: 300,
-            },
-            {
-                headerName: "Origen",
-                field: "m_sOrigen",
-                flex: 1,
-                minWidth: 300,
-            },
-            {
-                headerName: "Destino",
-                field: "m_sDestino",
-                flex: 1,
-                minWidth: 300,
-            },
-
-            {
-                headerName: "Activo",
-                field: "m_bActivo",
-                width: 100,
-                renderCell: (row) => {
-                    return (
-                        <div
-                            style={{
-                                width: "100%",
-                                textAlign: "center",
-                                color: row.row.m_bActivo == 'true' ? "green" : "red",
-                            }}
-                        >
-                            {row.row.m_bActivo ? (
-                                <SvgIcon component={Activo} />
-                            ) : (
-                                <SvgIcon component={NoActivo} />
-                            )}
-                        </div>
-                    );
-                },
-            },
-        )
-
-
-        this.setState({
-            columns: columns
-        })
-    }
-
-    handleShowModificar(id) {
-
-        const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
-            this.setState({
-                pantalla: 2,
-                openDialog: true,
-                agregar: "Modificar",
-                edit: true,
-                consult: false,
-                selected: respuesta.data,
-            })
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(1).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Agregar').addClass('in show');
-        });
-    }
-
-    handleShowConsultar(id) {
-
-        const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data)
-            this.setState({
-                pantalla: 2,
-                agregar: "Consultar",
-                openDialog: true,
-                edit: true,
-                consult: true,
-                selected: respuesta.data,
-            })
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(1).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Agregar').addClass('in show');
-        });
-    }
-
-    handleEliminar(id) {
-        var derecho;
-        validarPermisos(this.state).then(respuesta => {
-            derecho = respuesta.data;
-            if (derecho == false) {
-                showSuccess("El usuario no tiene derechos para realizar el proceso");
-                return;
-            }
-
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + id + `/${this.state.ModificadoPor}`;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
-                this.getAllData();
-            }).catch(err => {
-                showSuccess(err)
-            });
-        }).catch(err => {
-            showSuccess(err)
-        });
-    }
-
-    handleAceptar(data) {
-
-        let params = {
-            /*m_nIdSucursal: data.sucursal,
-            m_nIdOrigen: data.origen,
-            m_nIdDestino: data.destino,
-            m_cFleteMinimo: data.precioFlete,
-            m_bActivo: data.activo ? 1 : 0,
-            m_cMontoMinimo: data.precioMinimo,
-            m_cPrecioKilo: data.precioKilo,
-            m_cPrecioM3: data.precioM3,
-            m_bPorPesoVolumen: data.porPesoOVolumen,
-            m_bPorRango: data.porRangos,
-            m_bPorRegion: data.porRegion,
-            m_nFactorConversion: data.factorConversion,
-            m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
-            m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
-            m_arrArConceptos: data.todosConceptos.map(c => ({
-                m_nIdConceptosFacturacion: c.idConcepto,
-                m_cImporte: c.importe,
-                m_nIdImpuestoTraslada: c.traslada,
-                m_nIdImpuestoRetiene: c.retiene,
-                m_cImporteRetiene: c.importeRet,
-                m_cImporteIva: c.importeIVA,
-                m_nIdTipoCalculo: c.tipoCalculo,
-                m_xnRangoMinimo: c.rangoMinimo,
-                m_xnRangoMaximo: c.rangoMaximo,
-                m_nIdAgregadoDesde: c.agregadoDesde,
-                m_nIdTipoMedida: c.tipoMedida
-            })),
-            m_arrArProductos: data.dataProductosSeleccionados,
-            m_arrArDestinos: data.dataDestinosSeleccionados,
-            m_nCreadoPOr: localStorage.getItem("UsuarioId"),
-            m_nModificadoPor: localStorage.getItem("UsuarioId"),
-            m_sCodigo: data.codigoTarifa*/
-            idOrigen: data.origen,
-            fleteMinimo: data.precioFlete,
-            productos: data.dataProductosSeleccionados,
-            destinos: data.dataDestinosSeleccionados,
-            creadoPor: localStorage.getItem("UsuarioId"),
-            codigo: data.codigoTarifa,
-            tipo: this.state.configuraciones?.TipoTarifaTarifas,
-        }
-        console.log(JSON.stringify(params))
-        console.log(params)
-        if (this.state.edit) {
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + this.state.selected.m_nIdTarifa;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-                showSuccess(respuesta.data)
-                this.getAllData()
-                this.setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-            }).catch(err => {
-                console.log(err)
-                showSuccess("err")
-            });
-        } else {
-            /*const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-                showSuccess(respuesta.data)
-                this.getAllData()
-                this.setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });*/
-            agregarTarifa(params).then(respuesta => {
-                if (respuesta.data.Estatus){
-                    showSuccess("Agregado con éxito")
-                }else {
-                    showSuccess("Hubo un error al agregar")
-                }
-            }).catch(err => {
-                showSuccess("Hubo un error al agregar")
-            })
-        }
-
-    }
-
-    cambiarPantalla(id) {
-        this.setState({ pantalla: id })
-    }
-
-    getAllData() {
-        /*const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
-            this.setState({ data: respuesta.data, agregar: "Agregar" })
-        });*/
-        obtenerTarifasByTipo().then(respuesta => {
-            this.setState({ data: respuesta.data, agregar: "Agregar" })
-        })
-    }
-
-    getParametrosConfiguracion() {
-        obtenerParametrosConfiguracion().then(respuesta => {
-            this.setState({
-                configuraciones: {
-                    TipoTarifaTarifas: respuesta.data.TipoTarifaTarifas || 0,
-                    IdConceptoFlete: respuesta.data.IdConceptoFlete || 0,
-                    IdConceptoCarga: respuesta.data.IdConceptoCarga || 0,
-                    IdConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
-                    IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
-                    IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
-                    IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
-                    IdConceptoCita: respuesta.data.IdConceptoCita || 0,
-                    CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
-                }
-            })
-            if (respuesta.data.TipoTarifaTarifas !== 2){
-                this.getAllData()
-            }
-        })
-    }
-
-
-    render() {
-        const {classes} = this.props; 
-        const { height, data, columns, edit, consult, configuraciones } = this.state
-
-        return (
-            <div >
-                <header className="topbar clearfix">
-                    <Cabecera titulo="Tarifas" >
-                        <div className="page-header">
-                            <ul className="list-page-breadcrumb">
-                                <li>
-                                    <a href="/Catalogos" className="color-mapeo">
-                                        Catálogos <i className="zmdi zmdi-chevron-right" />
-                                    </a>
-                                </li>
-                                <li className="active-page">Tarifas</li>
-                            </ul>
-                        </div>
-                    </Cabecera>
-                </header>
-
-                {/*Leftbar Start Here*/}
-                <aside className="iconic-leftbar" style={{ minHeight: this.state.height }}>
-                    <BarraLateralIzquierda />
-                </aside>
-                {
-                    configuraciones?.TipoTarifaTarifas === 1 &&
-                    <section className="main-container">
-                        <div className="container-fluid">
-
-
-                            <ul className="nav navStatica nav-tabs">
-                                <li className="active">
-                                    <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
-                                        <i className="fa fa-list" /> Listado
-                                    </a>
-                                </li>
-                                <li >
-                                    <a className= {validarDerecho(9101346)? "":classes.disabled} onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
-                                        <i className="fa fa-plus-circle" /> {this.state.agregar}
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a data_id="3">
-                                        <i className="fa fa-times-circle" /> Imprimir
-                                    </a>
-                                </li>
-
-
-
-                                {/**<button className="topbar-right pull-right">Boton</button>*/}
-                            </ul>
-
-
-                            <div
-                                className="row"
-                                className="tab-content"
-                                style={{ paddingLeft: "-15px" }}
-                            >
-                                <div id="Listado" className="tab-pane fade in show">
-                                    <div className="widget-wrap">
-                                        <div className="widget-content">
-                                            <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
-                                                <DataGrid
-                                                    localeText={dataGridLocaleText}
-                                                    rows={data}
-                                                    columns={columns}
-                                                    density="compact"
-                                                    pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                    getRowId={(row) => row.m_nIdTarifa}
-                                                    onRowSelected={(row) => {
-                                                        this.setState({
-                                                            idTarifa: row.data.m_nIdTarifa
-                                                        })
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="Agregar" className="tab-pane fade">
-                                    {
-                                        this.state.pantalla == 2 &&
-                                        <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
-                                                     onSubmit={this.handleAceptar} onCancel={(event) => {
-                                            event.stopPropagation();
-                                            this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
-                                            $('.nav-tabs li ').removeClass('active');
-                                            $('.nav-tabs li').eq(0).addClass('active');
-                                            $('.tab-content div ').removeClass('in show');
-                                            $('#Listado').addClass('in show');
-                                        }}
-                                                     listaCiudades={this.state.dataCiudades}
-                                        />
-                                    }
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </section>
-                }
-                {
-                    configuraciones?.TipoTarifaTarifas === 2 &&
-                        <TarifasRangos
-                            configuraciones={configuraciones}
-                        />
-
-                }
-                {
-                    configuraciones?.TipoTarifaTarifas === 3 &&
-                    <TarifasRegion
-                        configuraciones={configuraciones}
-                    />
-                }
-
-            </div >
-        );
-    }
-}
-
-function Tarifa(props){
+function Tarifa(){
     const [state, setState] = useState({
         data: [],
         agregar: "Agregar",
@@ -512,10 +57,10 @@ function Tarifa(props){
     })
 
     useEffect(value => {
-        definirColumnas()
+        // definirColumnas()
         getParametrosConfiguracion()
     }, [])
-
+/*
     const handleShowAgregar = (event) => {
         event.stopPropagation();
         setState(state => {
@@ -531,8 +76,8 @@ function Tarifa(props){
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-    }
-
+    }*/
+/*
     const handleShowModificar = (id) => {
         obtenerTarifaBy(id).then(respuesta => {
             setState(state => {
@@ -590,7 +135,8 @@ function Tarifa(props){
         }).catch(err => {
             showSuccess(err)
         });
-    }
+    }*/
+/*
 
     const handleAceptar = (data) => {
         let params = {
@@ -632,6 +178,8 @@ function Tarifa(props){
         }
 
     }
+*/
+/*
 
     const handleShowListado = (event) => {
         if (event !== undefined){
@@ -653,30 +201,7 @@ function Tarifa(props){
         definirColumnas()
         getTarifas(state.configuraciones.TipoTarifaTarifas);
     }
-
-    const getAllData = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
-            /**Se agrega el tipo de tarifa manualmente de la forma que se ocupa porque no viene de los servicios*/
-            respuesta.data.forEach(i => {
-                if (i.m_bPorPesoVolumen){
-                    i.tipoTarifa = "Por peso volumen"
-                }else if (i.m_bPorRango){
-                    i.tipoTarifa = "Por rango"
-                }else if (i.m_bPorRegion){
-                    i.tipoTarifa = "Por región"
-                }
-            })
-
-            setState(state =>{
-                return {
-                ...state,
-                    data: respuesta.data,
-                    agregar: "Agregar"
-                }
-            })
-        });
-    }
+*/
 
     const getTarifas = (idTipoTarifa) => {
         obtenerTarifasByTipo(idTipoTarifa).then(respuesta => {
@@ -713,7 +238,7 @@ function Tarifa(props){
     }
 
     /**Se definen las columnas que se van a mostrar en el listado de tarifas*/
-    const definirColumnas = () => {
+    /*const definirColumnas = () => {
 
         let columns = []
         if (state.mostrarColumnasPesoVolumen){
@@ -795,7 +320,7 @@ function Tarifa(props){
                 minWidth: 300,
             },
 
-            /*{
+            /!*{
                 headerName: "Activo",
                 field: "m_bActivo",
                 width: 100,
@@ -816,7 +341,7 @@ function Tarifa(props){
                         </div>
                     );
                 },
-            },*/
+            },*!/
         )
 
         setState(state => {
@@ -825,7 +350,7 @@ function Tarifa(props){
                 columns: columns
             }
         })
-    }
+    }*/
 
 
     return(
@@ -851,7 +376,7 @@ function Tarifa(props){
             </aside>
 
 
-            {
+            {/*{
                 state.configuraciones?.TipoTarifaTarifas === 1 &&
                     <section className="main-container">
                     <div className="container-fluid">
@@ -877,7 +402,7 @@ function Tarifa(props){
 
 
 
-                            {/**<button className="topbar-right pull-right">Boton</button>*/}
+                            *<button className="topbar-right pull-right">Boton</button>
                         </ul>
 
 
@@ -924,7 +449,7 @@ function Tarifa(props){
                         </div>
                     </div>
                 </section>
-            }
+            }*/}
             {
                 state.configuraciones?.TipoTarifaTarifas === 2 &&
                     <TarifasRangos
@@ -941,10 +466,6 @@ function Tarifa(props){
         </div >
     )
 }
-
-Tarifas.propTypes = {
-
-};
 
 /* export default Tarifas; */
 export default Tarifa;

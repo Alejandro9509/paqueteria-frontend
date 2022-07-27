@@ -77,7 +77,7 @@ function agregarTarifa(params){
 }
 
 function eliminarTarifa(idTarifa, idModificarPor) {
-    const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + idTarifa + `/`+ idModificarPor;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Eliminar/` + idTarifa + `/`+ idModificarPor;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
