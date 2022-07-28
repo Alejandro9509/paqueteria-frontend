@@ -318,6 +318,7 @@ function Guia(props) {
             return
         }
         let params = {
+            "m_nIdGuia": state.idGuia,
             "m_nTIpoCambio": state.tipoCambio,
             "m_sFolioGuia": state.folioGuia,
             "m_nIdEstatusGuia": state.idEstatusGuia,
@@ -358,7 +359,6 @@ function Guia(props) {
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
-                showSuccess('Guia modificada')
                 handleShowListado()
             }).catch(err => {
                 console.log(err)

@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
