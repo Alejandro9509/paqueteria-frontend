@@ -85,7 +85,7 @@ function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
 }
 
 function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
-    const url = `${process.env.REACT_APP_API_URL}/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })
