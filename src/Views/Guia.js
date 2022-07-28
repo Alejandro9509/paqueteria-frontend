@@ -408,21 +408,21 @@ function Guia(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            validarEliminarGuia(id).then(respuesta=>{
-               if(respuesta.data.sePuedeEliminar){
-                eliminarGuia(id, state.modificadoPor).then(respuesta => {
-                showSuccess(respuesta.data)
-                //console.log(respuesta)
-                if (respuesta.data.indexOf("fracaso:") <= 0)
-                    getAllData()
-            }).catch(function (err) {
-                console.log(err.data)
-            });
-               }else{
-                   showSuccess("La guia no puede ser eliminada a menos que se cancele")
-               }
+            validarEliminarGuia(id).then(respuesta => {
+                if (respuesta.data.sePuedeEliminar) {
+                    eliminarGuia(id, state.modificadoPor).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        if (respuesta.data.indexOf("fracaso:") <= 0)
+                            getAllData()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
+                } else {
+                    showSuccess("La guia no puede ser eliminada a menos que se cancele")
+                }
             })
-           
+
         }).catch(err => {
             showSuccess(err)
         });
@@ -639,30 +639,31 @@ function Guia(props) {
     const handleCancelar = (e) => {
         e.preventDefault();
         //console.log(state.idGuia)
-       validarCancelarGuia(state.idGuia).then((respuesta)=>{
-            if(respuesta.data.sePuedeCancelar){
-          var params = {
-            "motivoCancelacion": state.MotivoCancelacion,
-            "usuarioCancelacion": localStorage.getItem("UsuarioId"),
-            "fechaCancelacion": `${getCurrentDate()}`,
-            "HoraCancelacion": `${getCurrentTime()}`
-        }
-        console.log(JSON.stringify(params))
-          cancelarGuia(state.idGuia, params).then((respuesta) => {
-            console.log(respuesta.data)
-            showSuccess("La guia ha sido cancelada");
-            handleShowListado()
-        }) 
+        validarCancelarGuia(state.idGuia).then((respuesta) => {
+            if (respuesta.data.sePuedeCancelar) {
+                let params = {
+                    m_nIdGuia: state.idGuia,
+                    motivoCancelacion: state.MotivoCancelacion,
+                    idUsuario: localStorage.getItem("UsuarioId"),
+                    fechaCancelacion: getCurrentDateTime()
+                }
+                console.log(JSON.stringify(params))
+                cancelarGuia(params).then((respuesta) => {
+                    console.log(respuesta.data)
+                    handleShowListado()
+                }).catch(err => {
+                    console.log(err)
+                    showSuccess(err.response?.data)
+                })
+            } else {
+                showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: " + respuesta.data.FolioInforme)
+                return
             }
-            else{
-            showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
-            return
-            }
-            }).catch((err)=>{
-                showSuccess(err)
-            })
+        }).catch((err) => {
+            showSuccess(err)
+        })
 
-        
+
     }
 
     //Prepara campos para agregar guia

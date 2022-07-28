@@ -33,7 +33,7 @@ function agregarGuia(params) {
 }
 
 function eliminarGuia(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Eliminar/${id}/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -49,8 +49,8 @@ function validarEliminarGuia(id){
     return result
 }
 
-function cancelarGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${id}`;
+function cancelarGuia(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Cancelar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
