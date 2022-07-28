@@ -125,10 +125,15 @@ function asignarTrayectos(idGuia) {
 }
 
 function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/ActualizarCoordenadas/${idGuia}/${latitud}/${longitud}`;
+    let params = {
+        m_nIdGuia: idGuia,
+        m_sLatitud: latitud,
+        m_sLongitud: longitud
+    }
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ActualizarCoordenadas`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
