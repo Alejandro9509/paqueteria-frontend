@@ -94,10 +94,14 @@ function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
 }
 
 function cambiarTipoCobro(idGuia, tipoCobro) {
-    const url = `${process.env.REACT_APP_API_URL}/Guias/CambiarTipoCobro/${idGuia}/${tipoCobro}`;
+    let params = {
+        m_nIdGuia: idGuia,
+        m_nIdTIpoCobro: tipoCobro
+    }
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/CambiarTipoCobro`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
