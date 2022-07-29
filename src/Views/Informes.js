@@ -1522,165 +1522,7 @@ function Informes({history}) {
 
                                 <div className="row">
                                     <div className="col-md-12">
-                                        {/*<Grid container spacing={2} alignItems="center">
 
-                                        <Grid item xs={2}>
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChangeFiltros}
-                                                           onKeyDown={handleFolioInformeFiltro}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Folio Informe"
-                                                           id="folioInformeListado"
-                                                           name="folioInformeListado"
-                                                           value={filtros.folioInformeListado}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <TextField
-                                                            autoFocus
-                                                            type="date"
-                                                            margin="dense"
-                                                            label="Fecha Inicial"
-                                                            variant="outlined"
-                                                            className="form-control"
-                                                            InputLabelProps={{shrink: true,}}
-                                                            value={filtros.fechaInicial}
-                                                            onChange={handleChangeFiltros}
-                                                            id="fechaInicial"
-                                                            name="fechaInicial"
-                                                        />
-                                                    </FormControl>
-                                                </Grid>   
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   type="date"
-                                                                   className="form-control"
-                                                                   label="Fecha Final"
-                                                                   InputLabelProps={{
-                                                                       shrink: true,
-                                                                   }}
-                                                                   value={filtros.fechaFinal}
-                                                                   onChange={handleChangeFiltros}
-                                                                   id="fechaFinal"
-                                                                   name="fechaFinal"
-
-                                                        />
-                                                    </FormControl>
-
-                                                </Grid>
-                                            <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
-                                                    <Select
-                                                        labelId="sucursalListadoLabel"
-                                                        label="Sucursal"
-                                                        className="form-control"
-                                                        required
-                                                        value={filtros.sucursalListado}
-                                                        onChange={handleChangeFiltros}
-                                                        id="sucursalListado"
-                                                        name="sucursalListado"
-                                                    >
-                                                        <option value="0">Todas</option>
-                                                        {dataSucursal.map((sucursal) => (
-                                                            <option
-                                                                key={sucursal.m_nIdSucursal}
-                                                                value={sucursal.m_nIdSucursal}
-                                                            >
-                                                                {sucursal.m_sSucursal}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <InputLabel id="idEstatusLabel">Estatus</InputLabel>
-                                                    <Select
-                                                        labelId="estatusListadoLabel"
-                                                        className="form-control"
-                                                        required
-                                                        label="Estatus"
-                                                        value={filtros.estatusListado}
-                                                        onChange={handleChangeFiltros}
-                                                        id="estatusListado"
-                                                        name="estatusListado"
-                                                    >
-                                                        <option value="0">Todos</option>
-                                                        {dataEstatusInformes.map((estatus) => (
-                                                            <option
-                                                                key={estatus.m_nIdEstatusInforme}
-                                                                value={estatus.m_nIdEstatusInforme}
-                                                            >
-                                                                {estatus.m_sEstatus}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
-                                                        <Select
-                                                            labelId="OrigenListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Origen"
-                                                            value={filtros.OrigenListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="OrigenListado"
-                                                            name="OrigenListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataOrigenes.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
-                                                        <Select
-                                                            labelId="DestinoListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Destino"
-                                                            value={filtros.DestinoListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="DestinoListado"
-                                                            name="DestinoListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataOrigenes.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                            <Grid item container xs={2}>
-                                                <IconButton aria-label="delete" onClick={() => {
-                                                    resetFiltros()
-                                                    getAllData()
-                                                }}>
-                                                    <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                                                    Limpiar filtros
-                                                </IconButton>
-                                            </Grid>
-                                            </Grid>*/}
                                         <Filtros
                                             listaResultado={setDataListado}
                                             informe={true}
@@ -1714,35 +1556,7 @@ function Informes({history}) {
                             {/*INICIO DE ESTRUCTURA */}
 
                             <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
-                                {/*Inicio de ejemplo*/}
-                                {/*<div className="form-content">
-                                     start steps
-                                    <div
-                                        className="wizard-breadcrumb number-style"
-                                        style={{
-                                            position: "sticky",
-                                            top: "60px",
-                                            padding: "5px",
-                                            backgroundColor: "white",
-                                            zIndex: 100,
-                                            marginBottom: "10px",
-                                        }}
-                                    >
-                                        <div className="row">
-                                            <Stepper activeStep={stepActive - 1}>
-                                                {
-                                                    ["Información De Envio", "Asignar a un Viaje", "Detalles de Guias"].map((s, index) => (
-                                                        <Step key={s} completed={false}
-                                                              onClick={() => openSection(index + 1)}>
-                                                            <StepLabel>{s}</StepLabel>
-                                                        </Step>
-                                                    ))
-                                                }
-                                            </Stepper>
-                                        </div>
-                                    </div>
-                                     end steps
-                                </div>*/}
+
 
                                 <div className="row">
                                     <div className="col-md-6">
@@ -1889,19 +1703,9 @@ function Informes({history}) {
                                                                                     id="sucursalEmisora"
                                                                                     onChange={handleSelectSucursalEmisora}
                                                                                 >
-                                                                                    {dataSucursal.map(
-                                                                                        (sucursalEmisora) => (
-                                                                                            <option
-                                                                                                key={
-                                                                                                    sucursalEmisora.m_nIdSucursal
-                                                                                                }
-                                                                                                value={
-                                                                                                    sucursalEmisora.m_nIdSucursal
-                                                                                                }
-                                                                                            >
-                                                                                                {
-                                                                                                    sucursalEmisora.m_sSucursal
-                                                                                                }
+                                                                                    {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
+                                                                                            <option key={sucursalEmisora.m_nIdSucursal} value={sucursalEmisora.m_nIdSucursal}>
+                                                                                                {sucursalEmisora.m_sSucursal}
                                                                                             </option>
                                                                                         )
                                                                                     )}
@@ -1909,226 +1713,37 @@ function Informes({history}) {
                                                                             </FormControl>
                                                                         </label>
                                                                     </div>
-                                                                   
-                                                                   
- {/*****************************************Oficina Receptora*************************************************/}
- <div className="col-sm-6 col-md-6 unit">
+                                                                    {/*****************************************Oficina Receptora*************************************************/}
+                                                                    <div className="col-sm-6 col-md-6 unit">
 
-<label className="input select">
-    <FormControl fullWidth
-                 variant="outlined"
-                 margin="dense" required>
-        <InputLabel
-            id="sucursalReceptoraLabel">Oficina
-            Receptora</InputLabel>
-        <Select
-            labelId="sucursalReceptoraLabel"
-            label="Oficina Receptora"
-            className="form-control"
-            required
-            value={state.sucursalReceptora}
-            id="sucursalReceptora"
-            onChange={handleSelectSucursalReceptora}
-        >
-            {dataSucursal.map(
-                (sucursalReceptora) => (
-                    <option
-                        key={
-                            sucursalReceptora.m_nIdSucursal
-                        }
-                        value={
-                            sucursalReceptora.m_nIdSucursal
-                        }
-                    >
-                        {
-                            sucursalReceptora.m_sSucursal
-                        }
-                    </option>
-                )
-            )}
-        </Select>
-    </FormControl>
-</label>
-</div>
-
-                                                                    {/*****************************************Operador*************************************************/}
-
-                                                                    {/*<div className="row">
-                                                                        <div className="col-sm-12 col-md-12 unit">
-
-                                                                              <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/>
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                value={state.IdOperador}
-                                                                                onChange={(event, newValue) =>
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        IdOperador: newValue,
-                                                                                    })
-                                                                                }
-                                                                                id="IdOperador"
-                                                                                disableClearable
-                                                                                forcePopupIcon={false}
-                                                                                options={dataOperadores}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sNombreCompleto
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            variant="outlined"
-                                                                                            label="Operador"
-                                                                                            margin="dense"
-                                                                                            className="form-control"
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: {
-                                                                                                    height: 24,
-                                                                                                },
-                                                                                                type: "search",
-                                                                                                disableUnderline: true,
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment
-                                                                                                        position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "IdOperador",
-                                                                                                                    tipoModal: 2,
-                                                                                                                    openDialog: true,
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>*/}
-                                                                    {/*****************************************tipo Unidad*************************************************/}
-                                                                    {/*<div className="row">
-                                                                        <div className="col-sm-12 col-md-6 unit">
-
-                                                                            <div className="input">
-                                                                                <Autocomplete
-                                                                                    freeSolo
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdTipoUnidad: newValue,
-                                                                                        })
-                                                                                    }
-                                                                                    value={state.IdTipoUnidad}
-                                                                                    id="IdTipoUnidad"
-                                                                                    disableClearable
-                                                                                    forcePopupIcon={false}
-                                                                                    options={dataUnidades && dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
-                                                                                    getOptionLabel={(option) =>
-                                                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                                                    }
-                                                                                    variant="outlined"
-                                                                                    style={{
-                                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                                    }}
-                                                                                    renderInput={(params) => (
-                                                                                        <div>
-                                                                                            <TextField
-                                                                                                variant="outlined"
-                                                                                                label="Dolly"
-                                                                                                margin="dense"
-                                                                                                className="form-control"
-                                                                                                {...params}
-                                                                                                InputProps={{
-                                                                                                    ...params.InputProps,
-                                                                                                    style: {
-                                                                                                        height: 24,
-                                                                                                    },
-                                                                                                    type: "search",
-                                                                                                    disableUnderline: true,
-                                                                                                    endAdornment: (
-                                                                                                        <InputAdornment
-                                                                                                            position="end">
-                                                                                                            <IconButton
-                                                                                                                padding="0px"
-                                                                                                                style={{
-                                                                                                                    paddingRight:
-                                                                                                                        "0px",
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "IdTipoUnidad",
-                                                                                                                        tipoModal: 4,
-                                                                                                                        openDialog: true,
-                                                                                                                    });
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <PageviewIcon
-                                                                                                                    style={{
-                                                                                                                        color:
-                                                                                                                            "#F9A03E",
-                                                                                                                        fontSize: 32,
-                                                                                                                        paddingInlineEnd: 0,
-                                                                                                                        paddingRight: 0,
-                                                                                                                        paddingBlockEnd: 0,
-                                                                                                                        paddingLeft: 0,
-                                                                                                                        paddingBlock: 0,
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </IconButton>
-                                                                                                        </InputAdornment>
-                                                                                                    ),
-                                                                                                }}
-                                                                                            />
-                                                                                        </div>
+                                                                        <label className="input select">
+                                                                            <FormControl fullWidth
+                                                                                         variant="outlined"
+                                                                                         margin="dense" required>
+                                                                                <InputLabel
+                                                                                    id="sucursalReceptoraLabel">Oficina
+                                                                                    Receptora</InputLabel>
+                                                                                <Select
+                                                                                    labelId="sucursalReceptoraLabel"
+                                                                                    label="Oficina Receptora"
+                                                                                    className="form-control"
+                                                                                    required
+                                                                                    value={state.sucursalReceptora}
+                                                                                    id="sucursalReceptora"
+                                                                                    onChange={handleSelectSucursalReceptora}
+                                                                                >
+                                                                                    {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalEmisora)).map(
+                                                                                        (sucursalReceptora) => (
+                                                                                            <option key={sucursalReceptora.m_nIdSucursal} value={sucursalReceptora.m_nIdSucursal}>
+                                                                                                {sucursalReceptora.m_sSucursal}
+                                                                                            </option>
+                                                                                        )
                                                                                     )}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </label>
+                                                                    </div>
 
-                                                                        ****************************************Placa Int************************************************
-                                                                        <div className="col-sm-12 col-md-6 unit">
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           label="Placa Int"
-                                                                                           value={state.PlacasDolly}
-                                                                                           disabled
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           id="PlacasDolly"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>*/}
 
                                                                     {/*****************************************Remolque*************************************************/}
                                                                     <div className="row">
