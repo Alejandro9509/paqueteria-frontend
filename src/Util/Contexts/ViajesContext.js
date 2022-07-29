@@ -7,7 +7,7 @@ const headers = API_HEADERS
 
 
 function agregarViaje( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })

@@ -127,8 +127,8 @@ class AgregarViaje extends Component {
 
             //OPERADOR
             operador: {},
-            cargadoVacioRemolqueUno: false,
-            cargadoVacioRemolqueDos: false,
+            cargadoVacioRemolqueUno: 0,
+            cargadoVacioRemolqueDos: 0,
             unidad: null,
             placaIntUnidad: "",
             estatusUnidad: "",
@@ -324,16 +324,16 @@ class AgregarViaje extends Component {
             CreadoPor: this.state.CreadoPor,
             m_arrInformes: this.state.dataInformesAsignados,
             m_nIdOrigen: this.state.idCiudadOrigen.m_nIdCiudad,
-            m_nDestino: this.state.idCiudadDestino.m_nIdCiudad,
-            IdRemolque1: this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0,
-            IdRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
-            IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
+            m_nIdDestino: this.state.idCiudadDestino.m_nIdCiudad,
+            idRemolque1: this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0,
+            idRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
+            idDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             m_nIdRuta: this.state.idRuta,
-            asignacionUnidad: {
+            /*asignacionUnidad: {
                 idUnidad: this.state.unidad.m_nIdUnidad,
                 idOperador: this.state.operador.m_nIdOperador,
-                CRV1: this.state.cargadoVacioRemolqueUno,
-                CRV2: this.state.cargadoVacioRemolqueDos,
+                cvr1: this.state.cargadoVacioRemolqueUno,
+                cvr2: this.state.cargadoVacioRemolqueDos,
                 referencia: this.state.referencia,
                 kilometro: this.state.kms,
                 fechaCarga: this.state.fechaCarga,
@@ -343,11 +343,24 @@ class AgregarViaje extends Component {
                 horaInforme: this.state.horaInforme,
                 estatus: this.state.estatusInforme,
                 horaEntrega: this.state.horaEntregaGeneral,
-            },
-            EsOperadorPermisionario: this.state.esOperadorPermisionario,
-            LicenciaPermisionario: this.state.licenciaPermisionario,
-            NombrePermisionario: this.state.nombrePermisionario,
-            FechaVigenciaPermisionario: this.state.fechaVigenciaPermisionario,
+            },*/
+            idUnidad: this.state.unidad.m_nIdUnidad,
+            idOperador: this.state.operador.m_nIdOperador,
+            cvr1: this.state.cargadoVacioRemolqueUno,
+            cvr2: this.state.cargadoVacioRemolqueDos,
+            referencia: this.state.referencia,
+            kilometro: this.state.kms,
+            fechaCarga: this.state.fechaCarga,
+            horas: this.state.horas,
+            fechaEntrega: this.state.fechaEntregaGeneral,
+            fechaInforme: this.state.fechaInforme,
+            horaInforme: this.state.horaInforme,
+            estatus: this.state.estatusInforme,
+            horaEntrega: this.state.horaEntregaGeneral,
+            esOperadorPermisionario: this.state.esOperadorPermisionario,
+            licenciaPermisionario: this.state.licenciaPermisionario,
+            nombrePermisionario: this.state.nombrePermisionario,
+            fechaVigenciaPermisionario: this.state.fechaVigenciaPermisionario,
         }
         //console.log(params)
        if (this.props.modificar) {
@@ -370,12 +383,12 @@ class AgregarViaje extends Component {
             agregarViaje(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
-                    $('.nav-tabs li ').removeClass('active');
+                    /*$('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
                     this.props.cancel()
-                    this.handleClearData()
+                    this.handleClearData()*/
                 })
                 .catch((err) => {
                     console.log(err);
@@ -434,8 +447,8 @@ class AgregarViaje extends Component {
 
             //OPERADOR
             operador: {},
-            cargadoVacioRemolqueUno: false,
-            cargadoVacioRemolqueDos: false,
+            cargadoVacioRemolqueUno: 0,
+            cargadoVacioRemolqueDos: 0,
             unidad: null,
             placaIntUnidad: "",
             estatusUnidad: "",
