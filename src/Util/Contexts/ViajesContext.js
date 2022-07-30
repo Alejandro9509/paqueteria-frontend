@@ -16,7 +16,7 @@ function agregarViaje( params){
 }
 
 function modificarViaje( id,params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/Modificar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })

@@ -383,12 +383,12 @@ class AgregarViaje extends Component {
             agregarViaje(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
-                    /*$('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
                     this.props.cancel()
-                    this.handleClearData()*/
+                    this.handleClearData()
                 })
                 .catch((err) => {
                     console.log(err);
