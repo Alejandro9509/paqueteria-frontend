@@ -328,14 +328,14 @@ async function searchLocation(city, address) {
 }
 
 function agregarRuta(idUltimaMilla, tour, data) {
-    const url = `${process.env.REACT_APP_API_URL}/GuardarUltimaMilla`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GuardarUltimaMilla`;
     let result;
     var ultimaMillaObject = {
         idUltimaMilla: idUltimaMilla,
-        fecha: moment(data.fecha).format("YYYYMMDD"),
-        m_nCreadoPor: localStorage.getItem("UsuarioId"),
+        fecha: moment(data.fecha).format("YYYY-MM-DD"),
+        creadoPor: localStorage.getItem("UsuarioId"),
         idSucursal: data.sucursalSeleccionada.m_nIdSucursal,
-        zonas: [],
+        arrZonas: [],
         rutas: []
     }
     tour.unidades.forEach((u) => {
@@ -374,7 +374,7 @@ function agregarRuta(idUltimaMilla, tour, data) {
         })
     })
     data.zonasSeleccionada.forEach((z) => {
-        ultimaMillaObject.zonas.push({id: z.m_nIdZona})
+        ultimaMillaObject.arrZonas.push({m_nIdZona: z.m_nIdZona})
     })
     console.log(ultimaMillaObject)
     trackPromise(
