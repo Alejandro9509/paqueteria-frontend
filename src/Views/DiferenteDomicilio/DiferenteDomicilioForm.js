@@ -20,8 +20,11 @@ export default function DiferenteDomicilioForm(props){
 
     const [state, setState] = useState({
         idPais: props.value.idPais || null,
+        pais: props.value.pais || null,
         idEstado: props.value.idEstado || null,
+        estado: props.value.estado || null,
         idMunicipio: props.value.idMunicipio || null,
+        municipio: props.value.municipio || null,
         codigoPostal: props.value.codigoPostal || null,
         zonaOperativa: props.value.zonaOperativa || null,
         domicilio: props.value.domicilio || null,
@@ -39,8 +42,11 @@ export default function DiferenteDomicilioForm(props){
                     return{
                         ...state,
                         [event.target.name]: event.target.value,
+                        pais: dataPaises.find(i => i.m_nIdPais === event.target.value)?.m_sPais,
                         idEstado: null,
+                        estado: null,
                         idMunicipio: null,
+                        municipio: null,
                         codigoPostal: null,
                         zonaOperativa: null,
                     }
@@ -51,7 +57,9 @@ export default function DiferenteDomicilioForm(props){
                     return{
                         ...state,
                         [event.target.name]: event.target.value,
+                        estado: props.dataEstados.find(i => i.m_nIdEstado === event.target.value)?.m_sEstado,
                         idMunicipio: null,
+                        municipio: null,
                         codigoPostal: null,
                         zonaOperativa: null,
                     }
@@ -62,6 +70,7 @@ export default function DiferenteDomicilioForm(props){
                     return{
                         ...state,
                         [event.target.name]: event.target.value,
+                        municipio: dataMunicipios.find(i => i.m_sCodigoMunicipio === event.target.value)?.m_sMunicipio,
                         codigoPostal: null,
                         zonaOperativa: null,
                     }
@@ -122,7 +131,8 @@ export default function DiferenteDomicilioForm(props){
                     setState(state => {
                         return {
                             ...state,
-                            idPais: respuesta.data.find(i => i.m_sCodigo === "MEX").m_nIdPais
+                            idPais: respuesta.data.find(i => i.m_sCodigo === "MEX").m_nIdPais,
+                            pais: respuesta.data.find(i => i.m_sCodigo === "MEX").m_sPais
                         }
                     })
                 }

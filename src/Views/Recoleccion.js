@@ -29,7 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getCurrentDateTime, validarDerecho} from "../Util/Util"
+import {getAddressFormated, getCurrentDateTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -342,6 +342,7 @@ function Recoleccion() {
         numeroIntRemitente: '0',
         numeroExtRemitente: '',
         coloniaRemitente: '',
+        paisTexto: '',
         estadoRemitente: '',
         municipioRemitente: '',
         codigoPostalRemitente: '',
@@ -367,6 +368,8 @@ function Recoleccion() {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            estadoTexto: data.estadoTexto,
+            paisTexto: data.paisTexto,
             municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
@@ -534,8 +537,11 @@ function Recoleccion() {
 
     const [recoleccionDD, setRecoleccionDD] = useState({
         idPais: '',
+        pais: '',
         idEstado: '',
+        estado: '',
         idMunicipio: '',
+        municipio: '',
         codigoPostal: '',
         zonaOperativa: '',
         domicilio: '',
@@ -548,8 +554,11 @@ function Recoleccion() {
     const resetRecoleccionDD = () => {
         setRecoleccionDD({
             idPais: '',
+            pais: '',
             idEstado: '',
+            estado: '',
             idMunicipio: '',
+            municipio: '',
             codigoPostal: '',
             zonaOperativa: '',
             domicilio: '',
@@ -558,73 +567,6 @@ function Recoleccion() {
             latitud: '',
             longitud: ''
         })
-    }
-
-    const handleChangeRecoleccionDD = (event) => {
-
-        event.preventDefault();
-        setRecoleccionDD(recoleccionDD => {
-            return {
-                ...recoleccionDD,
-                [event.target.name]: event.target.value,
-            }
-        });
-        if (event.target.name === "estadoRec") {
-            setRepetirConceptos(true)
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
-                setDataMunicipiosRecoleccionDD(data)
-            })
-        }
-        if (event.target.name === "municipioRec") {
-            setRepetirConceptos(true)
-        }
-    };
-
-    const handleChangeAutocompleteRecoleccionDD = (input, newValue) => {
-        setRepetirConceptos(true)
-        setRecoleccionDD(recoleccionDD => {
-            return {
-                ...recoleccionDD,
-                [input]: newValue
-            }
-        })
-        if (input === "codigoPostalRec") {
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                if (data.length > 0){
-                    if (data.length === 1){
-                        setRecoleccionDD(recoleccionDD => {
-                            return {
-                                ...recoleccionDD,
-                                zonaOperativaRec: data[0]
-                            }
-                        })
-                    }
-                    setDataZonasOperativasRecoleccionDD(data)
-
-                }else{
-                    setRecoleccionDD(recoleccionDD => {
-                        return{
-                            ...recoleccionDD,
-                            zonaOperativaRec: {}
-                        }
-                    })
-                }
-
-            })
-            /*obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                if (data.length > 0){
-                    setDataZonasTarifaRecoleccionDD(data)
-                }else{
-                    setRecoleccionDD(recoleccionDD => {
-                        return{
-                            ...recoleccionDD,
-                            zonaTarifaRec: {}
-                        }
-                    })
-                }
-
-            })*/
-        }
     }
 
     const getAllEstados = () => {
@@ -645,7 +587,7 @@ function Recoleccion() {
         );
     }
 
-    useEffect(value => {
+    /*useEffect(value => {
 
         if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
             // console.log('tipo Unidad select: ', state.tipoUnidad)
@@ -669,7 +611,7 @@ function Recoleccion() {
 
         // getDataParaListado()
 
-    }, []);
+    }, []);*/
 
     const getDataParaListado = () => {
         // getAllSucursales();
@@ -1332,8 +1274,11 @@ function Recoleccion() {
             return {
                 ...recoleccionDD,
                 idPais: respuesta.data.m_nIdPaisRecoleccion || 0,
+                pais: respuesta.data.m_sPaisRecoleccion || '',
                 idEstado: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                estado: respuesta.data.m_sEstadoRecoleccion || '',
                 idMunicipio: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                municipio: respuesta.data.m_sMunicipioRecoleccion || '',
                 codigoPostal: {
                     m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
                     m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
@@ -2951,8 +2896,11 @@ function Recoleccion() {
             return{
                 ...recoleccionDD,
                 idPais: newValue.idPais,
+                pais: newValue.pais,
                 idEstado: newValue.idEstado,
+                estado: newValue.estado,
                 idMunicipio: newValue.idMunicipio,
+                municipio: newValue.municipio,
                 codigoPostal: newValue.codigoPostal,
                 zonaOperativa: newValue.zonaOperativa,
                 domicilio: newValue.domicilio,
@@ -2964,22 +2912,66 @@ function Recoleccion() {
         });
     }
 
+    const obtenerDatosDireccion = (esRecoleccion) => {
+        let esDiferenteDomicilio = state.diferenteRecoleccion
+        if (esRecoleccion){
+            if (esDiferenteDomicilio){
+                return {
+                    nombreLugar: remitente.nombreRemitente,
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: recoleccionDD.domicilio,
+                    colonia: '',
+                    ciudad: recoleccionDD.municipio,
+                    estado: recoleccionDD.estado,
+                    pais: recoleccionDD.pais,
+                    codigoPostal: recoleccionDD.codigoPostal?.m_sCP,
+                    direccionCompleta: getAddressFormated(
+                        recoleccionDD.domicilio,
+                        null,
+                        null,
+                        null,
+                        recoleccionDD.codigoPostal?.m_sCP,
+                        recoleccionDD.municipio,
+                        recoleccionDD.estado,
+                        recoleccionDD.pais
+                    )
+                }
+            }else{
+                return {
+                    nombreLugar: remitente.nombreRemitente,
+                    numeroInterior: remitente.numeroIntRemitente,
+                    numeroExterior: remitente.numeroExtRemitente,
+                    calle: remitente.calleRemitente,
+                    colonia: remitente.coloniaRemitente,
+                    ciudad: remitente.municipioTexto,
+                    estado: remitente.estadoTexto,
+                    pais: remitente.paisTexto,
+                    codigoPostal: remitente.codigoPostalRemitente?.m_sCP,
+                    direccionCompleta: getAddressFormated(
+                        remitente.calleRemitente,
+                        remitente.numeroExtRemitente,
+                        remitente.numeroIntRemitente,
+                        remitente.coloniaRemitente,
+                        remitente.codigoPostalRemitente?.m_sCP,
+                        remitente.municipioTexto,
+                        remitente.estadoTexto,
+                        remitente.paisTexto
+                    )
+                }
+            }
+        }
+    }
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
             {state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
-                                    dataMunicipiosRecoleccionDD={dataMunicipiosRecoleccionDD}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
                                     titulo={state.titulo}
-                                    recoleccion={true}
                                     remitente={true}
-                                    direccion={remitente}
-                                    esDiferenteRecoleccion={state.diferenteRecoleccion}
-                                    esDiferenteEntrega={state.diferenteEntrega}
-                                    recoleccionDD={recoleccionDD}
-                >
-                </ConfirmarUbicacion>
+                                    direccion={obtenerDatosDireccion(true)}
+                />
             }
             <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} fullWidth
                     maxWidth="md">
