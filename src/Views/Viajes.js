@@ -943,7 +943,7 @@ function Viajes() {
                 getAllData()
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
 
     }
@@ -987,7 +987,7 @@ function Viajes() {
             })
             .catch((err) => {
                 console.log(err);
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
 
     }

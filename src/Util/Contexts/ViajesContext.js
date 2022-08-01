@@ -37,7 +37,7 @@ function agregarViajeSalida( params){
     
     
 function agregarViajeLlegada( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarLlegada`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarLlegada`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
