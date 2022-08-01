@@ -33,7 +33,7 @@ function obtenerEstatusGuia(){
 }
 
 function obtenerEstatusViaje(){
-    const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoViajes`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
