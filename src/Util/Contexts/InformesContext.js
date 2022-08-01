@@ -5,7 +5,7 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
 function modificarInformes(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -31,7 +31,7 @@ function obtenerInformeReporte(id) {
 }
 
 function cancelarInformes(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/Cancelar/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/Cancelar/${id}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -49,7 +49,7 @@ function agregarInformes( params){
 }
 
 function eliminarInformes(id, idEliminadoPor){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -75,7 +75,7 @@ function obtenerInformesEstatus(idEstatus){
     return result
 }
 function obtenerInformesPorViaje(id){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetByIdViaje/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
