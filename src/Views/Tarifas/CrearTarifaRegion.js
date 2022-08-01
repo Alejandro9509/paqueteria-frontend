@@ -213,7 +213,7 @@ function CrearTarifaRegion(props) {
                     </div>
                 </DialogContent>
             </Dialog>
-            <form className="j-forms" onSubmit={onSubmit}>
+            <form className="j-forms" onSubmit={onSubmit} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
                     <Grid container spacing={2}>

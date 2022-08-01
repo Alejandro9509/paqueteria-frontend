@@ -94,7 +94,9 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
     }
 
     const onSubmit = (event) => {
-        event.preventDefault()
+        if (event){
+            event.preventDefault()
+        }
         // this.props.addConcepto(state)
         if (dataProducto.producto === null){
             return
@@ -181,8 +183,8 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                    fullWidth
                                    label="Importe"
                                    style={{textAlign: "right"}}
-                                   step="1"
                                    min="0"
+                                   onKeyDown={e => {if (e.code === "Enter"){e.preventDefault();onSubmit()}}}
                                    value={dataProducto.m_cImporte}
                                    name="m_cImporte"
                         />
