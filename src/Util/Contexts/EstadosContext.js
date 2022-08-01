@@ -42,7 +42,7 @@ function obtenerEstados() {
 }
 
 function obtenerEstadosId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Estado/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Estado/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
