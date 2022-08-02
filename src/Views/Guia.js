@@ -942,14 +942,13 @@ function Guia(props) {
                 $('#Agregar').addClass('in show');
                  //setDataMoneda(props.location.dataMoneda)
                  //setDataSucursal(props.location.dataSucursal)
-                 setDataTipoCobro(props.location.dataTipoCobro)
+                 // setDataTipoCobro(props.location.dataTipoCobro)
                  //setDataTipoCambio(props.location.dataTipoCambio)
                 // setDataCiudadF(props.location.dataCiudades)
                 getDataParaEditar()
             });
 
         }
-        getAllDataTipoCobro()
     }, []);
 
 
@@ -1321,7 +1320,7 @@ function Guia(props) {
     const getDataParaEditar = () =>{
         getAllDataSucursal()
         getAllDataMoneda()
-
+        getAllDataTipoCobro()
         getTipoCambio()
         getAllDataEstatusGuia()
         getAllDataTipoServicio()
@@ -1854,7 +1853,7 @@ function Guia(props) {
     return (
         <div>
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
-                              open={state.openTipoCobro} dataTipoCobro={dataTipoCobro}
+                              open={state.openTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
             <CambiarEstatus submit={(data) => cambiarEstausExitoso(data)}
                             open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
