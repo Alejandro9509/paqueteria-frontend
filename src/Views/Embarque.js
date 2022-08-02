@@ -1455,10 +1455,12 @@ function Embarque(props) {
                 eliminarEmbarques(embarque.m_nIdEmbarque, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
-                        // getAllEmbarque();
+                         getAllEmbarque();
+                        
                     })
                     .catch((err) => {
                         showSuccess(err.response?.data);
+                       
                     });
             })
             .catch((err) => {
@@ -1477,7 +1479,8 @@ function Embarque(props) {
         };
         cancelarEmbarque(state, params).then((respuesta) => {
             showSuccess(respuesta.data);
-            // getAllEmbarque()
+            getAllEmbarque()
+           
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -1578,7 +1581,8 @@ function Embarque(props) {
             if (!respuesta.data.m_bSePuedeCancelar) {
                 showSuccess("Embarque no se puede cancelar");
             }
-        });
+            getAllEmbarque();
+        }); 
     }
 
     function handleShowConsultar(id) {
