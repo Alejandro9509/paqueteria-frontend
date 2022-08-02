@@ -1168,7 +1168,7 @@ function Informes({history}) {
                         showSuccess(data)
                     })
                     .catch((err) => {
-                        showSuccess(err);
+                        showSuccess(err.response?.data);
                     });
             })
             .catch((err) => {
