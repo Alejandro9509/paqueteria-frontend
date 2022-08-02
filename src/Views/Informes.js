@@ -1203,9 +1203,10 @@ function Informes({history}) {
                 eliminarInformes(id, state.CreadoPor)
                     .then(({data}) => {
                         showSuccess(data)
+                        getAllData()
                     })
                     .catch((err) => {
-                        showSuccess(err);
+                        showSuccess(err.response?.data);
                     });
             })
             .catch((err) => {
