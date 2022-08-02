@@ -34,7 +34,7 @@ function agregarRecoleccion(params) {
 }
 
 function cancelarRecoleccion(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Cancelar/${id}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -42,7 +42,7 @@ function cancelarRecoleccion(id, params) {
     return result
 }
 function actualizarCoordenadasRecoleccion(idRecoleccion, latitud, longitud) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/ActualizarCoordenadas/${idRecoleccion}/${latitud}/${longitud}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ActualizarCoordenadas/${idRecoleccion}/${latitud}/${longitud}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })
@@ -51,7 +51,7 @@ function actualizarCoordenadasRecoleccion(idRecoleccion, latitud, longitud) {
 }
 
 function eliminarRecoleccion(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -69,7 +69,7 @@ function obtenerRecoleccion() {
 }
 
 function obtenerRecoleccionCancelada(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetCancelarById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetCancelarById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
