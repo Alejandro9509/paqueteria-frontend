@@ -1183,7 +1183,7 @@ function Recoleccion() {
             handleShowListado();
         }).catch((err) => {
 
-            showSuccess(err);
+            showSuccess(err.response?.data);
         });
     }
 
@@ -1224,7 +1224,7 @@ function Recoleccion() {
                         getAllData();
                     })
                     .catch((err) => {
-                        showSuccess(err);
+                        showSuccess(err.response?.data);
                     });
             })
             .catch((err) => {
