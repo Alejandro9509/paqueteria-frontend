@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarTipoCambio(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCambio/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarTipoCambio(id, params) {
 }
 
 function agregarTipoCambio(params) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCambio/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function agregarTipoCambio(params) {
 }
 
 function eliminarTipoCambio(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCambio/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -42,7 +42,7 @@ function obtenerTipoCambio() {
 }
 
 function obtenerTipoCambioId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCambio/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
