@@ -1458,7 +1458,7 @@ function Embarque(props) {
                         // getAllEmbarque();
                     })
                     .catch((err) => {
-                        showSuccess(err);
+                        showSuccess(err.response?.data);
                     });
             })
             .catch((err) => {
