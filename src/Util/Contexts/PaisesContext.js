@@ -33,7 +33,7 @@ function eliminarPaises(id, idEliminadoPor) {
 }
 
 function obtenerPaises() {
-    const url = `${process.env.REACT_APP_API_URL}/Pais/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Pais/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
