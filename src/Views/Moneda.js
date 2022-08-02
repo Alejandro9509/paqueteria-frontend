@@ -63,8 +63,8 @@ function Moneda() {
             "m_sCodigo": state.codigo,
             "m_sAbreviacion": state.abreviacion,
             "m_sSimbolo": state.simbolo,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "m_nCreadoPor": parseInt(state.CreadoPor),
+            "m_nModificadoPor": parseInt(state.ModificadoPor)
         }
         console.log(params)
         if (state.idMoneda != 0) {
