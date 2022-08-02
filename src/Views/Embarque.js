@@ -3087,7 +3087,7 @@ function Embarque(props) {
                         </li>
                         <li style={{float: "right"}}>
                             <a
-                                className={state.idEmbarque === 0 || !validarDerecho(9101429) ? classes.disabled : ""}
+                                className={state.idEmbarque === 0 || (!validarDerecho(9101429) ||state.estatusEmbarque ==21)? classes.disabled : ""}
                                 style={{textAlign: "right"}}
                                 onClick={() => setRedirect(true)}
                             >
@@ -3119,6 +3119,7 @@ function Embarque(props) {
                                             setState({
                                                 ...state,
                                                 idEmbarque: row.data.m_nIdEmbarque,
+                                                estatusEmbarque:row.data.m_nIdEstatusEmbarque
                                             });
                                         }}
                                     />
