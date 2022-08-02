@@ -404,7 +404,7 @@ function validarUnidadesSeleccionadas(unidades) {
 }
 
 async function ordenarParada(idParada, guias) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/OrdenarParada/${idParada}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/OrdenarParada`;
     let result;
 
     guias = await obtenerGuiasUbicacion(guias)
@@ -416,7 +416,10 @@ async function ordenarParada(idParada, guias) {
         esRecoleccion: g.m_bEsRecoleccion
     }))
     trackPromise(
-        result = axios.put(url, Object.assign({}, {guias: paquetes}), {headers})
+        result = axios.put(url, Object.assign({}, {
+            m_nIdParadaUltimaMilla: idParada,
+            guias: paquetes
+        }), {headers})
     )
     ;
     return result
