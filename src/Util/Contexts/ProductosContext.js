@@ -96,7 +96,7 @@ function modificarProducto(idProducto,params){
 }
 
 function  agregarProducto(params){
-    const url = `${process.env.REACT_APP_API_URL}/Productos/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
