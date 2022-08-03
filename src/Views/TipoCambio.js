@@ -8,6 +8,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import Noty from 'noty';
+import $ from "jquery";
+
 import { dataGridLocaleText } from "../Constants";
 import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoCambio, eliminarTipoCambio, modificarTipoCambio, obtenerTipoCambio, obtenerTipoCambioId } from "../Util/Contexts/TipoCambioContext";
@@ -37,7 +39,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 function TipoCambio() {
-
+window.jQuery = window.$ = $;
     const classes = useStyles();
     const [data, setData] = React.useState([])
 
@@ -206,6 +208,10 @@ function TipoCambio() {
             respuesta.data.map(cambio=>cambio.m_cTipoCambio = cambio.m_cTipoCambio.toFixed(4))
             setData(respuesta.data)
         });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
     };
 
 
@@ -340,7 +346,7 @@ function TipoCambio() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a data-toggle="tab" href="#Listado" onClick={()=>  getAllData()}>
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
