@@ -84,7 +84,7 @@ const configurationRoutes = [
     component: Folios,
     isDialog: false,
     visible: validarDerecho(9101209)
-  },*/
+  },
   {
     path: "/TipoDeCambio",
     name: "Tipo de Cambio",
@@ -92,7 +92,7 @@ const configurationRoutes = [
     component: TipoCambio,
     isDialog: false,
     visible: validarDerecho(9101210)
-  },
+  },*/
   {
     path: "/Moneda",
     name: "Moneda",
