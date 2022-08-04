@@ -106,7 +106,7 @@ class FiltroReporteViajes extends Component {
                                     name="fechaFinal"/>
                             </Grid>
                             <Grid item md={12}>
-                                <Typography variant={"h4"}>Sucursales:</Typography>
+                                <Typography variant={"h4"}>Sucursales origen:</Typography>
                                 <MultiSelect
                                     showSelectedItems={false}
                                     messages= {{
