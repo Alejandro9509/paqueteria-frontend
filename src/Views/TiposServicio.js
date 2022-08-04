@@ -65,12 +65,12 @@ function TiposServicio() {
         console.log(e)
         e.preventDefault()
         var params = {
-            "Descripcion": state.Descripcion,
-            "DiasHabiles": state.DiasHabiles,
-            "Costo": state.Costo,
-            "activo": state.Activo,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "m_sDescripcion": state.Descripcion,
+            "m_nDiashabiles": state.DiasHabiles,
+            "m_cCosto": state.Costo,
+            "m_bActivo": state.Activo,
+            "m_nCreadoPor": state.CreadoPor,
+            "m_nModificadoPor": state.ModificadoPor
         }
         console.log(params)
         if (state.IdTipoServicio != 0) {
@@ -79,7 +79,7 @@ function TiposServicio() {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess("err")
+                showSuccess(err.response?.data)
             });
         } else {
             agregarTipoServicio(params).then(respuesta => {
@@ -87,7 +87,7 @@ function TiposServicio() {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
         }
 
