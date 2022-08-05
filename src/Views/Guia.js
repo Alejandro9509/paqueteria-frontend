@@ -725,25 +725,6 @@ function Guia(props) {
         }
     };
 
-    const handleChangePaquete = (event, index) => {
-
-        var {paquetes} = state
-        paquetes[index][event.target.name] = event.target.value
-        setState({
-            ...state,
-            paquetes: paquetes
-        });
-    };
-
-    const handleChangeSobre = (event, index) => {
-
-        var {sobres} = state
-        sobres[index][event.target.name] = event.target.value
-        setState({
-            ...state,
-            sobres: sobres
-        });
-    };
     const currencyFormatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -778,12 +759,14 @@ function Guia(props) {
                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
+                        { row.row.EntregaEnSucursal &&
+                            <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        }
                         <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
@@ -842,12 +825,6 @@ function Guia(props) {
             field: "m_sTracking",
             width: 150,
         },
-        /*{
-            headerName: "Folio Relacionado",
-            field: "m_sFolioGuiaRelacionada",
-            width: 125,
-
-        },*/
         {
             headerName: "Total",
             field: "m_cTotal",
@@ -1931,20 +1908,6 @@ function Guia(props) {
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
-                        {/*<li>*/}
-                        {/*    <a onClick={(event) => {*/}
-                        {/*        event.stopPropagation();*/}
-                        {/*        setState({*/}
-                        {/*            ...state,*/}
-                        {/*            identificadorModal:*/}
-                        {/*                "imprimir",*/}
-                        {/*            tipoModal: 6,*/}
-                        {/*            openDialog: true*/}
-                        {/*        });*/}
-                        {/*    }}>*/}
-                        {/*        <i className="fa fa-print"/> Imprimir*/}
-                        {/*    </a>*/}
-                        {/*</li>*/}
 
                         <li className="hide">
                             <a data-toggle="tab" href="#Importar">
@@ -1959,15 +1922,19 @@ function Guia(props) {
                                 </a>
                             </li>
 
-                        <li>
-                            <a className={((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) && validarDerecho(9101459)) ? "" : classes.disabled}
-                               onClick={() => {
-                                   getAllDataEstatusGuia()
-                                   setState({...state, openCambiarEstatus: true})
-                               }}>
-                                <i className="fa fa-refresh"/> Cambiar Estatus
-                            </a>
-                        </li>
+                        {
+                            ((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) || (guiaSeleccionada?.m_nIdEstatusGuia === 14)) &&
+                            <li>
+                                <a className={validarDerecho(9101459) ? "" : classes.disabled}
+                                   onClick={() => {
+                                       getAllDataEstatusGuia()
+                                       setState({...state, openCambiarEstatus: true})
+                                   }}>
+                                    <i className="fa fa-refresh"/> Cambiar tipo de entrega
+                                </a>
+                            </li>
+                        }
+
                         <li>
                             <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}
                                onClick={() => {
@@ -1983,12 +1950,6 @@ function Guia(props) {
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
-                        {/*<li>*/}
-                        {/*    <ExportCSV csvData={data} fileName="Guia_Listado" />*/}
-                        {/*</li>*/}
-                        {/*<li>*/}
-                        {/*    <ExportPDF data={data} column={columns} fileName="Guia" />*/}
-                        {/*</li>*/}
                     </ul>
 
                     <div className="row tab-content">
