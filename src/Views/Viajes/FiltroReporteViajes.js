@@ -22,7 +22,6 @@ class FiltroReporteViajes extends Component {
         this.state = {
             fechaInicial: today.getFullYear() + "-" + ((today.getMonth() + 1) <= 9 ? ("0" + (today.getMonth() + 1)) : (today.getMonth() + 1)) + "-01",
             fechaFinal: today.getFullYear() + "-" + ((today.getMonth() +1) <= 9 ? ("0"+(today.getMonth() +1)) : (today.getMonth() +1)) + "-" + (today.getDate() <= 9 ? ("0"+today.getDate()) : today.getDate()),
-            sucursales: [],
             sucursalesSeleccionadas: []
         }
         this.handleChange = this.handleChange.bind(this)
@@ -49,7 +48,7 @@ class FiltroReporteViajes extends Component {
     imprimirFormato(event){
         event.preventDefault()
         if (this.state.sucursalesSeleccionadas.length === 0) {
-            showError("Es necesario seleccionar al menos una sucursal")
+            showError("Es necesario seleccionar al menos un destino")
             return
         }
         imprimirFormatosId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal,this.state.sucursalesSeleccionadas).then(({data}) => {
@@ -106,7 +105,7 @@ class FiltroReporteViajes extends Component {
                                     name="fechaFinal"/>
                             </Grid>
                             <Grid item md={12}>
-                                <Typography variant={"h4"}>Sucursales origen:</Typography>
+                                <Typography variant={"h4"}>Destinos:</Typography>
                                 <MultiSelect
                                     showSelectedItems={false}
                                     messages= {{
@@ -117,7 +116,7 @@ class FiltroReporteViajes extends Component {
                                         selectAllMessage: "Seleccionar todos",
                                         clearAllMessage: "Limpiar todos",
                                     }}
-                                    items={this.props.sucursales.map(s => ({id:s.m_nIdSucursal, label:s.m_sSucursal}))}
+                                    items={this.props.origenesDestinos.map(s => ({id:s.m_nIdCiudad, label:s.m_sCiudad}))}
                                     selectedItems={this.state.sucursalesSeleccionadas}
                                     onChange={this.handleChangeSucursales}
                                 />
