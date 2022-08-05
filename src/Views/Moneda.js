@@ -189,7 +189,7 @@ function Moneda() {
             headerName: "Abreviación",
             field: "m_sAbreviacion",
             width: 150,
-        }, {
+        }/*, {
             headerName: "Creado El",
             field: "m_sCreadoEl",
             width: 200,
@@ -206,7 +206,7 @@ function Moneda() {
             field: "m_sModificadoPor",
             width: 150,
         }
-
+*/
     ]);
 
     useEffect(value => {
