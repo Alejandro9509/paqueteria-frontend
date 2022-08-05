@@ -589,33 +589,6 @@ function Recoleccion() {
         );
     }
 
-    useEffect(value => {
-
-        if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
-            // console.log('tipo Unidad select: ', state.tipoUnidad)
-            getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
-        }
-    }, [state.tipoUnidad])
-
-    useEffect((value) => {
-
-        obtenerFormatosImpresion().then(({data}) => {
-            setFormatosImpresion(data)
-        })
-
-        if (
-            localStorage.getItem("UsuarioId") === null ||
-            localStorage.getItem("UsuarioId") <= 0
-        ) {
-            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-            window.location.replace("login");
-            return;
-        }
-
-        getDataParaListado()
-
-    }, []);
-
     const getDataParaListado = () => {
         getAllSucursales();
         getAllEstatusRecoleccion()
