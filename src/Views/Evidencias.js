@@ -12,12 +12,7 @@ function Evidencias(props) {
         })
     }, [idGuia])
   return (
-    <div className="widget-wrap">
-                <div className="widget-container">
-                    <div className="widget-content">
-                        <div className="row">
-                            <div className="widget-header">
-                                <h2>Evidencias</h2>
+                                <div style={{margin:"0 auto"}}>
                                 <Box display="flex" p={1} bgcolor="background.paper" justifyContent={"center"}>
                                     {imagenesEvidencias.length == 0?
                                     <Typography variant={"h5"} >No hay evidencias</Typography>:
@@ -47,11 +42,7 @@ function Evidencias(props) {
                                     }
                     
                                      </Box>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                          </div>
   )
 }
 

@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox} from '@material-ui/core';
+import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Accordion, AccordionSummary, Typography} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
@@ -21,6 +21,7 @@ import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Uti
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {
     obtenerZonaTarifaByIdCodigoPostal,
@@ -30,6 +31,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    AccordionDetails,
     DialogTitle,
     FormControl,
     InputLabel,
@@ -3054,11 +3056,7 @@ function Guia(props) {
                                         </div>
 
                                     </div>
-                                    {state.agregar === "Consultar" || state.agregar === "Modificar"? 
-                                    <div className="row">
-                                      <Evidencias esRecoleccion={0} idGuia={state.idGuia}/> 
-                                    </div> :""
-                                   }
+                                 
                                     <div className="form-footer col-md-12">
 
                                         {/*<button
@@ -3093,7 +3091,30 @@ function Guia(props) {
                                 </div>
                                     </div>
 
-                                </div>
+                                </div>   { state.agregar !="Agregar"  && <div className="row">
+                                                    <div className="widget-wrap">
+                <div className="widget-container">
+                    <div className="widget-content">
+                        <div className="row">
+                            <div className="widget-header">
+                                                    <Accordion>
+                                                         <AccordionSummary
+                                                           expandIcon={<ExpandMoreIcon />}
+                                                           aria-controls="panel1a-content"
+                                                           id="panel1a-header"
+                                                         ><Typography className={classes.heading}><h2>Evidencias última milla</h2></Typography>
+                                                         </AccordionSummary>
+                                                         
+                                                         <AccordionDetails>
+                                                         <Evidencias esRecoleccion={0} idGuia={state.idGuia}/> 
+                                                          </AccordionDetails>
+                                                        </Accordion>
+                                                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                                    </div>}
                             </form>
                         </div>
                         <div id="Importar" className="tab-pane fade">

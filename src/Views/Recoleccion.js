@@ -22,6 +22,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
     useTable,
     useFilters,
@@ -38,6 +39,9 @@ import RestartAltIcon from '@material-ui/icons/Refresh';
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import Noty from 'noty';
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Button, Chip,
     Dialog,
     DialogActions,
@@ -50,7 +54,8 @@ import {
     Step,
     StepLabel,
     Stepper,
-    Tooltip
+    Tooltip,
+    Typography
 } from "@material-ui/core";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
@@ -4164,9 +4169,9 @@ function Recoleccion() {
                                                    }))} />
                                     </div>
 
-                                                    <div classNae="row">
-                                                   <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion}/>
-                                                    </div>
+                                               
+
+
                                     <div className="form-footer ol-md-12">
                                     <Grid container spacing={1}>
                                         <Grid item xs>
@@ -4195,7 +4200,30 @@ function Recoleccion() {
                                 </div>
 
 
-                                </div>
+                                </div> { state.agregar !="Agregar"  && <div className="row">
+                                                    <div className="widget-wrap">
+                <div className="widget-container">
+                    <div className="widget-content">
+                        <div className="row">
+                            <div className="widget-header">
+                                                    <Accordion>
+                                                         <AccordionSummary
+                                                           expandIcon={<ExpandMoreIcon />}
+                                                           aria-controls="panel1a-content"
+                                                           id="panel1a-header"
+                                                         ><Typography className={classes.heading}><h2>Evidencias última milla</h2></Typography>
+                                                         </AccordionSummary>
+                                                         
+                                                         <AccordionDetails>
+                                                            <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion}/>
+                                                          </AccordionDetails>
+                                                        </Accordion>
+                                                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                                    </div>}
                             </form>
                         </div>
 
