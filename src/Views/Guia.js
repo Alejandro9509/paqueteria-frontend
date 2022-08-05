@@ -708,25 +708,6 @@ function Guia(props) {
         }
     };
 
-    const handleChangePaquete = (event, index) => {
-
-        var {paquetes} = state
-        paquetes[index][event.target.name] = event.target.value
-        setState({
-            ...state,
-            paquetes: paquetes
-        });
-    };
-
-    const handleChangeSobre = (event, index) => {
-
-        var {sobres} = state
-        sobres[index][event.target.name] = event.target.value
-        setState({
-            ...state,
-            sobres: sobres
-        });
-    };
     const currencyFormatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -829,12 +810,6 @@ function Guia(props) {
             field: "m_sTracking",
             width: 150,
         },
-        /*{
-            headerName: "Folio Relacionado",
-            field: "m_sFolioGuiaRelacionada",
-            width: 125,
-
-        },*/
         {
             headerName: "Total",
             field: "m_cTotal",
@@ -1934,15 +1909,19 @@ function Guia(props) {
                                 </a>
                             </li>
 
-                        <li>
-                            <a className={((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) && validarDerecho(9101459)) ? "" : classes.disabled}
-                               onClick={() => {
-                                   getAllDataEstatusGuia()
-                                   setState({...state, openCambiarEstatus: true})
-                               }}>
-                                <i className="fa fa-refresh"/> Cambiar Estatus
-                            </a>
-                        </li>
+                        {
+                            ((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) || (guiaSeleccionada?.m_nIdEstatusGuia === 14)) &&
+                            <li>
+                                <a className={validarDerecho(9101459) ? "" : classes.disabled}
+                                   onClick={() => {
+                                       getAllDataEstatusGuia()
+                                       setState({...state, openCambiarEstatus: true})
+                                   }}>
+                                    <i className="fa fa-refresh"/> Cambiar tipo de entrega
+                                </a>
+                            </li>
+                        }
+
                         <li>
                             <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}
                                onClick={() => {

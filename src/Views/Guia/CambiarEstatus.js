@@ -6,7 +6,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
+    FormControl, Grid,
     InputLabel, MenuItem, Select,
     Typography
 } from "@material-ui/core";
@@ -16,6 +16,9 @@ import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext
 import {cambiarEstatusGuia} from "../../Util/Contexts/GuiaContext";
 import Noty from "noty";
 import {getAddressFormated} from "../../Util/Util";
+import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
+import TextField from "@material-ui/core/TextField";
+import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 
 
 function showSuccess(mensaje) {
@@ -30,7 +33,7 @@ function showSuccess(mensaje) {
 export default CambiarEstatus;
 
 function CambiarEstatus(props){
-    const [dataMunicipios, setDataMunicipios] = useState([])
+    const [dataSucursales, setDataSucursales] = useState([])
 
     const [entregaDD, setEntregaDD] = useState({
         idPais: '',
@@ -50,7 +53,9 @@ function CambiarEstatus(props){
 
     const [state, setState] = useState({
         idEstatusGuia:'',
-        showConfirmarUbicacion: false
+        showConfirmarUbicacion: false,
+        idSucursalEntrega:'',
+        zonaOperativaSucursal: null
     })
 
     const handleOnChangeEntregaDD = (newValue) => {
@@ -102,18 +107,21 @@ function CambiarEstatus(props){
     const resetData = () =>{
         setState({
             idEstatusGuia:'',
+            idSucursalEntrega:'',
+            zonaOperativaSucursal: null
         })
         resetEntregaDD()
     }
 
     useEffect(() => {
-        if (entregaDD.idEstado && entregaDD.idEstado.length > 0){
-            obtenerMunicipiosByIdEstado(entregaDD.idEstado).then(({data}) =>{
-                setDataMunicipios(data)
+        if (parseInt(state.idEstatusGuia) === 7){
+            obtenerSucursales().then(({data}) =>{
+                if (dataSucursales.length === 0){
+                    setDataSucursales(data)
+                }
             })
         }
-
-    }, [entregaDD.idEstado])
+    }, [state.idEstatusGuia])
 
     const mostrarDialogoMapa = (isVisible) => {
         setState(state => {
@@ -137,23 +145,39 @@ function CambiarEstatus(props){
 
     const onSubmit = (e) => {
         e.preventDefault()
-        if ((!entregaDD.latitud) || (!entregaDD.longitud)){
-            showSuccess("Confirme el punto de entrega con el mapa, presionando el botón CONFIRMAR UBICACION.")
+        let params = {}
+        if (state.idEstatusGuia === 14){
+            if ((!entregaDD.latitud) || (!entregaDD.longitud)){
+                showSuccess("Confirme el punto de entrega con el mapa, presionando el botón CONFIRMAR UBICACION.")
+                return
+            }
+            params.idPais =  entregaDD.idPais
+            params.m_nIdEstadoEntrega =  entregaDD.idEstado
+            params.m_sCodigoMunicipioEntrega =  entregaDD.idMunicipio
+            params.codigoPostalEntrega =  entregaDD.codigoPostal?.m_nIdCP
+            params.m_nIdZonaOperativa =  entregaDD.zonaOperativa?.m_nIdZona
+            params.domicilioEntrega =  entregaDD.domicilio
+            params.entregarEn =  entregaDD.detalles
+            params.datosAdicionales =  entregaDD.datosAdicionales
+            params.m_sLatitudD =  entregaDD.latitud
+            params.m_sLongitudD =  entregaDD.longitud
+        }else if (state.idEstatusGuia === 7){
+            if (!(parseInt(state.idSucursalEntrega) > 0)){
+                showSuccess("Seleccione una sucursal de entrega.")
+                return
+            }
+            if (!(parseInt(state.zonaOperativaSucursal?.m_nIdZona) > 0)){
+                showSuccess("La sucursal necesita pertenecer a una zona operativa.")
+                return
+            }
+            params.idSucursalEntrega =  state.idSucursalEntrega
+            params.m_nIdZonaOperativa =  state.zonaOperativa?.m_nIdZona
+        }else{
+            showSuccess("Seleccione un estatus para la guia")
             return
         }
-        let params = {}
         params.m_nIdEstatusGuia = state.idEstatusGuia
 
-        params.idPais =  entregaDD.idPais
-        params.m_nIdEstadoEntrega =  entregaDD.idEstado
-        params.m_sCodigoMunicipioEntrega =  entregaDD.idMunicipio
-        params.codigoPostalEntrega =  entregaDD.codigoPostal?.m_nIdCP
-        params.m_nIdZonaOperativa =  entregaDD.zonaOperativa?.m_nIdZona
-        params.domicilioEntrega =  entregaDD.domicilio
-        params.entregarEn =  entregaDD.detalles
-        params.datosAdicionales =  entregaDD.datosAdicionales
-        params.m_sLatitudD =  entregaDD.latitud
-        params.m_sLongitudD =  entregaDD.longitud
         console.log(params)
         console.log(JSON.stringify(params))
         params.m_nIdGuia = props.guia.m_nIdGuia
@@ -176,7 +200,7 @@ function CambiarEstatus(props){
                 numeroInterior: '',
                 numeroExterior: '',
                 calle: entregaDD.domicilio,
-                colonia: '',
+                colonia: entregaDD.codigoPostal?.m_sColonia ||entregaDD.codigoPostal?.m_sLocalidad,
                 ciudad: entregaDD.municipio,
                 estado: entregaDD.estado,
                 pais: entregaDD.pais,
@@ -185,7 +209,7 @@ function CambiarEstatus(props){
                     entregaDD.domicilio,
                     null,
                     null,
-                    null,
+                    entregaDD.codigoPostal?.m_sColonia ||entregaDD.codigoPostal?.m_sLocalidad,
                     entregaDD.codigoPostal?.m_sCP,
                     entregaDD.municipio,
                     entregaDD.estado,
@@ -193,6 +217,28 @@ function CambiarEstatus(props){
                 )
             }
         }
+    }
+
+    const handleChangeSucursalEntrega = (event) => {
+        //Evaluar si este setState se usa para algo
+        setState(state => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value,
+            }
+        });
+        getZonaOperativaByCodigoPostal(dataSucursales.find(c => parseInt(c.m_nIdSucursal) === parseInt(event.target.value)).m_sCodigoPostal)
+    };
+
+    const getZonaOperativaByCodigoPostal = (codigoPostal) => {
+        obtenerZonaOperativaByIdCodigoPostal(codigoPostal).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    zonaOperativaSucursal: respuesta.data[0]
+                }
+            })
+        })
     }
 
     return (
@@ -211,9 +257,14 @@ function CambiarEstatus(props){
             props.close()
         }} maxWidth={"md"} fullWidth>
             <DialogTitle>
-                <Typography variant={"h3"}>Cambiar Estatus</Typography>
+                <Typography variant={"h3"}>Cambiar Tipo de Entrega</Typography>
             </DialogTitle>
                 <DialogContent>
+                    <Typography variant={"caption"}>Al cambiar a estatus "Completado" se habilitará la guía para realizar entrega ocurre.</Typography>
+                    <br/>
+                    <Typography variant={"caption"}>Al cambiar a estatus "Ultima Milla" se habilitará la guía para realizar entrega a domicilio.</Typography>
+                    <br/>
+                    <br/>
                     <label className="input select" style={{width: "100%"}}>
                         <FormControl fullWidth variant="outlined"
                                      margin="dense">
@@ -233,37 +284,81 @@ function CambiarEstatus(props){
                                     shrink: true,
                                 }}
                             >
-                                {props.dataEstatusGuia.filter(i => i.m_nIdEstatusGuia === 14).map(
-                                    (estatusGuia) => {
-                                        if (props.guia?.EntregaEnSucursal){
-                                            return (
-                                                <MenuItem
-                                                    key={estatusGuia.m_nIdEstatusGuia}
-                                                    value={estatusGuia.m_nIdEstatusGuia}>
-                                                    {estatusGuia.m_sEstatus}
-                                                </MenuItem>
-                                            )
-                                        }else{
-                                            return null
-                                        }
-                                    }
+                                {props.dataEstatusGuia
+                                    .filter(i => parseInt(i.m_nIdEstatusGuia) === 14 || parseInt(i.m_nIdEstatusGuia) === 7)
+                                    .filter(i => parseInt(i.m_nIdEstatusGuia) !== parseInt(props.guia?.m_nIdEstatusGuia)).map(
+                                    (estatusGuia) => (
+                                        <MenuItem key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia}>
+                                            {estatusGuia.m_sEstatus}
+                                        </MenuItem>
+                                    )
                                 )}
                             </Select>
                         </FormControl>
                     </label>
-                    <DiferenteDomicilioForm
-                        value={entregaDD}
-                        onChange={handleOnChangeEntregaDD}
-                        disabled={false}
-                        requiered={false}
-                        listadoEstadosLocal={true}
-                    />
-                    <p>
-                        <span>Latitud: {entregaDD.latitud || "Indefinida"}</span>
-                        <br/>
-                        <span>Longitud: {entregaDD.longitud || "Indefinida"}</span>
-                    </p>
-                    <Button onClick={() => mostrarDialogoMapa(true)} variant={"outlined"} disabled={!sonDatosEntregaValidos}>Confirmar ubicación</Button>
+                    <br/>
+                    <br/>
+                    {
+                        state.idEstatusGuia === 14 &&
+                        <div>
+                            <DiferenteDomicilioForm
+                                value={entregaDD}
+                                onChange={handleOnChangeEntregaDD}
+                                disabled={false}
+                                requiered={false}
+                                listadoEstadosLocal={true}
+                            />
+                            <p>
+                                <span>Latitud: {entregaDD.latitud || "Indefinida"}</span>
+                                <br/>
+                                <span>Longitud: {entregaDD.longitud || "Indefinida"}</span>
+                            </p>
+                            <Button onClick={() => mostrarDialogoMapa(true)} variant={"outlined"} disabled={!sonDatosEntregaValidos}>Confirmar ubicación</Button>
+                        </div>
+                    }
+                    {
+                        state.idEstatusGuia === 7 &&
+                            <div>
+
+                                <Grid container spacing={1}>
+                                    <Grid item xs={12} sm={6}>
+                                        <label className="input select" style={{width: "100%"}}>
+                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                                <InputLabel id="idSucursalEntrega">Sucursal de Entrega</InputLabel>
+                                                <Select
+                                                    labelId={"idSucursalEntrega"}
+                                                    label="Sucursal de Entrega"
+                                                    className="form-control"
+                                                    onChange={handleChangeSucursalEntrega}
+                                                    value={state.idSucursalEntrega}
+                                                    id="idSucursalEntrega"
+                                                    name="idSucursalEntrega"
+                                                    inputProps={{ name: "idSucursalEntrega" }}
+                                                    fullWidth
+                                                >
+                                                    {dataSucursales.map((sucursal) => (
+                                                        <MenuItem key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal} >
+                                                            {sucursal.m_sSucursal}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </label>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField variant="outlined"
+                                                   margin="dense"
+                                                   className="form-control"
+                                                   type="text"
+                                                   label="Zona operativa"
+                                                   value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
+                                                   disabled
+                                        />
+                                    </Grid>
+
+                                </Grid>
+                            </div>
+                    }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {
