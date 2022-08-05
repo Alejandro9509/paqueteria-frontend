@@ -385,7 +385,7 @@ function Viajes() {
                 return (
                     <div align={"center"} style={{width: "100%"}}>
                         <Chip size="small" style={{
-                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            backgroundColor: `#${row.row.m_sColorEstatus}`,
                             //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
                             padding: "1px"
                         }} label={row.row.m_sEstatus}/>

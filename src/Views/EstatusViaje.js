@@ -74,8 +74,7 @@ function EstatusViaje() {
             "m_sCreadoPor": state.CreadoPor,
             "m_sModificadoPor": state.ModificadoPor
         }
-        console.log(params)
-       if (state.idEstatusViaje != 0) {
+        if (state.idEstatusViaje != 0) {
             modificarEstatusViaje(state.idEstatusViaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
@@ -91,7 +90,7 @@ function EstatusViaje() {
                 console.log(err)
                 showSuccess(err)
             });
-        } 
+        }
 
     }
 
@@ -183,7 +182,7 @@ function EstatusViaje() {
     }
 
     const columns = React.useMemo(() => [
-       /* {
+     /*   {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
@@ -200,26 +199,14 @@ function EstatusViaje() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() =>  confirmAlert({
-                                                        title: 'Confirmar Eliminar',
-                                                        message: '¿Está seguro de eliminar estatus viaje?',
-                                                        buttons: [
-                                                            {
-                                                                label: 'Si',
-                                                                onClick: () =>  (handleEliminar(row.row.m_nIdEstatusViaje))
-                                                            },
-                                                            {
-                                                                label: 'No',
-                                                            }
-                                                        ]
-                                                    }) }
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdEstatusViaje))}
                             disabled={!validarDerecho(9101326)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>
                 )
             }
-        }*/,
+        },*/
         {
             headerName: "Abreviación",
             field: "m_sAbreviacion",
@@ -239,11 +226,19 @@ function EstatusViaje() {
             headerName: "Creado El",
             field: "m_sCreadoEl",
             width: 200,
-        }, , {
+        }, {
+            headerName: "Creado Por",
+            field: "m_sCreadoPor",
+            width: 200,
+        }, {
             headerName: "Modificado El",
             field: "m_sModificadoEl",
             width: 200,
-        }, 
+        }, {
+            headerName: "Modificado Por",
+            field: "m_sModificadoPor",
+            width: 200,
+        }
 
     ]);
 
