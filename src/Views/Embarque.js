@@ -3669,16 +3669,18 @@ function Embarque(props) {
                                                                             type="checkbox"
                                                                             checked={state.entregaEnSucursal}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.deshabilitarDiferenteDomicilio}
                                                                             id="entregaEnSucursal"
                                                                         />
-                                                                        <i/>
+                                                                        <i/>{  state.aplicaEntrega && <>
+                                                                      <div style={{color:"red", zIndex: "100", marginLeft: "220px",width: "250px", marginTop: "-15px"}}>
+                                                                        No se realizará entrega de última milla
+                                                                      </div>
+                                                                    </>}
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                            {  state.aplicaEntrega && <>
-                                                                      <div style={{marginTop:"10px",color:"red"}}>No se realizará entrega de última milla</div>
-                                                                    </>}
+                                                            
                                                             </div>
                                                             <div className="row">
                                                             <div style={{width:'70%'}}>
