@@ -155,16 +155,8 @@ function Guia(props) {
     const [dataOcurre, setDataOcurre] = useState()
     const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado: 0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado: 0,
-        DestinoListado: 0,
-    })
     const [dataPaquetes, setDataPaquetes] = useState([])
+    const [guiaSeleccionada, setGuiaSeleccionada] = useState(null)
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -391,6 +383,7 @@ function Guia(props) {
             getAllData()
             setDataOcurre({})
             setState({...state, openDialog: false})
+            setGuiaSeleccionada(null)
         }).catch(err => {
             console.log(err)
             showSuccess(err)
@@ -415,6 +408,7 @@ function Guia(props) {
                 //console.log(respuesta)
                 if (respuesta.data.indexOf("fracaso:") <= 0)
                     getAllData()
+                    setGuiaSeleccionada(null)
             }).catch(function (err) {
                 console.log(err.data)
             });
@@ -693,6 +687,7 @@ function Guia(props) {
             }
         });
         getAllData()
+        setGuiaSeleccionada(null)
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1231,7 +1226,6 @@ function Guia(props) {
     }
 
     const limpiarCamposAgregar = () => {
-        console.log("limpiar")
         setState(state => {
             return {
                 ...state,
@@ -1307,6 +1301,7 @@ function Guia(props) {
             }
         })
         setConceptosAdicionales([])
+        setGuiaSeleccionada(null)
     }
 
     const getDataParaEditar = () =>{
@@ -1816,23 +1811,21 @@ function Guia(props) {
         cambiarTipoCobro(state.idGuia, tipoCobro).then(({data}) => {
             showSuccess(data)
             getAllData()
+            setGuiaSeleccionada(null)
         })
     }
 
-    const cambiarEstaus = (estatus) => {
-
-             cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
-            showSuccess(data)
-            getAllData()
-        }) 
-       
-       
+    const cambiarEstausExitoso = (data) => {
+        showSuccess(data)
+        getAllData()
+        setGuiaSeleccionada(null)
     }
 
     const handleAsignarTrayectos = (idGuia) => {
         asignarTrayectos(idGuia).then(({data}) => {
             showSuccess(data)
             getAllData()
+            setGuiaSeleccionada(null)
         })
     }
 
@@ -1849,9 +1842,11 @@ function Guia(props) {
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
                               open={state.openTipoCobro} dataTipoCobro={dataTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
-            <CambiarEstatus submit={(id) => cambiarEstaus(id)}
-                              open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
-                              close={() => setState({...state, openCambiarEstatus: false})}/>
+            <CambiarEstatus submit={(data) => cambiarEstausExitoso(data)}
+                            open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
+                            close={() => setState({...state, openCambiarEstatus: false})}
+                            guia={guiaSeleccionada}
+            />
             <AsignarTrayectos submit={(id) => handleAsignarTrayectos(id)}
                             open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
                             close={() => setState({...state, openAsignarTrayectos: false})}/>
@@ -1952,7 +1947,7 @@ function Guia(props) {
                             </li>
 
                         <li>
-                            <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459)) && state.estatusGuia != 8? "" : classes.disabled}
+                            <a className={((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) && validarDerecho(9101459)) ? "" : classes.disabled}
                                onClick={() => {
                                    getAllDataEstatusGuia()
                                    setState({...state, openCambiarEstatus: true})
@@ -2011,7 +2006,7 @@ function Guia(props) {
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdGuia}
                                             onRowSelected={(row) => {
-                                                console.log(row)
+                                                setGuiaSeleccionada(row.data)
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,

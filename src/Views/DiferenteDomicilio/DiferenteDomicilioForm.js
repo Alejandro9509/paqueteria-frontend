@@ -9,7 +9,15 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerPaises} from "../../Util/Contexts/PaisesContext";
+import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
 
+/** PROPS
+ value= objeto con los datos a mostrar en los inputs
+ onChange= funcion que retorna datos actualizados
+ disabled= booleano de desabilita inputs
+ requiered= booleano que define si todos los campos sin necesarios
+ dataEstados= listado de estados a mostrar
+ listadoEstadosLocal= booleano que indica si el listado de estados se obtendra del mismo componente o de props*/
 export default function DiferenteDomicilioForm(props){
 
     const [dataEstados, setDataEstados] = useState([])
@@ -57,7 +65,7 @@ export default function DiferenteDomicilioForm(props){
                     return{
                         ...state,
                         [event.target.name]: event.target.value,
-                        estado: props.dataEstados.find(i => i.m_nIdEstado === event.target.value)?.m_sEstado,
+                        estado: props.listadoEstadosLocal ? dataEstados.find(i => i.m_nIdEstado === event.target.value)?.m_sEstado : props.dataEstados.find(i => i.m_nIdEstado === event.target.value)?.m_sEstado,
                         idMunicipio: null,
                         municipio: null,
                         codigoPostal: null,
@@ -141,8 +149,17 @@ export default function DiferenteDomicilioForm(props){
         }
     }
 
+    const getAllEstados = () => {
+        obtenerAllEstados().then((respuesta) => {
+            setDataEstados(respuesta.data);
+        });
+    }
+
     useEffect(() => {
         getPaises()
+        if (props.listadoEstadosLocal){
+            getAllEstados()
+        }
     }, [])
 
     useEffect(() => {
@@ -207,14 +224,22 @@ export default function DiferenteDomicilioForm(props){
                         name="idEstado"
                         disabled={props.disabled}
                     >
-                        {props.dataEstados.filter(i => parseInt(i.m_nIdPais) === parseInt(props.value.idPais)).map((estado) => (
-                            <MenuItem
-                                key={estado.m_nIdEstado}
-                                value={estado.m_nIdEstado}
-                            >
+                        {props.listadoEstadosLocal ?
+                            dataEstados.filter(i => parseInt(i.m_nIdPais) === parseInt(props.value.idPais)).map((estado) => (
+                                <MenuItem
+                                    key={estado.m_nIdEstado}
+                                    value={estado.m_nIdEstado}
+                                >
                                 {estado.m_sEstado}
-                            </MenuItem>
-                        ))}
+                            </MenuItem>)) :
+                            props.dataEstados.filter(i => parseInt(i.m_nIdPais) === parseInt(props.value.idPais)).map((estado) => (
+                                <MenuItem
+                                    key={estado.m_nIdEstado}
+                                    value={estado.m_nIdEstado}
+                                >
+                                    {estado.m_sEstado}
+                                </MenuItem>))
+                        }
                     </Select>
                 </FormControl>
             </Grid>
