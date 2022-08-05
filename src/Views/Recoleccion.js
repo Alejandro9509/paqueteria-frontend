@@ -150,7 +150,6 @@ function Recoleccion() {
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
-    const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
@@ -586,32 +585,6 @@ function Recoleccion() {
             </GridOverlay>
         );
     }
-
-    /*useEffect(value => {
-
-        if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
-            // console.log('tipo Unidad select: ', state.tipoUnidad)
-            getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
-        }
-    }, [state.tipoUnidad])
-
-    useEffect((value) => {
-        obtenerFormatosImpresion().then(({data}) => {
-            setFormatosImpresion(data)
-        })
-        if (
-            localStorage.getItem("UsuarioId") === null ||
-            localStorage.getItem("UsuarioId") <= 0
-        ) {
-            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-            window.location.replace("login");
-            return;
-        }
-
-
-        // getDataParaListado()
-
-    }, []);*/
 
     const getDataParaListado = () => {
         // getAllSucursales();
@@ -3232,51 +3205,6 @@ function Recoleccion() {
                             </DialogActions>
                         </div>
                     }
-                    {state.tipoModal === 6 &&
-                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
-                            <div>
-                                <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
-                                        <Select
-                                            labelId="sucursalListadoLabel"
-                                            label="Formato"
-                                            className="form-control"
-                                            required
-                                            value={state.formatoSeleccionado}
-                                            onChange={(event) => setState({
-                                                ...state,
-                                                formatoSeleccionado: event.target.value
-                                            })}
-                                            id="formatoSeleccionado"
-                                            name="formatoSeleccionado"
-                                        >
-                                            {dataFormatos.map((formato) => (
-                                                <option
-                                                    key={formato.m_nIdFormato}
-                                                    value={formato.m_nIdFormato}
-                                                >
-                                                    {formato.m_sFormato}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <i></i>
-                                </label>
-                            </div>
-
-                            <DialogActions style={{justifyContent: "left"}}>
-
-                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
-                                </button>
-                                <button onClick={() => setState({...state, openDialog: false})}
-                                        className="btn btn-secondary secondary-btn">Cerrar
-                                </button>
-
-                            </DialogActions>
-                        </div>
-                    }
                     {state.tipoModal === 10 &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                             <DialogTableClientes dialogVisible={dialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
@@ -3319,7 +3247,7 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        <li >
+                        {/*<li >
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({
@@ -3332,7 +3260,7 @@ function Recoleccion() {
                             }}>
                                 <i className="fa fa-print"/> Imprimir
                             </a>
-                        </li>
+                        </li>*/}
 
                         <li>
                             <a className={(state.idRecoleccion === 0 || !validarDerecho(9101420)) ? classes.disabled : ""} onClick={handleShowCancelar}>
