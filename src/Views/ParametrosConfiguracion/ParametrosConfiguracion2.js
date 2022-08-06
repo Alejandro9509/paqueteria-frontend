@@ -105,7 +105,8 @@ function ParametrosConfiguracion2() {
         idConceptoEntrega: 0,
         idConceptoSeguro: 0,
         idConceptoCita:0,
-        validarInforme: false
+        validarInforme: false,
+        timbradoPruebaGuia: true
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -151,29 +152,30 @@ function ParametrosConfiguracion2() {
 
     function onSubmit() {
         let params = {
-            EstatusRecoleccion: configuraciones.estatusRecoleccion,
-            EstatusEmbarque: configuraciones.estatusEmbarque,
-            MonedaEmbarque: configuraciones.monedaPredeterminadaEmbarque,
-            TipoCambioEmbarque: configuraciones.tipoCambioEmbarque,
-            EstatusGuia: configuraciones.estatusGuia,
-            TipoTarifaTarifas: configuraciones.tipoTarifa,
-            CostoCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
-            CobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
-            CobrarCita: configuraciones.cobrarCita,
-            DetectarTipoCobro: configuraciones.detectarTipoCobro,
-            LimpiarProducto: configuraciones.limpiarProducto,
-            TipoCobro: configuraciones.tipoCobro,
-            TiposCobroActivos: configuraciones.idsTiposCobroSeleccionString,
-            CorreoFacturacionViaje: draftToHtml(convertToRaw(configuraciones.correoFacturaViaje.getCurrentContent())),
-            CorreoFacturacionUltimaMilla: draftToHtml(convertToRaw(configuraciones.correoFacturaUltimaMilla.getCurrentContent())),
-            IdConceptoFlete: configuraciones.idConceptoFlete,
-            IdConceptoCarga: configuraciones.idConceptoCarga,
-            IdConceptoDescarga: configuraciones.idConceptoDescarga,
-            IdConceptoRecoleccion: configuraciones.idConceptoRecoleccion,
-            IdConceptoEntrega: configuraciones.idConceptoEntrega,
-            IdConceptoSeguro: configuraciones.idConceptoSeguro,
-            IdConceptoCita: configuraciones.idConceptoCita,
-            ValidarInforme: configuraciones.validarInforme
+            estatusRecoleccion: configuraciones.estatusRecoleccion,
+            estatusEmbarque: configuraciones.estatusEmbarque,
+            monedaEmbarque: configuraciones.monedaPredeterminadaEmbarque,
+            tipoCambioEmbarque: configuraciones.tipoCambioEmbarque,
+            estatusGuia: configuraciones.estatusGuia,
+            tipoTarifaTarifas: configuraciones.tipoTarifa,
+            costoCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
+            cobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
+            cobrarCita: configuraciones.cobrarCita,
+            detectarTipoCobro: configuraciones.detectarTipoCobro,
+            limpiarProducto: configuraciones.limpiarProducto,
+            tipoCobro: configuraciones.tipoCobro,
+            tiposCobroActivos: configuraciones.idsTiposCobroSeleccionString,
+            correoFacturacionViaje: draftToHtml(convertToRaw(configuraciones.correoFacturaViaje.getCurrentContent())),
+            correoFacturacionUltimaMilla: draftToHtml(convertToRaw(configuraciones.correoFacturaUltimaMilla.getCurrentContent())),
+            idConceptoFlete: configuraciones.idConceptoFlete,
+            idConceptoCarga: configuraciones.idConceptoCarga,
+            idConceptoDescarga: configuraciones.idConceptoDescarga,
+            idConceptoRecoleccion: configuraciones.idConceptoRecoleccion,
+            idConceptoEntrega: configuraciones.idConceptoEntrega,
+            idConceptoSeguro: configuraciones.idConceptoSeguro,
+            idConceptoCita: configuraciones.idConceptoCita,
+            validarInforme: configuraciones.validarInforme,
+            timbradoPruebaGuia: configuraciones.timbradoPruebaGuia,
         }
 
         modificarParametrosConfiguracion(params)
@@ -217,7 +219,8 @@ function ParametrosConfiguracion2() {
                     idConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
                     idConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
                     idConceptoCita: respuesta.data.IdConceptoCita || 0,
-                    validarInforme: respuesta.data.validarQR
+                    validarInforme: respuesta.data.validarQR,
+                    timbradoPruebaGuia: respuesta.data.TimbradoPruebaGuia
                 }
             })
 
@@ -684,6 +687,21 @@ function ParametrosConfiguracion2() {
                                                 style={{transform: "scale(2)"}}
                                                 inputProps={{'aria-label': 'primary checkbox'}}
                                                 name="validarInforme"
+                                            />
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5} display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <h2>Hacer timbrado de prueba para guías</h2>
+                                        </Box>
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.timbradoPruebaGuia}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="timbradoPruebaGuia"
                                             />
                                         </Box>
                                     </Box>

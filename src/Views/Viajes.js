@@ -76,6 +76,7 @@ import {cancelarInformeCFDI, enviarCorreoCFDIViaje} from "../Util/Contexts/SATCo
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -536,68 +537,114 @@ function Viajes() {
     }
 
     function descargarPDF(id, folio) {
-            obtenerReporteCFDIViaje(id).then(({data}) => {
+        obtenerReporteCFDIViaje(id).then(({data}) => {
+            try {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "CFDI_ " + folio;
-            })
-
+            } catch (e) {
+                showSuccess("No se pudo abrir el pdf")
+            }
+        })
     }
 
     function generarCFDI(id, folio, idViaje, sustituir) {
-        confirmAlert({
-            title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
-                        obtenerCFDI(id,sustituir).then((result) => {
-                            setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
-                            }
-                        })
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar timbrado de prueba'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar timbrado ante el SAT'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            obtenerCFDI(id,sustituir).then((result) => {
+                                setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
+
     }
 
     function showCancelarCFDI(informe){
-        setState({...state,openCancelarSAT: true, informe: informe})
+        setState(state => {
+            return {...state,openCancelarSAT: true, informe: informe}
+        })
     }
     function cancelarCFDI( data) {
-        console.log(data)
-        confirmAlert({
-            title: 'Confirmar Cancelación',
-            message: '¿Está seguro de realizar la cancelación ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
-                        cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
-                            getParadasListado(state.informe)
-                            showSuccess(result.data)
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar cancelación de prueba'
+                mensaje = '¿Está seguro de realizar la cancelación en modo prueba?\nPara timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar cancelación ante el SAT'
+                mensaje = '¿Está seguro de realizar la cancelación ante el SAT?'
+
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            if (parseInt(data.idCancelacionSAT) === 1){
+                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
+                                        setState(state => {
+                                            return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
+                                        })
+                                        getParadasListado(state.informe)
+                                    }).catch((error) => {
+                                        if (error.response){
+                                            showError(error.response.data)
+                                        }
+                                    })
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
+
+                            }else{
+                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    getParadasListado(state.informe)
+                                    showSuccess(result.data)
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
                             }
-                        })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
-
-
     }
 
 
@@ -723,7 +770,7 @@ function Viajes() {
 
                             </Tooltip>
                         }
-                        {
+                        {/*{
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Sustituir CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
@@ -731,7 +778,7 @@ function Viajes() {
                                                                                                                                                                         style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
-                        }
+                        }*/}
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
