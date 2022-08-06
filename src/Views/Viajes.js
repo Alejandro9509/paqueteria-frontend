@@ -610,16 +610,23 @@ function Viajes() {
                         label: 'Sí',
                         onClick: () => {
                             if (parseInt(data.idCancelacionSAT) === 1){
-                                obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
-                                    setState(state => {
-                                        return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
+                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
+                                        setState(state => {
+                                            return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
+                                        })
+                                        getParadasListado(state.informe)
+                                    }).catch((error) => {
+                                        if (error.response){
+                                            showError(error.response.data)
+                                        }
                                     })
-                                    getParadasListado(state.informe)
                                 }).catch((error) => {
                                     if (error.response){
                                         showError(error.response.data)
                                     }
                                 })
+
                             }else{
                                 cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
                                     getParadasListado(state.informe)
