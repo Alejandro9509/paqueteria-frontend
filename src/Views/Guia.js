@@ -941,6 +941,7 @@ function Guia(props) {
             });
 
         }
+        getAllDataTipoCobro()
     }, []);
 
 
