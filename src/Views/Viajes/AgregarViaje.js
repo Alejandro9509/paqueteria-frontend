@@ -783,10 +783,22 @@ class AgregarViaje extends Component {
 
     handleChangeAutocomplete = (input, value) => {
         console.log(JSON.stringify(value))
+           if(value.m_bEsPermisionario){
+            console.log("entra a validar")
+            this.setState(state => {
+                return {
+                    ...state,
+                    nombrePermisionario: value.m_sNombreCompleto,
+                    fechaVigenciaPermisionario: value.m_dLicenciaVencimiento.substr(0, 10),
+                    licenciaPermisionario: value.m_sLicencia 
+                }
+            });
+        }
         this.setState({
             [input]: value,
             esOperadorPermisionario: value.m_bEsPermisionario
         });
+     
     }
 
     handleChangeRuta (idRuta) {
@@ -1611,7 +1623,6 @@ class AgregarViaje extends Component {
                                                     variant={"outlined"}
                                                     label={"No. de licencia"}
                                                     name={"licenciaPermisionario"}
-                                                    type={"number"}
                                                     required={this.state.esOperadorPermisionario}
                                                     value={this.state.licenciaPermisionario}
                                                     onChange={this.handleChangeDataPermisionario}
