@@ -159,6 +159,7 @@ function Viajes() {
 
     function handleEliminar(id,idEstatus) {
         var derecho;
+        console.log(`id estatus ${idEstatus}`)
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
@@ -167,7 +168,7 @@ function Viajes() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            if(idEstatus!=6){
+            if(idEstatus!=10){
                 showSuccess("Para eliminar debe estar cancelado");
                 return
             }
