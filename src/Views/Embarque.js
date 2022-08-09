@@ -1398,11 +1398,11 @@ function Embarque(props) {
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                          getAllEmbarque();
-                        
+
                     })
                     .catch((err) => {
                         showSuccess(err.response?.data);
-                       
+
                     });
             })
             .catch((err) => {
@@ -1422,7 +1422,7 @@ function Embarque(props) {
         cancelarEmbarque(state, params).then((respuesta) => {
             showSuccess(respuesta.data);
             getAllEmbarque()
-           
+
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -1524,7 +1524,7 @@ function Embarque(props) {
                 showSuccess("Embarque no se puede cancelar");
             }
             getAllEmbarque();
-        }); 
+        });
     }
 
     function handleShowConsultar(id) {
@@ -3583,7 +3583,7 @@ function Embarque(props) {
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                             cliente={state.clientePaga}
                                             seCalculaTarifa={seCalculaTarifa}
-                                            LimpiarProducto={configuraciones.limpiarProducto}
+                                            limpiarProducto={configuraciones.limpiarProducto}
                                         />
 
                                     </div>
@@ -3679,7 +3679,7 @@ function Embarque(props) {
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             </div>
                                                             <div className="row">
                                                             <div style={{width:'70%'}}>

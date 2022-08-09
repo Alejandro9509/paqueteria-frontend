@@ -3801,6 +3801,7 @@ function Recoleccion() {
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                             cliente={state.clientePaga}
+                                            limpiarProducto={configuraciones.limpiarProducto}
                                         />
                                     </div>
                                     <div className="widget-wrap" id="complementosSat">

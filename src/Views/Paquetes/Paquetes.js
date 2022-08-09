@@ -38,7 +38,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,LimpiarProducto = false,seCalculaTarifa}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false,seCalculaTarifa}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
@@ -254,11 +254,11 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
                     item.m_rLargo != data.m_rLargo ||
                     item.m_rPeso != data.m_rPeso ||
                     item.m_rVolumen != data.m_rVolumen){
-                       
+
                         entra = true
-                    } 
+                    }
                     item = data
-                  
+
                 }
                 arraynew.push(item)
             })
@@ -314,7 +314,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
                     paquete={paquete}
                     resetPaquete={resetPaquete}
                     cliente={cliente}
-                    LimpiarProducto={LimpiarProducto}
+                    limpiarProducto={limpiarProducto}
                 />
             </div>
 
