@@ -53,6 +53,22 @@ export default function DialogoNuevoPaquete(props) {
         errorTexto:""
        
     })
+
+    const resetErrores = () => {
+        setErrores(errores=>{
+            return{
+                ...errores,
+                errorLargo:false,
+                errorAlto:false,
+                errorAncho:false,
+                errorPeso:false,
+                errorCantidad:false,
+                nameInput:'',
+                errorTexto:""
+
+            }
+        })
+    }
     const [paquete, setPaquete] = useState({
         m_nIdPaquete: Math.floor(Math.random() * 10000),
         producto: null,
@@ -77,7 +93,7 @@ export default function DialogoNuevoPaquete(props) {
         setPaquete(paquete => {
             return {
                 ...paquete,
-                producto: props.LimpiarProducto ? null : paquete.producto,
+                producto: props.limpiarProducto ? null : paquete.producto,
                 m_nIdPaquete: Math.floor(Math.random() * 10000),
                 m_rPeso: "",
                 m_rLargo: "",
@@ -90,7 +106,7 @@ export default function DialogoNuevoPaquete(props) {
                 m_sObservaciones: "",
                 m_cyValorDeclarado: "0",
                 m_nIdTipo: 2,
-                m_nIdProducto: props.LimpiarProducto ? '' : paquete.m_nIdProducto,
+                m_nIdProducto: props.limpiarProducto ? '' : paquete.m_nIdProducto,
                 m_sTipo: "Paquete",
                 m_sClaveSATProducto:'',
                 m_sClaveSATUnidad:'',
@@ -106,6 +122,12 @@ export default function DialogoNuevoPaquete(props) {
         }
     }, [props.paquete])
 
+    useEffect(() => {
+        if (open){
+            resetErrores()
+        }
+    }, [open])
+
     const handleClickOpen = () => {
         resetPaquete()
         setOpen(true);
@@ -118,55 +140,26 @@ export default function DialogoNuevoPaquete(props) {
     const handleAceptar = (e) => {
         e.stopPropagation()
         e.preventDefault()
-        //Si es paquete
-        if (paquete.m_nIdTipo === 2){
-            if(errores.errorAlto || errores.errorAncho || errores.errorCantidad ||errores.errorPeso || errores.errorLargo){
-                showSuccess("Uno o más campos tienen error")
-            }else{
-                if (paquete.producto !== null) {
-                    if (state.agregarMas) {
-                        props.agregar(paquete)
-                        resetPaquete()
-                    } else {
-                        handleClose()
-                        setPaquete(paquete=>{
-                            return{
-                                ...paquete,
-                                m_rLargo:Number(paquete.m_rLargo)
-                            }
-                        })
-                        props.agregar(paquete)
-                        resetPaquete()
-                    }
+        if(errores.errorAlto || errores.errorAncho || errores.errorCantidad ||errores.errorPeso || errores.errorLargo){
+            showSuccess("Uno o más campos tienen error")
+        }else{
+            if (paquete.producto !== null) {
+                if (state.agregarMas) {
+                    props.agregar(paquete)
+                    resetPaquete()
+                    resetErrores()
+                } else {
+                    handleClose()
+                    setPaquete(paquete=>{
+                        return{
+                            ...paquete,
+                            m_rLargo:Number(paquete.m_rLargo)
+                        }
+                    })
+                    props.agregar(paquete)
+                    resetPaquete()
+                    resetErrores()
                 }
-            }
-        //    Si es sobre
-        }else if (paquete.m_nIdTipo === 1){
-            let sobre = {
-                m_nIdPaquete: paquete.m_nIdPaquete,
-                producto: null,
-                m_rPeso: "",
-                m_rLargo: "",
-                m_rAncho: "",
-                m_rAlto: "",
-                m_rVolumen: "",
-                m_nIdTipoEmbalaje: "",
-                m_sDescripcion: paquete.m_sDescripcion,
-                m_nCantidad: "1",
-                m_sObservaciones: "",
-                m_nIdTipo: paquete.m_nIdTipo,
-                m_nIdProducto:'',
-                m_sTipo: paquete.m_sTipo,
-            }
-            if (state.agregarMas) {
-                console.log(sobre)
-                props.agregar(sobre)
-                resetPaquete()
-            } else {
-                handleClose()
-                console.log(sobre)
-                props.agregar(sobre)
-                resetPaquete()
             }
         }
 
@@ -423,146 +416,163 @@ export default function DialogoNuevoPaquete(props) {
     };
 
     const handleChangePaqueteProductov2 = (event, newValue) => {
-        console.log(newValue)
-           if (newValue){  
-            if(newValue?.m_xLargo !== undefined || newValue?.m_xLargo !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
-                if(Number(newValue.m_xLargo)<=0){
-                        setErrores(errores=>{
-                            return{ 
-                                ...errores,
-                             errorLargo:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-
-                            }
-                         })
-                         
-                }else if(isNaN(Number(newValue.m_xLargo))){
-                    setErrores(errores=>{
-                        return{ 
-                            ...errores,
-                         errorLargo:true,
-                         errorTexto:"Ingrese solo digitos"
-                        }
-                     })
-                }else{
-                    setErrores(errores=>{
-                        return{ 
-                            ...errores,
-                         errorLargo:false}
-                     })
+        if (newValue === null) {
+            setPaquete(paquete => {
+                return {
+                    ...paquete,
+                    producto: null,
+                    m_nIdProducto: 0,
                 }
-            }else{
-                setErrores(errores=>{
-                    return{ 
-                        ...errores,
-                     errorLargo:false}
-                 })
-            }
-        
-
-            if(newValue?.m_xAlto !== undefined || newValue?.m_xAlto !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
-                if(Number(newValue.m_xAlto)<=0){
-                        setErrores(errores=>{
-                            return{ 
-                                ...errores,
-                             errorAlto:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-                            
-                            }
-                         })
-                }else if(isNaN(Number(newValue.m_xAlto))){
-                    setErrores(errores=>{
-                        return{ 
-                            ...errores,
-                         errorAlto:true,
-                         errorTexto:"Ingrese solo digitos"
-                        }
-                     })
-                }else{
-                    setErrores(errores=>{
-                        return{ 
-                            ...errores,
-                         errorAlto:false}
-                     })
-                }
-            }else{
-                setErrores(errores=>{
-                    return{ 
-                        ...errores,
-                     errorAlto:false}
-                 })
-            
+            })
+            return
         }
-            if(newValue?.m_xAncho !== undefined || newValue?.m_xAncho !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
-                if(Number(newValue.m_xAncho)<=0){
-                        setErrores(errores=>{
-                            return{ 
-                                ...errores,
-                             errorAncho:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-                            
-                            }
-                         })
-                }else if(isNaN(Number(newValue.m_xAncho))){
-                    setErrores(errores=>{
-                        return{ 
+        if (parseInt(newValue.m_nIdProducto) > 0) {
+            if (newValue?.m_xLargo !== undefined || newValue?.m_xLargo !== null) {//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if (Number(newValue.m_xLargo) <= 0) {
+                    setErrores(errores => {
+                        return {
                             ...errores,
-                         errorAncho:true,
-                         errorTexto:"Ingrese solo digitos"
+                            errorLargo: true,
+                            errorTexto: "Ingrese un numero mayor a 0"
+
                         }
-                     })
-                }else{
-                    setErrores(errores=>{
-                        return{ 
+                    })
+
+                } else if (isNaN(Number(newValue.m_xLargo))) {
+                    setErrores(errores => {
+                        return {
                             ...errores,
-                         errorAncho:false}
-                     })
+                            errorLargo: true,
+                            errorTexto: "Ingrese solo digitos"
+                        }
+                    })
+                } else {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorLargo: false
+                        }
+                    })
                 }
-            }else{
-                setErrores(errores=>{
-                    return{ 
+            } else {
+                setErrores(errores => {
+                    return {
                         ...errores,
-                     errorAncho:false}
-                 })
+                        errorLargo: false
+                    }
+                })
             }
 
-   
-            if(newValue?.m_xPeso !== undefined ||newValue?.m_xPeso !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
-                if(Number(newValue.m_xPeso)<=0){
-                        setErrores(errores=>{
-                            return{ 
-                                ...errores,
-                             errorPeso:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-                            
-                            }
-                         })
-                }else if(isNaN(Number(newValue.m_xPeso))){
-                    setErrores(errores=>{
-                        return{ 
+
+            if (newValue?.m_xAlto !== undefined || newValue?.m_xAlto !== null) {//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if (Number(newValue.m_xAlto) <= 0) {
+                    setErrores(errores => {
+                        return {
                             ...errores,
-                         errorPeso:true,
-                         errorTexto:"Ingrese solo digitos"
+                            errorAlto: true,
+                            errorTexto: "Ingrese un numero mayor a 0"
+
                         }
-                     })
-                }else{
-                    setErrores(errores=>{
-                        return{ 
+                    })
+                } else if (isNaN(Number(newValue.m_xAlto))) {
+                    setErrores(errores => {
+                        return {
                             ...errores,
-                         errorPeso:false}
-                     })
+                            errorAlto: true,
+                            errorTexto: "Ingrese solo digitos"
+                        }
+                    })
+                } else {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorAlto: false
+                        }
+                    })
                 }
-            }else{
-                setErrores(errores=>{
-                    return{ 
+            } else {
+                setErrores(errores => {
+                    return {
                         ...errores,
-                     errorPeso:false}
-                 })
+                        errorAlto: false
+                    }
+                })
+
+            }
+            if (newValue?.m_xAncho !== undefined || newValue?.m_xAncho !== null) {//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if (Number(newValue.m_xAncho) <= 0) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorAncho: true,
+                            errorTexto: "Ingrese un numero mayor a 0"
+
+                        }
+                    })
+                } else if (isNaN(Number(newValue.m_xAncho))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorAncho: true,
+                            errorTexto: "Ingrese solo digitos"
+                        }
+                    })
+                } else {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorAncho: false
+                        }
+                    })
+                }
+            } else {
+                setErrores(errores => {
+                    return {
+                        ...errores,
+                        errorAncho: false
+                    }
+                })
             }
 
-       
-            setPaquete(paquete =>{
-                return{
+
+            if (newValue?.m_xPeso !== undefined || newValue?.m_xPeso !== null) {//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if (Number(newValue.m_xPeso) <= 0) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorPeso: true,
+                            errorTexto: "Ingrese un numero mayor a 0"
+
+                        }
+                    })
+                } else if (isNaN(Number(newValue.m_xPeso))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorPeso: true,
+                            errorTexto: "Ingrese solo digitos"
+                        }
+                    })
+                } else {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorPeso: false
+                        }
+                    })
+                }
+            } else {
+                setErrores(errores => {
+                    return {
+                        ...errores,
+                        errorPeso: false
+                    }
+                })
+            }
+
+
+            setPaquete(paquete => {
+                return {
                     ...paquete,
                     producto: newValue,
                     m_nIdProducto: newValue.m_nIdProducto || 0,
@@ -572,21 +582,29 @@ export default function DialogoNuevoPaquete(props) {
                     m_rPeso: newValue.m_xPeso || 0,
                     m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
                     m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
-                    m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
+                    m_sDescripcion: newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion,
                     m_sProducto: newValue.m_sDescripcion
                 }
             })
-            setPaquete(paquete =>{
-                return{
+            setPaquete(paquete => {
+                return {
                     ...paquete,
                     m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho
-                }})
-        }else{
-            setPaquete(paquete =>{
-                return{
-                    ...paquete,
-                    producto: null,
-                    m_nIdProducto:  0,
+                }
+            })
+            setErrores(errores => {
+                return {
+                    ...errores,
+                    nameInput: '',
+                    errorTexto: ""
+                }
+            })
+        } else {
+            setErrores(errores => {
+                return {
+                    ...errores,
+                    nameInput: 'producto',
+                    errorTexto: "Producto inválido"
                 }
             })
         }
@@ -656,11 +674,19 @@ export default function DialogoNuevoPaquete(props) {
                                         freeSolo
                                         required
                                         onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                        // disableClearable
+                                        onInputChange={(event, newInputValue) => {
+                                            setErrores(errores=>{
+                                                return{
+                                                    ...errores,
+                                                    nameInput:'producto',
+                                                    errorTexto:"Producto inválido"
+                                                }
+                                            })
+                                        }}
                                         forcePopupIcon={false}
                                         options={dataProductos}
                                         disabled={props.disabled}
-                                        getOptionLabel={(option) => `${option.m_nIdProducto}-${option.m_sDescripcion}`}
+                                        getOptionLabel={(option) => (option.m_nIdProducto ? `${option.m_nIdProducto}-${option.m_sDescripcion}` : '')}
                                         variant="outlined"
                                         name={"producto"}
                                         style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -672,8 +698,8 @@ export default function DialogoNuevoPaquete(props) {
                                                 margin="dense"
                                                 onClick={handleClickProducto}
                                                 {...params}
-                                                error={!paquete.producto}
-                                                helperText={!paquete.producto ? 'Producto inválido' : 'Producto válido'}
+                                                error={errores.nameInput === 'producto'}
+                                                helperText={errores.errorTexto}
                                             />
                                         }
                                     />

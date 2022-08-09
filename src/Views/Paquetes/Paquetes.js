@@ -38,7 +38,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,LimpiarProducto = false}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
@@ -296,7 +296,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
                     paquete={paquete}
                     resetPaquete={resetPaquete}
                     cliente={cliente}
-                    LimpiarProducto={LimpiarProducto}
+                    limpiarProducto={limpiarProducto}
                 />
             </div>
 
