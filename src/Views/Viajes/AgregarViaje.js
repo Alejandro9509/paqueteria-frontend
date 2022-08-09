@@ -49,6 +49,7 @@ import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/Operad
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
+import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
 
 const headers = API_HEADERS
 
@@ -781,6 +782,7 @@ class AgregarViaje extends Component {
     }
 
     handleChangeAutocomplete = (input, value) => {
+        console.log(JSON.stringify(value))
         this.setState({
             [input]: value,
             esOperadorPermisionario: value.m_bEsPermisionario
@@ -1586,21 +1588,7 @@ class AgregarViaje extends Component {
                                             />
                                         </Grid>
                                         <Grid item xs={10}/>
-                                        {
-                                            this.state.esOperadorPermisionario &&
-                                            <Grid item xs={2}>
-                                                <TextField
-                                                    margin={"dense"}
-                                                    variant={"outlined"}
-                                                    label={"No. de licencia"}
-                                                    name={"licenciaPermisionario"}
-                                                    type={"number"}
-                                                    required={this.state.esOperadorPermisionario}
-                                                    value={this.state.licenciaPermisionario}
-                                                    onChange={this.handleChangeDataPermisionario}
-                                                />
-                                            </Grid>
-                                        }
+                                       
                                         {
                                             this.state.esOperadorPermisionario &&
                                             <Grid item xs={2}>
@@ -1612,6 +1600,20 @@ class AgregarViaje extends Component {
                                                     inputMode={"text"}
                                                     required={this.state.esOperadorPermisionario}
                                                     value={this.state.nombrePermisionario}
+                                                    onChange={this.handleChangeDataPermisionario}
+                                                />
+                                            </Grid>
+                                        } {
+                                            this.state.esOperadorPermisionario &&
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    margin={"dense"}
+                                                    variant={"outlined"}
+                                                    label={"No. de licencia"}
+                                                    name={"licenciaPermisionario"}
+                                                    type={"number"}
+                                                    required={this.state.esOperadorPermisionario}
+                                                    value={this.state.licenciaPermisionario}
                                                     onChange={this.handleChangeDataPermisionario}
                                                 />
                                             </Grid>
