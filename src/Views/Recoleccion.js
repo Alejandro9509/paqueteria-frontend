@@ -654,11 +654,6 @@ function Recoleccion() {
     }, [state.tipoUnidad])
 
     useEffect((value) => {
-        
-        obtenerFormatosImpresion().then(({data}) => {
-            setFormatosImpresion(data)
-        })
-
         if (
             localStorage.getItem("UsuarioId") === null ||
             localStorage.getItem("UsuarioId") <= 0
