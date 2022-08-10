@@ -63,8 +63,8 @@ import {
     enviarCorreoCFDIViaje
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
-import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {getAddressFormated, validarDerecho} from "../../Util/Util";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 
 function showError(mensaje) {
     new Noty({
@@ -608,15 +608,11 @@ class DetalleParadas extends Component {
                                                close={() => this.setState({openAgregar: false})}
                                                open={this.state.openAgregar} paquetes={this.state.paquetes}/>
                 }
-                {
-                    this.state.openRemplazar &&
-                    <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
-                                                 onSubmit={this.onSubmitRemplazarPaquete}
-                                                 close={() => this.setState({openRemplazar: false})}
-                                                 data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado.m_sFolio)}/>
 
-                }
-
+                <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
+                                             onSubmit={this.onSubmitRemplazarPaquete}
+                                             close={() => this.setState({openRemplazar: false})}
+                                             data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado.m_sFolio)}/>
 
                 {this.state.openParciales &&
                 <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
@@ -959,8 +955,7 @@ class DetalleParadas extends Component {
                                                                                                         color="primary">
                                                                                                         
                                                                                                         {
-                                                                                                            // !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
-                                                                                                            false &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
                                                                                                                 /* disabled={!validarDerecho(9101449)} */
                                                                                                                 onClick={() => {
