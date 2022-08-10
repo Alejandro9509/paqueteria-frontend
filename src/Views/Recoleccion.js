@@ -594,6 +594,20 @@ function Recoleccion() {
         );
     }
 
+    useEffect((value) => {
+        if (
+            localStorage.getItem("UsuarioId") === null ||
+            localStorage.getItem("UsuarioId") <= 0
+        ) {
+            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+            window.location.replace("login");
+            return;
+        }
+
+        getDataParaListado()
+
+    }, []);
+
     const getDataParaListado = () => {
         getAllSucursales();
         getAllEstatusRecoleccion()
@@ -4136,7 +4150,7 @@ function Recoleccion() {
                                                    }))} />
                                     </div>
 
-                                               
+
 
 
                                     <div className="form-footer ol-md-12">
@@ -4181,7 +4195,7 @@ function Recoleccion() {
                                                            id="panel1a-header"
                                                          ><Typography className={classes.heading}><h2>Evidencias última milla</h2></Typography>
                                                          </AccordionSummary>
-                                                         
+
                                                          <AccordionDetails>
                                                             <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion}/>
                                                           </AccordionDetails>
