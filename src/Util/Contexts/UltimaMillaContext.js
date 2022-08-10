@@ -285,12 +285,12 @@ function searchLocationWeb(city, address, subdistrict, number, code) {
     let addressComplete = arrayAddress.join(', ')
     let houseNumbre = ''
     if (number){
-        houseNumbre = 'houseNumber=' + number
+        houseNumbre = 'houseNumber=' + number + ';'
     }
     trackPromise(
         result = new Promise((resolve, reject) => {
             axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
-                + addressComplete + "&qq=" + houseNumbre + ";postalCode=" + code + "&apiKey="
+                + addressComplete + "&qq=" + houseNumbre + "postalCode=" + code + "&apiKey="
                 + process.env.REACT_APP_HERE_API_TOEKN, {}).then(({data}) => {
                 if (data) {
                     if (data.items) {
