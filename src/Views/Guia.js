@@ -440,8 +440,13 @@ function Guia(props) {
         });
     }
 
-    function handleShowModificar(id,folioGuia) {
-        
+    function handleShowModificar(fila,id,folioGuia) {
+      if(fila.m_sFolioInforme){
+              if(fila.m_sFolioInforme?.length!=0){
+                showSuccess(`No es posible modificar la Guia ya que esta relacionada al informe:${fila.m_sFolioInforme}`)
+                return
+            }
+        }
         obtenerValidacionGuia(id).then(respuesta=>{
             console.log(respuesta)
             if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
@@ -459,6 +464,9 @@ function Guia(props) {
                     console.log(err.data)
                 });
             }
+            
+
+
         }).catch(function (err){
             console.log("Error al ejecutar el query"+err.data)
         })
@@ -743,7 +751,7 @@ function Guia(props) {
                     <div>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_nIdEstatusGuia == 8}>
                             <a 
-                               onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}
+                               onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
 
