@@ -29,7 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getCurrentDateTime, validarDerecho} from "../Util/Util"
+import {getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -1226,14 +1226,22 @@ function Recoleccion() {
         let params = {
             "motivoCancelacion": state.motivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
-            "fechaCancelacion": state.fechaCancelacion
+            "fechaCancelacion": state.fechaCancelacion.replace('T', ' ')
         }
         JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
+            setState(state => {
+                return {
+                    ...state,
+                    folioRecoleccion: '',
+                    fechaCancelacion: '',
+                    idRecoleccion: 0,
+                    motivoCancelacion: ''
+                }
+            })
             handleShowListado();
         }).catch((err) => {
-
             showSuccess(err.response?.data);
         });
     }
@@ -1620,48 +1628,28 @@ function Recoleccion() {
     }
 
     function handleShowCancelar() {
+        obtenerSucursales().then((respuesta) => {
+            setDataSucursal(respuesta.data);
+            obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
 
-        let hours = today.getHours();
-        let mostrarHora = today.getHours();
-        let minutes = today.getMinutes();
-        let ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        let strTime = hours + ':' + minutes + ' ' + ampm;
-        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
-
-            const {
-                m_sFolioRecoleccion,
-                m_nIdSucursal,
-                m_nIdEstatusRecoleccion,
-                m_dtFechaCancelacion,
-                m_sMotivoCancelacion,
-                m_nIdInforme,
-                m_nIdGuia,
-                m_nIdEmbarque
-            } = respuesta.data
-            if (respuesta.data.m_nSePuedeCancelar == 0 || m_nIdEmbarque > 0|| m_nIdInforme > 0 || m_nIdGuia > 0)
-            {showSuccess("Recolección no se puede cancelar")
-            }else{
-                setState({
-                    ...state,
-                    folioRecoleccion: m_sFolioRecoleccion,
-                    sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == m_nIdSucursal).m_sSucursal,
-                    fechaCancelacion: m_nIdEstatusRecoleccion == "0" ? m_dtFechaCancelacion :
-                        today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + mostrarHora + ":" + minutes,
-                    mostrarFechaCancelacion: m_nIdEstatusRecoleccion == "0" ? m_dtFechaCancelacion :
-                        today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
-                    estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == m_nIdEstatusRecoleccion).m_sEstatus,
-                    motivoCancelacion: m_sMotivoCancelacion,
-                })
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(3).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Cancelar').addClass('in show');}
+                if (respuesta.data.m_nSePuedeCancelar){
+                    showSuccess("Recolección no se puede cancelar")
+                }else{
+                    setState({
+                        ...state,
+                        folioRecoleccion: data.find(i => parseInt(i.m_nIdRecoleccion) === state.idRecoleccion)?.m_sFolioRecoleccion,
+                        fechaCancelacion: getCurrentDateTime()
+                    })
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(3).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Cancelar').addClass('in show');}
 
 
-        })
+            })
+        });
+
+
 
     }
 
@@ -2122,13 +2110,6 @@ function Recoleccion() {
         handleAceptar(e, coordenadas)
     }
 
-    const getAllClientes = () => {
-        obtenerCliente().then((respuesta) => {
-            setDataClientes(respuesta.data)
-            //  console.log(respuesta.data)
-        })
-    }
-
     function getAllEmbalajes() {
         obtenerEmbalajes().then((respuesta) => {
             setDataEmbalaje(respuesta.data);
@@ -2136,9 +2117,12 @@ function Recoleccion() {
     }
 
     function getAllSucursales() {
-        obtenerSucursales().then((respuesta) => {
-            setDataSucursal(respuesta.data);
-        });
+        if (dataSucursal.length === 0 ){
+            obtenerSucursales().then((respuesta) => {
+                setDataSucursal(respuesta.data);
+            });
+        }
+
     }
 
     function getAllEstatusRecoleccion() {
@@ -4216,59 +4200,19 @@ function Recoleccion() {
                                                             />
                                                         </div>
                                                     </div>
-
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                        onChange={handleChange}
                                                                        className="form-control"
-                                                                       type="text"
-                                                                       label="Sucursal"
-                                                                       value={state.sucursalCancelacion}
-                                                                       id="sucursalCancelacion"
+                                                                       type="datetime-local"
+                                                                       label="Fecha cancelación"
+                                                                       value={state.fechaCancelacion}
+                                                                       id="fechaCancelacion"
                                                                        readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Fecha"
-                                                                       value={state.mostrarFechaCancelacion}
-                                                                       id="mostrarFechaCancelacion"
-                                                                       readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Usuario"
-                                                                       value={state.usuario}
-                                                                       id="usuario"
-                                                                       readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Estatus"
-                                                                       value={state.estatusRecoleccion}
-                                                                       id="estatusRecoleccion"
-                                                                       readOnly
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
                                                             />
                                                         </div>
                                                     </div>
