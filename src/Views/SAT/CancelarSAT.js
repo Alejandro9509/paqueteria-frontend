@@ -70,7 +70,7 @@ class CancelarSAT extends Component {
                                             key={estatus.m_nid}
                                             value={estatus.m_nid}
                                         >
-                                            {estatus.m_sDescripcion}
+                                            {estatus.m_nid+' - '+estatus.m_sDescripcion}
                                         </MenuItem>
                                     ))}
                                 </Select>
