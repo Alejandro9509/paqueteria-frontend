@@ -87,7 +87,7 @@ function obtenerProductosByConvenioCliente(idCliente){
 }
 
 function modificarProducto(idProducto,params){
-    const url = `${process.env.REACT_APP_API_URL}/Productos/Modificar/${idProducto}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Modificar/${idProducto}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
