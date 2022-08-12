@@ -896,14 +896,16 @@ function Viajes() {
         setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
     }
-    const showSalidaDialog = (data) => {
-          //validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
-            //  let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-             // let qr = respuesta.data.find(parada=>parada.Escaneado==false)
+    const showSalidaDialog = (e,data) => {
+        e.stopPropagation()
+          validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+              let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+             let qr = respuesta.data.find(parada=>parada.Escaneado==false)
 
-          //    if(encontrado){//si encontro valor falso en timbrado
-           //       showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-           //   }
+              if(encontrado){//si encontro valor falso en timbrado
+                  showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+                  return
+              }
 
             //  if(qr){//si encontro valor falso en qr
             //    showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
@@ -911,9 +913,9 @@ function Viajes() {
                setParadaData(data);
             setEventOptions({...eventOptions, showSalidaParadasDialog: true});
             //}
-          //}).catch((err)=>{
-           //   showSuccess(err)
-          //})
+          }).catch((err)=>{
+             showSuccess(err)
+          })
     }
 
     const closeSalidaDialog = () => {
@@ -1342,7 +1344,7 @@ function Viajes() {
                                                                             ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado)  &&
 
                                                                             <Link  style={{cursor: "pointer"}}
-                                                                                  onClick={() => showSalidaDialog(p)}>Marcar
+                                                                                  onClick={(e) => showSalidaDialog(e,p)}>Marcar
                                                                                 Salida</Link>
                                                                         }
                                                                         {
