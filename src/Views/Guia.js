@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Accordion, AccordionSummary, Typography} from '@material-ui/core';
+import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Accordion, AccordionSummary, Typography, Chip} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
