@@ -464,7 +464,7 @@ function Guia(props) {
                     console.log(err.data)
                 });
             }
-            
+
 
 
         }).catch(function (err){
@@ -814,6 +814,16 @@ function Guia(props) {
             headerName: "Estatus Guía",
             field: "m_sEstatusGuia",
             width: 200,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColor}`,
+                            padding: "1px"
+                        }} label={row.row.m_sEstatusGuia}/>
+                    </div>
+                )
+            }
         },
         {
             headerName: "Origen",
