@@ -74,66 +74,6 @@ import {validarDerecho} from "./Util/Util";
 
 
 const catalogRoutes = [
-  /*{
-    path: "/GrupoCliente",
-    name: "Grupo Clientes",
-    icon:  <GClienteIcon/>,
-    component: GrupoClientePage,
-  },
-  {
-    path: "/Clientes",
-    name: "Clientes",
-    icon: <ClienteIcon/>,
-    component: ClientePage,
-  },
-  {
-    path: "/RemitenteDestinatarios",
-    name: "Rem / Des",
-    icon: <RemDesIcon/>,
-    component: RemDesPage,
-  },
-  {
-    path: "/Puesto",
-    name: "Puesto",
-    icon: <PuestoIcon/>,
-    component: PuestoPage,
-  },*/
-  /*  {
-     path: "/Departamento",
-     name: "Departamento",
-     icon: <DepartamentoIcon/>,
-     component: DepartamentoPage,
-   }, */
-  /*{
-    path: "/Operador",
-    name: "Operadores",
-    icon: <OperadorIcon/>,
-    component: OperadoresPage,
-  },
-  {
-    path: "/TipoUnidad",
-    name: "Tipo Unidad",
-    icon: <TUnidadIcon/>,
-    component: TipoUnidad,
-  },*/
-  /*  {
-     path: "/GrupoUnidades",
-     name: "Grupo Unidades",
-     icon: <GUnidadesIcon/>,
-     component: GrupoUnidadPage,
-   }, */
-  /*{
-    path: "/Unidades",
-    name: "Unidades",
-    icon: <UnidadesIcon/>,
-    component: UnidadesPage,
-  },
-  {
-    path: "/EstatusUnidad",
-    name: "Estatus Unidades",
-    icon: <EUnidadIcon/>,
-    component: EstatusUnidadPage,
-  },*/
   {
     path: "/Seguros",
     name: "Seguros",
@@ -149,13 +89,6 @@ const catalogRoutes = [
     component: EmbalajesPage,
       visible: validarDerecho(9101225)
   },
-  /*{
-    path: "/TiposViaje",
-    name: "Tipos Viaje",
-    icon: <TViajeIcon/>,
-    component: TiposViaje,
-      visible: validarDerecho(9101226)
-  },*/
   {
     path: "/TiposServicio",
     name: "Tipos de Servicio",
@@ -205,38 +138,13 @@ const catalogRoutes = [
     component: EstatusDocumentoPage,
       visible: validarDerecho(9101232)
   },
-
-  {
+  /*{
     path: "/ClasificacionViaje",
     name: "Clasificación Viaje",
     icon: <ClasificacionIcon/>,
     component: ClasificacionViajePage,
       visible: validarDerecho(9101233)
-  },
-  /*{
-    path: "/Caseta",
-    name: "Casetas",
-    icon: <CasetaIcon/>,
-    component: CasetaPage,
-  },
-  {
-    path: "/Impuestos",
-    name: "Impuestos",
-    icon: <ImpuestosIcon/>,
-    component: ImpuestosPage,
-  },
-  {
-    path: "/ConceptosFacturacion",
-    name: "Conceptos Fact.",
-    icon: <CFacturaIcon/>,
-    component: ConceptosFacturacionPage,
   },*/
-  /* {
-    path: "/Rutas",
-    name: "Rutas",
-    icon: <ViajesIcon/>,
-    component: RutasPage,
-  }, */
   {
     path: "/Tarifas",
     name: "Tarifas",
@@ -265,12 +173,6 @@ const catalogRoutes = [
     component: PlantillaCorreo,
       visible: validarDerecho(9101383)
   },
-  /*  {
-     path: "/CondicionesRecepcionEntrega",
-     name: "Condiciones de recepcion y entrega",
-     icon: <PConfiguracionIcon/>,
-     component: CondicionesRecepcionEntrega,
-   }, */
   {
     path: "/Productos",
     name: "Productos",
@@ -291,14 +193,7 @@ const catalogRoutes = [
     icon: <GeocercaIcon/>,
     component: ZonaOperativa,
       visible: validarDerecho(9101387)
-  },/*
-  {
-    path: "/ZonasTarifas",
-    name: "Zonas Tarifas",
-    icon: <ZonaTarifaIcon/>,
-    component: ZonaTarifas,
-      visible: validarDerecho(9101225)
-  }*/
+  },
 ];
 
 export default catalogRoutes;
