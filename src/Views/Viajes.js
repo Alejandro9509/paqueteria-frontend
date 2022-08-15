@@ -1385,29 +1385,15 @@ function Viajes() {
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`}/>
                                                                         {
-
                                                                             ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado) &&
-
-                                                                            <>
-                                                                                <p style={{margin: "5px"}}> Se requiere de
-                                                                                    timbrar todos los informes para
-                                                                                    habilitar esta opcion: </p>
-                                                                                <Link style={{cursor: "pointer"}}
-                                                                                      className={((informesFiltrados.filter(informe => informe.m_bTimbrado == true).length !== informesFiltrados.length) && (!viajeSeleccionado.m_bEsPermisionario)) ? classes.disabled : ""}
-                                                                                      onClick={() => showSalidaDialog(p)}
-                                                                                      disabled={(informesFiltrados.filter(informe => informe.m_bTimbrado == true).length !== informesFiltrados.length) && (!viajeSeleccionado.m_bEsPermisionario)}>Marcar
-                                                                                    Salida</Link>
-                                                                            </>
+                                                                            <Link style={{cursor: "pointer"}} onClick={(e) => showSalidaDialog(e, p)}>Marcar Salida</Link>
                                                                         }
                                                                         {
                                                                             p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado &&
                                                                             <>
-                                                                                <Link style={{cursor: "pointer"}}
-                                                                                      onClick={() => showCancelarDialog(p)}>Cancelar
-                                                                                    Salida</Link>
+                                                                                <Link style={{cursor: "pointer"}} onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
                                                                                 -
                                                                             </>
-
                                                                         }
 
                                                                         {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
@@ -1430,8 +1416,7 @@ function Viajes() {
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
-                                                                        <div
-                                                                            style={{height: `${70 + (informesFiltrados.length * 30)}px`}}>
+                                                                        <div style={{height: `${100 + (informesFiltrados.length * 30)}px`}}>
                                                                             <DataGrid
                                                                                 localeText={dataGridLocaleText}
                                                                                 rows={informesFiltrados}
