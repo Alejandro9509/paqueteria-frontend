@@ -34,7 +34,7 @@ function agregarEmbarques( params){
 }
 
 function eliminarEmbarques(id, idEliminadoPor){
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -89,7 +89,7 @@ function obtenerUltimoFolioEmbarques(){
 }
 
 function cancelarEmbarque(state, params){
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Cancelar/${state.idEmbarque}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
