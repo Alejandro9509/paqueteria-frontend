@@ -13,6 +13,8 @@ import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarMonedas, eliminarMonedas, modificarMonedas, obtenerMonedas, obtenerMonedasId } from "../Util/Contexts/MonedaContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
+import $ from "jquery";
+window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -63,8 +65,8 @@ function Moneda() {
             "m_sCodigo": state.codigo,
             "m_sAbreviacion": state.abreviacion,
             "m_sSimbolo": state.simbolo,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "m_nCreadoPor": parseInt(state.CreadoPor),
+            "m_nModificadoPor": parseInt(state.ModificadoPor)
         }
         console.log(params)
         if (state.idMoneda != 0) {
@@ -73,20 +75,18 @@ function Moneda() {
                 window.location.reload();
             }).catch(err => {
                 console.log(err)
-                showSuccess("err")
+                showSuccess(err.response?.data)
             });
         } else {
             agregarMonedas(params).then(respuesta => {
                 showSuccess(respuesta.data)
-              //  window.location.reload();
+                window.location.reload();
+              getAllData();
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
         }
-
-        //showSuccess("No existe servicio todavia")
-
     }
 
     function handleEliminar(id) {
@@ -99,14 +99,16 @@ function Moneda() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            eliminarMonedas(id, state.CreadoPor).then(respuesta => {
-                showSuccess(respuesta)
-                window.location.reload();
+            eliminarMonedas(id).then(respuesta => {
+                showSuccess(respuesta.data)
+                console.log(JSON.stringify(respuesta))
+                getAllData();
+               // window.location.reload();
             }).catch(err => {
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
         }).catch(err => {
-            showSuccess(err)
+            showSuccess(err.response?.data)
         });
 
     }
@@ -187,7 +189,7 @@ function Moneda() {
             headerName: "Abreviación",
             field: "m_sAbreviacion",
             width: 150,
-        }, {
+        }/*, {
             headerName: "Creado El",
             field: "m_sCreadoEl",
             width: 200,
@@ -204,7 +206,7 @@ function Moneda() {
             field: "m_sModificadoPor",
             width: 150,
         }
-
+*/
     ]);
 
     useEffect(value => {
@@ -220,6 +222,10 @@ function Moneda() {
         obtenerMonedas().then(respuesta => {
             setData(respuesta.data)
         });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
     };
 
     const headers = {
@@ -262,7 +268,7 @@ function Moneda() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a data-toggle="tab" href="#Listado" onClick={() => getAllData()}>
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
