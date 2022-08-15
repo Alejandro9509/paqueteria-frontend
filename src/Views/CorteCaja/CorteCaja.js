@@ -9,6 +9,8 @@ import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import CorteCajaAgregar from "./CorteCajaAgregar";
 import {
+    Accordion,
+    AccordionSummary,
     Collapse,
     FormControl,
     Grid,
@@ -19,6 +21,7 @@ import {
     Select,
     Tooltip
 } from "@material-ui/core";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
 import Noty from "noty";
@@ -452,8 +455,13 @@ function CorteCaja(){
                                         >
                                             {
                                                 listaCortes.map((group,index) => (
-                                                    <div>
-                                                        <ListItem button key={index} onClick={() => handleClick(index)} style={{backgroundColor:"lightgrey"}}>
+                                                    <Accordion >
+                                                           <AccordionSummary
+                                                                   expandIcon={<ExpandMoreIcon />}
+                                                                    aria-controls="panel2a-content"
+                                                                 id="panel2a-header"
+                                                                >
+                                                              <ListItem button key={index} onClick={() => handleClick(index)} style={{backgroundColor:"lightgrey"}}>
                                                             <ListItemText primary={
                                                                 <Grid container spacing={1} alignItems="center">
                                                                     <Grid item xs={1}>
@@ -467,9 +475,8 @@ function CorteCaja(){
                                                                     <Grid item xs={2}>Total: {currencyFormatter.format(Number(group.reduce((a, b) => +a + +b.m_cTotal, 0)))}</Grid>
                                                                 </Grid>
                                                             } />
-                                                            {openItemKey === index ? <ExpandLess /> : <ExpandMore />}
                                                         </ListItem>
-                                                        <Collapse in={openItemKey === index} timeout="auto" unmountOnExit>
+                                                        </AccordionSummary>
                                                             <div className={"row"} style={{height: (group.length + 1) * 50, width: '100%'}}>
                                                                 <DataGrid columns={columns} rows={group}
                                                                           locateText={dataGridLocaleText}
@@ -478,8 +485,8 @@ function CorteCaja(){
                                                                           getRowId={(row => row.m_nIdCorte)}
                                                                 />
                                                             </div>
-                                                        </Collapse>
-                                                    </div>
+                                                
+                                                    </Accordion>
                                                 ))
                                             }
 

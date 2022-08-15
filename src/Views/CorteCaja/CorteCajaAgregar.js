@@ -160,15 +160,18 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                     let m_cImporteIva = 0
                     let m_cImporteRetiene = 0
                     let m_cTotal = 0
+                    let m_c_Descuento = 0
                     i.m_arClsGuiaConceptos.forEach((j) => {
                         m_cImporte += parseFloat(j.m_cImporte)
                         m_cImporteIva += parseFloat(j.m_cImporteIva)
                         m_cImporteRetiene += parseFloat(j.m_cImporteRetiene)
                         m_cTotal += parseFloat(j.m_cTotal)
+                        m_c_Descuento += parseFloat(j.m_c_Descuento)
                     })
                     i.m_cImporte = m_cImporte
                     i.m_cImporteIva = m_cImporteIva
                     i.m_cImporteRetiene = m_cImporteRetiene
+                    i.m_cDescuento = m_c_Descuento
                     i.m_cTotal = m_cTotal
                     totalTotal += parseFloat(m_cTotal)
                 })
