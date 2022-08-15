@@ -1341,20 +1341,15 @@ function Viajes() {
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
                                                                         {
-                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado)  &&
-
-                                                                            <Link  style={{cursor: "pointer"}}
-                                                                                  onClick={(e) => showSalidaDialog(e,p)}>Marcar
-                                                                                Salida</Link>
+                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado) &&
+                                                                            <Link style={{cursor: "pointer"}} onClick={(e) => showSalidaDialog(e, p)}>Marcar Salida</Link>
                                                                         }
                                                                         {
-                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado  &&
+                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado &&
                                                                             <>
-                                                                                <Link  style={{cursor: "pointer"}}
-                                                                                       onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
+                                                                                <Link style={{cursor: "pointer"}} onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
                                                                                 -
                                                                             </>
-
                                                                         }
 
                                                                         {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
