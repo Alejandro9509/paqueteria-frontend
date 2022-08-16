@@ -491,7 +491,7 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
     return result
 }
 
-function confirmarUbicacion(coordenadas, id, esRecoleccion) {
+/*function confirmarUbicacion(coordenadas, id, esRecoleccion) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/CambiarUbicacion`;
     let result;
     trackPromise(
@@ -502,7 +502,7 @@ function confirmarUbicacion(coordenadas, id, esRecoleccion) {
         }), {headers})
     );
     return result
-}
+}*/
 
 function obtenerUltimaMillaReporte(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/UltimaMilla/${id}`;
