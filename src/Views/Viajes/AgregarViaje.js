@@ -378,7 +378,7 @@ class AgregarViaje extends Component {
                 })
                 .catch((err) => {
                     // console.log(err);
-                    showSuccess("Error al intentar modificar viaje");
+                    showSuccess(err.response?.data);
                 });
         } else {
             agregarViaje(params)
@@ -392,8 +392,7 @@ class AgregarViaje extends Component {
                     this.handleClearData()
                 })
                 .catch((err) => {
-                    console.log(err);
-                    showSuccess("Error al intentar agregar viaje");
+                    showSuccess(err.response?.data);
                 });
         }
 
