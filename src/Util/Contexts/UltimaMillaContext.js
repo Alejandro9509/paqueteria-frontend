@@ -463,16 +463,16 @@ function obtenerPaquetesUnidadOperador(idUnidad, idOperador, zonasIds) {
 }
 
 async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/RemplazarParada/${idParada}/${paqueteViejo.m_nId}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/RemplazarParada/${idParada}/${paqueteViejo.m_nId}`;
     let result;
     var guia = await obtenerGuiasUbicacion([paqueteNuevo])
     trackPromise(
         result = axios.put(url, Object.assign({}, {
-            EsRecoleccion: paqueteViejo.m_bEsRecoleccion,
-            IdNuevaGuia: paqueteNuevo.m_nId,
-            NuevoEsRecoleccion: paqueteNuevo.m_bEsRecoleccion,
-            Lat: guia[0].lat,
-            Lng: guia[0].lng
+            esRecoleccion: paqueteViejo.m_bEsRecoleccion,
+            idNuevaGuia: paqueteNuevo.m_nId,
+            nuevoEsRecoleccion: paqueteNuevo.m_bEsRecoleccion,
+            lat: guia[0].lat,
+            lng: guia[0].lng
         }), {headers})
     );
     return result
