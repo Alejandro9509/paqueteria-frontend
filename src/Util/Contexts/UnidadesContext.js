@@ -88,7 +88,7 @@ function obtenerUnidadesId(id) {
 }
 
 function obtenerEstatusUnidadeId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetByIdUnidad/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/InventarioUnidades/GetByIdUnidad/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
