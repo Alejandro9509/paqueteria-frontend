@@ -692,7 +692,7 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                     <Box width="40%" p={1} my={0.5} display="flex">
                                         <Box width="40%" p={1} my={0.5}>
-                                            <h2>Hacer timbrado de prueba para guías</h2>
+                                            <h2>Hacer timbrado de prueba</h2>
                                         </Box>
                                         <Box width="40%" p={1} my={0.5}>
                                             <Checkbox
