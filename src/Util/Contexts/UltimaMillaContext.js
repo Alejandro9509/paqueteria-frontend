@@ -445,7 +445,7 @@ function obtenerPaquetesInforme(idInforme, zonasIds) {
 }
 
 function obtenerPaquetesViaje(idViaje, zonasIds) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByViaje/` + idViaje;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetListadoPaquetesByViaje/` + idViaje;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
