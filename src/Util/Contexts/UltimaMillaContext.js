@@ -514,7 +514,7 @@ function obtenerUltimaMillaReporte(id) {
 }
 
 function cancelarRuta(id) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/EliminarRuta/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/EliminarRuta/${id}`;
     let result;
     trackPromise(
         result = axios.delete(url, {headers})
