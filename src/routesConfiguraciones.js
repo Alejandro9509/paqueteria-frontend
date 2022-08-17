@@ -1,7 +1,6 @@
 import React from 'react';
 import DepartamentoPage from './Views/Departamento';
 import MonedaPage from './Views/Moneda';
-import TipoCambio from './Views/TipoCambio';
 import PaisesPage from './Views/Paises';
 import CiudadesCodigoPostalPage from './Views/Ciudades';
 import ParametrosPage from './Views/Parametros';
@@ -84,7 +83,7 @@ const configurationRoutes = [
     component: Folios,
     isDialog: false,
     visible: validarDerecho(9101209)
-  },*/
+  },
   {
     path: "/TipoDeCambio",
     name: "Tipo de Cambio",
@@ -92,7 +91,7 @@ const configurationRoutes = [
     component: TipoCambio,
     isDialog: false,
     visible: validarDerecho(9101210)
-  },
+  },*/
   {
     path: "/Moneda",
     name: "Moneda",
