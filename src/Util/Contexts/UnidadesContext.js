@@ -106,7 +106,7 @@ function cambiarOperadorUnidad(idOperador, idUnidad) {
 }
 
 function obtenerUnidadesTipo(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ByTipoUnidad/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
