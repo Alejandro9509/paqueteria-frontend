@@ -7,7 +7,7 @@ const headers = API_HEADERS
 
 
 function agregarViaje( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -16,7 +16,7 @@ function agregarViaje( params){
 }
 
 function modificarViaje( id,params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/Modificar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -25,7 +25,7 @@ function modificarViaje( id,params){
 }
 
 function agregarViajeSalida( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarSalida`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarSalida`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -37,7 +37,7 @@ function agregarViajeSalida( params){
     
     
 function agregarViajeLlegada( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarLlegada`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarLlegada`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
