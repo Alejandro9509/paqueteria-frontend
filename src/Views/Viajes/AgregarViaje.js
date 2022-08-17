@@ -170,7 +170,7 @@ class AgregarViaje extends Component {
         this.getAllUnidades = this.getAllUnidades.bind(this);
         this.handleSelectCP = this.handleSelectCP.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.getInformesByFiltro = this.getInformesByFiltro.bind(this);
+        // this.getInformesByFiltro = this.getInformesByFiltro.bind(this);
         this.handleRutaFiltro = this.handleRutaFiltro.bind(this);
         this.handleRemolqueUnoFiltro = this.handleRemolqueUnoFiltro.bind(this);
         this.handleRemolqueDosFiltro = this.handleRemolqueDosFiltro.bind(this);
@@ -560,13 +560,13 @@ class AgregarViaje extends Component {
         })
     }
 
-    getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
+    /*getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
         const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" + nIdRuta + "/" +
             nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly;
         axios.get(url, {headers}).then((respuesta) => {
             this.setState({dataInformesAsignados: respuesta.data})
         });
-    }
+    }*/
 
     handleChange = (event) => {
         event.preventDefault();
@@ -644,11 +644,11 @@ class AgregarViaje extends Component {
                 }
 
             })
-            if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
                 this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                     newValue.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-            }
+            }*/
 
         }else{
             this.setState({
@@ -695,11 +695,11 @@ class AgregarViaje extends Component {
                 }
             })
 
-            if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
                 this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                     this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-            }
+            }*/
         }else{
             this.setState({
                 IdRemolque2: null,
@@ -763,11 +763,11 @@ class AgregarViaje extends Component {
 
 
 
-        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+        /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
             this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                 this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-        }
+        }*/
     }
 
     handleDollyFiltro(event, newValue) {
@@ -778,11 +778,11 @@ class AgregarViaje extends Component {
             return
         }
         this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
-        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
+        /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
 
             this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                 this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
-        }
+        }*/
         }
         else{
             this.setState({IdDolly: null, placasDolly: "",dollySelect:false})
