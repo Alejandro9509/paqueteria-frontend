@@ -896,14 +896,18 @@ function Viajes() {
         setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
     }
-    const showSalidaDialog = (data) => {
-          //validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
-            //  let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-             // let qr = respuesta.data.find(parada=>parada.Escaneado==false)
+    const showSalidaDialog = (e,data) => {
+        e.stopPropagation()
+          validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+              if (!viajeSeleccionado.m_bUnidadPermisionario){
+                  let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+                  let qr = respuesta.data.find(parada=>parada.Escaneado==false)
 
-          //    if(encontrado){//si encontro valor falso en timbrado
-           //       showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-           //   }
+                  if(encontrado){//si encontro valor falso en timbrado
+                      showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+                      return
+                  }
+              }
 
             //  if(qr){//si encontro valor falso en qr
             //    showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
@@ -911,9 +915,9 @@ function Viajes() {
                setParadaData(data);
             setEventOptions({...eventOptions, showSalidaParadasDialog: true});
             //}
-          //}).catch((err)=>{
-           //   showSuccess(err)
-          //})
+          }).catch((err)=>{
+             showSuccess(err)
+          })
     }
 
     const closeSalidaDialog = () => {
@@ -1339,20 +1343,15 @@ function Viajes() {
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
                                                                         {
-                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado)  &&
-
-                                                                            <Link  style={{cursor: "pointer"}}
-                                                                                  onClick={() => showSalidaDialog(p)}>Marcar
-                                                                                Salida</Link>
+                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado) &&
+                                                                            <Link style={{cursor: "pointer"}} onClick={(e) => showSalidaDialog(e, p)}>Marcar Salida</Link>
                                                                         }
                                                                         {
-                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado  &&
+                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado &&
                                                                             <>
-                                                                                <Link  style={{cursor: "pointer"}}
-                                                                                       onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
+                                                                                <Link style={{cursor: "pointer"}} onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
                                                                                 -
                                                                             </>
-
                                                                         }
 
                                                                         {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
