@@ -58,7 +58,7 @@ function validarNumeroCliente(state){
 }
 
 function obtenerClienteId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Clientes/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
