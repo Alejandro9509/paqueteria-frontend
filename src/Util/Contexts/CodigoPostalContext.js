@@ -44,7 +44,7 @@ function obtenerCodigoPostalCiudad(id){
 
 
 function obtenerCodigoPostal(){
-    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado` ;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetListado` ;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
