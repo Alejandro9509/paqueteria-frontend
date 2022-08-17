@@ -1210,7 +1210,7 @@ function Informes({history}) {
                     });
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
     }
 
