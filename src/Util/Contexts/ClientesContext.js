@@ -58,20 +58,11 @@ function validarNumeroCliente(state){
 }
 
 function obtenerClienteId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Clientes/GetById/${id}`;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-        );
-    return result
-}
-
-function obtenerClienteById(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-    );
+        );
     return result
 }
 
@@ -93,4 +84,4 @@ function obtenerClienteTieneConvenio(idCliente, idTipoTarifa){
     return result
 }
 
-export {obtenerClienteTieneConvenio,modificarCliente, agregarCliente, eliminarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente,obtenerClientePaginado,obtenerClienteById,obtenerClientePublicoGeneral}
+export {obtenerClienteTieneConvenio,modificarCliente, agregarCliente, eliminarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente,obtenerClientePaginado,obtenerClientePublicoGeneral}
