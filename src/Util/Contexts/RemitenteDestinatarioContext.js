@@ -61,7 +61,7 @@ function eliminarRemitentesDestinatarios(id, idEliminadoPor){
 }
 
 function obtenerRemitentesDestinatarios(){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -86,7 +86,7 @@ function validarNumeroRemitente(state){
 }
 
 function obtenerRemitentesDestinatariosId(id){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
