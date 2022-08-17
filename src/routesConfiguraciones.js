@@ -1,7 +1,6 @@
 import React from 'react';
 import DepartamentoPage from './Views/Departamento';
 import MonedaPage from './Views/Moneda';
-import TipoCambio from './Views/TipoCambio';
 import PaisesPage from './Views/Paises';
 import CiudadesCodigoPostalPage from './Views/Ciudades';
 import ParametrosPage from './Views/Parametros';
