@@ -23,7 +23,7 @@ function agregarZonaOperativa(params) {
 }
 
 function eliminarZonaOperativa(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaOperativa/Eliminar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
