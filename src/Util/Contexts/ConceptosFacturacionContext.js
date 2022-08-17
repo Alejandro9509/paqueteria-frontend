@@ -51,7 +51,7 @@ function obtenerImpuestosByConceptosFacturacion(id){
 }
 
 function obtenerConceptosFacturacionManiobra(){
-    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado/Maniobra`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ConceptosFacturacion/GetListado/Maniobra`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
