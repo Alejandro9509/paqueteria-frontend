@@ -597,13 +597,13 @@ function Recoleccion() {
             return;
         }
 
-
-        // getDataParaListado()
+        getDataParaListado()
 
     }, []);
 
     const getDataParaListado = () => {
-        // getAllSucursales();
+        getAllSucursales();
+        getAllEstatusRecoleccion()
 
     }
 
@@ -1218,7 +1218,7 @@ function Recoleccion() {
                     });
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
     }
 
@@ -3304,6 +3304,7 @@ function Recoleccion() {
                                         <div className="col-md-12">
                                             <Filtros
                                                 listaResultado={setDataListado}
+                                                listadoSucursales={setDataSucursal}
                                                 recoleccion={true}
                                             />
                                         </div>
