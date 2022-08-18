@@ -17,6 +17,7 @@ import {
     Tooltip,
 } from "@material-ui/core";
 import ClavesCFDI from "./ClavesCFDI";
+import Noty from 'noty';
 import { obtenerImpuestos } from "../../Util/Contexts/ImpuestosContext";
 import {
     obtenerSATEmbalajes, obtenerSATPaginado,
@@ -28,6 +29,17 @@ import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import {API_HEADERS} from "../../Constants";
 import {obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 var numRegistros = 20
+
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
+
 function CrearConceptoSAT(props) {
     const [pagina, setPagina] = React.useState(0);
     const [rows, setRow] = useState([])
@@ -95,7 +107,12 @@ function CrearConceptoSAT(props) {
     function cargarDesdeServidor(pagina,numRegistros){
         if (state.catalogo !== "") {
             return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
                 setState({...state, dataSat: respuesta.data, openDialog: true})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+              
             })
         }
     }
