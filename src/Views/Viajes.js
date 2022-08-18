@@ -1102,12 +1102,14 @@ function Viajes() {
         }
         let params = {
             motivoCancelacion: state.motivoCancelacion,
-            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+            m_nIdUsuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
         cancelarViaje(state.idViaje,params).then((respuesta) => {
-            showSuccess("El viaje ha sido cancelado")
+            showSuccess(respuesta.data)
             handleShowListado()
+        }).catch(err => {
+            showSuccess(err.response?.data)
         });
     };
 
