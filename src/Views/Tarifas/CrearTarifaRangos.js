@@ -45,7 +45,6 @@ import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {
-    obtenerClienteById,
     obtenerClientePublicoGeneral,
     obtenerClienteTieneConvenio
 } from "../../Util/Contexts/ClientesContext";
