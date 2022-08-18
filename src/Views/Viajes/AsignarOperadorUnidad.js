@@ -258,7 +258,7 @@ export default function AsignarOperadorUnidad(props) {
         });
     }
     const handleUnidad = (e, value) => {
-        obtenerEstatusUnidadeId(value.m_nIdUnidad).then((resultado) => {
+        /*obtenerEstatusUnidadeId(value.m_nIdUnidad).then((resultado) => {
             setData({
                 ...data,
                 unidad: value,
@@ -267,7 +267,7 @@ export default function AsignarOperadorUnidad(props) {
                 kms: value.m_nOdometro,
                 horas: value.m_nHorasTrabajadasMotorNoGPS
             });
-        })
+        })*/
 
     }
 
