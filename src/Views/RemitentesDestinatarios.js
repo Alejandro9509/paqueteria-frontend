@@ -568,6 +568,10 @@ if(input=="codigoPostal"){
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
+      if(!row.data.m_nIdCP){
+        showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
+        return
+      }
     props.seCalculaTarifa()
       obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
           ( zonaOperativa ) => {
