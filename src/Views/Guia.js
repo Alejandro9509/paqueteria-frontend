@@ -416,8 +416,10 @@ function Guia(props) {
                                onClick: () => {
                                    eliminarGuia(id, state.modificadoPor).then(respuesta => {
                                        showSuccess(respuesta.data)
-                                       if (respuesta.data.indexOf("fracaso:") <= 0)
+                                       if (respuesta.data.indexOf("fracaso:") <= 0) {
                                            getAllData()
+                                           setGuiaSeleccionada(null)
+                                       }
                                    }).catch(err => {
                                        console.log(err)
                                        showSuccess(err.response?.data)
@@ -434,7 +436,7 @@ function Guia(props) {
                    showSuccess("La guia no puede ser eliminada a menos que se cancele")
                }
             })
-           
+
         }).catch(err => {
             showSuccess(err)
         });
