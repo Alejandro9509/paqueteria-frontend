@@ -311,7 +311,7 @@ function Guia(props) {
         }
         let params = {
             "m_nIdGuia": state.idGuia,
-            "m_nTIpoCambio": state.tipoCambio,
+            /*"m_nTIpoCambio": state.tipoCambio,
             "m_sFolioGuia": state.folioGuia,
             "m_nIdEstatusGuia": state.idEstatusGuia,
             "m_nIdEmbarque": state.idEmbarque,
@@ -324,7 +324,7 @@ function Guia(props) {
             "m_nidTipoServicio": state.idTipoServicio,
 
             "m_dFecha": getCurrentDateTime().substr(0, 10),
-            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
+            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),*/
 
             "arClsGuiaConceptos": conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
@@ -2252,7 +2252,7 @@ function Guia(props) {
                                                                         name="idEstatusGuia"
                                                                         read="true"
                                                                         value={state.idEstatusGuia}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         InputLabelProps={{
                                                                             shrink: true,
                                                                         }}
@@ -2286,7 +2286,7 @@ function Guia(props) {
                                                                         id="idMoneda"
                                                                         read="true"
                                                                         value={state.idMoneda}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         // disabled
                                                                     >
                                                                         <option value="0">
@@ -2909,7 +2909,7 @@ function Guia(props) {
                                                                                         className="form-control"
                                                                                         required
                                                                                         onChange={handleChange}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        disabled
                                                                                         id="idTipoServicio"
                                                                                         name="idTipoServicio"
                                                                                         read="true"
