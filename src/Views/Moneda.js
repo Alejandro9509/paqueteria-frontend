@@ -127,6 +127,20 @@ function Moneda() {
             })
         });
     }
+    function handleShowConsultar(id) {
+        obtenerMonedasId(id).then(respuesta => {
+            console.log(respuesta.data)
+            setState({
+                ...state,
+                agregar: "Consultar",
+                idMoneda: id,
+                codigo: respuesta.data.m_sCodigo,
+                moneda: respuesta.data.m_sMoneda,
+                simbolo: respuesta.data.m_sSimbolo,
+                abreviacion: respuesta.data.m_sAbreviacion,
+            })
+        });
+    }
 
     function handleShowAgregar() {
         setState({
@@ -162,7 +176,7 @@ function Moneda() {
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdMoneda))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdMoneda))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101270)}>
@@ -325,6 +339,7 @@ function Moneda() {
                                                                 maxLength="10"
                                                                 required={true}
                                                                 value={state.codigo}
+                                                                disabled={state.agregar=="Consultar"}
                                                                 id="codigo"
                                                             />
                                                         </div>
@@ -337,6 +352,7 @@ function Moneda() {
                                                                 className="form-control"
                                                                 type="text"
                                                                 required={true}
+                                                                disabled={state.agregar=="Consultar"}
                                                                 value={state.moneda}
                                                                 id="moneda"
                                                             />
@@ -351,6 +367,7 @@ function Moneda() {
                                                                 type="text"
                                                                 maxLength="3"
                                                                 required={true}
+                                                                disabled={state.agregar=="Consultar"}
                                                                 value={state.simbolo}
                                                                 id="simbolo"
                                                             />
@@ -365,6 +382,7 @@ function Moneda() {
                                                                 required={true}
                                                                 type="text"
                                                                 maxLength="3"
+                                                                disabled={state.agregar=="Consultar"}
                                                                 value={state.abreviacion}
                                                                 id="abreviacion"
                                                             />
