@@ -10,19 +10,31 @@ import {
     InputLabel, Select,
     Typography
 } from "@material-ui/core";
+import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 
 class MyComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tipoCobro:"0"
+            tipoCobro:"0",
+            dataTipoCobro: []
         }
+        this.getAllDataTipoCobro = this.getAllDataTipoCobro.bind(this)
     }
 
     componentWillMount() {
-
+        this.getAllDataTipoCobro()
     }
-
+    getAllDataTipoCobro() {
+        if (this.state.dataTipoCobro.length > 0) {
+            return
+        }
+        obtenerTipoCobro().then(respuesta => {
+            this.setState({
+                dataTipoCobro: respuesta.data
+            })
+        });
+    };
 
     render() {
         return (
@@ -57,7 +69,7 @@ class MyComponent extends Component {
                                     <option value="0">
                                         Seleccionar
                                     </option>
-                                    {this.props.dataTipoCobro.map(
+                                    {this.state.dataTipoCobro.map(
                                         (tipoCobro) => (
                                             <option
                                                 key={tipoCobro.m_nIdTipoCobro}
@@ -73,11 +85,11 @@ class MyComponent extends Component {
                         </label>
                     </DialogContent>
                     <DialogActions>
-                        <Button type={"submit"} onClick={() => this.props.close()}>
-                            Aceptar
-                        </Button>
                         <Button onClick={() => this.props.close()}>
                             Cancelar
+                        </Button>
+                        <Button type={"submit"} onClick={() => this.props.close()}>
+                            Aceptar
                         </Button>
                     </DialogActions>
                 </form>

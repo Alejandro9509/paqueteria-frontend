@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -33,7 +33,7 @@ function agregarGuia(params) {
 }
 
 function eliminarGuia(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Eliminar/${id}/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -49,8 +49,8 @@ function validarEliminarGuia(id){
     return result
 }
 
-function cancelarGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${id}`;
+function cancelarGuia(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Cancelar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -85,7 +85,7 @@ function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
 }
 
 function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
-    const url = `${process.env.REACT_APP_API_URL}/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })
@@ -94,10 +94,14 @@ function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
 }
 
 function cambiarTipoCobro(idGuia, tipoCobro) {
-    const url = `${process.env.REACT_APP_API_URL}/Guias/CambiarTipoCobro/${idGuia}/${tipoCobro}`;
+    let params = {
+        m_nIdGuia: idGuia,
+        m_nIdTIpoCobro: tipoCobro
+    }
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/CambiarTipoCobro`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
@@ -121,10 +125,15 @@ function asignarTrayectos(idGuia) {
 }
 
 function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/ActualizarCoordenadas/${idGuia}/${latitud}/${longitud}`;
+    let params = {
+        m_nIdGuia: idGuia,
+        m_sLatitud: latitud,
+        m_sLongitud: longitud
+    }
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ActualizarCoordenadas`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
