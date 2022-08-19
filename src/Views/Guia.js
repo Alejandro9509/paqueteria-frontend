@@ -311,7 +311,7 @@ function Guia(props) {
         }
         let params = {
             "m_nIdGuia": state.idGuia,
-            /*"m_nTIpoCambio": state.tipoCambio,
+            "m_nTIpoCambio": state.tipoCambio,
             "m_sFolioGuia": state.folioGuia,
             "m_nIdEstatusGuia": state.idEstatusGuia,
             "m_nIdEmbarque": state.idEmbarque,
@@ -324,7 +324,7 @@ function Guia(props) {
             "m_nidTipoServicio": state.idTipoServicio,
 
             "m_dFecha": getCurrentDateTime().substr(0, 10),
-            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),*/
+            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
 
             "arClsGuiaConceptos": conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
@@ -425,24 +425,24 @@ function Guia(props) {
     function handleShowModificar(id,folioGuia) {
         
         obtenerValidacionGuia(id).then(respuesta=>{
-            console.log(respuesta)
-            if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
-                let {valores} = respuesta.data
-            showSuccess(`La Guía ${folioGuia} no se puede editar debido a que está relacionada a la factura  ${valores.Serie}-${valores.Folio}`)
-            }else{            
-                obtenerGuiaId(id).then(respuesta => {         
-                    cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)     
-                    setDataGuiaParaConsultarModificar(respuesta, "Modificar")
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(1).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Agregar').addClass('in show');
-                }).catch(function (err) {
-                    console.log(err.data)
-                });
+            if(!respuesta.data.esEditable){//Entrega un 1 si la guia no es modificable
+                // let {valores} = respuesta.data
+            // showSuccess(`La Guía ${folioGuia} no se puede editar debido a que está relacionada a la factura  ${valores.Serie}-${valores.Folio}`)
+                showSuccess(respuesta.data.motivo)
+                return
             }
-        }).catch(function (err){
-            console.log("Error al ejecutar el query"+err.data)
+            obtenerGuiaId(id).then(respuesta => {
+                cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
+                setDataGuiaParaConsultarModificar(respuesta, "Modificar")
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(1).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
+            }).catch(function (err) {
+                console.log(err.data)
+            });
+        }).catch(err => {
+            console.log(err.response.data)
         })
       
     }
