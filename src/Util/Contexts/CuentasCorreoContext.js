@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarCuentasCorreo(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CuentasCorreo/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarCuentasCorreo(id, params){
 }
 
 function agregarCuentasCorreo( params){
-    const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CuentasCorreo/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -33,7 +33,7 @@ function eliminarCuentasCorreo(id){
 }
 
 function obtenerCuentasCorreo(){
-    const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CuentasCorreo/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
