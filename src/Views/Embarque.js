@@ -1456,6 +1456,7 @@ function Embarque(props) {
             .then((respuesta) => {
                 setDataRecoleccionOnState(respuesta)
                 setTabActiva(1)
+                setRepetirConceptos(false)
             })
         }
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
