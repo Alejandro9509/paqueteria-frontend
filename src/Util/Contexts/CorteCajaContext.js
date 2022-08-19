@@ -24,7 +24,7 @@ function agregarCorte(params) {
 }
 
 function eliminarCorte(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
