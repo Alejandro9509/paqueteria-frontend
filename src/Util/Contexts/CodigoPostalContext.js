@@ -33,7 +33,7 @@ function eliminarCodigoPostal(id){
 }
 
 function obtenerCodigoPostalCiudad(id){
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListadoCP/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetListadoCP/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
