@@ -5,12 +5,12 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS;
 
 function modificarInformes(id, params) {
-  const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/Modificar`;
-  let result;
-  trackPromise(
-    (result = axios.put(url, Object.assign({}, params), { headers }))
-  );
-  return result;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/Modificar`;
+    let result;
+    trackPromise(
+        (result = axios.put(url, Object.assign({}, params), { headers }))
+    );
+    return result;
 }
 function obtenerXMLCFDI(id) {
   const url = `${process.env.REACT_APP_API_URL}/Informes/GetXMLCFDI/${id}`;
