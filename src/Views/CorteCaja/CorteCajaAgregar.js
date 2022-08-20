@@ -458,32 +458,18 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 folioGuia: event.target.value,
             })
             obtenerGuiasFiltro(0, 0, 0, 0, value,0,0, 0).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setDataGuiasAgregar([])
-                } else {
-                    let totalTotal = 0.0
-                    respuesta.data.forEach((i) => {
-                        /*let m_cImporte = 0
-                        let m_cImporteIva = 0
-                        let m_cImporteRetiene = 0
-                        let m_cTotal = 0*/
-                        /*i.m_arClsGuiaConceptos.forEach((j) => {
-                            m_cImporte += parseFloat(j.m_cImporte)
-                            m_cImporteIva += parseFloat(j.m_cImporteIva)
-                            m_cImporteRetiene += parseFloat(j.m_cImporteRetiene)
-                            m_cTotal += parseFloat(j.m_cTotal)
-                        })*/
-
-                        totalTotal += parseFloat(i.m_cTotal)
-                    })
-                    setState( state => {
-                        return{
-                            ...state,
-                            total: totalTotal
-                        }
-                    })
-                    setDataGuiasAgregar(respuesta.data)
-                }
+                let totalTotal = 0.0
+                let guiasValidas = respuesta.data.filter(g => parseInt(g.m_nIdEstatusGuia) === 18 || parseInt(g.m_nIdEstatusGuia) === 17 || parseInt(g.m_nIdEstatusGuia) === 7)
+                guiasValidas.forEach((i) => {
+                    totalTotal += parseFloat(i.m_cTotal)
+                })
+                setState( state => {
+                    return{
+                        ...state,
+                        total: totalTotal
+                    }
+                })
+                setDataGuiasAgregar(guiasValidas)
             })
         }
     }
