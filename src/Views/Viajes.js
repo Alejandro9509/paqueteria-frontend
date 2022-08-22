@@ -945,7 +945,7 @@ function Viajes() {
             setEventOptions({...eventOptions, showSalidaParadasDialog: true});
             //}
           }).catch((err)=>{
-             showSuccess(err)
+             showSuccess(err.response?.data)
           })
     }
 

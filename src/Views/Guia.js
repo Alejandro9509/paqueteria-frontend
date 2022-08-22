@@ -405,36 +405,36 @@ function Guia(props) {
                 return;
             }
             validarEliminarGuia(id).then(respuesta=>{
-               if(respuesta.data.sePuedeEliminar){
+                if(respuesta.data.sePuedeEliminar){
 
-                   confirmAlert({
-                       title: 'Confirmar Eliminar',
-                       message: '¿Está seguro de eliminar guia?',
-                       buttons: [
-                           {
-                               label: 'Si',
-                               onClick: () => {
-                                   eliminarGuia(id, state.modificadoPor).then(respuesta => {
-                                       showSuccess(respuesta.data)
-                                       if (respuesta.data.indexOf("fracaso:") <= 0) {
-                                           getAllData()
-                                           setGuiaSeleccionada(null)
-                                       }
-                                   }).catch(err => {
-                                       console.log(err)
-                                       showSuccess(err.response?.data)
-                                   });
-                               }
-                           },
-                           {
-                               label: 'No',
-                           }
-                       ]
-                   })
+                    confirmAlert({
+                        title: 'Confirmar Eliminar',
+                        message: '¿Está seguro de eliminar guia?',
+                        buttons: [
+                            {
+                                label: 'Si',
+                                onClick: () => {
+                                    eliminarGuia(id, state.modificadoPor).then(respuesta => {
+                                        showSuccess(respuesta.data)
+                                        if (respuesta.data.indexOf("fracaso:") <= 0) {
+                                            getAllData()
+                                            setGuiaSeleccionada(null)
+                                        }
+                                    }).catch(err => {
+                                        console.log(err)
+                                        showSuccess(err.response?.data)
+                                    });
+                                }
+                            },
+                            {
+                                label: 'No',
+                            }
+                        ]
+                    })
 
-               }else{
-                   showSuccess("La guia no puede ser eliminada a menos que se cancele")
-               }
+                }else{
+                    showSuccess("La guia no puede ser eliminada a menos que se cancele")
+                }
             })
 
         }).catch(err => {
