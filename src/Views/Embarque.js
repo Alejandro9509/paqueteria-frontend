@@ -1215,7 +1215,6 @@ function Embarque(props) {
             m_arrClsComplementoSAT: dataComplementosSAT,
             creadoPor: state.CreadoPor,
             modificadoPor: state.ModificadoPor,
-            m_bEntregaEnSucursal: state.entregaEnSucursal,
 
             // IdCiudadEntrega: state.ciudadDestinatario,
             codigoPostalEntrega: destinatario.codigoPostalDestinatario.m_nIdCP,
@@ -1230,28 +1229,31 @@ function Embarque(props) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.entregarMismoDomicilio = false
             params.m_nIdZonaOperativa = state.zonaOperativaSucursal.m_nIdZona
+
+        }else {
+            params.m_nIdSucursalEntrega = 0
             /**Si es entrega en direfente domicilio*/
-        }else if (state.diferenteEntrega) {
-            params.m_nIdSucursalEntrega = 0
-            params.m_bEntregaEnSucursal = false
-            params.codigoPostalEntrega = entregaDD.codigoPostal.m_nIdCP
-            params.domicilioEntrega = entregaDD.domicilio
-            params.entregarEn = entregaDD.detalles
-            params.m_nIdEstadoEntrega = entregaDD.idEstado
-            params.m_sCodigoMunicipioEntrega = entregaDD.idMunicipio
-            params.datosAdicionales = entregaDD.datosAdicionales
-            params.m_nIdZonaOperativa = entregaDD.zonaOperativa.m_nIdZona
-            // params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
-            params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitud
-            params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitud
-        }else{
-            /**Si es entrega en domicilio de destinatario*/
-            params.m_nIdSucursalEntrega = 0
-            params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
-            params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
-            params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
-            params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
+            if (state.diferenteEntrega) {
+                params.m_bEntregaEnSucursal = false
+                params.codigoPostalEntrega = entregaDD.codigoPostal.m_nIdCP
+                params.domicilioEntrega = entregaDD.domicilio
+                params.entregarEn = entregaDD.detalles
+                params.m_nIdEstadoEntrega = entregaDD.idEstado
+                params.m_sCodigoMunicipioEntrega = entregaDD.idMunicipio
+                params.datosAdicionales = entregaDD.datosAdicionales
+                params.m_nIdZonaOperativa = entregaDD.zonaOperativa.m_nIdZona
+                // params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
+                params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitud
+                params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitud
+            }else{
+                /**Si es entrega en domicilio de destinatario*/
+                params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
+                params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
+                params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
+                params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
+            }
         }
+
         if (state.entregaConCita) {
             params.m_bCitaPendiente = state.citaPendiente
             if (!state.citaPendiente){
@@ -1389,11 +1391,11 @@ function Embarque(props) {
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                          getAllEmbarque();
-                        
+
                     })
                     .catch((err) => {
                         showSuccess(err.response?.data);
-                       
+
                     });
             })
             .catch((err) => {
@@ -1413,7 +1415,7 @@ function Embarque(props) {
         cancelarEmbarque(state, params).then((respuesta) => {
             showSuccess(respuesta.data);
             getAllEmbarque()
-           
+
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -1515,7 +1517,7 @@ function Embarque(props) {
                 showSuccess("Embarque no se puede cancelar");
             }
             getAllEmbarque();
-        }); 
+        });
     }
 
     function handleShowConsultar(id) {
@@ -1714,7 +1716,7 @@ function Embarque(props) {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
-                            zonaOperativa: data
+                            zonaOperativa: data,
                         }
                     })
                 })
@@ -2630,8 +2632,8 @@ function Embarque(props) {
             "m_nIdSucursal": state.idSucursalAgregar,
             "m_nValorDeclarado": state.valorDeclarado,
             // "idTipoServicio": state.idTipoServicio,
-            "m_dFecha": state.fechaHoraRegistro.substr(0, 10),
-            "m_sHora": state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
+            "m_dFecha": getCurrentDateTime().substr(0, 10),
+            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
 
             "arClsGuiaConceptos": dataConceptos.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
