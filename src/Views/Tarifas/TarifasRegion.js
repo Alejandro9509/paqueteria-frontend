@@ -20,6 +20,7 @@ import $ from "jquery";
 import Noty from "noty";
 import {obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
 import {getRandomId} from "../../Util/Util";
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -316,7 +317,19 @@ function TarifasRegion(props){
 
                             </Tooltip>
                             <Tooltip title="Eliminar">
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a href="#" className="btn btn-default btn-xs" onClick={() =>   confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar tarifa?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  handleEliminar(row.row.m_nIdTarifa)
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    })}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
                         </div>

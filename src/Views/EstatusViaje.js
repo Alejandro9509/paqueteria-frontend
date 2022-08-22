@@ -14,6 +14,7 @@ import { agregarEstatusViaje, eliminarEstatusViaje, modificarEstatusViaje, obten
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -390,11 +391,11 @@ function EstatusViaje() {
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
-                        <li>
+                        {/*<li>
                             <a className= {validarDerecho(9101324)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
-                        </li>
+                        </li>*/}
                     </ul>
 
                     <div className="row" className="tab-content">

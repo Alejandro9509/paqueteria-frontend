@@ -8,14 +8,16 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import {Checkbox, FormControlLabel, MenuItem, TextField, Tooltip} from "@material-ui/core";
-import { Button, Grid } from "@material-ui/core";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
 import {makeStyles} from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 import $ from "jquery";
+import Button from "@material-ui/core/Button";
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -142,7 +144,19 @@ function TipoCobro() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoCobro))}
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar tipo de cobro?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  handleEliminar(row.row.m_nIdTipoCobro)
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    }) }
                             disabled={!validarDerecho(9101352)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>

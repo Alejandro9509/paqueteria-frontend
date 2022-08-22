@@ -15,6 +15,7 @@ import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obten
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -105,6 +106,7 @@ function TiposServicio() {
 
             eliminarTipoServicio(id, state.ModificadoPor).then(respuesta => {
                 console.log(respuesta)
+                showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
                 showSuccess(err)
@@ -190,7 +192,22 @@ function TiposServicio() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoServicio))}
+                            <a href="#" className="btn btn-default btn-xs" onClick={() =>   confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar este servicio?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  {
+                                                                    handleEliminar(row.row.m_nIdTipoServicio)
+                                                                
+                                                                }
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    })}
                             disabled={!validarDerecho(9101317)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
@@ -357,7 +374,23 @@ function TiposServicio() {
                                             <div>
                                                 <a onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
                                                 <a onClick={() => (handleShowConsultar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{ color: "#F9A03E" }} /></a>
+                                                <a className="btn btn-default btn-sm" onClick={() => {
+                                                    confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar Embarque?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  handleEliminar(row.original.m_nIdTipoServicio)
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    })
+                                                
+                                                
+                                                }}><i className="zmdi zmdi-delete" style={{ color: "#F9A03E" }} /></a>
                                             </div>
                                         </td>
                                         {row.cells.map(cell => {

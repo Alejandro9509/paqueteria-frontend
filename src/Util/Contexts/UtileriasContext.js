@@ -27,4 +27,15 @@ async function obtenerFechaFinal(){
     return result
 }
 
-export {obtenerFechaInicio, obtenerFechaFinal}
+function validarDerecho(idUsuario,idPrivilegio,idTipo){
+    const url = `${process.env.REACT_APP_REPORT_URL}/Utilerias/ValidaDerechos/${idUsuario}/${idPrivilegio}/${idTipo}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+
+        console.log(result)
+    return result
+}
+
+export {obtenerFechaInicio, obtenerFechaFinal,validarDerecho}

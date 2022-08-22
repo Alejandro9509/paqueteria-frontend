@@ -29,6 +29,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import { withStyles } from '@material-ui/core/styles';
 import CrearTarifaRegion from "./CrearTarifaRegion";
 import TarifasRegion from "./TarifasRegion";
+import { confirmAlert } from 'react-confirm-alert';
 
 window.jQuery = window.$ = $;
 /*function showSuccess(mensaje) {
