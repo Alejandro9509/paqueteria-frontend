@@ -184,6 +184,30 @@ export default function DialogoNuevoPaquete(props) {
         }
     }, [props.cliente])
 
+    useEffect(value => {
+        if (errores.nameInput === 'producto'){
+            setPaquete(paquete => {
+                return {
+                    ...paquete,
+                    m_rPeso: "",
+                    m_rLargo: "",
+                    m_rAncho: "",
+                    m_rAlto: "",
+                    m_rVolumen: "",
+                    m_nIdTipoEmbalaje: "",
+                    m_sDescripcion: "",
+                    m_nCantidad: "",
+                    m_sObservaciones: "",
+                    m_cyValorDeclarado: "0",
+                    m_nIdTipo: 2,
+                    m_sTipo: "Paquete",
+                    m_sClaveSATProducto:'',
+                    m_sClaveSATUnidad:'',
+                }
+            })
+        }
+    }, [errores.nameInput])
+
     const getAllEmbalajes = () => {
         if (dataEmbalaje.length === 0){
             obtenerEmbalajes().then((respuesta) => {
@@ -668,7 +692,7 @@ export default function DialogoNuevoPaquete(props) {
                                     </FormControl>
                                 </label>
                             </Grid>
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={12}>
                                 <div className="input">
                                     <Autocomplete
@@ -708,7 +732,7 @@ export default function DialogoNuevoPaquete(props) {
                                 </div>
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
@@ -717,7 +741,7 @@ export default function DialogoNuevoPaquete(props) {
                                                label="Cantidad"
                                                required
                                                value={paquete.m_nCantidad}
-                                               disabled={props.disabled || !paquete.producto}
+                                               disabled={props.disabled || errores.nameInput === 'producto' }
                                                placeholder="Cantidad"
                                                name="m_nCantidad"
                                                helperText={errores.errorCantidad?errores.errorTexto:""}
@@ -726,33 +750,35 @@ export default function DialogoNuevoPaquete(props) {
                                 </div>
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
-                                <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense" required>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                               label="Embalaje"
+                                               labelId="m_nIdTipoEmbalajeLabel"
+                                               value={paquete.m_nIdTipoEmbalaje}
+                                               disabled={props.disabled || errores.nameInput === 'producto'}
+                                               onChange={(event) => handleChangePaquetev2(event)}
+                                               id="m_nIdTipoEmbalaje"
+                                               name="m_nIdTipoEmbalaje"
+                                               select
+                                    >
+                                        {dataEmbalaje.map((embalaje) => (
+                                            <MenuItem key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                                                {embalaje.m_sNombre}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </div>
+                                {/*<label className="input select" style={{width: "100%"}}>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
                                         <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
-                                        <Select
-                                            label="Embalaje"
-                                            labelId="m_nIdTipoEmbalajeLabel"
-                                            className="form-control"
-                                            value={paquete.m_nIdTipoEmbalaje}
-                                            disabled={props.disabled || !paquete.producto}
-                                            required
-                                            onChange={(event) => handleChangePaquetev2(event)}
-                                            id="m_nIdTipoEmbalaje"
-                                            name="m_nIdTipoEmbalaje"
-                                        >
-                                            {dataEmbalaje.map((embalaje) => (
-                                                <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
-                                                    {embalaje.m_sNombre}
-                                                </option>
-                                            ))}
-                                        </Select>
+
                                     </FormControl>
-                                </label>
+                                </label>*/}
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
@@ -761,7 +787,7 @@ export default function DialogoNuevoPaquete(props) {
                                                label="Peso"
                                                required
                                                value={paquete.m_rPeso}
-                                               disabled={props.disabled || !paquete.producto}
+                                               disabled={props.disabled || errores.nameInput === 'producto'}
                                                placeholder="kg"
                                                name="m_rPeso"
                                                helperText={errores.errorPeso?errores.errorTexto:""}
@@ -770,7 +796,7 @@ export default function DialogoNuevoPaquete(props) {
                                 </div>
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
                                 <TextField variant="outlined" margin="dense"
@@ -779,7 +805,7 @@ export default function DialogoNuevoPaquete(props) {
                                                label="Largo"
                                                required
                                                value={paquete.m_rLargo}
-                                               disabled={props.disabled || !paquete.producto}
+                                               disabled={props.disabled || errores.nameInput === 'producto'}
                                                placeholder="cms"
                                                name="m_rLargo"
                                                helperText={errores.errorLargo?errores.errorTexto:""}
@@ -788,7 +814,7 @@ export default function DialogoNuevoPaquete(props) {
                                 </div>
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
@@ -797,7 +823,7 @@ export default function DialogoNuevoPaquete(props) {
                                                required
                                                label="Ancho"
                                                value={paquete.m_rAncho}
-                                               disabled={props.disabled || !paquete.producto}
+                                               disabled={props.disabled || errores.nameInput === 'producto'}
                                                placeholder="cms"
                                                name="m_rAncho"
                                                helperText={errores.errorAncho?errores.errorTexto:""}
@@ -806,7 +832,7 @@ export default function DialogoNuevoPaquete(props) {
                                 </div>
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
@@ -815,7 +841,7 @@ export default function DialogoNuevoPaquete(props) {
                                                value={paquete.m_rAlto}
                                                label="Alto"
                                                required
-                                               disabled={props.disabled || !paquete.producto}
+                                               disabled={props.disabled || errores.nameInput === 'producto'}
                                                placeholder="cms"
                                                name="m_rAlto"
                                                helperText={errores.errorAlto?errores.errorTexto:""}
@@ -824,7 +850,7 @@ export default function DialogoNuevoPaquete(props) {
                                 </div>
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={12}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
@@ -849,14 +875,14 @@ export default function DialogoNuevoPaquete(props) {
                                                required
                                                label="Descripción"
                                                value={paquete.m_sDescripcion}
-                                               disabled={props.disabled || !paquete.producto}
+                                               disabled={props.disabled || errores.nameInput === 'producto'}
                                                placeholder="Descripción"
                                                name="m_sDescripcion"
                                     />
                                 </div>
                             </Grid>
 
-                            {paquete.m_nIdTipo != 1 &&
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={12}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
