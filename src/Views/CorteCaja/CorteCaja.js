@@ -80,7 +80,7 @@ function CorteCaja(){
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
-                                   message: 'Está seguro de eliminar Convenio?',
+                                   message: 'Está seguro de eliminar el corte?',
                                    buttons: [
                                        {
                                            label: 'Si',
