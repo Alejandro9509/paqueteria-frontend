@@ -348,6 +348,8 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 console.log(err.data)
             });
         })
+        setDataGuiasAgregar([])
+        setGuiasSeleccionadas([])
         handleCloseDialog()
     };
 
@@ -462,7 +464,9 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
             })
             obtenerGuiasFiltro(0, 0, 0, 0, value,0,0, 0).then(respuesta => {
                 let totalTotal = 0.0
-                let guiasValidas = respuesta.data.filter(g => parseInt(g.m_nIdEstatusGuia) === 18 || parseInt(g.m_nIdEstatusGuia) === 17 || parseInt(g.m_nIdEstatusGuia) === 7)
+                let guiasValidas = respuesta.data
+                    .filter(g => parseInt(g.m_nIdEstatusGuia) === 18 || parseInt(g.m_nIdEstatusGuia) === 17 || parseInt(g.m_nIdEstatusGuia) === 7)
+                    .filter(g => parseInt(g.m_nIdGuia) !== dataGuias.find( i => parseInt(i.m_nIdGuia) === parseInt(g.m_nIdGuia))?.m_nIdGuia)
                 guiasValidas.forEach((i) => {
                     totalTotal += parseFloat(i.m_cTotal)
                 })
