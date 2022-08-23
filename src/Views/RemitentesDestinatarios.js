@@ -331,19 +331,6 @@ function RemitenteDestinatario(props) {
       };
     });
 
-    // obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
-    //   setDataMunicipios(data);
-    // });
-    // obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(
-    //     (cp) => {
-    //       setState((state) => {
-    //         return {
-    //           ...state,
-    //
-    //         };
-    //       });
-    //     }
-    // );
     obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({ data }) => {
       setState((state) => {
         return {
@@ -352,6 +339,14 @@ function RemitenteDestinatario(props) {
         };
       });
     });
+    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
+      setState((state) => {
+        return {
+          ...state,
+          zonaOperativa: {m_nIdZona: respuesta.data.m_nIdZonaOperativaRecoleccion},
+        };
+      });
+    }
   }
 
   const mostrarDatosDestinatarioEmbarqueById = (respuesta) => {

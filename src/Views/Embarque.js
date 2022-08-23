@@ -627,6 +627,7 @@ function Embarque(props) {
         setDataEmbarqueConsulta(undefined)
         setDataPaquetes([])
         resetEntregaDD()
+        resetRecoleccionDD()
         setErrores([])
         setDataConceptos([])
         setDataComplementosSAT([])
@@ -813,6 +814,34 @@ function Embarque(props) {
             datosAdicionales: '',
             latitud: '',
             longitud: ''
+        })
+    }
+
+    const [recoleccionDD, setRecoleccionDD] = useState({
+        /*idPais: '',
+        idEstado: '',
+        idMunicipio: '',
+        codigoPostal: '',*/
+        zonaOperativa: '',
+        /*domicilio: '',
+        detalles: '',
+        datosAdicionales: '',
+        latitud: '',
+        longitud: ''*/
+    })
+
+    const resetRecoleccionDD = () => {
+        setRecoleccionDD({
+            /*idPais: '',
+            idEstado: '',
+            idMunicipio: '',
+            codigoPostal: '',*/
+            zonaOperativa: '',
+            /*domicilio: '',
+            detalles: '',
+            datosAdicionales: '',
+            latitud: '',
+            longitud: ''*/
         })
     }
 
@@ -1856,6 +1885,15 @@ function Embarque(props) {
         })*/
     }
 
+    const mostrarDatosRecoleccionDD = (respuesta) => {
+        setRecoleccionDD(recoleccionDD => {
+            return {
+                ...recoleccionDD,
+                zonaOperativa: {m_nIdZona: respuesta.data.m_nIdZonaOperativaRecoleccion}
+            }
+        })
+    }
+
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta, duplicar,operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
@@ -1887,6 +1925,9 @@ function Embarque(props) {
             mostrarDatosEntregaDiferenteDomicilio(respuesta)
         }
 
+        if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
+            mostrarDatosRecoleccionDD(respuesta)
+        }
         let totalPaquetes = 0
         respuesta.data.m_arrSobres.forEach((s) => {
             respuesta.data.m_arrPaquetes.push(s)
@@ -4071,6 +4112,7 @@ function Embarque(props) {
                                                    disabled={state.agregar === "Consultar"}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
+                                                   recoleccionDiferenteDom={recoleccionDD}
                                                    entregaDiferenteDom={entregaDD}
                                                    onChangeConceptosList={actualizarConceptos}
                                                    conceptos={dataConceptos}
