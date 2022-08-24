@@ -1488,7 +1488,7 @@ function Embarque(props) {
 
     };
 
-    useEffect((value) => {
+    /*useEffect((value) => {
         if (props.location.idRecoleccion != undefined) {
             if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataClientes.length > 0) {
                 obtenerRecoleccionId(props.location.idRecoleccion)
@@ -1499,7 +1499,7 @@ function Embarque(props) {
         }
 
 
-    }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);
+    }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);*/
 
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
@@ -1737,19 +1737,28 @@ function Embarque(props) {
                     entregaEnSucursal: respuesta.data.m_bEntregaSucursal,
                     idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                     diferenteEntrega: false,
+                    zonaOperativaSucursal: {
+                        m_nIdZona: respuesta.data.m_nIdZonaOperativaEntrega,
+                        m_sCodigoZona: respuesta.data.m_sCodigoZonaEntrega,
+                    },
+                    aplicaEntrega:respuesta.data.m_bAplicaEntrega,
+                    deshabilitarDiferenteDomicilio:respuesta.data.m_bAplicaEntrega,
                 }
             })
-            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+            /*obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
                 console.log("entra"+JSON.stringify(data))
                 setState(state => {
                     return {
                         ...state,
-                        zonaOperativaSucursal: data,
-                        aplicaEntrega:data.m_bAplicaEntrega,
-                        deshabilitarDiferenteDomicilio:data.m_bAplicaEntrega,
+                        zonaOperativaSucursal: {
+                            m_nIdZona: respuesta.data.m_nIdZonaOperativaEntrega,
+                            m_sCodigoZona: respuesta.data.m_sCodigoZonaEntrega,
+                        },
+                        aplicaEntrega:respuesta.data.m_bAplicaEntrega,
+                        deshabilitarDiferenteDomicilio:respuesta.data.m_bAplicaEntrega,
                     }
                 })
-            })
+            })*/
         }else{
             //ENTREGA EN DIFERENTE DOMICILIO
             if (respuesta.data.m_bEntregaDiferenteDomicilio) {
