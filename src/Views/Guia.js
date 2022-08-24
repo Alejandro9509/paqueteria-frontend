@@ -749,7 +749,7 @@ function Guia(props) {
                 return (
                     <div>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || parseInt(row.row.m_nIdEstatusGuia) !== 4}>
-                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}>
                                 <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
                             </a>
 
