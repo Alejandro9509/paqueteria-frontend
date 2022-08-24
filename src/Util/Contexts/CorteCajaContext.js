@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarCorte(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarCorte(id, params) {
 }
 
 function agregarCorte(params) {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function agregarCorte(params) {
 }
 
 function eliminarCorte(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -43,7 +43,7 @@ function obtenerCortes() {
 }
 
 function obtenerCorteId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
