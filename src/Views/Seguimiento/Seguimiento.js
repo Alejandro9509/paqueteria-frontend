@@ -207,6 +207,7 @@ class Seguimiento extends Component {
                                                     <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
                                                      src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
                                         }
+                                           Entregó: {this.state.data.m_sReceptorRecoleccion}
                                           </div>   
                                                                       
                                     </Grid>
@@ -229,7 +230,7 @@ class Seguimiento extends Component {
                                            <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
                                             src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
                                              }
-                                            Recibió: {this.state.data.m_sReceptor}
+                                            Recibió: {this.state.data.m_sReceptorGuia}
                                           </div>
                                        
                                         </Grid>
