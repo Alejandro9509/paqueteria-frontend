@@ -336,7 +336,7 @@ function Recoleccion() {
         uploadedFileContent: "<div>Hello</div>",
         height: window.innerHeight,
         recoleccionConEmbarque: false,
-
+        receptorRecoleccion: ''
     });
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -1521,6 +1521,7 @@ function Recoleccion() {
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
+                receptorRecoleccion: respuesta.data.m_sReceptorRecoleccion,
 
             }
         });
@@ -1739,7 +1740,8 @@ function Recoleccion() {
                 fechaHoraSalida: '',
                 fechaHoraLlegada: '',
                 zonaOperativaSucursal: null,
-                idSucursalEntrega: ''
+                idSucursalEntrega: '',
+                receptorRecoleccion: ''
             }
         });
         setDataPaquetes([])
@@ -4215,7 +4217,7 @@ function Recoleccion() {
                                                          </AccordionSummary>
                                                          
                                                          <AccordionDetails>
-                                                            <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion}/>
+                                                            <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion} data={state}/>
                                                           </AccordionDetails>
                                                         </Accordion>
                                                         </div>
