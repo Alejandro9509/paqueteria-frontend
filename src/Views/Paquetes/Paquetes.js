@@ -45,7 +45,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
 
         const handleDeleteClick = (event) => {
             event.stopPropagation();
-            console.log()
             let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
             console.log(row)
             if (row){
@@ -69,7 +68,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
         const handleEditClick = (event) => {
             event.stopPropagation();
             let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
-            console.log(row)
             if (row){
                 handleEdit(row);
             }
@@ -90,7 +88,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
 
     const handleEdit = (data) =>{
         if(!disabled){
-            console.log(data)
             setPaquete(data)
         }
     }
