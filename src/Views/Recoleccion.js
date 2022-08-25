@@ -284,7 +284,7 @@ function Recoleccion() {
         clientePaga: {},
         observaciones: '',
         aplicaEntrega:false,
-        deshabilitarDiferenteDomicilio:false,
+        // deshabilitarDiferenteDomicilio:false,
         //Paquetes/Sobres
         countPaquetes: 1,
         countSobres: 1,
@@ -1806,7 +1806,7 @@ function Recoleccion() {
                 recogerEn: '',
                 datosAdicionalesRecoleccion: '',*/
                 aplicaEntrega:false,
-                deshabilitarDiferenteDomicilio:false,
+                // deshabilitarDiferenteDomicilio:false,
                 //Operador
                 operador: '',
                 tipoUnidad: '',
@@ -3140,7 +3140,7 @@ function Recoleccion() {
             ...state,
             aplicaEntrega:aplicaEntrega,
             entregaEnSucursal:true,
-            deshabilitarDiferenteDomicilio:true,
+            // deshabilitarDiferenteDomicilio:true,
             diferenteEntrega:false
         })}
         else{
@@ -3148,7 +3148,7 @@ function Recoleccion() {
                 ...state,
                 aplicaEntrega:aplicaEntrega,
                 entregaEnSucursal:false,
-                deshabilitarDiferenteDomicilio:false
+                // deshabilitarDiferenteDomicilio:false
             })}  
         
       }
@@ -4155,7 +4155,7 @@ function Recoleccion() {
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
                                                                                 className="form-control"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.deshabilitarDiferenteDomicilio}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 // value={state.diferenteEntrega}
                                                                                 checked={state.diferenteEntrega}
                                                                                 type="checkbox"
@@ -4179,7 +4179,7 @@ function Recoleccion() {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{ height: "20px" }}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.deshabilitarDiferenteDomicilio}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i />

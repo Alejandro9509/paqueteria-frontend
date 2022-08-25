@@ -552,7 +552,7 @@ function Embarque(props) {
         //Ruta
         idRuta: 0,
         aplicaEntrega:false,
-        deshabilitarDiferenteDomicilio:false,
+        // deshabilitarDiferenteDomicilio:false,
         DerechoBorrar: 139,
         identificadorModal: "",
         tipoModal: 0,
@@ -1742,7 +1742,7 @@ function Embarque(props) {
                         m_sCodigoZona: respuesta.data.m_sCodigoZonaEntrega,
                     },
                     aplicaEntrega:respuesta.data.m_bAplicaEntrega,
-                    deshabilitarDiferenteDomicilio:respuesta.data.m_bAplicaEntrega,
+                    // deshabilitarDiferenteDomicilio:respuesta.data.m_bAplicaEntrega,
                 }
             })
             /*obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
@@ -2736,7 +2736,7 @@ function Embarque(props) {
             ...state,
             aplicaEntrega:aplicaEntrega,
             entregaEnSucursal:true,
-            deshabilitarDiferenteDomicilio:true,
+            // deshabilitarDiferenteDomicilio:true,
             diferenteEntrega:false
         })}
         else{
@@ -2744,7 +2744,7 @@ function Embarque(props) {
                 ...state,
                 aplicaEntrega:aplicaEntrega,
                 entregaEnSucursal:false,
-                deshabilitarDiferenteDomicilio:false
+                // deshabilitarDiferenteDomicilio:false
             })}  
         
       }
@@ -3678,7 +3678,7 @@ function Embarque(props) {
                                                                             type="checkbox"
                                                                             checked={state.entregaEnSucursal}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.deshabilitarDiferenteDomicilio}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                             id="entregaEnSucursal"
                                                                         />
                                                                         <i/>{  state.aplicaEntrega && <>
@@ -3703,7 +3703,7 @@ function Embarque(props) {
                                                                             checked={state.diferenteEntrega}
                                                                             value={state.diferenteEntrega}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.deshabilitarDiferenteDomicilio}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                             id="diferenteEntrega"
                                                                         />
                                                                         <i/>
@@ -3723,7 +3723,7 @@ function Embarque(props) {
                                                                             checked={state.entregaConCita}
                                                                             value={state.entregaConCita}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar" || state.deshabilitarDiferenteDomicilio}
+                                                                            disabled={state.agregar === "Consultar" /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                             id="entregaConCita"
                                                                         />
                                                                         <i/>
