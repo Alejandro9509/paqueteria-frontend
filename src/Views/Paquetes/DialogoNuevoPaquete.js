@@ -69,6 +69,7 @@ export default function DialogoNuevoPaquete(props) {
             }
         })
     }
+
     const [paquete, setPaquete] = useState({
         m_nIdPaquete: Math.floor(Math.random() * 10000),
         producto: null,
@@ -115,6 +116,10 @@ export default function DialogoNuevoPaquete(props) {
         props.resetPaquete()
     }
 
+    useEffect(value => {
+        getAllEmbalajes()
+    }, [])
+
     useEffect(() => {
         if (props.paquete.m_nIdPaquete !== 0){
             setPaquete(props.paquete)
@@ -127,6 +132,38 @@ export default function DialogoNuevoPaquete(props) {
             resetErrores()
         }
     }, [open])
+
+    useEffect(value => {
+        if (props.cliente !== null){
+            getProductosByConvenioCliente()
+        }else{
+            getAllProductos()
+        }
+    }, [props.cliente])
+
+    useEffect(value => {
+        if (errores.nameInput === 'producto'){
+            setPaquete(paquete => {
+                return {
+                    ...paquete,
+                    m_rPeso: "",
+                    m_rLargo: "",
+                    m_rAncho: "",
+                    m_rAlto: "",
+                    m_rVolumen: "",
+                    m_nIdTipoEmbalaje: "",
+                    m_sDescripcion: "",
+                    m_nCantidad: "",
+                    m_sObservaciones: "",
+                    m_cyValorDeclarado: "0",
+                    m_nIdTipo: 2,
+                    m_sTipo: "Paquete",
+                    m_sClaveSATProducto:'',
+                    m_sClaveSATUnidad:'',
+                }
+            })
+        }
+    }, [errores.nameInput])
 
     const handleClickOpen = () => {
         resetPaquete()
@@ -171,42 +208,6 @@ export default function DialogoNuevoPaquete(props) {
         resetPaquete()
         handleClose()
     }
-
-    useEffect(value => {
-        getAllEmbalajes()
-    }, [])
-
-    useEffect(value => {
-        if (props.cliente !== null){
-            getProductosByConvenioCliente()
-        }else{
-            getAllProductos()
-        }
-    }, [props.cliente])
-
-    useEffect(value => {
-        if (errores.nameInput === 'producto'){
-            setPaquete(paquete => {
-                return {
-                    ...paquete,
-                    m_rPeso: "",
-                    m_rLargo: "",
-                    m_rAncho: "",
-                    m_rAlto: "",
-                    m_rVolumen: "",
-                    m_nIdTipoEmbalaje: "",
-                    m_sDescripcion: "",
-                    m_nCantidad: "",
-                    m_sObservaciones: "",
-                    m_cyValorDeclarado: "0",
-                    m_nIdTipo: 2,
-                    m_sTipo: "Paquete",
-                    m_sClaveSATProducto:'',
-                    m_sClaveSATUnidad:'',
-                }
-            })
-        }
-    }, [errores.nameInput])
 
     const getAllEmbalajes = () => {
         if (dataEmbalaje.length === 0){
@@ -701,13 +702,19 @@ export default function DialogoNuevoPaquete(props) {
                                         required
                                         onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
                                         onInputChange={(event, newInputValue) => {
-                                            setErrores(errores=>{
-                                                return{
-                                                    ...errores,
-                                                    nameInput:'producto',
-                                                    errorTexto:"Producto inválido"
-                                                }
-                                            })
+                                            let productoEncontrado = dataProductos.find(option => `${option.m_nIdProducto}-${option.m_sDescripcion}` === newInputValue)
+                                            if (productoEncontrado ){
+                                                handleChangePaqueteProductov2(null, productoEncontrado)
+                                            }else{
+                                                setErrores(errores=>{
+                                                    return{
+                                                        ...errores,
+                                                        nameInput:'producto',
+                                                        errorTexto:"Producto inválido"
+                                                    }
+                                                })
+                                            }
+
                                         }}
                                         forcePopupIcon={false}
                                         options={dataProductos}
