@@ -57,8 +57,8 @@ class Seguimiento extends Component {
     buscarAction(e) {
         e.preventDefault()
         obtenerInformeFolioTipo(this.state.folioBusqueda,this.state.tipoBusqueda).then(({data}) => {
-            obtenerImagenEvidencia(data.m_nId,1).then(respuestaRec=>{
-                obtenerImagenEvidencia(data.m_nId,0).then(respuestaEmb=>{
+            obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
+                obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
                     this.setState({
                         imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
                         imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
@@ -207,8 +207,9 @@ class Seguimiento extends Component {
                                                     <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
                                                      src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
                                         }
+                                           Entregó: {this.state.data.m_sReceptorRecoleccion}
                                           </div>
-
+                                                                      
                                     </Grid>
                                        }
 
@@ -217,7 +218,7 @@ class Seguimiento extends Component {
                                      </Grid>
                                      <Grid item md={6}>
                                      <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"  alignItems="center">
-                                        <Typography variant={"h4"} style={{marginBottom:"10px"}}>Embarque</Typography>
+                                        <Typography variant={"h4"} style={{marginBottom:"10px"}}>Entrega</Typography>
                                          {
                                          this.state.imagenesEvidenciaEmbarque.length == 0?
                                             <Typography variant={"h5"} >No hay evidencias</Typography>:
@@ -229,7 +230,7 @@ class Seguimiento extends Component {
                                            <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
                                             src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
                                              }
-                                            Recibió: {this.state.data.m_sReceptor}
+                                            Recibió: {this.state.data.m_sReceptorGuia}
                                           </div>
 
                                         </Grid>
