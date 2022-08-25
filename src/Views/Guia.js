@@ -285,7 +285,8 @@ function Guia(props) {
         modificadoEl: "",
         openDialog: false,
         openDialogEtiquetas:false,
-        detallesPaquetesEtiquetas:[]
+        detallesPaquetesEtiquetas:[],
+        receptorGuia:[]
 
     })
 
@@ -598,7 +599,8 @@ function Guia(props) {
                 tieneRecoleccion: !!respuesta.data.m_nFolioRecoleccion,
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
-                tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita
+                tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
+                receptorGuia: respuesta.data.m_sReceptorGuia
 
             }
         })
@@ -1307,6 +1309,7 @@ function Guia(props) {
                 tieneCitaEntrega: false,
                 zonaTarifaRemitente: '',
                 zonaTarifaDestinatario: '',
+                receptorGuia: '',
             }
         })
         setConceptosAdicionales([])
@@ -3106,7 +3109,7 @@ function Guia(props) {
                                                          </AccordionSummary>
                                                          
                                                          <AccordionDetails>
-                                                         <Evidencias esRecoleccion={0} idGuia={state.idGuia}/> 
+                                                         <Evidencias esRecoleccion={0} idGuia={state.idGuia} data={state}/>
                                                           </AccordionDetails>
                                                         </Accordion>
                                                         </div>
