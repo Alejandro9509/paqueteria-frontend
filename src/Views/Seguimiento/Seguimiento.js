@@ -217,7 +217,7 @@ class Seguimiento extends Component {
                                      </Grid>
                                      <Grid item md={6}>
                                      <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"  alignItems="center">
-                                        <Typography variant={"h4"} style={{marginBottom:"10px"}}>Embarque</Typography> 
+                                        <Typography variant={"h4"} style={{marginBottom:"10px"}}>Entrega</Typography>
                                          {
                                          this.state.imagenesEvidenciaEmbarque.length == 0?
                                             <Typography variant={"h5"} >No hay evidencias</Typography>:
