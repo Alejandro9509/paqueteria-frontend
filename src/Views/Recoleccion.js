@@ -1660,6 +1660,15 @@ function Recoleccion() {
 
                 //Recoleccion
                 diferenteRecoleccion: false,
+                /*fechaRecoleccion: '',
+                ciudadRecoleccion: '',
+                codigoPostalRecoleccion: '',
+                zonaRecoleccion: '',
+                domicilioRecoleccion: '',
+                recogerEn: '',
+                datosAdicionalesRecoleccion: '',*/
+                aplicaEntrega:false,
+                // deshabilitarDiferenteDomicilio:false,
                 //Operador
                 operador: '',
                 tipoUnidad: '',

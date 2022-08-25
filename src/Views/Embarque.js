@@ -3727,7 +3727,7 @@ function Embarque(props) {
                                                                             type="checkbox"
                                                                             checked={state.entregaEnSucursal}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia/* || state.deshabilitarDiferenteDomicilio*/}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                             id="entregaEnSucursal"
                                                                         />
                                                                         <i/>{  state.aplicaEntrega && <>
@@ -3752,7 +3752,7 @@ function Embarque(props) {
                                                                             checked={state.diferenteEntrega}
                                                                             value={state.diferenteEntrega}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia/* || state.deshabilitarDiferenteDomicilio*/}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                             id="diferenteEntrega"
                                                                         />
                                                                         <i/>
