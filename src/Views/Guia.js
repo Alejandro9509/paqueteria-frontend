@@ -3071,53 +3071,58 @@ function Guia(props) {
                                                             Cancelar
                                                         </button>*/}
                                         <div className="form-footer ol-md-12">
-                                    <Grid container spacing={1}>
-                                        <Grid item xs>
-                                            <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
-                                                event.stopPropagation();
-                                                setState({...state, agregar: "Agregar"});
-                                                $('.nav-tabs li ').removeClass('active');
-                                                $('.nav-tabs li').eq(0).addClass('active');
-                                                $('.tab-content div ').removeClass('in show');
-                                                $('#Listado').addClass('in show');
-                                            }} style={{color: "white"}}>
-                                                Cancelar
-                                            </Button>
-                                        </Grid>
-                                        <Grid item xs>
-                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn"
-                                                        disabled={state.agregar === "Consultar"}>
-                                                    Guardar guía
-                                                </Button>
-                                        </Grid>
-                                    </Grid>
-                                </div>
+                                            <Grid container spacing={1}>
+                                                <Grid item xs>
+                                                    <Button fullWidth color={"secondary"} variant={"contained"}
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                setState({...state, agregar: "Agregar"});
+                                                                $('.nav-tabs li ').removeClass('active');
+                                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                                $('.tab-content div ').removeClass('in show');
+                                                                $('#Listado').addClass('in show');
+                                                            }} style={{color: "white"}}>
+                                                        Cancelar
+                                                    </Button>
+                                                </Grid>
+                                                <Grid item xs>
+                                                    <Button fullWidth type="submit"
+                                                            className="btn btn-primary primary-btn"
+                                                            disabled={state.agregar === "Consultar"}>
+                                                        Guardar guía
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </div>
                                     </div>
 
-                                </div>   { state.agregar !="Agregar"  && <div className="row">
-                                                    <div className="widget-wrap">
-                <div className="widget-container">
-                    <div className="widget-content">
-                        <div className="row">
-                            <div className="widget-header">
-                                                    <Accordion>
-                                                         <AccordionSummary
-                                                           expandIcon={<ExpandMoreIcon />}
-                                                           aria-controls="panel1a-content"
-                                                           id="panel1a-header"
-                                                         ><Typography className={classes.heading}><h2>Evidencias última milla</h2></Typography>
-                                                         </AccordionSummary>
-                                                         
-                                                         <AccordionDetails>
-                                                         <Evidencias esRecoleccion={0} idGuia={state.idGuia} data={state}/>
-                                                          </AccordionDetails>
+                                </div>
+                                {state.agregar != "Agregar" && <div className="row">
+                                    <div className="widget-wrap">
+                                        <div className="widget-container">
+                                            <div className="widget-content">
+                                                <div className="row">
+                                                    <div className="widget-header">
+                                                        <Accordion>
+                                                            <AccordionSummary
+                                                                expandIcon={<ExpandMoreIcon/>}
+                                                                aria-controls="panel1a-content"
+                                                                id="panel1a-header"
+                                                            ><Typography className={classes.heading}><h2>Evidencias
+                                                                última milla</h2></Typography>
+                                                            </AccordionSummary>
+
+                                                            <AccordionDetails>
+                                                                <Evidencias esRecoleccion={0} idGuia={state.idGuia}
+                                                                            data={state}/>
+                                                            </AccordionDetails>
                                                         </Accordion>
-                                                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                                                    </div>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>}
                             </form>
                         </div>
                         <div id="Importar" className="tab-pane fade">
