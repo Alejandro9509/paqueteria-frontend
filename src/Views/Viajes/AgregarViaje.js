@@ -49,6 +49,7 @@ import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/Operad
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
+import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 
 const headers = API_HEADERS
@@ -817,9 +818,23 @@ class AgregarViaje extends Component {
     }
 
     handleChangeAutocomplete = (input, value) => {
+        console.log(JSON.stringify(value))
+           if(value.m_bEsPermisionario){
+            console.log("entra a validar")
+            this.setState(state => {
+                return {
+                    ...state,
+                    nombrePermisionario: value.m_sNombreCompleto,
+                    fechaVigenciaPermisionario: value.m_dLicenciaVencimiento.substr(0, 10),
+                    licenciaPermisionario: value.m_sLicencia
+                }
+            });
+        }
         this.setState({
-            [input]: value
+            [input]: value,
+            esOperadorPermisionario: value.m_bEsPermisionario
         });
+
     }
 
     handleChangeRuta (idRuta) {
@@ -1613,6 +1628,7 @@ class AgregarViaje extends Component {
                                                         onChange={this.handleChangeDataPermisionario}
                                                         name="esOperadorPermisionario"
                                                         color="primary"
+                                                        disabled
                                                         size={"medium"}
                                                     />
                                                 }
@@ -1620,21 +1636,7 @@ class AgregarViaje extends Component {
                                             />
                                         </Grid>
                                         <Grid item xs={10}/>
-                                        {
-                                            this.state.esOperadorPermisionario &&
-                                            <Grid item xs={2}>
-                                                <TextField
-                                                    margin={"dense"}
-                                                    variant={"outlined"}
-                                                    label={"No. de licencia"}
-                                                    name={"licenciaPermisionario"}
-                                                    type={"number"}
-                                                    required={this.state.esOperadorPermisionario}
-                                                    value={this.state.licenciaPermisionario}
-                                                    onChange={this.handleChangeDataPermisionario}
-                                                />
-                                            </Grid>
-                                        }
+
                                         {
                                             this.state.esOperadorPermisionario &&
                                             <Grid item xs={2}>
@@ -1646,6 +1648,19 @@ class AgregarViaje extends Component {
                                                     inputMode={"text"}
                                                     required={this.state.esOperadorPermisionario}
                                                     value={this.state.nombrePermisionario}
+                                                    onChange={this.handleChangeDataPermisionario}
+                                                />
+                                            </Grid>
+                                        } {
+                                            this.state.esOperadorPermisionario &&
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    margin={"dense"}
+                                                    variant={"outlined"}
+                                                    label={"No. de licencia"}
+                                                    name={"licenciaPermisionario"}
+                                                    required={this.state.esOperadorPermisionario}
+                                                    value={this.state.licenciaPermisionario}
                                                     onChange={this.handleChangeDataPermisionario}
                                                 />
                                             </Grid>
@@ -1858,7 +1873,7 @@ class AgregarViaje extends Component {
                                         <h2 color={'#717171'}>Detalle de paradas</h2>
                                     </div>
                                     {
-                                       
+
                                         (!this.props.consult && this.props.modificar) &&
                                         <Button variant="contained" color="primary" disabled={this.props.viajeSeleccionado.m_arrTrayectos.some(p=>
                                             (p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado))} fullWidth onClick={(event) => this.handleShowDialog(event)}>
