@@ -358,7 +358,7 @@ function Guia(props) {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
 
         }
