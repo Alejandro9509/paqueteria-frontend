@@ -354,7 +354,7 @@ function Guia(props) {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
 
         }
@@ -442,24 +442,24 @@ function Guia(props) {
     function handleShowModificar(id,folioGuia) {
         
         obtenerValidacionGuia(id).then(respuesta=>{
-            console.log(respuesta)
-            if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
-                let {valores} = respuesta.data
-            showSuccess(`La Guía ${folioGuia} no se puede editar debido a que está relacionada a la factura  ${valores.Serie}-${valores.Folio}`)
-            }else{            
-                obtenerGuiaId(id).then(respuesta => {         
-                    cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)     
-                    setDataGuiaParaConsultarModificar(respuesta, "Modificar")
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(1).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Agregar').addClass('in show');
-                }).catch(function (err) {
-                    console.log(err.data)
-                });
+            if(!respuesta.data.esEditable){//Entrega un 1 si la guia no es modificable
+                // let {valores} = respuesta.data
+            // showSuccess(`La Guía ${folioGuia} no se puede editar debido a que está relacionada a la factura  ${valores.Serie}-${valores.Folio}`)
+                showSuccess(respuesta.data.motivo)
+                return
             }
-        }).catch(function (err){
-            console.log("Error al ejecutar el query"+err.data)
+            obtenerGuiaId(id).then(respuesta => {
+                cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
+                setDataGuiaParaConsultarModificar(respuesta, "Modificar")
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(1).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
+            }).catch(function (err) {
+                console.log(err.data)
+            });
+        }).catch(err => {
+            console.log(err.response.data)
         })
       
     }
@@ -759,11 +759,10 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_nIdEstatusGuia == 8}>
-                            <a 
-                               onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}
-                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
-                                                                     style={{color: "#F9A03E"}}/></a>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || parseInt(row.row.m_nIdEstatusGuia) !== 4}>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}>
+                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
+                            </a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -2280,7 +2279,7 @@ function Guia(props) {
                                                                         name="idEstatusGuia"
                                                                         read="true"
                                                                         value={state.idEstatusGuia}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         InputLabelProps={{
                                                                             shrink: true,
                                                                         }}
@@ -2314,7 +2313,7 @@ function Guia(props) {
                                                                         id="idMoneda"
                                                                         read="true"
                                                                         value={state.idMoneda}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         // disabled
                                                                     >
                                                                         <option value="0">
@@ -2937,7 +2936,7 @@ function Guia(props) {
                                                                                         className="form-control"
                                                                                         required
                                                                                         onChange={handleChange}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        disabled
                                                                                         id="idTipoServicio"
                                                                                         name="idTipoServicio"
                                                                                         read="true"
