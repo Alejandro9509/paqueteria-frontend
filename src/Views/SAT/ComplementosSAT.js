@@ -230,7 +230,7 @@ function ComplementosSAT(props) {
             },
             width: 180,
         },
-        {
+        /*{
             headerName: "Tipo embalaje",
             field: "embalajeSAT",
             renderCell : (row) => {
@@ -241,7 +241,7 @@ function ComplementosSAT(props) {
                 )
             },
             width: 200,
-        },
+        },*/
         {
             headerName: "Descripción embalaje",
             field: "descripcionEmbalajeSAT",
@@ -446,10 +446,10 @@ function ComplementosSAT(props) {
                 claveProducto: item['Clave productos y servicios'],
                 claveUnidad: item['Clave Unidad'],
                 esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
-                claveMaterialPeligroso: item['Es material peligroso'] == "SI"? item['Clave material peligroso']:0,
-                claveEmbalaje:item['Es material peligroso'] == "SI"? item['Tipo embalaje']:0,
-                descripcionEmbalajeSAT:item['Es material peligroso'] == "SI"?item['Descripción embalaje']:"",
-                claveFraccion:item['Es material peligroso'] == "SI"? item['Clave Fraccion']:""
+                claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso']:0,
+                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje']:0,
+                descripcionEmbalajeSAT:item['Es material peligroso'] === "SI"?item['Descripción embalaje']:"",
+                claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion']:""
             }))
             console.log(newArray)
             // props.dataList.push(newArray)
