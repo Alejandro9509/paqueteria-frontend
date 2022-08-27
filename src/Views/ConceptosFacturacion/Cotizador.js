@@ -165,6 +165,7 @@ class Cotizador extends Component {
                 showJustificacionIconButton: showJustificacionConceptos,
                 justificaciones: justificaciones
             })
+            this.props.validarErrores(errores)
             this.props.mostrarCotizadorRec(true)
 
         })
