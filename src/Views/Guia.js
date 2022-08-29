@@ -423,12 +423,18 @@ function Guia(props) {
     }
 
     function handleShowModificar(fila,id,folioGuia) {
-      if(fila.m_sFolioInforme){
-              if(fila.m_sFolioInforme?.length!=0){
-                showSuccess(`No es posible modificar la Guia ya que esta relacionada al informe:${fila.m_sFolioInforme}`)
+      if(fila.m_nIdEstatusGuia){
+              if(fila.m_nIdEstatusGuia == 8){
+                showSuccess(`No es posible modificar la Guia ya que esta cancelada`)
                 return
             }
         }
+        if(fila.m_sFolioInforme){
+            if(fila.m_sFolioInforme?.length!=0){
+              showSuccess(`No es posible modificar la Guia ya que esta relacionada al informe:${fila.m_sFolioInforme}`)
+              return
+          }
+      }
         obtenerValidacionGuia(id).then(respuesta=>{
             console.log(respuesta)
             if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
@@ -749,7 +755,7 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_nIdEstatusGuia == 8}>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
                             <a 
                                onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
