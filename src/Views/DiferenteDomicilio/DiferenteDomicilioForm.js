@@ -87,7 +87,7 @@ export default function DiferenteDomicilioForm(props){
     }
     const handleChangeAutocomplete = (input, newValue) => {
       
-        if (input === "codigoPostal"){
+        if (input === "codigoPostal" && newValue.m_sCP){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 
                
@@ -118,10 +118,7 @@ export default function DiferenteDomicilioForm(props){
                     })
                 }
             })
-        }  setState({
-            ...state,
-            [input]: newValue
-        })
+        }
     }
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -267,10 +264,16 @@ export default function DiferenteDomicilioForm(props){
                     forcePopupIcon={false}
                     options={dataCodigosPostales}
                     getOptionLabel={(option) => (
-                        option ?
+                        option.m_sCP ?
                             `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
                             : ''
                     )}
+                    onKeyDown={e => {
+                        if (e.code === "Enter") {
+                            console.log(e)
+                            e.preventDefault()
+                        }
+                    }}
                     style={{
                         transform: "translate(14px, 10px) scale(1) !important"
                     }}
@@ -282,6 +285,12 @@ export default function DiferenteDomicilioForm(props){
                                 variant="outlined"
                                 onClick={(e) => handleClickCodigosPostalesInput("codigoPostal")}
                                 required={props.required}
+                                onKeyDown={e => {
+                                    if (e.code === "Enter") {
+                                        console.log(e)
+                                        e.preventDefault()
+                                    }
+                                }}
                                 {...params}
                             />
                         </div>
