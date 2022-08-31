@@ -97,12 +97,14 @@ export default function DiferenteDomicilioForm(props){
                         showSuccess(`No aplican entregas en la zona operativa`)
                         setState({
                             ...state,
-                            [input]: null
+                            [input]: null,
+                            zonaOperativa: null
                         })
                        }else{
                         setState(state => {
                             return {
                                 ...state,
+                                [input]: newValue,
                                 zonaOperativa: data[0]
                             }
                         })
@@ -113,7 +115,7 @@ export default function DiferenteDomicilioForm(props){
                     setState(state => {
                         return{
                             ...state,
-                            zonaOperativa: {}
+                            zonaOperativa: null
                         }
                     })
                 }
