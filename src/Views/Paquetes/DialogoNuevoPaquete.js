@@ -146,6 +146,8 @@ export default function DialogoNuevoPaquete(props) {
             setPaquete(paquete => {
                 return {
                     ...paquete,
+                    producto: null,
+                    m_nIdProducto: '',
                     m_rPeso: "",
                     m_rLargo: "",
                     m_rAncho: "",
