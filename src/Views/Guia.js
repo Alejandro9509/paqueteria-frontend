@@ -444,12 +444,18 @@ function Guia(props) {
     }
 
     function handleShowModificar(fila,id,folioGuia) {
-      if(fila.m_sFolioInforme){
-              if(fila.m_sFolioInforme?.length!=0){
-                showSuccess(`No es posible modificar la Guia ya que esta relacionada al informe:${fila.m_sFolioInforme}`)
+      if(fila.m_nIdEstatusGuia){
+              if(fila.m_nIdEstatusGuia == 8){
+                showSuccess(`No es posible modificar la Guia ya que esta cancelada`)
                 return
             }
         }
+        if(fila.m_sFolioInforme){
+            if(fila.m_sFolioInforme?.length!=0){
+              showSuccess(`No es posible modificar la Guia ya que esta relacionada al informe:${fila.m_sFolioInforme}`)
+              return
+          }
+      }
         obtenerValidacionGuia(id).then(respuesta=>{
             if(!respuesta.data.esEditable){//Entrega un 1 si la guia no es modificable
                 // let {valores} = respuesta.data
@@ -750,10 +756,11 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || parseInt(row.row.m_nIdEstatusGuia) !== 4}>
-                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}>
-                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
-                            </a>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
+                            <a 
+                               onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
+                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                     style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -3044,7 +3051,7 @@ function Guia(props) {
                                         </div>
 
                                     </div>
-                                 
+
                                     <div className="form-footer col-md-12">
 
                                         {/*<button
