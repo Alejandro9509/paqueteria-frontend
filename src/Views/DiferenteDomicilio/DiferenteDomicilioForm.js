@@ -288,7 +288,7 @@ export default function DiferenteDomicilioForm(props){
                                 onClick={(e) => handleClickCodigosPostalesInput("codigoPostal")}
                                 required={props.required}
                                 onKeyDown={e => {
-                                    if (e.code === "Enter") {
+                                    if (e.key === "Enter") {
                                         console.log(e)
                                         e.preventDefault()
                                     }
