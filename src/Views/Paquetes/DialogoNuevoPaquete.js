@@ -146,6 +146,8 @@ export default function DialogoNuevoPaquete(props) {
             setPaquete(paquete => {
                 return {
                     ...paquete,
+                    producto: null,
+                    m_nIdProducto: '',
                     m_rPeso: "",
                     m_rLargo: "",
                     m_rAncho: "",
@@ -637,6 +639,22 @@ export default function DialogoNuevoPaquete(props) {
         }
     };
 
+    const handleChangeInputProductov2= (event, newInputValue) => {
+        let productoEncontrado = dataProductos.find(option => `${option.m_nIdProducto}-${option.m_sDescripcion}` === newInputValue)
+        if (productoEncontrado ){
+            handleChangePaqueteProductov2(null, productoEncontrado)
+        }
+        if (!productoEncontrado && newInputValue !== ''){
+            setErrores(errores=>{
+                return{
+                    ...errores,
+                    nameInput:'producto',
+                    errorTexto:"Producto inválido"
+                }
+            })
+        }
+    }
+
     const handleChecked = (event) => {
         setState((state) => {
             return {
@@ -701,21 +719,7 @@ export default function DialogoNuevoPaquete(props) {
                                         freeSolo
                                         required
                                         onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                        onInputChange={(event, newInputValue) => {
-                                            let productoEncontrado = dataProductos.find(option => `${option.m_nIdProducto}-${option.m_sDescripcion}` === newInputValue)
-                                            if (productoEncontrado ){
-                                                handleChangePaqueteProductov2(null, productoEncontrado)
-                                            }else{
-                                                setErrores(errores=>{
-                                                    return{
-                                                        ...errores,
-                                                        nameInput:'producto',
-                                                        errorTexto:"Producto inválido"
-                                                    }
-                                                })
-                                            }
-
-                                        }}
+                                        onInputChange={(event, newInputValue) => handleChangeInputProductov2(event, newInputValue)}
                                         forcePopupIcon={false}
                                         options={dataProductos}
                                         disabled={props.disabled}
