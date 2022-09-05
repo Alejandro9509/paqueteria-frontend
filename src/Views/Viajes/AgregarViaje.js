@@ -49,8 +49,8 @@ import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/Operad
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
-import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
+import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 
 const headers = API_HEADERS
 

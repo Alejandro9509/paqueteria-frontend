@@ -825,7 +825,7 @@ function Guia(props) {
                 return (
                     <div align={"center"} style={{width: "100%"}}>
                         <Chip size="small" style={{
-                            backgroundColor: `${row.row.m_sColor}`,
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
                             padding: "1px"
                         }} label={row.row.m_sEstatusGuia}/>
                     </div>
