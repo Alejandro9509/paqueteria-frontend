@@ -641,9 +641,9 @@ export default function DialogoNuevoPaquete(props) {
 
     const handleChangeInputProductov2= (event, newInputValue) => {
         let productoEncontrado = dataProductos.find(option => `${option.m_nIdProducto}-${option.m_sDescripcion}` === newInputValue)
-        if (productoEncontrado ){
+        /*if (productoEncontrado ){
             handleChangePaqueteProductov2(null, productoEncontrado)
-        }
+        }*/
         if (!productoEncontrado && newInputValue !== ''){
             setErrores(errores=>{
                 return{
