@@ -315,6 +315,7 @@ class DetalleParadas extends Component {
         if (esRecoleccion){
             if (data.m_bRecoleccionDiferenteDomicilio){
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreRemitente,
                     numeroInterior: '',
                     numeroExterior: '',
@@ -337,6 +338,7 @@ class DetalleParadas extends Component {
                 }
             }else{
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreRemitente,
                     numeroInterior: '',
                     numeroExterior: '',
@@ -361,6 +363,7 @@ class DetalleParadas extends Component {
         }else{
             if (data.m_bEntregaDiferenteDomicilio){
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreDestinatario,
                     numeroInterior: '',
                     numeroExterior: '',
@@ -383,6 +386,7 @@ class DetalleParadas extends Component {
                 }
             }else{
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreDestinatario,
                     numeroInterior: null,
                     numeroExterior: null,
