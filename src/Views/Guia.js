@@ -468,24 +468,22 @@ function Guia(props) {
       
         let campos = arrayFiltrado.map(f=>f.field)
 
-        let columnasOrdenadas = []
-        
+        console.log(arrayFiltrado)
         let datosfiltrados =  data.map(datos=>{
+          
         return Object.keys(datos).
         filter((key) => campos.some(c=>c==key)).
         reduce((cur, key) => { 
-                columnasOrdenadas.push(key)
-            
-            return Object.assign(cur, { [key]: datos[key] })}, {});
+            let llave = arrayFiltrado.filter(f=>f.field==key)[0].headerName
+            return Object.assign(cur, { [llave]: datos[key] })}, {});
         })
-        let items =  Object.keys(datosfiltrados[0]).map(orden => {
-            return arrayFiltrado.find(x => x.field == orden).headerName
-          })
-          console.log(items)
+
         const worksheet = XLSX.utils.json_to_sheet(datosfiltrados);
+        const max_width = arrayFiltrado.map((w, r) => {return {wch:17}});
+        worksheet["!cols"] =  max_width;
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Guias");
-        XLSX.utils.sheet_add_aoa(worksheet, [items], { origin: "A1" });
+        XLSX.utils.sheet_add_aoa(worksheet, [], { origin: "A1" });
         XLSX.writeFile(workbook, "Guias.xlsx");
       
       };
