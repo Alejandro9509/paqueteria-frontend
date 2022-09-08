@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Accordion, AccordionSummary, Typography, Chip} from '@material-ui/core';
+import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Accordion, AccordionSummary, Typography, Chip, List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
@@ -19,7 +19,7 @@ import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
 import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
-import {DataGrid} from '@material-ui/data-grid';
+import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -281,6 +281,226 @@ function Guia(props) {
         receptorGuia:[]
 
     })
+    const columns = React.useMemo(() => [
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            width: 200,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
+                            <a
+                                onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
+                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                      style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="Consultar">
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye"
+                                                                                           style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i
+                                className="zmdi zmdi-file"
+                                style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        { row.row.EntregaEnSucursal &&
+                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
+                                className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        }
+                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
+                                                                                                                                          style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        {/*} <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
+                                                                                 style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                         */}
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
+                                                                                      style={{color: "#F30B0B"}}/></a>
+
+                        </Tooltip>
+                    </div>
+                )
+            }
+        },
+        {
+            headerName: "Fecha/Hora Elaboración",
+            field: "m_sFechaHora",
+            width: 200,
+        },
+        {
+            headerName: "Folio Guía",
+            field: "m_nFolioGuia",
+            width: 125,
+        },
+        {
+            headerName: "Estatus Guía",
+            field: "m_sEstatusGuia",
+            width: 200,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            padding: "1px"
+                        }} label={row.row.m_sEstatusGuia}/>
+                    </div>
+                )
+            }
+        },
+        {
+            headerName: "Origen",
+            field: "m_sCiudadOrigen",
+            width: 150,
+        },
+        {
+            headerName: "Destino",
+            field: "m_sCiudadDestino",
+            width: 150,
+        },
+        {
+            headerName: "Tipo cobro",
+            field: "m_sTipoCobro",
+            width: 200,
+        },
+        {
+            headerName: "Tracking",
+            field: "m_sTracking",
+            width: 150,
+        },
+        {
+            headerName: "Total",
+            field: "m_cTotal",
+            width: 125,
+            valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+
+        },
+        {
+            headerName: "Cliente",
+            field: "m_sCliente",
+            width: 300,
+        },
+        {
+            headerName: "Sucursal",
+            field: "m_sSucursal",
+            width: 125,
+        },
+        {
+            headerName: "Folio Informe",
+            field: "m_sFolioInforme",
+            width: 125,
+        },
+        {
+            headerName: "Folio Embarque",
+            field: "m_sFolioEmbarque",
+            width: 150,
+        },
+        /* {
+            headerName: "Observaciones",
+            field: "m_sObservaciones",
+            width: 150,
+        }, */
+        {
+            field: 'Fecha de Cancelación',
+            headerName: 'Fecha de Cancelación',
+            width: 200,
+            renderCell: (row) => {
+                return (
+                    <>
+                        {row.row.m_dtFechaCancelacion?row.row.m_dtFechaCancelacion.substring(0,10)+" ":""}{row.row.m_sHoraCancelacion}
+
+                    </>
+                )
+            },
+        },
+        {
+            headerName: "Usuario de Cancelación",
+            field: "m_sUsuarioCancelacion",
+            width: 200,
+        }
+
+    ]);
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+    const handleAceptarColumnas = () => {
+        //AQUI SE VALIDARAN QUE HAYA POR LO MENOS UNA COLUMNA SELECCIONADA
+        if(checked.length<=0){
+            showSuccess("Requiere seleccionar por lo menos una columna")
+            return
+        }
+
+        if(data.length<=0){
+            showSuccess("Requiere por lo menos un registro de guia para exportar")
+            return
+        }
+        //FILTRAR COLUMNS Y OBTENER TAMBIEN EL FIELD ATRAVES DE checked
+       let arrayFiltrado =  checked.map(col=>{
+            return columns.filter(columna=>columna.headerName==col)[0]
+
+        })
+
+        let campos = arrayFiltrado.map(f=>f.field)
+
+        let columnasOrdenadas = []
+
+        let datosfiltrados =  data.map(datos=>{
+        return Object.keys(datos).
+        filter((key) => campos.some(c=>c==key)).
+        reduce((cur, key) => {
+                columnasOrdenadas.push(key)
+
+            return Object.assign(cur, { [key]: datos[key] })}, {});
+        })
+        let items =  Object.keys(datosfiltrados[0]).map(orden => {
+            return arrayFiltrado.find(x => x.field == orden).headerName
+          })
+          console.log(items)
+        const worksheet = XLSX.utils.json_to_sheet(datosfiltrados);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Guias");
+        XLSX.utils.sheet_add_aoa(worksheet, [items], { origin: "A1" });
+        XLSX.writeFile(workbook, "Guias.xlsx");
+
+      };
+
+    const [checked, setChecked] = React.useState(columns.filter(col=>col.headerName!="Acciones").map(col=>col.headerName));
+
+    const handleToggle = (value) => () => {
+      const currentIndex = checked.indexOf(value);
+      const newChecked = [...checked];
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
+
+      setChecked(newChecked);
+    };
 
     useEffect(() => {
         console.log(conceptosAdicionales.length)
@@ -392,7 +612,7 @@ function Guia(props) {
             console.log(err)
             showSuccess(err)
         });
-    
+
     }
 
     function handleEliminar(id) {
@@ -747,163 +967,6 @@ function Guia(props) {
         currency: 'USD',
     });
 
-    const columns = React.useMemo(() => [
-        {
-            headerName: "Acciones",
-            sortable: false, filterable: false,
-            width: 200,
-            field: "",
-            renderCell: (row) => {
-                return (
-                    <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
-                            <a 
-                               onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
-                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
-                                                                     style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>
-                        <Tooltip title="Consultar">
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye"
-                                                                                           style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>
-                        <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i
-                                className="zmdi zmdi-file"
-                                style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>
-                        { row.row.EntregaEnSucursal &&
-                            <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
-                                className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>
-                        }
-                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
-                                                                                 style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>
-                       {/*} <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
-                                                                                 style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>
-                         */}
-                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
-                                                                                      style={{color: "#F30B0B"}}/></a>
-
-                        </Tooltip>
-                    </div>
-                )
-            }
-        },
-        {
-            headerName: "Fecha/Hora Elaboración",
-            field: "m_sFechaHora",
-            width: 200,
-        },
-        {
-            headerName: "Folio Guía",
-            field: "m_nFolioGuia",
-            width: 125,
-        },
-        {
-            headerName: "Estatus Guía",
-            field: "m_sEstatusGuia",
-            width: 200,
-            renderCell: (row) => {
-                return (
-                    <div align={"center"} style={{width: "100%"}}>
-                        <Chip size="small" style={{
-                            backgroundColor: `${row.row.m_sColorEstatus}`,
-                            padding: "1px"
-                        }} label={row.row.m_sEstatusGuia}/>
-                    </div>
-                )
-            }
-        },
-        {
-            headerName: "Origen",
-            field: "m_sCiudadOrigen",
-            width: 150,
-        },
-        {
-            headerName: "Destino",
-            field: "m_sCiudadDestino",
-            width: 150,
-        },
-        {
-            headerName: "Tipo cobro",
-            field: "m_sTipoCobro",
-            width: 200,
-        },
-        {
-            headerName: "Tracking",
-            field: "m_sTracking",
-            width: 150,
-        },
-        {
-            headerName: "Total",
-            field: "m_cTotal",
-            width: 125,
-            valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
-
-        },
-        {
-            headerName: "Cliente",
-            field: "m_sCliente",
-            width: 300,
-        },
-        {
-            headerName: "Sucursal",
-            field: "m_sSucursal",
-            width: 125,
-        },
-        {
-            headerName: "Folio Informe",
-            field: "m_sFolioInforme",
-            width: 125,
-        },
-        {
-            headerName: "Folio Embarque",
-            field: "m_sFolioEmbarque",
-            width: 150,
-        },
-        /* {
-            headerName: "Observaciones",
-            field: "m_sObservaciones",
-            width: 150,
-        }, */
-        {
-            field: 'Fecha de Cancelación',
-            headerName: 'Fecha de Cancelación',
-            width: 200,
-            renderCell: (row) => {
-                return (
-                    <>
-                    {row.row.m_dtFechaCancelacion?row.row.m_dtFechaCancelacion.substring(0,10)+" ":""}{row.row.m_sHoraCancelacion}
-
-                    </>
-                )
-            },
-          },
-        {
-            headerName: "Usuario de Cancelación",
-            field: "m_sUsuarioCancelacion",
-            width: 200,
-        }
-
-    ]);
 
     function generarReporte(id, folio) {
         obtenerGuiaReporte(id).then(({data}) => {
@@ -1903,7 +1966,39 @@ function Guia(props) {
                 }
 
             </Dialog>
+            {/*SELECCION COLUMNAS PARA EXPORTAR EXCEL*/}
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth={"sm"}
+        maxWidth={"sm"}>
+                   <DialogTitle id="form-dialog-title">Columnas a exportar en Excel</DialogTitle>
+        <DialogContent>
+        <List className={classes.root}>
+      {columns.filter(m=>m.headerName!="Acciones").map((value,index) => {
+        const labelId = `checkbox-list-label-${value.headerName}`;
+        return (
+          <ListItem key={index} role={undefined} dense button onClick={handleToggle(value.headerName)}>
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked.indexOf(value.headerName) !== -1}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{ 'aria-labelledby': labelId }}
+              />
+            </ListItemIcon>
+            <ListItemText id={labelId} primary={`${value.headerName}`} />
+          </ListItem>
+        );
+      })}
+    </List>
+        </DialogContent>
+        <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={handleAceptarColumnas} color="primary">Aceptar</Button>
+        </DialogActions>
+    </Dialog>
 
+
+      {/*CABECERA*/}
             <header className="topbar clearfix">
                 <Cabecera titulo="Guías">
                     <div className="page-header">
@@ -2001,6 +2096,14 @@ function Guia(props) {
                                     </div>
 
                                     <div className="row" style={{height: state.height - 250, width: '100%'}}>
+                                    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-textSizeSmall MuiButton-sizeSmall" tabindex="0" type="button" aria-haspopup="menu" aria-labelledby="mui-66113" id="mui-38414" aria-expanded="true" onClick={handleClickOpen}>
+                                        <span class="MuiButton-label">
+                                         <span class="MuiButton-startIcon MuiButton-iconSizeSmall">
+                                            <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z">
+                                            </path></svg></span>Exportar</span><span class="MuiTouchRipple-root">
+                                        </span>
+                                    </button>
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             rows={data}
