@@ -435,7 +435,38 @@ function Guia(props) {
             headerName: "Usuario de Cancelación",
             field: "m_sUsuarioCancelacion",
             width: 200,
-        }
+        },
+        {
+            headerName: "Remitente",
+            field: "m_sRemitente",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Destinatario",
+            field: "m_sDestinatario",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Cajas",
+            field: "m_nCajas",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Valor declarado",
+            field: "m_nValorDeclarado",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Observaciones",
+            field: "m_sObservaciones",
+            width: 200,
+            hide:true
+        },
+
 
     ]);
     const [open, setOpen] = React.useState(false);
@@ -466,30 +497,38 @@ function Guia(props) {
 
         let campos = arrayFiltrado.map(f=>f.field)
 
-        let columnasOrdenadas = []
-
         let datosfiltrados =  data.map(datos=>{
+
         return Object.keys(datos).
         filter((key) => campos.some(c=>c==key)).
-        reduce((cur, key) => {
-                columnasOrdenadas.push(key)
-
-            return Object.assign(cur, { [key]: datos[key] })}, {});
+        reduce((cur, key) => { 
+            let llave = arrayFiltrado.filter(f=>f.field==key)[0].headerName
+            return Object.assign(cur, { [llave]: datos[key] })}, {});
         })
-        let items =  Object.keys(datosfiltrados[0]).map(orden => {
-            return arrayFiltrado.find(x => x.field == orden).headerName
-          })
-          console.log(items)
+
         const worksheet = XLSX.utils.json_to_sheet(datosfiltrados);
+        const max_width = arrayFiltrado.map((w, r) => {return {wch:17}});
+        worksheet["!cols"] =  max_width;
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Guias");
-        XLSX.utils.sheet_add_aoa(worksheet, [items], { origin: "A1" });
+        var ws = workbook.Sheets["Guias"];
+     /* var C = XLSX.utils.decode_col("D"); // 1
+        var fmt = '$0.00';
+        //BUSCAR INDEX DE LAS COLUMNAS Y SACAR EL INDEX DEL TOTAL
+        var range = XLSX.utils.decode_range(ws['!ref']);
+        for(var i = range.s.r + 1; i <= range.e.r; ++i) {
+          var ref = XLSX.utils.encode_cell({r:i, c:C});
+          if(!ws[ref]) continue;
+          if(ws[ref].t != 'n') continue;
+          ws[ref].z = fmt;
+        }*/
+        XLSX.utils.sheet_add_aoa(worksheet, [], { origin: "A1" });
         XLSX.writeFile(workbook, "Guias.xlsx");
-
+      
       };
 
     const [checked, setChecked] = React.useState(columns.filter(col=>col.headerName!="Acciones").map(col=>col.headerName));
-
+  
     const handleToggle = (value) => () => {
       const currentIndex = checked.indexOf(value);
       const newChecked = [...checked];
