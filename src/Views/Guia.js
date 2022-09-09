@@ -2117,9 +2117,7 @@ function Guia(props) {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className="row" style={{height: state.height - 250, width: '100%'}}>
-                                    <button
+                                    <Button
                                         className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-textSizeSmall MuiButton-sizeSmall"
                                         tabIndex="0" type="button" aria-haspopup="menu" aria-labelledby="mui-66113"
                                         id="mui-38414" aria-expanded="true" onClick={handleClickOpen}>
@@ -2131,7 +2129,8 @@ function Guia(props) {
                                                 d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z">
                                         </path></svg></span>Exportar</span><span className="MuiTouchRipple-root">
                                     </span>
-                                    </button>
+                                    </Button>
+                                    <div className="row" style={{height: state.height - 250, width: '100%'}}>
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             rows={data}
