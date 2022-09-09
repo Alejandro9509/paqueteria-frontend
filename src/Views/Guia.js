@@ -437,7 +437,38 @@ function Guia(props) {
             headerName: "Usuario de Cancelación",
             field: "m_sUsuarioCancelacion",
             width: 200,
-        }
+        },
+        {
+            headerName: "Remitente",
+            field: "m_sRemitente",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Destinatario",
+            field: "m_sDestinatario",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Cajas",
+            field: "m_nCajas",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Valor declarado",
+            field: "m_nValorDeclarado",
+            width: 200,
+            hide:true
+        },
+        {
+            headerName: "Observaciones",
+            field: "m_sObservaciones",
+            width: 200,
+            hide:true
+        },
+
 
     ]);
     const [open, setOpen] = React.useState(false);
@@ -468,7 +499,6 @@ function Guia(props) {
       
         let campos = arrayFiltrado.map(f=>f.field)
 
-        console.log(arrayFiltrado)
         let datosfiltrados =  data.map(datos=>{
           
         return Object.keys(datos).
@@ -483,6 +513,17 @@ function Guia(props) {
         worksheet["!cols"] =  max_width;
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Guias");
+        var ws = workbook.Sheets["Guias"];
+     /* var C = XLSX.utils.decode_col("D"); // 1
+        var fmt = '$0.00'; 
+        //BUSCAR INDEX DE LAS COLUMNAS Y SACAR EL INDEX DEL TOTAL
+        var range = XLSX.utils.decode_range(ws['!ref']);
+        for(var i = range.s.r + 1; i <= range.e.r; ++i) {
+          var ref = XLSX.utils.encode_cell({r:i, c:C});
+          if(!ws[ref]) continue;
+          if(ws[ref].t != 'n') continue;
+          ws[ref].z = fmt;
+        }*/  
         XLSX.utils.sheet_add_aoa(worksheet, [], { origin: "A1" });
         XLSX.writeFile(workbook, "Guias.xlsx");
       
