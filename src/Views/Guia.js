@@ -466,6 +466,12 @@ function Guia(props) {
             width: 200,
             hide:true
         },
+        {
+            headerName: "Factura",
+            field: "m_sFactura",
+            width: 200,
+            hide:true
+        },
 
 
     ]);
@@ -512,16 +518,26 @@ function Guia(props) {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Guias");
         var ws = workbook.Sheets["Guias"];
-     /* var C = XLSX.utils.decode_col("D"); // 1
-        var fmt = '$0.00';
+        var C = XLSX.utils.decode_col("D"); // 1
+        var fmt = '$0.00'; 
         //BUSCAR INDEX DE LAS COLUMNAS Y SACAR EL INDEX DEL TOTAL
         var range = XLSX.utils.decode_range(ws['!ref']);
-        for(var i = range.s.r + 1; i <= range.e.r; ++i) {
-          var ref = XLSX.utils.encode_cell({r:i, c:C});
-          if(!ws[ref]) continue;
-          if(ws[ref].t != 'n') continue;
-          ws[ref].z = fmt;
-        }*/
+        console.log("range s r "+range.s.c)
+        console.log("range e r"+range.e.c)
+        for(var i = range.s.c; i <= range.e.c; ++i) {
+            var ref = XLSX.utils.encode_cell({r:0, c:i});
+            console.log("ref: "+ws[ref].v)
+            if(ws[ref].v=="Total" || ws[ref].v=="Valor declarado"){
+                for(var j = range.s.r + 1; j <= range.e.r; ++j) {
+                    var ref = XLSX.utils.encode_cell({r:j, c:i});
+                    if(!ws[ref]) continue;
+                    if(ws[ref].t != 'n') continue;
+                    ws[ref].z = fmt;
+                  }
+            }
+
+        }
+
         XLSX.utils.sheet_add_aoa(worksheet, [], { origin: "A1" });
         XLSX.writeFile(workbook, "Guias.xlsx");
       
