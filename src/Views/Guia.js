@@ -468,6 +468,12 @@ function Guia(props) {
             width: 200,
             hide:true
         },
+        {
+            headerName: "Factura",
+            field: "m_sFactura",
+            width: 200,
+            hide:true
+        },
 
 
     ]);
