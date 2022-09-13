@@ -825,7 +825,7 @@ class AgregarViaje extends Component {
                 return {
                     ...state,
                     nombrePermisionario: value.m_sNombreCompleto,
-                    fechaVigenciaPermisionario: value.m_dLicenciaVencimiento.substr(0, 10),
+                    fechaVigenciaPermisionario:value.m_dLicenciaVencimiento?value.m_dLicenciaVencimiento.substr(0, 10):"",
                     licenciaPermisionario: value.m_sLicencia
                 }
             });
