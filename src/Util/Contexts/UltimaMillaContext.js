@@ -575,7 +575,14 @@ async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
     );
     return result
 }
-
+function obtenerImagenEvidencia(idGuia,esRecoleccion){
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 export {
     cancelarRuta,
     obtenerXMLPermisionario,
@@ -603,7 +610,8 @@ export {
     validarUnidadesSeleccionadas,
     validarUnidadOcupada,
     searchLocationGuia,
-    searchLocationGuiav2
+    searchLocationGuiav2,
+    obtenerImagenEvidencia
 }
 
 
