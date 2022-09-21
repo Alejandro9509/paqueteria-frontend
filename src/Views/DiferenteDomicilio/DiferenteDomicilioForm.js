@@ -265,6 +265,7 @@ export default function DiferenteDomicilioForm(props){
                     disableClearable
                     forcePopupIcon={false}
                     options={dataCodigosPostales}
+                    getOptionDisabled={(option) => option.m_bNoAplicaEntrega || option.codigoFueraDeZonaOperativa}
                     getOptionLabel={(option) => (
                         option.m_sCP ?
                             `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
