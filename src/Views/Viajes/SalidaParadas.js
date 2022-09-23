@@ -358,7 +358,7 @@ export default function SalidaParadas(props){
                         label={"Fecha Salida"}
                         variant={"outlined"}
                         InputLabelProps={{shrink: true}}
-                        InputProps={{inputProps: { min: getCurrentDate()}}}
+                        InputProps={{inputProps: { min: data.fecha}}}
                         value={data.fechaSalida}
                         onChange={handleChangeFechaSalida}
                     />
