@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Chip, List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Accordion, AccordionSummary, Typography, Chip, List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
@@ -21,6 +21,7 @@ import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Uti
 import Barra from "../Util/jquery-barcode"
 import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import {
     obtenerZonaTarifaByIdCodigoPostal,
@@ -30,6 +31,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    AccordionDetails,
     DialogTitle,
     FormControl,
     InputLabel,
@@ -91,6 +93,8 @@ import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfigu
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
 import ImprimirEtiquetas2 from "./Guia/ImprimirEtiquetas2";
+import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
+import Evidencias from "./Evidencias";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -154,16 +158,8 @@ function Guia(props) {
     const [dataOcurre, setDataOcurre] = useState()
     const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado: 0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado: 0,
-        DestinoListado: 0,
-    })
     const [dataPaquetes, setDataPaquetes] = useState([])
+    const [guiaSeleccionada, setGuiaSeleccionada] = useState(null)
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -281,7 +277,8 @@ function Guia(props) {
         modificadoEl: "",
         openDialog: false,
         openDialogEtiquetas:false,
-        detallesPaquetesEtiquetas:[]
+        detallesPaquetesEtiquetas:[],
+        receptorGuia:[]
 
     })
     const columns = React.useMemo(() => [
@@ -293,7 +290,7 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || parseInt(row.row.m_nIdEstatusGuia) == 8}>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || parseInt(row.row.m_nIdEstatusGuia) !== 4}>
                             <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}>
                                 <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
                             </a>
@@ -321,15 +318,16 @@ function Guia(props) {
                         <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
-                                                                                                                                          style={{color: "#F9A03E"}}/></a>
+                                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
+                       {/*} <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
-                                                                                                                  style={{color: "#F9A03E"}}/></a>
+                                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                         */}
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
@@ -387,12 +385,6 @@ function Guia(props) {
             field: "m_sTracking",
             width: 150,
         },
-        /*{
-            headerName: "Folio Relacionado",
-            field: "m_sFolioGuiaRelacionada",
-            width: 125,
-
-        },*/
         {
             headerName: "Total",
             field: "m_cTotal",
@@ -426,18 +418,17 @@ function Guia(props) {
             width: 150,
         }, */
         {
-            headerName: "Fecha de Cancelación",
-            field: "m_dtFechaCancelacion",
-            width: 200,
-        },
-        {
             field: 'Fecha de Cancelación',
             headerName: 'Fecha de Cancelación',
             width: 200,
-            valueGetter: (params) =>
-                `${params.getValue(params.m_nFolioGuia, 'm_dtFechaCancelacion') || ''} ${
-                    params.getValue(params.m_nFolioGuia, 'm_sHoraCancelacion') || ''
-                }`,
+            renderCell: (row) => {
+                return (
+                    <>
+                        {row.row.m_dtFechaCancelacion?row.row.m_dtFechaCancelacion.substring(0,10)+" ":""}{row.row.m_sHoraCancelacion}
+
+                    </>
+                )
+            },
         },
         {
             headerName: "Usuario de Cancelación",
@@ -481,15 +472,16 @@ function Guia(props) {
             hide:true
         },
 
+
     ]);
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
-        setOpen(true);
+      setOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+      setOpen(false);
     };
     const handleAceptarColumnas = () => {
         //AQUI SE VALIDARAN QUE HAYA POR LO MENOS UNA COLUMNA SELECCIONADA
@@ -503,7 +495,7 @@ function Guia(props) {
             return
         }
         //FILTRAR COLUMNS Y OBTENER TAMBIEN EL FIELD ATRAVES DE checked
-        let arrayFiltrado =  checked.map(col=>{
+       let arrayFiltrado =  checked.map(col=>{
             return columns.filter(columna=>columna.headerName==col)[0]
 
         })
@@ -540,7 +532,7 @@ function Guia(props) {
                     if(!ws[ref]) continue;
                     if(ws[ref].t != 'n') continue;
                     ws[ref].z = fmt;
-                }
+                  }
             }
 
         }
@@ -548,20 +540,20 @@ function Guia(props) {
         XLSX.utils.sheet_add_aoa(worksheet, [], { origin: "A1" });
         XLSX.writeFile(workbook, "Guias.xlsx");
 
-    };
+      };
 
     const [checked, setChecked] = React.useState(columns.filter(col=>col.headerName!="Acciones").map(col=>col.headerName));
 
     const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
+      const currentIndex = checked.indexOf(value);
+      const newChecked = [...checked];
+      if (currentIndex === -1) {
+        newChecked.push(value);
+      } else {
+        newChecked.splice(currentIndex, 1);
+      }
 
-        setChecked(newChecked);
+      setChecked(newChecked);
     };
 
     useEffect(() => {
@@ -596,17 +588,19 @@ function Guia(props) {
             return
         }
         let params = {
-            "TIpoCambio": state.tipoCambio,
-            "FolioGuia": state.folioGuia,
-            "IdEstatusGuia": state.idEstatusGuia,
-            "IdEmbarque": state.idEmbarque,
-            "IdMoneda": state.idMoneda,
+            "m_nIdGuia": state.idGuia,
+            "m_nTIpoCambio": state.tipoCambio,
+            "m_sFolioGuia": state.folioGuia,
+            "m_nIdEstatusGuia": state.idEstatusGuia,
+            "m_nIdEmbarque": state.idEmbarque,
+            "m_nIdMoneda": state.idMoneda,
 
-            "CreadoPor": state.creadoPor,
-            "ModificadoPor": state.modificadoPor,
-            "IdSucursal": state.idSucursalAgregar,
-            "ValorDeclarado": state.ValorDeclarado,
-            "idTipoServicio": state.idTipoServicio,
+            "m_nCreadoPor": state.creadoPor,
+            "m_nModificadoPor": state.modificadoPor,
+            "m_nIdSucursal": state.idSucursalAgregar,
+            "m_nValorDeclarado": state.ValorDeclarado,
+            "m_nidTipoServicio": state.idTipoServicio,
+
             "m_dFecha": getCurrentDateTime().substr(0, 10),
             "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
 
@@ -630,16 +624,15 @@ function Guia(props) {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
-                showSuccess('Guia modificada')
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
 
         }
@@ -651,12 +644,15 @@ function Guia(props) {
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
-            m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
+            m_nIdUsuarioEntregaOcurre: parseInt(localStorage.getItem("UsuarioId")),
             m_sFechaOcurre: dataOcurre.fechaOcurre,
             m_sHoraOcurre: dataOcurre.horaOcurre,
-            m_sComentariosOcurre: dataOcurre.comentariosOcurre,
+            m_sComentariosOcurre: dataOcurre.comentariosOcurre || "",
             m_sMontoRecibidoOcurre: dataOcurre.importeOcurre,
-            m_nIdTipoPago: dataOcurre.tipoPago
+            m_nIdTipoPago: dataOcurre.tipoPago,
+            m_nIdBanco:dataOcurre.aplicaDetalle?dataOcurre.idBancoproveniente:0,
+            m_dFechaPago:dataOcurre.fechaPago,
+            m_nAplicaDetalle:dataOcurre.aplicaDetalle?1:0
 
         }
         console.log(params)
@@ -665,10 +661,12 @@ function Guia(props) {
             getAllData()
             setDataOcurre({})
             setState({...state, openDialog: false})
+            setGuiaSeleccionada(null)
         }).catch(err => {
             console.log(err)
             showSuccess(err)
         });
+
     }
 
     function handleEliminar(id) {
@@ -682,20 +680,38 @@ function Guia(props) {
                 return;
             }
             validarEliminarGuia(id).then(respuesta=>{
-               if(respuesta.data.sePuedeEliminar){
-                eliminarGuia(id, state.modificadoPor).then(respuesta => {
-                showSuccess(respuesta.data)
-                //console.log(respuesta)
-                if (respuesta.data.indexOf("fracaso:") <= 0)
-                    getAllData()
-            }).catch(function (err) {
-                console.log(err.data)
-            });
-               }else{
-                   showSuccess("La guia no puede ser eliminada a menos que se cancele")
-               }
+                if(respuesta.data.sePuedeEliminar){
+
+                    confirmAlert({
+                        title: 'Confirmar Eliminar',
+                        message: '¿Está seguro de eliminar guia?',
+                        buttons: [
+                            {
+                                label: 'Si',
+                                onClick: () => {
+                                    eliminarGuia(id, state.modificadoPor).then(respuesta => {
+                                        showSuccess(respuesta.data)
+                                        if (respuesta.data.indexOf("fracaso:") <= 0) {
+                                            getAllData()
+                                            setGuiaSeleccionada(null)
+                                        }
+                                    }).catch(err => {
+                                        console.log(err)
+                                        showSuccess(err.response?.data)
+                                    });
+                                }
+                            },
+                            {
+                                label: 'No',
+                            }
+                        ]
+                    })
+
+                }else{
+                    showSuccess("La guia no puede ser eliminada a menos que se cancele")
+                }
             })
-           
+
         }).catch(err => {
             showSuccess(err)
         });
@@ -704,24 +720,24 @@ function Guia(props) {
     function handleShowModificar(id,folioGuia) {
         
         obtenerValidacionGuia(id).then(respuesta=>{
-            console.log(respuesta)
-            if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
-                let {valores} = respuesta.data
-            showSuccess(`La Guía ${folioGuia} no se puede editar debido a que está relacionada a la factura  ${valores.Serie}-${valores.Folio}`)
-            }else{            
-                obtenerGuiaId(id).then(respuesta => {         
-                    cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)     
-                    setDataGuiaParaConsultarModificar(respuesta, "Modificar")
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(1).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Agregar').addClass('in show');
-                }).catch(function (err) {
-                    console.log(err.data)
-                });
+            if(!respuesta.data.esEditable){//Entrega un 1 si la guia no es modificable
+                // let {valores} = respuesta.data
+            // showSuccess(`La Guía ${folioGuia} no se puede editar debido a que está relacionada a la factura  ${valores.Serie}-${valores.Folio}`)
+                showSuccess(respuesta.data.motivo)
+                return
             }
-        }).catch(function (err){
-            console.log("Error al ejecutar el query"+err.data)
+            obtenerGuiaId(id).then(respuesta => {
+                cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
+                setDataGuiaParaConsultarModificar(respuesta, "Modificar")
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(1).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
+            }).catch(function (err) {
+                console.log(err.data)
+            });
+        }).catch(err => {
+            console.log(err.response.data)
         })
       
     }
@@ -868,7 +884,8 @@ function Guia(props) {
                 tieneRecoleccion: !!respuesta.data.m_nFolioRecoleccion,
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
-                tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita
+                tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
+                receptorGuia: respuesta.data.m_sReceptorGuia
 
             }
         })
@@ -912,30 +929,31 @@ function Guia(props) {
     const handleCancelar = (e) => {
         e.preventDefault();
         //console.log(state.idGuia)
-       validarCancelarGuia(state.idGuia).then((respuesta)=>{
-            if(respuesta.data.sePuedeCancelar){
-          var params = {
-            "motivoCancelacion": state.MotivoCancelacion,
-            "usuarioCancelacion": localStorage.getItem("UsuarioId"),
-            "fechaCancelacion": `${getCurrentDate()}`,
-            "HoraCancelacion": `${getCurrentTime()}`
-        }
-        console.log(JSON.stringify(params))
-          cancelarGuia(state.idGuia, params).then((respuesta) => {
-            console.log(respuesta.data)
-            showSuccess("La guia ha sido cancelada");
-            handleShowListado()
-        }) 
+        validarCancelarGuia(state.idGuia).then((respuesta) => {
+            if (respuesta.data.sePuedeCancelar) {
+                let params = {
+                    m_nIdGuia: state.idGuia,
+                    motivoCancelacion: state.MotivoCancelacion,
+                    idUsuario: localStorage.getItem("UsuarioId"),
+                    fechaCancelacion: getCurrentDateTime()
+                }
+                console.log(JSON.stringify(params))
+                cancelarGuia(params).then((respuesta) => {
+                    console.log(respuesta.data)
+                    handleShowListado()
+                }).catch(err => {
+                    console.log(err)
+                    showSuccess(err.response?.data)
+                })
+            } else {
+                showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: " + respuesta.data.FolioInforme)
+                return
             }
-            else{
-            showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
-            return
-            }
-            }).catch((err)=>{
-                showSuccess(err)
-            })
+        }).catch((err) => {
+            showSuccess(err)
+        })
 
-        
+
     }
 
     //Prepara campos para agregar guia
@@ -966,6 +984,7 @@ function Guia(props) {
             }
         });
         getAllData()
+        setGuiaSeleccionada(null)
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1010,6 +1029,7 @@ function Guia(props) {
         currency: 'USD',
     });
 
+
     function generarReporte(id, folio) {
         obtenerGuiaReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
@@ -1051,7 +1071,7 @@ function Guia(props) {
                 $('#Agregar').addClass('in show');
                  //setDataMoneda(props.location.dataMoneda)
                  //setDataSucursal(props.location.dataSucursal)
-                 setDataTipoCobro(props.location.dataTipoCobro)
+                 // setDataTipoCobro(props.location.dataTipoCobro)
                  //setDataTipoCambio(props.location.dataTipoCambio)
                 // setDataCiudadF(props.location.dataCiudades)
                 getDataParaEditar()
@@ -1349,7 +1369,6 @@ function Guia(props) {
     }
 
     const limpiarCamposAgregar = () => {
-        console.log("limpiar")
         setState(state => {
             return {
                 ...state,
@@ -1422,15 +1441,17 @@ function Guia(props) {
                 tieneCitaEntrega: false,
                 zonaTarifaRemitente: '',
                 zonaTarifaDestinatario: '',
+                receptorGuia: '',
             }
         })
         setConceptosAdicionales([])
+        setGuiaSeleccionada(null)
     }
 
     const getDataParaEditar = () =>{
         getAllDataSucursal()
         getAllDataMoneda()
-
+        getAllDataTipoCobro()
         getTipoCambio()
         getAllDataEstatusGuia()
         getAllDataTipoServicio()
@@ -1479,7 +1500,7 @@ function Guia(props) {
         if (dataTipoPago.length > 0) {
             return
         }
-        axios.get(`${process.env.REACT_APP_API_URL}/TiposPago/GetListado`, {headers}).then(({data}) => {
+        obtenerTiposPago().then(({data}) => {
             setDataTipoPago(data)
         });
     };
@@ -1898,14 +1919,17 @@ function Guia(props) {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
                 if (!guia.m_nClienteBloqueado) {
-
                     let importeTotal = 0
                     guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
+                    let tipoCobro = dataTipoCobro.find(i => i.m_nIdTipoCobro == guia.m_nIdTIpoCobro)
+                    let tipoPago = tipoCobro.m_nIdTipoPago || dataTipoPago[0]?.m_nIdTipoPago
                     setDataOcurre({
                         idGuia: guia.m_nIdGuia,
                         tipoCobroOcurre: guia.m_nIdTIpoCobro,
-                        importeTotal: importeTotal,
-                        tipoPago: guia.m_nIdTIpoCobro == 11 ? 5 : 0
+                        importeTotal: importeTotal.toFixed(2),
+                        tipoPago: tipoPago,
+                        fechaOcurre: getCurrentDate(),
+                        horaOcurre: getCurrentTime()
                     })
                     setState({
                         ...state,
@@ -1931,23 +1955,21 @@ function Guia(props) {
         cambiarTipoCobro(state.idGuia, tipoCobro).then(({data}) => {
             showSuccess(data)
             getAllData()
+            setGuiaSeleccionada(null)
         })
     }
 
-    const cambiarEstaus = (estatus) => {
-
-             cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
-            showSuccess(data)
-            getAllData()
-        }) 
-       
-       
+    const cambiarEstausExitoso = (data) => {
+        showSuccess(data)
+        getAllData()
+        setGuiaSeleccionada(null)
     }
 
     const handleAsignarTrayectos = (idGuia) => {
         asignarTrayectos(idGuia).then(({data}) => {
             showSuccess(data)
             getAllData()
+            setGuiaSeleccionada(null)
         })
     }
 
@@ -1962,11 +1984,13 @@ function Guia(props) {
     return (
         <div>
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
-                              open={state.openTipoCobro} dataTipoCobro={dataTipoCobro}
+                              open={state.openTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
-            <CambiarEstatus submit={(id) => cambiarEstaus(id)}
-                              open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
-                              close={() => setState({...state, openCambiarEstatus: false})}/>
+            <CambiarEstatus submit={(data) => cambiarEstausExitoso(data)}
+                            open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
+                            close={() => setState({...state, openCambiarEstatus: false})}
+                            guia={guiaSeleccionada}
+            />
             <AsignarTrayectos submit={(id) => handleAsignarTrayectos(id)}
                             open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
                             close={() => setState({...state, openAsignarTrayectos: false})}/>
@@ -1991,47 +2015,52 @@ function Guia(props) {
                 {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 {
                     dataOcurre &&
-                    <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {
-                        setState({...state, openDialog: false});
-                        setShowDialogOcurre(false)
-                    }} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro}
-                            showDialogOcurre={showDialogOcurre}/>
+                    <Ocurre
+                        handleEntregaOcurre={handleEntregaOcurre}
+                        closeOcurre={() => {
+                            setState({...state, openDialog: false});
+                            setShowDialogOcurre(false)
+                        }}
+                        dataTipoPago={dataTipoPago}
+                        dataOcurre={dataOcurre}
+                        dataTipoCobro={dataTipoCobro}
+                        showDialogOcurre={showDialogOcurre}/>
                 }
 
             </Dialog>
             {/*SELECCION COLUMNAS PARA EXPORTAR EXCEL*/}
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth={"sm"}
-                    maxWidth={"sm"}>
-                <DialogTitle id="form-dialog-title">Columnas a exportar en Excel</DialogTitle>
-                <DialogContent>
-                    <List className={classes.root}>
-                        {columns.filter(m=>m.headerName!="Acciones").map((value,index) => {
-                            const labelId = `checkbox-list-label-${value.headerName}`;
-                            return (
-                                <ListItem key={index} role={undefined} dense button onClick={handleToggle(value.headerName)}>
-                                    <ListItemIcon>
-                                        <Checkbox
-                                            edge="start"
-                                            checked={checked.indexOf(value.headerName) !== -1}
-                                            tabIndex={-1}
-                                            disableRipple
-                                            inputProps={{ 'aria-labelledby': labelId }}
-                                        />
-                                    </ListItemIcon>
-                                    <ListItemText id={labelId} primary={`${value.headerName}`} />
-                                </ListItem>
-                            );
-                        })}
-                    </List>
-                </DialogContent>
-                <DialogActions>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth={"sm"}
+        maxWidth={"sm"}>
+                   <DialogTitle id="form-dialog-title">Columnas a exportar en Excel</DialogTitle>
+        <DialogContent>
+        <List className={classes.root}>
+      {columns.filter(m=>m.headerName!="Acciones").map((value,index) => {
+        const labelId = `checkbox-list-label-${value.headerName}`;
+        return (
+          <ListItem key={index} role={undefined} dense button onClick={handleToggle(value.headerName)}>
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked.indexOf(value.headerName) !== -1}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{ 'aria-labelledby': labelId }}
+              />
+            </ListItemIcon>
+            <ListItemText id={labelId} primary={`${value.headerName}`} />
+          </ListItem>
+        );
+      })}
+    </List>
+        </DialogContent>
+        <DialogActions>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
                     <Button onClick={handleAceptarColumnas} color="primary">Aceptar</Button>
-                </DialogActions>
-            </Dialog>
+        </DialogActions>
+    </Dialog>
 
 
-            {/*CABECERA*/}
+      {/*CABECERA*/}
             <header className="topbar clearfix">
                 <Cabecera titulo="Guías">
                     <div className="page-header">
@@ -2094,7 +2123,7 @@ function Guia(props) {
                             </li>
 
                         <li>
-                            <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459)) && state.estatusGuia != 8? "" : classes.disabled}
+                            <a className={((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) && validarDerecho(9101459)) ? "" : classes.disabled}
                                onClick={() => {
                                    getAllDataEstatusGuia()
                                    setState({...state, openCambiarEstatus: true})
@@ -2143,20 +2172,16 @@ function Guia(props) {
                                             </div>
                                         </div>
                                     </div>
-                                    <Button
-                                        className="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-textSizeSmall MuiButton-sizeSmall"
-                                        tabIndex="0" type="button" aria-haspopup="menu" aria-labelledby="mui-66113"
-                                        id="mui-38414" aria-expanded="true" onClick={handleClickOpen}>
-                                    <span className="MuiButton-label">
-                                     <span className="MuiButton-startIcon MuiButton-iconSizeSmall">
-                                        <svg className="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24"
-                                             aria-hidden="true">
-                                            <path
-                                                d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z">
-                                        </path></svg></span>Exportar</span><span className="MuiTouchRipple-root">
-                                    </span>
-                                    </Button>
+
                                     <div className="row" style={{height: state.height - 250, width: '100%'}}>
+                                    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-textSizeSmall MuiButton-sizeSmall" tabindex="0" type="button" aria-haspopup="menu" aria-labelledby="mui-66113" id="mui-38414" aria-expanded="true" onClick={handleClickOpen}>
+                                        <span class="MuiButton-label">
+                                         <span class="MuiButton-startIcon MuiButton-iconSizeSmall">
+                                            <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z">
+                                            </path></svg></span>Exportar</span><span class="MuiTouchRipple-root">
+                                        </span>
+                                    </button>
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             rows={data}
@@ -2165,7 +2190,7 @@ function Guia(props) {
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdGuia}
                                             onRowSelected={(row) => {
-                                                console.log(row)
+                                                setGuiaSeleccionada(row.data)
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,
@@ -2175,6 +2200,7 @@ function Guia(props) {
                                                     folioInforme:row.data.m_sFolioInforme
                                                 })
                                             }}
+
                                         />
                                     </div>
 
@@ -2301,7 +2327,7 @@ function Guia(props) {
                                                                                 <option key={embarque.m_nIdEmbarque}
                                                                                         value={embarque.m_nIdEmbarque}>
                                                                                     {
-                                                                                        embarque.m_nFolioEmbarque
+                                                                                        embarque.m_sFolioEmbarque
                                                                                     }
                                                                                 </option>
                                                                             )
@@ -2411,7 +2437,7 @@ function Guia(props) {
                                                                         name="idEstatusGuia"
                                                                         read="true"
                                                                         value={state.idEstatusGuia}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         InputLabelProps={{
                                                                             shrink: true,
                                                                         }}
@@ -2445,7 +2471,7 @@ function Guia(props) {
                                                                         id="idMoneda"
                                                                         read="true"
                                                                         value={state.idMoneda}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                         // disabled
                                                                     >
                                                                         <option value="0">
@@ -3068,7 +3094,7 @@ function Guia(props) {
                                                                                         className="form-control"
                                                                                         required
                                                                                         onChange={handleChange}
-                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        disabled
                                                                                         id="idTipoServicio"
                                                                                         name="idTipoServicio"
                                                                                         read="true"
@@ -3218,17 +3244,59 @@ function Guia(props) {
                                                         >
                                                             Cancelar
                                                         </button>*/}
-                                        <Grid container spacing={2}>
-                                            <Grid item xs>
-                                                <Button fullWidth type="submit" className="btn btn-primary primary-btn"
-                                                        disabled={state.agregar === "Consultar"}>
-                                                    Guardar guía
-                                                </Button>
+                                        <div className="form-footer ol-md-12">
+                                            <Grid container spacing={1}>
+                                                <Grid item xs>
+                                                    <Button fullWidth color={"secondary"} variant={"contained"}
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                setState({...state, agregar: "Agregar"});
+                                                                $('.nav-tabs li ').removeClass('active');
+                                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                                $('.tab-content div ').removeClass('in show');
+                                                                $('#Listado').addClass('in show');
+                                                            }} style={{color: "white"}}>
+                                                        Cancelar
+                                                    </Button>
+                                                </Grid>
+                                                <Grid item xs>
+                                                    <Button fullWidth type="submit"
+                                                            className="btn btn-primary primary-btn"
+                                                            disabled={state.agregar === "Consultar"}>
+                                                        Guardar guía
+                                                    </Button>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
+                                        </div>
                                     </div>
 
                                 </div>
+                                {state.agregar != "Agregar" && <div className="row">
+                                    <div className="widget-wrap">
+                                        <div className="widget-container">
+                                            <div className="widget-content">
+                                                <div className="row">
+                                                    <div className="widget-header">
+                                                        <Accordion>
+                                                            <AccordionSummary
+                                                                expandIcon={<ExpandMoreIcon/>}
+                                                                aria-controls="panel1a-content"
+                                                                id="panel1a-header"
+                                                            ><Typography className={classes.heading}><h2>Evidencias
+                                                                última milla</h2></Typography>
+                                                            </AccordionSummary>
+
+                                                            <AccordionDetails>
+                                                                <Evidencias esRecoleccion={0} idGuia={state.idGuia}
+                                                                            data={state}/>
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>}
                             </form>
                         </div>
                         <div id="Importar" className="tab-pane fade">

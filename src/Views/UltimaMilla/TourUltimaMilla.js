@@ -4,14 +4,13 @@ import Marker from "react-leaflet-enhanced-marker";
 import {Polyline, Popup} from "react-leaflet";
 import {calcularRuta, calcularRutaUltimaMilla, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
-import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent} from "@material-ui/core";
 import {InsertDriveFile} from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import {obtenerRecoleccionReporte} from "../../Util/Contexts/RecoleccionContext";
-
+import {decodePolyline} from "../../Util/HereDecoading";
 
 class TourUltimaMilla extends Component {
     constructor(props) {
@@ -50,19 +49,18 @@ class TourUltimaMilla extends Component {
             if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0) {
                 calcularRutaUltimaMilla(guias, this.props.sucursal, {lat: this.props.data.m_xlat, lng: this.props.data.m_xlng}).then((result) => {
                     if (result) {
-                        result.polyline.plain.polyline.map(c => {
-                            polygon.push([c.y, c.x])
+                        result.routes[0].sections.map((c, index) => {
+                            polygon = [...polygon, ...decodePolyline(c.polyline)]
                         })
-                        this.setState({polygon: polygon})
-                    }
+                        this.setState({polygon:polygon })                    }
                 })
             } else {
                 calcularRuta(guias, this.props.sucursal).then((result) => {
                     if (result) {
-                        result.polyline.plain.polyline.map(c => {
-                            polygon.push([c.y, c.x])
+                        result.routes[0].sections.map((c, index) => {
+                            polygon = [...polygon, ...decodePolyline(c.polyline)]
                         })
-                        this.setState({polygon: polygon})
+                        this.setState({polygon:polygon })
                     }
                 })
             }
@@ -144,7 +142,7 @@ class TourUltimaMilla extends Component {
                                                 g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
                                                 <Grid item md={12}>
                                                     <div align={"center"}>
-                                                        <img style={{width: "80px", height: "80px"}}
+                                                        <img style={{width: "80px", height: "80px",transform:"rotate(90deg)"}}
                                                              src={`data:image/jpeg;base64,${g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
                                                     </div>
                                                 </Grid>

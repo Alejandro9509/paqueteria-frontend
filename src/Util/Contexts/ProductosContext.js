@@ -87,7 +87,7 @@ function obtenerProductosByConvenioCliente(idCliente){
 }
 
 function modificarProducto(idProducto,params){
-    const url = `${process.env.REACT_APP_API_URL}/Productos/Modificar/${idProducto}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Modificar/${idProducto}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -96,10 +96,19 @@ function modificarProducto(idProducto,params){
 }
 
 function  agregarProducto(params){
-    const url = `${process.env.REACT_APP_API_URL}/Productos/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function eliminarProducto(idProducto){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Eliminar/${idProducto}`
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
         );
     return result
 }
@@ -111,4 +120,4 @@ function  agregarProducto(params){
     );
     return result
 }*/
-export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto,obtenerProductosByConvenioCliente}
+export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto,obtenerProductosByConvenioCliente,eliminarProducto}

@@ -49,6 +49,8 @@ import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/Operad
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
+import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
+import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 
 const headers = API_HEADERS
 
@@ -86,7 +88,7 @@ class AgregarViaje extends Component {
             IdRemolque1: null,
             IdRemolque2: null,
             IdDolly: null,
-            idRuta: {},
+            idRuta: 0,
             arrayIdRutas:[],
             idCiudadOrigen: {},
             idCiudadDestino: {},
@@ -126,8 +128,8 @@ class AgregarViaje extends Component {
 
             //OPERADOR
             operador: {},
-            cargadoVacioRemolqueUno: false,
-            cargadoVacioRemolqueDos: false,
+            cargadoVacioRemolqueUno: 0,
+            cargadoVacioRemolqueDos: 0,
             unidad: null,
             placaIntUnidad: "",
             estatusUnidad: "",
@@ -156,7 +158,9 @@ class AgregarViaje extends Component {
             entregado: false,
             estatusInforme: "",
             dataOperadores: [],
-            openDialogInformes:false
+            openDialogInformes:false,
+            Remolque2Select:false,
+            dollySelect:false
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -166,7 +170,7 @@ class AgregarViaje extends Component {
         this.getAllUnidades = this.getAllUnidades.bind(this);
         this.handleSelectCP = this.handleSelectCP.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.getInformesByFiltro = this.getInformesByFiltro.bind(this);
+        // this.getInformesByFiltro = this.getInformesByFiltro.bind(this);
         this.handleRutaFiltro = this.handleRutaFiltro.bind(this);
         this.handleRemolqueUnoFiltro = this.handleRemolqueUnoFiltro.bind(this);
         this.handleRemolqueDosFiltro = this.handleRemolqueDosFiltro.bind(this);
@@ -271,6 +275,8 @@ class AgregarViaje extends Component {
                     licenciaPermisionario: this.props.select.LicenciaPermisionario,
                     nombrePermisionario: this.props.select.NombrePermisionario,
                     fechaVigenciaPermisionario: this.props.select.FechaVigenciaPermisionario,
+                    dollySelect:this.props.select.m_nIdDolly?true:false,
+                    Remolque2Select:this.props.select.m_nIdRemolque2?true:false
 
                 }
             })
@@ -296,6 +302,16 @@ class AgregarViaje extends Component {
             return
         }
 
+        if(this.state.Remolque2Select && !this.state.dollySelect){
+            showSuccess("Al seleccionar Remolque 2, se requiere dolly")
+            return
+        }
+
+        if(!this.state.Remolque2Select && this.state.dollySelect){
+            showSuccess("Al seleccionar dolly, se requiere Remolque 2")
+            return
+        }
+
         var params = {
             m_nIdViaje: this.props.id,
             m_sFecha: getCurrentDateTime().substr(0, 10),
@@ -309,16 +325,16 @@ class AgregarViaje extends Component {
             CreadoPor: this.state.CreadoPor,
             m_arrInformes: this.state.dataInformesAsignados,
             m_nIdOrigen: this.state.idCiudadOrigen.m_nIdCiudad,
-            m_nDestino: this.state.idCiudadDestino.m_nIdCiudad,
-            IdRemolque1: this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0,
-            IdRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
-            IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
+            m_nIdDestino: this.state.idCiudadDestino.m_nIdCiudad,
+            idRemolque1: this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0,
+            idRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
+            idDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             m_nIdRuta: this.state.idRuta,
-            asignacionUnidad: {
+            /*asignacionUnidad: {
                 idUnidad: this.state.unidad.m_nIdUnidad,
                 idOperador: this.state.operador.m_nIdOperador,
-                CRV1: this.state.cargadoVacioRemolqueUno,
-                CRV2: this.state.cargadoVacioRemolqueDos,
+                cvr1: this.state.cargadoVacioRemolqueUno,
+                cvr2: this.state.cargadoVacioRemolqueDos,
                 referencia: this.state.referencia,
                 kilometro: this.state.kms,
                 fechaCarga: this.state.fechaCarga,
@@ -328,11 +344,24 @@ class AgregarViaje extends Component {
                 horaInforme: this.state.horaInforme,
                 estatus: this.state.estatusInforme,
                 horaEntrega: this.state.horaEntregaGeneral,
-            },
-            EsOperadorPermisionario: this.state.esOperadorPermisionario,
-            LicenciaPermisionario: this.state.licenciaPermisionario,
-            NombrePermisionario: this.state.nombrePermisionario,
-            FechaVigenciaPermisionario: this.state.fechaVigenciaPermisionario,
+            },*/
+            idUnidad: this.state.unidad.m_nIdUnidad,
+            idOperador: this.state.operador.m_nIdOperador,
+            cvr1: this.state.cargadoVacioRemolqueUno,
+            cvr2: this.state.cargadoVacioRemolqueDos,
+            referencia: this.state.referencia,
+            kilometro: this.state.kms,
+            fechaCarga: this.state.fechaCarga,
+            horas: this.state.horas,
+            fechaEntrega: this.state.fechaEntregaGeneral,
+            fechaInforme: this.state.fechaInforme,
+            horaInforme: this.state.horaInforme,
+            estatus: this.state.estatusInforme,
+            horaEntrega: this.state.horaEntregaGeneral,
+            esOperadorPermisionario: this.state.esOperadorPermisionario,
+            licenciaPermisionario: this.state.licenciaPermisionario,
+            nombrePermisionario: this.state.nombrePermisionario,
+            fechaVigenciaPermisionario: this.state.fechaVigenciaPermisionario,
         }
         //console.log(params)
        if (this.props.modificar) {
@@ -349,7 +378,7 @@ class AgregarViaje extends Component {
                 })
                 .catch((err) => {
                     // console.log(err);
-                    showSuccess("Error al intentar modificar viaje");
+                    showSuccess(err.response?.data);
                 });
         } else {
             agregarViaje(params)
@@ -363,8 +392,7 @@ class AgregarViaje extends Component {
                     this.handleClearData()
                 })
                 .catch((err) => {
-                    console.log(err);
-                    showSuccess("Error al intentar agregar viaje");
+                    showSuccess(err.response?.data);
                 });
         }
 
@@ -379,7 +407,7 @@ class AgregarViaje extends Component {
             IdRemolque1: null,
             IdRemolque2: null,
             IdDolly: null,
-            idRuta: {},
+            idRuta: 0,
             idCiudadOrigen: {},
             idCiudadDestino: {},
             dataInformesPorAsignar: [],
@@ -419,8 +447,8 @@ class AgregarViaje extends Component {
 
             //OPERADOR
             operador: {},
-            cargadoVacioRemolqueUno: false,
-            cargadoVacioRemolqueDos: false,
+            cargadoVacioRemolqueUno: 0,
+            cargadoVacioRemolqueDos: 0,
             unidad: null,
             placaIntUnidad: "",
             estatusUnidad: "",
@@ -495,8 +523,7 @@ class AgregarViaje extends Component {
     }
 
     getAllEstatusViaje() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
-        axios.get(url, {headers}).then((respuesta) => {
+        obtenerEstatusViaje().then((respuesta) => {
             this.setState({dataEstatusViaje: respuesta.data})
         });
     }
@@ -533,13 +560,13 @@ class AgregarViaje extends Component {
         })
     }
 
-    getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
+    /*getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
         const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" + nIdRuta + "/" +
             nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly;
         axios.get(url, {headers}).then((respuesta) => {
             this.setState({dataInformesAsignados: respuesta.data})
         });
-    }
+    }*/
 
     handleChange = (event) => {
         event.preventDefault();
@@ -617,11 +644,11 @@ class AgregarViaje extends Component {
                 }
 
             })
-            if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
                 this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                     newValue.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-            }
+            }*/
 
         }else{
             this.setState({
@@ -644,7 +671,8 @@ class AgregarViaje extends Component {
                             IdRemolque2: null,
                             placasRemolque2: "",
                             colorRemolque2: "",
-                            estatusRemolque2: ""
+                            estatusRemolque2: "",
+                            Remolque2Select:false
                         })
                         return
                     }
@@ -652,7 +680,9 @@ class AgregarViaje extends Component {
                         IdRemolque2: newValue,
                         placasRemolque2: newValue.m_sPlacas,
                         colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                        estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                        estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus,
+                        Remolque2Select:true
+
                     })
                 }else{
                     showSuccess("La unidad seleccionada no está disponible")
@@ -665,17 +695,18 @@ class AgregarViaje extends Component {
                 }
             })
 
-            if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
                 this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                     this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-            }
+            }*/
         }else{
             this.setState({
                 IdRemolque2: null,
                 placasRemolque2: "",
                 colorRemolque2: "",
-                estatusRemolque2: ""
+                estatusRemolque2: "",
+                Remolque2Select:false
             })
         }
     }
@@ -732,26 +763,32 @@ class AgregarViaje extends Component {
 
 
 
-        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+        /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
             this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                 this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-        }
+        }*/
     }
 
     handleDollyFiltro(event, newValue) {
         event.preventDefault();
+        if (newValue){
         if (!this.isUnidadAvailable(newValue, "DOLLY")){
             showSuccess("La unidad elegida ya se encuentra seleccionada.");
             return
         }
-        this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas})
-        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
+        this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
+        /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
 
             this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                 this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
+        }*/
+        }
+        else{
+            this.setState({IdDolly: null, placasDolly: "",dollySelect:false})
         }
     }
+
 
     handleAgregarInforme(id) {
         if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
@@ -781,9 +818,23 @@ class AgregarViaje extends Component {
     }
 
     handleChangeAutocomplete = (input, value) => {
+        console.log(JSON.stringify(value))
+           if(value.m_bEsPermisionario){
+            console.log("entra a validar")
+            this.setState(state => {
+                return {
+                    ...state,
+                    nombrePermisionario: value.m_sNombreCompleto,
+                    fechaVigenciaPermisionario:value.m_dLicenciaVencimiento?value.m_dLicenciaVencimiento.substr(0, 10):"",
+                    licenciaPermisionario: value.m_sLicencia
+                }
+            });
+        }
         this.setState({
-            [input]: value
+            [input]: value,
+            esOperadorPermisionario: value.m_bEsPermisionario
         });
+
     }
 
     handleChangeRuta (idRuta) {
@@ -1158,7 +1209,7 @@ class AgregarViaje extends Component {
                                                 id="origenRemitente"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado || t.Iniciado).map(t => t.IdOrigen).includes(c.m_nIdCiudad) : true)}
+                                                options={this.state.dataCiudad.filter(c => this.props.select ? this.props.select.m_arrIdRutas.filter(t => !t.Terminado && !t.Iniciado).map(t => t.IdOrigen).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
                                                 }
@@ -1577,6 +1628,7 @@ class AgregarViaje extends Component {
                                                         onChange={this.handleChangeDataPermisionario}
                                                         name="esOperadorPermisionario"
                                                         color="primary"
+                                                        disabled
                                                         size={"medium"}
                                                     />
                                                 }
@@ -1584,21 +1636,7 @@ class AgregarViaje extends Component {
                                             />
                                         </Grid>
                                         <Grid item xs={10}/>
-                                        {
-                                            this.state.esOperadorPermisionario &&
-                                            <Grid item xs={2}>
-                                                <TextField
-                                                    margin={"dense"}
-                                                    variant={"outlined"}
-                                                    label={"No. de licencia"}
-                                                    name={"licenciaPermisionario"}
-                                                    type={"number"}
-                                                    required={this.state.esOperadorPermisionario}
-                                                    value={this.state.licenciaPermisionario}
-                                                    onChange={this.handleChangeDataPermisionario}
-                                                />
-                                            </Grid>
-                                        }
+
                                         {
                                             this.state.esOperadorPermisionario &&
                                             <Grid item xs={2}>
@@ -1610,6 +1648,19 @@ class AgregarViaje extends Component {
                                                     inputMode={"text"}
                                                     required={this.state.esOperadorPermisionario}
                                                     value={this.state.nombrePermisionario}
+                                                    onChange={this.handleChangeDataPermisionario}
+                                                />
+                                            </Grid>
+                                        } {
+                                            this.state.esOperadorPermisionario &&
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    margin={"dense"}
+                                                    variant={"outlined"}
+                                                    label={"No. de licencia"}
+                                                    name={"licenciaPermisionario"}
+                                                    required={this.state.esOperadorPermisionario}
+                                                    value={this.state.licenciaPermisionario}
                                                     onChange={this.handleChangeDataPermisionario}
                                                 />
                                             </Grid>
@@ -1822,8 +1873,16 @@ class AgregarViaje extends Component {
                                         <h2 color={'#717171'}>Detalle de paradas</h2>
                                     </div>
                                     {
-                                        !this.props.consult &&
-                                        <Button variant="contained" color="primary" disabled={this.props.select ?  this.props.select.m_sEstatusViaje != "Pendiente" : false} fullWidth onClick={(event) => this.handleShowDialog(event)}>
+
+                                        (!this.props.consult && this.props.modificar) &&
+                                        <Button variant="contained" color="primary" disabled={this.props.viajeSeleccionado.m_arrTrayectos.some(p=>
+                                            (p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado))} fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                            Agregar informes
+                                        </Button>
+                                    }
+                                    {
+                                        (!this.props.consult && !this.props.modificar) &&
+                                        <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
                                         </Button>
                                     }

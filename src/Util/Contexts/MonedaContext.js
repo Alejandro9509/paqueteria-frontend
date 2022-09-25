@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarMonedas(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarMonedas(id, params){
 }
 
 function agregarMonedas( params){
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -23,8 +23,8 @@ function agregarMonedas( params){
     return result
 }
 
-function eliminarMonedas(id, idEliminadoPor){
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/Eliminar/` + id + `/${idEliminadoPor}`;
+function eliminarMonedas(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -42,7 +42,7 @@ function obtenerMonedas(){
 }
 
 function obtenerMonedasId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

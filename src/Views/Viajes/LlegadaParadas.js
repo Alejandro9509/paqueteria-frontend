@@ -49,7 +49,7 @@ export default function LlegadaParadas(props){
         operador: props.viaje.m_sOperador,
         liquidacion: "",
         unidad: props.viaje.m_sUnidad,
-        idEstatusUnidad: 0,
+        idEstatusUnidad: props.viaje.m_sEstatusUnidad,
         remolqueUno: props.viaje.m_sRemolque1,
         kmsRemolqueUno: "",
         millasRemolqueUno: "",
@@ -78,6 +78,10 @@ export default function LlegadaParadas(props){
         {
             id: 1,
             name: "No disponible"
+        },
+        {
+            id:2,
+            name:"OCUPADA"
         }
     ]
     const estatusListado = [
@@ -210,8 +214,10 @@ export default function LlegadaParadas(props){
     return(
         <form onSubmit={onSubmit}>
             {/*<div className={classes.root}></div>*/}
+            
             <Grid container spacing={2}>
-                <Grid item xs={2}>
+           <ul style={{width:"100%",display:"flex",flexWrap:"wrap",listStyle:"none",padding:"5px"}}>
+                    <li style={{margin:"5px",minWidth:"16%"}}>
                     <TextField
                         id={"sucursal"}
                         margin={"dense"}
@@ -221,8 +227,10 @@ export default function LlegadaParadas(props){
                         InputProps={{readOnly: true}}
                         value={data.sucursal}
                     />
-                </Grid>
-                <Grid item xs={1}>
+              
+                </li>
+                <li style={{margin:"5px",minWidth:"10%"}}>
+           
                     <TextField
                         id={"viaje"}
                         margin={"dense"}
@@ -231,8 +239,10 @@ export default function LlegadaParadas(props){
                         disabled
                         variant={"outlined"}
                         value={data.viaje}/>
-                </Grid>
-                <Grid item xs={4}>
+         
+                </li>
+                <li style={{margin:"5px",minWidth:"16%"}}>
+            
                     <TextField
                         id={"documento"}
                         margin={"dense"}
@@ -241,8 +251,10 @@ export default function LlegadaParadas(props){
                         disabled
                         variant={"outlined"}
                         value={data.documento}/>
-                </Grid>
-                <Grid item xs={2}>
+        
+                </li>
+                <li style={{margin:"5px",minWidth:"8%"}}>
+           
                     <TextField
                         id={"numViajeCliente"}
                         margin={"dense"}
@@ -251,8 +263,10 @@ export default function LlegadaParadas(props){
                         disabled
                         variant={"outlined"}
                         value={data.numViajeCliente}/>
-                </Grid>
-                <Grid item xs={2}>
+         
+                </li>
+                <li style={{margin:"5px",minWidth:"16%"}}>
+       
                     <TextField
                         id={"fecha"}
                         margin={"dense"}
@@ -261,8 +275,10 @@ export default function LlegadaParadas(props){
                         disabled
                         variant={"outlined"}
                         value={data.fecha}/>
-                </Grid>
-                <Grid item xs={1}>
+            
+                </li>
+                <li style={{margin:"5px",minWidth:"16%"}}>
+               
                     <TextField
                         id={"hora"}
                         margin={"dense"}
@@ -271,8 +287,9 @@ export default function LlegadaParadas(props){
                         disabled
                         variant={"outlined"}
                         value={data.hora}/>
-                </Grid>
-
+          
+                </li>
+                </ul>
                 <Grid item xs={5}>
                     <TextField
                         id={"origen"}
@@ -341,6 +358,7 @@ export default function LlegadaParadas(props){
                         select
                         variant={"outlined"}
                         value={data.idEstatusUnidad}
+                        disabled
                         onChange={handleEstatusUnidad}
                     >
                         {estatusUnidadListado.map((estatus) => (

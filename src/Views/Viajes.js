@@ -53,7 +53,8 @@ import {
     obtenerReporteCFDIViaje,
     cancelarViaje,
     validarSalidaParada,
-    cancelarTrayecto
+    cancelarTrayecto,
+    eliminarViaje
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -76,6 +77,9 @@ import {cancelarInformeCFDI, enviarCorreoCFDIViaje} from "../Util/Contexts/SATCo
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
+import { RowingSharp } from "@material-ui/icons";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -153,27 +157,50 @@ function Viajes() {
 
 
 
-    function handleEliminar(id) {
-        // var derecho;
-        // const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        // axios.get(urlDelete, { headers }).then(respuesta => {
-        //   derecho = respuesta.data;
-        //   if (derecho == false)
-        //   {
-        //     showSuccess ("El usuario no tiene derechos para realizar el proceso");
-        //     return;
-        //   }
-        //
-        // const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
-        // axios.delete(url, { headers }).then(respuesta => {
-        //   console.log(respuesta);
-        //   getAllData();
-        // }).catch(err => {
-        //   showSuccess(err)
-        // });
-        // }).catch(err => {
-        // showSuccess(err)
-        // });
+    function handleEliminar(id,idEstatus) {
+        var derecho;
+        console.log(`id estatus ${idEstatus}`)
+        validarPermisos(state).then(respuesta => {
+            //showSuccess(respuesta.data)
+
+            derecho = respuesta.data;
+            if (derecho == false) {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
+            if(idEstatus!=10){
+                showSuccess("Para eliminar debe estar cancelado");
+                return
+            }
+
+
+            confirmAlert({
+                title: 'Confirmar Eliminar',
+                message: '¿Está seguro de eliminar viaje?',
+                buttons: [
+                    {
+                        label: 'Si',
+                        onClick: () => {
+
+                          eliminarViaje(id,idEstatus).then(respuesta => {
+                                   showSuccess(respuesta.data)
+                                  getAllData();
+                                }).catch(err => {
+                                  showSuccess(err)
+                                 })
+
+                        }
+                    },
+                    {
+                        label: 'No',
+                    }
+                ]
+            })
+        }).catch(err => {
+            showSuccess(err)
+        });
+
+
     }
 
     function handleShowModificar(id) {
@@ -331,15 +358,15 @@ function Viajes() {
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}
                                disabled={!validarDerecho(9101440)}><i className="fa fa-eye"
-                                                                                            style={{color: "#F9A03E"}}/></a>
+                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
 
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (handleEliminar(row.row.m_nIdViaje))}
+                               onClick={() => handleEliminar(row.row.m_nIdViaje,row.row.m_nIdEstatusViaje)}
                                disabled={!validarDerecho(9101442)}><i className="zmdi zmdi-delete"
-                                                                                       style={{color: "#F30B0B"}}/></a>
+                                                                      style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
                     </div>
@@ -359,7 +386,7 @@ function Viajes() {
                 return (
                     <div align={"center"} style={{width: "100%"}}>
                         <Chip size="small" style={{
-                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            backgroundColor: `#${row.row.m_sColorEstatus}`,
                             //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
                             padding: "1px"
                         }} label={row.row.m_sEstatus}/>
@@ -444,29 +471,26 @@ function Viajes() {
        //console.log("Entro")
         if(viajeSeleccionado){
             let rutaActiva = true
-        viajeSeleccionado.m_arrTrayectos.map((p, index) => {
-            console.log(viajeSeleccionado)
-            
-            if(p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada  ){
-                p.deshabilitado = false
-            }
-            else if((!p.m_nIdSalida || p.m_bSalidaCancelada)  && rutaActiva){
-                p.deshabilitado = false
-                rutaActiva = false
-            }
-            else if(p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva){
-                p.deshabilitado = false
-                rutaActiva = false
-            }
-            else{
-                p.deshabilitado = true
-            }
-            console.log(p.deshabilitado)
-              //console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
-        })
+            viajeSeleccionado.m_arrTrayectos.map((p, index) => {
+                console.log(viajeSeleccionado)
 
-        //console.log(viajeSeleccionado.m_arrTrayectos)
-    }
+                if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {
+                    p.deshabilitado = false
+                } else if ((!p.m_nIdSalida || p.m_bSalidaCancelada) && rutaActiva) {
+                    p.deshabilitado = false
+                    rutaActiva = false
+                } else if (p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva) {
+                    p.deshabilitado = false
+                    rutaActiva = false
+                } else {
+                    p.deshabilitado = true
+                }
+                console.log(p.deshabilitado)
+                //console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
+            })
+
+            //console.log(viajeSeleccionado.m_arrTrayectos)
+        }
     }, [viajeSeleccionado]);
 
 
@@ -474,7 +498,7 @@ function Viajes() {
     function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
-                obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
                     setData(respuesta.data)
                     setViajeSeleccionado(null)
                 })
@@ -536,68 +560,115 @@ function Viajes() {
     }
 
     function descargarPDF(id, folio) {
-            obtenerReporteCFDIViaje(id).then(({data}) => {
+        obtenerReporteCFDIViaje(id).then(({data}) => {
+            try {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "CFDI_ " + folio;
-            })
+            } catch (e) {
+                showSuccess("No se pudo abrir el pdf")
+            }
+        })
 
     }
 
     function generarCFDI(id, folio, idViaje, sustituir) {
-        confirmAlert({
-            title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
-                        obtenerCFDI(id,sustituir).then((result) => {
-                            setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
-                            }
-                        })
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar timbrado de prueba'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar timbrado ante el SAT'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            obtenerCFDI(id,sustituir).then((result) => {
+                                setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
+
     }
 
     function showCancelarCFDI(informe){
-        setState({...state,openCancelarSAT: true, informe: informe})
+        setState(state => {
+            return {...state,openCancelarSAT: true, informe: informe}
+        })
     }
     function cancelarCFDI( data) {
-        console.log(data)
-        confirmAlert({
-            title: 'Confirmar Cancelación',
-            message: '¿Está seguro de realizar la cancelación ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
-                        cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
-                            getParadasListado(state.informe)
-                            showSuccess(result.data)
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar cancelación de prueba'
+                mensaje = '¿Está seguro de realizar la cancelación en modo prueba?\nPara timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar cancelación ante el SAT'
+                mensaje = '¿Está seguro de realizar la cancelación ante el SAT?'
+
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            if (parseInt(data.idCancelacionSAT) === 1){
+                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
+                                        setState(state => {
+                                            return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
+                                        })
+                                        getParadasListado(state.informe)
+                                    }).catch((error) => {
+                                        if (error.response){
+                                            showError(error.response.data)
+                                        }
+                                    })
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
+
+                            }else{
+                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    getParadasListado(state.informe)
+                                    showSuccess(result.data)
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
                             }
-                        })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
-
-
     }
 
 
@@ -719,24 +790,27 @@ function Viajes() {
                             !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXMLCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i className="zmdi zmdi-download" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarXMLCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i
+                                    className="zmdi zmdi-download" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
-                        {
+                        {/*{
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Sustituir CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, true))}><i className="zmdi zmdi-refresh"
-                                                                                                                                                                        style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, true))}><i
+                                    className="zmdi zmdi-refresh"
+                                    style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
-                        }
+                        }*/}
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDF(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarPDF(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i
+                                    className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
@@ -745,7 +819,8 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXMLCFDITimbrado(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID,row.row.m_sXMLTraslada))}><i className="zmdi zmdi-file-text" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarXMLCFDITimbrado(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID, row.row.m_sXMLTraslada))}><i
+                                    className="zmdi zmdi-file-text" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
@@ -754,7 +829,8 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Cancelar Timbrado SAT">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off"
+                                                                                  style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
@@ -849,14 +925,18 @@ function Viajes() {
         setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
     }
-    const showSalidaDialog = (data) => {
-          //validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
-            //  let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-             // let qr = respuesta.data.find(parada=>parada.Escaneado==false)
+    const showSalidaDialog = (e,data) => {
+        e.stopPropagation()
+          validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+              if (!viajeSeleccionado.m_bUnidadPermisionario){
+                  let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+                  let qr = respuesta.data.find(parada=>parada.Escaneado==false)
 
-          //    if(encontrado){//si encontro valor falso en timbrado
-           //       showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-           //   }
+                  if(encontrado){//si encontro valor falso en timbrado
+                      showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+                      return
+                  }
+              }
 
             //  if(qr){//si encontro valor falso en qr
             //    showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
@@ -864,9 +944,9 @@ function Viajes() {
                setParadaData(data);
             setEventOptions({...eventOptions, showSalidaParadasDialog: true});
             //}
-          //}).catch((err)=>{
-           //   showSuccess(err)
-          //})
+          }).catch((err)=>{
+             showSuccess(err.response?.data)
+          })
     }
 
     const closeSalidaDialog = () => {
@@ -943,7 +1023,7 @@ function Viajes() {
                 getAllData()
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
 
     }
@@ -987,7 +1067,7 @@ function Viajes() {
             })
             .catch((err) => {
                 console.log(err);
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
 
     }
@@ -1022,16 +1102,19 @@ function Viajes() {
         }
         let params = {
             motivoCancelacion: state.motivoCancelacion,
-            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+            m_nIdUsuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
         cancelarViaje(state.idViaje,params).then((respuesta) => {
-            showSuccess("El viaje ha sido cancelado")
+            showSuccess(respuesta.data)
             handleShowListado()
+        }).catch(err => {
+            showSuccess(err.response?.data)
         });
     };
-    function envioCorreoAction(data){
-        enviarCorreoCFDIViaje(state.idInforme, data.correos,data.correoDefault).then(({data}) => {
+
+    function envioCorreoAction(data) {
+        enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault).then(({data}) => {
             showSuccess(data);
             descargarPDF(state.idInforme, state.folio)
             setState(state => {
@@ -1057,11 +1140,18 @@ function Viajes() {
         <div>
             {
                 state.openEnvioCorreo &&
-                <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={()=> {setState({...state, openEnvioCorreo:false}); descargarPDF(state.idInforme, state.folio);getParadasListado({m_nIdViaje:state.idViaje})}}/>
+                <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={() => {
+                    setState({...state, openEnvioCorreo: false});
+                    descargarPDF(state.idInforme, state.folio);
+                    getParadasListado({m_nIdViaje: state.idViaje})
+                }}/>
             }
             {state.openCancelarSAT &&
-                <CancelarSAT open={state.openCancelarSAT} onSubmit={cancelarCFDI} data={{folioSustituye: state.informe.m_sFolioFiscalUUID,m_sFolio: state.informe.m_sFolioInforme, folioCancelar: state.informe.m_sFolioFiscalUUIDSustituido || state.informe.m_sFolioFiscalUUID
-                }} close={() => setState({...state,openCancelarSAT: false})}/>
+                <CancelarSAT open={state.openCancelarSAT} onSubmit={cancelarCFDI} data={{
+                    folioSustituye: state.informe.m_sFolioFiscalUUID,
+                    m_sFolio: state.informe.m_sFolioInforme,
+                    folioCancelar: state.informe.m_sFolioFiscalUUIDSustituido || state.informe.m_sFolioFiscalUUID
+                }} close={() => setState({...state, openCancelarSAT: false})}/>
             }
             {
                 informeSeleccionado &&
@@ -1107,7 +1197,8 @@ function Viajes() {
             </Dialog>*/}
             {
                 paradaData &&
-                <CancelarTrayecto onSubmit={cancelarTrayectos} open={eventOptions.showCancelarParadasDialog} close={() => closeCancelarDialog()} data={paradaData}>
+                <CancelarTrayecto onSubmit={cancelarTrayectos} open={eventOptions.showCancelarParadasDialog}
+                                  close={() => closeCancelarDialog()} data={paradaData}>
                     <DialogActions>
                         <Button
                             variant={'contained'} color={'primary'}
@@ -1214,7 +1305,7 @@ function Viajes() {
                             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101439)? "":classes.disabled} onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101439) ? "" : classes.disabled} onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -1225,12 +1316,12 @@ function Viajes() {
                         </li>
                         <li>
                             <a
-                                
-                                className= {(state.idViaje === 0 || !validarDerecho(9101443))? classes.disabled : ""}
+
+                                className={(state.idViaje === 0 || !validarDerecho(9101443)) ? classes.disabled : ""}
                                 data-toggle="tab"
                                 href="#Cancelar"
                                 onClick={handleShowCancelar}
-                                
+
                             >
                                 <i className="fa fa-ban"/> Cancelar
                             </a>
@@ -1248,7 +1339,7 @@ function Viajes() {
                                         viajes={true}
                                     />
 
-                                    <div  style={{height: "300px", width: '100%'}}>
+                                    <div style={{height: "300px", width: '100%'}}>
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             rows={data}
@@ -1272,40 +1363,41 @@ function Viajes() {
 
                                 <div className="widget-wrap" style={{height: "300px", width: '100%', overflow: "auto"}}>
                                     <div className="widget-content">
-                                <div className="col-md-12">
-                                    <div style={{color: '#717171', marginBottom: "10px", fontSize: "18px"}}>Detalle de
-                                        Paradas
-                                    </div>
+                                        <div className="col-md-12">
+                                            <div style={{
+                                                color: '#717171',
+                                                marginBottom: "10px",
+                                                fontSize: "18px"
+                                            }}>Detalle de
+                                                Paradas
+                                            </div>
 
                                             <div className="row"
-                                                 >
+                                            >
                                                 <List>
                                                     {
                                                         viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
 
-                                                            const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ( (viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino) )  ))
+                                                            const informesFiltrados = paradasListado.filter((i, ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ((viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino))))
 
                                                             return (
                                                                 <div>
-                                                                    <ListItem button key={p.m_nIdDestino+index+p.m_nIdOrigen}  onClick={() => handleClick(index)}
+                                                                    <ListItem button
+                                                                              key={p.m_nIdDestino + index + p.m_nIdOrigen}
+                                                                              onClick={() => handleClick(index)}
                                                                     >
 
-                                                                        <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
+                                                                        <ListItemText primary={`Ruta: ${p.m_sRuta}`}/>
                                                                         {
-                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado)  &&
-
-                                                                            <Link  style={{cursor: "pointer"}}
-                                                                                  onClick={() => showSalidaDialog(p)}>Marcar
-                                                                                Salida</Link>
+                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado) &&
+                                                                            <Link style={{cursor: "pointer"}} onClick={(e) => showSalidaDialog(e, p)}>Marcar Salida</Link>
                                                                         }
                                                                         {
-                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado  &&
+                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado &&
                                                                             <>
-                                                                                <Link  style={{cursor: "pointer"}}
-                                                                                       onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
+                                                                                <Link style={{cursor: "pointer"}} onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
                                                                                 -
                                                                             </>
-
                                                                         }
 
                                                                         {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
@@ -1314,7 +1406,7 @@ function Viajes() {
 
 
                                                                         {
-                                                                            p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado  &&
+                                                                            p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado &&
 
                                                                             <Link style={{cursor: "pointer"}}
                                                                                   onClick={() => showLlegadaDialog(p)}>Marcar
@@ -1328,7 +1420,7 @@ function Viajes() {
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
-                                                                        <div style={{height: `${70 + (informesFiltrados.length * 30)}px`}}>
+                                                                        <div style={{height: `${100 + (informesFiltrados.length * 30)}px`}}>
                                                                             <DataGrid
                                                                                 localeText={dataGridLocaleText}
                                                                                 rows={informesFiltrados}
@@ -1367,7 +1459,7 @@ function Viajes() {
                                         </div>
                                     </div>
                                 </div>
-{/*
+                                {/*
                                 <div className="col-md-6">
                                     <div style={{
                                         color: '#717171',
@@ -1409,6 +1501,7 @@ function Viajes() {
                                     consult={state.agregar === "Consultar"}
                                     modificar={state.agregar === "Modificar"}
                                     select={state.selectViaje}
+                                    viajeSeleccionado={viajeSeleccionado}
                                     cancel={() => handleShowListado()}
                                     id={state.idViaje}/>
 
@@ -1428,7 +1521,11 @@ function Viajes() {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {
+                                                if (e.code === 13) {
+                                                    e.preventDefault()
+                                                }
+                                            }}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
@@ -1460,7 +1557,8 @@ function Viajes() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Fecha de cancelación"
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Fecha de cancelación"
                                                                        className="form-control"
                                                                        type="datetime-local"
                                                                        InputLabelProps={{shrink: true,}}

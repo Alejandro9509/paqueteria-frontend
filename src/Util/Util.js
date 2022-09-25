@@ -3,11 +3,8 @@ import axios from "axios";
 import {trackPromise} from "react-promise-tracker";
 import {API_HEADERS} from "../Constants";
 
-const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
 const XLoadClient = window.XLoadClient;
-var xlocate = new XLocateClient();
-xlocate.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 var xroute = new XRouteClient();
 xroute.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 var xload = new XLoadClient();
@@ -95,15 +92,12 @@ export  function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
 }
 
 async function searchLocation(city) {
-    var location = await xlocate.searchLocations({
-        "$type": "SearchByAddressRequest",
-        "address": {
-            "city": city,
-        }
-    });
-    if (location.results) {
-        if (location.results.length !== 0) {
-            return location.results[0].location.referenceCoordinate
+    var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+        + city  + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
         } else {
             return {x: 0.0, y: 0.0}
         }
@@ -270,3 +264,32 @@ export const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
+
+export function getAddressFormated(calle, numeroExterior, numeroInterior, colonia, codigoPostal,ciudad,  estado, pais){
+    let addressComplete = "";
+    if (calle){
+        addressComplete += calle
+    }
+    if (numeroExterior){
+        addressComplete += ","+numeroExterior
+    }
+    /*if (numeroInterior){
+        addressComplete += ","+numeroInterior
+    }*/
+    if (colonia){
+        addressComplete += ","+colonia
+    }
+    if (codigoPostal){
+        addressComplete += ","+codigoPostal
+    }
+    if (ciudad){
+        addressComplete += ","+ciudad
+    }
+    if (estado){
+        addressComplete += ","+estado
+    }
+    if (pais){
+        addressComplete += ","+pais
+    }
+    return addressComplete
+}

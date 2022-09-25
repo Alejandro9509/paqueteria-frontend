@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarGuia(id, params) {
 }
 
 function entregaOcurreGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/EntregaOcurre/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/EntregaOcurre/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function entregaOcurreGuia(id, params) {
 }
 
 function agregarGuia(params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -33,7 +33,7 @@ function agregarGuia(params) {
 }
 
 function eliminarGuia(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Eliminar/${id}/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -49,8 +49,8 @@ function validarEliminarGuia(id){
     return result
 }
 
-function cancelarGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${id}`;
+function cancelarGuia(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Cancelar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -85,7 +85,7 @@ function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
 }
 
 function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
-    const url = `${process.env.REACT_APP_API_URL}/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })
@@ -94,19 +94,23 @@ function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
 }
 
 function cambiarTipoCobro(idGuia, tipoCobro) {
-    const url = `${process.env.REACT_APP_API_URL}/Guias/CambiarTipoCobro/${idGuia}/${tipoCobro}`;
+    let params = {
+        m_nIdGuia: idGuia,
+        m_nIdTIpoCobro: tipoCobro
+    }
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/CambiarTipoCobro`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
 
-function cambiarEstatusGuia(idGuia, estatus) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/CambiarEstatusGuia/${idGuia}/${estatus}`;
+function cambiarEstatusGuia(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/CambiarEstatusGuia`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
@@ -121,16 +125,21 @@ function asignarTrayectos(idGuia) {
 }
 
 function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/ActualizarCoordenadas/${idGuia}/${latitud}/${longitud}`;
+    let params = {
+        m_nIdGuia: idGuia,
+        m_sLatitud: latitud,
+        m_sLongitud: longitud
+    }
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ActualizarCoordenadas`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, {}), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
 
 function obtenerGuiaPendientes(idOrigen, idDestino) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetListadoPendientes/` +
         idOrigen +
         "/" +
         idDestino
@@ -167,7 +176,7 @@ function ultimoFolioGuia() {
 }
 
 function obtenerGuiaId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -215,7 +224,7 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
 function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
 
     const url =
-        `${process.env.REACT_APP_API_URL}/Guias/GetListadoFiltrosCorteCaja/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja/` +
         fecha +
         "/" +
         destino +
@@ -240,6 +249,16 @@ function obtenerValidacionGuia(id){
     return result
 }
 
+function obtenerBancos() {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetBancos`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
+
 export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos}

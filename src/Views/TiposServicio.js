@@ -10,11 +10,12 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obtenerTipoServicio, obtenerTipoServicioId } from "../Util/Contexts/TipoServiciosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -64,12 +65,12 @@ function TiposServicio() {
         console.log(e)
         e.preventDefault()
         var params = {
-            "Descripcion": state.Descripcion,
-            "DiasHabiles": state.DiasHabiles,
-            "Costo": state.Costo,
-            "activo": state.Activo,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "m_sDescripcion": state.Descripcion,
+            "m_nDiashabiles": state.DiasHabiles,
+            "m_cCosto": state.Costo,
+            "m_bActivo": state.Activo,
+            "m_nCreadoPor": state.CreadoPor,
+            "m_nModificadoPor": state.ModificadoPor
         }
         console.log(params)
         if (state.IdTipoServicio != 0) {
@@ -78,7 +79,7 @@ function TiposServicio() {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess("err")
+                showSuccess(err.response?.data)
             });
         } else {
             agregarTipoServicio(params).then(respuesta => {
@@ -86,7 +87,7 @@ function TiposServicio() {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
         }
 
@@ -105,6 +106,7 @@ function TiposServicio() {
 
             eliminarTipoServicio(id, state.ModificadoPor).then(respuesta => {
                 console.log(respuesta)
+                showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
                 showSuccess(err)
@@ -190,7 +192,22 @@ function TiposServicio() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoServicio))}
+                            <a href="#" className="btn btn-default btn-xs" onClick={() =>   confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar este servicio?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  {
+                                                                    handleEliminar(row.row.m_nIdTipoServicio)
+                                                                
+                                                                }
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    })}
                             disabled={!validarDerecho(9101317)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
@@ -357,7 +374,23 @@ function TiposServicio() {
                                             <div>
                                                 <a onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
                                                 <a onClick={() => (handleShowConsultar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{ color: "#F9A03E" }} /></a>
+                                                <a className="btn btn-default btn-sm" onClick={() => {
+                                                    confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar Embarque?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  handleEliminar(row.original.m_nIdTipoServicio)
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    })
+                                                
+                                                
+                                                }}><i className="zmdi zmdi-delete" style={{ color: "#F9A03E" }} /></a>
                                             </div>
                                         </td>
                                         {row.cells.map(cell => {
@@ -556,14 +589,22 @@ function TiposServicio() {
                                                 <br></br>
                                                 
                                             </form> 
-                                           <div style={{display:"flex", justifyContent: "flex-end",margin:'5px'}}>
-                                                    <button className="btn btn-secondary secondary-btn" style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"} onClick={handleShowListado}>
-                                                        Cancelar
-                                                    </button>
-                                                    <button type="submit" form="formulario" disabled={state.agregar == "Consultar"}
-                                                            className="btn btn-primary primary-btn">Aceptar
-                                                    </button>
-                                                </div>
+                     
+                                                <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth className="btn btn-secondary secondary-btn" style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"} onClick={handleShowListado}>
+                                                        CANCELAR
+                                        </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" form="formulario" disabled={state.agregar == "Consultar"}
+                                                            className="btn btn-primary primary-btn">AGREGAR TIPO DE SERVICIO
+                                        </Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
                                         </div>
                                     </div>
                                 </div>

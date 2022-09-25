@@ -19,6 +19,13 @@ function showSuccess(mensaje) {
         timeout: "3000",
     }).show();
 }
+const esDatoValido = (dato) => {
+    return dato
+        && dato !== ''
+        && dato !== 0
+        && dato !== "0";
+
+}
 class Cotizador extends Component {
     constructor(props) {
         super(props);
@@ -62,6 +69,18 @@ class Cotizador extends Component {
             })
             this.props.mostrarCotizadorRec(true)
         }
+        if (prevProps.embarque.mostrarCotizador !== this.props.embarque.mostrarCotizador){
+            if (!this.props.embarque.mostrarCotizador){
+                this.setState(state => {
+                    return {
+                        showErrorIconButton: false,
+                        errores: [],
+                        showJustificacionIconButton: false,
+                        justificaciones: []
+                    }
+                })
+            }
+        }
     }
 
     calcularTarifa() {
@@ -69,10 +88,32 @@ class Cotizador extends Component {
             showSuccess("No se puede crear cotización sin paquetes.")
             return
         }
+        if (this.props.embarque.entregaEnSucursal && !this.props.embarque.zonaOperativaSucursal?.m_nIdZona){
+            showSuccess("Seleccione sucursal de entrega para poder realizar la cotizacion")
+            return
+        }
+        if (this.props.embarque.entregaConCita || this.props.embarque.recoleccionConCita){
+            if (!this.props.embarque.citaPendiente){
+                if (!esDatoValido(this.props.embarque.fechaCita)){
+                    showSuccess("La fecha de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(this.props.embarque.horaCitaMinima)){
+                    showSuccess("La hora mínima de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(this.props.embarque.horaCitaMaxima)){
+                    showSuccess("La hora máxima de la cita es un dato requerido");
+                    return;
+                }
+            }
+        }
         this.setState(state => {
             return {
                 showErrorIconButton: false,
-                errores: []
+                errores: [],
+                showJustificacionIconButton: false,
+                justificaciones: []
             }
         })
         obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario,this.props.recoleccion,this.props.entregaDiferenteDom,this.props.recoleccionDiferenteDom).then(({data}) => {
@@ -120,10 +161,11 @@ class Cotizador extends Component {
                 ivaRetiene: ivaRetiene,
                 ivaTraslada: ivaTraslada,
                 showErrorIconButton: showErrorConceptos,
-                showJustificacionIconButton: showJustificacionConceptos,
                 errores: errores,
+                showJustificacionIconButton: showJustificacionConceptos,
                 justificaciones: justificaciones
             })
+            this.props.validarErrores(errores)
             this.props.mostrarCotizadorRec(true)
 
         })
