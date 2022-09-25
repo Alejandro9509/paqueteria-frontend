@@ -258,6 +258,13 @@ function RemitenteDestinatario(props) {
         paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+      ( zonaOperativa ) => {
+        if(props.destinatario){
+          props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+        }
+      }
+  );
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
       setDataMunicipios(data);
     });*/
@@ -387,11 +394,13 @@ function RemitenteDestinatario(props) {
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
       setDataMunicipios(data);
     });*/
-    /*obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
-        ({ data }) => {
-          setDataZonasOperativas(data);
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+        ( zonaOperativa ) => {
+          if(props.destinatario){
+            props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+          }
         }
-    );*/
+    );
 
     /*obtenerCodigoPostalId(
         respuesta.data.m_nIdCodigoPostalDestinatario
