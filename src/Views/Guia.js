@@ -507,7 +507,7 @@ function Guia(props) {
 
         return Object.keys(datos).
         filter((key) => campos.some(c=>c==key)).
-        reduce((cur, key) => { 
+        reduce((cur, key) => {
             let llave = arrayFiltrado.filter(f=>f.field==key)[0].headerName
             return Object.assign(cur, { [llave]: datos[key] })}, {});
         })
@@ -519,7 +519,7 @@ function Guia(props) {
         XLSX.utils.book_append_sheet(workbook, worksheet, "Guias");
         var ws = workbook.Sheets["Guias"];
         var C = XLSX.utils.decode_col("D"); // 1
-        var fmt = '$0.00'; 
+        var fmt = '$0.00';
         //BUSCAR INDEX DE LAS COLUMNAS Y SACAR EL INDEX DEL TOTAL
         var range = XLSX.utils.decode_range(ws['!ref']);
         console.log("range s r "+range.s.c)
@@ -540,11 +540,11 @@ function Guia(props) {
 
         XLSX.utils.sheet_add_aoa(worksheet, [], { origin: "A1" });
         XLSX.writeFile(workbook, "Guias.xlsx");
-      
+
       };
 
     const [checked, setChecked] = React.useState(columns.filter(col=>col.headerName!="Acciones").map(col=>col.headerName));
-  
+
     const handleToggle = (value) => () => {
       const currentIndex = checked.indexOf(value);
       const newChecked = [...checked];
@@ -3209,7 +3209,7 @@ function Guia(props) {
                                         </div>
 
                                     </div>
-
+                                 
                                     <div className="form-footer col-md-12">
 
                                         {/*<button
