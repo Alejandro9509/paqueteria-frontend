@@ -17,6 +17,7 @@ import {
 } from "../../Util/Contexts/ZonaOperativaContext";
 import ZonaAgregar from "./ZonaAgregar";
 import Noty from "noty";
+import Filtros from "./Filtros";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -239,8 +240,14 @@ function ZonaOperativa() {
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
+                                    
+              
+                                   <Filtros listaResultados={setListadoZonas}/>
+                                   
+                                 
+
                                     <div className={"row"} style={{height: state.height -250, width: '100%'}}>
-                                        <DataGrid columns={columns} rows={listadoZonas}
+                                        <DataGrid columns={columns} rows={listadoZonas}                                               
                                                   locateText={dataGridLocaleText}
                                                   density={"compact"}
                                                   pageSize={Math.floor((state.height - 310) / 30)}

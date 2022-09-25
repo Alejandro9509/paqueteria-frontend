@@ -289,7 +289,8 @@ function Recoleccion() {
         tipoCobro: '',
         clientePaga: {},
         observaciones: '',
-
+        aplicaEntrega:false,
+        // deshabilitarDiferenteDomicilio:false,
         //Paquetes/Sobres
         countPaquetes: 1,
         countSobres: 1,
@@ -593,6 +594,13 @@ function Recoleccion() {
         );
     }
 
+    useEffect(value => {
+
+        if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
+            // console.log('tipo Unidad select: ', state.tipoUnidad)
+            getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
+        }
+    }, [state.tipoUnidad])
 
     useEffect((value) => {
         if (
@@ -1659,7 +1667,15 @@ function Recoleccion() {
 
                 //Recoleccion
                 diferenteRecoleccion: false,
-
+                /*fechaRecoleccion: '',
+                ciudadRecoleccion: '',
+                codigoPostalRecoleccion: '',
+                zonaRecoleccion: '',
+                domicilioRecoleccion: '',
+                recogerEn: '',
+                datosAdicionalesRecoleccion: '',*/
+                aplicaEntrega:false,
+                // deshabilitarDiferenteDomicilio:false,
                 //Operador
                 operador: '',
                 tipoUnidad: '',
@@ -2897,6 +2913,24 @@ function Recoleccion() {
             }
         });
     }
+    function esEntregaSucursal(aplicaEntrega){
+        if(aplicaEntrega){
+        setState({
+            ...state,
+            aplicaEntrega:aplicaEntrega,
+            entregaEnSucursal:true,
+            // deshabilitarDiferenteDomicilio:true,
+            diferenteEntrega:false
+        })}
+        else{
+            setState({
+                ...state,
+                aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:false,
+                // deshabilitarDiferenteDomicilio:false
+            })}
+
+      }
 
     function validarErrores(errores) {
         setErrores(errores)
@@ -3894,6 +3928,7 @@ function Recoleccion() {
                                                                     dataPadreConsulta={dataRecoleccionConsulta}
                                                                     limpiarRemDes={limpiarRemDes}
                                                                     seCalculaTarifa={seCalculaTarifa}
+                                                                    soloEntregaSucursal={esEntregaSucursal}
                                                                     entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                 />
                                                             }
@@ -3904,7 +3939,7 @@ function Recoleccion() {
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
                                                                                 className="form-control"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 // value={state.diferenteEntrega}
                                                                                 checked={state.diferenteEntrega}
                                                                                 type="checkbox"
@@ -3928,13 +3963,28 @@ function Recoleccion() {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{ height: "20px" }}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i />
                                                                         </label>
-                                                                    </div></div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                   {  state.aplicaEntrega && <>
+
+
+
+                                                                        <div style={{marginTop:"10px",color:"red"}}>No se realizará entrega de última milla</div>
+
+
+
+                                                                    </>}
                                                             </div>
+
+
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -4103,7 +4153,7 @@ function Recoleccion() {
                                                    }))} />
                                     </div>
 
-                                               
+
 
 
                                     <div className="form-footer ol-md-12">
@@ -4148,7 +4198,7 @@ function Recoleccion() {
                                                            id="panel1a-header"
                                                          ><Typography className={classes.heading}><h2>Evidencias última milla</h2></Typography>
                                                          </AccordionSummary>
-                                                         
+
                                                          <AccordionDetails>
                                                             <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion} data={state}/>
                                                           </AccordionDetails>

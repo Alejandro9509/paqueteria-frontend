@@ -5,12 +5,21 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import TextField from "@material-ui/core/TextField";
+import Noty from "noty";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerPaises} from "../../Util/Contexts/PaisesContext";
 import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
 
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "8000",
+    }).show();
+}
 /** PROPS
  value= objeto con los datos a mostrar en los inputs
  onChange= funcion que retorna datos actualizados
@@ -94,28 +103,34 @@ export default function DiferenteDomicilioForm(props){
         }
     }
     const handleChangeAutocomplete = (input, newValue) => {
-        // setRepetirConceptos(true)
-        setState({
-            ...state,
-            [input]: newValue
-        })
-        if (input === "codigoPostal"){
+
+        if (input === "codigoPostal" && newValue.m_sCP){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 if (data.length > 0){
                     if (data.length === 1){
+                        if(data[0].m_bAplicaEntrega){
+                        showSuccess(`No aplican entregas en la zona operativa`)
+                        setState({
+                            ...state,
+                            [input]: null,
+                            zonaOperativa: null
+                        })
+                       }else{
                         setState(state => {
                             return {
                                 ...state,
+                                [input]: newValue,
                                 zonaOperativa: data[0]
                             }
                         })
                     }
                     setDataZonasOperativas(data)
+                }
                 }else{
                     setState(state => {
                         return{
                             ...state,
-                            zonaOperativa: {}
+                            zonaOperativa: null
                         }
                     })
                 }
@@ -283,11 +298,18 @@ export default function DiferenteDomicilioForm(props){
                     disableClearable
                     forcePopupIcon={false}
                     options={dataCodigosPostales}
+                    getOptionDisabled={(option) => option.m_bNoAplicaEntrega || option.codigoFueraDeZonaOperativa}
                     getOptionLabel={(option) => (
-                        option ?
+                        option.m_sCP ?
                             `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
                             : ''
                     )}
+                    onKeyDown={e => {
+                        if (e.code === "Enter") {
+                            console.log(e)
+                            e.preventDefault()
+                        }
+                    }}
                     style={{
                         transform: "translate(14px, 10px) scale(1) !important"
                     }}
@@ -299,6 +321,12 @@ export default function DiferenteDomicilioForm(props){
                                 variant="outlined"
                                 onClick={(e) => handleClickCodigosPostalesInput("codigoPostal")}
                                 required={props.required}
+                                onKeyDown={e => {
+                                    if (e.key === "Enter") {
+                                        console.log(e)
+                                        e.preventDefault()
+                                    }
+                                }}
                                 {...params}
                             />
                         </div>
