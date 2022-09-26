@@ -179,7 +179,7 @@ class ConfirmarUbicacion extends Component {
                     <MapContainer style={{width: "100%", height: "500px"}} center={[32.62781, -115.44632]} zoom={18}
                                   scrollWheelZoom={false} whenCreated={m => this.cargarMapa(m)}>
                         <TileLayer style={{width: "100%", height: "500px"}}
-                                   url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/reduced.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
+                                   url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
                                    token={process.env.REACT_APP_HERE_API_TOEKN}
                         />
 
