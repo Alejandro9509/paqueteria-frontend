@@ -422,7 +422,7 @@ class UltimaMilla extends Component {
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
                                 <TileLayer style={{width: "100%", height: "100%"}}
-                                           url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/reduced.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
+                                           url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
                                            token={process.env.REACT_APP_HERE_API_TOEKN}
                                 />
                                 {
