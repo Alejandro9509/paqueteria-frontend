@@ -717,8 +717,19 @@ function Guia(props) {
         });
     }
 
-    function handleShowModificar(id,folioGuia) {
-        
+    function handleShowModificar(fila,id,folioGuia) {
+      if(fila.m_nIdEstatusGuia){
+              if(fila.m_nIdEstatusGuia == 8){
+                showSuccess(`No es posible modificar la Guia ya que esta cancelada`)
+                return
+            }
+        }
+        if(fila.m_sFolioInforme){
+            if(fila.m_sFolioInforme?.length!=0){
+              showSuccess(`No es posible modificar la Guia ya que esta relacionada al informe:${fila.m_sFolioInforme}`)
+              return
+          }
+      }
         obtenerValidacionGuia(id).then(respuesta=>{
             if(!respuesta.data.esEditable){//Entrega un 1 si la guia no es modificable
                 // let {valores} = respuesta.data
