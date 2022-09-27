@@ -909,10 +909,12 @@ function Recoleccion() {
         let error = false
         let params = {}
         if(!error){
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                showConfirmarUbicacion: false,
-                showConfirmarUbicacionDestinatario:false
+                    showConfirmarUbicacion: false,
+                    showConfirmarUbicacionDestinatario:false
+                }
             })
             if (!validarCoordenadas(coordenadas)){
                 return
@@ -1155,17 +1157,21 @@ function Recoleccion() {
         clearTimeout(timer);
         if (e.detail === 1) {
             timer = setTimeout(() => {
-                setState({
+                setState(state => {
+                    return {
                     ...state,
-                    [state.identificadorModal]: id,
-                    openDialog: true
+                        [state.identificadorModal]: id,
+                        openDialog: true
+                    }
                 })
             }, 200)
         } else if (e.detail === 2) {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                [state.identificadorModal]: id,
-                openDialog: false
+                    [state.identificadorModal]: id,
+                    openDialog: false
+                }
             });
         }
     }
@@ -1209,9 +1215,11 @@ function Recoleccion() {
             //   console.log(reader.result)
         }.bind(this);
         reader.readAsText(selectedFile);
-        setState({
+        setState(state => {
+            return {
             ...setState,
-            uploadedFileContent: "reader.result"
+                uploadedFileContent: "reader.result"
+            }
         })
     };
 
@@ -1589,10 +1597,12 @@ function Recoleccion() {
                 if (respuesta.data.m_nSePuedeCancelar){
                     showSuccess("Recolección no se puede cancelar")
                 }else{
-                    setState({
+                    setState(state => {
+                        return {
                         ...state,
-                        folioRecoleccion: data.find(i => parseInt(i.m_nIdRecoleccion) === state.idRecoleccion)?.m_sFolioRecoleccion,
-                        fechaCancelacion: getCurrentDateTime()
+                            folioRecoleccion: data.find(i => parseInt(i.m_nIdRecoleccion) === state.idRecoleccion)?.m_sFolioRecoleccion,
+                            fechaCancelacion: getCurrentDateTime()
+                        }
                     })
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(3).addClass('active');
@@ -1608,17 +1618,19 @@ function Recoleccion() {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        setState(() => ({
+        setState(state => {
+            return {
             ...state,
-            clientePaga: row.data,
-            idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
-            porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
-            aplicaSeguro: row.data.m_bTieneSeguro,
-            tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-            observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
+                clientePaga: row.data,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
+                porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_bTieneSeguro,
+                tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
 
-            openDialog: false,
-        }))
+                openDialog: false,
+            }
+        })
     }
 
     //Limpia todos los inputs
@@ -1701,9 +1713,11 @@ function Recoleccion() {
         if(event.target.id == "porcentajeSeguro"){
             setRepetirConceptos(true)
         }
-        setState({
+        setState(state => {
+            return {
             ...state,
-            [event.target.id]: event.target.value,
+                [event.target.id]: event.target.value,
+            }
         });
     };
 
@@ -2841,9 +2855,11 @@ function Recoleccion() {
         // }
     }
     const dialogVisible = (isVisible) => {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            openDialog: isVisible,
+                openDialog: isVisible,
+            }
         });
     };
 
@@ -2915,19 +2931,23 @@ function Recoleccion() {
     }
     function esEntregaSucursal(aplicaEntrega){
         if(aplicaEntrega){
-        setState({
+        setState(state => {
+            return {
             ...state,
-            aplicaEntrega:aplicaEntrega,
-            entregaEnSucursal:true,
-            // deshabilitarDiferenteDomicilio:true,
-            diferenteEntrega:false
+                aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:true,
+                // deshabilitarDiferenteDomicilio:true,
+                diferenteEntrega:false
+            }
         })}
         else{
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                aplicaEntrega:aplicaEntrega,
-                entregaEnSucursal:false,
-                // deshabilitarDiferenteDomicilio:false
+                    aplicaEntrega:aplicaEntrega,
+                    entregaEnSucursal:false,
+                    // deshabilitarDiferenteDomicilio:false
+                }
             })}
 
       }
