@@ -1609,10 +1609,17 @@ function Embarque(props) {
     }
 
     function handleShowModificar(filaEmbarque,id) {
+        console.log(JSON.stringify(filaEmbarque))
         if(filaEmbarque.m_nIdEstatusEmbarque==21){
             showSuccess("El embarque no puede ser modificado ya que se encuentra cancelado")
             return
-        }     
+        } 
+        if(filaEmbarque.m_sFolioGuia){
+            if(filaEmbarque.m_sFolioGuia.length!=0)
+           { showSuccess("No es posible modificar el embarque ya que pertenece a una guia")
+            return
+        }
+        }    
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
