@@ -38,14 +38,13 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,LimpiarProducto = false}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
 
         const handleDeleteClick = (event) => {
             event.stopPropagation();
-            console.log()
             let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
             console.log(row)
             if (row){
@@ -69,7 +68,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
         const handleEditClick = (event) => {
             event.stopPropagation();
             let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
-            console.log(row)
             if (row){
                 handleEdit(row);
             }
@@ -90,7 +88,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
 
     const handleEdit = (data) =>{
         if(!disabled){
-            console.log(data)
             setPaquete(data)
         }
     }
@@ -296,7 +293,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
                     paquete={paquete}
                     resetPaquete={resetPaquete}
                     cliente={cliente}
-                    LimpiarProducto={LimpiarProducto}
+                    limpiarProducto={limpiarProducto}
                 />
             </div>
 

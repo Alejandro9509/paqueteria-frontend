@@ -113,6 +113,7 @@ class FiltersMap extends Component {
             tipoBusqueda: "3",
             sistemaUnidad: "1",
             optimizar: "2",
+            unidades:false,
             operadores: [],
             openOperadorDialog: false,
             operadorSeleccionado: 0
@@ -160,6 +161,7 @@ class FiltersMap extends Component {
             paquetesSeleccionadas: [],
             unidadesSeleccionadas: []
         })
+    
     }
 
 

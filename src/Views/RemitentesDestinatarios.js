@@ -73,6 +73,7 @@ function RemitenteDestinatario(props) {
     colonia: "",
     estado: "",
     estadoTexto: "",
+    paisTexto: "",
     municipio: "",
     municipioTexto: "",
     codigoPostal: "",
@@ -127,6 +128,7 @@ function RemitenteDestinatario(props) {
     colonia: "",
     estado: "",
     estadoTexto: "",
+    paisTexto: "",
     municipio: "",
     municipioTexto: "",
     codigoPostal: "",
@@ -158,6 +160,7 @@ function RemitenteDestinatario(props) {
         numeroExt: respuesta.data.m_sNoExtRemitente,
         colonia: respuesta.data.m_sColoniaRemitente,
         codigoPostal: {
+          m_nIdCP: respuesta.data.m_sIdCodigoPostalRemitente,
           m_sCP: respuesta.data.m_sCodigoPostalRemitente || "No especificado",
           m_sColonia: respuesta.data.m_sColoniaRemitente || "No especificado",
         },
@@ -243,6 +246,7 @@ function RemitenteDestinatario(props) {
         municipio: respuesta.data.m_nIdCiudadDestinatario,
         municipioTexto: respuesta.data.m_sMunicipioDestinatario,
         codigoPostal: {
+          m_nIdCP: respuesta.data.m_sIdCodigoPostalDestinatario,
           m_sCP: respuesta.data.m_sCodigoPostalDestinatario || "No especificado",
           m_sColonia: respuesta.data.m_sColoniaDestinatario || "No especificado",
         },
@@ -251,8 +255,16 @@ function RemitenteDestinatario(props) {
         contacto: respuesta.data.m_sContactoDestinatario,
         latitud: "",
         longitud:  "",
+        paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+      ( zonaOperativa ) => {
+        if(props.destinatario){
+          props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+        }
+      }
+  );
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
       setDataMunicipios(data);
     });*/
@@ -331,19 +343,6 @@ function RemitenteDestinatario(props) {
       };
     });
 
-    // obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
-    //   setDataMunicipios(data);
-    // });
-    // obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(
-    //     (cp) => {
-    //       setState((state) => {
-    //         return {
-    //           ...state,
-    //
-    //         };
-    //       });
-    //     }
-    // );
     obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({ data }) => {
       setState((state) => {
         return {
@@ -352,6 +351,14 @@ function RemitenteDestinatario(props) {
         };
       });
     });
+    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
+      setState((state) => {
+        return {
+          ...state,
+          zonaOperativa: {m_nIdZona: respuesta.data.m_nIdZonaOperativaRecoleccion},
+        };
+      });
+    }
   }
 
   const mostrarDatosDestinatarioEmbarqueById = (respuesta) => {
@@ -381,16 +388,19 @@ function RemitenteDestinatario(props) {
           m_sCP: respuesta.data.m_sCodigoPostalDestinatario,
           m_sColonia: respuesta.data.m_sColoniaDestinatario ? respuesta.data.m_sColoniaDestinatario : respuesta.data.m_sLocalidadDestinatario
         },
+        paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
       setDataMunicipios(data);
     });*/
-    /*obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
-        ({ data }) => {
-          setDataZonasOperativas(data);
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+        ( zonaOperativa ) => {
+          if(props.destinatario){
+            props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+          }
         }
-    );*/
+    );
 
     /*obtenerCodigoPostalId(
         respuesta.data.m_nIdCodigoPostalDestinatario
@@ -562,9 +572,17 @@ if(input=="codigoPostal"){
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
+      if(!row.data.m_nIdCP){
+        showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
+        return
+      }
     props.seCalculaTarifa()
       obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
           ( zonaOperativa ) => {
+            console.log(JSON.stringify(zonaOperativa))
+            if(props.destinatario){
+              props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+            }
             setState((state) => ({
               ...state,
               id: row.data.m_nIdRemitenteDestinatario,
@@ -574,6 +592,7 @@ if(input=="codigoPostal"){
               domicilio: row.data.m_sDomicilio || "No especificado",
               codigoPostal:
                   {
+                    m_nIdCP: row.data.m_nIdCP,
                     m_sCP: row.data.m_sCodigoPostal,
                     m_sColonia: row.data.m_sColonia || "No especificado",
                   },
@@ -594,6 +613,7 @@ if(input=="codigoPostal"){
               destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
               openDialog: false,
               zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+              paisTexto: row.data.m_sPais
             }));
 
             if (zonaOperativa.data.length === 0){

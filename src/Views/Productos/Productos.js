@@ -4,6 +4,7 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import { DataGrid } from "@material-ui/data-grid";
 import Noty from "noty";
 import {
+  Button,
   FormControl,
   Grid,
   InputLabel,
@@ -22,7 +23,8 @@ import {
   obtenerProductos,
   obtenerProductoById,
   agregarProducto,
-  modificarProducto
+  modificarProducto,
+  eliminarProducto
 } from "../../Util/Contexts/ProductosContext";
 function showSuccess(mensaje) {
   new Noty({
@@ -95,7 +97,7 @@ function Productos() {
                 <i className={"fa fa-eye"} style={{ color: "#F9A03E" }} />
               </a>
             </Tooltip>
-            {/*<Tooltip title={"Eliminar"}>
+            <Tooltip title={"Eliminar"}>
               <a
                 className="btn btn-default btn-xs"
                 onClick={() =>
@@ -116,7 +118,7 @@ function Productos() {
               >
                 <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
               </a>
-            </Tooltip>*/}
+            </Tooltip>
           </div>
         );
       },
@@ -177,7 +179,14 @@ function Productos() {
   }
 
   function handleEliminar(row) {
-
+    eliminarProducto(row.m_nIdProducto).then((respuesta) => {
+      showSuccess("Producto Eliminado");
+      handleShowListado();
+    })
+    .catch((err) => {
+      console.log(err);
+      showSuccess("El Usuario no tiene derecho para modificar");
+    });
   }
 
   function handleShowConsultar(row) {
@@ -216,16 +225,16 @@ function Productos() {
     e.preventDefault();
 
     let params = {
-      Descripcion: form.Descripcion,
-      Largo: form.Largo,
-      Ancho: form.Ancho,
-      Alto: form.Alto,
-      Peso: form.Peso,
-      IdTipoEmbalaje: form.IdTipoEmbalaje,
-      Embalaje: form.Embalaje,
-      Activo: form.Activo,
-      NoProducto: form.IdProducto,
-      predeterminado: form.predeterminado
+      m_sDescripcion: form.Descripcion,
+      m_xLargo: form.Largo,
+      m_xAncho: form.Ancho,
+      m_xAlto: form.Alto,
+      m_xPeso: form.Peso,
+      m_nIdEmbalaje: form.IdTipoEmbalaje,
+      m_sEmbalaje: form.Embalaje,
+      m_bActivo: form.Activo,
+      m_nNoProducto: form.IdProducto,
+      m_bPredeterminado: form.predeterminado
     };
 console.log(params)
      if (form.IdProducto != 0) {
@@ -583,23 +592,32 @@ console.log(params)
                             </Grid>
                           </Grid>
                         </Grid>
-                            <Grid item xs={2}>
-                              <div className="form-footer">
-                                <button
+                            <Grid item xs={12}>
+                              <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button
+                                        fullWidth
                                   onClick={handleShowListado}
                                   className="btn btn-secondary secondary-btn"
                                   disabled={state.agregar == "Consultar"}
                                 >
-                                  Cancelar
-                                </button>
-                                <button
+                                  CANCELAR
+                                </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button
+                                        fullWidth
                                   type="submit"
                                   className="btn btn-primary primary-btn"
                                   disabled={state.agregar == "Consultar"}
                                 >
-                                  Aceptar
-                                </button>
-                              </div>
+                                  AGREGAR PRODUCTO
+                                </Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
                             </Grid>
                           </Grid>
                       </form>

@@ -9,6 +9,7 @@ import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/Codi
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {Autocomplete} from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
+import { CheckBox } from "@material-ui/icons";
 
 function not(a, b) {
     return a.filter((value) => b.find(v => v.m_nIdCP == value.m_nIdCP) === undefined);
@@ -23,7 +24,8 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
         idMunicipio: '',
         selectedCP: [],
         idOrigenDestino: '',
-        idPais: ''
+        idPais: '',
+        aplicaEntrega:false
     })
 
     const [allCP, setAllCP] = useState([])
@@ -47,7 +49,8 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                 estado: seleccion.m_sEstado ? seleccion.m_sEstado : '',
                 selectedCP: seleccion.m_arrCPs ? seleccion.m_arrCPs : [],
                 idOrigenDestino: seleccion.m_nIdOrigenDestino || '',
-                idPais: seleccion.m_nIdPais || ''
+                idPais: seleccion.m_nIdPais || '',
+                aplicaEntrega: seleccion.m_bAplicaEntrega ?  seleccion.m_bAplicaEntrega : false
             }
         })
         if (!seleccion.m_arrCPs){
@@ -131,6 +134,16 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                 }
             })
         }
+    }
+
+    const handleCheck = (event) =>{
+        const {target} = event
+        setState(state => {
+            return {
+                ...state,
+                [target.name]: target.checked
+            }
+        })
     }
 
     const onChangeList = (allItems, selectedItems) => {
@@ -334,6 +347,26 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                                 ))}
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                    <FormControl className="input select" fullWidth variant="outlined" margin="dense">
+                    <div className="row" style={{display:"flex",justifyContent:"space-evenly",marginLeft:"-60px"}}>
+
+
+                    <label className="checkbox">
+                                                                                No aplican entregas
+                   
+                    </label> <input
+                                                                                onChange={handleCheck}
+                                                                                type="checkbox"
+                                                                                checked={state.aplicaEntrega}
+                                                                                style={{ height: "20px",left:"150px",top:"1px"}}
+                                                                                name="aplicaEntrega"
+                                                                                id="aplicaEntrega"
+                                                                            />
+                                                                     
+                    </div>
+                    </FormControl>
                     </Grid>
                     <Grid item xs={12}>
                         <Button fullWidth type={"button"} className="btn btn-primary primary-btn" onClick={handleGetCPS} disabled={consult}>

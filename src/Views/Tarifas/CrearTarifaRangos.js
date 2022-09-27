@@ -45,7 +45,6 @@ import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {
-    obtenerClienteById,
     obtenerClientePublicoGeneral,
     obtenerClienteTieneConvenio
 } from "../../Util/Contexts/ClientesContext";
@@ -682,7 +681,8 @@ export default function CrearTarifaRangos(props) {
                                 className={"form-control"}
                                 InputProps={{inputProps: { min: getCurrentDate()}}}
                                 disabled={props.disabled}
-                                InputLabelProps={{shrink: true,}}
+                                onKeyDown={(e) => e.preventDefault()}
+                                InputLabelProps={{shrink: true}}
                                 required
                             />
                         </Grid>

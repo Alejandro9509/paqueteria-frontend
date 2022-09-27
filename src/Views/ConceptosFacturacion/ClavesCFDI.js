@@ -14,6 +14,7 @@ import {
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
 import SearchIcon from "@material-ui/icons/Search";
+
 class ClavesCFDI extends Component {
     constructor(props) {
         super(props);
@@ -231,8 +232,7 @@ class ClavesCFDI extends Component {
                         </div>
                     </div>
                     <div style={{height:"300px", padding:"5px"}}>
-                        {this.props.dataSAT != 0 ? (
-                            <DataGrid
+                       <DataGrid
                                 localeText={dataGridLocaleText}
                                 rows={this.props.dataSAT}
                                 columns={this.state.columnsUnidades}
@@ -245,9 +245,6 @@ class ClavesCFDI extends Component {
                                     this.props.selectClase(row);
                                 }}
                             />
-                        ) : (
-                            <div>No se encontró ningún registro</div>
-                        )}
                     </div>
 
                 </div>

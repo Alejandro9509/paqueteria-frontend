@@ -200,7 +200,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     };
 
     const getAlTiposCalculo = () => {
-        const url = `${process.env.REACT_APP_API_URL}/TipoCalculo/GetListado`;
+        const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCalculo/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             setState(state =>{
                 return { ...state, tiposCalculo: respuesta.data }

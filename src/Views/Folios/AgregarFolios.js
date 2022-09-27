@@ -9,7 +9,7 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {DataGrid} from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -237,19 +237,20 @@ class AgregarFolio extends Component {
                                 </div>
                             </div>
 
-                            {/*<div className="row" >*/}
-                            {/*    <InputLabel> *Estos folios son internos para llevar una administración de los comprobantes fiscales, ya que el folio digital se obtiene al momento de hacer un timbre y son 36 dígitos" </InputLabel>*/}
-                            {/*</div>*/}
 
-                            <div className={"row"}>
-                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                    <button className="btn btn-secondary secondary-btn"
+                            <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                             <Button fullWidth className="btn btn-secondary secondary-btn"
                                             onClick={this.props.onClose}>Cancelar
-                                    </button>
+                                             </Button>
 
-                                    <button className="btn btn-primary primary-btn" type={"submit"}>Aceptar</button>
+                                        </Grid>
+                                        <Grid item xs>
+                                             <Button fullWidth className="btn btn-primary primary-btn" type={"submit"}>Aceptar</Button>
+                                        </Grid>
+                                    </Grid>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>

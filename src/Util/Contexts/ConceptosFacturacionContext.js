@@ -51,7 +51,7 @@ function obtenerImpuestosByConceptosFacturacion(id){
 }
 
 function obtenerConceptosFacturacionManiobra(){
-    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado/Maniobra`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ConceptosFacturacion/GetListado/Maniobra`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -141,7 +141,7 @@ function obtenerSATServicios(){
 }
 function obtenerSATPaginado(registros, pagina, catalogo, busqueda){
 
-    const url = `${process.env.REACT_APP_API_URL}/SAT/GetListadoPaginado/${registros}/${pagina}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/GetListadoPaginado/${registros}/${pagina}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {busqueda: busqueda, catalogo: catalogo}), { headers })

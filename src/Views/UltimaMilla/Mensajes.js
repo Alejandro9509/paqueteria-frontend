@@ -19,7 +19,16 @@ import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unida
 import SearchIcon from '@material-ui/icons/Search';
 import {agregarMensajes, obtenerMensajes} from "../../Util/Contexts/MensajesConetext";
 import Buttons from "../../Util/CarruselButtons";
+import Noty from "noty";
 
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 class Mensajes extends Component {
     constructor(props) {
         super(props);
@@ -66,7 +75,7 @@ class Mensajes extends Component {
     }
 
     openChat(index) {
-        obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador).then(({data}) => {
+        obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador,this.props.fecha).then(({data}) => {
             this.setState({indexOpen: index === this.state.indexOpen ? -1 : index, mensajes: data, newMessageText: ""})
         })
 
@@ -75,7 +84,8 @@ class Mensajes extends Component {
     enviarMensaje() {
         if (this.state.newMessageText !== "") {
             agregarMensajes(this.state.newMessageText, this.state.repartidoresFiltrados[this.state.indexOpen].m_nIdOperador).then(({data}) => {
-                obtenerMensajes(this.state.repartidoresFiltrados[this.state.indexOpen].m_nIdOperador).then(({data}) => {
+                showSuccess(data)
+                obtenerMensajes(this.state.repartidoresFiltrados[this.state.indexOpen].m_nIdOperador,this.props.fecha).then(({data}) => {
                     this.setState({mensajes: data, newMessageText: ""})
                 })
             })
@@ -213,9 +223,12 @@ class Mensajes extends Component {
                                                                         <ListItem id={`item${index}`} autoFocus={true} style={{
                                                                             borderRadius: "5px",
                                                                             marginBottom:"5px",
-                                                                            backgroundColor: m.m_nIdEnviadoPor === parseInt(localStorage.getItem("UsuarioId")) ? "#C6CDF3" : "#E6E6E6"
+                                                                            marginLeft: m.m_bEsOperador  ? "0px" : "20px",
+                                                                            marginRight: m.m_bEsOperador  ? "20px" : "0px",
+                                                                            textAlign: m.m_bEsOperador  ? "left" : "right",
+                                                                            backgroundColor: m.m_bEsOperador  ? "#C6CDF3" : "#E6E6E6"
                                                                         }}>
-                                                                            <ListItemText primary={m.m_sMensaje}/>
+                                                                            <ListItemText primary={m.m_sMensaje} secondary={m.m_sFechaHora}/>
                                                                         </ListItem>
                                                                     )
                                                                 })

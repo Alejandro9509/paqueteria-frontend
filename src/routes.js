@@ -75,6 +75,15 @@ const dashboardRoutes = [
     visible: validarDerecho(9101198)
   },
   {
+    path: "/Embarque/:id",
+    name: "Embarque",
+    icon: EmbarqueIcon,
+    component: EmbarquePage,
+    single: true,
+    child:[],
+    visible:false
+  },
+  {
     path: "/Guia",
     name: "Guías",
     icon: GuiasIcon,

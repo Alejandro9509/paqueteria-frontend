@@ -63,7 +63,8 @@ import {
     enviarCorreoCFDIViaje
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
-import {validarDerecho} from "../../Util/Util";
+import {getAddressFormated, validarDerecho} from "../../Util/Util";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 
 function showError(mensaje) {
     new Noty({
@@ -119,7 +120,11 @@ class DetalleParadas extends Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) ||  this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0)
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0)
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0)) {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
 
@@ -241,34 +246,47 @@ class DetalleParadas extends Component {
             }
     }
     generarCFDI(id,esRecoleccion, folio) {
-        confirmAlert({
-            title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar timbrado de prueba'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar timbrado ante el SAT'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
 
-                        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
-                            this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
-                            }
-                        })
+                            obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                                this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+                    },
+                    {
+                        label: 'No',
                     }
-                },
-                {
-                    label: 'No',
-                }
-            ]
+                ]
+            })
         })
+
+
 
 
     }
     confirmUbicacionParada(id,esRecoleccion, data) {
 
-        const domicilioRecoleccion = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
+        /*const domicilioRecoleccion = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
         const domicilioEntrega = data.m_bEntregaDiferenteDomicilio ? data.m_sDomicilioDetalleEntrega : data.m_sDomicilioDestinatario
 
         const direccion = esRecoleccion ?
@@ -292,7 +310,105 @@ class DetalleParadas extends Component {
                 numeroIntDestinatario: data.m_bEntregaDiferenteDomicilio ? '' : '',
                 codigoPostalDestinatario: data.m_bEntregaDiferenteDomicilio ? {m_sCP: ''} : {m_sCP: data.m_sCodigoPostalDestinatario},
                 domicilioDestinatario: domicilioEntrega,
+            }*/
+        let direccion = '';
+        if (esRecoleccion){
+            if (data.m_bRecoleccionDiferenteDomicilio){
+                direccion = {
+                    idGuia: id,
+                    nombreLugar: data.m_sNombreRemitente,
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: data.m_sDomicilioDetalleRecoleccion,
+                    colonia: '',
+                    ciudad: data.m_sMunicipioRemitente,
+                    estado: data.m_sEstadoRecoleccion,
+                    pais: data.m_sPaisRecoleccion,
+                    codigoPostal: '',
+                    direccionCompleta: getAddressFormated(
+                        data.m_sDomicilioDetalleRecoleccion,
+                        null,
+                        null,
+                        null,
+                        null,
+                        data.m_sMunicipioRemitente,
+                        data.m_sEstadoRecoleccion,
+                        data.m_sPaisRecoleccion
+                    )
+                }
+            }else{
+                direccion = {
+                    idGuia: id,
+                    nombreLugar: data.m_sNombreRemitente,
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: data.m_sCalleRemitente,
+                    colonia: data.m_sColoniaRemitente,
+                    ciudad: data.m_sMunicipioRemitente,
+                    estado: data.m_sEstadoRemitente,
+                    pais: data.m_sPaisRemitente,
+                    codigoPostal: data.m_sCodigoPostalRemitente,
+                    direccionCompleta: getAddressFormated(
+                        data.m_sCalleRemitente,
+                        '',
+                        '',
+                        data.m_sColoniaRemitente,
+                        data.m_sCodigoPostalRemitente,
+                        data.m_sMunicipioRemitente,
+                        data.m_sEstadoRemitente,
+                        data.m_sPaisRemitente
+                    )
+                }
             }
+        }else{
+            if (data.m_bEntregaDiferenteDomicilio){
+                direccion = {
+                    idGuia: id,
+                    nombreLugar: data.m_sNombreDestinatario,
+                    numeroInterior: '',
+                    numeroExterior: '',
+                    calle: data.m_sDomicilioDetalleEntrega,
+                    colonia: '',
+                    ciudad: data.m_sMunicipioEntrega,
+                    estado: data.m_sEstadoEntrega,
+                    pais: data.m_sPaisEntrega,
+                    codigoPostal: '',
+                    direccionCompleta: getAddressFormated(
+                        data.m_sDomicilioDetalleEntrega,
+                        null,
+                        null,
+                        null,
+                        null,
+                        data.m_sMunicipioEntrega,
+                        data.m_sEstadoEntrega,
+                        data.m_sPaisEntrega
+                    )
+                }
+            }else{
+                direccion = {
+                    idGuia: id,
+                    nombreLugar: data.m_sNombreDestinatario,
+                    numeroInterior: null,
+                    numeroExterior: null,
+                    calle: data.m_sCalleDestinatario,
+                    colonia: data.m_sColoniaDestinatario,
+                    ciudad: data.m_sMunicipioDestinatario,
+                    estado: data.m_sEstadoDestinatario,
+                    pais: data.m_sPaisDestinatario,
+                    codigoPostal: data.m_sCodigoPostalDestinatario,
+                    direccionCompleta: getAddressFormated(
+                        data.m_sCalleDestinatario,
+                        null,
+                        null,
+                        data.m_sColoniaDestinatario,
+                        data.m_sCodigoPostalDestinatario,
+                        data.m_sMunicipioDestinatario,
+                        data.m_sEstadoDestinatario,
+                        data.m_sPaisDestinatario
+                    )
+                }
+            }
+        }
        this.setState({
            titulo: 'parada',
            showConfirmarUbicacion: true,
@@ -357,15 +473,35 @@ class DetalleParadas extends Component {
                 {
                     label: 'Sí',
                     onClick: () => {
-                        cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
-                            // showSuccess(result.data)
-                            showSuccess("Se canceló ante el SAT con éxito.")
-                            this.props.refresh()
-                        }).catch((error) => {
-                            if (error.response){
-                                showError(error.response.data)
-                            }
-                        })
+                        if (parseInt(data.idCancelacionSAT) === 1){
+                            cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
+                                // showSuccess(result.data)
+                                obtenerCFDI(this.state.paqueteSeleccionado.m_nId,this.state.paqueteSeleccionado.m_bEsRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                                    this.setState({idParada: this.state.paqueteSeleccionado.m_nId, esRecoleccion: this.state.paqueteSeleccionado.m_bEsRecoleccion, openEnvioCorreo: true, folio: this.state.paqueteSeleccionado.m_sFolio})
+                                    this.props.refresh()
+                                }).catch((error) => {
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
+                                })
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+
+                        }else{
+                            cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
+                                // showSuccess(result.data)
+                                showSuccess("Se canceló ante el SAT con éxito.")
+                                this.props.refresh()
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
+                        }
+
                     }
                 },
                 {
@@ -456,7 +592,7 @@ class DetalleParadas extends Component {
                     <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
                 }
                 {this.state.openCancelarSAT &&
-                    <CancelarSAT open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
+                    <CancelarSAT ultimaMilla={true} open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
                     }} close={() => this.setState({openCancelarSAT: false})}/>
                 }
                 {
@@ -481,10 +617,13 @@ class DetalleParadas extends Component {
                                                open={this.state.openAgregar} paquetes={this.state.paquetes}/>
                 }
 
+                {(this.state.openRemplazar && this.state.paqueteSeleccionado) &&
                 <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
                                              onSubmit={this.onSubmitRemplazarPaquete}
                                              close={() => this.setState({openRemplazar: false})}
-                                             data={this.state.paquetes}/>
+                                             data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado?.m_sFolio)}/>
+
+                }
 
                 {this.state.openParciales &&
                 <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
@@ -727,7 +866,8 @@ class DetalleParadas extends Component {
 
                                                         {
                                                             tour.m_bActiva &&
-                                                            <Button disabled={!validarDerecho(9101447)} variant={"contained"} color={"primary"}
+                                                            <Button disabled={!validarDerecho(9101447) || tour.m_arrClsProGuia.some(g=> 
+                                                                g.m_nEstatusUlimaMilla != 1)} variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,
                                                                         tour: tour,
@@ -826,7 +966,8 @@ class DetalleParadas extends Component {
                                                                                                         color="primary">
                                                                                                         
                                                                                                         {
-                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            // !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            false &&
                                                                                                             <IconButton
                                                                                                                 /* disabled={!validarDerecho(9101449)} */
                                                                                                                 onClick={() => {

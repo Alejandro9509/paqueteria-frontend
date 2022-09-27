@@ -44,7 +44,8 @@ function ZonaAgregar({idZona, consult}) {
             m_sMunicipio: state.municipio,
             m_arrCP: state.selectedCP,
             m_nIdOrigenDestino: state.idOrigenDestino,
-            m_nIdPais: state.idPais
+            m_nIdPais: state.idPais,
+            m_bAplicaEntrega:state.aplicaEntrega
         }
         console.log(JSON.stringify(params))
         if (state.idZona){
