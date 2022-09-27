@@ -1368,35 +1368,39 @@ function Embarque(props) {
 
     function handleSelectCP(id, cp) {
         if (state.identificadorModal == "nombreRemitente") {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                [state.identificadorModal]: id,
-                RFCRemitente: id.m_sRFC,
-                domicilioRemitente: id.m_sDomicilio,
+                    [state.identificadorModal]: id,
+                    RFCRemitente: id.m_sRFC,
+                    domicilioRemitente: id.m_sDomicilio,
 
-                ciudadRemitente: dataCiudad.find(
+                    ciudadRemitente: dataCiudad.find(
                     (o) => o.m_nIdCiudad == dataCodigosPostalesRemitente.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
                 ),
 
-                correoRemitente: id.m_sCorreoElectronico,
-                telefonoRemitente: id.m_sTelefono,
-                contactoRemitente: id.m_sContacto,
+                    correoRemitente: id.m_sCorreoElectronico,
+                    telefonoRemitente: id.m_sTelefono,
+                    contactoRemitente: id.m_sContacto,
+                }
             });
         } else {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                [state.identificadorModal]: id,
-                RFCDestinatario: id.m_sRFC,
-                domicilioDestinatario: id.m_sDomicilio,
+                    [state.identificadorModal]: id,
+                    RFCDestinatario: id.m_sRFC,
+                    domicilioDestinatario: id.m_sDomicilio,
 
-                ciudadDestinatario: dataCiudad.find(
+                    ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad ==
                         dataCodigosPostalesDestinatario.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
                 ),
 
-                correoDestinatario: id.m_sCorreoElectronico,
-                telefonoDestinatario: id.m_sTelefono,
-                contactoDestinatario: id.m_sContacto,
+                    correoDestinatario: id.m_sCorreoElectronico,
+                    telefonoDestinatario: id.m_sTelefono,
+                    contactoDestinatario: id.m_sContacto,
+                }
             });
         }
 
@@ -1541,14 +1545,16 @@ function Embarque(props) {
         $('#Cancelar').addClass('in show');
         setTabActiva(2)
         obtenerEmbarquesId(state.idEmbarque).then((respuesta) => {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                folioEmbarque: respuesta.data.m_sFolioEmbarque,
-                sucursalCancelacion: respuesta.data.m_sSucursal,
-                fechaCancelacion: respuesta.data.m_sFechaCancelacion ? respuesta.data.m_sFechaCancelacion.replace(' ', 'T') : getCurrentDateTime(),
-                estatusEmbarque: respuesta.data.m_sEstatusEmbarque,
-                motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
+                    folioEmbarque: respuesta.data.m_sFolioEmbarque,
+                    sucursalCancelacion: respuesta.data.m_sSucursal,
+                    fechaCancelacion: respuesta.data.m_sFechaCancelacion ? respuesta.data.m_sFechaCancelacion.replace(' ', 'T') : getCurrentDateTime(),
+                    estatusEmbarque: respuesta.data.m_sEstatusEmbarque,
+                    motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
+                    sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
+                }
             });
             if (!respuesta.data.m_bSePuedeCancelar) {
                 showSuccess("Embarque no se puede cancelar");
@@ -1565,9 +1571,11 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                agregar: "Consultar",
+                    agregar: "Consultar",
+                }
             });
             setDataParaConsultarModificar(respuesta, false,"Consultar")
 
@@ -1627,10 +1635,12 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                agregar: "Modificar",
-                embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
+                    agregar: "Modificar",
+                    embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
+                }
             });
             setDataParaConsultarModificar(respuesta, false,"Modificar")
         });
@@ -2054,9 +2064,11 @@ function Embarque(props) {
         if(event.target.name == "porcentajeSeguro"){
             setRepetirConceptos(true)
         }
-        setState({
+        setState(state => {
+            return {
             ...state,
-            [event.target.name]: event.target.value,
+                [event.target.name]: event.target.value,
+            }
         });
     };
 
@@ -2073,29 +2085,35 @@ function Embarque(props) {
 
     const handleEntregaCheckboxChange = (event) => {
         setRepetirConceptos(true)
-        setState({
+        setState(state => {
+            return {
             ...state,
-            diferenteEntrega: !state.diferenteEntrega,
-            entregaEnSucursal: !state.diferenteEntrega && false
+                diferenteEntrega: !state.diferenteEntrega,
+                entregaEnSucursal: !state.diferenteEntrega && false
+            }
         });
     };
 
     const handleEntregaEnSucursalCheckbox = (event) => {
         setRepetirConceptos(true)
-        setState({
+        setState(state => {
+            return {
             ...state,
-            entregaEnSucursal: !state.entregaEnSucursal,
-            diferenteEntrega: !state.entregaEnSucursal && false,
-            entregaConCita: !state.entregaEnSucursal && false,
+                entregaEnSucursal: !state.entregaEnSucursal,
+                diferenteEntrega: !state.entregaEnSucursal && false,
+                entregaConCita: !state.entregaEnSucursal && false,
+            }
         });
     };
 
     const handleEntregaConCitaCheckbox = (event) => {
         setRepetirConceptos(true)
-        setState({
+        setState(state => {
+            return {
             ...state,
-            entregaEnSucursal: !state.entregaConCita && false,
-            entregaConCita: !state.entregaConCita
+                entregaEnSucursal: !state.entregaConCita && false,
+                entregaConCita: !state.entregaConCita
+            }
         });
     };
     const seCalculaTarifa = () =>{
@@ -2110,9 +2128,11 @@ function Embarque(props) {
     }
 
     const handleSucursalFiltro = async (event) => {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            sucursalListado: event.target.value,
+                sucursalListado: event.target.value,
+            }
         });
         const {fechaInicial, fechaFinal, estatusListado, folioEmbarque} = state
         obtenerEmbarquesFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado, folioEmbarque).then((respuesta) => {
@@ -2121,9 +2141,11 @@ function Embarque(props) {
     };
 
     function handleSelectDatos(id, cp) {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            [state.identificadorModal]: id,
+                [state.identificadorModal]: id,
+            }
         });
         console.log(id);
         console.log(state.identificadorModal);
@@ -2131,16 +2153,18 @@ function Embarque(props) {
 
     const handlePatrocinadorSelected = (row) => {
         console.log(row)
-        setState(() => ({
+        setState(state => {
+            return {
             ...state,
-            clientePaga: row.data,
-            idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
-            porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
-            aplicaSeguro: row.data.m_bTieneSeguro,
-            tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-            observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
-            openDialog: false,
-        }))
+                clientePaga: row.data,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
+                porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_bTieneSeguro,
+                tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
+                openDialog: false,
+            }
+        })
     }
 
     const getDataParaEditar = (operacion) => {
@@ -2621,12 +2645,14 @@ function Embarque(props) {
     }
 
     const handleChangeCita = (data) => {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            fechaCita: data.fechaCita,
-            horaCitaMinima: data.horaCitaMinima,
-            horaCitaMaxima: data.horaCitaMaxima,
-            citaPendiente: data.citaPendiente
+                fechaCita: data.fechaCita,
+                horaCitaMinima: data.horaCitaMinima,
+                horaCitaMaxima: data.horaCitaMaxima,
+                citaPendiente: data.citaPendiente
+            }
         })
     }
 
@@ -2640,9 +2666,11 @@ function Embarque(props) {
     }
 
     const dialogVisible = (isVisible) => {
-        setState({
-          ...state,
-          openDialog: isVisible,
+        setState(state => {
+            return {
+            ...state,
+                openDialog: isVisible,
+            }
         });
       };
 
@@ -2667,20 +2695,24 @@ function Embarque(props) {
     }
 
     const handleChangeRuta = (idRuta) => {
-        setState( {
+        setState( state => {
+            return {
             ...state,
-            idRuta: idRuta,
+                idRuta: idRuta,
+            }
         })
     }
 
     const handleChangeTipoSeguro = (event) => {
         setRepetirConceptos(true)
-        setState({
+        setState(state => {
+            return {
             ...state,
-            idTipoSeguro: event.target.value,
-            porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
-            aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
-            valorDeclarado: 0
+                idTipoSeguro: event.target.value,
+                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
+                valorDeclarado: 0
+            }
         });
     }
 
@@ -2736,19 +2768,23 @@ function Embarque(props) {
     }
     function esEntregaSucursal(aplicaEntrega){
         if(aplicaEntrega){
-        setState({
+        setState(state => {
+            return {
             ...state,
-            aplicaEntrega:aplicaEntrega,
-            entregaEnSucursal:true,
-            // deshabilitarDiferenteDomicilio:true,
-            diferenteEntrega:false
+                aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:true,
+                // deshabilitarDiferenteDomicilio:true,
+                diferenteEntrega:false
+            }
         })}
         else{
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                aplicaEntrega:aplicaEntrega,
-                entregaEnSucursal:false,
-                // deshabilitarDiferenteDomicilio:false
+                    aplicaEntrega:aplicaEntrega,
+                    entregaEnSucursal:false,
+                    // deshabilitarDiferenteDomicilio:false
+                }
             })}
 
       }
