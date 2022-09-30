@@ -183,7 +183,7 @@ function Informes({history}) {
                 return (
                     <div>
                         <a
-                            onClick={() => handleShowModificar(row.row.m_nIdInforme)}
+                            onClick={() => handleShowModificar(row.row.m_nIdInforme, row.row)}
                             className="btn btn-default btn-xs"
                             disabled={!validarDerecho(9101433)}
                         >
@@ -1138,7 +1138,11 @@ function Informes({history}) {
 
     }
 
-    function handleShowModificar(id) {
+    function handleShowModificar(id, row) {
+        if (parseInt(row.m_nIdEstatusInforme) !== 5){
+            showSuccess("Solo se pueden modificar informes con estatus pendiente")
+            return
+        }
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
