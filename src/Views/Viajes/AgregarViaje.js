@@ -1005,7 +1005,7 @@ class AgregarViaje extends Component {
                     return (
                         <div>
                             {
-                                row.row.m_bSePuedeBorrar ?
+                                row.row.m_bSePuedeBorrar && this.state.estatusListado === 8?
                                 <Tooltip title={"Desasignar"}>
                                     <a
                                         onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
@@ -1360,7 +1360,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult || this.state.estatusListado !== 8}
                                                        required
                                                        label="Núm. Viaje Cliente"
                                                        value={this.state.viajeCliente}
@@ -1379,7 +1379,7 @@ class AgregarViaje extends Component {
                                                        required
                                                        label="Fecha / Hora de Registro"
                                                        InputLabelProps={{shrink: true,}}
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult || this.state.estatusListado !== 8}
                                                        value={this.state.fechaHoraRegistro}
                                                        className="form-control"
                                                        id="fechaHoraRegistro"
@@ -1402,7 +1402,7 @@ class AgregarViaje extends Component {
                                                     id="estatusListado"
                                                     label="Estatus Viaje"
                                                     name={"estatusListado"}
-                                                    disabled={!this.props.modificar}
+                                                    disabled
                                                     InputProps={{
                                                         id: "estatusListado",
                                                         name: "estatusListado"
@@ -1427,7 +1427,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult || this.state.estatusListado !== 8}
                                                        label="Candado Oficial"
                                                        value={this.state.candadoOficial}
                                                        name="candadoOficial"
@@ -1442,7 +1442,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult || this.state.estatusListado !== 8}
                                                        label="Identificador"
                                                        value={this.state.identificadorViaje}
                                                        name="identificadorViaje"
@@ -1465,7 +1465,7 @@ class AgregarViaje extends Component {
                                                 id="idCiudadOrigen"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                disabled={this.props.consult}
+                                                disabled={this.props.consult || this.state.estatusListado !== 8}
                                                 options={this.state.dataCiudad}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
@@ -1498,7 +1498,7 @@ class AgregarViaje extends Component {
                                                 id="idCiudadDestino"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                disabled={this.props.consult}
+                                                disabled={this.props.consult || this.state.estatusListado !== 8}
                                                 options={this.state.dataCiudad}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
@@ -1527,9 +1527,9 @@ class AgregarViaje extends Component {
                                         IdDestino={this.state.idCiudadDestino.m_nIdCiudad ? this.state.idCiudadDestino.m_nIdCiudad : '' }
                                         IdCliente={0}
                                         viaje={true}
-                                        disabled={this.props.consult}
+                                        disabled={this.props.consult || this.state.estatusListado !== 8}
                                         onChangeRuta={this.handleChangeRuta}
-                                        EsConsulta={this.props.consult}
+                                        EsConsulta={this.props.consult || this.state.estatusListado !== 8}
                                     />
                                     </div>
                                 </div>
@@ -1555,7 +1555,7 @@ class AgregarViaje extends Component {
                                                 style={{
                                                     transform: "translate(14px, 10px) scale(1) !important"
                                                 }}
-                                                disabled={this.props.consult}
+                                                disabled={this.props.consult || this.state.estatusListado !== 8}
                                                 renderInput={(params) => (
                                                     <div>
                                                         <TextField
@@ -1564,7 +1564,7 @@ class AgregarViaje extends Component {
                                                             variant="outlined"
                                                             required
                                                             {...params}
-                                                            disabled={this.props.consult}
+                                                            disabled={this.props.consult || this.state.estatusListado !== 8}
                                                         />
                                                     </div>
                                                 )}
@@ -1587,7 +1587,7 @@ class AgregarViaje extends Component {
                                                 }
                                                 getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
                                                 // style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                disabled={this.props.consult}
+                                                disabled={this.props.consult || this.state.estatusListado !== 8}
                                                 renderInput={(params) => (
                                                     <div>
                                                         <TextField
@@ -1596,7 +1596,7 @@ class AgregarViaje extends Component {
                                                             variant="outlined"
                                                             required
                                                             {...params}
-                                                            disabled={this.props.consult}
+                                                            disabled={this.props.consult || this.state.estatusListado !== 8}
                                                         />
                                                     </div>
                                                 )}
@@ -1703,7 +1703,7 @@ class AgregarViaje extends Component {
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque1"
                                                     // disableClearable
-                                                    disabled={this.props.consult}
+                                                    disabled={this.props.consult || this.state.estatusListado !== 8}
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28 && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                     getOptionLabel={(option) =>
@@ -1767,7 +1767,7 @@ class AgregarViaje extends Component {
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque2"
                                                     // disableClearable
-                                                    disabled={this.props.consult}
+                                                    disabled={this.props.consult || this.state.estatusListado !== 8}
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28 && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                     getOptionLabel={(option) =>
@@ -1829,7 +1829,7 @@ class AgregarViaje extends Component {
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdDolly"
                                                     // disableClearable
-                                                    disabled={this.props.consult}
+                                                    disabled={this.props.consult || this.state.estatusListado !== 8}
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28)}
                                                     getOptionLabel={(option) =>
