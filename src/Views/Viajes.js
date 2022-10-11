@@ -1196,7 +1196,7 @@ function Viajes() {
                 </DialogContent>
             </Dialog>*/}
             {
-                paradaData &&
+                eventOptions.showCancelarParadasDialog &&
                 <CancelarTrayecto onSubmit={cancelarTrayectos} open={eventOptions.showCancelarParadasDialog}
                                   close={() => closeCancelarDialog()} data={paradaData}>
                     <DialogActions>
