@@ -119,13 +119,14 @@ import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm"
 
 import {
     useLocation
-  } from "react-router-dom";
+} from "react-router-dom";
+import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 
 function useQuery() {
-    const { search } = useLocation();
+    const {search} = useLocation();
 
     return React.useMemo(() => new URLSearchParams(search), [search]);
-  }
+}
 
 function showSuccess(mensaje) {
     new Noty({
@@ -205,6 +206,7 @@ function Embarque(props) {
     const [redirect, setRedirect] = React.useState(false);
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
+    const [dataTipoDocumento, setDataTipoDocumento] = React.useState([]);
     const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
     const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
@@ -221,7 +223,7 @@ function Embarque(props) {
         preventScroll: true,
     });
     const [tabActiva, setTabActiva] = useState(0);
-    const [repetirConceptos,setRepetirConceptos] = React.useState(false)
+    const [repetirConceptos, setRepetirConceptos] = React.useState(false)
     const columnsRemitenteDestinatarios = React.useMemo(() => [
         {
             Name: "Número",
@@ -287,7 +289,8 @@ function Embarque(props) {
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
                             <a
                                 onClick={() => {
-                                    handleShowModificar(row.row,row.row.m_nIdEmbarque)}}
+                                    handleShowModificar(row.row, row.row.m_nIdEmbarque)
+                                }}
                                 className="btn btn-default btn-xs"
                             >
                                 <i
@@ -305,9 +308,10 @@ function Embarque(props) {
                             </a>
                         </Tooltip>
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101425)}>
-                            <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i className="zmdi zmdi-file"
-                                                                                                                 style={{color: "#F9A03E"}}/></a>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i
+                                className="zmdi zmdi-file"
+                                style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101424)}>
@@ -353,16 +357,16 @@ function Embarque(props) {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
             width: 125,
-            renderCell:(row)=>{
-                return(
+            renderCell: (row) => {
+                return (
                     <div>
-                     <Tooltip title= {row.row.m_sObservaciones}>
-                         <field>{row.row.m_sFolioEmbarque}</field>
-                     </Tooltip>
-                </div>
+                        <Tooltip title={row.row.m_sObservaciones}>
+                            <field>{row.row.m_sFolioEmbarque}</field>
+                        </Tooltip>
+                    </div>
 
                 );
-                
+
             }
         },
         {
@@ -481,7 +485,7 @@ function Embarque(props) {
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
-        tipoCobro:0,
+        tipoCobro: 0,
         limpiarProducto: false,
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
@@ -503,7 +507,7 @@ function Embarque(props) {
         usuario: localStorage.getItem("Usuario"),
         // estatusEmbarque: '', se usa en agregar tambien
         motivoCancelacion: '',
-        mostrarCotizador:false,
+        mostrarCotizador: false,
         //==VARIABLES DE AGREGAR
         //Informacion general
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -519,11 +523,11 @@ function Embarque(props) {
         tipoCobro: '',
         clientePaga: {},
         observaciones: '',
-        valorDeclarado:0,
-        idTipoSeguro:5,
+        valorDeclarado: 0,
+        idTipoSeguro: 5,
         porcentajeSeguro: 0,
         aplicaSeguro: false,
-        idTipoTarifa:'',
+        idTipoTarifa: '',
 
         //Entrega
         entregaEnSucursal: false,
@@ -566,6 +570,7 @@ function Embarque(props) {
         embarqueConGuia: false
     });
     let query = useQuery();
+
     //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
     function limpiarCamposAgregar() {
         setState(state => {
@@ -575,7 +580,7 @@ function Embarque(props) {
                 //Informacion general
                 folioRecoleccion: '',
                 idRecoleccion: 0,
-                idCotizacion:'',
+                idCotizacion: '',
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
@@ -591,7 +596,7 @@ function Embarque(props) {
                 idTipoSeguro: 5,
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
-                idTipoTarifa:'',
+                idTipoTarifa: '',
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
@@ -605,7 +610,7 @@ function Embarque(props) {
                 horaCitaMinima: '',
                 horaCitaMaxima: '',
                 citaPendiente: false,
-                mostrarCotizador:false,
+                mostrarCotizador: false,
 
                 //Paquetes/sobres
                 paquetes: [],
@@ -623,6 +628,7 @@ function Embarque(props) {
                 esConsultaRuta: false,
                 height: window.innerHeight,
                 observaciones: '',
+                idComplemento: null
             }
         })
         setDataEmbarqueConsulta(undefined)
@@ -644,7 +650,7 @@ function Embarque(props) {
             cobrarCita: false,
             costoCita: "0",
             detectarTipoCobro: false,
-            tipoCobro:0,
+            tipoCobro: 0,
             limpiarProducto: false,
             idsTiposCobroSeleccionArray: [],
             idsTiposCobroSeleccionString: '',
@@ -687,7 +693,7 @@ function Embarque(props) {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
-            municipioTexto:data.municipioTexto,
+            municipioTexto: data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
             correoRemitente: data.correo,
@@ -702,17 +708,17 @@ function Embarque(props) {
     };
 
     const handleClickCodigosPostalesInput = (input) => {
-        if (input === "codigoPostalRemitente"){
+        if (input === "codigoPostalRemitente") {
             obtenerCodigosPostalesPorEstadoMunicipio(remitente.estadoRemitente, remitente.municipioRemitente).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
         }
-        if (input === "codigoPostalDestinatario"){
+        if (input === "codigoPostalDestinatario") {
             obtenerCodigosPostalesPorEstadoMunicipio(destinatario.estadoDestinatario, destinatario.municipioDestinatario).then(({data}) => {
                 setDataCodigosPostalesDestinatario(data)
             })
         }
-        if (input === "codigoPostalEnt"){
+        if (input === "codigoPostalEnt") {
             obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, entregaDD.municipioEnt).then(({data}) => {
                 setDataCodigosPostalesEntregaDD(data)
             })
@@ -743,7 +749,7 @@ function Embarque(props) {
     })
 
     const handleChangeDestinatario = (data) => {
-        setDestinatario( () => ({
+        setDestinatario(() => ({
             idDestinatario: data.id,
             aliasDestinatario: data.alias,
             nombreDestinatario: data.nombre,
@@ -757,7 +763,7 @@ function Embarque(props) {
             estadoDestinatario: data.estado,
             estadoTexto: data.estadoTexto,
             municipioDestinatario: data.municipio,
-            municipioTexto:data.municipioTexto,
+            municipioTexto: data.municipioTexto,
             codigoPostalDestinatario: data.codigoPostal,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
@@ -785,7 +791,7 @@ function Embarque(props) {
         longitud: ''
     })
 
-    const resetEntregaDD = () =>{
+    const resetEntregaDD = () => {
         setEntregaDD({
             idPais: '',
             pais: '',
@@ -834,7 +840,7 @@ function Embarque(props) {
     function generarReporte(id, folio){
         obtenerEmbarqueReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Embarque " + folio;
         })
@@ -843,7 +849,7 @@ function Embarque(props) {
     const handleOnChangeEntregaDD = (newValue) => {
         setRepetirConceptos(true)
         setEntregaDD(entregaDD => {
-            return{
+            return {
                 ...entregaDD,
                 idPais: newValue.idPais,
                 pais: newValue.pais,
@@ -886,34 +892,34 @@ function Embarque(props) {
     }
 
     const validarCoordenadas = (coordenadas) => {
-        console.log("coordenadas"+coordenadas)
+        console.log("coordenadas" + coordenadas)
         /**Si es modificacion*/
-        if (state.idEmbarque != 0){
+        if (state.idEmbarque != 0) {
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if(state.diferenteEntrega
-                && coordenadas==undefined){
+            if (state.diferenteEntrega
+                && coordenadas == undefined) {
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
-            }else if (!state.diferenteEntrega
+            } else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
                 && !coordenadas
-                ) {
+            ) {
                 mostrarDialogoMapa(true)
                 return false
             }
             /**Si es agregar*/
-        }else{
+        } else {
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if (state.diferenteEntrega && coordenadas==undefined){
+            if (state.diferenteEntrega && coordenadas == undefined) {
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
-            }else if (!state.diferenteEntrega
+            } else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
-                && !coordenadas){
+                && !coordenadas) {
                 mostrarDialogoMapa(true)
                 return false
             }
@@ -930,11 +936,11 @@ function Embarque(props) {
             }
         })
     }
-    const mostrarCotizadorRec = (isVisible) =>{
+    const mostrarCotizadorRec = (isVisible) => {
         setState(state => {
             return {
                 ...state,
-                mostrarCotizador:isVisible
+                mostrarCotizador: isVisible
             }
         })
     }
@@ -958,113 +964,113 @@ function Embarque(props) {
     const esEmbarqueValido = () => {
         let valid = false;
         /**INFORMACION GENERAl*/
-        if (!esDatoValido(state.idTipoSeguro)){
+        if (!esDatoValido(state.idTipoSeguro)) {
             showSuccess("El tipo de seguro es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(state.tipoCambio)){
+        if (!esDatoValido(state.tipoCambio)) {
             showSuccess("El tipo de cambio es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(state.tipoCobro)){
+        if (!esDatoValido(state.tipoCobro)) {
             showSuccess("El tipo de cobro es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(state.clientePaga?.m_nIdCliente)){
+        if (!esDatoValido(state.clientePaga?.m_nIdCliente)) {
             showSuccess("El responsable de pago es un dato requerido");
             return valid;
         }
 
         /**REMITENTE*/
-        if (!esDatoValido(remitente.idRemitente)){
+        if (!esDatoValido(remitente.idRemitente)) {
             showSuccess("El remitente es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)) {
             showSuccess("El cÓdigo postal del remitente es un dato requerido");
             return valid;
         }
-        if(!esDatoValido(remitente.correoRemitente)){
+        if (!esDatoValido(remitente.correoRemitente)) {
             showSuccess("El correo del remitente es un dato requerido")
             return valid;
         }
-        if (!esDatoValido(remitente.origenRemitente?.m_nIdCiudad)){
+        if (!esDatoValido(remitente.origenRemitente?.m_nIdCiudad)) {
             showSuccess("La ciudad de origen es un dato requerido");
             return valid;
         }
 
         /**DESTINATARIO*/
-        if (!esDatoValido(destinatario.idDestinatario)){
+        if (!esDatoValido(destinatario.idDestinatario)) {
             showSuccess("El destinatario es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)) {
             showSuccess("El código postal del destinatario es un dato requerido");
             return valid;
         }
-        if(!esDatoValido(destinatario.correoDestinatario)){
+        if (!esDatoValido(destinatario.correoDestinatario)) {
             showSuccess("El correo del destinatario es un dato requerido")
             return valid;
         }
-        if (!esDatoValido(destinatario.destinoDestinatario?.m_nIdCiudad)){
+        if (!esDatoValido(destinatario.destinoDestinatario?.m_nIdCiudad)) {
             showSuccess("La ciudad de destino es un dato requerido");
             return valid;
         }
 
         /**Si es entrega en sucursal*/
-        if (state.entregaEnSucursal){
-            if (!esDatoValido(state.idSucursalEntrega)){
+        if (state.entregaEnSucursal) {
+            if (!esDatoValido(state.idSucursalEntrega)) {
                 showSuccess("La sucursal de entrega es un dato requerido");
                 return valid;
             }
             /**Si es entrega en direfente domicilio*/
-        }else if(state.diferenteEntrega){
-            if (!esDatoValido(entregaDD.codigoPostal?.m_nIdCP)){
+        } else if (state.diferenteEntrega) {
+            if (!esDatoValido(entregaDD.codigoPostal?.m_nIdCP)) {
                 showSuccess("El código postal de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.idEstado)){
+            if (!esDatoValido(entregaDD.idEstado)) {
                 showSuccess("El estado de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.zonaOperativa?.m_nIdZona)){
+            if (!esDatoValido(entregaDD.zonaOperativa?.m_nIdZona)) {
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
-          /*  if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
-                showSuccess("La zona de la tarifa de entrega es un dato requerido");
-                return valid;
-            }*/
+            /*  if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+                  showSuccess("La zona de la tarifa de entrega es un dato requerido");
+                  return valid;
+              }*/
 
-        }else {
+        } else {
             /**Si es entrega en domicilio de destinatario*/
             if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
                 return valid;
             }
-           /* else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
-                showSuccess("Verificar la zona tarifa de destinatario")
-                return valid;
-            }*/
+            /* else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+                 showSuccess("Verificar la zona tarifa de destinatario")
+                 return valid;
+             }*/
         }
-        if (state.entregaConCita){
-            if (!state.citaPendiente){
-                if (!esDatoValido(state.fechaCita)){
+        if (state.entregaConCita) {
+            if (!state.citaPendiente) {
+                if (!esDatoValido(state.fechaCita)) {
                     showSuccess("La fecha de la cita es un dato requerido");
                     return;
                 }
-                if (!esDatoValido(state.horaCitaMinima)){
+                if (!esDatoValido(state.horaCitaMinima)) {
                     showSuccess("La hora mínima de la cita es un dato requerido");
                     return;
                 }
-                if (!esDatoValido(state.horaCitaMaxima)){
+                if (!esDatoValido(state.horaCitaMaxima)) {
                     showSuccess("La hora máxima de la cita es un dato requerido");
                     return;
                 }
             }
         }
 
-        if (!esDatoValido(state.idRuta) ){
+        if (!esDatoValido(state.idRuta)) {
             showSuccess("La ruta es un dato requerido.")
             return valid;
         }
@@ -1076,11 +1082,11 @@ function Embarque(props) {
             showSuccess("Debe agregar al menos un complemento del SAT")
             return
         }
-        if (dataConceptos.find(i => parseInt(i.idConcepto) === parseInt(configuraciones.idConceptoFlete)) === undefined){
+        if (dataConceptos.find(i => parseInt(i.idConcepto) === parseInt(configuraciones.idConceptoFlete)) === undefined) {
             showSuccess("La cotización debe incluir el concepto flete.")
             return;
         }
-        if (dataConceptos.length === 0){
+        if (dataConceptos.length === 0) {
             showSuccess("No se han agregado conceptos de facturación. Genere una cotización.")
             return;
         }
@@ -1090,38 +1096,38 @@ function Embarque(props) {
 
     const esComplementoValido = (item) => {
         let valid = true
-        if (!parseFloat(item.cantidad) > 0){
+        if (!parseFloat(item.cantidad) > 0) {
             return false
         }
-        if (!parseFloat(item.peso) > 0){
+        if (!parseFloat(item.peso) > 0) {
             return false
         }
-        if (!item.claveProducto?.length > 0){
+        if (!item.claveProducto?.length > 0) {
             return false
         }
-        if (!item.claveUnidad?.length > 0){
+        if (!item.claveUnidad?.length > 0) {
             return false
         }
-        if (item.esPeligroso){
-            if (!item.claveFraccion?.length > 0){
+        if (item.esPeligroso) {
+            if (!item.claveFraccion?.length > 0) {
                 return false
             }
             /*if (!item.comercioExterior?.length > 0){
                 return false
             }*/
-            if (!item.claveMaterialPeligroso?.length > 0){
+            if (!item.claveMaterialPeligroso?.length > 0) {
                 return false
             }
-            if (!item.materialPeligrosoSAT?.length > 0){
+            if (!item.materialPeligrosoSAT?.length > 0) {
                 return false
             }
-            if (!item.claveEmbalaje?.length > 0){
+            if (!item.claveEmbalaje?.length > 0) {
                 return false
             }
         }
         return valid
     }
- 
+
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
@@ -1136,13 +1142,13 @@ function Embarque(props) {
         /**Se cierra el dialogo porque si no se quedará abierto despues de darle aceptar.*/
         mostrarDialogoMapa(false)
 
-        if (!esEmbarqueValido()){
+        if (!esEmbarqueValido()) {
             return;
         }
 
         /**Si no es entrega en sucursal se validan las coordenadas*/
-        if (!state.entregaEnSucursal){
-            if (!validarCoordenadas(coordenadas)){
+        if (!state.entregaEnSucursal) {
+            if (!validarCoordenadas(coordenadas)) {
                 return
             }
         }
@@ -1164,7 +1170,7 @@ function Embarque(props) {
 
             packs.push(p)
         })
-        if (dataComplementosSAT.some(i => !esComplementoValido(i))){
+        if (dataComplementosSAT.some(i => !esComplementoValido(i))) {
             showSuccess("Verifique los complementos SAT registrados.")
             return;
         }
@@ -1198,7 +1204,7 @@ function Embarque(props) {
             m_sHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
             valorDeclarado: state.valorDeclarado,
-            m_sObservaciones: state.observaciones, 
+            m_sObservaciones: state.observaciones,
             m_nIdTipoSeguro: state.idTipoSeguro,
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
@@ -1258,8 +1264,10 @@ function Embarque(props) {
             entregarMismoDomicilio: !state.diferenteEntrega,
             //Cita de recoleccion
             m_bEmbarqueConCita: state.entregaConCita,
+            m_nIdComplemento: state.idComplemento,
+            m_nIdTipoDocumento: state.idTipoDocumento,
         }
-            params.m_bEntregaEnSucursal = state.entregaEnSucursal
+        params.m_bEntregaEnSucursal = state.entregaEnSucursal
         /**Si es entrega en sucursal*/
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
@@ -1292,7 +1300,7 @@ function Embarque(props) {
 
         if (state.entregaConCita) {
             params.m_bCitaPendiente = state.citaPendiente
-            if (!state.citaPendiente){
+            if (!state.citaPendiente) {
                 params.m_sFechaCita = state.fechaCita
                 params.m_sHoraCitaMinima = state.horaCitaMinima
                 params.m_sHoraCitaMaxima = state.horaCitaMaxima
@@ -1313,11 +1321,11 @@ function Embarque(props) {
         params.m_nIdRuta = state.idRuta
         console.log(params)
         console.log(JSON.stringify(params))
-   if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    if (respuesta.data != "Modificado Exitosamente"){
+                    if (respuesta.data != "Modificado Exitosamente") {
                         return
                     }
                     handleShowListado();
@@ -1329,15 +1337,15 @@ function Embarque(props) {
         } else {
             agregarEmbarques(params)
                 .then((respuesta) => {
-                    if (respuesta.data.m_sFolioEmbarque.length === 0){
+                    if (respuesta.data.m_sFolioEmbarque.length === 0) {
                         return
                     }
-                    showSuccess("Embarque creado con folio: "+respuesta.data.m_sFolioEmbarque);
+                    showSuccess("Embarque creado con folio: " + respuesta.data.m_sFolioEmbarque);
 
                     console.log(respuesta.data);
                     // handleShowListado();
                     setState(state => {
-                        return{
+                        return {
                             ...state,
                             idEmbarque: respuesta.data.m_nIdEmbarque,
                             folioEmbarque: respuesta.data.m_sFolioEmbarque,
@@ -1410,7 +1418,7 @@ function Embarque(props) {
 
     function handleEliminar(embarque) {
         let derecho;
-        if (embarque.m_sEstatusEmbarque !== "Cancelado"){
+        if (embarque.m_sEstatusEmbarque !== "Cancelado") {
             showSuccess("El embarque tiene que estar cancelado.");
             return;
         }
@@ -1477,9 +1485,9 @@ function Embarque(props) {
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
 
-        if(query.get("id")){
+        if (query.get("id")) {
             handleShowConsultar(query.get("id"))
-            }
+        }
         if (props.location.idRecoleccion !== undefined) {
         obtenerRecoleccionId(props.location.idRecoleccion)
             .then((respuesta) => {
@@ -1523,7 +1531,7 @@ function Embarque(props) {
     const getZonaOperativaByCodigoPostal = (codigoPostal) => {
         obtenerZonaOperativaByIdCodigoPostal(codigoPostal).then(respuesta => {
             setState(state => {
-                return{
+                return {
                     ...state,
                     zonaOperativaSucursal: respuesta.data[0]
                 }
@@ -1532,7 +1540,7 @@ function Embarque(props) {
     }
 
     function handleShowCancelar(e) {
-        if (e){
+        if (e) {
             e.preventDefault()
         }
         $('.nav-tabs li ').removeClass('active');
@@ -1569,7 +1577,7 @@ function Embarque(props) {
                 ...state,
                 agregar: "Consultar",
             });
-            setDataParaConsultarModificar(respuesta, false,"Consultar")
+            setDataParaConsultarModificar(respuesta, false, "Consultar")
 
         });
     }
@@ -1586,7 +1594,7 @@ function Embarque(props) {
                 ...state,
                 agregar: "Agregar",
             });
-            setDataParaConsultarModificar(respuesta, true,"Agregar")
+            setDataParaConsultarModificar(respuesta, true, "Agregar")
 
         });
     }
@@ -1632,7 +1640,7 @@ function Embarque(props) {
                 agregar: "Modificar",
                 embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
             });
-            setDataParaConsultarModificar(respuesta, false,"Modificar")
+            setDataParaConsultarModificar(respuesta, false, "Modificar")
         });
     }
 
@@ -1653,14 +1661,14 @@ function Embarque(props) {
             p.m_nClaveSATUnidad = p.m_sClaveSATUnidad
             p.m_sProductoSAT = p.m_nProductoSAT
             p.m_sUnidadSAT = p.m_nUnidadSAT
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
 
@@ -1691,7 +1699,7 @@ function Embarque(props) {
                 return {
                     ...state,
                     clientePaga: data,
-                    
+
                 }
             })
         })
@@ -1712,7 +1720,7 @@ function Embarque(props) {
         setDataConceptos(conceptosCast)
 
         //ENTREGA EN SUCURSAL
-        if (respuesta.data.m_bEntregaSucursal){
+        if (respuesta.data.m_bEntregaSucursal) {
             setState(state => {
                 return {
                     ...state,
@@ -1744,7 +1752,7 @@ function Embarque(props) {
         }else{
             //ENTREGA EN DIFERENTE DOMICILIO
             if (respuesta.data.m_bEntregaDiferenteDomicilio) {
-                setEntregaDD(entregaDD =>{
+                setEntregaDD(entregaDD => {
                     return {
                         ...entregaDD,
                         idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
@@ -1764,7 +1772,7 @@ function Embarque(props) {
                         },
                     }
                 })
-                obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
+                obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) => {
                     setDataMunicipiosEntregaDD(data)
                 })
 
@@ -1801,7 +1809,7 @@ function Embarque(props) {
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 //observaciones
-                observaciones: respuesta.data.m_sObservaciones 
+                observaciones: respuesta.data.m_sObservaciones
             }
         });
     }
@@ -1862,7 +1870,7 @@ function Embarque(props) {
     }
 
     //Funcion para mostrar datos de embarque para consultar o modificar
-    const setDataParaConsultarModificar = (respuesta, duplicar,operacion) => {
+    const setDataParaConsultarModificar = (respuesta, duplicar, operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.embarqueById = true
         setDataEmbarqueConsulta(respuesta)
@@ -1870,7 +1878,7 @@ function Embarque(props) {
         getAllCiudades()
 
         /**Si es entrega en sucursal*/
-        if(respuesta.data.m_bEntregaEnSucursal){
+        if (respuesta.data.m_bEntregaEnSucursal) {
             setState(state => {
                 return {
                     ...state,
@@ -1888,7 +1896,7 @@ function Embarque(props) {
                 })
             })
             /**Si es entrega es en diferente domicilio*/
-        }else if (!respuesta.data.EntregarMismoDomicilio){
+        } else if (!respuesta.data.EntregarMismoDomicilio) {
             mostrarDatosEntregaDiferenteDomicilio(respuesta)
         }
 
@@ -1922,14 +1930,14 @@ function Embarque(props) {
             // p.m_sUnidadSAT
             // p.m_sProductoSAT
 
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
 
@@ -1988,7 +1996,7 @@ function Embarque(props) {
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_sFolioInforme,
-                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + 'T' + respuesta.data.m_tHoraRegistro.substr(0,5),
+                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + 'T' + respuesta.data.m_tHoraRegistro.substr(0, 5),
                 estatusEmbarque: duplicar ? 16 : respuesta.data.m_nIdEstatusEmbarque,
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
@@ -2000,7 +2008,7 @@ function Embarque(props) {
                 // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
                 //Entrega
-                
+
                 entregaConCita: respuesta.data.m_bEmbarqueConCita,
                 fechaCita: respuesta.data.m_sFechaCita,
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
@@ -2020,14 +2028,16 @@ function Embarque(props) {
                 countSobres: respuesta.data.m_nNoSobres,
                 fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
                 //observaciones
-                observaciones: respuesta.data.m_sObservaciones 
+                observaciones: respuesta.data.m_sObservaciones,
+                idTipoDocumento: respuesta.data.m_nIdTipoDocumento,
+                idComplemento: respuesta.data.m_nIdComplemento
             }
         });
 
     }
 
     const handleShowListado = (event) => {
-        if (event){
+        if (event) {
             event.stopPropagation();
         }
         limpiarCamposAgregar()
@@ -2051,7 +2061,7 @@ function Embarque(props) {
     }
 
     const handleChange = (event) => {
-        if(event.target.name == "porcentajeSeguro"){
+        if (event.target.name == "porcentajeSeguro") {
             setRepetirConceptos(true)
         }
         setState({
@@ -2098,7 +2108,7 @@ function Embarque(props) {
             entregaConCita: !state.entregaConCita
         });
     };
-    const seCalculaTarifa = () =>{
+    const seCalculaTarifa = () => {
         setRepetirConceptos(true)
     }
 
@@ -2135,7 +2145,7 @@ function Embarque(props) {
             ...state,
             clientePaga: row.data,
             idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
-            porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
+            porcentajeSeguro: row.data.m_cPorcentajeSeguro,
             aplicaSeguro: row.data.m_bTieneSeguro,
             tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
             observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
@@ -2154,49 +2164,56 @@ function Embarque(props) {
         getParametrosConfiguracion(operacion)
     }
 
-    async function getParametrosConfiguracion(operacion){
 
-        obtenerParametrosConfiguracion().then(respuesta=>{
-            if (operacion === "Agregar") {
-                setState((config) => {
-                    console.log(state.tipoCobro)
+    async function getParametrosConfiguracion(operacion) {
+
+        obtenerParametrosConfiguracion().then(respuesta => {
+            obtenerTiposDocumentoSucursal(localStorage.getItem("Sucursal")).then(({data}) => {
+                setDataTipoDocumento(data)
+
+                if (operacion === "Agregar") {
+                    setState((config) => {
+                        return {
+                            ...config,
+                            estatusEmbarque: respuesta.data.EstatusEmbarque,
+                            moneda: state.idRecoleccion > 0 ? state.moneda : respuesta.data.MonedaEmbarque,
+                            tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio : respuesta.data.TipoCambioEmbarque,
+                            tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
+                            idComplemento: respuesta.data.IdComplemento,
+                            idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
+                        }
+                    })
+                }
+                setState(state => {
                     return {
-                        ...config,
-                        estatusEmbarque: respuesta.data.EstatusEmbarque,
-                        moneda: state.idRecoleccion > 0 ? state.moneda :respuesta.data.MonedaEmbarque,
-                        tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio :respuesta.data.TipoCambioEmbarque,
-                        tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
+                        ...state,
+                        idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     }
                 })
-            }
-            setState(state => {
-                return {
-                    ...state,
-                    idTipoTarifa: respuesta.data.TipoTarifaTarifas,
-                }
-            })
-          setConfiguraciones((config) => {
-                console.log(respuesta.data.TipoCobro)
-                return {
-                    ...config,
-                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
-                    estatusEmbarque: respuesta.data.EstatusEmbarque,
-                    monedaPredeterminadaEmbarque: respuesta.data.MonedaEmbarque,
-                    tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
-                    estatusGuia: respuesta.data.EstatusGuia,
-                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
-                    cobrarCita: respuesta.data.esCobro,
-                    costoCita: respuesta.data.CobroCitaTarifas || 0,
-                    detectarTipoCobro: respuesta.data.DetectarTipoCobro,
-                    limpiarProducto: respuesta.data.LimpiarProducto,
-                    tipoCobro: respuesta.data.TipoCobro,
-                    idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
-                    idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
-                    idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
-                }
+                setConfiguraciones((config) => {
+                    return {
+                        ...config,
+                        estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                        estatusEmbarque: respuesta.data.EstatusEmbarque,
+                        monedaPredeterminadaEmbarque: respuesta.data.MonedaEmbarque,
+                        tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
+                        estatusGuia: respuesta.data.EstatusGuia,
+                        tipoTarifa: respuesta.data.TipoTarifaTarifas,
+                        cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
+                        cobrarCita: respuesta.data.esCobro,
+                        costoCita: respuesta.data.CobroCitaTarifas || 0,
+                        detectarTipoCobro: respuesta.data.DetectarTipoCobro,
+                        limpiarProducto: respuesta.data.LimpiarProducto,
+                        tipoCobro: respuesta.data.TipoCobro,
+                        idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
+                        idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                        idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                    }
+                })
+                setDataTipoDocumento(data)
             })
         })
+
     }
 
     function validarErrores(errores) {
@@ -2206,7 +2223,7 @@ function Embarque(props) {
     async function getAllEmbarque() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
-                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0, 0).then((respuesta) => {
+                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0, 0).then((respuesta) => {
                     setData(respuesta.data);
                 })
             })
@@ -2259,7 +2276,7 @@ function Embarque(props) {
         });
     }
 
-    async function getAllTiposSeguro(){
+    async function getAllTiposSeguro() {
         axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
@@ -2312,7 +2329,7 @@ function Embarque(props) {
                 data,
                 defaultColumn,
             },
-             useFilters,
+            useFilters,
             useSortBy
         );
 
@@ -2631,7 +2648,7 @@ function Embarque(props) {
     }
 
     const handleListPaquetesChange = (newList) => {
-          setRepetirConceptos(true)
+        setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -2641,10 +2658,10 @@ function Embarque(props) {
 
     const dialogVisible = (isVisible) => {
         setState({
-          ...state,
-          openDialog: isVisible,
+            ...state,
+            openDialog: isVisible,
         });
-      };
+    };
 
     const setDataListado = (listado) => {
         setData(listado)
@@ -2655,9 +2672,9 @@ function Embarque(props) {
     }
 
     const saveIdCotizacion = (id) => {
-        if (id){
+        if (id) {
             setState(state => {
-                return{
+                return {
                     ...state,
                     idCotizacion: id
                 }
@@ -2667,7 +2684,7 @@ function Embarque(props) {
     }
 
     const handleChangeRuta = (idRuta) => {
-        setState( {
+        setState({
             ...state,
             idRuta: idRuta,
         })
@@ -2755,8 +2772,8 @@ function Embarque(props) {
 
     const obtenerDatosDireccion = (esRecoleccion) => {
         let esDiferenteDomicilio = state.diferenteEntrega
-        if (!esRecoleccion){
-            if (esDiferenteDomicilio){
+        if (!esRecoleccion) {
+            if (esDiferenteDomicilio) {
                 return {
                     nombreLugar: destinatario.nombreDestinatario,
                     numeroInterior: '',
@@ -2778,7 +2795,7 @@ function Embarque(props) {
                         entregaDD.pais
                     )
                 }
-            }else{
+            } else {
                 return {
                     nombreLugar: destinatario.nombreDestinatario,
                     numeroInterior: destinatario.numeroIntDestinatario,
@@ -3089,9 +3106,10 @@ function Embarque(props) {
                     }*/}
 
                     {state.tipoModal === 10 &&
-                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                        <DialogTableClientes dialogVisible={dialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
-                    </div>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <DialogTableClientes dialogVisible={dialogVisible}
+                                                 handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                        </div>
                     }
                 </DialogContent>
             </Dialog>
@@ -3127,7 +3145,8 @@ function Embarque(props) {
 
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
-                            <a  className={validarDerecho(9101422)?"":classes.disabled} onClick={() => handleShowAgregar()}>
+                            <a className={validarDerecho(9101422) ? "" : classes.disabled}
+                               onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -3153,14 +3172,14 @@ function Embarque(props) {
                         <li>
                             <a
                                 onClick={handleShowCancelar}
-                                className={state.idEmbarque === 0 || !validarDerecho(9101427)? classes.disabled : ""}
+                                className={state.idEmbarque === 0 || !validarDerecho(9101427) ? classes.disabled : ""}
                             >
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
                         <li style={{float: "right"}}>
                             <a
-                                className={state.idEmbarque === 0 || (!validarDerecho(9101429) ||state.estatusEmbarque ==21)? classes.disabled : ""}
+                                className={state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled : ""}
                                 style={{textAlign: "right"}}
                                 onClick={() => setRedirect(true)}
                             >
@@ -3192,7 +3211,7 @@ function Embarque(props) {
                                             setState({
                                                 ...state,
                                                 idEmbarque: row.data.m_nIdEmbarque,
-                                                estatusEmbarque:row.data.m_nIdEstatusEmbarque
+                                                estatusEmbarque: row.data.m_nIdEstatusEmbarque
                                             });
                                         }}
                                     />
@@ -3203,7 +3222,11 @@ function Embarque(props) {
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
-                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
+                                if (e.code === 13) {
+                                    e.preventDefault()
+                                }
+                            }}>
                                 <div className="form-content">
                                     {/*<div
                                         className="wizard-breadcrumb number-style"
@@ -3238,395 +3261,433 @@ function Embarque(props) {
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
-                                                                    <InputLabel
-                                                                        id="idSucursalAgregarLabel">Sucursal</InputLabel>
-                                                                    <Select
-                                                                        labelId="idSucursalAgregarLabel"
-                                                                        className="form-control"
-                                                                        required
-                                                                        disabled
-                                                                        value={state.idSucursalAgregar}
-                                                                        onChange={handleSucursalFiltro}
-                                                                        id="idSucursalAgregar"
-                                                                        label="Sucursal"
-                                                                        readOnly
-                                                                        inputProps={{
-                                                                            id: "idSucursalAgregar"
-                                                                        }}
-                                                                    >
-                                                                        <option value="0">Todas</option>
-                                                                        {dataSucursal.map((sucursal) => (
-                                                                            <option
-                                                                                key={sucursal.m_nIdSucursal}
-                                                                                value={sucursal.m_nIdSucursal}
-                                                                            >
-                                                                                {sucursal.m_sSucursal}
-                                                                            </option>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </label>
-                                                        </div>
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="input select">
+                                                            <FormControl fullWidth variant="outlined"
+                                                                         margin="dense">
+                                                                <InputLabel
+                                                                    id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                                                                <Select
+                                                                    labelId="idSucursalAgregarLabel"
+                                                                    className="form-control"
+                                                                    required
+                                                                    disabled
+                                                                    value={state.idSucursalAgregar}
+                                                                    onChange={handleSucursalFiltro}
+                                                                    id="idSucursalAgregar"
+                                                                    label="Sucursal"
+                                                                    readOnly
+                                                                    inputProps={{
+                                                                        id: "idSucursalAgregar"
+                                                                    }}
+                                                                >
+                                                                    <option value="0">Todas</option>
+                                                                    {dataSucursal.map((sucursal) => (
+                                                                        <option
+                                                                            key={sucursal.m_nIdSucursal}
+                                                                            value={sucursal.m_nIdSucursal}
+                                                                        >
+                                                                            {sucursal.m_sSucursal}
+                                                                        </option>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </label>
+                                                    </div>
 
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Folio Recolección"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.folioRecoleccion}
+                                                                       name="folioRecoleccion"
+                                                                       readOnly
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label={state.duplicar ? "Folio Relacionado" : "Folio Embarque"}
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.folioEmbarque}
+                                                                       name="folioEmbarque"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       readOnly
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Folio Guía"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.folioGuia}
+                                                                       name="folioGuia"
+                                                                       readOnly
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Folio Informe"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.folioInforme}
+                                                                       name="folioInforme"
+                                                                       readOnly
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Fecha / Hora"
+                                                                       onChange={handleChange}
+                                                                       required
+                                                                       value={state.fechaHoraRegistro}
+                                                                       className="form-control"
+                                                                       name="fechaHoraRegistro"
+                                                                       type="datetime-local"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+
+                                                        <label className="input select">
+                                                            <FormControl fullWidth variant="outlined"
+                                                                         margin="dense">
+                                                                <InputLabel id="idEstatusEmbarque">Estatus del
+                                                                    Embarque</InputLabel>
+                                                                <Select
+                                                                    labelId={"idEstatusEmbarque"}
+                                                                    label={"Estatus del Embarque"}
+                                                                    className="form-control"
+                                                                    required
+                                                                    onChange={handleChange}
+                                                                    value={state.estatusEmbarque}
+                                                                    disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                    id="estatusEmbarque"
+                                                                    inputProps={{
+                                                                        name: "estatusEmbarque"
+                                                                    }}
+                                                                >
+                                                                    {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 || e.m_nIdEstatusEmbarque == 22).map((estatus) => (
+                                                                        <option
+                                                                            key={estatus.m_nIdEstatusEmbarque}
+                                                                            value={estatus.m_nIdEstatusEmbarque}
+                                                                        >
+                                                                            {estatus.m_sEstatus}
+                                                                        </option>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="input select">
+                                                            <FormControl fullWidth variant="outlined"
+                                                                         margin="dense">
+                                                                <InputLabel id="idMonedaLabel">Moneda</InputLabel>
+                                                                <Select
+                                                                    labelId={"idMonedaLabel"}
+                                                                    label={"Moneda"}
+                                                                    className="form-control"
+                                                                    required
+                                                                    value={state.moneda}
+                                                                    disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                    onChange={handleChange}
+                                                                    id="moneda"
+                                                                    name="moneda"
+                                                                    InputProps={{
+                                                                        name: "moneda"
+                                                                    }}
+                                                                >
+                                                                    {dataTipoMoneda.map((moneda) => (
+                                                                        <option
+                                                                            key={moneda.m_nIdMoneda}
+                                                                            value={moneda.m_nIdMoneda}
+                                                                        >
+                                                                            {moneda.m_sMoneda}
+                                                                        </option>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
+                                                        <div className="input">
+                                                            <FormControl fullWidth variant="outlined" required
+
+                                                                         margin="dense">
+                                                                <InputLabel id="tipoCambioLabel">Tipo de
+                                                                    Cambio</InputLabel>
+                                                                <Select
+                                                                    labelId="tipoCambioLabel"
+                                                                    label="Tipo de Cambio"
+                                                                    className="form-control"
+                                                                    value={state.tipoCambio}
+                                                                    onChange={(event) => {
+                                                                        event.preventDefault();
+                                                                        setState({
+                                                                            ...state,
+                                                                            tipoCambio: event.target.value,
+                                                                        });
+                                                                    }}
+                                                                    disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                    id="tipoCambio"
+                                                                >
+                                                                    <option value="0">Seleccionar</option>
+                                                                    {dataTipoCambio.map((cambio) => (
+                                                                        <option
+                                                                            key={cambio.m_nIdTipoCambio}
+                                                                            value={cambio.m_nIdTipoCambio}
+                                                                        >
+                                                                            {cambio.m_cTipoCambio.toFixed(4)}
+                                                                        </option>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <label className="input select">
+                                                            <FormControl fullWidth variant="outlined" required
+                                                                         margin="dense">
+                                                                <InputLabel id="idTipoCobroLabel">Tipo
+                                                                    Cobro</InputLabel>
+                                                                <Select
+                                                                    labelId={"idTipoCobroLabel"}
+                                                                    label={"Tipo Cobro"}
+                                                                    className="form-control"
+                                                                    value={state.tipoCobro}
+                                                                    disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                    onChange={(event) => {
+                                                                        event.preventDefault();
+                                                                        setState({
+                                                                            ...state,
+                                                                            tipoCobro: event.target.value,
+                                                                        });
+                                                                    }}
+                                                                    id="tipoCobro"
+                                                                    InputProps={{
+                                                                        id: "tipoCobro",
+                                                                        name: "tipoCobro"
+                                                                    }}
+                                                                >
+                                                                    {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
+                                                                        <option
+                                                                            key={tipoCobro.m_nIdTipoCobro}
+                                                                            value={tipoCobro.m_nIdTipoCobro}
+                                                                        >
+                                                                            {tipoCobro.m_sDescripcion}
+                                                                        </option>
+                                                                    ))}
+                                                                </Select>
+                                                            </FormControl>
+                                                        </label>
+                                                    </div>
+
+                                                    <Grid container spacing={2}
+                                                          style={{marginBottom: '10px', paddingRight: '15px'}}>
+                                                        <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
-                                                                           label="Folio Recolección"
-                                                                           onChange={handleChange}
-                                                                           className="form-control"
-                                                                           type="text"
-                                                                           value={state.folioRecoleccion}
-                                                                           name="folioRecoleccion"
-                                                                           readOnly
-                                                                           disabled
+                                                                <TextField
+                                                                    variant="outlined"
+                                                                    label="Responsable de pago"
+                                                                    margin="dense"
+                                                                    required
+                                                                    disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                    value={state.clientePaga.m_sNombreFiscal}
+                                                                    error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
+                                                                    helperText={(state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
+                                                                    placeholder={"No. Cliente: Nombre fiscal"}
+                                                                    InputLabelProps={{shrink: true}}
+                                                                    onClick={(state.agregar === "Consultar" || state.embarqueConGuia) ?
+                                                                        () => {
+                                                                            return
+                                                                        } : (() => {
+                                                                            setState({
+                                                                                ...state,
+                                                                                openDialog: true,
+                                                                                tipoModal: 10
+                                                                            })
+                                                                        })}
                                                                 />
                                                             </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
-                                                                           label={state.duplicar ? "Folio Relacionado" : "Folio Embarque"}
-                                                                           onChange={handleChange}
-                                                                           className="form-control"
-                                                                           type="text"
-                                                                           value={state.folioEmbarque}
-                                                                           name="folioEmbarque"
-                                                                           InputLabelProps={{
-                                                                               shrink: true,
-                                                                           }}
-                                                                           readOnly
-                                                                           disabled
-                                                                />
+                                                                <TextField
+                                                                    name="idTipoSeguro"
+                                                                    select
+                                                                    required
+                                                                    label="Tipo seguro"
+                                                                    value={state.idTipoSeguro}
+                                                                    onChange={handleChangeTipoSeguro}
+                                                                    variant="outlined"
+                                                                    disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                >
+                                                                    {dataTiposSeguro.map((option) => (
+                                                                        <option key={option.m_nIdTipoSeguro}
+                                                                                value={option.m_nIdTipoSeguro}>
+                                                                            {option.m_sDescripcion}
+                                                                        </option>
+                                                                    ))}
+                                                                </TextField>
                                                             </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                           label="Folio Guía"
-                                                                           onChange={handleChange}
                                                                            className="form-control"
-                                                                           type="text"
-                                                                           value={state.folioGuia}
-                                                                           name="folioGuia"
-                                                                           readOnly
-                                                                           disabled
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
-                                                                           label="Folio Informe"
-                                                                           onChange={handleChange}
-                                                                           className="form-control"
-                                                                           type="text"
-                                                                           value={state.folioInforme}
-                                                                           name="folioInforme"
-                                                                           readOnly
-                                                                           disabled
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
-                                                                           label="Fecha / Hora"
-                                                                           onChange={handleChange}
+                                                                           type="number"
                                                                            required
-                                                                           value={state.fechaHoraRegistro}
-                                                                           className="form-control"
-                                                                           name="fechaHoraRegistro"
-                                                                           type="datetime-local"
-                                                                           InputLabelProps={{
-                                                                               shrink: true,
+                                                                           disabled={state.agregar === "Consultar" || !state.aplicaSeguro || state.embarqueConGuia}
+                                                                           label="Porcentaje de seguro"
+                                                                           onChange={handleChange}
+                                                                           value={state.porcentajeSeguro}
+                                                                           placeholder="%"
+                                                                           name="porcentajeSeguro"
+                                                                           id="porcentajeSeguro"
+                                                                           InputProps={{
+                                                                               endAdornment: <InputAdornment
+                                                                                   position="start">%</InputAdornment>,
                                                                            }}
-                                                                           disabled
                                                                 />
                                                             </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-
-                                                            <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
-                                                                    <InputLabel id="idEstatusEmbarque">Estatus del
-                                                                        Embarque</InputLabel>
-                                                                    <Select
-                                                                        labelId={"idEstatusEmbarque"}
-                                                                        label={"Estatus del Embarque"}
-                                                                        className="form-control"
-                                                                        required
-                                                                        onChange={handleChange}
-                                                                        value={state.estatusEmbarque}
-                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                        id="estatusEmbarque"
-                                                                        inputProps={{
-                                                                            name: "estatusEmbarque"
-                                                                        }}
-                                                                    >
-                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 || e.m_nIdEstatusEmbarque == 22).map((estatus) => (
-                                                                            <option
-                                                                                key={estatus.m_nIdEstatusEmbarque}
-                                                                                value={estatus.m_nIdEstatusEmbarque}
-                                                                            >
-                                                                                {estatus.m_sEstatus}
-                                                                            </option>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </label>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                            <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
-                                                                    <InputLabel id="idMonedaLabel">Moneda</InputLabel>
-                                                                    <Select
-                                                                        labelId={"idMonedaLabel"}
-                                                                        label={"Moneda"}
-                                                                        className="form-control"
-                                                                        required
-                                                                        value={state.moneda}
-                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                        onChange={handleChange}
-                                                                        id="moneda"
-                                                                        name="moneda"
-                                                                        InputProps={{
-                                                                            name: "moneda"
-                                                                        }}
-                                                                    >
-                                                                        {dataTipoMoneda.map((moneda) => (
-                                                                            <option
-                                                                                key={moneda.m_nIdMoneda}
-                                                                                value={moneda.m_nIdMoneda}
-                                                                            >
-                                                                                {moneda.m_sMoneda}
-                                                                            </option>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </label>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <div className="input">
-                                                                <FormControl fullWidth variant="outlined"                                                                         required
-
-                                                                             margin="dense">
-                                                                    <InputLabel id="tipoCambioLabel">Tipo de
-                                                                        Cambio</InputLabel>
-                                                                    <Select
-                                                                        labelId="tipoCambioLabel"
-                                                                        label="Tipo de Cambio"
-                                                                        className="form-control"
-                                                                        value={state.tipoCambio}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                tipoCambio: event.target.value,
-                                                                            });
-                                                                        }}
-                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                        id="tipoCambio"
-                                                                    >
-                                                                        <option value="0">Seleccionar</option>
-                                                                        {dataTipoCambio.map((cambio) => (
-                                                                            <option
-                                                                                key={cambio.m_nIdTipoCambio}
-                                                                                value={cambio.m_nIdTipoCambio}
-                                                                            >
-                                                                                {cambio.m_cTipoCambio.toFixed(4)}
-                                                                            </option>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
+                                                                <TextField variant="outlined" margin="dense"
+                                                                           className="form-control"
+                                                                           type="number"
+                                                                           required
+                                                                           disabled={(state.agregar === "Consultar") || !state.aplicaSeguro || state.embarqueConGuia}
+                                                                           label="Valor Declarado"
+                                                                           onChange={(event) => {
+                                                                               event.preventDefault();
+                                                                               setRepetirConceptos(true)
+                                                                               setState({
+                                                                                   ...state,
+                                                                                   valorDeclarado: event.target.value,
+                                                                               });
+                                                                           }}
+                                                                           value={state.valorDeclarado}
+                                                                           placeholder="$"
+                                                                           name="valorDeclarado"
+                                                                           InputProps={{
+                                                                               startAdornment: <InputAdornment
+                                                                                   position="start">$</InputAdornment>,
+                                                                           }}
+                                                                />
                                                             </div>
-                                                        </div>
-
-                                                        <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined" required
-                                                                             margin="dense">
-                                                                    <InputLabel id="idTipoCobroLabel">Tipo
-                                                                        Cobro</InputLabel>
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense" required>
+                                                                    <InputLabel> Tipo de Tarifa</InputLabel>
                                                                     <Select
-                                                                        labelId={"idTipoCobroLabel"}
-                                                                        label={"Tipo Cobro"}
+                                                                        native
+                                                                        label="Tipo de Tarifa"
                                                                         className="form-control"
-                                                                        value={state.tipoCobro}
-                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                tipoCobro: event.target.value,
-                                                                            });
-                                                                        }}
-                                                                        id="tipoCobro"
-                                                                        InputProps={{
-                                                                            id: "tipoCobro",
-                                                                            name: "tipoCobro"
-                                                                        }}
+                                                                        onChange={handleChange}
+                                                                        name="idTipoTarifa"
+                                                                        read="true"
+                                                                        value={state.idTipoTarifa}
+                                                                        disabled
                                                                     >
-                                                                        {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
-                                                                            <option
-                                                                                key={tipoCobro.m_nIdTipoCobro}
-                                                                                value={tipoCobro.m_nIdTipoCobro}
-                                                                            >
-                                                                                {tipoCobro.m_sDescripcion}
-                                                                            </option>
-                                                                        ))}
+                                                                        <option value="0">Sin definir</option>
+                                                                        <option value="1">Por peso o volumen</option>
+                                                                        <option value="2">Por rango</option>
+                                                                        <option value="3">Por región</option>
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
-                                                        </div>
+                                                        </Grid>
+                                                        <Grid item xs>
+                                                            <label className="input select">
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense" required>
+                                                                    <InputLabel> Tipo de Documento</InputLabel>
+                                                                    <Select
+                                                                        label="Tipo de Documento"
+                                                                        className="form-control"
+                                                                        onChange={handleChange}
+                                                                        name="idTipoDocumento"
+                                                                        value={ state.idTipoDocumento || 0 }
+                                                                        disabled={state.agregar === "Consultar"}
+                                                                    >
+                                                                        {
+                                                                            dataTipoDocumento.map(d => {
+                                                                                return (
+                                                                                    <option key={d.IdDocumento}
+                                                                                            value={d.IdDocumento}>{d.Documento}</option>
+                                                                                )
+                                                                            })
+                                                                        }
 
-                                                        <Grid container spacing={2} style={{marginBottom:'10px',paddingRight:'15px'}}>
-                                                            <Grid item xs>
-                                                                <div className="input">
-                                                                            <TextField
-                                                                                variant="outlined"
-                                                                                label="Responsable de pago"
-                                                                                margin="dense"
-                                                                                required
-                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                                value={state.clientePaga.m_sNombreFiscal}
-                                                                                error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
-                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
-                                                                                placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                InputLabelProps={{shrink: true}}
-                                                                                onClick={(state.agregar === "Consultar" || state.embarqueConGuia)?
-                                                                                ()=>{return}:(()=>{ setState({ ...state, openDialog: true,tipoModal:10})
-                                                                            })} 
-                                                                            />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs>
+                                                                    </Select>
+                                                                </FormControl>
+                                                            </label>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid container spacing={2}
+                                                          style={{marginBottom: '10px', paddingRight: '15px'}}>
+                                                        <Grid item xs>
+                                                            <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                                 <div className="input">
                                                                     <TextField
-                                                                        name="idTipoSeguro"
-                                                                        select
-                                                                        required
-                                                                        label="Tipo seguro"
-                                                                        value={state.idTipoSeguro}
-                                                                        onChange={handleChangeTipoSeguro}
                                                                         variant="outlined"
-                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                    >
-                                                                        {dataTiposSeguro.map((option) => (
-                                                                            <option key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
-                                                                                {option.m_sDescripcion}
-                                                                            </option>
-                                                                        ))}
-                                                                    </TextField>
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               className="form-control"
-                                                                               type="number"
-                                                                               required
-                                                                               disabled={state.agregar === "Consultar" || !state.aplicaSeguro || state.embarqueConGuia}
-                                                                               label="Porcentaje de seguro"
-                                                                               onChange={handleChange}
-                                                                               value={state.porcentajeSeguro}
-                                                                               placeholder="%"
-                                                                               name="porcentajeSeguro"
-                                                                               id="porcentajeSeguro"
-                                                                               InputProps={{
-                                                                                   endAdornment: <InputAdornment position="start">%</InputAdornment>,
-                                                                               }}
+                                                                        label="Observaciones"
+                                                                        margin="dense"
+                                                                        type="text"
+                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                        value={state.observaciones}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                observaciones: event.target.value,
+                                                                            });
+                                                                        }}
+                                                                        name="observaciones"
+                                                                        id="observaciones"
+                                                                        placeholder={"sin observaciones"}
+                                                                        InputLabelProps={{shrink: true}}
                                                                     />
                                                                 </div>
-                                                            </Grid>
-                                                            <Grid item xs>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               className="form-control"
-                                                                               type="number"
-                                                                               required
-                                                                               disabled={(state.agregar === "Consultar") || !state.aplicaSeguro || state.embarqueConGuia}
-                                                                               label="Valor Declarado"
-                                                                               onChange={(event) => {
-                                                                                   event.preventDefault();
-                                                                                   setRepetirConceptos(true)
-                                                                                   setState({
-                                                                                       ...state,
-                                                                                       valorDeclarado: event.target.value,
-                                                                                   });
-                                                                               }}
-                                                                               value={state.valorDeclarado}
-                                                                               placeholder="$"
-                                                                               name="valorDeclarado"
-                                                                               InputProps={{
-                                                                                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                                                               }}
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs>
-                                                                <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined"
-                                                                                 margin="dense" required>
-                                                                        <InputLabel> Tipo de Tarifa</InputLabel>
-                                                                        <Select
-                                                                            native
-                                                                            label="Tipo de Tarifa"
-                                                                            className="form-control"
-                                                                            onChange={handleChange}
-                                                                            name="idTipoTarifa"
-                                                                            read="true"
-                                                                            value={state.idTipoTarifa}
-                                                                            disabled
-                                                                        >
-                                                                            <option value="0">Sin definir</option>
-                                                                            <option value="1">Por peso o volumen</option>
-                                                                            <option value="2">Por rango</option>
-                                                                            <option value="3">Por región</option>
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                </label>
-                                                            </Grid>
+                                                            </div>
                                                         </Grid>
-                                                        <Grid container spacing={2} style={{marginBottom:'10px',paddingRight:'15px'}}>
-                                                        <Grid item xs>
-                                                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                    <div className="input">                       
-                                                                                    <TextField
-                                                                                        variant="outlined"
-                                                                                        label="Observaciones"
-                                                                                        margin="dense"
-                                                                                        type= "text"
-                                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                        value= {state.observaciones}
-                                                                                        onChange={(event) => {
-                                                                                            event.preventDefault();
-                                                                                            setState({
-                                                                                                ...state,
-                                                                                                observaciones: event.target.value,
-                                                                                            });
-                                                                                        }}
-                                                                                        name="observaciones"
-                                                                                        id="observaciones"
-                                                                                        placeholder={"sin observaciones"}
-                                                                                        InputLabelProps={{shrink: true}}                                                                
-                                                                                    />
-                                                                    </div>
-                                                                </div>
-                                                            </Grid>                                                                            
-                                                        </Grid> 
+                                                    </Grid>
                                                 </div>
                                             </div>
                                         </div>
@@ -3656,34 +3717,34 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="row">
-                                            <div className="widget-wrap" id="remitenteDestinatario">
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <div className="widget-header">
-                                                            <h2>Remitente</h2>
-                                                        </div>
-                                                        <div className="widget-container">
-                                                            <div className="widget-content">
-                                                                {
-                                                                    (tabActiva === 1) &&
-                                                                    <RemitentesDestinatarios
-                                                                        remitente={true}
-                                                                        componentePadre={"Embarque"}
-                                                                        consulta={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                        modificar={state.agregar === "Modificar"}
-                                                                        agregar={state.agregar === "Agregar"}
-                                                                        mostrarZonas={false}
-                                                                        dataRemitenteDestinatario={dataRemitenteDestinatario}
-                                                                        dataEstados={dataEstados}
-                                                                        dataCiudad={dataCiudad}
-                                                                        handleClickRemitenteDestinatario={handleClickRemitenteDestinatario}
-                                                                        handleClickCiudad={handleClickCiudad}
-                                                                        handleDataChange={handleChangeRemitente}
-                                                                        dataPadreConsulta={dataEmbarqueConsulta}
-                                                                        seCalculaTarifa={seCalculaTarifa}
-                                                                        
-                                                                    />
-                                                                }
+                                        <div className="widget-wrap" id="remitenteDestinatario">
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <div className="widget-header">
+                                                        <h2>Remitente</h2>
+                                                    </div>
+                                                    <div className="widget-container">
+                                                        <div className="widget-content">
+                                                            {
+                                                                (tabActiva === 1) &&
+                                                                <RemitentesDestinatarios
+                                                                    remitente={true}
+                                                                    componentePadre={"Embarque"}
+                                                                    consulta={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                    modificar={state.agregar === "Modificar"}
+                                                                    agregar={state.agregar === "Agregar"}
+                                                                    mostrarZonas={false}
+                                                                    dataRemitenteDestinatario={dataRemitenteDestinatario}
+                                                                    dataEstados={dataEstados}
+                                                                    dataCiudad={dataCiudad}
+                                                                    handleClickRemitenteDestinatario={handleClickRemitenteDestinatario}
+                                                                    handleClickCiudad={handleClickCiudad}
+                                                                    handleDataChange={handleChangeRemitente}
+                                                                    dataPadreConsulta={dataEmbarqueConsulta}
+                                                                    seCalculaTarifa={seCalculaTarifa}
+
+                                                                />
+                                                            }
 
                                                             </div>
                                                         </div>
@@ -3780,67 +3841,67 @@ function Embarque(props) {
                                                                 </div>
                                                               </div>
                                                             </div>
-                                                          </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {state.entregaEnSucursal ?
-
-                                                    <div className="row">
-                                                        <Grid container spacing={1}>
-                                                            <Grid item xs={12} sm={6}>
-                                                                <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined"
-                                                                                 margin="dense">
-                                                                        <InputLabel id="idSucursalEntrega">Sucursal de
-                                                                            Entrega</InputLabel>
-                                                                        <Select
-                                                                            labelId={"idSucursalEntrega"}
-                                                                            label="Sucursal de Entrega"
-                                                                            className="form-control"
-                                                                            required={state.entregaEnSucursal}
-                                                                            onChange={handleChangeSucursalEntrega}
-                                                                            value={state.idSucursalEntrega}
-                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                            id="idSucursalEntrega"
-                                                                            name="idSucursalEntrega"
-                                                                            inputProps={{
-                                                                                name: "idSucursalEntrega"
-                                                                            }}
-                                                                        >
-                                                                            {dataSucursal.map((sucursal) => (
-                                                                                <MenuItem
-                                                                                    key={sucursal.m_nIdSucursal}
-                                                                                    value={sucursal.m_nIdSucursal}
-                                                                                    // value={sucursal}
-                                                                                >
-                                                                                    {sucursal.m_sSucursal}
-                                                                                </MenuItem>
-                                                                            ))}
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                </label>
-                                                            </Grid>
-                                                            <Grid item xs={12} sm={6}>
-                                                                <TextField variant="outlined"
-                                                                           margin="dense"
-                                                                           className="form-control"
-                                                                           type="text"
-                                                                           label="Zona operativa"
-                                                                           value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
-                                                                           disabled
-                                                                />
-                                                            </Grid>
-
-                                                        </Grid>
-                                                    </div>
-
-                                                    :
-                                                    <div/>
-
-                                                }
-
                                             </div>
+                                            {state.entregaEnSucursal ?
+
+                                                <div className="row">
+                                                    <Grid container spacing={1}>
+                                                        <Grid item xs={12} sm={6}>
+                                                            <label className="input select">
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense">
+                                                                    <InputLabel id="idSucursalEntrega">Sucursal de
+                                                                        Entrega</InputLabel>
+                                                                    <Select
+                                                                        labelId={"idSucursalEntrega"}
+                                                                        label="Sucursal de Entrega"
+                                                                        className="form-control"
+                                                                        required={state.entregaEnSucursal}
+                                                                        onChange={handleChangeSucursalEntrega}
+                                                                        value={state.idSucursalEntrega}
+                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                        id="idSucursalEntrega"
+                                                                        name="idSucursalEntrega"
+                                                                        inputProps={{
+                                                                            name: "idSucursalEntrega"
+                                                                        }}
+                                                                    >
+                                                                        {dataSucursal.map((sucursal) => (
+                                                                            <MenuItem
+                                                                                key={sucursal.m_nIdSucursal}
+                                                                                value={sucursal.m_nIdSucursal}
+                                                                                // value={sucursal}
+                                                                            >
+                                                                                {sucursal.m_sSucursal}
+                                                                            </MenuItem>
+                                                                        ))}
+                                                                    </Select>
+                                                                </FormControl>
+                                                            </label>
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={6}>
+                                                            <TextField variant="outlined"
+                                                                       margin="dense"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       label="Zona operativa"
+                                                                       value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
+                                                                       disabled
+                                                            />
+                                                        </Grid>
+
+                                                    </Grid>
+                                                </div>
+
+                                                :
+                                                <div/>
+
+                                            }
+
+                                        </div>
 
 
                                     </div>
@@ -3853,7 +3914,7 @@ function Embarque(props) {
                                             <SeleccionarRuta
                                                 IdRuta={state.idRuta}
                                                 IdOrigen={remitente.origenRemitente ? remitente.origenRemitente.m_nIdCiudad : ''}
-                                                IdDestino={destinatario.destinoDestinatario ? destinatario.destinoDestinatario.m_nIdCiudad : '' }
+                                                IdDestino={destinatario.destinoDestinatario ? destinatario.destinoDestinatario.m_nIdCiudad : ''}
                                                 IdCliente={state.clientePaga.m_nIdCliente}
                                                 disabled={state.agregar === "Consultar"}
                                                 onChangeRuta={handleChangeRuta}
@@ -4130,15 +4191,15 @@ function Embarque(props) {
 
                                     <div className="row">
                                         {state.entregaConCita &&
-                                        <div className="widget-wrap" id="citaEntrega">
-                                            <Citas titulo={"Programar cita de la Entrega"}
-                                                   onDataChange={handleChangeCita}
-                                                   dataPadreConsulta={dataEmbarqueConsulta}
-                                                   embarque={true}
-                                                   disabled={state.agregar === "Consultar"}
-                                                   required={state.entregaConCita}
-                                            />
-                                        </div>
+                                            <div className="widget-wrap" id="citaEntrega">
+                                                <Citas titulo={"Programar cita de la Entrega"}
+                                                       onDataChange={handleChangeCita}
+                                                       dataPadreConsulta={dataEmbarqueConsulta}
+                                                       embarque={true}
+                                                       disabled={state.agregar === "Consultar"}
+                                                       required={state.entregaConCita}
+                                                />
+                                            </div>
                                         }
                                     </div>
 
@@ -4156,19 +4217,19 @@ function Embarque(props) {
                                                    validarErrores={validarErrores}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    saveIdCotizacion={saveIdCotizacion}
-                                                   setCalculoTarifa={()=>setRepetirConceptos(false)}
-                                                   paquetes={dataPaquetes.map(p =>({
-                                            Tipo: p.m_nIdTipo,
-                                            Peso: p.m_rPeso,
-                                            Largo: p.m_rLargo,
-                                            Ancho: p.m_rAncho,
-                                            Alto:p.m_rAlto,
-                                            Volumen:p.m_rVolumen,
-                                            IdTipoEmpaque:p.m_nIdTipoEmbalaje,
-                                            Activo: 1,
-                                            ctd:p.m_nCantidad,
-                                            IdProducto:p.m_nIdProducto
-                                        }))} />
+                                                   setCalculoTarifa={() => setRepetirConceptos(false)}
+                                                   paquetes={dataPaquetes.map(p => ({
+                                                       Tipo: p.m_nIdTipo,
+                                                       Peso: p.m_rPeso,
+                                                       Largo: p.m_rLargo,
+                                                       Ancho: p.m_rAncho,
+                                                       Alto: p.m_rAlto,
+                                                       Volumen: p.m_rVolumen,
+                                                       IdTipoEmpaque: p.m_nIdTipoEmbalaje,
+                                                       Activo: 1,
+                                                       ctd: p.m_nCantidad,
+                                                       IdProducto: p.m_nIdProducto
+                                                   }))}/>
                                     </div>
 
                                     {/*<div className="row">
@@ -4234,7 +4295,11 @@ function Embarque(props) {
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
-                                        <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                                        <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {
+                                            if (e.code === 13) {
+                                                e.preventDefault()
+                                            }
+                                        }}>
                                             <div className="form-content">
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
