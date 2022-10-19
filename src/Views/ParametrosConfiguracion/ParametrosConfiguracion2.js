@@ -1009,10 +1009,8 @@ function ParametrosConfiguracion2() {
                             <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                  flexDirection="column">
                                 <Box display="flex" p={1} my={0.5} flexDirection="column">
-                                    <Box width="40%" p={1} my={0.5}>
-                                        <div className={classes.subtitulo}>Complemento</div>
-                                    </Box>
-                                    <Box width="60%" p={1} my={0.5}>
+
+                                    <Box width="100%" p={1} my={0.5}>
                                         <FormControl fullWidth variant="outlined" width="25%">
                                             <InputLabel id="idComplementoLabel">Complemento</InputLabel>
                                             <Select
@@ -1038,9 +1036,9 @@ function ParametrosConfiguracion2() {
                                             </Select>
                                         </FormControl>
                                     </Box>
-                                    <Box width="40%" display="flex">
+                                    <Box width="50%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
-                                            <div className={classes.subtitulo}>Validar timbrado</div>
+                                            <div className={classes.subtitulo}>Validar timbrado de informes</div>
                                         </Box>
                                         <Box width="60%" p={1} my={0.5}>
                                             <Checkbox

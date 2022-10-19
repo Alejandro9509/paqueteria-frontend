@@ -926,8 +926,8 @@ function Viajes() {
 
     }
     const showSalidaDialog = (data) => {
-        obtenerParametrosConfiguracion().then(({data}) => {
-            if (data.ValidarTimbrado) {
+        obtenerParametrosConfiguracion().then(parametros => {
+            if (parametros.data.ValidarTimbrado) {
                 validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
                     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
                     // let qr = respuesta.data.find(parada=>parada.Escaneado==false)
