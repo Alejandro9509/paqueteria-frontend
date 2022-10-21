@@ -925,7 +925,8 @@ function Viajes() {
         setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
     }
-    const showSalidaDialog = (data) => {
+    const showSalidaDialog = (e,data) => {
+        e.preventDefault()
         obtenerParametrosConfiguracion().then(parametros => {
             if (parametros.data.ValidarTimbrado) {
                 validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
