@@ -670,7 +670,7 @@ function Embarque(props) {
         correoRemitente: '',
         telefonoRemitente: '',
         contactoRemitente: '',
-        origenRemitente: '',
+        origenRemitente: null,
         zonaOperativaRemitente: '',
         zonaTarifaRemitente: '',
         latitudR: '',
@@ -737,7 +737,7 @@ function Embarque(props) {
         correoDestinatario: '',
         telefonoDestinatario: '',
         contactoDestinatario: '',
-        destinoDestinatario: '',
+        destinoDestinatario: null,
         zonaOperativaDestinatario: '',
         zonaTarifaDestinatario: '',
         latitudD: '',
@@ -2110,7 +2110,6 @@ function Embarque(props) {
                             tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio : respuesta.data.TipoCambioEmbarque,
                             tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
                             idComplemento: respuesta.data.IdComplemento,
-                            idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
                         }
                     })
                 }
@@ -2118,6 +2117,7 @@ function Embarque(props) {
                     return {
                         ...state,
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
+                        idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
                     }
                 })
                 setConfiguraciones((config) => {
