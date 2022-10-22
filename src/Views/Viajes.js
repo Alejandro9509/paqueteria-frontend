@@ -935,6 +935,7 @@ function Viajes() {
 
                     if(encontrado){//si encontro valor falso en timbrado
                         showError(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+                        return
                     }else {
                         setParadaData(data);
                         setEventOptions({...eventOptions, showSalidaParadasDialog: true});
