@@ -3432,7 +3432,7 @@ function Embarque(props) {
                                                                         name: "estatusEmbarque"
                                                                     }}
                                                                 >
-                                                                    {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 || e.m_nIdEstatusEmbarque == 22).map((estatus) => (
+                                                                    {dataEstatusEmbarque.map((estatus) => (
                                                                         <option
                                                                             key={estatus.m_nIdEstatusEmbarque}
                                                                             value={estatus.m_nIdEstatusEmbarque}
