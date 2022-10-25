@@ -30,7 +30,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getAddressFormated, getCurrentTime,getCurrentDateTime, validarDerecho} from "../Util/Util"
+import {getAddressFormated,getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -594,6 +594,14 @@ function Recoleccion() {
         );
     }
 
+    useEffect(value => {
+
+        if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
+            // console.log('tipo Unidad select: ', state.tipoUnidad)
+            getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
+        }
+    }, [state.tipoUnidad])
+
     useEffect((value) => {
         if (
             localStorage.getItem("UsuarioId") === null ||
@@ -616,7 +624,6 @@ function Recoleccion() {
 
     const getDataParaEditar = (operacion) => {
         getAllSucursales();
-
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
@@ -902,10 +909,12 @@ function Recoleccion() {
         let error = false
         let params = {}
         if(!error){
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                showConfirmarUbicacion: false,
-                showConfirmarUbicacionDestinatario:false
+                    showConfirmarUbicacion: false,
+                    showConfirmarUbicacionDestinatario:false
+                }
             })
             if (!validarCoordenadas(coordenadas)){
                 return
@@ -1052,6 +1061,7 @@ function Recoleccion() {
                     params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
                 }
             }
+
             if (state.recoleccionConCita) {
                 params.m_bCitaPendiente = state.citaPendiente
                 if (!state.citaPendiente){
@@ -1147,17 +1157,21 @@ function Recoleccion() {
         clearTimeout(timer);
         if (e.detail === 1) {
             timer = setTimeout(() => {
-                setState({
+                setState(state => {
+                    return {
                     ...state,
-                    [state.identificadorModal]: id,
-                    openDialog: true
+                        [state.identificadorModal]: id,
+                        openDialog: true
+                    }
                 })
             }, 200)
         } else if (e.detail === 2) {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                [state.identificadorModal]: id,
-                openDialog: false
+                    [state.identificadorModal]: id,
+                    openDialog: false
+                }
             });
         }
     }
@@ -1201,9 +1215,11 @@ function Recoleccion() {
             //   console.log(reader.result)
         }.bind(this);
         reader.readAsText(selectedFile);
-        setState({
+        setState(state => {
+            return {
             ...setState,
-            uploadedFileContent: "reader.result"
+                uploadedFileContent: "reader.result"
+            }
         })
     };
 
@@ -1343,7 +1359,6 @@ function Recoleccion() {
             })
         })
     }
-
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
@@ -1582,10 +1597,12 @@ function Recoleccion() {
                 if (respuesta.data.m_nSePuedeCancelar){
                     showSuccess("Recolección no se puede cancelar")
                 }else{
-                    setState({
+                    setState(state => {
+                        return {
                         ...state,
-                        folioRecoleccion: data.find(i => parseInt(i.m_nIdRecoleccion) === state.idRecoleccion)?.m_sFolioRecoleccion,
-                        fechaCancelacion: getCurrentDateTime()
+                            folioRecoleccion: data.find(i => parseInt(i.m_nIdRecoleccion) === state.idRecoleccion)?.m_sFolioRecoleccion,
+                            fechaCancelacion: getCurrentDateTime()
+                        }
                     })
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(3).addClass('active');
@@ -1601,17 +1618,19 @@ function Recoleccion() {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        setState(() => ({
+        setState(state => {
+            return {
             ...state,
-            clientePaga: row.data,
-            idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
-            porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
-            aplicaSeguro: row.data.m_bTieneSeguro,
-            tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-            observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
+                clientePaga: row.data,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
+                porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_bTieneSeguro,
+                tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
 
-            openDialog: false,
-        }))
+                openDialog: false,
+            }
+        })
     }
 
     //Limpia todos los inputs
@@ -1694,9 +1713,11 @@ function Recoleccion() {
         if(event.target.id == "porcentajeSeguro"){
             setRepetirConceptos(true)
         }
-        setState({
+        setState(state => {
+            return {
             ...state,
-            [event.target.id]: event.target.value,
+                [event.target.id]: event.target.value,
+            }
         });
     };
 
@@ -2816,6 +2837,8 @@ function Recoleccion() {
 
     }
     const handleListPaquetesChange = (newList) => {
+        console.log("ENTRA PAQUETES")
+        setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -2832,9 +2855,11 @@ function Recoleccion() {
         // }
     }
     const dialogVisible = (isVisible) => {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            openDialog: isVisible,
+                openDialog: isVisible,
+            }
         });
     };
 
@@ -2904,29 +2929,32 @@ function Recoleccion() {
             }
         });
     }
+    function esEntregaSucursal(aplicaEntrega){
+        if(aplicaEntrega){
+        setState(state => {
+            return {
+            ...state,
+                aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:true,
+                // deshabilitarDiferenteDomicilio:true,
+                diferenteEntrega:false
+            }
+        })}
+        else{
+            setState(state => {
+                return {
+                ...state,
+                    aplicaEntrega:aplicaEntrega,
+                    entregaEnSucursal:false,
+                    // deshabilitarDiferenteDomicilio:false
+                }
+            })}
+
+      }
 
     function validarErrores(errores) {
         setErrores(errores)
     }
-
-    function esEntregaSucursal(aplicaEntrega){
-        if(aplicaEntrega){
-        setState({
-            ...state,
-            aplicaEntrega:aplicaEntrega,
-            entregaEnSucursal:true,
-            // deshabilitarDiferenteDomicilio:true,
-            diferenteEntrega:false
-        })}
-        else{
-            setState({
-                ...state,
-                aplicaEntrega:aplicaEntrega,
-                entregaEnSucursal:false,
-                // deshabilitarDiferenteDomicilio:false
-            })}
-
-      }
     const obtenerDatosDireccion = (esRecoleccion) => {
         let esDiferenteDomicilio = state.diferenteRecoleccion
         if (esRecoleccion){
