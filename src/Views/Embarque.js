@@ -3643,9 +3643,10 @@ function Embarque(props) {
                                                                         className="form-control"
                                                                         onChange={handleChange}
                                                                         name="idTipoDocumento"
-                                                                        value={ state.idTipoDocumento || 0 }
+                                                                        required
+                                                                        value={ state.idTipoDocumento || "" }
                                                                         disabled={state.agregar === "Consultar"}
-                                                                    >
+                                                                    >¿
                                                                         {
                                                                             dataTipoDocumento.map(d => {
                                                                                 return (
