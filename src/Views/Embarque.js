@@ -629,7 +629,6 @@ function Embarque(props) {
                 height: window.innerHeight,
                 observaciones: '',
                 idComplemento: null,
-                validarTimbrado: false,
             }
         })
         setDataEmbarqueConsulta(undefined)
