@@ -1039,7 +1039,7 @@ function ParametrosConfiguracion2() {
                                             </Select>
                                         </FormControl>
                                     </Box>*/}
-                                    <Box width="100%" p={1} my={0.5}>
+                                    <Box width="50%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Validar facturas de ingreso</div>
                                         </Box>
