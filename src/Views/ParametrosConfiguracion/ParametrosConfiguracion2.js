@@ -106,7 +106,8 @@ function ParametrosConfiguracion2() {
         idConceptoSeguro: 0,
         idConceptoCita: 0,
         validarInforme: false,
-        timbradoPruebaGuia: true
+        timbradoPruebaGuia: true,
+        validarTimbradoIngreso: false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -178,6 +179,7 @@ function ParametrosConfiguracion2() {
             timbradoPruebaGuia: configuraciones.timbradoPruebaGuia,
             validarTimbrado: configuraciones.validarTimbrado,
             idComplemento: configuraciones.idComplemento,
+            validarTimbradoIngreso: configuraciones.validarTimbradoIngreso
         }
 
         modificarParametrosConfiguracion(params)
@@ -224,7 +226,8 @@ function ParametrosConfiguracion2() {
                     validarInforme: respuesta.data.validarQR,
                     timbradoPruebaGuia: respuesta.data.TimbradoPruebaGuia,
                     validarTimbrado: respuesta.data.ValidarTimbrado,
-                    idComplemento: respuesta.data.IdComplemento
+                    idComplemento: respuesta.data.IdComplemento,
+                    validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso
                 }
             })
 
@@ -1010,7 +1013,7 @@ function ParametrosConfiguracion2() {
                                  flexDirection="column">
                                 <Box display="flex" p={1} my={0.5} flexDirection="column">
 
-                                    <Box width="100%" p={1} my={0.5}>
+                                    {/*<Box width="100%" p={1} my={0.5}>
                                         <FormControl fullWidth variant="outlined" width="25%">
                                             <InputLabel id="idComplementoLabel">Complemento</InputLabel>
                                             <Select
@@ -1022,6 +1025,32 @@ function ParametrosConfiguracion2() {
                                                 id="idComplemento"
                                                 name="idComplemento"
                                                 onChange={handleChange}
+                                            >
+                                                <option key={"1"}
+                                                        value={2}
+                                                >
+                                                    Ingreso
+                                                </option>
+                                                <option key={"2"}
+                                                        value={3}
+                                                >
+                                                    Ninguno
+                                                </option>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>*/}
+                                    <Box width="100%" p={1} my={0.5}>
+                                        <FormControl fullWidth variant="outlined" width="25%">
+                                            <InputLabel id="idComplementoLabel">Validar facturas de ingreso</InputLabel>
+                                            <Select
+                                                labelId="idComplementoLabel"
+                                                className="form-control"
+                                                required
+                                                value={configuraciones.validarTimbradoIngreso}
+                                                label="Validar facturas de ingreso"
+                                                id="validarTimbradoIngreso"
+                                                name="validarTimbradoIngreso"
+                                                onChange={handleChecked}
                                             >
                                                 <option key={"1"}
                                                         value={2}
