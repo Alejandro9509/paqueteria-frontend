@@ -1040,30 +1040,19 @@ function ParametrosConfiguracion2() {
                                         </FormControl>
                                     </Box>*/}
                                     <Box width="100%" p={1} my={0.5}>
-                                        <FormControl fullWidth variant="outlined" width="25%">
-                                            <InputLabel id="idComplementoLabel">Validar facturas de ingreso</InputLabel>
-                                            <Select
-                                                labelId="idComplementoLabel"
-                                                className="form-control"
-                                                required
-                                                value={configuraciones.validarTimbradoIngreso}
-                                                label="Validar facturas de ingreso"
-                                                id="validarTimbradoIngreso"
-                                                name="validarTimbradoIngreso"
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.validarTimbradoIngreso}
                                                 onChange={handleChecked}
-                                            >
-                                                <option key={"1"}
-                                                        value={2}
-                                                >
-                                                    Ingreso
-                                                </option>
-                                                <option key={"2"}
-                                                        value={3}
-                                                >
-                                                    Ninguno
-                                                </option>
-                                            </Select>
-                                        </FormControl>
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="validarTimbradoIngreso"
+                                            />
+                                        </Box>
                                     </Box>
                                     <Box width="50%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
