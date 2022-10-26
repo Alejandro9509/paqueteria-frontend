@@ -3677,7 +3677,7 @@ function Embarque(props) {
                                                                 <FormControlLabel
                                                                     control={
                                                                         <Switch
-                                                                            checked={state.validarTimbrado}
+                                                                            checked={state.validarTimbrado ?? false}
                                                                             onChange={(e) => setState((v) =>{return ({...v, validarTimbrado:e.target.checked})}) }
                                                                             name="validarTimbrado"
                                                                             color="primary"
