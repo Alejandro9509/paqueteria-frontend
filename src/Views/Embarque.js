@@ -40,11 +40,11 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
+    DialogTitle, FormControlLabel,
     Grid, MenuItem,
     Step,
     StepLabel,
-    Stepper,
+    Stepper, Switch,
     Tooltip
 } from "@material-ui/core";
 import {ToggleButtonGroup} from "@material-ui/lab";
@@ -628,7 +628,7 @@ function Embarque(props) {
                 esConsultaRuta: false,
                 height: window.innerHeight,
                 observaciones: '',
-                idComplemento: null
+                idComplemento: null,
             }
         })
         setDataEmbarqueConsulta(undefined)
@@ -1266,6 +1266,7 @@ function Embarque(props) {
             m_bEmbarqueConCita: state.entregaConCita,
             m_nIdComplemento: state.idComplemento,
             m_nIdTipoDocumento: state.idTipoDocumento,
+            m_bValidarTimbradoIngreso: state.validarTimbrado,
         }
         params.m_bEntregaEnSucursal = state.entregaEnSucursal
         /**Si es entrega en sucursal*/
@@ -2040,7 +2041,8 @@ function Embarque(props) {
                 //observaciones
                 observaciones: respuesta.data.m_sObservaciones,
                 idTipoDocumento: respuesta.data.m_nIdTipoDocumento,
-                idComplemento: respuesta.data.m_nIdComplemento
+                idComplemento: respuesta.data.m_nIdComplemento,
+                validarTimbrado: respuesta.data.m_bValidarTimbraoIngreso
             }
         });
 
@@ -2203,7 +2205,7 @@ function Embarque(props) {
                             moneda: state.idRecoleccion > 0 ? state.moneda : respuesta.data.MonedaEmbarque,
                             tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio : respuesta.data.TipoCambioEmbarque,
                             tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
-                            idComplemento: respuesta.data.IdComplemento,
+//                            idComplemento: respuesta.data.IdComplemento,
                         }
                     })
                 }
@@ -2211,7 +2213,8 @@ function Embarque(props) {
                     return {
                         ...state,
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
-                        idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
+  //                      idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
+                        validarTimbrado:  respuesta.data.ValidarTimbradoIngreso
                     }
                 })
                 setConfiguraciones((config) => {
@@ -3671,32 +3674,48 @@ function Embarque(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
-                                                                             margin="dense" required>
-                                                                    <InputLabel> Tipo de Documento</InputLabel>
-                                                                    <Select
-                                                                        label="Tipo de Documento"
-                                                                        className="form-control"
-                                                                        onChange={handleChange}
-                                                                        name="idTipoDocumento"
-                                                                        required
-                                                                        value={ state.idTipoDocumento || "" }
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                    >¿
-                                                                        {
-                                                                            dataTipoDocumento.map(d => {
-                                                                                return (
-                                                                                    <option key={d.IdDocumento}
-                                                                                            value={d.IdDocumento}>{d.Documento}</option>
-                                                                                )
-                                                                            })
-                                                                        }
-
-                                                                    </Select>
-                                                                </FormControl>
+                                                                <FormControlLabel
+                                                                    control={
+                                                                        <Switch
+                                                                            checked={state.validarTimbrado ?? false}
+                                                                            onChange={(e) => setState((v) =>{return ({...v, validarTimbrado:e.target.checked})}) }
+                                                                            name="validarTimbrado"
+                                                                            color="primary"
+                                                                        />
+                                                                    }
+                                                                    label="Validar timbrado de factura"
+                                                                />
                                                             </label>
                                                         </Grid>
                                                     </Grid>
+                                                    {/*    <Grid item xs>*/}
+                                                    {/*        <label className="input select">*/}
+                                                    {/*            <FormControl fullWidth variant="outlined"*/}
+                                                    {/*                         margin="dense" required>*/}
+                                                    {/*                <InputLabel> Tipo de Documento</InputLabel>*/}
+                                                    {/*                <Select*/}
+                                                    {/*                    label="Tipo de Documento"*/}
+                                                    {/*                    className="form-control"*/}
+                                                    {/*                    onChange={handleChange}*/}
+                                                    {/*                    name="idTipoDocumento"*/}
+                                                    {/*                    required*/}
+                                                    {/*                    value={ state.idTipoDocumento || "" }*/}
+                                                    {/*                    disabled={state.agregar === "Consultar"}*/}
+                                                    {/*                >¿*/}
+                                                    {/*                    {*/}
+                                                    {/*                        dataTipoDocumento.map(d => {*/}
+                                                    {/*                            return (*/}
+                                                    {/*                                <option key={d.IdDocumento}*/}
+                                                    {/*                                        value={d.IdDocumento}>{d.Documento}</option>*/}
+                                                    {/*                            )*/}
+                                                    {/*                        })*/}
+                                                    {/*                    }*/}
+
+                                                    {/*                </Select>*/}
+                                                    {/*            </FormControl>*/}
+                                                    {/*        </label>*/}
+                                                    {/*    </Grid>*/}
+                                                    {/*</Grid>*/}
                                                     <Grid container spacing={2}
                                                           style={{marginBottom: '10px', paddingRight: '15px'}}>
                                                         <Grid item xs>
