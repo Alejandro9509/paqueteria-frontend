@@ -106,8 +106,8 @@ function cancelarCFDI(id, motivo){
     );
     return result
 }
-function obtenerReporteCFDIViaje(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}`;
+function obtenerReporteCFDIViaje(id, idInforme){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}/${idInforme}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
