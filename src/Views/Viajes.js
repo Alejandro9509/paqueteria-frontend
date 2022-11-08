@@ -559,8 +559,8 @@ function Viajes() {
 
     }
 
-    function descargarPDF(id, folio) {
-        obtenerReporteCFDIViaje(id).then(({data}) => {
+    function descargarPDF(id, idInforme, folio) {
+        obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
             try {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
@@ -809,7 +809,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDF(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i
+                                   onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i
                                     className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>

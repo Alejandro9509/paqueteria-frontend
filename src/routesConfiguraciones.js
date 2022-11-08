@@ -75,8 +75,8 @@ const configurationRoutes = [
     icon:  <GFormatosIcon/>,
     component: FormatoImpresionPage,
     visible: true
-  },
- /* {
+  },/*
+  {
     path: "/Folios",
     name: "Folios",
     icon:  <GFoliosIcon/>,

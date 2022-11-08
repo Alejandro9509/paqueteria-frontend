@@ -43,7 +43,7 @@ class Seguimiento extends Component {
     }
 
     componentDidMount() {
-        
+
     }
 
     handleChage(e){
@@ -192,29 +192,29 @@ class Seguimiento extends Component {
                                      <Grid item md={12}>
                                         <Typography variant={"h4"} align={"center"}>Evidencias</Typography>
                                      </Grid>
-                                     
+
                                      <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
                                      <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" alignItems="center">
-                                    <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography> 
+                                    <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography>
                                     {
                                     this.state.imagenesEvidenciaRecoleccion.length == 0?
                                      <Typography variant={"h5"} style={{margin:"20%"}}>No hay evidencias</Typography>:
                                     this.state.imagenesEvidenciaRecoleccion.length != 0 &&
                                     <Grid item md={6}>
                                        <div id="divRecoleccion">
-                                        
+
                                         {this.state.imagenesEvidenciaRecoleccion.reverse().map( (img,index)=>(
                                                     <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
                                                      src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
                                         }
                                            Entregó: {this.state.data.m_sReceptorRecoleccion}
-                                          </div>   
+                                          </div>
                                                                       
                                     </Grid>
                                        }
-                                    
+
                                      </Box>
-                                        
+
                                      </Grid>
                                      <Grid item md={6}>
                                      <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"  alignItems="center">
@@ -232,18 +232,18 @@ class Seguimiento extends Component {
                                              }
                                             Recibió: {this.state.data.m_sReceptorGuia}
                                           </div>
-                                       
+
                                         </Grid>
 
                                         }
                                         </Box>
                                      </Grid>
-                                   
-                                     
+
+
                                         </Grid>
                                     </div>
                                     </div>
-                                    
+
                                 </Grid>
                                 <Grid item md={6}>
                                     <div style={{

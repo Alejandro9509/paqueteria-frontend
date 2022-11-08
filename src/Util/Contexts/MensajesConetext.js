@@ -11,9 +11,7 @@ function obtenerMensajes(id,fecha){
     let result;
     console.log(moment(fecha).format("yyyy-MM-DD"))
     var dateString =  moment(fecha).format("yyyy-MM-DD")
-    trackPromise(
         result =  axios.get(url, { headers:headers,params:{idOperador: id, fecha: dateString} })
-    );
     return result
 }
 
