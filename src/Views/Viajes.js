@@ -1148,7 +1148,7 @@ function Viajes() {
                 state.openEnvioCorreo &&
                 <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={() => {
                     setState({...state, openEnvioCorreo: false});
-                    descargarPDF(state.idInforme, state.folio);
+                    descargarPDF(state.idViaje,state.idInforme, state.folio);
                     getParadasListado({m_nIdViaje: state.idViaje})
                 }}/>
             }
