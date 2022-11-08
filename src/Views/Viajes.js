@@ -634,8 +634,8 @@ function Viajes() {
                         label: 'Sí',
                         onClick: () => {
                             if (parseInt(data.idCancelacionSAT) === 1){
-                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
-                                    obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
+                                cancelarInformeCFDI(state.informe.m_nIdParada,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    obtenerCFDI(state.informe.m_nIdParada,true).then((result) => {
                                         setState(state => {
                                             return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
                                         })
@@ -652,7 +652,7 @@ function Viajes() {
                                 })
 
                             }else{
-                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                cancelarInformeCFDI(state.informe.m_nIdParada,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
                                     getParadasListado(state.informe)
                                     showSuccess(result.data)
                                 }).catch((error) => {
@@ -781,7 +781,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
+                                   onClick={() => (generarCFDI(row.row.m_nIdParada, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
                                                                                                                                              style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
