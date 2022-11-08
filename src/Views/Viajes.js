@@ -1122,7 +1122,7 @@ function Viajes() {
     function envioCorreoAction(data) {
         enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault).then(({data}) => {
             showSuccess(data);
-            descargarPDF(state.idInforme, state.folio)
+            descargarPDF(state.idViaje,state.idInforme, state.folio)
             setState(state => {
                 return {...state, openEnvioCorreo: false}
             })
