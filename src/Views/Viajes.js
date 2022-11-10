@@ -559,8 +559,8 @@ function Viajes() {
 
     }
 
-    function descargarPDF(id, folio) {
-        obtenerReporteCFDIViaje(id).then(({data}) => {
+    function descargarPDF(id, idInforme, folio) {
+        obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
             try {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
@@ -573,7 +573,7 @@ function Viajes() {
 
     }
 
-    function generarCFDI(id, folio, idViaje, sustituir) {
+    function generarCFDI(idParada, folio, idViaje, sustituir, idInforme) {
         obtenerParametrosConfiguracion().then(respuesta => {
             let titulo;
             let mensaje;
@@ -591,8 +591,8 @@ function Viajes() {
                     {
                         label: 'Sí',
                         onClick: () => {
-                            obtenerCFDI(id,sustituir).then((result) => {
-                                setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
+                            obtenerCFDI(idParada,sustituir).then((result) => {
+                                setState({...state, openEnvioCorreo: true, idInforme: idInforme, folio: folio, idViaje: idViaje})
                             }).catch((error) => {
                                 if (error.response){
                                     showError(error.response.data)
@@ -634,8 +634,8 @@ function Viajes() {
                         label: 'Sí',
                         onClick: () => {
                             if (parseInt(data.idCancelacionSAT) === 1){
-                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
-                                    obtenerCFDI(state.informe.m_nIdInforme,true).then((result) => {
+                                cancelarInformeCFDI(state.informe.m_nIdParada,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                    obtenerCFDI(state.informe.m_nIdParada,true).then((result) => {
                                         setState(state => {
                                             return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
                                         })
@@ -652,7 +652,7 @@ function Viajes() {
                                 })
 
                             }else{
-                                cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                                cancelarInformeCFDI(state.informe.m_nIdParada,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
                                     getParadasListado(state.informe)
                                     showSuccess(result.data)
                                 }).catch((error) => {
@@ -781,7 +781,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
+                                   onClick={() => (generarCFDI(row.row.m_nIdParada, row.row.m_sFolioInforme, row.row.m_nIdViaje, false, row.row.m_nIdInforme))}><i className="zmdi zmdi-file-text"
                                                                                                                                              style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -809,7 +809,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDF(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i
+                                   onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i
                                     className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -1122,7 +1122,7 @@ function Viajes() {
     function envioCorreoAction(data) {
         enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault).then(({data}) => {
             showSuccess(data);
-            descargarPDF(state.idInforme, state.folio)
+            descargarPDF(viajeSeleccionado.id,state.idInforme, state.folio)
             setState(state => {
                 return {...state, openEnvioCorreo: false}
             })
@@ -1148,7 +1148,7 @@ function Viajes() {
                 state.openEnvioCorreo &&
                 <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={() => {
                     setState({...state, openEnvioCorreo: false});
-                    descargarPDF(state.idInforme, state.folio);
+                    descargarPDF(viajeSeleccionado.id,state.idInforme, state.folio);
                     getParadasListado({m_nIdViaje: state.idViaje})
                 }}/>
             }
