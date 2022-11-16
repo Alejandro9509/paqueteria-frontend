@@ -1,57 +1,90 @@
-import { Box, Grid, Typography } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
-import { obtenerImagenEvidencia } from '../Util/Contexts/UltimaMillaContext'
+import {Box, Button, Grid, Typography} from '@material-ui/core'
+import React, {useEffect, useState} from 'react'
+import {obtenerImagenEvidencia} from '../Util/Contexts/UltimaMillaContext'
+import DialogoEvidenciasUltimaMilla from "./UltimaMilla/DialogoEvidenciasUltimaMilla";
 
 function Evidencias(props) {
-    const {esRecoleccion,idGuia} = props
+    const {esRecoleccion, idGuia} = props
     const [imagenesEvidencias, setImagenesEvidencias] = useState([])
+    const [openDialogEvidencias, setOpenDialogEvidencias] = useState(false)
 
     useEffect(value => {
-        obtenerImagenEvidencia(idGuia,esRecoleccion).then(respuestaRec=>{
-            setImagenesEvidencias(respuestaRec.data?respuestaRec.data:[])        
+        obtenerImagenEvidencia(idGuia, esRecoleccion).then(respuestaRec => {
+            setImagenesEvidencias(respuestaRec.data ? respuestaRec.data : [])
         })
     }, [idGuia])
-  return (
-                                <div style={{margin:"0 auto"}}>
-                                <Box display="flex" p={1} bgcolor="background.paper" justifyContent={"center"}>
-                                    {imagenesEvidencias.length == 0?
-                                    <Typography variant={"h5"} >No hay evidencias</Typography>:
 
-                                                
+    const handleClickCloseDialogoEvidencia = (openDialog) => {
+        setOpenDialogEvidencias(openDialog)
+    }
+    const handleClickOpenDialogoEvidencia = (openDialog) => {
+        setOpenDialogEvidencias(openDialog)
+    }
+    return (
+        <div style={{margin: "0 auto"}}>
 
-                                    esRecoleccion?
-                                    // imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
-                                    <Grid item md={6} style={{flexBasis:"0"}}>
-                                         <div id="divRecoleccion">
-                                             {/*<img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
+            { (openDialogEvidencias) &&
+                <DialogoEvidenciasUltimaMilla
+                    open={openDialogEvidencias}
+                    setCloseDialog={handleClickCloseDialogoEvidencia}
+                    imagenes={imagenesEvidencias}
+                />
+            }
+            <Grid container>
+                {
+                    esRecoleccion ?
+                        // imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
+                        <Grid item md={12}>
+                            <div id="divRecoleccion">
+                                Entregó: {props.data.receptorRecoleccion}
+                                <Button fullWidth variant="text" color="primary" onClick={() => handleClickOpenDialogoEvidencia(true)}>
+                                    Ver evidencias de recolección
+                                </Button>
+                                {/*<img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
                                                      src={`data:image/jpeg;base64,${imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>*/}
-                                             {imagenesEvidencias.reverse().map( (img,index)=>(
-                                                 <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
-                                                      src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
-                                             }
-                                             Entregó: {props.data.receptorRecoleccion}
-                                          </div>
-                                    </Grid>
-                                    : 
-                                    <Grid item md={6} style={{flexBasis:"0"}}>
-                                         <div id="divEmbarque">
-                                  
-                                            {/*<img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
+                                {/*{imagenesEvidencias.reverse().map((img, index) => (
+                                    <img style={{
+                                        width: "180px",
+                                        height: "180px",
+                                        margin: "0 0 0 -10px",
+                                        marginBottom: "10px",
+                                        outline: "solid 1px black"
+                                    }}
+                                         src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index}/>))
+                                }
+                                Entregó: {props.data.receptorRecoleccion}*/}
+                            </div>
+                        </Grid>
+                        :
+                        <Grid item md={12}>
+                            <div id="divEmbarque">
+                                Recibió: {props.data.receptorGuia}
+                                <Button fullWidth variant="text" color="primary"
+                                        onClick={() => handleClickOpenDialogoEvidencia(true)}>
+                                    Ver evidencias de entrega
+                                </Button>
+                                {/*<img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
                                              src={`data:image/jpeg;base64,${imagenesEvidencias.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`} />*/}
-                                             {imagenesEvidencias.reverse().map( (img,index)=>(
-                                                 <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
-                                                      src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
-                                             }
-                                             Recibió: {props.data.receptorGuia}
-                                         
-                                           </div>   
-                                    </Grid>  
-                                    
-                                    }
-                    
-                                     </Box>
-                          </div>
-  )
+                                {/*{imagenesEvidencias.reverse().map((img, index) => (
+                                    <img style={{
+                                        width: "180px",
+                                        height: "180px",
+                                        margin: "0 0 0 -10px",
+                                        marginBottom: "10px",
+                                        outline: "solid 1px black"
+                                    }}
+                                         src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index}/>))
+                                }
+                                Recibió: {props.data.receptorGuia}*/}
+
+                            </div>
+                        </Grid>
+
+                }
+
+            </Grid>
+        </div>
+    )
 }
 
 export default Evidencias

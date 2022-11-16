@@ -112,6 +112,7 @@ import Citas from "./Citas/Citas";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 import Evidencias from "./Evidencias";
+import DialogoEvidenciasUltimaMilla from "./UltimaMilla/DialogoEvidenciasUltimaMilla";
 
 let timer;
 
@@ -337,7 +338,8 @@ function Recoleccion() {
         uploadedFileContent: "<div>Hello</div>",
         height: window.innerHeight,
         recoleccionConEmbarque: false,
-        receptorRecoleccion: ''
+        receptorRecoleccion: '',
+        setOpenDialogEvidencias: false,
     });
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -3005,6 +3007,7 @@ function Recoleccion() {
             }
         }
     }
+
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -4205,30 +4208,39 @@ function Recoleccion() {
                                 </div>
 
 
-                                </div> { state.agregar !="Agregar"  && <div className="row">
-                                                    <div className="widget-wrap">
-                <div className="widget-container">
-                    <div className="widget-content">
-                        <div className="row">
-                            <div className="widget-header">
-                                                    <Accordion>
-                                                         <AccordionSummary
-                                                           expandIcon={<ExpandMoreIcon />}
-                                                           aria-controls="panel1a-content"
-                                                           id="panel1a-header"
-                                                         ><Typography className={classes.heading}><h2>Evidencias última milla</h2></Typography>
-                                                         </AccordionSummary>
+                                </div>
+                                {
+                                    state.agregar != "Agregar" &&
+                                    <div className="row">
+                                        <div className="widget-wrap">
+                                            <div className="widget-container">
+                                                <Evidencias esRecoleccion={1}
+                                                            idGuia={state.idRecoleccion} data={state}/>
+                                                {/*<div className="widget-content">
+                                                    <div className="row">
+                                                        <div className="widget-header">
+                                                            <Accordion>
+                                                                <AccordionSummary
+                                                                    expandIcon={<ExpandMoreIcon/>}
+                                                                    aria-controls="panel1a-content"
+                                                                    id="panel1a-header">
+                                                                    <Typography className={classes.heading}>
+                                                                        <h2>Evidencias última milla</h2>
+                                                                    </Typography>
+                                                                </AccordionSummary>
 
-                                                         <AccordionDetails>
-                                                            <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion} data={state}/>
-                                                          </AccordionDetails>
-                                                        </Accordion>
+                                                                <AccordionDetails>
+                                                                    <Evidencias esRecoleccion={1}
+                                                                                idGuia={state.idRecoleccion} data={state}/>
+                                                                </AccordionDetails>
+                                                            </Accordion>
                                                         </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                                                    </div>}
+                                                    </div>
+                                                </div>*/}
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </form>
                         </div>
 

@@ -264,7 +264,7 @@ class Seguimiento extends Component {
                                      </Box>
                                         
                                      </Grid>
-                                     <Grid item md={6}>
+                                     <Grid item md={12}>
                                          <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"
                                               alignItems="center">
                                              <Typography variant={"h4"}
