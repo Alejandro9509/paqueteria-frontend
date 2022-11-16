@@ -23,6 +23,7 @@ class TourUltimaMilla extends Component {
         }
         this.getRoute = this.getRoute.bind(this)
         this.handleClickOpenDialogoEvidencia = this.handleClickOpenDialogoEvidencia.bind(this)
+        this.handleClickCloseDialogoEvidencia = this.handleClickCloseDialogoEvidencia.bind(this)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -92,6 +93,13 @@ class TourUltimaMilla extends Component {
 
     }
 
+    handleClickCloseDialogoEvidencia(openDialog){
+        this.setState({
+            setOpenDialogEvidencias: openDialog,
+            guiaSeleccionada: null
+        })
+    }
+
     handleClickOpenDialogoEvidencia(openDialog, guia){
         this.setState({
             setOpenDialogEvidencias: openDialog,
@@ -106,7 +114,7 @@ class TourUltimaMilla extends Component {
                 { (this.state.setOpenDialogEvidencias && this.state.guiaSeleccionada) &&
                     <DialogoEvidenciasUltimaMilla
                         open={this.state.setOpenDialogEvidencias}
-                        setOpenDialog={this.handleClickOpenDialogoEvidencia}
+                        setCloseDialog={this.handleClickCloseDialogoEvidencia}
                         imagenes={this.state.guiaSeleccionada.m_arrImagenes}
                     />
                 }

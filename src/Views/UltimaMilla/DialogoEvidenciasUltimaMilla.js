@@ -10,7 +10,7 @@ import {Grid} from "@material-ui/core";
 
 export default function DialogoEvidenciasUltimaMilla(props) {
     const handleClose = () => {
-        props.setOpenDialog(false, null);
+        props.setCloseDialog(false);
     };
 
     const handleDownloadImage = (imageBase64) => {
@@ -40,11 +40,14 @@ export default function DialogoEvidenciasUltimaMilla(props) {
                     </ImageList>*/}
                     <h4>Firma</h4>
                     {
+                        props.imagenes.filter(i => parseInt(i.m_nTipoArchivo) === 2).length > 0 ?
                         <Grid item md={12}>
                             <div align={"center"}>
                                 <img src={`data:image/jpeg;base64,${props.imagenes.find(i => parseInt(i.m_nTipoArchivo) === 2).m_sImagen}`} alt={''}/>
                             </div>
                         </Grid>
+                            :
+                            <span>No se adjuntó firma</span>
                     }
                     <h4>Evidencias</h4>
                     {

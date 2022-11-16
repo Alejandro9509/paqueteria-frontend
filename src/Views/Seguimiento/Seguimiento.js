@@ -17,6 +17,7 @@ import {obtenerInformeFolioTipo} from "../../Util/Contexts/SeguimientoContext";
 import moment from "moment";
 import 'moment/locale/es';
 import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
+import DialogoEvidenciasUltimaMilla from "../UltimaMilla/DialogoEvidenciasUltimaMilla";
 
 const events = [
     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
@@ -35,10 +36,15 @@ class Seguimiento extends Component {
             data:{},
             imagenesEvidenciaRecoleccion:[],
             imagenesEvidenciaEmbarque:[],
-            esRecoleccion:false
+            esRecoleccion:false,
+            setOpenDialogEvidenciasRecoleccion:false,
+            setOpenDialogEvidenciasEntrega:false,
         }
         this.handleChage = this.handleChage.bind(this)
         this.buscarAction = this.buscarAction.bind(this)
+        this.handleClickOpenDialogoEvidencia = this.handleClickOpenDialogoEvidencia.bind(this)
+        this.handleClickCloseDialogoEvidenciaRecoleccion = this.handleClickCloseDialogoEvidenciaRecoleccion.bind(this)
+        this.handleClickCloseDialogoEvidenciaEntrega = this.handleClickCloseDialogoEvidenciaEntrega.bind(this)
 
     }
 
@@ -68,15 +74,51 @@ class Seguimiento extends Component {
             })
         })
     }
-    render() {
-        var imgsEmbarque =  this.state.imagenesEvidenciaEmbarque.map( img=>{
-              return `<img style={{width: "180px", height: "180px",transform:"rotate(90deg)",margin: "0 0 0 -10px"}}
-             src=data:image/jpeg;base64,${img.m_sImagen}`
+    handleClickCloseDialogoEvidenciaRecoleccion(openDialog){
+        this.setState({
+            setOpenDialogEvidenciasRecoleccion: openDialog
+        })
+
+    }
+
+    handleClickCloseDialogoEvidenciaEntrega(openDialog){
+        this.setState({
+            setOpenDialogEvidenciasEntrega: openDialog
+        })
+
+    }
+
+    handleClickOpenDialogoEvidencia(openDialog, esRecoleccion){
+        if (esRecoleccion){
+            this.setState({
+                setOpenDialogEvidenciasRecoleccion: openDialog
+            })
+        }else{
+            this.setState({
+                setOpenDialogEvidenciasEntrega: openDialog
+            })
         }
-         ).join('')
+
+    }
+    render() {
+
 
         moment.locale("es");
         return (<div>
+            { (this.state.setOpenDialogEvidenciasRecoleccion && (this.state.imagenesEvidenciaRecoleccion)) &&
+                <DialogoEvidenciasUltimaMilla
+                    open={this.state.setOpenDialogEvidenciasRecoleccion}
+                    setCloseDialog={this.handleClickCloseDialogoEvidenciaRecoleccion}
+                    imagenes={this.state.imagenesEvidenciaRecoleccion}
+                />
+            }
+            { (this.state.setOpenDialogEvidenciasEntrega && (this.state.imagenesEvidenciaEmbarque)) &&
+                <DialogoEvidenciasUltimaMilla
+                    open={this.state.setOpenDialogEvidenciasEntrega}
+                    setCloseDialog={this.handleClickCloseDialogoEvidenciaEntrega}
+                    imagenes={this.state.imagenesEvidenciaEmbarque}
+                />
+            }
             <header className="topbar clearfix">
                 <Cabecera titulo="Seguimiento">
                     <div className="page-header">
@@ -195,8 +237,14 @@ class Seguimiento extends Component {
                                      
                                      <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
                                      <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" alignItems="center">
-                                    <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography> 
-                                    {
+                                    <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography>
+                                         <Grid item md={12}>
+                                             Entregó: {this.state.data.m_sReceptorRecoleccion}
+                                             <Button fullWidth variant="text" color="primary" onClick={() => this.handleClickOpenDialogoEvidencia(true, true)}>
+                                                 Ver evidencias de recolección
+                                             </Button>
+                                         </Grid>
+                                    {/*{
                                     this.state.imagenesEvidenciaRecoleccion.length == 0?
                                      <Typography variant={"h5"} style={{margin:"20%"}}>No hay evidencias</Typography>:
                                     this.state.imagenesEvidenciaRecoleccion.length != 0 &&
@@ -211,32 +259,48 @@ class Seguimiento extends Component {
                                           </div>   
                                                                       
                                     </Grid>
-                                       }
+                                       }*/}
                                     
                                      </Box>
                                         
                                      </Grid>
                                      <Grid item md={6}>
-                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"  alignItems="center">
-                                        <Typography variant={"h4"} style={{marginBottom:"10px"}}>Entrega</Typography>
-                                         {
-                                         this.state.imagenesEvidenciaEmbarque.length == 0?
-                                            <Typography variant={"h5"} >No hay evidencias</Typography>:
+                                         <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"
+                                              alignItems="center">
+                                             <Typography variant={"h4"}
+                                                         style={{marginBottom: "10px"}}>Entrega</Typography>
+                                             <Grid item md={6}>
+                                                 Recibió: {this.state.data.m_sReceptorGuia}
+                                                 <Button fullWidth variant="text" color="primary"
+                                                         onClick={() => this.handleClickOpenDialogoEvidencia(true, false)}>
+                                                     Ver evidencias de entrega
+                                                 </Button>
+                                             </Grid>
+                                             {/*{
+                                                 this.state.imagenesEvidenciaEmbarque.length == 0 ?
+                                                     <Typography variant={"h5"}>No hay evidencias</Typography> :
 
-                                        <Grid item md={6}>
+                                                     <Grid item md={6}>
 
-                                          <div id="divEmbarque">
-                                          {this.state.imagenesEvidenciaEmbarque.reverse().map( (img,index)=>(
-                                           <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
-                                            src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
-                                             }
-                                            Recibió: {this.state.data.m_sReceptorGuia}
-                                          </div>
-                                       
-                                        </Grid>
+                                                         <div id="divEmbarque">
+                                                             {this.state.imagenesEvidenciaEmbarque.reverse().map((img, index) => (
+                                                                 <img style={{
+                                                                     width: "180px",
+                                                                     height: "180px",
+                                                                     margin: "0 0 0 -10px",
+                                                                     marginBottom: "10px",
+                                                                     outline: "solid 1px black"
+                                                                 }}
+                                                                      src={`data:image/jpeg;base64,${img.m_sImagen}`}
+                                                                      key={index}/>))
+                                                             }
+                                                             Recibió: {this.state.data.m_sReceptorGuia}
+                                                         </div>
 
-                                        }
-                                        </Box>
+                                                     </Grid>
+
+                                             }*/}
+                                         </Box>
                                      </Grid>
                                    
                                      
