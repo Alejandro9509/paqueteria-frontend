@@ -30,7 +30,7 @@ import {
     searchLocationAddress,
     obtenerUltimaMillaFecha,
     validarUnidadesSeleccionadas,
-    validarUnidadOcupada
+    validarUnidadOcupada, obtenerUltimaMillaFechaImagenes
 } from "../../Util/Contexts/UltimaMillaContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
@@ -132,7 +132,14 @@ class UltimaMilla extends Component {
 
     getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda) {
         this.setState({mostrarRuta: false})
+        obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
+            //imagenes
+        })
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
+            //Metes imagenes
+            /*obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
+
+            })*/
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar && !this.state.modoPlaneacion) {
                     this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 150000);
