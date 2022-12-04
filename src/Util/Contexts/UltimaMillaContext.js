@@ -161,7 +161,7 @@ async function obtenerRutas(truck, guias, data) {
             ))
         }
     })
-    //var token = await  axios.get(process.env.REACT_APP_API_URL_LOCAL + "/api/here/getToken",{})
+    //var token = await  axios.get(process.env.REACT_APP_REPORT_URL + "/api/here/getToken",{})
 
     trackPromise(
         result = new Promise((resolve, reject) => {
@@ -343,7 +343,6 @@ function agregarRuta(idUltimaMilla, tour, data) {
         console.log(tour)
         console.log(tempTour)
         var guias = tour.paquetes.filter((p, index) => tempTour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").map(a => parseInt(a.jobId.replace('job_',''))).includes(p.index))
-        debugger
         guias = ordenarGuiasPorRuta(tempTour, guias)
         console.log(guias)
         ultimaMillaObject.rutas.push({
@@ -353,7 +352,6 @@ function agregarRuta(idUltimaMilla, tour, data) {
             idRemolque2: u.idRemolque2,
             idDolly: u.idDolly,
             guias: guias.map((g, index) => {
-                debugger
                 var tourReport = tour.tour.tours.find(t => t.typeId === ("vehicle" + u.m_nIdUnidad))
                 var distance = tourReport.statistic.distance
                 var reportTime = tourReport.statistic.duration
@@ -425,8 +423,18 @@ async function ordenarParada(idParada, guias) {
     return result
 }
 
+/**Se usará sólo para traer todos los datos de ultima milla sin imagenes*/
 function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
-    console.log(zonas)
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GetUltimaMillaFecha/` + moment(date).format("YYYY-MM-DD") + "/" + idSucursal;
+    let result;
+    trackPromise(
+        result = axios.post(url, Object.assign({}, {zonas: zonas.join(",")}), {headers})
+    );
+    return result
+}
+
+/**Se usará sólo para traer las imagenes*/
+function obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas) {
     const url = `${process.env.REACT_APP_API_URL}/GetUltimaMillaFecha/` + moment(date).format("YYYYMMDD") + "/" + idSucursal;
     let result;
     trackPromise(
@@ -575,11 +583,41 @@ async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
     );
     return result
 }
+
 function obtenerImagenEvidencia(idGuia,esRecoleccion){
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+//Cambiar a Local para pruebas
+function obtenerPaquetesPorParada(idGuia){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-por-parada/consultar/${idGuia}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerPaquetesParciales(idParada, idGuia){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-parciales/consultar/${idParada}/${idGuia}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+//Cambiar a Local para pruebas
+function agregarPaquetesParciales(idParada, idGuia,params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-parciales/agregar/${idParada}/${idGuia}`;
+    let result;
+    trackPromise(
+        result = axios.post(url, Object.assign([],params), {headers})
     );
     return result
 }
@@ -599,6 +637,7 @@ export {
     agregarRuta,
     searchLocationAddress,
     obtenerUltimaMillaFecha,
+    obtenerUltimaMillaFechaImagenes,
     remplazarPaqueteUltimaMilla,
     ordenarParada,
     eliminarPaqueteUltimaMilla,
@@ -611,7 +650,10 @@ export {
     validarUnidadOcupada,
     searchLocationGuia,
     searchLocationGuiav2,
-    obtenerImagenEvidencia
+    obtenerImagenEvidencia,
+    obtenerPaquetesPorParada,
+    obtenerPaquetesParciales,
+    agregarPaquetesParciales
 }
 
 
