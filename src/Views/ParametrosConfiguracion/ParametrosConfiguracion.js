@@ -39,6 +39,10 @@ import {EditorState, ContentState, convertToRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
+import {FilePond} from "react-filepond";
+// Import FilePond styles
+import 'filepond/dist/filepond.min.css'
+import {toBase64} from "../../Util/GlobalFunctions";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -68,9 +72,7 @@ function ParametrosConfiguracion() {
     const [dataTipoCambioEmbarque, setTipoCambioEmbarque] = React.useState([])
     const [dataTipoCobro, setTipoCobro] = React.useState([])
     const [dataEstatusGuia, setEstatusGuia] = React.useState([])
-    const [datatipoTarifa, setTipoTarifa] = React.useState([])
     const [tabIndex, setTabIndex] = React.useState('1');
-    const [selectionModel, setSelectionModel] = React.useState([]);
     const columnasTipoCobro = [
         {
             headerName: "Descripción",
@@ -80,7 +82,7 @@ function ParametrosConfiguracion() {
     ]
     const [dataConceptos, setDataConceptos] = useState([]);
 
-
+    const [files, setFiles] = useState([])
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -107,7 +109,9 @@ function ParametrosConfiguracion() {
         idConceptoCita: 0,
         validarInforme: false,
         timbradoPruebaGuia: true,
-        validarTimbradoIngreso: false
+        validarTimbradoIngreso: false,
+        plantillaImportarEmbarquesBase64: '',
+        plantillaImportarEmbarquesNombreArchivo: ''
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -152,6 +156,8 @@ function ParametrosConfiguracion() {
     };
 
     function onSubmit() {
+        convertirABase64()
+        console.log(configuraciones.plantillaImportarEmbarquesBase64)
         let params = {
             estatusRecoleccion: configuraciones.estatusRecoleccion,
             estatusEmbarque: configuraciones.estatusEmbarque,
@@ -179,9 +185,12 @@ function ParametrosConfiguracion() {
             timbradoPruebaGuia: configuraciones.timbradoPruebaGuia,
             validarTimbrado: configuraciones.validarTimbrado,
             idComplemento: configuraciones.idComplemento,
-            validarTimbradoIngreso: configuraciones.validarTimbradoIngreso
+            validarTimbradoIngreso: configuraciones.validarTimbradoIngreso,
+            plantillaImportarEmbarquesBase64: configuraciones.plantillaImportarEmbarquesBase64,
+            plantillaImportarEmbarquesNombreArchivo: configuraciones.plantillaImportarEmbarquesNombreArchivo
         }
-
+        console.log(params)
+        return
         modificarParametrosConfiguracion(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
@@ -227,7 +236,9 @@ function ParametrosConfiguracion() {
                     timbradoPruebaGuia: respuesta.data.TimbradoPruebaGuia,
                     validarTimbrado: respuesta.data.ValidarTimbrado,
                     idComplemento: respuesta.data.IdComplemento,
-                    validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso
+                    validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
+                    plantillaImportarEmbarquesBase64: respuesta.data.PlantillaImportarEmbarquesBase64,
+                    plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo
                 }
             })
 
@@ -361,6 +372,41 @@ function ParametrosConfiguracion() {
 
         }
 
+    }
+
+    const descargarPlantillaImportar = () => {
+        if (configuraciones.plantillaImportarEmbarquesBase64 === ''){
+            return
+        }
+        let mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
+        let a = document.createElement('a');
+        a.href = mediaType+encodeURI(configuraciones.plantillaImportarEmbarquesBase64);
+        a.download = configuraciones.plantillaImportarEmbarquesNombreArchivo;
+        a.textContent = 'Descargar Archivo';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
+
+    const handleOnupdatefiles = (files) => {
+        convertirABase64(files[0].file)
+        setFiles(files)
+    }
+
+    const convertirABase64 = (file) => {
+        /*if(files.length === 0){
+            return
+        }*/
+        let fileName = file.name
+        let fileBase64 = toBase64(file)
+        console.log(fileBase64)
+        setConfiguraciones(configuraciones => {
+            return{
+                ...configuraciones,
+                plantillaImportarEmbarquesBase64: fileBase64,
+                plantillaImportarEmbarquesNombreArchivo: fileName
+            }
+        })
     }
 
 
@@ -600,6 +646,30 @@ function ParametrosConfiguracion() {
                                         />
                                     </Box>
                                 </Box>
+                                <Box width="100%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <h2>Plantilla importar embarques</h2>
+                                    </Box>
+                                    <Box width="100%" p={1} my={0.5}>
+                                        <FilePond
+                                            files={files}
+                                            onupdatefiles={(files) => handleOnupdatefiles(files)}
+                                            labelIdle='Haz click aquí para seleccionar un documento'
+                                        />
+                                    </Box>
+                                    <Box width="100%" p={1} my={0.5}>
+                                        <Button fullWidth variant="text" color="primary" onClick={descargarPlantillaImportar}>
+                                            Descargar plantilla existente
+                                        </Button>
+                                    </Box>
+
+                                    <Box width="100%" p={1} my={0.5}>
+                                        <Button fullWidth variant="text" color="primary" onClick={convertirABase64}>
+                                            convertir a base64
+                                        </Button>
+                                    </Box>
+                                </Box>
+
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101408)} variant="contained" color="primary"
                                             style={{width: "100px"}}
@@ -1082,12 +1152,6 @@ function ParametrosConfiguracion() {
                 </section>
 
             </TabContext>
-            {/*<section className="main-container">
-                <div className="container-fluid" style={{width: "70%"}}>
-
-
-                </div>
-            </section>*/}
         </div>
 
     );
