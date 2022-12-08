@@ -38,4 +38,13 @@ function validarDerecho(idUsuario,idPrivilegio,idTipo){
     return result
 }
 
-export {obtenerFechaInicio, obtenerFechaFinal,validarDerecho}
+function descargarPlantillaImportarEmbarque(){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Utilerias/descargar-plantilla-importacion-embarques`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers: headers, responseType: 'blob' })
+    );
+    return result
+}
+
+export {obtenerFechaInicio, obtenerFechaFinal,validarDerecho,descargarPlantillaImportarEmbarque}

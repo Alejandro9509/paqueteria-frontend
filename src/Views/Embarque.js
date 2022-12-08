@@ -99,7 +99,11 @@ import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "..
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerAllEstados, obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
-import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import {
+    obtenerFechaInicio,
+    obtenerFechaFinal,
+    descargarPlantillaImportarEmbarque
+} from "../Util/Contexts/UtileriasContext";
 import ReplayIcon from "@material-ui/icons/Replay";
 import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
@@ -3190,30 +3194,40 @@ function Embarque(props) {
                             </a>
                         </li>
 
-
-                        <li className="hide">
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({
-                                    ...state,
-                                    identificadorModal:
-                                        "imprimir",
-                                    tipoModal: 6,
-                                    openDialog: true
-                                });
-                            }}>
-                                <i className="fa fa-print"/> Imprimir
-                            </a>
-                        </li>
                         <li>
                             <ExportCSV disabled={!validarDerecho(9101428)} csvData={data} fileName="Embarque_Listado"/>
                         </li>
+
                         <li>
                             <a
                                 onClick={handleShowCancelar}
                                 className={state.idEmbarque === 0 || !validarDerecho(9101427) ? classes.disabled : ""}
                             >
                                 <i className="fa fa-times-circle"/> Cancelar
+                            </a>
+                        </li>
+
+                        <li >
+                            <a onClick={(event) => {
+                                // event.stopPropagation();
+                                descargarPlantillaImportarEmbarque().then(response => {
+                                    // create file link in browser's memory
+                                    let file = new Blob([response.data],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+                                    const href = URL.createObjectURL(file);
+
+                                    // create "a" HTML element with href to file & click
+                                    const link = document.createElement('a');
+                                    link.href = href;
+                                    link.setAttribute('download', 'plantillaImportarEmbarques.xlsx'); //or any other extension
+                                    document.body.appendChild(link);
+                                    link.click();
+
+                                    // clean up "a" element & remove ObjectURL
+                                    document.body.removeChild(link);
+                                    URL.revokeObjectURL(href);
+                                })
+                            }}>
+                                <i className="fa fa-print"/> Importar
                             </a>
                         </li>
                         <li style={{float: "right"}}>
