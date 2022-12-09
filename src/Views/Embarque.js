@@ -12,7 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {getAddressFormated, getCurrentDateTime, validarDerecho} from "../Util/Util"
+import {DEFAULT_FORMAT, getAddressFormated, getCurrentDateTime, readExcel, validarDerecho} from "../Util/Util"
 import {
     ReactTable,
     useTable,
@@ -125,6 +125,7 @@ import {
     useLocation
 } from "react-router-dom";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
+import ImportarEmbarques from "./Embarque/ImportarEmbarques";
 
 function useQuery() {
     const {search} = useLocation();
@@ -2076,6 +2077,16 @@ function Embarque(props) {
         setTabActiva(0)
     }
 
+    const handleShowImportar = (event) => {
+        if (event) {
+            event.stopPropagation();
+        }
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Importar').addClass('in show');
+    }
+
     const handleChange = (event) => {
         if (event.target.name == "porcentajeSeguro") {
             setRepetirConceptos(true)
@@ -3208,25 +3219,7 @@ function Embarque(props) {
                         </li>
 
                         <li >
-                            <a onClick={(event) => {
-                                // event.stopPropagation();
-                                descargarPlantillaImportarEmbarque().then(response => {
-                                    // create file link in browser's memory
-                                    let file = new Blob([response.data],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
-                                    const href = URL.createObjectURL(file);
-
-                                    // create "a" HTML element with href to file & click
-                                    const link = document.createElement('a');
-                                    link.href = href;
-                                    link.setAttribute('download', 'plantillaImportarEmbarques.xlsx'); //or any other extension
-                                    document.body.appendChild(link);
-                                    link.click();
-
-                                    // clean up "a" element & remove ObjectURL
-                                    document.body.removeChild(link);
-                                    URL.revokeObjectURL(href);
-                                })
-                            }}>
+                            <a onClick={() => handleShowImportar()}>
                                 <i className="fa fa-print"/> Importar
                             </a>
                         </li>
@@ -4471,6 +4464,12 @@ function Embarque(props) {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div id="Importar" className="tab-pane fade">
+                            <ImportarEmbarques
+                                // mostrarListado={handleShowListado}
+                            />
                         </div>
                     </div>
                 </div>

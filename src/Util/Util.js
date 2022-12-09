@@ -2,6 +2,8 @@ import {useEffect, useRef} from "react";
 import axios from "axios";
 import {trackPromise} from "react-promise-tracker";
 import {API_HEADERS} from "../Constants";
+import * as XLSX from "xlsx";
+import moment from "moment";
 
 const XRouteClient = window.XRouteClient;
 const XLoadClient = window.XLoadClient;
@@ -292,4 +294,268 @@ export function getAddressFormated(calle, numeroExterior, numeroInterior, coloni
         addressComplete += ","+pais
     }
     return addressComplete
+}
+
+export function readExcel(FORMAT,file){
+    const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+
+        fileReader.onload = (e) => {
+            const bufferArray = e.target.result;
+
+            const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
+
+            const wsGuias = (wb.Sheets['Embarques']);
+            const wsPaquetes = (wb.Sheets['Paquetes']);
+
+            const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item['Número de embarque'] > 0);
+            const dataPaquetes = XLSX.utils.sheet_to_json(wsPaquetes, {range:0}).filter(item => item['Número de embarque'] > 0);
+            console.log(data)
+            //VALIDACIONES PAQUETES
+            const arrayPaquetes = dataPaquetes.map((item) => ({
+                numeroEmbarque: item[FORMAT.paquetes.numeroEmbarque],
+                idEmbalaje: item[FORMAT.paquetes.idEmbalaje],
+                alto: item[FORMAT.paquetes.alto],
+                ancho: item[FORMAT.paquetes.ancho],
+                largo: item[FORMAT.paquetes.largo],
+                peso: item[FORMAT.paquetes.peso],
+                volumen: parseFloat(item[FORMAT.paquetes.alto]) * parseFloat(item[FORMAT.paquetes.ancho]) * parseFloat(item[FORMAT.paquetes.largo]),
+                cantidad: item[FORMAT.paquetes.cantidad],
+                descripcion: item[FORMAT.paquetes.descripcion],
+                observaciones: item[FORMAT.paquetes.observaciones] || ""
+            }))
+            console.log(arrayPaquetes)
+
+            //VALIDACIONES DE GUIAS
+            const newArray = data.map(function(item,index){
+                /*if(!item[FORMAT.nombreRemitente]){
+                    reject(`El nombre del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+                if(!item[FORMAT.rfcRemitente] ){
+                    reject(`El rfc del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.calleRemitente]){
+                    reject(`El item del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+                if(!item[FORMAT.numeroExtRemitente]){
+                    reject(`El numero interno del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.codigoPostalRemitente]){
+                    reject(`El codigo postal del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if( !item[FORMAT.correoRemitente] ){
+                    reject(`El correo del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.telefonoRemitente] ){
+                    reject(`El telefono del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.contactoRemitente]  ){
+                    reject(`El contacto del remitente es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.nombreDestinatario] ){
+                    reject(`El nombre del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if( !item[FORMAT.rfcDestinatario] ){
+                    reject(`El rfc del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.calleDestinatario] ){
+                    reject(`La calle del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if( !item[FORMAT.numeroExtDestinatario]){
+                    reject(`El numero exterior del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+                if(  !item[FORMAT.codigoPostalDestinatario] ){
+                    reject(`El codigo postal del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if( !item[FORMAT.correoDestinatario]  ){
+                    reject(`El correo del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if( !item[FORMAT.telefonoDestinatario] ){
+                    reject(`El telefono del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.contactoDestinatario] ){
+                    reject(`El contacto del destinatario es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.latitud] ){
+                    reject(`La latitud es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if( !item[FORMAT.longitud]  ){
+                    reject(`La longitud es obligatorio linea ${index + comienzoLinea}`);
+                }
+                if( !item[FORMAT.conCita]  ){
+                    reject(`El campo con cita es obligatorio linea ${index + comienzoLinea}`);
+                }
+
+                if( !item[FORMAT.fechaCita] ){
+                    reject(`La fecha cita es obligatoria linea ${index + comienzoLinea}`);
+                }
+
+                if(!item[FORMAT.horaCitaMinima] ){
+                    reject(`La hora cita minima es obligatoria linea ${index + comienzoLinea}`);
+                }
+                if( !item[FORMAT.horaCitaMaxima] ){
+                    reject(`La hora cita maxima es obligatoria linea ${index + comienzoLinea}`);
+                }
+                if(!item[FORMAT.citaPendiente]){
+                    reject(`El campo de cita pendiente es obligatoria linea ${index + comienzoLinea}`);
+                }*/
+
+                /*arrayPaquetes.forEach(function (paquete,index) {
+                    if(paquete.numeroGuia == item[FORMAT.numeroGuia]){
+                        /!*if(!paquete.numeroGuia){
+                            reject(`El numero guia es obligatorio linea ${index + comienzoLinea}`);
+                        }
+                        if(!paquete.embalaje){
+                            reject(`El embalaje es obligatorio linea ${index + comienzoLinea}`);
+                        }
+                        if(!paquete.alto){
+                            reject(`El alto es obligatorio linea ${index + comienzoLinea}`);
+                        }
+
+                        if(!paquete.ancho){
+                            reject(`El ancho es obligatorio linea ${index + comienzoLinea}`);
+                        }
+
+                        if(!paquete.largo){
+                            reject(`El largo es obligatorio linea ${index + comienzoLinea}`);
+                        }
+
+                        if(!paquete.peso){
+                            reject(`El peso es obligatorio linea ${index + comienzoLinea}`);
+                        }
+
+                        if(!paquete.cantidad){
+                            reject(`La cantidad es obligatoria linea ${index + comienzoLinea}`);
+                        }
+
+                        if(!paquete.descripcion){
+                            reject(`La descripcion es obligatorio linea ${index + comienzoLinea}`);
+                        }*!/
+                        paquetesGuias.push(paquete);
+                    }
+
+                });*/
+                let embarqueResumen = {
+                    fechaRegistro:getCurrentDate(),
+                    horaRegistro:getCurrentTime(),
+                    numeroEmbarque : item[FORMAT.numeroEmbarque],
+                    idUsuario: localStorage.getItem("UsuarioId"),
+                    idMoneda: item[FORMAT.idMoneda],
+                    idTipoCambio: item[FORMAT.idTipoCambio],
+                    idTipoCobro: item[FORMAT.idTipoCobro],
+                    idCliente: item[FORMAT.idCliente],
+                    idTipoSeguro: item[FORMAT.idTipoSeguro],
+                    porcentajeSeguro: item[FORMAT.porcentajeSeguro],
+                    valorDeclarado: item[FORMAT.valorDeclarado],
+                    validarTimbradoFactura: item[FORMAT.validarTimbradoFactura] === 'SI',
+                    observaciones: item[FORMAT.observaciones],
+                    idRemitente: item[FORMAT.idRemitente],
+                    correoRemitente: item[FORMAT.correoRemitente],
+                    telefonoRemitente: item[FORMAT.telefonoRemitente],
+                    contactoRemitente: item[FORMAT.contactoRemitente],
+                    idDestinatario: item[FORMAT.idDestinatario],
+                    correoDestinatario: item[FORMAT.correoDestinatario],
+                    telefonoDestinatario: item[FORMAT.telefonoDestinatario],
+                    contactoDestinatario: item[FORMAT.contactoDestinatario],
+                    entregaEnSucursal: item[FORMAT.entregaEnSucursal] === 'SI',
+                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio] === 'SI',
+                    latitud: item[FORMAT.latitud],
+                    longitud: item[FORMAT.longitud],
+                    entregaConCita: item[FORMAT.entregaConCita] === 'SI'
+                }
+                if (embarqueResumen.entregaEnSucursal){
+                    embarqueResumen.idSucursalEntrega = item[FORMAT.idSucursalEntrega]
+                }else{
+                    if (embarqueResumen.entregaDiferenteDomicilio) {
+                        embarqueResumen.codigoPostalDiferenteDomicilio = item[FORMAT.codigoPostalDiferenteDomicilio]
+                        embarqueResumen.coloniaDiferenteDomicilio = item[FORMAT.coloniaDiferenteDomicilio]
+                        embarqueResumen.calleNumeroDiferenteDomicilio = item[FORMAT.calleNumeroDiferenteDomicilio]
+                        embarqueResumen.entregarEn = item[FORMAT.entregarEn]
+                        embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionalesEntrega]
+                    }
+                }
+                if (embarqueResumen.entregaConCita){
+                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente] === 'SI'
+                    if (!embarqueResumen.citaPendiente) {
+                        embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
+                        embarqueResumen.horaMinima = moment(item[FORMAT.horaMinima]).format('HH:mm')
+                        embarqueResumen.horaMaxima = moment(item[FORMAT.horaMaxima]).format('HH:mm')
+                    }
+                }
+                embarqueResumen.paquetes = arrayPaquetes.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
+                return embarqueResumen
+            })
+            resolve(newArray);
+        };
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+    return promise
+}
+
+/**Se hace la relacion de los nombres de las columnas en el excel*/
+export const DEFAULT_FORMAT = {
+    //Todos son obligatorios
+    numeroEmbarque:'Número de embarque',
+    idMoneda: 'IdMoneda',
+    idTipoCambio: 'IdTipoCambio',
+    idTipoCobro: 'IdTipoCobro',
+    idCliente: 'IdCliente',
+    idTipoSeguro: 'IdTipoSeguro',
+    porcentajeSeguro: 'Porcentaje de Seguro',
+    valorDeclarado: 'Valor declarado',
+    validarTimbradoFactura: 'Validar timbrado factura',
+    observaciones: 'Observaciones',
+    idRemitente: 'IdRemitente',
+    correoRemitente: 'Correo remitente',
+    telefonoRemitente: 'Telefono remitente',
+    contactoRemitente: 'Contacto remitente',
+    idDestinatario: 'IdDestinatario',
+    correoDestinatario: 'Correo destinatario',
+    telefonoDestinatario: 'Telefono destinatario',
+    contactoDestinatario: 'Contacto destinatario',
+    entregaEnSucursal: 'Entrega en sucursal',
+    idSucursalEntrega: 'IdSucursalEntrega',
+    entregaDiferenteDomicilio: 'Entrega en diferente domicilio',
+    codigoPostalDiferenteDomicilio: 'Codigo postal',
+    coloniaDiferenteDomicilio: 'Colonia',
+    calleNumeroDiferenteDomicilio: 'Calle y numero',
+    entregarEn: 'Entregar en',
+    datosAdicionalesEntrega: 'Datos adicionales de entrega',
+    latitud: 'Latitud',
+    longitud: 'Longitud',
+    entregaConCita: 'Entrega con cita',
+    citaPendiente: 'Cita pendiente',
+    fechaCita: 'Fecha cita',
+    horaMinima: 'Hora mínima',
+    horaMaxima: 'Hora máxima',
+    paquetes:{
+        numeroEmbarque: 'Número de embarque',
+        cantidad: 'Cantidad',
+        idProducto: 'IdProducto',
+        descripcion: 'Descripcion',
+        idEmbalaje: 'IdEmbalaje',
+        largo: 'Largo',
+        alto: 'Alto',
+        ancho: 'Ancho',
+        peso: 'Peso',
+        observaciones: 'Observaciones'
+    }
 }

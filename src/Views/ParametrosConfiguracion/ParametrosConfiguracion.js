@@ -388,9 +388,9 @@ function ParametrosConfiguracion() {
         a.remove();
     }
 
-    const handleOnupdatefiles = (files) => {
-        convertirABase64(files[0].file)
-        setFiles(files)
+    const handleOnupdatefiles = (newFiles) => {
+        convertirABase64(newFiles[0].file)
+        setFiles(newFiles)
     }
 
     const convertirABase64 = (file) => {
