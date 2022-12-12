@@ -573,7 +573,7 @@ function Viajes() {
 
     }
 
-    function generarCFDI(id, folio, idViaje, sustituir) {
+    function generarCFDI(idParada, folio, idViaje, sustituir, idInforme) {
         obtenerParametrosConfiguracion().then(respuesta => {
             let titulo;
             let mensaje;
@@ -591,8 +591,8 @@ function Viajes() {
                     {
                         label: 'Sí',
                         onClick: () => {
-                            obtenerCFDI(id,sustituir).then((result) => {
-                                setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
+                            obtenerCFDI(idParada,sustituir).then((result) => {
+                                setState({...state, openEnvioCorreo: true, idInforme: idInforme, folio: folio, idViaje: idViaje})
                             }).catch((error) => {
                                 if (error.response){
                                     showError(error.response.data)
@@ -781,7 +781,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_nIdParada, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
+                                   onClick={() => (generarCFDI(row.row.m_nIdParada, row.row.m_sFolioInforme, row.row.m_nIdViaje, false, row.row.m_nIdInforme))}><i className="zmdi zmdi-file-text"
                                                                                                                                              style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -1122,7 +1122,7 @@ function Viajes() {
     function envioCorreoAction(data) {
         enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault).then(({data}) => {
             showSuccess(data);
-            descargarPDF(state.idInforme, state.folio)
+            descargarPDF(viajeSeleccionado.id,state.idInforme, state.folio)
             setState(state => {
                 return {...state, openEnvioCorreo: false}
             })
@@ -1148,7 +1148,7 @@ function Viajes() {
                 state.openEnvioCorreo &&
                 <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={() => {
                     setState({...state, openEnvioCorreo: false});
-                    descargarPDF(state.idViaje,state.idInforme, state.folio);
+                    descargarPDF(viajeSeleccionado.id,state.idInforme, state.folio);
                     getParadasListado({m_nIdViaje: state.idViaje})
                 }}/>
             }
