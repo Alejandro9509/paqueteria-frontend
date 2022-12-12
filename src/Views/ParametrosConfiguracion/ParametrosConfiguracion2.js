@@ -179,7 +179,8 @@ function ParametrosConfiguracion2() {
             timbradoPruebaGuia: configuraciones.timbradoPruebaGuia,
             validarTimbrado: configuraciones.validarTimbrado,
             idComplemento: configuraciones.idComplemento,
-            validarTimbradoIngreso: configuraciones.validarTimbradoIngreso
+            validarTimbradoIngreso: configuraciones.validarTimbradoIngreso,
+            tipoTimbrado: configuraciones.tipoTimbrado
         }
 
         modificarParametrosConfiguracion(params)
@@ -227,7 +228,8 @@ function ParametrosConfiguracion2() {
                     timbradoPruebaGuia: respuesta.data.TimbradoPruebaGuia,
                     validarTimbrado: respuesta.data.ValidarTimbrado,
                     idComplemento: respuesta.data.IdComplemento,
-                    validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso
+                    validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
+                    tipoTimbrado: respuesta.data.TipoTimbrado
                 }
             })
 
@@ -1013,32 +1015,32 @@ function ParametrosConfiguracion2() {
                                  flexDirection="column">
                                 <Box display="flex" p={1} my={0.5} flexDirection="column">
 
-                                    {/*<Box width="100%" p={1} my={0.5}>
+                                    <Box width="100%" p={1} my={0.5}>
                                         <FormControl fullWidth variant="outlined" width="25%">
-                                            <InputLabel id="idComplementoLabel">Complemento</InputLabel>
+                                            <InputLabel id="idComplementoLabel">Tipo de servicio</InputLabel>
                                             <Select
                                                 labelId="idComplementoLabel"
                                                 className="form-control"
                                                 required
-                                                value={configuraciones.idComplemento}
-                                                label="Complemento"
-                                                id="idComplemento"
-                                                name="idComplemento"
+                                                value={configuraciones.tipoTimbrado}
+                                                label="Tipo de servicio"
+                                                id="tipoTimbrado"
+                                                name="tipoTimbrado"
                                                 onChange={handleChange}
                                             >
                                                 <option key={"1"}
-                                                        value={2}
+                                                        value={1}
                                                 >
-                                                    Ingreso
+                                                    Consolidado
                                                 </option>
                                                 <option key={"2"}
-                                                        value={3}
+                                                        value={2}
                                                 >
-                                                    Ninguno
+                                                    Paquetería
                                                 </option>
                                             </Select>
                                         </FormControl>
-                                    </Box>*/}
+                                    </Box>
                                     <Box width="50%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Validar facturas de ingreso</div>
