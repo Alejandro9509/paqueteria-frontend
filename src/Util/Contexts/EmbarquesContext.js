@@ -96,6 +96,7 @@ function cancelarEmbarque(state, params){
         );
     return result
 }
+
 function obtenerEmbarqueCancelado(state){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetCancelarById/${state.idEmbarque}`;
     let result;
@@ -104,6 +105,7 @@ function obtenerEmbarqueCancelado(state){
         );
     return result
 }
+
 function obtenerEmbarquesId(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarque/GetById/${id}`;
     let result;
@@ -122,4 +124,11 @@ function obtenerEmbarqueMoneda(valor, idMoneda, idGuia){
     return result
 }
 
-export {modificarEmbarques, agregarEmbarques, obtenerEmbarqueReporte, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda}
+function validarEmbarquesImportados(params){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Embarques/validar-importacion`;
+    let result;
+    trackPromise(result = axios.post(url, Object.assign({}, params), { headers }))
+    return result
+}
+
+export {modificarEmbarques, agregarEmbarques, obtenerEmbarqueReporte, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda, validarEmbarquesImportados}

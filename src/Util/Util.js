@@ -315,6 +315,7 @@ export function readExcel(FORMAT,file){
             //VALIDACIONES PAQUETES
             const arrayPaquetes = dataPaquetes.map((item) => ({
                 numeroEmbarque: item[FORMAT.paquetes.numeroEmbarque],
+                idProducto: item[FORMAT.paquetes.idProducto],
                 idEmbalaje: item[FORMAT.paquetes.idEmbalaje],
                 alto: item[FORMAT.paquetes.alto],
                 ancho: item[FORMAT.paquetes.ancho],

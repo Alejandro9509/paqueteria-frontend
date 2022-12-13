@@ -8,7 +8,7 @@ import {
     Grid,
     Input,
     InputLabel, List, ListItem, ListItemIcon, ListItemText,
-    Select,
+    Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField
 } from "@material-ui/core";
 
@@ -41,6 +41,12 @@ import {
 // import DeleteIcon from "@material-ui/icons/Delete";
 import {FilePond} from "react-filepond";
 import {descargarPlantillaImportarEmbarque} from "../../Util/Contexts/UtileriasContext";
+import {ExpandLess} from "@material-ui/icons";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import {DataGrid} from "@material-ui/data-grid";
+import {dataGridLocaleText} from "../../Constants";
+import {validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
+import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
 
 /*class ImportarEmbarques extends Component {
     constructor(props) {
@@ -443,11 +449,25 @@ function ImportarEmbarquesV2(props) {
             return
         }
         readExcel(DEFAULT_FORMAT,files[0].file).then((resultado)=>{
+            let params = {
+                embarques: resultado
+            }
             console.log(resultado)
+            console.log(params)
             // showMessage("Subiendo...",3000,"success")
             /*agregarGuiasImportadas(resultado).then((r)=>{
                 showMessage("Guias creadas exitosamente",3000,"success")
             })*/
+            validarEmbarquesImportados(params).then(respuesta => {
+                console.log(respuesta.data)
+                setState({
+                    ...state,
+                    embarques: respuesta.data
+                })
+            }).catch((error)=>{
+                // showMessage(err,2000,"warning")
+                console.log('error al validar: ' + error)
+            })
         }).catch((err)=>{
             // showMessage(err,2000,"warning")
             console.log('error al importar' + err)
@@ -563,32 +583,40 @@ function ImportarEmbarquesV2(props) {
                                                 labelIdle='Haz click aquí para seleccionar un documento'
                                             />
                                         </Grid>
-                                        <Grid item xs={3}>
+                                        <Grid item xs={1}>
                                             <Button fullWidth
                                                     color={"primary"}
                                                     variant={"contained"}
                                                     onClick={() => handleOnImportarClick()}
                                             >Importar</Button>
                                         </Grid>
+                                        <Grid item xs={3}>
+                                            <Button fullWidth
+                                                    color={"primary"}
+                                                    variant={"contained"}
+                                                    onClick={() => handleOnDescargarPlantillaClick()}
+                                            >Descargar plantilla</Button>
+                                        </Grid>
                                         <Grid item xs={12}>Embarques</Grid>
-                                        {/*<Grid item xs={12}>
+                                        <Grid item xs={12}>
 
                                             <List>
                                                 {
-                                                    this.state.embarques.map((e, i) => {
-                                                        const open = this.state.embarqueSeleccionado === i
+                                                    state.embarques.map((e, i) => {
+                                                        const open = state.embarqueSeleccionado === i
                                                         return (
                                                             <>
                                                                 <ListItem key={i} button
-                                                                          onClick={() => this.setState({embarqueSeleccionado: i === this.state.embarqueSeleccionado ? -1 : i})}>
-                                                                    <ListItemText primary={"Embarque #" + (i + 1)}/>
+                                                                          onClick={() => setState({...state, embarqueSeleccionado: i === state.embarqueSeleccionado ? -1 : i})}>
+                                                                    <ListItemText primary={"Embarque #" + (e.numeroEmbarque)}/>
+                                                                    {!e.success && <InfoRoundedIcon color={"error"} fontSize={"large"}/> }
                                                                     {open ? <ExpandLess/> : <ExpandMore/>}
                                                                 </ListItem>
                                                                 <Collapse in={open}
                                                                           timeout="auto" unmountOnExit>
                                                                     <List component="div" disablePadding>
                                                                         <ListItem button>
-                                                                            <Grid container spacing={1}>
+                                                                            {/*<Grid container spacing={1}>
                                                                                 <Grid item xs={6}>
                                                                                     <TextField
                                                                                         variant="outlined"
@@ -603,7 +631,7 @@ function ImportarEmbarquesV2(props) {
                                                                                         variant="outlined"
                                                                                         label="Destinatario"
                                                                                         required
-                                                                                        value={e.destinatario}
+                                                                                        value={e.nombreDestinatario}
                                                                                         InputLabelProps={{shrink: true}}
                                                                                     />
                                                                                 </Grid>
@@ -625,7 +653,126 @@ function ImportarEmbarquesV2(props) {
                                                                                         />
                                                                                     </div>
                                                                                 </Grid>
-                                                                            </Grid>
+                                                                            </Grid>*/}
+                                                                            {
+                                                                                e.success ?
+                                                                                <>
+
+
+                                                                                    <Grid container>
+                                                                                        <Grid item xs={6}>
+                                                                                            Cliente: {e.data.cliente}<br/>
+                                                                                            Tipo de seguro: {e.data.tipoSeguro}<br/>
+                                                                                            % de seguro: {e.data.porcentajeSeguro}<br/>
+                                                                                            Valor declarado: {e.data.valorDeclarado}<br/>
+                                                                                            Validar timbrado de factura: {e.data.validarTimbradoFactura?"Sí":"No"}<br/>
+                                                                                            Observaciones: {e.data.observaciones}<br/><br/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={6}>
+                                                                                            Entrega en sucursal: {e.data.entregaEnSucursal?"Sí":"No"}<br/>
+                                                                                            Entrega en diferente domicilio: {e.data.entregaDiferenteDomicilio?"Sí":"No"}<br/>
+                                                                                            Latitud: {e.data.latitud}<br/>
+                                                                                            Longitud: {e.data.longitud}<br/>
+                                                                                            Entrega con cita: {e.data.conCita?"Sí":"No"}<br/>
+                                                                                            Ruta: {e.data.ruta}
+                                                                                        </Grid>
+                                                                                        <Grid item xs={6}>
+                                                                                            Remitente: {e.data.nombreRemitente}<br/>
+                                                                                            Código Postal: {e.data.codigoPostalRemitente}<br/>
+                                                                                            Correo: {e.data.correoRemitente}<br/>
+                                                                                            Origen: {e.data.origen}<br/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={6}>
+                                                                                            Destinatario: {e.data.nombreDestinatario}<br/>
+                                                                                            Código Postal: {e.data.codigoPostalRemitente}<br/>
+                                                                                            Correo: {e.data.correoRemitente}<br/>
+                                                                                            Destino: {e.data.destino}<br/>
+                                                                                            Zona operativa: {e.data.zonaDestinatario}<br/>
+                                                                                        </Grid>
+                                                                                        <Grid item xs={12} sm={8}>
+                                                                                            <TableContainer style={{
+                                                                                                height: "100%",
+                                                                                                padding: "0px",
+                                                                                                paddingRight: "0px"
+                                                                                            }}>
+                                                                                                <Table size="small">
+                                                                                                    <TableHead>
+                                                                                                        <TableRow>
+                                                                                                            <TableCell
+                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
+                                                                                                                align="left">
+                                                                                                                Cantidad
+                                                                                                            </TableCell>
+                                                                                                            <TableCell
+                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
+                                                                                                                align="left">Descripcion</TableCell>
+                                                                                                            <TableCell
+                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
+                                                                                                                align="left">Embalaje</TableCell>
+                                                                                                            <TableCell
+                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
+                                                                                                                align="left">Largo</TableCell>
+                                                                                                            <TableCell
+                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
+                                                                                                                align="left">Alto</TableCell>
+                                                                                                            <TableCell
+                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
+                                                                                                                align="left">Ancho</TableCell>
+                                                                                                        </TableRow>
+                                                                                                    </TableHead>
+                                                                                                    <TableBody>
+                                                                                                        {
+                                                                                                            e.data.paquetes.map((item, index) => (
+                                                                                                                <TableRow key={index}>
+                                                                                                                    <TableCell
+                                                                                                                        style={{borderBottom: "none"}}
+                                                                                                                        align="left">
+                                                                                                                        {item.cantidad}
+                                                                                                                    </TableCell>
+                                                                                                                    <TableCell
+                                                                                                                        style={{borderBottom: "none"}}
+                                                                                                                        align="left">
+                                                                                                                        {item.descripcion}
+                                                                                                                    </TableCell>
+                                                                                                                    <TableCell
+                                                                                                                        style={{borderBottom: "none"}}
+                                                                                                                        align="left">
+                                                                                                                        {item.embalaje}
+                                                                                                                    </TableCell>
+                                                                                                                    <TableCell
+                                                                                                                        style={{borderBottom: "none"}}
+                                                                                                                        align="left">
+                                                                                                                        {item.largo}
+                                                                                                                    </TableCell>
+                                                                                                                    <TableCell
+                                                                                                                        style={{borderBottom: "none"}}
+                                                                                                                        align="left">
+                                                                                                                        {item.alto}
+                                                                                                                    </TableCell>
+                                                                                                                    <TableCell
+                                                                                                                        style={{borderBottom: "none"}}
+                                                                                                                        align="left">
+                                                                                                                        {item.ancho}
+                                                                                                                    </TableCell>
+                                                                                                                </TableRow>
+                                                                                                            ))
+                                                                                                        }
+                                                                                                    </TableBody>
+                                                                                                </Table>
+
+                                                                                            </TableContainer>
+                                                                                        </Grid>
+                                                                                    </Grid>
+
+
+
+                                                                                </>
+                                                                                    :
+                                                                                    <>
+                                                                                        {e.message}
+                                                                                    </>
+                                                                            }
+
                                                                         </ListItem>
                                                                     </List>
                                                                 </Collapse>
@@ -634,7 +781,7 @@ function ImportarEmbarquesV2(props) {
                                                     })
                                                 }
                                             </List>
-                                        </Grid>*/}
+                                        </Grid>
                                     </Grid>
                                 </div>
                             </div>
