@@ -596,9 +596,9 @@ function Viajes() {
                                 obtenerCFDI(idParada,sustituir).then((result) => {
                                     setState({...state, openEnvioCorreo: true, idInforme: idInforme, folio: folio, idViaje: idViaje})
                                 }).catch((error) => {
-                                    // if (error.response){
-                                    //     showError(error.response.data)
-                                    // }
+                                    if (error.response){
+                                        showError(error.response.data)
+                                    }
                                 })
                             }
                         },
