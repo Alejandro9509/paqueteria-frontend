@@ -306,13 +306,17 @@ export function readExcel(FORMAT,file){
 
             const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
 
+            //SE OBTIENEN LAS HOJAS DEL EXCEL
             const wsGuias = (wb.Sheets['Embarques']);
             const wsPaquetes = (wb.Sheets['Paquetes']);
+            const wsComplementosSat = (wb.Sheets['Complementos SAT']);
 
+            //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
             const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item['Número de embarque'] > 0);
             const dataPaquetes = XLSX.utils.sheet_to_json(wsPaquetes, {range:0}).filter(item => item['Número de embarque'] > 0);
-            console.log(data)
-            //VALIDACIONES PAQUETES
+            const dataComplementosSat = XLSX.utils.sheet_to_json(wsComplementosSat, {range:0}).filter(item => item['Número de embarque'] > 0);
+
+            //SE RECORREN LAS FILAS CON DATOS Y SE TOMAN LOS DATOS CORRESPONDIENTES
             const arrayPaquetes = dataPaquetes.map((item) => ({
                 numeroEmbarque: item[FORMAT.paquetes.numeroEmbarque],
                 idProducto: item[FORMAT.paquetes.idProducto],
@@ -326,7 +330,19 @@ export function readExcel(FORMAT,file){
                 descripcion: item[FORMAT.paquetes.descripcion],
                 observaciones: item[FORMAT.paquetes.observaciones] || ""
             }))
-            console.log(arrayPaquetes)
+            const arrayComplementos = dataComplementosSat.map((item) => ({
+                numeroEmbarque: item[FORMAT.complementosSat.numeroEmbarque],
+                cantidad: item[FORMAT.complementosSat.cantidad],
+                peso: item[FORMAT.complementosSat.peso],
+                claveProductoServicio: item[FORMAT.complementosSat.claveProducto],
+                claveUnidadMedida: item[FORMAT.complementosSat.claveUnidadMedida],
+                esMaterialPeligroso: item[FORMAT.complementosSat.esMaterialPeligroso] === 'SI',
+                claveMaterialPeligroso: item[FORMAT.complementosSat.claveMaterialPeligroso],
+                claveEmbalaje: item[FORMAT.complementosSat.claveEmbalaje],
+                descripcionEmbalaje: item[FORMAT.complementosSat.descripcionEmbalaje],
+                claveFraccionArancelaria: item[FORMAT.complementosSat.claveFraccionArancelaria],
+            }))
+            console.log(arrayComplementos)
 
             //VALIDACIONES DE GUIAS
             const newArray = data.map(function(item,index){
@@ -499,6 +515,7 @@ export function readExcel(FORMAT,file){
                     }
                 }
                 embarqueResumen.paquetes = arrayPaquetes.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
+                embarqueResumen.complementosSAT = arrayComplementos.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
                 return embarqueResumen
             })
             resolve(newArray);
@@ -558,5 +575,17 @@ export const DEFAULT_FORMAT = {
         ancho: 'Ancho',
         peso: 'Peso',
         observaciones: 'Observaciones'
+    },
+    complementosSat:{
+        numeroEmbarque: 'Número de embarque',
+        cantidad: 'Cantidad',
+        peso: 'Peso',
+        claveProducto: 'Clave producto o servicio',
+        claveUnidadMedida: 'Clave unidad medida',
+        esMaterialPeligroso: 'Es material peligroso',
+        claveMaterialPeligroso: 'Clave material peligroso',
+        claveEmbalaje: 'Clave embalaje',
+        descripcionEmbalaje: 'Descripcion embalaje',
+        claveFraccionArancelaria: 'Clave fracción arancelaria',
     }
 }
