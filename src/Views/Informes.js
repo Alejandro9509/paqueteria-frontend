@@ -1704,39 +1704,81 @@ function Informes({history}) {
                                                                             </FormControl>
                                                                         </label>
                                                                     </div>
-                                                                    {/*****************************************Oficina Emisora***************************************************/}
-                                                                    <div className="col-sm-6 col-md-6 unit">
+                                                                   <div className="row">  
+                                                                    <div className="col-sm-12 col-md-6 unit">
 
                                                                         <label className="input select">
                                                                             <FormControl fullWidth
                                                                                          variant="outlined"
                                                                                          margin="dense" required>
                                                                                 <InputLabel
-                                                                                    id="sucursalEmisoraLabel">Oficina
-                                                                                    Emisora</InputLabel>
+                                                                                    id="tipoTimbradoLabel">Tipo de servicio</InputLabel>
                                                                                 <Select
-                                                                                    labelId="sucursalEmisoraLabel"
-                                                                                    label="Oficina Emisora"
+                                                                                    labelId="tipoTimbradoLabel"
+                                                                                    label="Tipo de servicio"
                                                                                     className="form-control"
                                                                                     required
-                                                                                    value={state.sucursalEmisora}
-                                                                                    id="sucursalEmisora"
-                                                                                    onChange={handleSelectSucursalEmisora}
+                                                                                    value={state.tipoTimbrado}
+                                                                                    id="tipoTimbrado"
+                                                                                    onChange={handleSelectTipoTimbrado}
                                                                                 >
-                                                                                    {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
-                                                                                            <option
-                                                                                                key={sucursalEmisora.m_nIdSucursal}
-                                                                                                value={sucursalEmisora.m_nIdSucursal}>
-                                                                                                {sucursalEmisora.m_sSucursal}
-                                                                                            </option>
-                                                                                        )
-                                                                                    )}
+                                                                                    <option key={"1"}
+                                                                                            value={1}
+                                                                                    >
+                                                                                        Consolidado
+                                                                                    </option>
+                                                                                    <option key={"2"}
+                                                                                            value={2}
+                                                                                    >
+                                                                                        Paquetería
+                                                                                    </option>
                                                                                 </Select>
                                                                             </FormControl>
                                                                         </label>
+                                                                      </div>
                                                                     </div>
-                                                                    {/*****************************************Oficina Receptora*************************************************/}
-                                                                    <div className="col-sm-6 col-md-6 unit">
+                                                               
+                                                                   
+                                                                    
+                                                                  
+                                                                  
+                                                                    <div className="row">  
+                                                                     {/*****************************************Oficina Emisora***************************************************/}
+                                                                     <div className="col-sm-6 col-md-6 unit">
+
+<label className="input select">
+    <FormControl fullWidth
+                 variant="outlined"
+                 margin="dense" required>
+        <InputLabel
+            id="sucursalEmisoraLabel">Oficina
+            Emisora</InputLabel>
+        <Select
+            labelId="sucursalEmisoraLabel"
+            label="Oficina Emisora"
+            className="form-control"
+            required
+            value={state.sucursalEmisora}
+            id="sucursalEmisora"
+            onChange={handleSelectSucursalEmisora}
+        >
+            {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
+                    <option
+                        key={sucursalEmisora.m_nIdSucursal}
+                        value={sucursalEmisora.m_nIdSucursal}>
+                        {sucursalEmisora.m_sSucursal}
+                    </option>
+                )
+            )}
+        </Select>
+    </FormControl>
+</label>
+
+</div>                    
+                                                                        
+                                                                        
+                                                                    {/*****************************************Oficina Receptora*************************************************/}      
+                                                                         <div className="col-sm-12 col-md-6 unit">
 
                                                                         <label className="input select">
                                                                             <FormControl fullWidth
@@ -1767,38 +1809,9 @@ function Informes({history}) {
                                                                             </FormControl>
                                                                         </label>
                                                                     </div>
-                                                                    {/*****************************************TipoTimbrado*************************************************/}
-                                                                    <div className="col-sm-6 col-md-6 unit">
-
-                                                                        <label className="input select">
-                                                                            <FormControl fullWidth
-                                                                                         variant="outlined"
-                                                                                         margin="dense" required>
-                                                                                <InputLabel
-                                                                                    id="tipoTimbradoLabel">Tipo de timbrado</InputLabel>
-                                                                                <Select
-                                                                                    labelId="tipoTimbradoLabel"
-                                                                                    label="Tipo de timbrado"
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    value={state.tipoTimbrado}
-                                                                                    id="tipoTimbrado"
-                                                                                    onChange={handleSelectTipoTimbrado}
-                                                                                >
-                                                                                    <option key={"1"}
-                                                                                            value={1}
-                                                                                    >
-                                                                                        Consolidado
-                                                                                    </option>
-                                                                                    <option key={"2"}
-                                                                                            value={2}
-                                                                                    >
-                                                                                        Paquetería
-                                                                                    </option>
-                                                                                </Select>
-                                                                            </FormControl>
-                                                                        </label>
                                                                     </div>
+                                                                    {/*****************************************TipoTimbrado*************************************************/}
+                                                                    
 
 
                                                                     {/*****************************************Remolque*************************************************/}
