@@ -131,4 +131,11 @@ function validarEmbarquesImportados(params){
     return result
 }
 
-export {modificarEmbarques, agregarEmbarques, obtenerEmbarqueReporte, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda, validarEmbarquesImportados}
+function agregarEmbarquesImportados(params){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Embarques/agregar-importados`;
+    let result;
+    trackPromise(result = axios.post(url, Object.assign({}, params), { headers }))
+    return result
+}
+
+export {modificarEmbarques, agregarEmbarques, obtenerEmbarqueReporte, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda, validarEmbarquesImportados,agregarEmbarquesImportados}

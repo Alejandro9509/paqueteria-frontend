@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     Button, Collapse,
@@ -45,10 +45,14 @@ import {ExpandLess} from "@material-ui/icons";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import {validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
+import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 
 function ImportarEmbarques(props) {
+    const [configuraciones, setConfiguraciones] = React.useState({
+        estatusEmbarque: 0
+    })
     const [files, setFiles] = useState([])
     const [state, setState] = useState({
         fechaEmbarque: getCurrentDate(),
@@ -58,15 +62,13 @@ function ImportarEmbarques(props) {
         archivo: [],
         embarques: []
     })
-
-    const handleOnChange = (event) => {
-
-        setState({
-            ...state,
-            [event.target.name]: event.target.value
+    useEffect(() => {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            setConfiguraciones({
+                estatusEmbarque: respuesta.data.EstatusEmbarque
+            })
         })
-
-    }
+    }, [])
 
     const handleOnupdatefiles = (newFiles) => {
         setFiles(newFiles)
@@ -119,6 +121,33 @@ function ImportarEmbarques(props) {
             // showMessage(err,2000,"warning")
             console.log('error al importar' + err)
         })
+    }
+
+    const handleOnClickAceptar = (e) => {
+        try {
+            let params = {
+                embarques: state.embarques.filter(emb => emb.success === true).map(emb => emb.data)
+            }
+            params.embarques.forEach(embarque => {
+                embarque.fechaRegistro = getCurrentDate()
+                embarque.horaRegistro = getCurrentTime()
+                embarque.idSucursalRegistro = localStorage.getItem("Sucursal")
+                embarque.idUsuarioRegistro = localStorage.getItem("UsuarioId")
+                embarque.idEstatus = configuraciones.estatusEmbarque
+                embarque.conceptosFacturacion = embarque.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion===false)
+            })
+
+            console.log(params)
+            agregarEmbarquesImportados(params).then(respuesta => {
+                showSuccess(respuesta.data)
+            }).catch((error)=>{
+                // showMessage(err,2000,"warning")
+                console.log('error al agregar: ' + error)
+            })
+        }catch (err){
+            console.log('error al agregar: ' + err)
+        }
+
     }
 
     return(
@@ -400,7 +429,7 @@ function ImportarEmbarques(props) {
                             <div className="row">
                                 <Grid container spacing={2}>
                                     <Grid item xs={12}>
-                                        <Button type={"submit"} className="btn btn-primary primary-btn">
+                                        <Button className="btn btn-primary primary-btn" onClick={handleOnClickAceptar} disabled={configuraciones.estatusEmbarque === 0}>
                                             Aceptar
                                         </Button>
                                         <Button type={"button"} onClick={() => {console.log('cancelar')}}

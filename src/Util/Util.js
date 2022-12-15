@@ -4,6 +4,7 @@ import {trackPromise} from "react-promise-tracker";
 import {API_HEADERS} from "../Constants";
 import * as XLSX from "xlsx";
 import moment from "moment";
+import Noty from "noty";
 
 const XRouteClient = window.XRouteClient;
 const XLoadClient = window.XLoadClient;
@@ -14,6 +15,15 @@ xload.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 
 const headers = API_HEADERS
+
+export function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "8000",
+    }).show();
+}
 
 export function useInterval(callback, delay) {
     const savedCallback = useRef();
