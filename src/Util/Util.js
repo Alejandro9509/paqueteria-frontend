@@ -510,8 +510,8 @@ export function readExcel(FORMAT,file){
                     embarqueResumen.citaPendiente = item[FORMAT.citaPendiente] === 'SI'
                     if (!embarqueResumen.citaPendiente) {
                         embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
-                        embarqueResumen.horaMinima = moment(item[FORMAT.horaMinima]).format('HH:mm')
-                        embarqueResumen.horaMaxima = moment(item[FORMAT.horaMaxima]).format('HH:mm')
+                        embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinima]).format('HH:mm')
+                        embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaxima]).format('HH:mm')
                     }
                 }
                 embarqueResumen.paquetes = arrayPaquetes.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
@@ -562,8 +562,8 @@ export const DEFAULT_FORMAT = {
     entregaConCita: 'Entrega con cita',
     citaPendiente: 'Cita pendiente',
     fechaCita: 'Fecha cita',
-    horaMinima: 'Hora mínima',
-    horaMaxima: 'Hora máxima',
+    horaCitaMinima: 'Hora mínima',
+    horaCitaMaxima: 'Hora máxima',
     paquetes:{
         numeroEmbarque: 'Número de embarque',
         cantidad: 'Cantidad',
