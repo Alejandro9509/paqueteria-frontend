@@ -28,8 +28,8 @@ function obtenerClavesCancelacionSAT( ) {
     );
     return result
 }
-function enviarCorreoCFDIViaje(id, correos, correoDefault){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/Informe/${id}/EnviarCorreoFactura`;
+function enviarCorreoCFDIViaje(id, correos, correoDefault, idViaje){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/${idViaje}/Informe/${id}/EnviarCorreoFactura`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
