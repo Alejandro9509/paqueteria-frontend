@@ -51,7 +51,8 @@ import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConf
 
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
-        estatusEmbarque: 0
+        estatusEmbarque: 0,
+        plantillaImportarEmbarquesNombreArchivo: ''
     })
     const [files, setFiles] = useState([])
     const [state, setState] = useState({
@@ -65,7 +66,8 @@ function ImportarEmbarques(props) {
     useEffect(() => {
         obtenerParametrosConfiguracion().then(respuesta => {
             setConfiguraciones({
-                estatusEmbarque: respuesta.data.EstatusEmbarque
+                estatusEmbarque: respuesta.data.EstatusEmbarque,
+                plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo,
             })
         })
     }, [])
@@ -83,7 +85,7 @@ function ImportarEmbarques(props) {
             // create "a" HTML element with href to file & click
             const link = document.createElement('a');
             link.href = href;
-            link.setAttribute('download', 'plantillaImportarEmbarques.xlsx'); //or any other extension
+            link.setAttribute('download', configuraciones.plantillaImportarEmbarquesNombreArchivo); //or any other extension
             document.body.appendChild(link);
             link.click();
 
@@ -271,6 +273,7 @@ function ImportarEmbarques(props) {
                                                     color={"primary"}
                                                     variant={"contained"}
                                                     onClick={() => handleOnDescargarPlantillaClick()}
+                                                    disabled={configuraciones.plantillaImportarEmbarquesNombreArchivo===''}
                                             >Descargar plantilla</Button>
                                         </Grid>
                                         <Grid item xs={12}>Embarques</Grid>

@@ -503,7 +503,8 @@ export function readExcel(FORMAT,file){
                     entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio] === 'SI',
                     latitud: item[FORMAT.latitud],
                     longitud: item[FORMAT.longitud],
-                    entregaConCita: item[FORMAT.entregaConCita] === 'SI'
+                    entregaConCita: item[FORMAT.entregaConCita] === 'SI',
+                    idTipoServicio: item[FORMAT.idTipoServicio]
                 }
                 if (embarqueResumen.entregaEnSucursal){
                     embarqueResumen.idSucursalEntrega = item[FORMAT.idSucursalEntrega]
@@ -551,6 +552,7 @@ export const DEFAULT_FORMAT = {
     valorDeclarado: 'Valor declarado',
     validarTimbradoFactura: 'Validar timbrado factura',
     observaciones: 'Observaciones',
+    idTipoServicio: 'IdTipoServicio',
     idRemitente: 'IdRemitente',
     correoRemitente: 'Correo remitente',
     telefonoRemitente: 'Telefono remitente',

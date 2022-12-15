@@ -2082,7 +2082,7 @@ function Embarque(props) {
             event.stopPropagation();
         }
         $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(0).addClass('active');
+        $('.nav-tabs li').eq(4).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Importar').addClass('in show');
     }
@@ -3218,11 +3218,12 @@ function Embarque(props) {
                             </a>
                         </li>
 
-                        <li >
+                        <li>
                             <a onClick={() => handleShowImportar()}>
                                 <i className="fa fa-print"/> Importar
                             </a>
                         </li>
+
                         <li style={{float: "right"}}>
                             <a
                                 className={state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled : ""}
