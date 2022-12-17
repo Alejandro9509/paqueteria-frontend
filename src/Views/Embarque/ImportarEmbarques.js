@@ -48,6 +48,7 @@ import {dataGridLocaleText} from "../../Constants";
 import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import DialogTableClientes from "../Clientes/DialogTableClientes";
 
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -58,10 +59,12 @@ function ImportarEmbarques(props) {
     const [state, setState] = useState({
         fechaEmbarque: getCurrentDate(),
         horaEntrega: getCurrentTime(),
-        dialogVisible: false,
+        openDialog: false,
+        openDialogToOpen: '',
         dataSucursal: [],
         archivo: [],
-        embarques: []
+        embarques: [],
+        cliente: null
     })
     useEffect(() => {
         obtenerParametrosConfiguracion().then(respuesta => {
@@ -77,7 +80,7 @@ function ImportarEmbarques(props) {
     }
 
     const handleOnDescargarPlantillaClick = () => {
-        descargarPlantillaImportarEmbarque().then(response => {
+        descargarPlantillaImportarEmbarque(state.cliente.m_nIdCliente).then(response => {
             // create file link in browser's memory
             let file = new Blob([response.data],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
             const href = URL.createObjectURL(file);
@@ -100,6 +103,7 @@ function ImportarEmbarques(props) {
             return
         }
         readExcel(DEFAULT_FORMAT,files[0].file).then((resultado)=>{
+            resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
             let params = {
                 embarques: resultado
             }
@@ -109,6 +113,7 @@ function ImportarEmbarques(props) {
             /*agregarGuiasImportadas(resultado).then((r)=>{
                 showMessage("Guias creadas exitosamente",3000,"success")
             })*/
+            return
             validarEmbarquesImportados(params).then(respuesta => {
                 console.log(respuesta.data)
                 setState({
@@ -152,21 +157,37 @@ function ImportarEmbarques(props) {
 
     }
 
+    const handlePatrocinadorSelected = (row) => {
+        console.log(row)
+        setState(state => {
+            return {
+                ...state,
+                cliente: row.data,
+                /*idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
+                porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_bTieneSeguro,
+                tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",*/
+                openDialog: false,
+            }
+        })
+    }
+
     return(
         <section className={"main-container"} style={{marginLeft: "0px", padding: "0px"}}>
-            {/*<Dialog
-                open={this.state.openDialog}
-                onClose={() => this.setState({openDialog: false})}
+            <Dialog
+                open={state.openDialog}
+                onClose={() => setState({openDialog: false})}
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
-                    {this.state.openDialogToOpen === 'CLIENTES' &&
+                    {state.openDialogToOpen === 'CLIENTES' &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <DialogTableClientes dialogVisible={(value) => this.setState({openDialog: value})}
-                                                 handlePatrocinadorSelected={handleOnChangeCliente}/>
+                            <DialogTableClientes dialogVisible={(value) => setState({...state, openDialog: value})}
+                                                 handlePatrocinadorSelected={handlePatrocinadorSelected}/>
                         </div>
                     }
-                    {this.state.openDialogToOpen === 'DESTINATARIOS' &&
+                    {/*{this.state.openDialogToOpen === 'DESTINATARIOS' &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                             <DialogTableRemDes
                                 dialogVisible={(value) => this.setState({openDialog: value})}
@@ -177,9 +198,9 @@ function ImportarEmbarques(props) {
                                 agregarEmbarque={true}
                             />
                         </div>
-                    }
+                    }*/}
                 </DialogContent>
-            </Dialog>*/}
+            </Dialog>
             <div className={"content-fluid"}>
                 <div className={'row'}>
                     <div className="widget-wrap">
@@ -220,16 +241,22 @@ function ImportarEmbarques(props) {
                                                     shrink: true,
                                                 }}/>
                                         </Grid>*/}
-                                        {/*<Grid item xs={3}>
+                                        <Grid item xs={3}>
                                             <TextField
                                                 variant="outlined"
                                                 label="Cliente"
                                                 required
-                                                // value={this.state.cliente ? this.state.cliente : null}
+                                                value={state.cliente ? state.cliente.m_sNombreFiscal : null}
                                                 InputLabelProps={{shrink: true}}
-                                                // onClick={handleOnClickCliente}
+                                                onClick={() => {
+                                                    setState({
+                                                        ...state,
+                                                        openDialog: true,
+                                                        openDialogToOpen: 'CLIENTES'
+                                                    })
+                                                }}
                                             />
-                                        </Grid>*/}
+                                        </Grid>
 
                                         {/*<Grid item xs={3}>
                                             <TextField
@@ -258,7 +285,8 @@ function ImportarEmbarques(props) {
                                             <FilePond
                                                 files={files}
                                                 onupdatefiles={(files) => handleOnupdatefiles(files)}
-                                                labelIdle='Haz click aquí para seleccionar un documento'
+                                                labelIdle={state.cliente ? 'Haz click aquí para seleccionar un documento': 'Selecciona un cliente antes de adjuntar archivo'}
+                                                disabled={!state.cliente}
                                             />
                                         </Grid>
                                         <Grid item xs={1}>
@@ -266,6 +294,7 @@ function ImportarEmbarques(props) {
                                                     color={"primary"}
                                                     variant={"contained"}
                                                     onClick={() => handleOnImportarClick()}
+                                                    disabled={!state.cliente}
                                             >Importar</Button>
                                         </Grid>
                                         <Grid item xs={3}>
