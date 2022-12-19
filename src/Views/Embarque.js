@@ -1659,6 +1659,7 @@ function Embarque(props) {
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
+      
         respuesta.data.recoleccionById = true
         setDataEmbarqueConsulta(respuesta)
         getDataParaEditar("Consultar")
@@ -2182,6 +2183,7 @@ function Embarque(props) {
     }
 
     const getDataParaEditar = (operacion) => {
+        console.log(operacion)
         getAllSucursales();
         getAllEstatusEmbarque();
         getAllTipoCobro();
@@ -2194,7 +2196,6 @@ function Embarque(props) {
 
 
     async function getParametrosConfiguracion(operacion) {
-
         obtenerParametrosConfiguracion().then(respuesta => {
             obtenerTiposDocumentoSucursal(localStorage.getItem("Sucursal")).then(({data}) => {
                 setDataTipoDocumento(data)
@@ -2215,6 +2216,7 @@ function Embarque(props) {
                     return {
                         ...state,
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
+                        tipoTimbrado: respuesta.data.TipoTimbrado,
                         //                      idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
                         validarTimbrado: respuesta.data.ValidarTimbradoIngreso
                     }
