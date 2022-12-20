@@ -67,12 +67,12 @@ function Embalaje() {
          }
         else{
         var params = {
-            "IdEmbalaje": state.IdEmbalaje,
-            "Codigo": state.CodigoEmbalaje,
-            "Nombre": state.NombreEmbalaje,
-            "Descripcion": state.DescripcionEmbalaje,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "m_nIdEmbalaje": state.IdEmbalaje,
+            "m_sCodigo": state.CodigoEmbalaje,
+            "m_sNombre": state.NombreEmbalaje,
+            "m_sDescripcion": state.DescripcionEmbalaje,
+            "m_sCreadoPor": state.CreadoPor,
+            "m_nModificadoPor": state.ModificadoPor
         }
         console.log(params)
       

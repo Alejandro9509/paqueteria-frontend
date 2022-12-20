@@ -120,7 +120,11 @@ class DetalleParadas extends Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) ||  this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0)
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0)
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0)) {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
 
@@ -311,6 +315,7 @@ class DetalleParadas extends Component {
         if (esRecoleccion){
             if (data.m_bRecoleccionDiferenteDomicilio){
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreRemitente,
                     numeroInterior: '',
                     numeroExterior: '',
@@ -333,6 +338,7 @@ class DetalleParadas extends Component {
                 }
             }else{
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreRemitente,
                     numeroInterior: '',
                     numeroExterior: '',
@@ -357,6 +363,7 @@ class DetalleParadas extends Component {
         }else{
             if (data.m_bEntregaDiferenteDomicilio){
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreDestinatario,
                     numeroInterior: '',
                     numeroExterior: '',
@@ -379,6 +386,7 @@ class DetalleParadas extends Component {
                 }
             }else{
                 direccion = {
+                    idGuia: id,
                     nombreLugar: data.m_sNombreDestinatario,
                     numeroInterior: null,
                     numeroExterior: null,
@@ -609,10 +617,13 @@ class DetalleParadas extends Component {
                                                open={this.state.openAgregar} paquetes={this.state.paquetes}/>
                 }
 
+                {(this.state.openRemplazar && this.state.paqueteSeleccionado) &&
                 <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
                                              onSubmit={this.onSubmitRemplazarPaquete}
                                              close={() => this.setState({openRemplazar: false})}
-                                             data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado.m_sFolio)}/>
+                                             data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado?.m_sFolio)}/>
+
+                }
 
                 {this.state.openParciales &&
                 <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
@@ -955,7 +966,8 @@ class DetalleParadas extends Component {
                                                                                                         color="primary">
                                                                                                         
                                                                                                         {
-                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            // !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            false &&
                                                                                                             <IconButton
                                                                                                                 /* disabled={!validarDerecho(9101449)} */
                                                                                                                 onClick={() => {

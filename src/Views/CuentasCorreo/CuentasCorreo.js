@@ -62,20 +62,22 @@ class CuentasCorreo extends Component {
         event.preventDefault()
         const today = new Date();
         var params = {
-            TipoCuenta: this.state.idTipoCuenta,
-            Servidor: this.state.servidor,
-            Puerto: this.state.puerto,
-            Usuario: this.state.usuario,
-            Contrasenia: this.state.pass,
-            TipoCifrado: this.state.idSeguridad,
-            CreadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            CreadoPor: localStorage.getItem("UsuarioId"),
-            ModificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-            ModificadoPor: localStorage.getItem("UsuarioId")
+            m_nIdCuentasCorreo:this.state.idCuenta,
+            m_nTipoCuenta: this.state.idTipoCuenta,
+            m_sServidor: this.state.servidor,
+            m_nPuerto: this.state.puerto,
+            m_sUsuario: this.state.usuario,
+            m_sContrasenia: this.state.pass,
+            m_nTipoCifrado: this.state.idSeguridad,
+            m_sCreadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+            m_sCreadoPor: localStorage.getItem("UsuarioId"),
+            m_sModificadoEl: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+            m_sModificadoPor: localStorage.getItem("UsuarioId")
         }
         if (this.state.edit) {
             modificarCuentasCorreo(this.state.idCuenta, params).then(respuesta => {
                 console.log(respuesta)
+                showSuccess(`Modificacion exitosa`)
                 this.props.closeDialog()
             }).catch(err => {
                 console.log(err)
@@ -84,6 +86,7 @@ class CuentasCorreo extends Component {
         } else {
             agregarCuentasCorreo(params).then(respuesta => {
                 this.props.closeDialog()
+                showSuccess(`Se ha agregado exitosamente`)
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)

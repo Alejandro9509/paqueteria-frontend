@@ -14,6 +14,7 @@ import { agregarEstatusViaje, eliminarEstatusViaje, modificarEstatusViaje, obten
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -62,17 +63,16 @@ function EstatusViaje() {
     const handleAceptar = (e) => {
         e.preventDefault()
         var params = {
-
-            "Estatus": state.estatusViaje,
-            "Color": state.colorViaje.slice(-6),
-            "ColorLetra": state.colorViaje.slice(-6),
-            "Abreviacion": state.abreviacionViaje,
-            "TipoEstatus": state.tipoEstatusViaje,
-            "noSeguimiento": state.noSeguimiento,
-            "archivo": state.archivo,
-            "carga": state.carga,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "m_sEstatus": state.estatusViaje,
+            "m_sColor": state.colorViaje.slice(-6),
+            "m_sColorLetra": parseInt(state.colorViaje.slice(-6)),
+            "m_sAbreviacion": state.abreviacionViaje,
+            "m_sTipoEstatus": state.tipoEstatusViaje,
+            "m_bnoSeguimiento": state.noSeguimiento,
+            "m_barchivo": state.archivo,
+            "m_bcarga": state.carga,
+            "m_sCreadoPor": state.CreadoPor,
+            "m_sModificadoPor": state.ModificadoPor
         }
         if (state.idEstatusViaje != 0) {
             modificarEstatusViaje(state.idEstatusViaje, params).then(respuesta => {
@@ -182,7 +182,7 @@ function EstatusViaje() {
     }
 
     const columns = React.useMemo(() => [
-        {
+     /*   {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
@@ -206,7 +206,7 @@ function EstatusViaje() {
                     </div>
                 )
             }
-        },
+        },*/
         {
             headerName: "Abreviación",
             field: "m_sAbreviacion",
@@ -391,11 +391,11 @@ function EstatusViaje() {
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
-                        <li>
+                        {/*<li>
                             <a className= {validarDerecho(9101324)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
-                        </li>
+                        </li>*/}
                     </ul>
 
                     <div className="row" className="tab-content">

@@ -35,7 +35,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import Correos from "./Correos";
-import {EditorState,ContentState,convertToRaw} from "draft-js";
+import {EditorState, ContentState, convertToRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
@@ -94,7 +94,7 @@ function ParametrosConfiguracion2() {
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
-        tipoCobro:0,
+        tipoCobro: 0,
         limpiarProducto: false,
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
@@ -104,16 +104,17 @@ function ParametrosConfiguracion2() {
         idConceptoRecoleccion: 0,
         idConceptoEntrega: 0,
         idConceptoSeguro: 0,
-        idConceptoCita:0,
+        idConceptoCita: 0,
         validarInforme: false,
-        timbradoPruebaGuia: true
+        timbradoPruebaGuia: true,
+        validarTimbradoIngreso: false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
-        if (event.target.name === "tipoTarifa"){
-            if (parseInt(event.target.value) === 3){
+        if (event.target.name === "tipoTarifa") {
+            if (parseInt(event.target.value) === 3) {
                 onSeleccionaTarifaRegion()
-            }else{
+            } else {
                 setConfiguraciones((config) => {
                     return {
                         ...config,
@@ -176,6 +177,9 @@ function ParametrosConfiguracion2() {
             idConceptoCita: configuraciones.idConceptoCita,
             validarInforme: configuraciones.validarInforme,
             timbradoPruebaGuia: configuraciones.timbradoPruebaGuia,
+            validarTimbrado: configuraciones.validarTimbrado,
+            idComplemento: configuraciones.idComplemento,
+            validarTimbradoIngreso: configuraciones.validarTimbradoIngreso
         }
 
         modificarParametrosConfiguracion(params)
@@ -220,11 +224,14 @@ function ParametrosConfiguracion2() {
                     idConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
                     idConceptoCita: respuesta.data.IdConceptoCita || 0,
                     validarInforme: respuesta.data.validarQR,
-                    timbradoPruebaGuia: respuesta.data.TimbradoPruebaGuia
+                    timbradoPruebaGuia: respuesta.data.TimbradoPruebaGuia,
+                    validarTimbrado: respuesta.data.ValidarTimbrado,
+                    idComplemento: respuesta.data.IdComplemento,
+                    validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso
                 }
             })
 
-            if (parseInt(respuesta.data.TipoTarifaTarifas) === 3){
+            if (parseInt(respuesta.data.TipoTarifaTarifas) === 3) {
                 onSeleccionaTarifaRegion()
             }
         })
@@ -282,13 +289,13 @@ function ParametrosConfiguracion2() {
         });
     }
 
-    async function getConceptosFacturacion(){
+    async function getConceptosFacturacion() {
         obtenerConceptosFacturacion().then(respuesta => {
             setDataConceptos(respuesta.data);
         });
     }
 
-    function modificarCorreo(data, variable){
+    function modificarCorreo(data, variable) {
         setConfiguraciones({...configuraciones, [variable]: data})
     }
 
@@ -357,7 +364,6 @@ function ParametrosConfiguracion2() {
     }
 
 
-
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
     useEffect(value => {
         getParametrosConfiguracion()
@@ -404,6 +410,7 @@ function ParametrosConfiguracion2() {
                         <Tab label="Guia" value="3"/>
                         <Tab label="Tarifas" value="4"/>
                         <Tab label="Correos" value="5"/>
+                        <Tab label="Facturación" value="6"/>
                     </Tabs>
 
                 </Paper>
@@ -594,7 +601,8 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                 </Box>
                                 <Box margin={"0 auto"}>
-                                    <Button disabled={!validarDerecho(9101408)} variant="contained" color="primary" style={{width: "100px"}}
+                                    <Button disabled={!validarDerecho(9101408)} variant="contained" color="primary"
+                                            style={{width: "100px"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
@@ -637,7 +645,8 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                 </Box>
                                 <Box margin={"0 auto"}>
-                                    <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary" style={{width: "100px"}}
+                                    <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
+                                            style={{width: "100px"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
@@ -673,11 +682,11 @@ function ParametrosConfiguracion2() {
                                                     ))}
                                                 </Select>
                                             </FormControl>
-                                        </Box>                                      
+                                        </Box>
                                     </Box>
                                     <Box width="40%" p={1} my={0.5} display="flex">
                                         <Box width="40%" p={1} my={0.5}>
-                                            <h2>Escanear  Paquetes al Cargar Informe en Remolque</h2>
+                                            <h2>Escanear Paquetes al Cargar Informe en Remolque</h2>
                                         </Box>
                                         <Box width="40%" p={1} my={0.5}>
                                             <Checkbox
@@ -692,7 +701,7 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                     <Box width="40%" p={1} my={0.5} display="flex">
                                         <Box width="40%" p={1} my={0.5}>
-                                            <h2>Hacer timbrado de prueba para guías</h2>
+                                            <h2>Hacer timbrado de prueba</h2>
                                         </Box>
                                         <Box width="40%" p={1} my={0.5}>
                                             <Checkbox
@@ -707,7 +716,8 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                 </Box>
                                 <Box margin={"0 auto"}>
-                                    <Button disabled={!validarDerecho(9101410)} variant="contained" color="primary" style={{width: "100px"}}
+                                    <Button disabled={!validarDerecho(9101410)} variant="contained" color="primary"
+                                            style={{width: "100px"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
@@ -794,7 +804,8 @@ function ParametrosConfiguracion2() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <InputLabel
+                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
@@ -804,9 +815,10 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoFlete}
                                                     >
-                                                        <option aria-label="None" value="" />
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoFlete')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        <option aria-label="None" value=""/>
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoFlete')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -817,8 +829,10 @@ function ParametrosConfiguracion2() {
                                                 <div className={classes.subtitulo}>Concepto de carga</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required={configuraciones.cobroCargaDescarga}>
-                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <FormControl fullWidth variant="outlined" margin="dense"
+                                                             required={configuraciones.cobroCargaDescarga}>
+                                                    <InputLabel
+                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
@@ -828,9 +842,10 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoCarga}
                                                     >
-                                                        <option aria-label="None" value="" />
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoCarga')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        <option aria-label="None" value=""/>
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCarga')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -841,8 +856,10 @@ function ParametrosConfiguracion2() {
                                                 <div className={classes.subtitulo}>Concepto de descarga</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required={configuraciones.cobroCargaDescarga}>
-                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <FormControl fullWidth variant="outlined" margin="dense"
+                                                             required={configuraciones.cobroCargaDescarga}>
+                                                    <InputLabel
+                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
@@ -852,9 +869,10 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoDescarga}
                                                     >
-                                                        <option aria-label="None" value="" />
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoDescarga')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        <option aria-label="None" value=""/>
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoDescarga')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -866,7 +884,8 @@ function ParametrosConfiguracion2() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <InputLabel
+                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
@@ -876,9 +895,10 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoRecoleccion}
                                                     >
-                                                        <option aria-label="None" value="" />
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoRecoleccion')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        <option aria-label="None" value=""/>
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoRecoleccion')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -890,7 +910,8 @@ function ParametrosConfiguracion2() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <InputLabel
+                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
@@ -900,9 +921,10 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoEntrega}
                                                     >
-                                                        <option aria-label="None" value="" />
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoEntrega')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        <option aria-label="None" value=""/>
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoEntrega')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -914,7 +936,8 @@ function ParametrosConfiguracion2() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <InputLabel
+                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
@@ -924,9 +947,10 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoSeguro}
                                                     >
-                                                        <option aria-label="None" value="" />
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoSeguro')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        <option aria-label="None" value=""/>
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoSeguro')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -937,8 +961,10 @@ function ParametrosConfiguracion2() {
                                                 <div className={classes.subtitulo}>Concepto de cita</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required={configuraciones.cobrarCita}>
-                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <FormControl fullWidth variant="outlined" margin="dense"
+                                                             required={configuraciones.cobrarCita}>
+                                                    <InputLabel
+                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
@@ -948,9 +974,10 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoCita}
                                                     >
-                                                        <option aria-label="None" value="" />
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoCita')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        <option aria-label="None" value=""/>
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCita')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -961,7 +988,8 @@ function ParametrosConfiguracion2() {
                             </Box>
 
                             <Box margin={"0 auto"}>
-                                <Button disabled={!validarDerecho(9101411)} variant="contained" color="primary" style={{width: "100px"}}
+                                <Button disabled={!validarDerecho(9101411)} variant="contained" color="primary"
+                                        style={{width: "100px"}}
                                         onClick={onSubmit}>
                                     Modificar
                                 </Button>
@@ -973,12 +1001,83 @@ function ParametrosConfiguracion2() {
                             <Correos
                                 data={[configuraciones.correoFacturaViaje, configuraciones.correoFacturaUltimaMilla]}
                                 modficarCorreo={modificarCorreo}>
-                                <Button disabled={!validarDerecho(9101412)} variant="contained" color="primary" style={{width: "100px"}}
+                                <Button disabled={!validarDerecho(9101412)} variant="contained" color="primary"
+                                        style={{width: "100px"}}
                                         onClick={onSubmit}>
                                     Modificar
                                 </Button>
                             </Correos>
                         </TabPanel>
+                        <TabPanel value="6">
+                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                 flexDirection="column">
+                                <Box display="flex" p={1} my={0.5} flexDirection="column">
+
+                                    {/*<Box width="100%" p={1} my={0.5}>
+                                        <FormControl fullWidth variant="outlined" width="25%">
+                                            <InputLabel id="idComplementoLabel">Complemento</InputLabel>
+                                            <Select
+                                                labelId="idComplementoLabel"
+                                                className="form-control"
+                                                required
+                                                value={configuraciones.idComplemento}
+                                                label="Complemento"
+                                                id="idComplemento"
+                                                name="idComplemento"
+                                                onChange={handleChange}
+                                            >
+                                                <option key={"1"}
+                                                        value={2}
+                                                >
+                                                    Ingreso
+                                                </option>
+                                                <option key={"2"}
+                                                        value={3}
+                                                >
+                                                    Ninguno
+                                                </option>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>*/}
+                                    <Box width="50%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.validarTimbradoIngreso}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="validarTimbradoIngreso"
+                                            />
+                                        </Box>
+                                    </Box>
+                                    <Box width="50%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Validar timbrado de informes</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.validarTimbrado}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="validarTimbrado"
+                                            />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box margin={"0 auto"}>
+                                    <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
+                                            style={{width: "100px"}}
+                                            onClick={onSubmit}>
+                                        Modificar
+                                    </Button>
+                                </Box>
+                            </Box></TabPanel>
                     </div>
                 </section>
 

@@ -73,6 +73,7 @@ import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import Button from "@material-ui/core/Button";
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import { confirmAlert } from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -182,7 +183,7 @@ function Informes({history}) {
                 return (
                     <div>
                         <a
-                            onClick={() => handleShowModificar(row.row.m_nIdInforme)}
+                            onClick={() => handleShowModificar(row.row.m_nIdInforme, row.row)}
                             className="btn btn-default btn-xs"
                             disabled={!validarDerecho(9101433)}
                         >
@@ -207,7 +208,19 @@ function Informes({history}) {
                         <a
                             href="#"
                             className="btn btn-default btn-xs"
-                            onClick={() => handleEliminar(row.row.m_nIdInforme)}
+                            onClick={() => confirmAlert({
+                                title: 'Confirmar Eliminar',
+                                message: '¿Está seguro de eliminar informe?',
+                                buttons: [
+                                    {
+                                        label: 'Si',
+                                        onClick: () => handleEliminar(row.row.m_nIdInforme)
+                                    },
+                                    {
+                                        label: 'No',
+                                    }
+                                ]
+                            })}
                             disabled={!validarDerecho(9101434)}
                         >
                             <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
@@ -791,7 +804,19 @@ function Informes({history}) {
                                             href="#"
                                             className="btn btn-default btn-sm m-user-delete"
                                             onClick={() =>
-                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                                confirmAlert({
+                                                    title: 'Confirmar Eliminar',
+                                                    message: '¿Está seguro de eliminar Embarque?',
+                                                    buttons: [
+                                                        {
+                                                            label: 'Si',
+                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
+                                                        },
+                                                        {
+                                                            label: 'No',
+                                                        }
+                                                    ]
+                                                })
                                             }
                                         >
                                             <i
@@ -803,7 +828,19 @@ function Informes({history}) {
                                             href="#"
                                             className="btn btn-default btn-sm m-user-delete"
                                             onClick={() =>
-                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                                confirmAlert({
+                                                    title: 'Confirmar Eliminar',
+                                                    message: '¿Está seguro de eliminar Embarque?',
+                                                    buttons: [
+                                                        {
+                                                            label: 'Si',
+                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
+                                                        },
+                                                        {
+                                                            label: 'No',
+                                                        }
+                                                    ]
+                                                })
                                             }
                                         >
                                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
@@ -1101,7 +1138,11 @@ function Informes({history}) {
 
     }
 
-    function handleShowModificar(id) {
+    function handleShowModificar(id, row) {
+        if (parseInt(row.m_nIdEstatusInforme) !== 5){
+            showSuccess("Solo se pueden modificar informes con estatus pendiente")
+            return
+        }
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
@@ -1166,13 +1207,14 @@ function Informes({history}) {
                 eliminarInformes(id, state.CreadoPor)
                     .then(({data}) => {
                         showSuccess(data)
+                        getAllData()
                     })
                     .catch((err) => {
-                        showSuccess(err);
+                        showSuccess(err.response?.data);
                     });
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
     }
 

@@ -22,6 +22,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
     useTable,
     useFilters,
@@ -29,7 +30,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getAddressFormated, getCurrentDateTime, validarDerecho} from "../Util/Util"
+import {getAddressFormated,getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -38,6 +39,9 @@ import RestartAltIcon from '@material-ui/icons/Refresh';
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import Noty from 'noty';
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Button, Chip,
     Dialog,
     DialogActions,
@@ -50,7 +54,8 @@ import {
     Step,
     StepLabel,
     Stepper,
-    Tooltip
+    Tooltip,
+    Typography
 } from "@material-ui/core";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
@@ -106,6 +111,7 @@ import Filtros from "./Filtros/Filtros";
 import Citas from "./Citas/Citas";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
+import Evidencias from "./Evidencias";
 
 let timer;
 
@@ -226,6 +232,7 @@ function Recoleccion() {
     const [isAgregar, setIsAgregar] = useState(false);
     const [isModificar, setIsModificar] = useState(false);
     const [pagina, setPagina] = useState(0);
+    const [errores,setErrores] = React.useState([])
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
         estatusEmbarque: 0,
@@ -282,7 +289,8 @@ function Recoleccion() {
         tipoCobro: '',
         clientePaga: {},
         observaciones: '',
-
+        aplicaEntrega:false,
+        // deshabilitarDiferenteDomicilio:false,
         //Paquetes/Sobres
         countPaquetes: 1,
         countSobres: 1,
@@ -329,7 +337,7 @@ function Recoleccion() {
         uploadedFileContent: "<div>Hello</div>",
         height: window.innerHeight,
         recoleccionConEmbarque: false,
-
+        receptorRecoleccion: ''
     });
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -586,8 +594,31 @@ function Recoleccion() {
         );
     }
 
+    useEffect(value => {
+
+        if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
+            // console.log('tipo Unidad select: ', state.tipoUnidad)
+            getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
+        }
+    }, [state.tipoUnidad])
+
+    useEffect((value) => {
+        if (
+            localStorage.getItem("UsuarioId") === null ||
+            localStorage.getItem("UsuarioId") <= 0
+        ) {
+            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+            window.location.replace("login");
+            return;
+        }
+
+        getDataParaListado()
+
+    }, []);
+
     const getDataParaListado = () => {
-        // getAllSucursales();
+        getAllSucursales();
+        getAllEstatusRecoleccion()
 
     }
 
@@ -864,6 +895,10 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        if(errores.length>0){
+            showSuccess("Errores en conceptos de facturacion")
+            return;
+        }
         if(repetirConceptos && state.mostrarCotizador){
             showSuccess("Se requiere calcular tarifa otra vez")
             return;
@@ -874,10 +909,12 @@ function Recoleccion() {
         let error = false
         let params = {}
         if(!error){
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                showConfirmarUbicacion: false,
-                showConfirmarUbicacionDestinatario:false
+                    showConfirmarUbicacion: false,
+                    showConfirmarUbicacionDestinatario:false
+                }
             })
             if (!validarCoordenadas(coordenadas)){
                 return
@@ -1120,17 +1157,21 @@ function Recoleccion() {
         clearTimeout(timer);
         if (e.detail === 1) {
             timer = setTimeout(() => {
-                setState({
+                setState(state => {
+                    return {
                     ...state,
-                    [state.identificadorModal]: id,
-                    openDialog: true
+                        [state.identificadorModal]: id,
+                        openDialog: true
+                    }
                 })
             }, 200)
         } else if (e.detail === 2) {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                [state.identificadorModal]: id,
-                openDialog: false
+                    [state.identificadorModal]: id,
+                    openDialog: false
+                }
             });
         }
     }
@@ -1141,15 +1182,23 @@ function Recoleccion() {
         let params = {
             "motivoCancelacion": state.motivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
-            "fechaCancelacion": state.fechaCancelacion
+            "fechaCancelacion": state.fechaCancelacion.replace('T', ' ')
         }
         JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
+            setState(state => {
+                return {
+                    ...state,
+                    folioRecoleccion: '',
+                    fechaCancelacion: '',
+                    idRecoleccion: 0,
+                    motivoCancelacion: ''
+                }
+            })
             handleShowListado();
         }).catch((err) => {
-
-            showSuccess(err);
+            showSuccess(err.response?.data);
         });
     }
 
@@ -1166,9 +1215,11 @@ function Recoleccion() {
             //   console.log(reader.result)
         }.bind(this);
         reader.readAsText(selectedFile);
-        setState({
+        setState(state => {
+            return {
             ...setState,
-            uploadedFileContent: "reader.result"
+                uploadedFileContent: "reader.result"
+            }
         })
     };
 
@@ -1190,11 +1241,11 @@ function Recoleccion() {
                         getAllData();
                     })
                     .catch((err) => {
-                        showSuccess(err);
+                        showSuccess(err.response?.data);
                     });
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess(err.response?.data);
             });
     }
 
@@ -1433,6 +1484,7 @@ function Recoleccion() {
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
+                receptorRecoleccion: respuesta.data.m_sReceptorRecoleccion,
 
             }
         });
@@ -1538,63 +1590,47 @@ function Recoleccion() {
     }
 
     function handleShowCancelar() {
+        obtenerSucursales().then((respuesta) => {
+            setDataSucursal(respuesta.data);
+            obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
 
-        let hours = today.getHours();
-        let mostrarHora = today.getHours();
-        let minutes = today.getMinutes();
-        let ampm = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        let strTime = hours + ':' + minutes + ' ' + ampm;
-        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
-
-            const {
-                m_sFolioRecoleccion,
-                m_nIdSucursal,
-                m_nIdEstatusRecoleccion,
-                m_dtFechaCancelacion,
-                m_sMotivoCancelacion,
-                m_nIdInforme,
-                m_nIdGuia,
-                m_nIdEmbarque
-            } = respuesta.data
-            if (respuesta.data.m_nSePuedeCancelar == 0 || m_nIdEmbarque > 0|| m_nIdInforme > 0 || m_nIdGuia > 0)
-            {showSuccess("Recolección no se puede cancelar")
-            }else{
-                setState({
-                    ...state,
-                    folioRecoleccion: m_sFolioRecoleccion,
-                    sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == m_nIdSucursal).m_sSucursal,
-                    fechaCancelacion: m_nIdEstatusRecoleccion == "0" ? m_dtFechaCancelacion :
-                        today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + " " + mostrarHora + ":" + minutes,
-                    mostrarFechaCancelacion: m_nIdEstatusRecoleccion == "0" ? m_dtFechaCancelacion :
-                        today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
-                    estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == m_nIdEstatusRecoleccion).m_sEstatus,
-                    motivoCancelacion: m_sMotivoCancelacion,
-                })
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(3).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Cancelar').addClass('in show');}
+                if (respuesta.data.m_nSePuedeCancelar){
+                    showSuccess("Recolección no se puede cancelar")
+                }else{
+                    setState(state => {
+                        return {
+                        ...state,
+                            folioRecoleccion: data.find(i => parseInt(i.m_nIdRecoleccion) === state.idRecoleccion)?.m_sFolioRecoleccion,
+                            fechaCancelacion: getCurrentDateTime()
+                        }
+                    })
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(3).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Cancelar').addClass('in show');}
 
 
-        })
+            })
+        });
+
+
 
     }
 
     const handlePatrocinadorSelected = (row) => {
-        setState(() => ({
+        setState(state => {
+            return {
             ...state,
-            clientePaga: row.data,
-            idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
-            porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
-            aplicaSeguro: row.data.m_bTieneSeguro,
-            tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-            observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
+                clientePaga: row.data,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
+                porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_bTieneSeguro,
+                tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
 
-            openDialog: false,
-        }))
+                openDialog: false,
+            }
+        })
     }
 
     //Limpia todos los inputs
@@ -1643,7 +1679,15 @@ function Recoleccion() {
 
                 //Recoleccion
                 diferenteRecoleccion: false,
-
+                /*fechaRecoleccion: '',
+                ciudadRecoleccion: '',
+                codigoPostalRecoleccion: '',
+                zonaRecoleccion: '',
+                domicilioRecoleccion: '',
+                recogerEn: '',
+                datosAdicionalesRecoleccion: '',*/
+                aplicaEntrega:false,
+                // deshabilitarDiferenteDomicilio:false,
                 //Operador
                 operador: '',
                 tipoUnidad: '',
@@ -1651,7 +1695,8 @@ function Recoleccion() {
                 fechaHoraSalida: '',
                 fechaHoraLlegada: '',
                 zonaOperativaSucursal: null,
-                idSucursalEntrega: ''
+                idSucursalEntrega: '',
+                receptorRecoleccion: ''
             }
         });
         setDataPaquetes([])
@@ -1668,9 +1713,11 @@ function Recoleccion() {
         if(event.target.id == "porcentajeSeguro"){
             setRepetirConceptos(true)
         }
-        setState({
+        setState(state => {
+            return {
             ...state,
-            [event.target.id]: event.target.value,
+                [event.target.id]: event.target.value,
+            }
         });
     };
 
@@ -2040,13 +2087,6 @@ function Recoleccion() {
         handleAceptar(e, coordenadas)
     }
 
-    const getAllClientes = () => {
-        obtenerCliente().then((respuesta) => {
-            setDataClientes(respuesta.data)
-            //  console.log(respuesta.data)
-        })
-    }
-
     function getAllEmbalajes() {
         obtenerEmbalajes().then((respuesta) => {
             setDataEmbalaje(respuesta.data);
@@ -2054,9 +2094,12 @@ function Recoleccion() {
     }
 
     function getAllSucursales() {
-        obtenerSucursales().then((respuesta) => {
-            setDataSucursal(respuesta.data);
-        });
+        if (dataSucursal.length === 0 ){
+            obtenerSucursales().then((respuesta) => {
+                setDataSucursal(respuesta.data);
+            });
+        }
+
     }
 
     function getAllEstatusRecoleccion() {
@@ -2812,9 +2855,11 @@ function Recoleccion() {
         // }
     }
     const dialogVisible = (isVisible) => {
-        setState({
+        setState(state => {
+            return {
             ...state,
-            openDialog: isVisible,
+                openDialog: isVisible,
+            }
         });
     };
 
@@ -2884,7 +2929,32 @@ function Recoleccion() {
             }
         });
     }
+    function esEntregaSucursal(aplicaEntrega){
+        if(aplicaEntrega){
+        setState(state => {
+            return {
+            ...state,
+                aplicaEntrega:aplicaEntrega,
+                entregaEnSucursal:true,
+                // deshabilitarDiferenteDomicilio:true,
+                diferenteEntrega:false
+            }
+        })}
+        else{
+            setState(state => {
+                return {
+                ...state,
+                    aplicaEntrega:aplicaEntrega,
+                    entregaEnSucursal:false,
+                    // deshabilitarDiferenteDomicilio:false
+                }
+            })}
 
+      }
+
+    function validarErrores(errores) {
+        setErrores(errores)
+    }
     const obtenerDatosDireccion = (esRecoleccion) => {
         let esDiferenteDomicilio = state.diferenteRecoleccion
         if (esRecoleccion){
@@ -3304,6 +3374,7 @@ function Recoleccion() {
                                         <div className="col-md-12">
                                             <Filtros
                                                 listaResultado={setDataListado}
+                                                listadoSucursales={setDataSucursal}
                                                 recoleccion={true}
                                             />
                                         </div>
@@ -3767,6 +3838,7 @@ function Recoleccion() {
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                             cliente={state.clientePaga}
+                                            limpiarProducto={configuraciones.limpiarProducto}
                                         />
                                     </div>
                                     <div className="widget-wrap" id="complementosSat">
@@ -3876,6 +3948,7 @@ function Recoleccion() {
                                                                     dataPadreConsulta={dataRecoleccionConsulta}
                                                                     limpiarRemDes={limpiarRemDes}
                                                                     seCalculaTarifa={seCalculaTarifa}
+                                                                    soloEntregaSucursal={esEntregaSucursal}
                                                                     entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                 />
                                                             }
@@ -3886,7 +3959,7 @@ function Recoleccion() {
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
                                                                                 className="form-control"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 // value={state.diferenteEntrega}
                                                                                 checked={state.diferenteEntrega}
                                                                                 type="checkbox"
@@ -3910,13 +3983,28 @@ function Recoleccion() {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{ height: "20px" }}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i />
                                                                         </label>
-                                                                    </div></div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                   {  state.aplicaEntrega && <>
+
+
+
+                                                                        <div style={{marginTop:"10px",color:"red"}}>No se realizará entrega de última milla</div>
+
+
+
+                                                                    </>}
                                                             </div>
+
+
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -4065,6 +4153,8 @@ function Recoleccion() {
                                                    conceptos={dataConceptos}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
+                                                   errores={errores}
+                                                   validarErrores={validarErrores}
                                                    recoleccionDiferenteDom={recoleccionDD}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    entregaDiferenteDom={entregaDD}
@@ -4083,12 +4173,16 @@ function Recoleccion() {
                                                    }))} />
                                     </div>
 
+
+
+
                                     <div className="form-footer ol-md-12">
                                     <Grid container spacing={1}>
                                         <Grid item xs>
                                             <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
                                                 event.stopPropagation();
                                                 setState({...state, agregar: "Agregar"});
+                                                setErrores([])
                                                 $('.nav-tabs li ').removeClass('active');
                                                 $('.nav-tabs li').eq(0).addClass('active');
                                                 $('.tab-content div ').removeClass('in show');
@@ -4111,7 +4205,30 @@ function Recoleccion() {
                                 </div>
 
 
-                                </div>
+                                </div> { state.agregar !="Agregar"  && <div className="row">
+                                                    <div className="widget-wrap">
+                <div className="widget-container">
+                    <div className="widget-content">
+                        <div className="row">
+                            <div className="widget-header">
+                                                    <Accordion>
+                                                         <AccordionSummary
+                                                           expandIcon={<ExpandMoreIcon />}
+                                                           aria-controls="panel1a-content"
+                                                           id="panel1a-header"
+                                                         ><Typography className={classes.heading}><h2>Evidencias última milla</h2></Typography>
+                                                         </AccordionSummary>
+
+                                                         <AccordionDetails>
+                                                            <Evidencias esRecoleccion={1} idGuia={state.idRecoleccion} data={state}/>
+                                                          </AccordionDetails>
+                                                        </Accordion>
+                                                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                                    </div>}
                             </form>
                         </div>
 
@@ -4136,59 +4253,19 @@ function Recoleccion() {
                                                             />
                                                         </div>
                                                     </div>
-
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                        onChange={handleChange}
                                                                        className="form-control"
-                                                                       type="text"
-                                                                       label="Sucursal"
-                                                                       value={state.sucursalCancelacion}
-                                                                       id="sucursalCancelacion"
+                                                                       type="datetime-local"
+                                                                       label="Fecha cancelación"
+                                                                       value={state.fechaCancelacion}
+                                                                       id="fechaCancelacion"
                                                                        readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Fecha"
-                                                                       value={state.mostrarFechaCancelacion}
-                                                                       id="mostrarFechaCancelacion"
-                                                                       readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Usuario"
-                                                                       value={state.usuario}
-                                                                       id="usuario"
-                                                                       readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Estatus"
-                                                                       value={state.estatusRecoleccion}
-                                                                       id="estatusRecoleccion"
-                                                                       readOnly
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
                                                             />
                                                         </div>
                                                     </div>

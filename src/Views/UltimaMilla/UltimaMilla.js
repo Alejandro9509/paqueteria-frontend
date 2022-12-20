@@ -14,7 +14,7 @@ import {
     Dialog,
     DialogContent,
     DialogActions,
-    DialogTitle, Button
+    DialogTitle, Button, MenuItem
 } from "@material-ui/core";
 import FaceIcon from "@material-ui/icons/Face";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -332,8 +332,12 @@ class UltimaMilla extends Component {
     reasignarParada(event) {
         event.preventDefault()
         reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
-            showSuccess("Se realizó el cambio de operador")
+            showSuccess(data.data)
+            this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
+            this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
         })
+
+
     }
 
     changeFiltersMapDialogsState(isVisible){
@@ -355,7 +359,8 @@ class UltimaMilla extends Component {
             <div>
                 {
                     this.state.openDialog &&
-                    <Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
+                    <Dialog fullWidth
+                            maxWidth={"sm"} open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
                         <DialogTitle>Reasignar Paquete</DialogTitle>
 
                         <DialogContent>
@@ -368,6 +373,7 @@ class UltimaMilla extends Component {
                                             label="Formato"
                                             className="form-control"
                                             required
+                                            fullWidth
                                             value={this.state.unidadSeleccionada}
                                             onChange={(event) => this.setState({
                                                 unidadSeleccionada: event.target.value
@@ -376,23 +382,23 @@ class UltimaMilla extends Component {
                                             name="formatoSeleccionado"
                                         >
                                             {this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map((ultimaMilla) => (
-                                                <option
+                                                <MenuItem
                                                     key={ultimaMilla.m_nIdParadaUltimaMilla}
                                                     value={ultimaMilla.m_nIdParadaUltimaMilla}
                                                 >
                                                     {ultimaMilla.m_snNombreOperador}
-                                                </option>
+                                                </MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
                                     <i></i>
                                 </label>
                                 <DialogActions>
-                                    <Button color={"primary"} type={"submit"}>
-                                        Aceptar
-                                    </Button>
                                     <Button onClick={() => this.setState({openDialog: false})}>
                                         Cancelar
+                                    </Button>
+                                    <Button color={"primary"} type={"submit"}>
+                                        Aceptar
                                     </Button>
                                 </DialogActions>
                             </form>
@@ -416,7 +422,7 @@ class UltimaMilla extends Component {
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
                                 <TileLayer style={{width: "100%", height: "100%"}}
-                                           url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/reduced.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
+                                           url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
                                            token={process.env.REACT_APP_HERE_API_TOEKN}
                                 />
                                 {

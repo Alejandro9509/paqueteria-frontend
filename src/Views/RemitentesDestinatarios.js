@@ -258,6 +258,13 @@ function RemitenteDestinatario(props) {
         paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+      ( zonaOperativa ) => {
+        if(props.destinatario){
+          props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+        }
+      }
+  );
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
       setDataMunicipios(data);
     });*/
@@ -336,19 +343,6 @@ function RemitenteDestinatario(props) {
       };
     });
 
-    // obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
-    //   setDataMunicipios(data);
-    // });
-    // obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(
-    //     (cp) => {
-    //       setState((state) => {
-    //         return {
-    //           ...state,
-    //
-    //         };
-    //       });
-    //     }
-    // );
     obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({ data }) => {
       setState((state) => {
         return {
@@ -357,6 +351,14 @@ function RemitenteDestinatario(props) {
         };
       });
     });
+    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
+      setState((state) => {
+        return {
+          ...state,
+          zonaOperativa: {m_nIdZona: respuesta.data.m_nIdZonaOperativaRecoleccion},
+        };
+      });
+    }
   }
 
   const mostrarDatosDestinatarioEmbarqueById = (respuesta) => {
@@ -392,11 +394,13 @@ function RemitenteDestinatario(props) {
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
       setDataMunicipios(data);
     });*/
-    /*obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
-        ({ data }) => {
-          setDataZonasOperativas(data);
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+        ( zonaOperativa ) => {
+          if(props.destinatario){
+            props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+          }
         }
-    );*/
+    );
 
     /*obtenerCodigoPostalId(
         respuesta.data.m_nIdCodigoPostalDestinatario
@@ -568,9 +572,17 @@ if(input=="codigoPostal"){
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
+      if(!row.data.m_nIdCP){
+        showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
+        return
+      }
     props.seCalculaTarifa()
       obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
           ( zonaOperativa ) => {
+            console.log(JSON.stringify(zonaOperativa))
+            if(props.destinatario){
+              props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+            }
             setState((state) => ({
               ...state,
               id: row.data.m_nIdRemitenteDestinatario,

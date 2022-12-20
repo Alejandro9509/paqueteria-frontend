@@ -7,7 +7,7 @@ const headers = API_HEADERS
 
 
 function agregarViaje( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -16,7 +16,7 @@ function agregarViaje( params){
 }
 
 function modificarViaje( id,params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/Modificar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -25,7 +25,7 @@ function modificarViaje( id,params){
 }
 
 function agregarViajeSalida( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarSalida`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarSalida`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -37,7 +37,7 @@ function agregarViajeSalida( params){
     
     
 function agregarViajeLlegada( params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarLlegada`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarLlegada`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -98,16 +98,16 @@ function obtenerReporteCFDI(id){
     return result
 }
 
-function cancelarCFDI(id, motivo){
+/*function cancelarCFDI(id, motivo){
     const url = `${process.env.REACT_APP_API_URL}/Informes/CancelarCFDITraslada/${id}`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {motivoCancelacion: motivo}), { headers })
     );
     return result
-}
-function obtenerReporteCFDIViaje(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}`;
+}*/
+function obtenerReporteCFDIViaje(id, idInforme){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}/${idInforme}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
@@ -150,7 +150,7 @@ function cancelarTrayecto(id, params){
 }
 
 function cancelarViaje(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/CancelarViaje/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/CancelarViaje/${id}`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -167,7 +167,16 @@ function validarSalidaParada(id){
     return result
 }
 
+function eliminarViaje(idViaje,idEstatus){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Eliminar/${idViaje}/${idEstatus}`
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({},{}), { headers })
+    );
+    return result
+}
+
 
 
 export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,cancelarTrayecto,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje,validarSalidaParada}
+    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarViaje,validarSalidaParada,eliminarViaje}
