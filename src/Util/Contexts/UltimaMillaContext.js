@@ -575,8 +575,18 @@ async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
     );
     return result
 }
+
 function obtenerImagenEvidencia(idGuia,esRecoleccion){
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerGuiaRecoleccionPorFolio(folio){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetGuiaRecoleccionPorFolio/${folio}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -611,7 +621,8 @@ export {
     validarUnidadOcupada,
     searchLocationGuia,
     searchLocationGuiav2,
-    obtenerImagenEvidencia
+    obtenerImagenEvidencia,
+    obtenerGuiaRecoleccionPorFolio
 }
 
 
