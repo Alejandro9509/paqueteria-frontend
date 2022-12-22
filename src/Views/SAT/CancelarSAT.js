@@ -13,6 +13,24 @@ import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import {obtenerTipoSeguro} from "../../Util/Contexts/TipoSeguroContext";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Paquetes from "../Paquetes/Paquetes";
+import ComplementosSAT from "./ComplementosSAT";
+import DialogTableRemDes from "../RemitenteDestinatario/DialogTableRemDes";
+import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
+import Noty from "noty";
+import RemitentesDestinatarios from "../RemitentesDestinatarios";
+import {da} from "date-fns/locale";
+import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
+import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
+import Cotizador from "../ConceptosFacturacion/Cotizador";
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "5000",
+    }).show();
+}
 
 class CancelarSAT extends Component {
     constructor(props) {
@@ -167,8 +185,33 @@ export function RecoleccionResumen(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataPaquetes, setDataPaquetes] = useState([])
+    const [dataComplementosSAT, setDataComplementosSAT] = React.useState([])
+    const [remitente, setRemitente] = useState({
+        idRemitente: '',
+        aliasRemitente: '',
+        nombreRemitente: '',
+        origenRemitente: '',
+        zonaOperativaRemitente: '',
+    })
+    const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
+    const [recoleccionDD, setRecoleccionDD] = useState({
+        idPais: '',
+        pais: '',
+        idEstado: '',
+        estado: '',
+        idMunicipio: '',
+        municipio: '',
+        codigoPostal: '',
+        zonaOperativa: '',
+        domicilio: '',
+        detalles: '',
+        datosAdicionales: '',
+        latitud: '',
+        longitud: ''
+    })
     const [state, setState] = useState({
-        openDialog: false
+        openDialog: false,
+        openDialogRemitentes: false,
     })
     const [data, setData] = useState({
         "folio": "",
@@ -196,6 +239,7 @@ export function RecoleccionResumen(props) {
         if (props.idRecoleccion > 0){
             obtenerRecoleccionId(props.idRecoleccion).then((respuesta) => {
                 console.log(respuesta.data)
+                respuesta.data.recoleccionById = true
                 setData({
                     ...data,
                     folio: respuesta.data.m_sFolioRecoleccion,
@@ -204,10 +248,13 @@ export function RecoleccionResumen(props) {
                     idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                     porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
                     valorDeclarado: respuesta.data.m_xValorDeclarado,
-                    observaciones: respuesta.data.m_sObservaciones
-
+                    observaciones: respuesta.data.m_sObservaciones,
+                    diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio
                 })
                 setDataPaquetes(respuesta.data.m_parrPaquetes)
+                setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
+                setDataRecoleccionConsulta(respuesta)
+                mostrarDatosRecoleccionDD(respuesta)
             });
         }
 
@@ -275,12 +322,138 @@ export function RecoleccionResumen(props) {
         setDataPaquetes(newList)
     }
 
+    const handleListComplementosSATChange = (newList) => {
+        setDataComplementosSAT(newList)
+    }
+
+    const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
+        if(!row.data.m_nIdCP){
+            showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
+            return
+        }
+        obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
+            ( zonaOperativa ) => {
+                console.log(JSON.stringify(zonaOperativa))
+                if(props.destinatario){
+                    props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+                }
+                setData((data) => ({
+                    ...data,
+                    id: row.data.m_nIdRemitenteDestinatario,
+                    alias: row.data.m_sAlias,
+                    nombre: row.data.m_sNombre,
+                    /*codigoPostal:
+                        {
+                            m_nIdCP: row.data.m_nIdCP,
+                            m_sCP: row.data.m_sCodigoPostal,
+                            m_sColonia: row.data.m_sColonia || "No especificado",
+                        },*/
+                    origen: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
+                    zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                }));
+                setState({ ...state, openDialogRemitentes: false })
+                if (zonaOperativa.data.length === 0){
+                    showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
+                }
+
+            }
+        );
+    };
+
+    const handleChangeRemitente = (newData) => {
+        setRemitente({
+            idRemitente: newData.id,
+            aliasRemitente: newData.alias,
+            nombreRemitente: newData.nombre,
+            origenRemitente: newData.origen,
+            zonaOperativaRemitente: newData.zonaOperativa
+        })
+    };
+
+    const handleRecoleccionCheckboxChange = (event) => {
+        // event.preventDefault();
+        setData({
+            ...data,
+            recoleccionDiferenteDomicilio: !data.recoleccionDiferenteDomicilio,
+        });
+    };
+
+    const mostrarDatosRecoleccionDD = (respuesta) => {
+        setRecoleccionDD(recoleccionDD => {
+            return {
+                ...recoleccionDD,
+                idPais: respuesta.data.m_nIdPaisRecoleccion || 0,
+                pais: respuesta.data.m_sPaisRecoleccion || '',
+                idEstado: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                estado: respuesta.data.m_sEstadoRecoleccion || '',
+                idMunicipio: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                municipio: respuesta.data.m_sMunicipioRecoleccion || '',
+                codigoPostal: {
+                    m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
+                    m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
+                    m_sColonia: respuesta.data.m_sColoniaRecoleccion ? respuesta.data.m_sColoniaRecoleccion : respuesta.data.m_sLocalidadRecoleccion
+                },
+                domicilio: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                detalles: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                latitud: respuesta.data.m_sLatitud || '',
+                longitud: respuesta.data.m_sLongitud || '',
+            }
+        })
+        /*obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoRecoleccion).then(({data}) =>{
+            setDataMunicipiosRecoleccionDD(data)
+        })*/
+        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+            setRecoleccionDD(recoleccionDD => {
+                return {
+                    ...recoleccionDD,
+                    zonaOperativa: data
+                }
+            })
+        })
+    }
+
+    const handleOnChangeRecoleccionDD = (newValue) => {
+        setRecoleccionDD(recoleccionDD => {
+            return{
+                ...recoleccionDD,
+                idPais: newValue.idPais,
+                pais: newValue.pais,
+                idEstado: newValue.idEstado,
+                estado: newValue.estado,
+                idMunicipio: newValue.idMunicipio,
+                municipio: newValue.municipio,
+                codigoPostal: newValue.codigoPostal,
+                zonaOperativa: newValue.zonaOperativa,
+                domicilio: newValue.domicilio,
+                detalles: newValue.detalles,
+                datosAdicionales: newValue.datosAdicionales,
+                latitud: newValue.latitud,
+                longitud: newValue.longitud,
+            }
+        });
+    }
+
     return(
         <div>
             <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} fullWidth maxWidth="md">
                 <DialogContent>
                     <DialogTableClientes dialogVisible={(isVisible) => { setState({ ...state,openDialog: isVisible })}}
                                          handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                </DialogContent>
+            </Dialog>
+            <Dialog
+                open={state.openDialogRemitentes}
+                onClose={() => setState({ ...state, openDialogRemitentes: false })}
+                fullWidth
+                maxWidth="md"
+            >
+                <DialogContent>
+                    <DialogTableRemDes
+                        dialogVisible={(isVisible) => { setState({ ...state,openDialogRemitentes: isVisible })}}
+                        openDialog={state.openDialogRemitentes}
+                        handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
+                    />
                 </DialogContent>
             </Dialog>
             <section id={"informacionGeneral"}>
@@ -391,6 +564,90 @@ export function RecoleccionResumen(props) {
                     cliente={data.cliente}
                     limpiarProducto={configuraciones.limpiarProducto}
                 />
+            </section>
+            <section id={"complementos"}>
+                <ComplementosSAT
+                    dataList={dataComplementosSAT}
+                    onChangeList={handleListComplementosSATChange}
+                />
+            </section>
+            <section id={"remitente"}>
+                <h2>Remitente</h2>
+                <span>No se modificará el punto de recolección.</span>
+                <br/>
+                <br/>
+                <RemitentesDestinatarios
+                    remitente={true}
+                    componentePadre={"CANCELAR_SAT"}
+                    handleDataChange={handleChangeRemitente}
+                    dataPadreConsulta={dataRecoleccionConsulta}
+                    dataEstados={[]}
+                />
+            </section>
+
+            <section id={"recoleccionDiferenteDomicilio"}>
+                <label className="checkbox">
+                    <input
+                        onChange={handleRecoleccionCheckboxChange}
+                        className="form-control"
+                        checked={data.recoleccionDiferenteDomicilio}
+                        type="checkbox"
+                        style={{height: "20px"}}
+                        id="recoleccionDiferenteDomicilio"
+                    />
+                    <i/>
+                    Recolección en Diferente Domicilio
+                </label>
+                {data.recoleccionDiferenteDomicilio &&
+                    <div className="widget-wrap" id="detallesRecoleccion">
+                        <div>
+                            <div className="widget-header">
+                                <h2>Detalles de la Recolección</h2>
+                            </div>
+                            <div className="widget-container">
+                                <div className="widget-content">
+                                    <div className="row">
+                                        <DiferenteDomicilioForm
+                                            value={recoleccionDD}
+                                            onChange={handleOnChangeRecoleccionDD}
+                                            disabled={false}
+                                            requiered={false}
+                                            listadoEstadosLocal={true}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </section>
+            <section id={"cotizador"}>
+                <Cotizador embarque={state}
+                           disabled={state.agregar === "Consultar"}
+                           remitente={remitente}
+                           destinatario={destinatario}
+                           onChangeConceptosList={(list) => setData({...data, conceptosFacturacion: list})}
+                           conceptos={data.conceptosFacturacion}
+                           saveIdCotizacion={saveIdCotizacion}
+                           recoleccion={true}
+                           errores={errores}
+                           validarErrores={validarErrores}
+                           recoleccionDiferenteDom={recoleccionDD}
+                           mostrarCotizadorRec={mostrarCotizadorRec}
+                           entregaDiferenteDom={entregaDD}
+                           setCalculoTarifa={()=>setRepetirConceptos(false)}
+                           paquetes={dataPaquetes.map(p =>({
+                               Tipo: p.m_nIdTipo,
+                               Peso: p.m_rPeso,
+                               Largo: p.m_rLargo,
+                               Ancho: p.m_rAncho,
+                               Alto:p.m_rAlto,
+                               Volumen:p.m_rVolumen,
+                               IdTipoEmpaque:p.m_nIdTipoEmbalaje,
+                               Activo: 1,
+                               ctd:p.m_nCantidad,
+                               IdProducto:p.m_nIdProducto
+                           }))} />
             </section>
         </div>
     )
