@@ -49,6 +49,7 @@ import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
+import {obtenerPlantillaImportacionByIdCliente} from "../../Util/Contexts/PlantillasContext";
 
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -102,32 +103,31 @@ function ImportarEmbarques(props) {
         if (files.length === 0){
             return
         }
-        readExcel(DEFAULT_FORMAT,files[0].file).then((resultado)=>{
-            resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
-            let params = {
-                embarques: resultado
-            }
-            console.log(resultado)
-            console.log(params)
-            // showMessage("Subiendo...",3000,"success")
-            /*agregarGuiasImportadas(resultado).then((r)=>{
-                showMessage("Guias creadas exitosamente",3000,"success")
-            })*/
-            return
-            validarEmbarquesImportados(params).then(respuesta => {
-                console.log(respuesta.data)
-                setState({
-                    ...state,
-                    embarques: respuesta.data
+        obtenerPlantillaImportacionByIdCliente(state.cliente.m_nIdCliente).then(respuesta => {
+            readExcel(respuesta.data.data,files[0].file).then((resultado)=>{
+                resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
+                let params = {
+                    embarques: resultado
+                }
+                console.log(resultado)
+                console.log(params)
+                return
+                validarEmbarquesImportados(params).then(respuesta => {
+                    console.log(respuesta.data)
+                    setState({
+                        ...state,
+                        embarques: respuesta.data
+                    })
+                }).catch((error)=>{
+                    // showMessage(err,2000,"warning")
+                    console.log('error al validar: ' + error)
                 })
-            }).catch((error)=>{
+            }).catch((err)=>{
                 // showMessage(err,2000,"warning")
-                console.log('error al validar: ' + error)
+                console.log('error al importar' + err)
             })
-        }).catch((err)=>{
-            // showMessage(err,2000,"warning")
-            console.log('error al importar' + err)
         })
+
     }
 
     const handleOnClickAceptar = (e) => {

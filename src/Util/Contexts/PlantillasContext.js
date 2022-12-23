@@ -19,6 +19,14 @@ function obtenerPlantillasImportacionById(idPlantilla) {
     );
     return result
 }
+function obtenerPlantillaImportacionByIdCliente(idCliente) {
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/PlantillasImportacion/GetByIdCliente/${idCliente}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
 function agregarPlantillaImportacion(params){
     const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/PlantillasImportacion/Agregar`;
@@ -37,4 +45,5 @@ function modificarPlantillaImportacion(idPlantilla, params){
     );
     return result
 }
-export { obtenerPlantillasImportacion,agregarPlantillaImportacion,obtenerPlantillasImportacionById,modificarPlantillaImportacion }
+
+export { obtenerPlantillasImportacion,agregarPlantillaImportacion,obtenerPlantillasImportacionById,modificarPlantillaImportacion,obtenerPlantillaImportacionByIdCliente }

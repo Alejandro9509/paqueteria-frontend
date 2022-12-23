@@ -317,14 +317,14 @@ export function readExcel(FORMAT,file){
             const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
 
             //SE OBTIENEN LAS HOJAS DEL EXCEL
-            const wsGuias = (wb.Sheets['Embarques']);
-            const wsPaquetes = (wb.Sheets['Paquetes']);
-            const wsComplementosSat = (wb.Sheets['Complementos SAT']);
+            const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
+            const wsPaquetes = (wb.Sheets[FORMAT.hojaPaquetes]);
+            const wsComplementosSat = (wb.Sheets[FORMAT.hojaComplementos]);
 
             //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
-            const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item['Número de embarque'] > 0);
-            const dataPaquetes = XLSX.utils.sheet_to_json(wsPaquetes, {range:0}).filter(item => item['Número de embarque'] > 0);
-            const dataComplementosSat = XLSX.utils.sheet_to_json(wsComplementosSat, {range:0}).filter(item => item['Número de embarque'] > 0);
+            const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+            const dataPaquetes = XLSX.utils.sheet_to_json(wsPaquetes, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+            const dataComplementosSat = XLSX.utils.sheet_to_json(wsComplementosSat, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
 
             //SE RECORREN LAS FILAS CON DATOS Y SE TOMAN LOS DATOS CORRESPONDIENTES
             const arrayPaquetes = dataPaquetes.map((item) => ({
@@ -555,7 +555,7 @@ export const DEFAULT_FORMAT = {
     numeroEmbarque:'Número de embarque',
     // idMoneda: 'IdMoneda',
     // idTipoCambio: 'IdTipoCambio',
-    idTipoCobro: 'IdTipoCobro',
+    // idTipoCobro: 'IdTipoCobro',
     moneda: 'Moneda',
     tipoCambio: 'Tipo de cambio',
     tipoCobro: 'Tipo de cobro',
