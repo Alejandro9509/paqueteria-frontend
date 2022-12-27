@@ -4,8 +4,13 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import {Button, Grid, TextField} from "@material-ui/core";
 import $ from "jquery";
 import PlantillasImportacionListado from "./PlantillasImportacionListado";
-import {obtenerPlantillasImportacion, obtenerPlantillasImportacionById} from "../../Util/Contexts/PlantillasContext";
+import {
+    eliminarPlantillaImportacion,
+    obtenerPlantillasImportacion,
+    obtenerPlantillasImportacionById
+} from "../../Util/Contexts/PlantillasContext";
 import PlantillasImportacionAgregar from "./PlantillasImportacionAgregar";
+import {showSuccess} from "../../Util/Util";
 window.jQuery = window.$ = $;
 export default function PlantillasImportacionMain(){
     const TABS = {
@@ -55,6 +60,14 @@ export default function PlantillasImportacionMain(){
         obtenerPlantillasImportacionById(item.idPlantilla).then(respuesta => {
             setState({...state,plantillaSeleccionada: respuesta.data.data})
             handleChangeTab(TABS.AGREGAR)
+        })
+    }
+
+    const handleOnEliminarRowClick = (item) => {
+        eliminarPlantillaImportacion(item.idPlantilla).then(respuesta => {
+            setState({...state,plantillaSeleccionada: null})
+            obtenerListadoPlantillas()
+            showSuccess(respuesta.data.message)
         })
     }
 
@@ -111,7 +124,7 @@ export default function PlantillasImportacionMain(){
                             <PlantillasImportacionListado
                                 listado={state.listadoPlantillas}
                                 onConsultarRowClick={handleOnConsultarRowClick}
-                                onEliminarRowClick={{}}
+                                onEliminarRowClick={handleOnEliminarRowClick}
                                 onModificarRowClick={{}}
                             />
                         </div>

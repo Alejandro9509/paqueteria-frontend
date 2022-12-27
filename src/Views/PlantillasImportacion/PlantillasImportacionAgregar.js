@@ -6,6 +6,7 @@ import {showSuccess, validarDerecho} from "../../Util/Util";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {FilePond} from "react-filepond";
 import {agregarPlantillaImportacion, modificarPlantillaImportacion} from "../../Util/Contexts/PlantillasContext";
+import {toBase64} from "../../Util/GlobalFunctions";
 
 export default function PlantillasImportacionAgregar(props){
     const grid = {
@@ -146,6 +147,7 @@ export default function PlantillasImportacionAgregar(props){
             "descripcionEmbalajeComplemento": "",
             "claveFraccionArancelaria": ""
         })
+        setFiles([])
     }
 
     useEffect(() => {
@@ -182,7 +184,7 @@ export default function PlantillasImportacionAgregar(props){
         setOpenDialog(false)
     }
 
-    const handleOnSubmit = () => {
+    const handleOnSubmit = async () => {
         try {
 
             let params = {
@@ -246,10 +248,23 @@ export default function PlantillasImportacionAgregar(props){
                 "descripcionEmbalajeComplemento": state.descripcionEmbalajeComplemento,
                 "claveFraccionArancelaria": state.claveFraccionArancelaria,
             }
+            if (state.idPlantilla > 0){
+                if (files.length === 0){
+                    params.archivoBase64 = state.archivoBase64
+                    params.archivoNombre = state.archivoNombre
+                }else{
+                    params.archivoBase64 = await toBase64(files[0].file)
+                    params.archivoNombre = files[0].filenameWithoutExtension
+                }
+            }else{
+                params.archivoBase64 = await toBase64(files[0].file)
+                params.archivoNombre = files[0].filenameWithoutExtension
+            }
             console.log(params)
             if (props.value === null){
                 agregarPlantillaImportacion(params).then(respuesta => {
                     showSuccess(respuesta.data.message)
+                    restartState()
                     props.onSuccessSave()
                 }).catch(err => {
                     showSuccess(err.response.data.message)
@@ -258,6 +273,7 @@ export default function PlantillasImportacionAgregar(props){
             }else{
                 modificarPlantillaImportacion(state.idPlantilla,params).then(respuesta => {
                     showSuccess(respuesta.data.message)
+                    restartState()
                     props.onSuccessSave()
                 }).catch(err => {
                     showSuccess(err.response.data.message)
@@ -313,7 +329,7 @@ export default function PlantillasImportacionAgregar(props){
                                     labelIdle={'Haz click aquí para seleccionar un documento'}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}></Grid>
+                            <Grid item xs={12} sm={6}>Archivo adjunto: {state.archivoNombre === "" ? "Sin archivo": state.archivoNombre }</Grid>
 
                             <Grid item xs={12} sm={6}></Grid>
                         </Grid>

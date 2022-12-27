@@ -39,7 +39,7 @@ function validarDerecho(idUsuario,idPrivilegio,idTipo){
 }
 
 function descargarPlantillaImportarEmbarque(idCliente){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Utilerias/descargar-plantilla-importacion-embarques/${idCliente}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Utilerias/descargar-plantilla-importacion-embarques/${idCliente}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers: headers, responseType: 'blob' })

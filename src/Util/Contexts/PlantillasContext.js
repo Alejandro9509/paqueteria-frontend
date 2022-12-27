@@ -4,7 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 function obtenerPlantillasImportacion() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/PlantillasImportacion/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -12,7 +12,7 @@ function obtenerPlantillasImportacion() {
     return result
 }
 function obtenerPlantillasImportacionById(idPlantilla) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/PlantillasImportacion/GetById/${idPlantilla}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetById/${idPlantilla}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -20,7 +20,7 @@ function obtenerPlantillasImportacionById(idPlantilla) {
     return result
 }
 function obtenerPlantillaImportacionByIdCliente(idCliente) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/PlantillasImportacion/GetByIdCliente/${idCliente}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetByIdCliente/${idCliente}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -29,7 +29,7 @@ function obtenerPlantillaImportacionByIdCliente(idCliente) {
 }
 
 function agregarPlantillaImportacion(params){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/PlantillasImportacion/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -38,7 +38,7 @@ function agregarPlantillaImportacion(params){
 }
 
 function modificarPlantillaImportacion(idPlantilla, params){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/PlantillasImportacion/Modificar/${idPlantilla}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Modificar/${idPlantilla}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -46,4 +46,13 @@ function modificarPlantillaImportacion(idPlantilla, params){
     return result
 }
 
-export { obtenerPlantillasImportacion,agregarPlantillaImportacion,obtenerPlantillasImportacionById,modificarPlantillaImportacion,obtenerPlantillaImportacionByIdCliente }
+function eliminarPlantillaImportacion(idPlantilla){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Eliminar/${idPlantilla}`;
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+    );
+    return result
+}
+
+export { obtenerPlantillasImportacion,agregarPlantillaImportacion,obtenerPlantillasImportacionById,modificarPlantillaImportacion,obtenerPlantillaImportacionByIdCliente,eliminarPlantillaImportacion }
