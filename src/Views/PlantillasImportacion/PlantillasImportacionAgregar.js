@@ -18,6 +18,7 @@ export default function PlantillasImportacionAgregar(props){
         DIFERENTE_DOM: 3,
         UBICACION: 3,
         CITA: 3,
+        PAQUETES: 4,
     }
     const [files, setFiles] = useState([])
     const [openDialog, setOpenDialog] = useState(false)
@@ -63,6 +64,15 @@ export default function PlantillasImportacionAgregar(props){
         "fechaCita": "",
         "horaMinimaCita": "",
         "horaMaximaCita": "",
+        "cantidadPaquete": "",
+        "numeroProducto": "",
+        "embalajePaquete": "",
+        "largo": "",
+        "alto": "",
+        "ancho": "",
+        "pesoPaquete": "",
+        "observacionesPaquete": "",
+        "descripcionPaquete": "",
     })
     const restartState = () => {
         setState({
@@ -107,8 +117,18 @@ export default function PlantillasImportacionAgregar(props){
             "fechaCita": "",
             "horaMinimaCita": "",
             "horaMaximaCita": "",
+            "cantidadPaquete": "",
+            "numeroProducto": "",
+            "embalajePaquete": "",
+            "largo": "",
+            "alto": "",
+            "ancho": "",
+            "pesoPaquete": "",
+            "observacionesPaquete": "",
+            "descripcionPaquete": "",
         })
     }
+
     useEffect(() => {
         if (props.value !== null){
             console.log(props.value)
@@ -128,6 +148,7 @@ export default function PlantillasImportacionAgregar(props){
             restartState()
         }
     },[props.value])
+
     const handlePatrocinadorSelected = (row) => {
         setState(state => {
             return {
@@ -187,6 +208,15 @@ export default function PlantillasImportacionAgregar(props){
                 "fechaCita": state.fechaCita,
                 "horaMinimaCita": state.horaMinimaCita,
                 "horaMaximaCita": state.horaMaximaCita,
+                "cantidadPaquete": state.cantidadPaquete,
+                "numeroProducto": state.numeroProducto,
+                "embalajePaquete": state.embalajePaquete,
+                "largo": state.largo,
+                "alto": state.alto,
+                "ancho": state.ancho,
+                "pesoPaquete": state.pesoPaquete,
+                "observacionesPaquete": state.observacionesPaquete,
+                "descripcionPaquete": state.descripcionPaquete,
             }
             console.log(params)
             if (props.value === null){
@@ -688,6 +718,103 @@ export default function PlantillasImportacionAgregar(props){
                                     margin="dense"
                                     name="horaMaximaCita"
                                     value={state.horaMaximaCita}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                        </Grid>
+                    </section>
+
+                    <section id={"paquetes"} style={{padding: '10px'}}>
+                        <h2>Datos de paquetes</h2>
+                        <br/>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Cantidad de paquetes"
+                                    margin="dense"
+                                    name="cantidadPaquete"
+                                    value={state.cantidadPaquete}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Número de producto"
+                                    margin="dense"
+                                    name="numeroProducto"
+                                    value={state.numeroProducto}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Descripción"
+                                    margin="dense"
+                                    name="descripcionPaquete"
+                                    value={state.descripcionPaquete}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Largo"
+                                    margin="dense"
+                                    name="largo"
+                                    value={state.largo}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Alto"
+                                    margin="dense"
+                                    name="alto"
+                                    value={state.alto}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Ancho"
+                                    margin="dense"
+                                    name="ancho"
+                                    value={state.ancho}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Embalaje de paquete"
+                                    margin="dense"
+                                    name="embalajePaquete"
+                                    value={state.embalajePaquete}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Peso"
+                                    margin="dense"
+                                    name="pesoPaquete"
+                                    value={state.pesoPaquete}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.PAQUETES}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Observaciones"
+                                    margin="dense"
+                                    name="observacionesPaquete"
+                                    value={state.observacionesPaquete}
                                     onChange={handleOnChange}
                                 />
                             </Grid>

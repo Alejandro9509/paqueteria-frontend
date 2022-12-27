@@ -328,22 +328,22 @@ export function readExcel(FORMAT,file){
 
             //SE RECORREN LAS FILAS CON DATOS Y SE TOMAN LOS DATOS CORRESPONDIENTES
             const arrayPaquetes = dataPaquetes.map((item) => ({
-                numeroEmbarque: item[FORMAT.paquetes.numeroEmbarque],
+                numeroEmbarque: item[FORMAT.numeroEmbarque],
                 // idProducto: item[FORMAT.paquetes.idProducto],
                 numeroProducto: item[FORMAT.paquetes.numeroProducto],
                 // idEmbalaje: item[FORMAT.paquetes.idEmbalaje],
-                embalaje: item[FORMAT.paquetes.embalaje],
+                embalaje: item[FORMAT.paquetes.embalajePaquete],
                 alto: item[FORMAT.paquetes.alto],
                 ancho: item[FORMAT.paquetes.ancho],
                 largo: item[FORMAT.paquetes.largo],
-                peso: item[FORMAT.paquetes.peso],
+                peso: item[FORMAT.paquetes.pesoPaquete],
                 volumen: parseFloat(item[FORMAT.paquetes.alto]) * parseFloat(item[FORMAT.paquetes.ancho]) * parseFloat(item[FORMAT.paquetes.largo]),
-                cantidad: item[FORMAT.paquetes.cantidad],
-                descripcion: item[FORMAT.paquetes.descripcion],
-                observaciones: item[FORMAT.paquetes.observaciones] || ""
+                cantidad: item[FORMAT.paquetes.cantidadPaquete],
+                descripcion: item[FORMAT.paquetes.descripcionPaquete],
+                observaciones: item[FORMAT.paquetes.observacionesPaquete] || ""
             }))
             const arrayComplementos = dataComplementosSat.map((item) => ({
-                numeroEmbarque: item[FORMAT.complementosSat.numeroEmbarque],
+                numeroEmbarque: item[FORMAT.numeroEmbarque],
                 cantidad: item[FORMAT.complementosSat.cantidad],
                 peso: item[FORMAT.complementosSat.peso],
                 claveProductoServicio: item[FORMAT.complementosSat.claveProducto],
@@ -496,7 +496,7 @@ export function readExcel(FORMAT,file){
                     porcentajeSeguro: item[FORMAT.porcentajeSeguro],
                     valorDeclarado: item[FORMAT.valorDeclarado],
                     validarTimbradoFactura: item[FORMAT.validarTimbradoFactura] === 'SI',
-                    observaciones: item[FORMAT.observaciones],
+                    observaciones: item[FORMAT.observacionesEmbarque],
                     // idRemitente: item[FORMAT.idRemitente],
                     numeroRemitente: item[FORMAT.numeroRemitente],
                     correoRemitente: item[FORMAT.correoRemitente],
