@@ -111,7 +111,6 @@ function ImportarEmbarques(props) {
                 }
                 console.log(resultado)
                 console.log(params)
-                return
                 validarEmbarquesImportados(params).then(respuesta => {
                     console.log(respuesta.data)
                     setState({

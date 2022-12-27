@@ -19,6 +19,7 @@ export default function PlantillasImportacionAgregar(props){
         UBICACION: 3,
         CITA: 3,
         PAQUETES: 4,
+        COMPLEMENTOS: 4,
     }
     const [files, setFiles] = useState([])
     const [openDialog, setOpenDialog] = useState(false)
@@ -73,6 +74,15 @@ export default function PlantillasImportacionAgregar(props){
         "pesoPaquete": "",
         "observacionesPaquete": "",
         "descripcionPaquete": "",
+        "cantidadComplemento": "",
+        "pesoComplemento": "",
+        "claveProductoServicio": "",
+        "claveUnidadMedida": "",
+        "esMaterialPeligroso": "",
+        "claveMaterialPeligroso": "",
+        "claveEmbalaje": "",
+        "descripcionEmbalajeComplemento": "",
+        "claveFraccionArancelaria": ""
     })
     const restartState = () => {
         setState({
@@ -126,6 +136,15 @@ export default function PlantillasImportacionAgregar(props){
             "pesoPaquete": "",
             "observacionesPaquete": "",
             "descripcionPaquete": "",
+            "cantidadComplemento": "",
+            "pesoComplemento": "",
+            "claveProductoServicio": "",
+            "claveUnidadMedida": "",
+            "esMaterialPeligroso": "",
+            "claveMaterialPeligroso": "",
+            "claveEmbalaje": "",
+            "descripcionEmbalajeComplemento": "",
+            "claveFraccionArancelaria": ""
         })
     }
 
@@ -217,6 +236,15 @@ export default function PlantillasImportacionAgregar(props){
                 "pesoPaquete": state.pesoPaquete,
                 "observacionesPaquete": state.observacionesPaquete,
                 "descripcionPaquete": state.descripcionPaquete,
+                "cantidadComplemento": state.cantidadComplemento,
+                "pesoComplemento": state.pesoComplemento,
+                "claveProductoServicio": state.claveProductoServicio,
+                "claveUnidadMedida": state.claveUnidadMedida,
+                "esMaterialPeligroso": state.esMaterialPeligroso,
+                "claveMaterialPeligroso": state.claveMaterialPeligroso,
+                "claveEmbalaje": state.claveEmbalaje,
+                "descripcionEmbalajeComplemento": state.descripcionEmbalajeComplemento,
+                "claveFraccionArancelaria": state.claveFraccionArancelaria,
             }
             console.log(params)
             if (props.value === null){
@@ -821,7 +849,102 @@ export default function PlantillasImportacionAgregar(props){
                         </Grid>
                     </section>
 
-
+                    <section id={"complementos"} style={{padding: '10px'}}>
+                        <h2>Datos de complementos SAT</h2>
+                        <br/>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Cantidad"
+                                    margin="dense"
+                                    name="cantidadComplemento"
+                                    value={state.cantidadComplemento}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Peso"
+                                    margin="dense"
+                                    name="pesoComplemento"
+                                    value={state.pesoComplemento}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Clave producto/servicio"
+                                    margin="dense"
+                                    name="claveProductoServicio"
+                                    value={state.claveProductoServicio}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Clave unidad de medida"
+                                    margin="dense"
+                                    name="claveUnidadMedida"
+                                    value={state.claveUnidadMedida}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Es material peligroso"
+                                    margin="dense"
+                                    name="esMaterialPeligroso"
+                                    value={state.esMaterialPeligroso}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Clave material peligroso"
+                                    margin="dense"
+                                    name="claveMaterialPeligroso"
+                                    value={state.claveMaterialPeligroso}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Clave de embalaje"
+                                    margin="dense"
+                                    name="claveEmbalaje"
+                                    value={state.claveEmbalaje}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Descripcion de embalaje"
+                                    margin="dense"
+                                    name="descripcionEmbalajeComplemento"
+                                    value={state.descripcionEmbalajeComplemento}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Clave de fracción arancelaria"
+                                    margin="dense"
+                                    name="claveFraccionArancelaria"
+                                    value={state.claveFraccionArancelaria}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                        </Grid>
+                    </section>
 
                     <Grid container spacing={1}>
                         <Grid item xs>
