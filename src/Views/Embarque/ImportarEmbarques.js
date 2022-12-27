@@ -437,6 +437,11 @@ function ImportarEmbarques(props) {
                                                                                             Complementos SAT
                                                                                             <TablaImportadosComplementosSAT data={e.data.complementosSAT}/>
                                                                                         </Grid>
+                                                                                        <Grid item xs={12} sm={12}>
+                                                                                            <br/>
+                                                                                            Conceptos facturación
+                                                                                            <TablaImportadosCoceptosFacturacion data={e.data.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion===false)}/>
+                                                                                        </Grid>
                                                                                     </Grid>
                                                                                 </>
                                                                                     :
@@ -642,6 +647,64 @@ function TablaImportadosComplementosSAT(props) {
                                     style={{borderBottom: "none"}}
                                     align="left">
                                     {item.esMaterialPeligroso ? `${item.claveFraccionArancelaria} - ${item.descripcionFraccionArancelaria}`: "No aplica"}
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    }
+                </TableBody>
+            </Table>
+
+        </TableContainer>
+    )
+}
+
+function TablaImportadosCoceptosFacturacion(props) {
+    return(
+        <TableContainer style={{
+            height: "100%",
+            padding: "0px",
+            paddingRight: "0px"
+        }}>
+            <Table size="small">
+                <TableHead>
+                    <TableRow>
+                        <TableCell
+                            style={{borderBottom: "none",fontWeight: "bold"}}
+                            align="left">Concepto</TableCell>
+                        <TableCell
+                            style={{borderBottom: "none",fontWeight: "bold"}}
+                            align="left">Importe</TableCell>
+                        <TableCell
+                            style={{borderBottom: "none",fontWeight: "bold"}}
+                            align="left">IVA</TableCell>
+                        <TableCell
+                            style={{borderBottom: "none",fontWeight: "bold"}}
+                            align="left">Retencion</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {
+                        props.data.map((item, index) => (
+                            <TableRow key={index}>
+                                <TableCell
+                                    style={{borderBottom: "none"}}
+                                    align="left">
+                                    {item.m_sConcepto}
+                                </TableCell>
+                                <TableCell
+                                    style={{borderBottom: "none"}}
+                                    align="left">
+                                    {`$${item.m_cImporte}`}
+                                </TableCell>
+                                <TableCell
+                                    style={{borderBottom: "none"}}
+                                    align="left">
+                                    {`$${item.m_cImporteIva}`}
+                                </TableCell>
+                                <TableCell
+                                    style={{borderBottom: "none"}}
+                                    align="left">
+                                    {`$${item.m_cImporteRetiene}`}
                                 </TableCell>
                             </TableRow>
                         ))
