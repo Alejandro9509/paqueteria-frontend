@@ -12,7 +12,7 @@ import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/style
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {getAddressFormated, getCurrentDateTime, validarDerecho} from "../Util/Util"
+import {DEFAULT_FORMAT, getAddressFormated, getCurrentDateTime, readExcel, validarDerecho} from "../Util/Util"
 import {
     ReactTable,
     useTable,
@@ -99,7 +99,11 @@ import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "..
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerAllEstados, obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
-import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import {
+    obtenerFechaInicio,
+    obtenerFechaFinal,
+    descargarPlantillaImportarEmbarque
+} from "../Util/Contexts/UtileriasContext";
 import ReplayIcon from "@material-ui/icons/Replay";
 import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
@@ -121,6 +125,7 @@ import {
     useLocation
 } from "react-router-dom";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
+import ImportarEmbarques from "./Embarque/ImportarEmbarques";
 
 function useQuery() {
     const {search} = useLocation();
@@ -2107,6 +2112,16 @@ function Embarque(props) {
         setTabActiva(0)
     }
 
+    const handleShowImportar = (event) => {
+        if (event) {
+            event.stopPropagation();
+        }
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(4).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Importar').addClass('in show');
+    }
+
     const handleChange = (event) => {
         if (event.target.name == "porcentajeSeguro") {
             setRepetirConceptos(true)
@@ -3229,24 +3244,10 @@ function Embarque(props) {
                             </a>
                         </li>
 
-
-                        <li className="hide">
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({
-                                    ...state,
-                                    identificadorModal:
-                                        "imprimir",
-                                    tipoModal: 6,
-                                    openDialog: true
-                                });
-                            }}>
-                                <i className="fa fa-print"/> Imprimir
-                            </a>
-                        </li>
                         <li>
                             <ExportCSV disabled={!validarDerecho(9101428)} csvData={data} fileName="Embarque_Listado"/>
                         </li>
+
                         <li>
                             <a
                                 onClick={handleShowCancelar}
@@ -3255,6 +3256,13 @@ function Embarque(props) {
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
+
+                        <li>
+                            <a onClick={() => handleShowImportar()}>
+                                <i className="fa fa-print"/> Importar
+                            </a>
+                        </li>
+
                         <li style={{float: "right"}}>
                             <a
                                 className={state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled : ""}
@@ -4515,6 +4523,12 @@ function Embarque(props) {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div id="Importar" className="tab-pane fade">
+                            <ImportarEmbarques
+                                // mostrarListado={handleShowListado}
+                            />
                         </div>
                     </div>
                 </div>
