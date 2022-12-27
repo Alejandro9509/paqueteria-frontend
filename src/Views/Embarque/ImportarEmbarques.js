@@ -611,12 +611,12 @@ function TablaImportadosComplementosSAT(props) {
                                 <TableCell
                                     style={{borderBottom: "none"}}
                                     align="left">
-                                    {`${item.claveSatProducto} - ${item.descripcionSatProducto}`}
+                                    {`${item.claveProductoServicio} - ${item.descripcionProductoServicio}`}
                                 </TableCell>
                                 <TableCell
                                     style={{borderBottom: "none"}}
                                     align="left">
-                                    {`${item.claveSatUnidadMedida} - ${item.descripcionSatUnidadMedida}`}
+                                    {`${item.claveUnidadMedida} - ${item.descripcionUnidadMedida}`}
                                 </TableCell>
                                 <TableCell
                                     style={{borderBottom: "none"}}
@@ -626,12 +626,12 @@ function TablaImportadosComplementosSAT(props) {
                                 <TableCell
                                     style={{borderBottom: "none"}}
                                     align="left">
-                                    {item.esMaterialPeligroso ? `${item.claveSatMaterialPeligroso} - ${item.descripcionMaterialPeligroso}`: "No aplica"}
+                                    {item.esMaterialPeligroso ? `${item.claveMaterialPeligroso} - ${item.descripcionMaterialPeligroso}`: "No aplica"}
                                 </TableCell>
                                 <TableCell
                                     style={{borderBottom: "none"}}
                                     align="left">
-                                    {item.esMaterialPeligroso ? `${item.claveSatEmbalaje} - ${item.descripcionSatEmbalaje}`: "No aplica"}
+                                    {item.esMaterialPeligroso ? `${item.claveEmbalaje} - ${item.descripcionSatEmbalaje}`: "No aplica"}
                                 </TableCell>
                                 <TableCell
                                     style={{borderBottom: "none"}}
@@ -641,7 +641,7 @@ function TablaImportadosComplementosSAT(props) {
                                 <TableCell
                                     style={{borderBottom: "none"}}
                                     align="left">
-                                    {item.esMaterialPeligroso ? `${item.claveSatFraccionArancelaria} - ${item.descripcionSatFraccionArancelaria}`: "No aplica"}
+                                    {item.esMaterialPeligroso ? `${item.claveFraccionArancelaria} - ${item.descripcionFraccionArancelaria}`: "No aplica"}
                                 </TableCell>
                             </TableRow>
                         ))

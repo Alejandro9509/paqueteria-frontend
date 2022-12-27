@@ -132,7 +132,7 @@ function validarEmbarquesImportados(params){
 }
 
 function agregarEmbarquesImportados(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/agregar-importados`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Embarques/agregar-importados`;
     let result;
     trackPromise(result = axios.post(url, Object.assign({}, params), { headers }))
     return result
