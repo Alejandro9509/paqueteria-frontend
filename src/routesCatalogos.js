@@ -10,7 +10,7 @@ import EstatusGuiaPage from './Views/EstatusGuia';
 import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import TarifasPage from './Views/Tarifas/Tarifas';
-import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion';
+import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion2';
 import PlantillaCorreo from './Views/PlantillaCorreo';
 import Productos from "./Views/Productos/Productos";
 import Convenios from "./Views/Convenios/Convenios";
