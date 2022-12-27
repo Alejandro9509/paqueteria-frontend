@@ -49,7 +49,10 @@ import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import {obtenerPlantillaImportacionByIdCliente} from "../../Util/Contexts/PlantillasContext";
+import {
+    obtenerNombrePlantillaImportacionByIdCliente,
+    obtenerPlantillaImportacionByIdCliente
+} from "../../Util/Contexts/PlantillasContext";
 
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -81,22 +84,27 @@ function ImportarEmbarques(props) {
     }
 
     const handleOnDescargarPlantillaClick = () => {
-        descargarPlantillaImportarEmbarque(state.cliente.m_nIdCliente).then(response => {
-            // create file link in browser's memory
-            let file = new Blob([response.data],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
-            const href = URL.createObjectURL(file);
+        obtenerNombrePlantillaImportacionByIdCliente(state.cliente.m_nIdCliente).then(respuesta => {
+            descargarPlantillaImportarEmbarque(state.cliente.m_nIdCliente).then(response => {
+                // create file link in browser's memory
+                let file = new Blob([response.data],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+                console.log(file)
+                console.log(response.data)
+                const href = URL.createObjectURL(file);
 
-            // create "a" HTML element with href to file & click
-            const link = document.createElement('a');
-            link.href = href;
-            link.setAttribute('download', configuraciones.plantillaImportarEmbarquesNombreArchivo); //or any other extension
-            document.body.appendChild(link);
-            link.click();
+                // create "a" HTML element with href to file & click
+                const link = document.createElement('a');
+                link.href = href;
+                link.setAttribute('download', respuesta.data.data.archivoNombre); //or any other extension
+                document.body.appendChild(link);
+                link.click();
 
-            // clean up "a" element & remove ObjectURL
-            document.body.removeChild(link);
-            URL.revokeObjectURL(href);
+                // clean up "a" element & remove ObjectURL
+                document.body.removeChild(link);
+                URL.revokeObjectURL(href);
+            })
         })
+
     }
 
     const handleOnImportarClick = () => {

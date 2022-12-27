@@ -55,4 +55,14 @@ function eliminarPlantillaImportacion(idPlantilla){
     return result
 }
 
-export { obtenerPlantillasImportacion,agregarPlantillaImportacion,obtenerPlantillasImportacionById,modificarPlantillaImportacion,obtenerPlantillaImportacionByIdCliente,eliminarPlantillaImportacion }
+
+function obtenerNombrePlantillaImportacionByIdCliente(idCliente) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetNombrePlantilla/${idCliente}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { obtenerPlantillasImportacion,agregarPlantillaImportacion,obtenerPlantillasImportacionById,modificarPlantillaImportacion,obtenerPlantillaImportacionByIdCliente,eliminarPlantillaImportacion,obtenerNombrePlantillaImportacionByIdCliente }
