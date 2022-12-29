@@ -342,13 +342,14 @@ export function readExcel(FORMAT,file){
                 descripcion: item[FORMAT.paquetes.descripcionPaquete],
                 observaciones: item[FORMAT.paquetes.observacionesPaquete] || ""
             }))
+            console.log(dataComplementosSat[0])
             const arrayComplementos = dataComplementosSat.map((item) => ({
                 numeroEmbarque: item[FORMAT.numeroEmbarque],
                 cantidad: item[FORMAT.complementosSat.cantidadComplemento],
                 peso: item[FORMAT.complementosSat.pesoComplemento],
                 claveProductoServicio: item[FORMAT.complementosSat.claveProductoServicio],
                 claveUnidadMedida: item[FORMAT.complementosSat.claveUnidadMedida],
-                esMaterialPeligroso: item[FORMAT.complementosSat.esMaterialPeligroso] === 'SI',
+                esMaterialPeligroso: (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase() === 'SI'|| (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase() === 'SÍ',
                 claveMaterialPeligroso: item[FORMAT.complementosSat.claveMaterialPeligroso],
                 claveEmbalaje: item[FORMAT.complementosSat.claveEmbalaje],
                 descripcionEmbalaje: item[FORMAT.complementosSat.descripcionEmbalajeComplemento],
