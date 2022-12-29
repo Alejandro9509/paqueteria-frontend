@@ -209,14 +209,15 @@ export function RecoleccionResumen(props) {
         latitud: '',
         longitud: ''
     })
+    const [erroresCotizacion,setErroresCotizacion] = React.useState([])
     const [state, setState] = useState({
         openDialog: false,
-        openDialogRemitentes: false,
+        openDialogRemitentes: false
     })
     const [data, setData] = useState({
         "folio": "",
         "idTipoCobro": '',
-        "cliente": {
+        "clientePaga": {
             m_nIdCliente: 0,
             m_sNombreFiscal: ''
         },
@@ -228,12 +229,13 @@ export function RecoleccionResumen(props) {
         "idRemitente": 0,
         "remitente": "",
         "numeroRemitente": 0,
-        "idDestinatario": 0,
-        "destinatario": "",
-        "numeroDestinatario": 0,
-        "recoleccionDiferenteDomicilio": false,
+        "diferenteRecoleccion": false,
         "conCita": false,
-        "conceptosFacturacion": []
+        "conceptosFacturacion": [],
+        destinoDestinatario: { m_nIdCiudad:0 },
+        zonaOperativaDestinatario: { m_nIdZona:0 },
+        mostrarCotizador: true,
+        zonaOperativa: { m_nIdZona:0 }
     })
     useEffect(() => {
         if (props.idRecoleccion > 0){
@@ -243,18 +245,36 @@ export function RecoleccionResumen(props) {
                 setData({
                     ...data,
                     folio: respuesta.data.m_sFolioRecoleccion,
-                    cliente: respuesta.data.cliente,
+                    clientePaga: respuesta.data.cliente,
                     idTipoCobro: respuesta.data.m_nIdTipoDeCobro,
                     idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                     porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
                     valorDeclarado: respuesta.data.m_xValorDeclarado,
                     observaciones: respuesta.data.m_sObservaciones,
-                    diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio
+                    diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
+                    destinoDestinatario: { m_nIdCiudad:respuesta.data.m_nIdCiudadDestino },
+                    zonaOperativaDestinatario: { m_nIdZona:respuesta.data.m_nIdZonaOperativaEntrega },
+                    zonaOperativa: { m_nIdZona:respuesta.data.m_nIdZonaOperativaEntrega },
+                    conceptosFacturacion: respuesta.data.m_arrConceptos.map(item => ({
+                        id: Math.floor(Math.random() * 10000),
+                        idConcepto: item.m_nIdConceptoFacturacion,
+                        importe: item.m_cImporte,
+                        retiene: item.m_nIdImpuestoRetiene,
+                        traslada: item.m_nIdImpuestoTraslada,
+                        importeIVA: item.m_cImporteIva,
+                        importeRet: item.m_cImporteRetiene,
+                        nombreConcepto: item.m_sConcepto,
+                        descuento: item.m_c_Descuento
+                    })),
+
+                    aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 })
                 setDataPaquetes(respuesta.data.m_parrPaquetes)
                 setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
                 setDataRecoleccionConsulta(respuesta)
                 mostrarDatosRecoleccionDD(respuesta)
+            }).catch( err => {
+                showSuccess(err.response.data)
             });
         }
 
@@ -287,7 +307,7 @@ export function RecoleccionResumen(props) {
         setData(data => {
             return {
                 ...data,
-                cliente: row.data,
+                clientePaga: row.data,
                 idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
                 porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
                 aplicaSeguro: row.data.m_bTieneSeguro,
@@ -374,7 +394,7 @@ export function RecoleccionResumen(props) {
         // event.preventDefault();
         setData({
             ...data,
-            recoleccionDiferenteDomicilio: !data.recoleccionDiferenteDomicilio,
+            diferenteRecoleccion: !data.diferenteRecoleccion,
         });
     };
 
@@ -474,9 +494,9 @@ export function RecoleccionResumen(props) {
                             label="Responsable de pago"
                             margin="dense"
                             required
-                            value={data.cliente.m_sNombreFiscal}
-                            error={data.cliente.m_bCreditoVencido && !data.cliente.m_bSinCredito}
-                            helperText={ (data.cliente.m_bCreditoVencido && !data.cliente.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + data.cliente.m_nDiasCredito : ""}
+                            value={data.clientePaga.m_sNombreFiscal}
+                            error={data.clientePaga.m_bCreditoVencido && !data.clientePaga.m_bSinCredito}
+                            helperText={ (data.clientePaga.m_bCreditoVencido && !data.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + data.clientePaga.m_nDiasCredito : ""}
                             placeholder={"No. Cliente: Nombre fiscal"}
                             InputLabelProps={{shrink: true}}
                             onClick={()=>{ setState({ ...state, openDialog: true})}}
@@ -561,7 +581,7 @@ export function RecoleccionResumen(props) {
                     dataPaquetes={dataPaquetes}
                     onChangeList={handleListPaquetesChange}
                     // disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                    cliente={data.cliente}
+                    cliente={data.clientePaga}
                     limpiarProducto={configuraciones.limpiarProducto}
                 />
             </section>
@@ -586,19 +606,22 @@ export function RecoleccionResumen(props) {
             </section>
 
             <section id={"recoleccionDiferenteDomicilio"}>
-                <label className="checkbox">
-                    <input
-                        onChange={handleRecoleccionCheckboxChange}
-                        className="form-control"
-                        checked={data.recoleccionDiferenteDomicilio}
-                        type="checkbox"
-                        style={{height: "20px"}}
-                        id="recoleccionDiferenteDomicilio"
-                    />
-                    <i/>
-                    Recolección en Diferente Domicilio
-                </label>
-                {data.recoleccionDiferenteDomicilio &&
+                <div style={{width:'70%'}}>
+                    <label className="checkbox">
+                        <input
+                            onChange={handleRecoleccionCheckboxChange}
+                            className="form-control"
+                            checked={data.diferenteRecoleccion}
+                            type="checkbox"
+                            style={{height: "20px"}}
+                            id="diferenteRecoleccion"
+                        />
+                        <i/>
+                        Recolección en Diferente Domicilio
+                    </label>
+                </div>
+
+                {data.diferenteRecoleccion &&
                     <div className="widget-wrap" id="detallesRecoleccion">
                         <div>
                             <div className="widget-header">
@@ -622,20 +645,20 @@ export function RecoleccionResumen(props) {
                 }
             </section>
             <section id={"cotizador"}>
-                <Cotizador embarque={state}
-                           disabled={state.agregar === "Consultar"}
+                <Cotizador embarque={data}
+                           // disabled={state.agregar === "Consultar"}
                            remitente={remitente}
-                           destinatario={destinatario}
+                           destinatario={data}
                            onChangeConceptosList={(list) => setData({...data, conceptosFacturacion: list})}
                            conceptos={data.conceptosFacturacion}
-                           saveIdCotizacion={saveIdCotizacion}
+                           saveIdCotizacion={(idCotizacion) => setData({...data, idCotizacion: idCotizacion})}
                            recoleccion={true}
-                           errores={errores}
-                           validarErrores={validarErrores}
+                           errores={erroresCotizacion}
+                           validarErrores={(list) => setErroresCotizacion(list)}
                            recoleccionDiferenteDom={recoleccionDD}
-                           mostrarCotizadorRec={mostrarCotizadorRec}
-                           entregaDiferenteDom={entregaDD}
-                           setCalculoTarifa={()=>setRepetirConceptos(false)}
+                           mostrarCotizadorRec={() => {}}
+                           entregaDiferenteDom={data}
+                           setCalculoTarifa={() => {}}
                            paquetes={dataPaquetes.map(p =>({
                                Tipo: p.m_nIdTipo,
                                Peso: p.m_rPeso,

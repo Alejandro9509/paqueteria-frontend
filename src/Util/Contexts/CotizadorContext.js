@@ -19,7 +19,7 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
         entregaEnSucursal:  data.entregaEnSucursal,
         idSeguro: data.idTipoSeguro,
         valorDeclarado: data.valorDeclarado,
-        aplicaRecoleccion: data.folioRecoleccion.length > 0|| recoleccion,
+        aplicaRecoleccion: data.folioRecoleccion?.length > 0|| recoleccion,
         aplicaSeguro: data.aplicaSeguro,
         porcentajeSeguro: data.porcentajeSeguro,
         recoleccionConCita: data.recoleccionConCita,
