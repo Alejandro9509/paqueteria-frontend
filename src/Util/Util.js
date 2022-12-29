@@ -348,7 +348,7 @@ export function readExcel(FORMAT,file){
                 peso: item[FORMAT.complementosSat.pesoComplemento],
                 claveProductoServicio: item[FORMAT.complementosSat.claveProductoServicio],
                 claveUnidadMedida: item[FORMAT.complementosSat.claveUnidadMedida],
-                esMaterialPeligroso: item[FORMAT.complementosSat.esMaterialPeligroso].toUpperCase() === 'SI'|| item[FORMAT.complementosSat.esMaterialPeligroso].toUpperCase() === 'SÍ',
+                esMaterialPeligroso: (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase() === 'SI'|| (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase() === 'SÍ',
                 claveMaterialPeligroso: item[FORMAT.complementosSat.claveMaterialPeligroso],
                 claveEmbalaje: item[FORMAT.complementosSat.claveEmbalaje],
                 descripcionEmbalaje: item[FORMAT.complementosSat.descripcionEmbalajeComplemento],
