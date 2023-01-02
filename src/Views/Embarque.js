@@ -173,35 +173,35 @@ const options = {
 window.jQuery = window.$ = $;
 const theme = createMuiTheme({
     overrides: {
-      MuiSwitch: {
-        switchBase: {
-          // Controls default (unchecked) color for the thumb
-          color: "#ccc"
-        },
-        colorPrimary: {
-          "&$checked": {
-            // Controls checked color for the thumb
-            color: "rgb(249, 160, 62)",
-            "&$disabled": {
-                // Controls checked color for the thumb
-                color: "rgb(249, 160, 62)"
-              }
-          },
-        
-        },
-        track: {
-          // Controls default (unchecked) color for the track
-          opacity: 0.2,
-          backgroundColor: "#ccc",
-          "$checked$checked + &": {
-            // Controls checked color for the track
-            opacity: 0.7,
-            backgroundColor: "#F9A03E"
-          }
+        MuiSwitch: {
+            switchBase: {
+                // Controls default (unchecked) color for the thumb
+                color: "#ccc"
+            },
+            colorPrimary: {
+                "&$checked": {
+                    // Controls checked color for the thumb
+                    color: "rgb(249, 160, 62)",
+                    "&$disabled": {
+                        // Controls checked color for the thumb
+                        color: "rgb(249, 160, 62)"
+                    }
+                },
+
+            },
+            track: {
+                // Controls default (unchecked) color for the track
+                opacity: 0.2,
+                backgroundColor: "#ccc",
+                "$checked$checked + &": {
+                    // Controls checked color for the track
+                    opacity: 0.7,
+                    backgroundColor: "#F9A03E"
+                }
+            }
         }
-      }
     }
-  });
+});
 const styles = {
     paqueteCarrusel: {
         height: "280px !important",
@@ -219,7 +219,7 @@ const styles = {
         pointerEvents: "none",
         cursor: "default",
     },
-    
+
     root: {
         "& .super-app-theme--cell": {
             backgroundColor: "rgba(224, 183, 60, 0.55)",
@@ -526,6 +526,7 @@ function Embarque(props) {
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
+        modificarValorEmbarque:false
     })
     const [errores, setErrores] = React.useState([])
     const [state, setState] = React.useState({
@@ -1696,7 +1697,7 @@ function Embarque(props) {
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
-      
+
         respuesta.data.recoleccionById = true
         setDataEmbarqueConsulta(respuesta)
         getDataParaEditar("Consultar")
@@ -3721,27 +3722,27 @@ function Embarque(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="input select">
-                                                            <ThemeProvider theme={theme}>
-                                                                <FormControlLabel
-                                                                 
-                                                                    control={
-                                                                        <Switch
-                                                                            checked={state.validarTimbrado ?? false}
-                                                                            onChange={(e) => setState((v) => {
-                                                                                return ({
-                                                                                    ...v,
-                                                                                    validarTimbrado: e.target.checked
-                                                                                })
-                                                                            })}
-                                                                      
-                                                                            disabled={!configuraciones.modificarValorEmbarque}
-                                                                            name="validarTimbrado"
-                                                                            color="primary"
-                                                                        />
-                                                                    }
-                                                                    label="Validar timbrado de factura"
-                                                                />
-                                                                 </ThemeProvider>
+                                                                <ThemeProvider theme={theme}>
+                                                                    <FormControlLabel
+
+                                                                        control={
+                                                                            <Switch
+                                                                                checked={state.validarTimbrado ?? false}
+                                                                                onChange={(e) => setState((v) => {
+                                                                                    return ({
+                                                                                        ...v,
+                                                                                        validarTimbrado: e.target.checked
+                                                                                    })
+                                                                                })}
+
+                                                                                disabled={!configuraciones.modificarValorEmbarque}
+                                                                                name="validarTimbrado"
+                                                                                color="primary"
+                                                                            />
+                                                                        }
+                                                                        label="Validar timbrado de factura"
+                                                                    />
+                                                                </ThemeProvider>
                                                             </label>
                                                         </Grid>
                                                         <Grid item xs>

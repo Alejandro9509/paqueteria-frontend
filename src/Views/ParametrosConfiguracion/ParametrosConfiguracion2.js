@@ -1045,36 +1045,36 @@ function ParametrosConfiguracion2() {
                                         </FormControl>
                                     </Box>
                                     <div style={{display:"grid", gridTemplateColumns: "repeat(1, 1fr)",width:"400px",margin:"10px",gap: "10px",border:"1px solid #ccc",borderRadius:"20px"}}>
-                                    <Box display="flex">
-                                        <Box width="66%"  my={0.5}>
-                                            <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                        <Box display="flex">
+                                            <Box width="66%"  my={0.5}>
+                                                <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                            </Box>
+                                            <Box width="34%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.validarTimbradoIngreso}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="validarTimbradoIngreso"
+                                                />
+                                            </Box>
                                         </Box>
-                                        <Box width="34%" p={1} my={0.5}>
-                                            <Checkbox
-                                                checked={configuraciones.validarTimbradoIngreso}
-                                                onChange={handleChecked}
-                                                color="primary"
-                                                style={{transform: "scale(2)"}}
-                                                inputProps={{'aria-label': 'primary checkbox'}}
-                                                name="validarTimbradoIngreso"
-                                            />
+                                        <Box  display="flex">
+                                            <Box width="66%" my={0.5}>
+                                                <div className={classes.subtitulo}>Permitir modificar este valor en Embarque</div>
+                                            </Box>
+                                            <Box width="34%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.modificarValorEmbarque}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="modificarValorEmbarque"
+                                                />
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                    <Box  display="flex">
-                                        <Box width="66%" my={0.5}>
-                                            <div className={classes.subtitulo}>Permitir modificar este valor en Embarque</div>
-                                        </Box>
-                                        <Box width="34%" p={1} my={0.5}>
-                                            <Checkbox
-                                                checked={configuraciones.modificarValorEmbarque}
-                                                onChange={handleChecked}
-                                                color="primary"
-                                                style={{transform: "scale(2)"}}
-                                                inputProps={{'aria-label': 'primary checkbox'}}
-                                                name="modificarValorEmbarque"
-                                            />
-                                        </Box>
-                                    </Box>
                                     </div>
                                     <Box width="50%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
