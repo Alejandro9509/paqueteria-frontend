@@ -8,7 +8,7 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import {makeStyles} from "@material-ui/core/styles";
+import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -166,7 +166,37 @@ const options = {
 };
 
 window.jQuery = window.$ = $;
+const theme = createMuiTheme({
+    overrides: {
+        MuiSwitch: {
+            switchBase: {
+                // Controls default (unchecked) color for the thumb
+                color: "#ccc"
+            },
+            colorPrimary: {
+                "&$checked": {
+                    // Controls checked color for the thumb
+                    color: "rgb(249, 160, 62)",
+                    "&$disabled": {
+                        // Controls checked color for the thumb
+                        color: "rgb(249, 160, 62)"
+                    }
+                },
 
+            },
+            track: {
+                // Controls default (unchecked) color for the track
+                opacity: 0.2,
+                backgroundColor: "#ccc",
+                "$checked$checked + &": {
+                    // Controls checked color for the track
+                    opacity: 0.7,
+                    backgroundColor: "#F9A03E"
+                }
+            }
+        }
+    }
+});
 const styles = {
     paqueteCarrusel: {
         height: "280px !important",
@@ -184,6 +214,7 @@ const styles = {
         pointerEvents: "none",
         cursor: "default",
     },
+
     root: {
         "& .super-app-theme--cell": {
             backgroundColor: "rgba(224, 183, 60, 0.55)",
@@ -490,6 +521,7 @@ function Embarque(props) {
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
+        modificarValorEmbarque:false
     })
     const [errores, setErrores] = React.useState([])
     const [state, setState] = React.useState({
@@ -654,7 +686,8 @@ function Embarque(props) {
             limpiarProducto: false,
             idsTiposCobroSeleccionArray: [],
             idsTiposCobroSeleccionString: '',
-            idConceptoFlete: 0
+            idConceptoFlete: 0,
+            modificarValorEmbarque:false
         })
     }
 
@@ -2207,7 +2240,7 @@ function Embarque(props) {
                             moneda: state.idRecoleccion > 0 ? state.moneda : respuesta.data.MonedaEmbarque,
                             tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio : respuesta.data.TipoCambioEmbarque,
                             tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
-                            tipoTimbrado: respuesta.data.TipoTimbrado,
+                            tipoTimbrado: respuesta.data.TipoTimbrado
                         }
                     })
                 }
@@ -2215,6 +2248,7 @@ function Embarque(props) {
                     return {
                         ...state,
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
+                        tipoTimbrado: respuesta.data.TipoTimbrado,
                         //                      idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
                         validarTimbrado: respuesta.data.ValidarTimbradoIngreso
                     }
@@ -2237,6 +2271,7 @@ function Embarque(props) {
                         idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                         idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                         idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                        modificarValorEmbarque: respuesta.data.ModificarValorEmbarque
                     }
                 })
                 setDataTipoDocumento(data)
@@ -3678,22 +3713,27 @@ function Embarque(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="input select">
-                                                                <FormControlLabel
-                                                                    control={
-                                                                        <Switch
-                                                                            checked={state.validarTimbrado ?? false}
-                                                                            onChange={(e) => setState((v) => {
-                                                                                return ({
-                                                                                    ...v,
-                                                                                    validarTimbrado: e.target.checked
-                                                                                })
-                                                                            })}
-                                                                            name="validarTimbrado"
-                                                                            color="primary"
-                                                                        />
-                                                                    }
-                                                                    label="Validar timbrado de factura"
-                                                                />
+                                                                <ThemeProvider theme={theme}>
+                                                                    <FormControlLabel
+
+                                                                        control={
+                                                                            <Switch
+                                                                                checked={state.validarTimbrado ?? false}
+                                                                                onChange={(e) => setState((v) => {
+                                                                                    return ({
+                                                                                        ...v,
+                                                                                        validarTimbrado: e.target.checked
+                                                                                    })
+                                                                                })}
+
+                                                                                disabled={!configuraciones.modificarValorEmbarque}
+                                                                                name="validarTimbrado"
+                                                                                color="primary"
+                                                                            />
+                                                                        }
+                                                                        label="Validar timbrado de factura"
+                                                                    />
+                                                                </ThemeProvider>
                                                             </label>
                                                         </Grid>
                                                         <Grid item xs>

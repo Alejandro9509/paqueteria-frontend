@@ -107,7 +107,8 @@ function ParametrosConfiguracion2() {
         idConceptoCita: 0,
         validarInforme: false,
         timbradoPruebaGuia: true,
-        validarTimbradoIngreso: false
+        validarTimbradoIngreso: false,
+        modificarValorEmbarque:false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -180,6 +181,7 @@ function ParametrosConfiguracion2() {
             validarTimbrado: configuraciones.validarTimbrado,
             idComplemento: configuraciones.idComplemento,
             validarTimbradoIngreso: configuraciones.validarTimbradoIngreso,
+            modificarValorEmbarque: configuraciones.modificarValorEmbarque,
             tipoTimbrado: configuraciones.tipoTimbrado
         }
 
@@ -229,6 +231,7 @@ function ParametrosConfiguracion2() {
                     validarTimbrado: respuesta.data.ValidarTimbrado,
                     idComplemento: respuesta.data.IdComplemento,
                     validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
+                    modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
                     tipoTimbrado: respuesta.data.TipoTimbrado
                 }
             })
@@ -1041,21 +1044,38 @@ function ParametrosConfiguracion2() {
                                             </Select>
                                         </FormControl>
                                     </Box>
-                                    <Box width="50%" display="flex">
-                                        <Box width="40%" p={1} my={0.5}>
-                                            <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                    <div style={{display:"grid", gridTemplateColumns: "repeat(1, 1fr)",width:"400px",margin:"10px",gap: "10px",border:"1px solid #ccc",borderRadius:"20px"}}>
+                                        <Box display="flex">
+                                            <Box width="66%"  my={0.5}>
+                                                <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                            </Box>
+                                            <Box width="34%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.validarTimbradoIngreso}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="validarTimbradoIngreso"
+                                                />
+                                            </Box>
                                         </Box>
-                                        <Box width="60%" p={1} my={0.5}>
-                                            <Checkbox
-                                                checked={configuraciones.validarTimbradoIngreso}
-                                                onChange={handleChecked}
-                                                color="primary"
-                                                style={{transform: "scale(2)"}}
-                                                inputProps={{'aria-label': 'primary checkbox'}}
-                                                name="validarTimbradoIngreso"
-                                            />
+                                        <Box  display="flex">
+                                            <Box width="66%" my={0.5}>
+                                                <div className={classes.subtitulo}>Permitir modificar este valor en Embarque</div>
+                                            </Box>
+                                            <Box width="34%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.modificarValorEmbarque}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="modificarValorEmbarque"
+                                                />
+                                            </Box>
                                         </Box>
-                                    </Box>
+                                    </div>
                                     <Box width="50%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Validar timbrado de informes</div>
