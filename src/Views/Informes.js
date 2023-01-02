@@ -981,7 +981,7 @@ function Informes({history}) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
                 usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
                 estatusCancelacion: respuesta.data.m_sEstatusInforme,
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
             });
 
             if (!respuesta.data.m_bSePuedeCancelar) {
@@ -1192,7 +1192,8 @@ function Informes({history}) {
                 PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
                 EstatusInforme: data.m_nIdEstatusInforme,
-                agregar: accion
+                agregar: accion,
+                tipoTimbrado:data.m_nTipoTimbrado
             }
         });
     }
@@ -1714,14 +1715,20 @@ function Informes({history}) {
                                                                                     <InputLabel
                                                                                         id="tipoTimbradoLabel">Tipo de servicio</InputLabel>
                                                                                     <Select
+                                                                                        native
                                                                                         labelId="tipoTimbradoLabel"
-                                                                                        label="Tipo de servicio"
+                                                                                        label="Tipo de timbrado"
                                                                                         className="form-control"
                                                                                         required
-                                                                                        value={state.tipoTimbrado}
                                                                                         id="tipoTimbrado"
+                                                                                        name="tipoTimbrado"
+                                                                                        read="true"
                                                                                         onChange={handleSelectTipoTimbrado}
+                                                                                        value={state.tipoTimbrado}
                                                                                     >
+                                                                                        <option key={0}
+                                                                                                value="0">Seleccionar
+                                                                                        </option>
                                                                                         <option key={"1"}
                                                                                                 value={1}
                                                                                         >
