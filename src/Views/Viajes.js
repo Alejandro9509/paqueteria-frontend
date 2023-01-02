@@ -613,6 +613,7 @@ function Viajes() {
         })
        
 
+
     }
 
     function showCancelarCFDI(informe){
