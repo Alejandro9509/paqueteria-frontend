@@ -43,7 +43,9 @@ export default function DialogoEvidenciasUltimaMilla(props) {
                         props.imagenes.filter(i => parseInt(i.m_nTipoArchivo) === 2).length > 0 ?
                         <Grid item md={12}>
                             <div align={"center"}>
-                                <img src={`data:image/jpeg;base64,${props.imagenes.find(i => parseInt(i.m_nTipoArchivo) === 2).m_sImagen}`} alt={''}/>
+                                <img src={`data:image/jpeg;base64,${props.imagenes.find(i => parseInt(i.m_nTipoArchivo) === 2).m_sImagen}`}
+                                     alt={''}
+                                     style={{width: "560px", height: "380px",marginBottom:"10px",paddingRight:"15px" ,display: "block"}}/>
                             </div>
                         </Grid>
                             :
@@ -59,7 +61,7 @@ export default function DialogoEvidenciasUltimaMilla(props) {
                                         <Button variant={"contained"} color={"primary"} onClick={() => handleDownloadImage(item.m_sImagen)} style={{position: "absolute"}}>
                                             <DownloadIcon fontSize={'large'} />
                                         </Button>
-                                        <img style={{display: "block"}}
+                                        <img style={{width: "560px", height: "380px",paddingBottom:"20px",paddingRight:"15px" ,display: "block"}}
                                              src={`data:image/jpeg;base64,${item.m_sImagen}`} alt={''}/>
 
 
