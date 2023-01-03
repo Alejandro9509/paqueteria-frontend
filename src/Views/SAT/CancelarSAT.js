@@ -274,7 +274,8 @@ export function RecoleccionResumen(props) {
                 setDataRecoleccionConsulta(respuesta)
                 mostrarDatosRecoleccionDD(respuesta)
             }).catch( err => {
-                showSuccess(err.response.data)
+                console.log(err)
+                // showSuccess(err.response.data)
             });
         }
 
@@ -494,9 +495,9 @@ export function RecoleccionResumen(props) {
                             label="Responsable de pago"
                             margin="dense"
                             required
-                            value={data.clientePaga.m_sNombreFiscal}
-                            error={data.clientePaga.m_bCreditoVencido && !data.clientePaga.m_bSinCredito}
-                            helperText={ (data.clientePaga.m_bCreditoVencido && !data.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + data.clientePaga.m_nDiasCredito : ""}
+                            value={data.clientePaga?.m_sNombreFiscal}
+                            error={data.clientePaga?.m_bCreditoVencido && !data.clientePaga?.m_bSinCredito}
+                            helperText={ (data.clientePaga?.m_bCreditoVencido && !data.clientePaga?.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + data.clientePaga.m_nDiasCredito : ""}
                             placeholder={"No. Cliente: Nombre fiscal"}
                             InputLabelProps={{shrink: true}}
                             onClick={()=>{ setState({ ...state, openDialog: true})}}
