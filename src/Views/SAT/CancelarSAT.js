@@ -250,7 +250,7 @@ export function RecoleccionResumen(props) {
                     idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                     porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
                     valorDeclarado: respuesta.data.m_xValorDeclarado,
-                    observaciones: respuesta.data.m_sObservaciones,
+                    observaciones: respuesta.data.m_sObservaciones || "",
                     diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                     destinoDestinatario: { m_nIdCiudad:respuesta.data.m_nIdCiudadDestino },
                     zonaOperativaDestinatario: { m_nIdZona:respuesta.data.m_nIdZonaOperativaEntrega },
@@ -272,7 +272,10 @@ export function RecoleccionResumen(props) {
                 setDataPaquetes(respuesta.data.m_parrPaquetes)
                 setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
                 setDataRecoleccionConsulta(respuesta)
-                mostrarDatosRecoleccionDD(respuesta)
+                if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
+                    mostrarDatosRecoleccionDD(respuesta)
+                }
+
             }).catch( err => {
                 console.log(err)
                 // showSuccess(err.response.data)
@@ -453,6 +456,177 @@ export function RecoleccionResumen(props) {
                 longitud: newValue.longitud,
             }
         });
+    }
+    const validarDatos = (params) => {
+        const status = {valid: true, message: ""}
+        if (!params.idRecoleccion > 0){
+            status.valid = false
+            status.message = "No hay identificador de recolección"
+            return status
+        }
+        if (!params.idCliente > 0){
+            status.valid = false
+            status.message = "No hay cliente"
+            return status
+        }
+        if (!params.idTipoSeguro > 0){
+            status.valid = false
+            status.message = "No hay tipo de seguro"
+            return status
+        }
+        if (!params.porcentajeSeguro > 0){
+            status.valid = false
+            status.message = "No hay porcentaje de seguro"
+            return status
+        }
+        if (!params.valorDeclarado > 0){
+            status.valid = false
+            status.message = "No hay valor declarado"
+            return status
+        }
+        if (!params.idTipoCobro > 0){
+            status.valid = false
+            status.message = "No hay tipo de cobro"
+            return status
+        }
+        if (!params.idRemitente > 0){
+            status.valid = false
+            status.message = "No hay remitente"
+            return status
+        }
+        if (!params.idOrigen > 0){
+            status.valid = false
+            status.message = "No hay origen"
+            return status
+        }
+        if (params.recoleccionDiferenteDomicilio){
+            if (!params.idPais > 0){
+                status.valid = false
+                status.message = "No hay país"
+                return status
+            }
+            if (!params.idEstado > 0){
+                status.valid = false
+                status.message = "No hay estado"
+                return status
+            }
+            if (!params.idMunicipio > 0){
+                status.valid = false
+                status.message = "No hay municipio"
+                return status
+            }
+            if (!params.municipio > 0){
+                status.valid = false
+                status.message = "No hay municipio"
+                return status
+            }
+            if (!params.idCodigoPostal > 0){
+                status.valid = false
+                status.message = "No hay código postal"
+                return status
+            }
+            if (!params.calleNumero > 0){
+                status.valid = false
+                status.message = "No hay domicilio"
+                return status
+            }
+            if (!params.entregarEn > 0){
+                status.valid = false
+                status.message = "No hay detalles de entrega"
+                return status
+            }
+        }
+        if (!params.idZonaOperativaRecoleccion > 0){
+            status.valid = false
+            status.message = "No hay zona operativa"
+            return status
+        }
+        if (!params.complementosSat.length > 0){
+            status.valid = false
+            status.message = "No hay complementos SAT"
+            return status
+        }
+        if (!params.conceptosFacturacion.length > 0){
+            status.valid = false
+            status.message = "No hay conceptos de facturación"
+            return status
+        }
+
+        return status
+    }
+
+    const handleOnClickGuardar = (event) => {
+        try {
+
+            let params = {
+                "idRecoleccion": props.idRecoleccion,
+                "idCliente": data.clientePaga?.m_nIdCliente,
+                "idTipoSeguro": data.idTipoSeguro,
+                "porcentajeSeguro": data.porcentajeSeguro,
+                "valorDeclarado": data.valorDeclarado,
+                "observaciones": data.observaciones,
+                "idTipoCobro": data.idTipoCobro,
+                "idRemitente": remitente.idRemitente,
+                "idOrigen": remitente.origenRemitente?.m_nIdCiudad,
+                "recoleccionDiferenteDomicilio": data.diferenteRecoleccion,
+                "paquetes": dataPaquetes.map(i => ({
+                    "cantidad": i.m_nCantidad,
+                    "idProducto": i.m_nIdProducto,
+                    "idEmbalaje": i.m_nIdTipoEmbalaje,
+                    "largo": i.m_rLargo,
+                    "alto": i.m_rAlto,
+                    "ancho": i.m_rAncho,
+                    "peso": i.m_rPeso,
+                    "volumen": i.m_rVolumen,
+                    "descripcion": i.m_sDescripcion,
+                    "observaciones": i.m_sObservaciones
+                })),
+                "complementosSat": dataComplementosSAT.map(i => ({
+                    "cantidad": i.cantidad,
+                    "peso": i.peso,
+                    "claveProductoServicio": i.claveProducto,
+                    "claveUnidadMedida": i.claveUnidad,
+                    "esMaterialPeligroso": i.esPeligroso,
+                    "claveMaterialPeligroso": i.claveMaterialPeligroso,
+                    "claveEmbalaje": i.claveEmbalaje,
+                    "descripcionEmbalaje": i.descripcionEmbalajeSAT,
+                    "claveFraccionArancelaria": i.claveFraccion
+                })),
+                "conceptosFacturacion": data.conceptosFacturacion.map(i => ({
+                    "idConceptoFacturacion": i.idConcepto,
+                    "importe": i.importe,
+                    "importeIva": i.importeIVA,
+                    "importeRetencion": i.importeRet,
+                    "idImpuestoIva": i.traslada,
+                    "idImpuestoRetencion": i.retiene,
+                    "descuento": i.descuento
+                })),
+            }
+            if (params.recoleccionDiferenteDomicilio){
+                params.idPais= recoleccionDD.idPais
+                params.idEstado= recoleccionDD.idEstado
+                params.idMunicipio= recoleccionDD.idMunicipio
+                params.municipio= recoleccionDD.municipio
+                params.idCodigoPostal= recoleccionDD.codigoPostal?.m_nIdCP
+                params.calleNumero= recoleccionDD.domicilio
+                params.entregarEn= recoleccionDD.detalles
+                params.datosAdicionales= recoleccionDD.datosAdicionales
+                params.idZonaOperativaRecoleccion= recoleccionDD.zonaOperativa?.m_nIdZona
+            }else{
+                params.idZonaOperativaRecoleccion= remitente.zonaOperativaRemitente?.m_nIdZona
+            }
+            let status = validarDatos(params)
+            if (!status.valid){
+                showSuccess(status.message)
+                return
+            }
+            console.log(params)
+        }catch (err){
+            showSuccess("Hubo un error al procesar la informacion intente más tarde")
+        }
+
+
+
     }
 
     return(
@@ -673,6 +847,8 @@ export function RecoleccionResumen(props) {
                                IdProducto:p.m_nIdProducto
                            }))} />
             </section>
+
+            <Button onClick={handleOnClickGuardar}>Guardar</Button>
         </div>
     )
 
