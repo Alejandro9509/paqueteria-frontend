@@ -1694,7 +1694,7 @@ function Embarque(props) {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
         setDataEmbarqueConsulta(respuesta)
-        getDataParaEditar("Consultar")
+        getDataParaEditar("Agregar")
         getAllCiudades()
         getAllSucursales()
         getAllEstatusEmbarque()
@@ -2240,7 +2240,8 @@ function Embarque(props) {
                             moneda: state.idRecoleccion > 0 ? state.moneda : respuesta.data.MonedaEmbarque,
                             tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio : respuesta.data.TipoCambioEmbarque,
                             tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
-                            tipoTimbrado: respuesta.data.TipoTimbrado
+                            tipoTimbrado: respuesta.data.TipoTimbrado,
+                            validarTimbrado: respuesta.data.ValidarTimbradoIngreso
                         }
                     })
                 }
@@ -2248,9 +2249,7 @@ function Embarque(props) {
                     return {
                         ...state,
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
-                        tipoTimbrado: respuesta.data.TipoTimbrado,
-                        //                      idTipoDocumento: data.filter(d => d.IdComplemento === respuesta.data.IdComplemento)[0]?.IdDocumento
-                        validarTimbrado: respuesta.data.ValidarTimbradoIngreso
+                        tipoTimbrado: respuesta.data.TipoTimbrado
                     }
                 })
                 setConfiguraciones((config) => {
