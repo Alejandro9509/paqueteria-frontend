@@ -84,7 +84,7 @@ function Seguros() {
                 width: 250,
               },
             {
-                headerName: "Poliza",
+                headerName: "Póliza",
                 field: "m_sPoliza",
                 width: 250,
               }
