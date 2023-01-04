@@ -340,8 +340,8 @@ function ImportarEmbarques(props) {
                                                                                         </Grid>
                                                                                         <Grid item xs={6}>
                                                                                             Destinatario: {e.data.nombreDestinatario}<br/>
-                                                                                            Código Postal: {e.data.codigoPostalRemitente}<br/>
-                                                                                            Correo: {e.data.correoRemitente}<br/>
+                                                                                            Código Postal: {e.data.codigoPostalDestinatario}<br/>
+                                                                                            Correo: {e.data.correoDestinatario}<br/>
                                                                                             Destino: {e.data.destino}<br/>
                                                                                             Zona operativa: {e.data.zonaDestinatario}<br/>
                                                                                         </Grid>
