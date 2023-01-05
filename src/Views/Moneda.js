@@ -237,7 +237,7 @@ function Moneda() {
             setData(respuesta.data)
         });
         $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
     };
