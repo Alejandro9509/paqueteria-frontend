@@ -42,6 +42,8 @@ class CancelarSAT extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.handleOnSaveDataRecoleccion = this.handleOnSaveDataRecoleccion.bind(this);
+        this.handleOnCancelEditRecoleccion = this.handleOnCancelEditRecoleccion.bind(this);
     }
 
     componentDidMount() {
@@ -81,13 +83,26 @@ class CancelarSAT extends Component {
         this.props.close()
         this.props.onSubmit(data)
     }
+
+    handleOnSaveDataRecoleccion(data){
+        console.log(data)
+        this.setState({openDialogRecoleccion: false})
+    }
+
+    handleOnCancelEditRecoleccion(){
+        this.setState({openDialogRecoleccion: false})
+    }
     render() {
         return (
             <div>
                 <Dialog open={this.state.openDialogRecoleccion} onClose={() => this.setState({openDialogRecoleccion: false})} fullWidth maxWidth={"xl"}>
                     <DialogTitle><Typography variant={"h3"}>Modificar recoleccion</Typography></DialogTitle>
                     <DialogContent>
-                        <RecoleccionResumen idRecoleccion={this.state.idGuia? this.state.idGuia : 0}/>
+                        <RecoleccionResumen
+                            idRecoleccion={this.state.idGuia? this.state.idGuia : 0}
+                            onSubmitData={this.handleOnSaveDataRecoleccion}
+                            onCancel={this.handleOnCancelEditRecoleccion}
+                        />
                     </DialogContent>
                 </Dialog>
                 <Dialog open={this.props.open} onClose={() => this.props.close()} fullWidth maxWidth={"md"}>
@@ -240,7 +255,6 @@ export function RecoleccionResumen(props) {
     useEffect(() => {
         if (props.idRecoleccion > 0){
             obtenerRecoleccionId(props.idRecoleccion).then((respuesta) => {
-                console.log(respuesta.data)
                 respuesta.data.recoleccionById = true
                 setData({
                     ...data,
@@ -479,7 +493,7 @@ export function RecoleccionResumen(props) {
             status.message = "No hay porcentaje de seguro"
             return status
         }
-        if (!params.valorDeclarado > 0){
+        if (!(params.valorDeclarado >= 0)){
             status.valid = false
             status.message = "No hay valor declarado"
             return status
@@ -621,12 +635,10 @@ export function RecoleccionResumen(props) {
                 return
             }
             console.log(params)
+            props.onSubmitData(params)
         }catch (err){
             showSuccess("Hubo un error al procesar la informacion intente más tarde")
         }
-
-
-
     }
 
     return(
@@ -848,7 +860,24 @@ export function RecoleccionResumen(props) {
                            }))} />
             </section>
 
-            <Button onClick={handleOnClickGuardar}>Guardar</Button>
+            <Grid container spacing={1}>
+                <Grid item xs>
+                    <Button
+                        fullWidth color={"secondary"} variant={"contained"} style={{color: "white"}}
+                        onClick={props.onCancel}>
+                        Cancelar
+                    </Button>
+                </Grid>
+                <Grid item xs>
+                    <Button fullWidth
+                            className="btn btn-primary primary-btn"
+                            onClick={handleOnClickGuardar}
+                    >
+                        GUARDAR RECOLECCIÓN
+                    </Button>
+
+                </Grid>
+            </Grid>
         </div>
     )
 
