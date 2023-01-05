@@ -155,7 +155,7 @@ function ActualizarDireccion(props){
         // params.m_sLongitudD =  entregaDD.longitud
         console.log(params)
         console.log(JSON.stringify(params))
-        // params.idGuia = props.guia.m_nIdGuia
+        params.idGuia = props.guia.m_nIdGuia
         props.onSubmit(params)
         /*cambiarEstatusGuia(params).then(({data}) => {
             resetData()

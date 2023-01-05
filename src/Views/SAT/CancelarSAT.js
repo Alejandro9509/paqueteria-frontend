@@ -92,6 +92,7 @@ class CancelarSAT extends Component {
         this.props.onSubmit(data)
     }
 
+    /**Obtienen objeto con datos nuevos de recoleccion*/
     handleOnSaveDataRecoleccion(data){
         console.log(data)
         this.setState({openDialogRecoleccion: false})
@@ -101,6 +102,7 @@ class CancelarSAT extends Component {
         this.setState({openDialogRecoleccion: false})
     }
 
+    /**Obtienen objeto con datos nuevos de guia*/
     handleOnSaveDataGuia(data){
         console.log(data)
         this.setState({openDialogDireccion: false})
