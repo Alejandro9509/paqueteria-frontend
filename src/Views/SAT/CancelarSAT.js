@@ -22,6 +22,7 @@ import {da} from "date-fns/locale";
 import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import Cotizador from "../ConceptosFacturacion/Cotizador";
+import ActualizarDireccion from "../Guia/ActualizarDireccion";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -38,12 +39,15 @@ class CancelarSAT extends Component {
         this.state= {
             catalogoSAT: [],
             openDialogRecoleccion: false,
+            openDialogDireccion: false,
             idGuia: 0
         }
         this.handleChange = this.handleChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.handleOnSaveDataRecoleccion = this.handleOnSaveDataRecoleccion.bind(this);
         this.handleOnCancelEditRecoleccion = this.handleOnCancelEditRecoleccion.bind(this);
+        this.handleOnSaveDataGuia = this.handleOnSaveDataGuia.bind(this);
+        this.handleOnCancelEditGuia = this.handleOnCancelEditGuia.bind(this);
     }
 
     componentDidMount() {
@@ -63,16 +67,20 @@ class CancelarSAT extends Component {
         if (event.target.name === 'idCancelacionSAT' && event.target.value === '01'){
             try {
                 obtenerGuiaRecoleccionPorFolio(this.props.data.m_sFolio).then(respuesta => {
-                    let idRecoleccion = respuesta.data.data.m_nIdRecoleccion
-                    this.setState({openDialogRecoleccion: true,idGuia: idRecoleccion})
+                    if (this.props.data.m_sFolio.substring(0,2) === 'RE'){
+                        let idRecoleccion = respuesta.data.data.m_nIdRecoleccion
+                        this.setState({openDialogRecoleccion: true,idGuia: idRecoleccion})
+                    }
+                    if (this.props.data.m_sFolio.substring(0,2) === 'FG'){
+                        let idGuia = respuesta.data.data.m_nIdGuia
+                        this.setState({openDialogDireccion: true,idGuia: idGuia})
+                    }
                 }).catch(err => {
                     console.log(err);
                 })
             }catch(err) {
                 console.log(err);
             }
-
-
         }
     };
     onSubmit(e){
@@ -92,10 +100,19 @@ class CancelarSAT extends Component {
     handleOnCancelEditRecoleccion(){
         this.setState({openDialogRecoleccion: false})
     }
+
+    handleOnSaveDataGuia(data){
+        console.log(data)
+        this.setState({openDialogDireccion: false})
+    }
+
+    handleOnCancelEditGuia(){
+        this.setState({openDialogDireccion: false})
+    }
     render() {
         return (
             <div>
-                <Dialog open={this.state.openDialogRecoleccion} onClose={() => this.setState({openDialogRecoleccion: false})} fullWidth maxWidth={"xl"}>
+                <Dialog open={this.state.openDialogRecoleccion} onClose={this.handleOnCancelEditRecoleccion} fullWidth maxWidth={"xl"}>
                     <DialogTitle><Typography variant={"h3"}>Modificar recoleccion</Typography></DialogTitle>
                     <DialogContent>
                         <RecoleccionResumen
@@ -105,6 +122,11 @@ class CancelarSAT extends Component {
                         />
                     </DialogContent>
                 </Dialog>
+                <ActualizarDireccion onSubmit={this.handleOnSaveDataGuia}
+                                open={this.state.openDialogDireccion}
+                                close={this.handleOnCancelEditGuia}
+                                idGuia={this.state.idGuia? this.state.idGuia : 0}
+                />
                 <Dialog open={this.props.open} onClose={() => this.props.close()} fullWidth maxWidth={"md"}>
                     <DialogTitle><Typography variant={"h3"}>Cancelar SAT - {this.props.data.folioCancelar}</Typography></DialogTitle>
                     <DialogContent>

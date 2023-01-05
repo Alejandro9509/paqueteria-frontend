@@ -2101,7 +2101,7 @@ function Guia(props) {
                             </li>
 
                         {
-                            ((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) || (guiaSeleccionada?.m_nIdEstatusGuia === 14)) &&
+                            (true) &&
                             <li>
                                 <a className={validarDerecho(9101459) ? "" : classes.disabled}
                                    onClick={() => {
