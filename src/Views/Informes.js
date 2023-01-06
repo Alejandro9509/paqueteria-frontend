@@ -2230,7 +2230,7 @@ function Informes({history}) {
                                                                                                                     margin="dense"
                                                                                                                     label="Tipo de Servicio"
                                                                                                                     disabled="true"
-                                                                                                                    value={value.m_sTipoServicio}
+                                                                                                                    value={parseInt(state.tipoTimbrado) === 1? 'Consolidad' : parseInt(state.tipoTimbrado) === 2?'Paqueteria':'Indefinido'}
                                                                                                                     className="form-control"
                                                                                                                     type="text"
                                                                                                                     id={"servicio-" + index}
