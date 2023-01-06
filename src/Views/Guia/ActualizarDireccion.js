@@ -13,7 +13,7 @@ import {
 import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
-import {cambiarEstatusGuia} from "../../Util/Contexts/GuiaContext";
+import {cambiarEstatusGuiaSAT} from "../../Util/Contexts/GuiaContext";
 import Noty from "noty";
 import {getAddressFormated} from "../../Util/Util";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
@@ -143,11 +143,11 @@ function ActualizarDireccion(props){
             showSuccess("Confirme el punto de entrega con el mapa, presionando el botón CONFIRMAR UBICACION.")
             return
         }*/
-        params.idPais =  entregaDD.idPais
-        params.idEstado =  entregaDD.idEstado
-        params.idMunicipio =  entregaDD.idMunicipio
-        params.idCodigoPostal =  entregaDD.codigoPostal?.m_nIdCP
-        params.idZonaOperativa =  entregaDD.zonaOperativa?.m_nIdZona
+        //params.idPais =  entregaDD.idPais
+        params.m_nIdEstadoEntrega =  entregaDD.idEstado
+        params.m_sCodigoMunicipioEntrega =  entregaDD.idMunicipio
+        params.codigoPostalEntrega =  entregaDD.codigoPostal?.m_nIdCP
+        params.m_nIdZonaOperativa =  entregaDD.zonaOperativa?.m_nIdZona
         params.domicilioEntrega =  entregaDD.domicilio
         params.entregarEn =  entregaDD.detalles
         params.datosAdicionales =  entregaDD.datosAdicionales || ""
@@ -155,15 +155,9 @@ function ActualizarDireccion(props){
         // params.m_sLongitudD =  entregaDD.longitud
         console.log(params)
         console.log(JSON.stringify(params))
-        params.idGuia = props.guia.m_nIdGuia
+        params.m_nIdGuia = props.guia.m_nIdGuia
         props.onSubmit(params)
-        /*cambiarEstatusGuia(params).then(({data}) => {
-            resetData()
-            props.submit(data)
-            props.close()
-        }).catch(err => {
-            showSuccess(err.response?.data)
-        })*/
+
 
 
     }

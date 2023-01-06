@@ -7,7 +7,7 @@ import {obtenerClavesCancelacionSAT} from "../../Util/Contexts/SATContext";
 import TextField from "@material-ui/core/TextField";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
-import {obtenerRecoleccionId} from "../../Util/Contexts/RecoleccionContext";
+import {obtenerRecoleccionId, modificarRecoleccionSAT} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiaRecoleccionPorFolio} from "../../Util/Contexts/UltimaMillaContext";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import {obtenerTipoSeguro} from "../../Util/Contexts/TipoSeguroContext";
@@ -21,6 +21,7 @@ import RemitentesDestinatarios from "../RemitentesDestinatarios";
 import {da} from "date-fns/locale";
 import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
+import {cambiarEstatusGuiaSAT} from "../../Util/Contexts/GuiaContext";
 import Cotizador from "../ConceptosFacturacion/Cotizador";
 import ActualizarDireccion from "../Guia/ActualizarDireccion";
 
@@ -94,18 +95,26 @@ class CancelarSAT extends Component {
 
     /**Obtienen objeto con datos nuevos de recoleccion*/
     handleOnSaveDataRecoleccion(data){
-        console.log(data)
+    modificarRecoleccionSAT(data).then(respuesta => {
+                                    this.setState({openDialogRecoleccion: false})
+                        }).catch(err => {
+                            showSuccess(err.response?.data)
+                        })
         this.setState({openDialogRecoleccion: false})
     }
 
     handleOnCancelEditRecoleccion(){
+
         this.setState({openDialogRecoleccion: false})
     }
 
     /**Obtienen objeto con datos nuevos de guia*/
     handleOnSaveDataGuia(data){
-        console.log(data)
-        this.setState({openDialogDireccion: false})
+        cambiarEstatusGuiaSAT(data).then(respuesta => {
+                            this.setState({openDialogDireccion: false})
+                }).catch(err => {
+                    showSuccess(err.response?.data)
+                })
     }
 
     handleOnCancelEditGuia(){
@@ -286,6 +295,7 @@ export function RecoleccionResumen(props) {
                     clientePaga: respuesta.data.cliente,
                     idTipoCobro: respuesta.data.m_nIdTipoDeCobro,
                     idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
+                    idCotizacion: respuesta.data.m_nIdCotizacion,
                     porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
                     valorDeclarado: respuesta.data.m_xValorDeclarado,
                     observaciones: respuesta.data.m_sObservaciones || "",
@@ -597,47 +607,49 @@ export function RecoleccionResumen(props) {
         try {
 
             let params = {
-                "idRecoleccion": props.idRecoleccion,
-                "idCliente": data.clientePaga?.m_nIdCliente,
-                "idTipoSeguro": data.idTipoSeguro,
-                "porcentajeSeguro": data.porcentajeSeguro,
+                "m_nIdRecoleccion": props.idRecoleccion,
+                "m_nIdCliente": data.clientePaga?.m_nIdCliente,
+                "m_nIdTipoSeguro": data.idTipoSeguro,
+                "m_xPorcentajeSeguro": data.porcentajeSeguro,
                 "valorDeclarado": data.valorDeclarado,
-                "observaciones": data.observaciones,
-                "idTipoCobro": data.idTipoCobro,
-                "idRemitente": remitente.idRemitente,
-                "idOrigen": remitente.origenRemitente?.m_nIdCiudad,
-                "recoleccionDiferenteDomicilio": data.diferenteRecoleccion,
+                "m_sObservaciones": data.observaciones,
+                "m_nIdTipoDeCobro": data.idTipoCobro,
+                "m_nIdRemitente": remitente.idRemitente,
+                "m_nIdCotizacion": data.idCotizacion,
+                "m_nIdCiudadOrigen": remitente.origenRemitente?.m_nIdCiudad,
+                "m_bRecoleccionDiferenteDomicilio": data.diferenteRecoleccion,
                 "paquetes": dataPaquetes.map(i => ({
-                    "cantidad": i.m_nCantidad,
-                    "idProducto": i.m_nIdProducto,
-                    "idEmbalaje": i.m_nIdTipoEmbalaje,
-                    "largo": i.m_rLargo,
-                    "alto": i.m_rAlto,
-                    "ancho": i.m_rAncho,
-                    "peso": i.m_rPeso,
-                    "volumen": i.m_rVolumen,
-                    "descripcion": i.m_sDescripcion,
-                    "observaciones": i.m_sObservaciones
+                    "m_nCantidad": i.m_nCantidad,
+                    "m_nIdProducto": i.m_nIdProducto,
+                    "m_nIdTipoEmbalaje": i.m_nIdTipoEmbalaje,
+                    "m_rPeso": i.m_rLargo,
+                    "m_rAlto": i.m_rAlto,
+                    "m_rAncho": i.m_rAncho,
+                    "m_nIdTipo": i.m_nIdTipo,
+                    "m_rPeso": i.m_rPeso,
+                    "m_rVolumen": i.m_rVolumen,
+                    "m_sDescripcion": i.m_sDescripcion,
+                    "m_sObservaciones": i.m_sObservaciones
                 })),
                 "complementosSat": dataComplementosSAT.map(i => ({
-                    "cantidad": i.cantidad,
-                    "peso": i.peso,
-                    "claveProductoServicio": i.claveProducto,
-                    "claveUnidadMedida": i.claveUnidad,
-                    "esMaterialPeligroso": i.esPeligroso,
-                    "claveMaterialPeligroso": i.claveMaterialPeligroso,
-                    "claveEmbalaje": i.claveEmbalaje,
-                    "descripcionEmbalaje": i.descripcionEmbalajeSAT,
-                    "claveFraccionArancelaria": i.claveFraccion
+                    "m_nCantidad": i.cantidad,
+                    "m_xPeso": i.peso,
+                    "m_sClaveProductoServicio": i.claveProducto,
+                    "m_sClaveUnidad": i.claveUnidad,
+                    "m_bEsMaterialPeligroso": i.esPeligroso,
+                    "m_sClaveMaterialPeligroso": i.claveMaterialPeligroso,
+                    "m_sClaveEmbalaje": i.claveEmbalaje,
+                    "m_sDescripcionEmbalaje": i.descripcionEmbalajeSAT,
+                    "m_sClaveFraccionArancelaria": i.claveFraccion
                 })),
                 "conceptosFacturacion": data.conceptosFacturacion.map(i => ({
-                    "idConceptoFacturacion": i.idConcepto,
-                    "importe": i.importe,
-                    "importeIva": i.importeIVA,
-                    "importeRetencion": i.importeRet,
-                    "idImpuestoIva": i.traslada,
-                    "idImpuestoRetencion": i.retiene,
-                    "descuento": i.descuento
+                    "m_nIdConceptoFacturacion": i.idConcepto,
+                    "m_cImporte": i.importe,
+                    "m_cImporteIva": i.importeIVA,
+                    "m_cImporteRetiene": i.importeRet,
+                    "m_nIdImpuestoTraslada": i.traslada,
+                    "m_nIdImpuestoRetiene": i.retiene,
+                    "m_c_Descuento": i.descuento
                 })),
             }
             if (params.recoleccionDiferenteDomicilio){
@@ -649,16 +661,15 @@ export function RecoleccionResumen(props) {
                 params.calleNumero= recoleccionDD.domicilio
                 params.entregarEn= recoleccionDD.detalles
                 params.datosAdicionales= recoleccionDD.datosAdicionales
-                params.idZonaOperativaRecoleccion= recoleccionDD.zonaOperativa?.m_nIdZona
+                params.m_nIdZonaOperativa= recoleccionDD.zonaOperativa?.m_nIdZona
             }else{
-                params.idZonaOperativaRecoleccion= remitente.zonaOperativaRemitente?.m_nIdZona
+                params.m_nIdZonaOperativa= remitente.zonaOperativaRemitente?.m_nIdZona
             }
             let status = validarDatos(params)
             if (!status.valid){
                 showSuccess(status.message)
                 return
             }
-            console.log(params)
             props.onSubmitData(params)
         }catch (err){
             showSuccess("Hubo un error al procesar la informacion intente más tarde")
