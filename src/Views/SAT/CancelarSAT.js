@@ -96,6 +96,7 @@ class CancelarSAT extends Component {
     /**Obtienen objeto con datos nuevos de recoleccion*/
     handleOnSaveDataRecoleccion(data){
     modificarRecoleccionSAT(data).then(respuesta => {
+    showSuccess(respuesta.data)
                                     this.setState({openDialogRecoleccion: false})
                         }).catch(err => {
                             showSuccess(err.response?.data)
@@ -111,6 +112,7 @@ class CancelarSAT extends Component {
     /**Obtienen objeto con datos nuevos de guia*/
     handleOnSaveDataGuia(data){
         cambiarEstatusGuiaSAT(data).then(respuesta => {
+        showSuccess(respuesta.data)
                             this.setState({openDialogDireccion: false})
                 }).catch(err => {
                     showSuccess(err.response?.data)
@@ -507,22 +509,23 @@ export function RecoleccionResumen(props) {
     }
     const validarDatos = (params) => {
         const status = {valid: true, message: ""}
-        if (!params.idRecoleccion > 0){
+        if (!params.m_nIdRecoleccion > 0){
             status.valid = false
             status.message = "No hay identificador de recolección"
             return status
         }
-        if (!params.idCliente > 0){
+        if (!params.m_nIdCliente > 0){
             status.valid = false
             status.message = "No hay cliente"
             return status
         }
-        if (!params.idTipoSeguro > 0){
+        if (!params.m_nIdTipoSeguro > 0){
             status.valid = false
             status.message = "No hay tipo de seguro"
             return status
         }
-        if (!params.porcentajeSeguro > 0){
+        console.log(params.m_xPorcentajeSeguro)
+        if (!(params.m_xPorcentajeSeguro >= 0)){
             status.valid = false
             status.message = "No hay porcentaje de seguro"
             return status
@@ -532,33 +535,33 @@ export function RecoleccionResumen(props) {
             status.message = "No hay valor declarado"
             return status
         }
-        if (!params.idTipoCobro > 0){
+        if (!params.m_nIdTipoDeCobro > 0){
             status.valid = false
             status.message = "No hay tipo de cobro"
             return status
         }
-        if (!params.idRemitente > 0){
+        if (!params.m_nIdRemitente > 0){
             status.valid = false
             status.message = "No hay remitente"
             return status
         }
-        if (!params.idOrigen > 0){
+        if (!params.m_nIdCiudadOrigen > 0){
             status.valid = false
             status.message = "No hay origen"
             return status
         }
-        if (params.recoleccionDiferenteDomicilio){
+        if (params.m_bRecoleccionDiferenteDomicilio){
             if (!params.idPais > 0){
                 status.valid = false
                 status.message = "No hay país"
                 return status
             }
-            if (!params.idEstado > 0){
+            if (!params.m_nIdEstadoRecoleccion > 0){
                 status.valid = false
                 status.message = "No hay estado"
                 return status
             }
-            if (!params.idMunicipio > 0){
+            if (!params.m_sCodigoMunicipioRecoleccion > 0){
                 status.valid = false
                 status.message = "No hay municipio"
                 return status
@@ -568,33 +571,33 @@ export function RecoleccionResumen(props) {
                 status.message = "No hay municipio"
                 return status
             }
-            if (!params.idCodigoPostal > 0){
+            if (!params.m_nIdCPDetalleRecoleccion > 0){
                 status.valid = false
                 status.message = "No hay código postal"
                 return status
             }
-            if (!params.calleNumero > 0){
+            if (!params.m_sDomicilioDetalleRecoleccion > 0){
                 status.valid = false
                 status.message = "No hay domicilio"
                 return status
             }
-            if (!params.entregarEn > 0){
+            if (!params.m_sRecogerEnDetalleRecoleccion > 0){
                 status.valid = false
                 status.message = "No hay detalles de entrega"
                 return status
             }
         }
-        if (!params.idZonaOperativaRecoleccion > 0){
+        if (!params.m_nIdZonaOperativa > 0){
             status.valid = false
             status.message = "No hay zona operativa"
             return status
         }
-        if (!params.complementosSat.length > 0){
+        if (!params.m_arrClsComplementoSAT.length > 0){
             status.valid = false
             status.message = "No hay complementos SAT"
             return status
         }
-        if (!params.conceptosFacturacion.length > 0){
+        if (!params.m_arrConceptos.length > 0){
             status.valid = false
             status.message = "No hay conceptos de facturación"
             return status
@@ -618,7 +621,7 @@ export function RecoleccionResumen(props) {
                 "m_nIdCotizacion": data.idCotizacion,
                 "m_nIdCiudadOrigen": remitente.origenRemitente?.m_nIdCiudad,
                 "m_bRecoleccionDiferenteDomicilio": data.diferenteRecoleccion,
-                "paquetes": dataPaquetes.map(i => ({
+                "m_parrPaquetes": dataPaquetes.map(i => ({
                     "m_nCantidad": i.m_nCantidad,
                     "m_nIdProducto": i.m_nIdProducto,
                     "m_nIdTipoEmbalaje": i.m_nIdTipoEmbalaje,
@@ -631,7 +634,7 @@ export function RecoleccionResumen(props) {
                     "m_sDescripcion": i.m_sDescripcion,
                     "m_sObservaciones": i.m_sObservaciones
                 })),
-                "complementosSat": dataComplementosSAT.map(i => ({
+                "m_arrClsComplementoSAT": dataComplementosSAT.map(i => ({
                     "m_nCantidad": i.cantidad,
                     "m_xPeso": i.peso,
                     "m_sClaveProductoServicio": i.claveProducto,
@@ -642,7 +645,7 @@ export function RecoleccionResumen(props) {
                     "m_sDescripcionEmbalaje": i.descripcionEmbalajeSAT,
                     "m_sClaveFraccionArancelaria": i.claveFraccion
                 })),
-                "conceptosFacturacion": data.conceptosFacturacion.map(i => ({
+                "m_arrConceptos": data.conceptosFacturacion.map(i => ({
                     "m_nIdConceptoFacturacion": i.idConcepto,
                     "m_cImporte": i.importe,
                     "m_cImporteIva": i.importeIVA,
@@ -654,13 +657,13 @@ export function RecoleccionResumen(props) {
             }
             if (params.recoleccionDiferenteDomicilio){
                 params.idPais= recoleccionDD.idPais
-                params.idEstado= recoleccionDD.idEstado
-                params.idMunicipio= recoleccionDD.idMunicipio
+                params.m_nIdEstadoRecoleccion= recoleccionDD.idEstado
+                params.m_sCodigoMunicipioRecoleccion= recoleccionDD.idMunicipio
                 params.municipio= recoleccionDD.municipio
-                params.idCodigoPostal= recoleccionDD.codigoPostal?.m_nIdCP
-                params.calleNumero= recoleccionDD.domicilio
-                params.entregarEn= recoleccionDD.detalles
-                params.datosAdicionales= recoleccionDD.datosAdicionales
+                params.m_nIdCPDetalleRecoleccion= recoleccionDD.codigoPostal?.m_nIdCP
+                params.m_sDomicilioDetalleRecoleccion= recoleccionDD.domicilio
+                params.m_sRecogerEnDetalleRecoleccion= recoleccionDD.detalles
+                params.m_sDatosAdicionalesDetalleRecoleccion= recoleccionDD.datosAdicionales
                 params.m_nIdZonaOperativa= recoleccionDD.zonaOperativa?.m_nIdZona
             }else{
                 params.m_nIdZonaOperativa= remitente.zonaOperativaRemitente?.m_nIdZona
