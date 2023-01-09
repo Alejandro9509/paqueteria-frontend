@@ -304,7 +304,7 @@ function ImportarEmbarques(props) {
                                                             <>
                                                                 <ListItem key={i} button
                                                                           onClick={() => setState({...state, embarqueSeleccionado: i === state.embarqueSeleccionado ? -1 : i})}>
-                                                                    <ListItemText primary={"Embarque #" + (e.numeroEmbarque)}/>
+                                                                    <ListItemText primary={e.esRecoleccion ? "Embarque #" + (e.numeroEmbarque) : "Recoleccion #" + (e.numeroEmbarque)}/>
                                                                     {!e.success && <InfoRoundedIcon color={"error"} fontSize={"large"}/> }
                                                                     {open ? <ExpandLess/> : <ExpandMore/>}
                                                                 </ListItem>
@@ -338,13 +338,14 @@ function ImportarEmbarques(props) {
                                                                                             Código Postal: {e.data.codigoPostalRemitente}<br/>
                                                                                             Correo: {e.data.correoRemitente}<br/>
                                                                                             Origen: {e.data.origen}<br/>
+                                                                                            Zona operativa recolección: {e.data.zonaRecoleccion}<br/>
                                                                                         </Grid>
                                                                                         <Grid item xs={6}>
                                                                                             Destinatario: {e.data.nombreDestinatario}<br/>
                                                                                             Código Postal: {e.data.codigoPostalDestinatario}<br/>
                                                                                             Correo: {e.data.correoDestinatario}<br/>
                                                                                             Destino: {e.data.destino}<br/>
-                                                                                            Zona operativa: {e.data.zonaDestinatario}<br/>
+                                                                                            Zona operativa entrega: {e.data.zonaEntrega}<br/>
                                                                                         </Grid>
                                                                                         <Grid item xs={12} sm={8}>
                                                                                             {/*<TableContainer style={{

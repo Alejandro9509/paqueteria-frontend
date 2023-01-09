@@ -484,6 +484,7 @@ export function readExcel(FORMAT,file){
                     fechaRegistro:getCurrentDate(),
                     horaRegistro:getCurrentTime(),
                     numeroEmbarque : item[FORMAT.numeroEmbarque],
+                    esRecoleccion : item[FORMAT.esRecoleccion]?.toUpperCase() === 'SI' || item[FORMAT.esRecoleccion]?.toUpperCase() === 'SÍ',
                     idUsuario: localStorage.getItem("UsuarioId"),
                     // idMoneda: item[FORMAT.idMoneda],
                     // idTipoCambio: item[FORMAT.idTipoCambio],
@@ -496,7 +497,7 @@ export function readExcel(FORMAT,file){
                     tipoSeguro: item[FORMAT.tipoSeguro],
                     porcentajeSeguro: item[FORMAT.porcentajeSeguro],
                     valorDeclarado: item[FORMAT.valorDeclarado],
-                    validarTimbradoFactura: item[FORMAT.validarTimbradoFactura] === 'SI',
+                    validarTimbradoFactura: item[FORMAT.validarTimbradoFactura]?.toUpperCase() === 'SI' || item[FORMAT.validarTimbradoFactura]?.toUpperCase() === 'SÍ',
                     observaciones: item[FORMAT.observacionesEmbarque],
                     // idRemitente: item[FORMAT.idRemitente],
                     numeroRemitente: item[FORMAT.numeroRemitente],
@@ -508,11 +509,11 @@ export function readExcel(FORMAT,file){
                     correoDestinatario: item[FORMAT.correoDestinatario],
                     telefonoDestinatario: item[FORMAT.telefonoDestinatario],
                     contactoDestinatario: item[FORMAT.contactoDestinatario],
-                    entregaEnSucursal: item[FORMAT.entregaEnSucursal] === 'SI',
-                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio] === 'SI',
+                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase() === 'SÍ',
+                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase() === 'SÍ',
                     latitud: item[FORMAT.latitud],
                     longitud: item[FORMAT.longitud],
-                    entregaConCita: item[FORMAT.entregaConCita] === 'SI',
+                    entregaConCita: item[FORMAT.entregaConCita]?.toUpperCase() === 'SI' || item[FORMAT.entregaConCita]?.toUpperCase() === 'SÍ',
                     // idTipoServicio: item[FORMAT.idTipoServicio]
                     tipoServicio: item[FORMAT.tipoServicio]
                 }
@@ -528,8 +529,18 @@ export function readExcel(FORMAT,file){
                         embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionalesEntrega]
                     }
                 }
+                if (embarqueResumen.esRecoleccion){
+                    embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase() === 'SÍ'
+                    if (embarqueResumen.recoleccionDiferenteDomicilio){
+                        embarqueResumen.codigoPostalDiferenteDomicilioRecoleccion = item[FORMAT.codigoPostalDiferenteDomicilioRecoleccion]
+                        embarqueResumen.coloniaDiferenteDomicilioRecoleccion = item[FORMAT.coloniaDiferenteDomicilioRecoleccion]
+                        embarqueResumen.calleNumeroDiferenteDomicilioRecoleccion = item[FORMAT.calleNumeroDiferenteDomicilioRecoleccion]
+                        embarqueResumen.recogerEn = item[FORMAT.recogerEn]
+                        embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
+                    }
+                }
                 if (embarqueResumen.entregaConCita){
-                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente] === 'SI'
+                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase() === 'SÍ'
                     if (!embarqueResumen.citaPendiente) {
                         embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
                         embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinima]).format('HH:mm')
