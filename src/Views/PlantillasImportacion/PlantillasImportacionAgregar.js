@@ -59,6 +59,12 @@ export default function PlantillasImportacionAgregar(props){
         "calleNumeroDiferenteDomicilio": "",
         "entregarEn": "",
         "datosAdicionales": "",
+        "recoleccionDiferenteDomicilio": "",
+        "codigoPostalDiferenteDomicilioRecoleccion": "",
+        "coloniaDiferenteDomicilioRecoleccion": "",
+        "calleNumeroDiferenteDomicilioRecoleccion": "",
+        "recogerEn": "",
+        "datosAdicionalesRecoleccion": "",
         "latitud": "",
         "longitud": "",
         "conCita": "",
@@ -121,6 +127,12 @@ export default function PlantillasImportacionAgregar(props){
             "calleNumeroDiferenteDomicilio": "",
             "entregarEn": "",
             "datosAdicionales": "",
+            "recoleccionDiferenteDomicilio": "",
+            "codigoPostalDiferenteDomicilioRecoleccion": "",
+            "coloniaDiferenteDomicilioRecoleccion": "",
+            "calleNumeroDiferenteDomicilioRecoleccion": "",
+            "recogerEn": "",
+            "datosAdicionalesRecoleccion": "",
             "latitud": "",
             "longitud": "",
             "conCita": "",
@@ -222,6 +234,12 @@ export default function PlantillasImportacionAgregar(props){
                 "calleNumeroDiferenteDomicilio": state.calleNumeroDiferenteDomicilio,
                 "entregarEn": state.entregarEn,
                 "datosAdicionales": state.datosAdicionales,
+                "recoleccionDiferenteDomicilio": state.recoleccionDiferenteDomicilio,
+                "codigoPostalDiferenteDomicilioRecoleccion": state.codigoPostalDiferenteDomicilioRecoleccion,
+                "coloniaDiferenteDomicilioRecoleccion": state.coloniaDiferenteDomicilioRecoleccion,
+                "calleNumeroDiferenteDomicilioRecoleccion": state.calleNumeroDiferenteDomicilioRecoleccion,
+                "recogerEn": state.recogerEn,
+                "datosAdicionalesRecoleccion": state.datosAdicionalesRecoleccion,
                 "latitud": state.latitud,
                 "longitud": state.longitud,
                 "conCita": state.conCita,
@@ -619,14 +637,14 @@ export default function PlantillasImportacionAgregar(props){
                             </Grid>
                         </Grid>
                     </section>
-                    <section id={"diferenteDomicilio"} style={{padding: '10px'}}>
+                    <section id={"entregaDiferenteDomicilio"} style={{padding: '10px'}}>
                         <h2>Datos para entrega en diferente domicilio</h2>
                         <br/>
                         <Grid container spacing={1}>
                             <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
                                 <TextField
                                     variant="outlined"
-                                    label="Entrega/recoleccion en diferente"
+                                    label="Entrega en diferente"
                                     margin="dense"
                                     name="entregaDiferenteDomicilio"
                                     value={state.entregaDiferenteDomicilio}
@@ -680,6 +698,72 @@ export default function PlantillasImportacionAgregar(props){
                                     margin="dense"
                                     name="datosAdicionales"
                                     value={state.datosAdicionales}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                        </Grid>
+                    </section>
+                    <section id={"recoleccionDiferenteDomicilio"} style={{padding: '10px'}}>
+                        <h2>Datos para recolección en diferente domicilio</h2>
+                        <br/>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Recoleccion en diferente"
+                                    margin="dense"
+                                    name="recoleccionDiferenteDomicilio"
+                                    value={state.recoleccionDiferenteDomicilio}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Código postal"
+                                    margin="dense"
+                                    name="codigoPostalDiferenteDomicilioRecoleccion"
+                                    value={state.codigoPostalDiferenteDomicilioRecoleccion}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Colonia"
+                                    margin="dense"
+                                    name="coloniaDiferenteDomicilioRecoleccion"
+                                    value={state.coloniaDiferenteDomicilioRecoleccion}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Calle y número"
+                                    margin="dense"
+                                    name="calleNumeroDiferenteDomicilioRecoleccion"
+                                    value={state.calleNumeroDiferenteDomicilioRecoleccion}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Recogerr en"
+                                    margin="dense"
+                                    name="recogerEn"
+                                    value={state.recogerEn}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Datos adicionales"
+                                    margin="dense"
+                                    name="datosAdicionalesRecoleccion"
+                                    value={state.datosAdicionalesRecoleccion}
                                     onChange={handleOnChange}
                                 />
                             </Grid>
@@ -767,7 +851,6 @@ export default function PlantillasImportacionAgregar(props){
                             </Grid>
                         </Grid>
                     </section>
-
                     <section id={"paquetes"} style={{padding: '10px'}}>
                         <h2>Datos de paquetes</h2>
                         <br/>
@@ -864,7 +947,6 @@ export default function PlantillasImportacionAgregar(props){
                             </Grid>
                         </Grid>
                     </section>
-
                     <section id={"complementos"} style={{padding: '10px'}}>
                         <h2>Datos de complementos SAT</h2>
                         <br/>
