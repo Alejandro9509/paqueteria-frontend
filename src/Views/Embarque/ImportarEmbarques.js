@@ -322,7 +322,8 @@ function ImportarEmbarques(props) {
                                                                                             % de seguro: {e.data.porcentajeSeguro}<br/>
                                                                                             Valor declarado: {e.data.valorDeclarado}<br/>
                                                                                             Validar timbrado de factura: {e.data.validarTimbradoFactura?"Sí":"No"}<br/>
-                                                                                            Observaciones: {e.data.observaciones}<br/><br/>
+                                                                                            Observaciones: {e.data.observaciones}<br/>
+                                                                                            Tipo de servicio: {e.data.idTipoServicio === 1 ? 'CONSOLIDADO' : 'PAQUETERIA'}<br/><br/>
                                                                                         </Grid>
                                                                                         <Grid item xs={6}>
                                                                                             Entrega en sucursal: {e.data.entregaEnSucursal?"Sí":"No"}<br/>
