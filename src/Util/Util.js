@@ -385,7 +385,7 @@ export function readExcel(FORMAT,file){
                     entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
                     latitud: item[FORMAT.latitud],
                     longitud: item[FORMAT.longitud],
-                    entregaConCita: item[FORMAT.entregaConCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaConCita]?.toUpperCase().trim() === 'SÍ',
+                    entregaConCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
                     // idTipoServicio: item[FORMAT.idTipoServicio]
                     tipoServicio: item[FORMAT.tipoServicio]
                 }
