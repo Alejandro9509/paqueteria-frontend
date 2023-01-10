@@ -348,7 +348,7 @@ export function readExcel(FORMAT,file){
                 peso: item[FORMAT.complementosSat.pesoComplemento],
                 claveProductoServicio: item[FORMAT.complementosSat.claveProductoServicio],
                 claveUnidadMedida: item[FORMAT.complementosSat.claveUnidadMedida],
-                esMaterialPeligroso: (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase() === 'SI'|| (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase() === 'SÍ',
+                esMaterialPeligroso: (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase().trim() === 'SI'|| (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase().trim() === 'SÍ',
                 claveMaterialPeligroso: item[FORMAT.complementosSat.claveMaterialPeligroso],
                 claveEmbalaje: item[FORMAT.complementosSat.claveEmbalaje],
                 descripcionEmbalaje: item[FORMAT.complementosSat.descripcionEmbalajeComplemento],
@@ -358,146 +358,20 @@ export function readExcel(FORMAT,file){
 
             //VALIDACIONES DE GUIAS
             const newArray = data.map(function(item,index){
-                /*if(!item[FORMAT.nombreRemitente]){
-                    reject(`El nombre del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-                if(!item[FORMAT.rfcRemitente] ){
-                    reject(`El rfc del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.calleRemitente]){
-                    reject(`El item del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-                if(!item[FORMAT.numeroExtRemitente]){
-                    reject(`El numero interno del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.codigoPostalRemitente]){
-                    reject(`El codigo postal del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if( !item[FORMAT.correoRemitente] ){
-                    reject(`El correo del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.telefonoRemitente] ){
-                    reject(`El telefono del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.contactoRemitente]  ){
-                    reject(`El contacto del remitente es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.nombreDestinatario] ){
-                    reject(`El nombre del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if( !item[FORMAT.rfcDestinatario] ){
-                    reject(`El rfc del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.calleDestinatario] ){
-                    reject(`La calle del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if( !item[FORMAT.numeroExtDestinatario]){
-                    reject(`El numero exterior del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-                if(  !item[FORMAT.codigoPostalDestinatario] ){
-                    reject(`El codigo postal del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if( !item[FORMAT.correoDestinatario]  ){
-                    reject(`El correo del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if( !item[FORMAT.telefonoDestinatario] ){
-                    reject(`El telefono del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.contactoDestinatario] ){
-                    reject(`El contacto del destinatario es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.latitud] ){
-                    reject(`La latitud es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if( !item[FORMAT.longitud]  ){
-                    reject(`La longitud es obligatorio linea ${index + comienzoLinea}`);
-                }
-                if( !item[FORMAT.conCita]  ){
-                    reject(`El campo con cita es obligatorio linea ${index + comienzoLinea}`);
-                }
-
-                if( !item[FORMAT.fechaCita] ){
-                    reject(`La fecha cita es obligatoria linea ${index + comienzoLinea}`);
-                }
-
-                if(!item[FORMAT.horaCitaMinima] ){
-                    reject(`La hora cita minima es obligatoria linea ${index + comienzoLinea}`);
-                }
-                if( !item[FORMAT.horaCitaMaxima] ){
-                    reject(`La hora cita maxima es obligatoria linea ${index + comienzoLinea}`);
-                }
-                if(!item[FORMAT.citaPendiente]){
-                    reject(`El campo de cita pendiente es obligatoria linea ${index + comienzoLinea}`);
-                }*/
-
-                /*arrayPaquetes.forEach(function (paquete,index) {
-                    if(paquete.numeroGuia == item[FORMAT.numeroGuia]){
-                        /!*if(!paquete.numeroGuia){
-                            reject(`El numero guia es obligatorio linea ${index + comienzoLinea}`);
-                        }
-                        if(!paquete.embalaje){
-                            reject(`El embalaje es obligatorio linea ${index + comienzoLinea}`);
-                        }
-                        if(!paquete.alto){
-                            reject(`El alto es obligatorio linea ${index + comienzoLinea}`);
-                        }
-
-                        if(!paquete.ancho){
-                            reject(`El ancho es obligatorio linea ${index + comienzoLinea}`);
-                        }
-
-                        if(!paquete.largo){
-                            reject(`El largo es obligatorio linea ${index + comienzoLinea}`);
-                        }
-
-                        if(!paquete.peso){
-                            reject(`El peso es obligatorio linea ${index + comienzoLinea}`);
-                        }
-
-                        if(!paquete.cantidad){
-                            reject(`La cantidad es obligatoria linea ${index + comienzoLinea}`);
-                        }
-
-                        if(!paquete.descripcion){
-                            reject(`La descripcion es obligatorio linea ${index + comienzoLinea}`);
-                        }*!/
-                        paquetesGuias.push(paquete);
-                    }
-
-                });*/
                 let embarqueResumen = {
                     fechaRegistro:getCurrentDate(),
                     horaRegistro:getCurrentTime(),
                     numeroEmbarque : item[FORMAT.numeroEmbarque],
+                    esRecoleccion : item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SI' || item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SÍ',
                     idUsuario: localStorage.getItem("UsuarioId"),
-                    // idMoneda: item[FORMAT.idMoneda],
-                    // idTipoCambio: item[FORMAT.idTipoCambio],
-                    // idTipoCobro: item[FORMAT.idTipoCobro],
                     moneda: item[FORMAT.moneda],
                     tipoCambio: item[FORMAT.tipoCambio],
                     tipoCobro: item[FORMAT.tipoCobro],
-                    // idCliente: item[FORMAT.idCliente],
-                    // idTipoSeguro: item[FORMAT.idTipoSeguro],
                     tipoSeguro: item[FORMAT.tipoSeguro],
                     porcentajeSeguro: item[FORMAT.porcentajeSeguro],
                     valorDeclarado: item[FORMAT.valorDeclarado],
-                    validarTimbradoFactura: item[FORMAT.validarTimbradoFactura] === 'SI',
+                    validarTimbradoFactura: item[FORMAT.validarTimbradoFactura]?.toUpperCase().trim() === 'SI' || item[FORMAT.validarTimbradoFactura]?.toUpperCase().trim() === 'SÍ',
                     observaciones: item[FORMAT.observacionesEmbarque],
-                    // idRemitente: item[FORMAT.idRemitente],
                     numeroRemitente: item[FORMAT.numeroRemitente],
                     correoRemitente: item[FORMAT.correoRemitente],
                     telefonoRemitente: item[FORMAT.telefonoRemitente],
@@ -507,11 +381,11 @@ export function readExcel(FORMAT,file){
                     correoDestinatario: item[FORMAT.correoDestinatario],
                     telefonoDestinatario: item[FORMAT.telefonoDestinatario],
                     contactoDestinatario: item[FORMAT.contactoDestinatario],
-                    entregaEnSucursal: item[FORMAT.entregaEnSucursal] === 'SI',
-                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio] === 'SI',
+                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
+                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
                     latitud: item[FORMAT.latitud],
                     longitud: item[FORMAT.longitud],
-                    entregaConCita: item[FORMAT.entregaConCita] === 'SI',
+                    entregaConCita: item[FORMAT.entregaConCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaConCita]?.toUpperCase().trim() === 'SÍ',
                     // idTipoServicio: item[FORMAT.idTipoServicio]
                     tipoServicio: item[FORMAT.tipoServicio]
                 }
@@ -527,8 +401,18 @@ export function readExcel(FORMAT,file){
                         embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionalesEntrega]
                     }
                 }
+                if (embarqueResumen.esRecoleccion){
+                    embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ'
+                    if (embarqueResumen.recoleccionDiferenteDomicilio){
+                        embarqueResumen.codigoPostalDiferenteDomicilioRecoleccion = item[FORMAT.codigoPostalDiferenteDomicilioRecoleccion]
+                        embarqueResumen.coloniaDiferenteDomicilioRecoleccion = item[FORMAT.coloniaDiferenteDomicilioRecoleccion]
+                        embarqueResumen.calleNumeroDiferenteDomicilioRecoleccion = item[FORMAT.calleNumeroDiferenteDomicilioRecoleccion]
+                        embarqueResumen.recogerEn = item[FORMAT.recogerEn]
+                        embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
+                    }
+                }
                 if (embarqueResumen.entregaConCita){
-                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente] === 'SI'
+                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
                     if (!embarqueResumen.citaPendiente) {
                         embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
                         embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinima]).format('HH:mm')

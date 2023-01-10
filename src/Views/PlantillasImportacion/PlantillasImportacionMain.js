@@ -79,16 +79,6 @@ export default function PlantillasImportacionMain(){
 
             <header className="topbar clearfix">
                 <Cabecera titulo="Plantilla de importacion de embarques">
-                    {/*<div className="page-header">
-                        <ul className="list-page-breadcrumb">
-                            <li>
-                                <a href="/Catalogos" className="color-mapeo">
-                                    Catálogos <i className="zmdi zmdi-chevron-right" />
-                                </a>
-                            </li>
-                            <li className="active-page">Embalajes</li>
-                        </ul>
-                    </div>*/}
                 </Cabecera>
             </header>
 
@@ -125,7 +115,7 @@ export default function PlantillasImportacionMain(){
                                 listado={state.listadoPlantillas}
                                 onConsultarRowClick={handleOnConsultarRowClick}
                                 onEliminarRowClick={handleOnEliminarRowClick}
-                                onModificarRowClick={{}}
+                                onModificarRowClick={handleOnConsultarRowClick}
                             />
                         </div>
 
