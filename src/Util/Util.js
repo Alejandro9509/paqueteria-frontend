@@ -385,7 +385,7 @@ export function readExcel(FORMAT,file){
                     entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
                     latitud: item[FORMAT.latitud],
                     longitud: item[FORMAT.longitud],
-                    entregaConCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
+                    conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
                     // idTipoServicio: item[FORMAT.idTipoServicio]
                     tipoServicio: item[FORMAT.tipoServicio]
                 }
@@ -411,7 +411,7 @@ export function readExcel(FORMAT,file){
                         embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
                     }
                 }
-                if (embarqueResumen.entregaConCita){
+                if (embarqueResumen.conCita){
                     embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
                     if (!embarqueResumen.citaPendiente) {
                         embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
