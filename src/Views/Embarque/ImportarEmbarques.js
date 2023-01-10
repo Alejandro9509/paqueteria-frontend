@@ -38,7 +38,7 @@ import {
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusEmbarque: 0,
-        plantillaImportarEmbarquesNombreArchivo: ''
+        // plantillaImportarEmbarquesNombreArchivo: ''
     })
     const [files, setFiles] = useState([])
     const [state, setState] = useState({
@@ -55,7 +55,7 @@ function ImportarEmbarques(props) {
         obtenerParametrosConfiguracion().then(respuesta => {
             setConfiguraciones({
                 estatusEmbarque: respuesta.data.EstatusEmbarque,
-                plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo,
+                // plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo,
             })
         })
     }, [])
@@ -161,6 +161,19 @@ function ImportarEmbarques(props) {
         })
     }
 
+    const handleOnLimpiarClick = () => {
+        setFiles([])
+        setState({
+            fechaEmbarque: getCurrentDate(),
+            horaEntrega: getCurrentTime(),
+            openDialog: false,
+            openDialogToOpen: '',
+            dataSucursal: [],
+            archivo: [],
+            embarques: [],
+            cliente: null
+        })
+    }
     return(
         <section className={"main-container"} style={{marginLeft: "0px", padding: "0px"}}>
             <Dialog
@@ -197,44 +210,12 @@ function ImportarEmbarques(props) {
                                 <div className="widget-content">
                                     <h2>Importar Embarques</h2>
                                     <Grid container spacing={1}>
-                                        {/*<Grid item xs={3}>
-                                            <TextField
-                                                id="FechaEmbarque"
-                                                name="fechaEmbarque"
-                                                label="Fecha de Embarque"
-                                                variant="outlined"
-                                                value={state.fechaEmbarque}
-                                                onChange={handleOnChange}
-                                                required={true}
-                                                type="date"
-                                                fullWidth
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                    min: {getCurrentDateTime}
-                                                }}
-                                                inputProps={{ max: "2125-12-31"}}/>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <TextField
-                                                id="HoraEmbarque"
-                                                name="horaEntrega"
-                                                label="Hora de Embarque"
-                                                variant="outlined"
-                                                value={state.horaEntrega}
-                                                onChange={handleOnChange}
-                                                required={true}
-                                                type="time"
-                                                fullWidth
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}/>
-                                        </Grid>*/}
                                         <Grid item xs={3}>
                                             <TextField
                                                 variant="outlined"
                                                 label="Cliente"
                                                 required
-                                                value={state.cliente ? state.cliente.m_sNombreFiscal : null}
+                                                value={state.cliente ? state.cliente.m_sNombreFiscal : ''}
                                                 InputLabelProps={{shrink: true}}
                                                 onClick={() => {
                                                     setState({
@@ -285,13 +266,20 @@ function ImportarEmbarques(props) {
                                                     disabled={!state.cliente}
                                             >Importar</Button>
                                         </Grid>
-                                        <Grid item xs={3}>
+                                        <Grid item xs={2}>
                                             <Button fullWidth
                                                     color={"primary"}
-                                                    variant={"contained"}
+                                                    variant={"outlined"}
                                                     onClick={() => handleOnDescargarPlantillaClick()}
-                                                    disabled={configuraciones.plantillaImportarEmbarquesNombreArchivo===''}
+                                                    // disabled={configuraciones.plantillaImportarEmbarquesNombreArchivo===''}
                                             >Descargar plantilla</Button>
+                                        </Grid>
+                                        <Grid item xs={1}>
+                                            <Button fullWidth
+                                                    color={"primary"}
+                                                    variant={"outlined"}
+                                                    onClick={() => handleOnLimpiarClick()}
+                                            >Limpiar</Button>
                                         </Grid>
                                         <Grid item xs={12}>Embarques</Grid>
                                         <Grid item xs={12}>
