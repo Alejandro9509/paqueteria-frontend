@@ -399,7 +399,7 @@ export function readExcel(FORMAT,file){
                         embarqueResumen.coloniaDiferenteDomicilio = item[FORMAT.coloniaDiferenteDomicilio]
                         embarqueResumen.calleNumeroDiferenteDomicilio = item[FORMAT.calleNumeroDiferenteDomicilio]
                         embarqueResumen.entregarEn = item[FORMAT.entregarEn]
-                        embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionalesEntrega]
+                        embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionales]
                     }
                 }
                 if (embarqueResumen.esRecoleccion){

@@ -129,6 +129,7 @@ function ImportarEmbarques(props) {
                 embarque.idSucursalRegistro = localStorage.getItem("Sucursal")
                 embarque.idUsuarioRegistro = localStorage.getItem("UsuarioId")
                 embarque.idEstatus = configuraciones.estatusEmbarque
+                embarque.idCotizacion = embarque.conceptosFacturacion[0]?.m_nIdCotizacion
                 embarque.conceptosFacturacion = embarque.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion===false)
             })
 
@@ -292,7 +293,7 @@ function ImportarEmbarques(props) {
                                                             <>
                                                                 <ListItem key={i} button
                                                                           onClick={() => setState({...state, embarqueSeleccionado: i === state.embarqueSeleccionado ? -1 : i})}>
-                                                                    <ListItemText primary={e.esRecoleccion ? "Embarque #" + (e.numeroEmbarque) : "Recoleccion #" + (e.numeroEmbarque)}/>
+                                                                    <ListItemText primary={e.esRecoleccion ? "Recoleccion #" + (e.numeroEmbarque) : "Embarque #" + (e.numeroEmbarque)}/>
                                                                     {!e.success && <InfoRoundedIcon color={"error"} fontSize={"large"}/> }
                                                                     {open ? <ExpandLess/> : <ExpandMore/>}
                                                                 </ListItem>
