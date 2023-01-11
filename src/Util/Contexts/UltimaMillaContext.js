@@ -328,7 +328,7 @@ async function searchLocation(city, address) {
 }
 
 function agregarRuta(idUltimaMilla, tour, data) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GuardarUltimaMilla`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/GuardarUltimaMilla`;
     let result;
     var ultimaMillaObject = {
         idUltimaMilla: idUltimaMilla,
@@ -425,7 +425,7 @@ async function ordenarParada(idParada, guias) {
 
 /**Se usará sólo para traer todos los datos de ultima milla sin imagenes*/
 function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GetUltimaMillaFecha/` + moment(date).format("YYYY-MM-DD") + "/" + idSucursal;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/GetUltimaMillaFecha/` + moment(date).format("YYYY-MM-DD") + "/" + idSucursal;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {zonas: zonas.join(",")}), {headers})
