@@ -3,7 +3,6 @@ import DepartamentoPage from './Views/Departamento';
 import MonedaPage from './Views/Moneda';
 import PaisesPage from './Views/Paises';
 import CiudadesCodigoPostalPage from './Views/Ciudades';
-import ParametrosPage from './Views/Parametros';
 import SucursalesPage from './Views/Sucursal';
 import UsuariosPage from './Views/Usuarios';
 import FormatoImpresionPage from './Views/FormatosImpresion/FormatoImpresion';
