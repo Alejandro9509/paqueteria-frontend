@@ -30,7 +30,7 @@ import {
     searchLocationAddress,
     obtenerUltimaMillaFecha,
     validarUnidadesSeleccionadas,
-    validarUnidadOcupada
+    validarUnidadOcupada, obtenerUltimaMillaFechaImagenes
 } from "../../Util/Contexts/UltimaMillaContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
@@ -132,7 +132,23 @@ class UltimaMilla extends Component {
 
     getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda) {
         this.setState({mostrarRuta: false})
+
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
+            //Metes imagenes
+            obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
+                //imagenes
+                let rutaConImagenes
+                let guiaConImagenes
+                data.m_arrClsParadaUltimaMilla.forEach(rutaSinImagenes => {
+
+                    rutaConImagenes = respuesta.data.m_arrClsParadaUltimaMilla.find(r => r.m_nIdParadaUltimaMilla === rutaSinImagenes.m_nIdParadaUltimaMilla)
+                    rutaSinImagenes.m_arrClsProGuia.forEach(guiaSinImagenes => {
+                        guiaConImagenes = rutaConImagenes.m_arrClsProGuia.find(g => g.m_nId === guiaSinImagenes.m_nId && g.m_bEsRecoleccion === guiaSinImagenes.m_bEsRecoleccion)
+                        guiaSinImagenes.m_arrImagenes = guiaConImagenes.m_arrImagenes
+                    })
+                })
+
+            })
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar && !this.state.modoPlaneacion) {
                     this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 150000);

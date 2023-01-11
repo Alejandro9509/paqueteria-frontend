@@ -5,20 +5,25 @@ import {Polyline, Popup} from "react-leaflet";
 import {calcularRuta, calcularRutaUltimaMilla, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
-import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent} from "@material-ui/core";
+import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent, Button} from "@material-ui/core";
 import {InsertDriveFile} from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import {obtenerRecoleccionReporte} from "../../Util/Contexts/RecoleccionContext";
 import {decodePolyline} from "../../Util/HereDecoading";
+import DialogoEvidenciasUltimaMilla from "./DialogoEvidenciasUltimaMilla";
 
 class TourUltimaMilla extends Component {
     constructor(props) {
         super(props);
         this.state = {
             polygon: [],
+            setOpenDialogEvidencias: false,
+            guiaSeleccionada: null
         }
         this.getRoute = this.getRoute.bind(this)
+        this.handleClickOpenDialogoEvidencia = this.handleClickOpenDialogoEvidencia.bind(this)
+        this.handleClickCloseDialogoEvidencia = this.handleClickCloseDialogoEvidencia.bind(this)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -88,11 +93,31 @@ class TourUltimaMilla extends Component {
 
     }
 
+    handleClickCloseDialogoEvidencia(openDialog){
+        this.setState({
+            setOpenDialogEvidencias: openDialog,
+            guiaSeleccionada: null
+        })
+    }
+
+    handleClickOpenDialogoEvidencia(openDialog, guia){
+        this.setState({
+            setOpenDialogEvidencias: openDialog,
+            guiaSeleccionada: guia
+        })
+    }
 
     render() {
         const blackOptions = {color: this.props.data.color}
         return (
             <div style={{backgroundColor: "transparent"}}>
+                { (this.state.setOpenDialogEvidencias && this.state.guiaSeleccionada) &&
+                    <DialogoEvidenciasUltimaMilla
+                        open={this.state.setOpenDialogEvidencias}
+                        setCloseDialog={this.handleClickCloseDialogoEvidencia}
+                        imagenes={this.state.guiaSeleccionada.m_arrImagenes}
+                    />
+                }
 
                 {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
@@ -137,7 +162,12 @@ class TourUltimaMilla extends Component {
                                                     <InsertDriveFile fontSize={"default"}/>
                                                 </IconButton>
                                             </Grid>
-                                            {
+                                            <Grid item md={12}>
+                                                <Button fullWidth variant="text" color="primary" onClick={() => this.handleClickOpenDialogoEvidencia(true, g)}>
+                                                    Ver evidencias
+                                                </Button>
+                                            </Grid>
+                                            {/*{
 
                                                 g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
                                                 <Grid item md={12}>
@@ -146,7 +176,7 @@ class TourUltimaMilla extends Component {
                                                              src={`data:image/jpeg;base64,${g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
                                                     </div>
                                                 </Grid>
-                                            }
+                                            }*/}
 
 
                                         </Grid>

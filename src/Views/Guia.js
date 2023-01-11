@@ -3247,11 +3247,13 @@ function Guia(props) {
                                     </div>
 
                                 </div>
-                                {state.agregar != "Agregar" && <div className="row">
-                                    <div className="widget-wrap">
-                                        <div className="widget-container">
-                                            <div className="widget-content">
-                                                <div className="row">
+                                {
+                                    state.agregar != "Agregar" &&
+                                    <div className="row">
+                                        <div className="widget-wrap">
+                                            <div className="widget-container">
+                                                <div className="widget-content">
+                                                    {/*<div className="row">
                                                     <div className="widget-header">
                                                         <Accordion>
                                                             <AccordionSummary
@@ -3268,11 +3270,14 @@ function Guia(props) {
                                                             </AccordionDetails>
                                                         </Accordion>
                                                     </div>
+                                                </div>*/}
+                                                    <Evidencias esRecoleccion={0} idGuia={state.idGuia}
+                                                                data={state}/>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>}
+                                }
                             </form>
                         </div>
                         <div id="Importar" className="tab-pane fade">
