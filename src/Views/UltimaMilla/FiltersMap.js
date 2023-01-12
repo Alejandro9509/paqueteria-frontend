@@ -735,11 +735,11 @@ class FiltersMap extends Component {
                         />
                     </div>
                     <div>
-                        <Typography style={{paddingLeft: "10px", color: "black"}} variant={"h1"}>Modo: <strong style={{color: this.props.data.modoPlaneacion ? "red": "blue"}}>{this.props.data.modoPlaneacion ? `Planeación` : `Fecha Actual`} </strong></Typography>
+                        {/*<Typography style={{paddingLeft: "10px", color: "black"}} variant={"h1"}>Modo: <strong style={{color: this.props.data.modoPlaneacion ? "red": "blue"}}>{this.props.data.modoPlaneacion ? `Planeación` : `Fecha Actual`} </strong></Typography>*/}
                     </div>
                 </div>
 
-                <IconButton
+                {/*<IconButton
                     onClick={(e) => {e.stopPropagation(); this.props.cambiarModo(!this.props.data.modoPlaneacion);}}
                     style={{
                         color: "white",
@@ -755,7 +755,7 @@ class FiltersMap extends Component {
                         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                     }}>
                     <UpdateIcon fontSize={"large"}/>
-                </IconButton>
+                </IconButton>*/}
 
             </div>
         );

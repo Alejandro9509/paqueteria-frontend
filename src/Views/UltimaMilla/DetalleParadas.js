@@ -865,7 +865,7 @@ class DetalleParadas extends Component {
 
 
                                                         {
-                                                            tour.m_bActiva &&
+                                                            false &&
                                                             <Button disabled={!validarDerecho(9101447) || tour.m_arrClsProGuia.some(g=> 
                                                                 g.m_nEstatusUlimaMilla != 1)} variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
@@ -967,7 +967,7 @@ class DetalleParadas extends Component {
                                                                                                         
                                                                                                         {
                                                                                                             // !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
-                                                                                                            (!g.m_bTimbrado && g.m_nEstatusUlimaMilla === 1 && tour.m_bActiva && !g.m_bEsRecoleccion) &&
+                                                                                                            (false) &&
                                                                                                             <IconButton
                                                                                                                 onClick={() => {
                                                                                                                     console.log(JSON.stringify(g))
@@ -984,7 +984,7 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         
                                                                                                         {
-                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            false &&
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101449)}
                                                                                                                 onClick={() => this.openRemplazarPaquete(tour, g)}
