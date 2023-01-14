@@ -420,7 +420,7 @@ function ImportarEmbarques(props) {
                                                                                         <Grid item xs={12} sm={12}>
                                                                                             <br/>
                                                                                             Conceptos facturación
-                                                                                            <TablaImportadosCoceptosFacturacion data={e.data.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion===false)}/>
+                                                                                            <TablaImportadosCoceptosFacturacion data={e.data.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion!==true)}/>
                                                                                         </Grid>
                                                                                     </Grid>
                                                                                 </>
