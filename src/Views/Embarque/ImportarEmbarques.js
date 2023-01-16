@@ -130,16 +130,17 @@ function ImportarEmbarques(props) {
                 embarque.idUsuarioRegistro = localStorage.getItem("UsuarioId")
                 embarque.idEstatus = configuraciones.estatusEmbarque
                 embarque.idCotizacion = embarque.conceptosFacturacion[0]?.m_nIdCotizacion
-                embarque.conceptosFacturacion = embarque.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion===false)
+                embarque.conceptosFacturacion = embarque.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion!==true)
             })
 
             console.log(params)
-            agregarEmbarquesImportados(params).then(respuesta => {
+            console.log(JSON.stringify(params))
+            /*agregarEmbarquesImportados(params).then(respuesta => {
                 showSuccess(respuesta.data)
             }).catch((error)=>{
                 // showMessage(err,2000,"warning")
                 console.log('error al agregar: ' + error)
-            })
+            })*/
         }catch (err){
             console.log('error al agregar: ' + err)
         }
