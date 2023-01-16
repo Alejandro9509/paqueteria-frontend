@@ -625,7 +625,7 @@ export function RecoleccionResumen(props) {
                     "m_nCantidad": i.m_nCantidad,
                     "m_nIdProducto": i.m_nIdProducto,
                     "m_nIdTipoEmbalaje": i.m_nIdTipoEmbalaje,
-                    "m_rPeso": i.m_rLargo,
+                    "m_rLargo": i.m_rLargo,
                     "m_rAlto": i.m_rAlto,
                     "m_rAncho": i.m_rAncho,
                     "m_nIdTipo": i.m_nIdTipo,
@@ -673,7 +673,8 @@ export function RecoleccionResumen(props) {
                 showSuccess(status.message)
                 return
             }
-            props.onSubmitData(params)
+            console.log(JSON.stringify(params))
+            // props.onSubmitData(params)
         }catch (err){
             showSuccess("Hubo un error al procesar la informacion intente más tarde")
         }
