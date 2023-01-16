@@ -1930,18 +1930,21 @@ function Embarque(props) {
 
         /**Si es entrega en sucursal*/
         if (respuesta.data.m_bEntregaEnSucursal) {
-            setState(state => {
+            /*setState(state => {
                 return {
                     ...state,
                     entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
                     idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                     diferenteEntrega: false,
                 }
-            })
+            })*/
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
                 setState(state => {
                     return {
                         ...state,
+                        entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
+                        idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
+                        diferenteEntrega: false,
                         zonaOperativaSucursal: data
                     }
                 })
