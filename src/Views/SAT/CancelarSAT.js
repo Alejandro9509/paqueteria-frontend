@@ -673,8 +673,8 @@ export function RecoleccionResumen(props) {
                 showSuccess(status.message)
                 return
             }
-            console.log(JSON.stringify(params))
-            // props.onSubmitData(params)
+            // console.log(JSON.stringify(params))
+            props.onSubmitData(params)
         }catch (err){
             showSuccess("Hubo un error al procesar la informacion intente más tarde")
         }
