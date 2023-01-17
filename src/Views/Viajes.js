@@ -1160,11 +1160,16 @@ function Viajes() {
                 }}/>
             }
             {state.openCancelarSAT &&
-                <CancelarSAT open={state.openCancelarSAT} onSubmit={cancelarCFDI} data={{
-                    folioSustituye: state.informe.m_sFolioFiscalUUID,
-                    m_sFolio: state.informe.m_sFolioInforme,
-                    folioCancelar: state.informe.m_sFolioFiscalUUIDSustituido || state.informe.m_sFolioFiscalUUID
-                }} close={() => setState({...state, openCancelarSAT: false})}/>
+                <CancelarSAT open={state.openCancelarSAT}
+                             onSubmit={cancelarCFDI}
+                             close={() => setState({...state, openCancelarSAT: false})}
+                             data={{
+                                folioSustituye: state.informe.m_sFolioFiscalUUID,
+                                m_sFolio: state.informe.m_sFolioInforme,
+                                folioCancelar: state.informe.m_sFolioFiscalUUIDSustituido || state.informe.m_sFolioFiscalUUID
+                             }}
+                             esInforme={true}
+                />
             }
             {
                 informeSeleccionado &&

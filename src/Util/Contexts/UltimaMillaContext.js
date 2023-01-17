@@ -621,6 +621,15 @@ function agregarPaquetesParciales(idParada, idGuia,params) {
     );
     return result
 }
+
+function obtenerGuiaRecoleccionPorFolio(folio){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetGuiaRecoleccionPorFolio/${folio}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 export {
     cancelarRuta,
     obtenerXMLPermisionario,
@@ -653,7 +662,8 @@ export {
     obtenerImagenEvidencia,
     obtenerPaquetesPorParada,
     obtenerPaquetesParciales,
-    agregarPaquetesParciales
+    agregarPaquetesParciales,
+    obtenerGuiaRecoleccionPorFolio
 }
 
 

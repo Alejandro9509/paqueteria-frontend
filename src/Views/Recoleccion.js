@@ -1385,7 +1385,7 @@ function Recoleccion() {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
-        respuesta.data.m_arrClsComplementoSAT.forEach(item => {
+        /*respuesta.data.m_arrClsComplementoSAT.forEach(item => {
             item.id = item.m_nIdComplementoSAT
             item.cantidad = item.m_nCantidad
             item.claveProducto = item.m_sClaveProductoServicio
@@ -1402,7 +1402,7 @@ function Recoleccion() {
             item.embalajeSAT = item.m_sTipoEmbalaje
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
-        })
+        })*/
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
         if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
             mostrarDatosRecoleccionDD(respuesta)
