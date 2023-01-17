@@ -72,7 +72,7 @@ function ParametrosConfiguracion() {
     const [dataTipoCambioEmbarque, setTipoCambioEmbarque] = React.useState([])
     const [dataTipoCobro, setTipoCobro] = React.useState([])
     const [dataEstatusGuia, setEstatusGuia] = React.useState([])
-    const [tabIndex, setTabIndex] = React.useState('1');
+    const [tabIndex, setTabIndex] = React.useState('0');
     const columnasTipoCobro = [
         {
             headerName: "Descripción",
@@ -238,7 +238,8 @@ function ParametrosConfiguracion() {
                     idComplemento: respuesta.data.IdComplemento,
                     validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
                     plantillaImportarEmbarquesBase64: respuesta.data.PlantillaImportarEmbarquesBase64,
-                    plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo
+                    plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo,
+                    foliosPorSucursal: respuesta.data.FoliosPorSucursal
                 }
             })
 
@@ -451,6 +452,7 @@ function ParametrosConfiguracion() {
                         onChange={handleTab}
                         centered
                     >
+                        <Tab label="General" value="0"/>
                         <Tab label="Embarque" value="1"/>
                         <Tab label="Recoleccion" value="2"/>
                         <Tab label="Guia" value="3"/>
@@ -462,7 +464,33 @@ function ParametrosConfiguracion() {
                 </Paper>
                 <section className="main-container">
                     <div className="container-fluid">
-
+                        <TabPanel value="0">
+                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                 flexDirection="column">
+                                <Box display="flex" p={1} my={0.5} flexDirection="column">
+                                    <Box width="50%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Folios por sucursal</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.foliosPorSucursal}
+                                                disabled
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                            />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box margin={"0 auto"}>
+                                    <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
+                                            style={{width: "100px"}}
+                                            onClick={onSubmit}>
+                                        Modificar
+                                    </Button>
+                                </Box>
+                            </Box></TabPanel>
                         <TabPanel value="1">
 
 

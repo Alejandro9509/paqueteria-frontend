@@ -392,7 +392,7 @@ function Embarque(props) {
         {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
-            width: 125,
+            width: 150,
             renderCell: (row) => {
                 return (
                     <div>
