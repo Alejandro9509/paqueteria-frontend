@@ -135,12 +135,12 @@ function ImportarEmbarques(props) {
 
             console.log(params)
             console.log(JSON.stringify(params))
-            /*agregarEmbarquesImportados(params).then(respuesta => {
+            agregarEmbarquesImportados(params).then(respuesta => {
                 showSuccess(respuesta.data)
             }).catch((error)=>{
                 // showMessage(err,2000,"warning")
                 console.log('error al agregar: ' + error)
-            })*/
+            })
         }catch (err){
             console.log('error al agregar: ' + err)
         }
