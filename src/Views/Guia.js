@@ -348,7 +348,7 @@ function Guia(props) {
         {
             headerName: "Folio Guía",
             field: "m_nFolioGuia",
-            width: 125,
+            width: 150,
         },
         {
             headerName: "Estatus Guía",

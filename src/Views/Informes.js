@@ -232,7 +232,7 @@ function Informes({history}) {
         {
             headerName: "Folio/Serie",
             field: "m_sFolioInforme",
-            width: 125,
+            width: 150,
         },
         {
             headerName: "Fecha/Hora Elaboración",
