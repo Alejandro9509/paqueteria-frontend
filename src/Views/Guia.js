@@ -324,13 +324,13 @@ function Guia(props) {
                                                                                                                                           style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        {/*} <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
+                         <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                         */}
+
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
