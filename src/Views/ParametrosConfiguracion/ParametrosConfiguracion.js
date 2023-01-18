@@ -111,7 +111,8 @@ function ParametrosConfiguracion() {
         timbradoPruebaGuia: true,
         validarTimbradoIngreso: false,
         plantillaImportarEmbarquesBase64: '',
-        plantillaImportarEmbarquesNombreArchivo: ''
+        plantillaImportarEmbarquesNombreArchivo: '',
+        foliosPorSucursal: false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -190,7 +191,6 @@ function ParametrosConfiguracion() {
             plantillaImportarEmbarquesNombreArchivo: configuraciones.plantillaImportarEmbarquesNombreArchivo
         }
         console.log(params)
-        return
         modificarParametrosConfiguracion(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
