@@ -111,7 +111,8 @@ function ParametrosConfiguracion() {
         timbradoPruebaGuia: true,
         validarTimbradoIngreso: false,
         plantillaImportarEmbarquesBase64: '',
-        plantillaImportarEmbarquesNombreArchivo: ''
+        plantillaImportarEmbarquesNombreArchivo: '',
+        modificarValorEmbarque:false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -186,6 +187,8 @@ function ParametrosConfiguracion() {
             validarTimbrado: configuraciones.validarTimbrado,
             idComplemento: configuraciones.idComplemento,
             validarTimbradoIngreso: configuraciones.validarTimbradoIngreso,
+            modificarValorEmbarque: configuraciones.modificarValorEmbarque,
+            tipoTimbrado: configuraciones.tipoTimbrado,
             plantillaImportarEmbarquesBase64: configuraciones.plantillaImportarEmbarquesBase64,
             plantillaImportarEmbarquesNombreArchivo: configuraciones.plantillaImportarEmbarquesNombreArchivo
         }
@@ -237,6 +240,8 @@ function ParametrosConfiguracion() {
                     validarTimbrado: respuesta.data.ValidarTimbrado,
                     idComplemento: respuesta.data.IdComplemento,
                     validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
+                    modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
+                    tipoTimbrado: respuesta.data.TipoTimbrado,
                     plantillaImportarEmbarquesBase64: respuesta.data.PlantillaImportarEmbarquesBase64,
                     plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo,
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal
@@ -1110,7 +1115,32 @@ function ParametrosConfiguracion() {
                             <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                  flexDirection="column">
                                 <Box display="flex" p={1} my={0.5} flexDirection="column">
-
+                                    <Box width="100%" p={1} my={0.5}>
+                                        <FormControl fullWidth variant="outlined" width="25%">
+                                            <InputLabel id="idComplementoLabel">Tipo de servicio</InputLabel>
+                                            <Select
+                                                labelId="idComplementoLabel"
+                                                className="form-control"
+                                                required
+                                                value={configuraciones.tipoTimbrado}
+                                                label="Tipo de servicio"
+                                                id="tipoTimbrado"
+                                                name="tipoTimbrado"
+                                                onChange={handleChange}
+                                            >
+                                                <option key={"1"}
+                                                        value={1}
+                                                >
+                                                    Consolidado
+                                                </option>
+                                                <option key={"2"}
+                                                        value={2}
+                                                >
+                                                    Paquetería
+                                                </option>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
                                     {/*<Box width="100%" p={1} my={0.5}>
                                         <FormControl fullWidth variant="outlined" width="25%">
                                             <InputLabel id="idComplementoLabel">Complemento</InputLabel>
@@ -1137,21 +1167,38 @@ function ParametrosConfiguracion() {
                                             </Select>
                                         </FormControl>
                                     </Box>*/}
-                                    <Box width="50%" display="flex">
-                                        <Box width="40%" p={1} my={0.5}>
-                                            <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                    <div style={{display:"grid", gridTemplateColumns: "repeat(1, 1fr)",width:"400px",margin:"10px",gap: "10px",border:"1px solid #ccc",borderRadius:"20px"}}>
+                                        <Box display="flex">
+                                            <Box width="66%"  my={0.5}>
+                                                <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                            </Box>
+                                            <Box width="34%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.validarTimbradoIngreso}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="validarTimbradoIngreso"
+                                                />
+                                            </Box>
                                         </Box>
-                                        <Box width="60%" p={1} my={0.5}>
-                                            <Checkbox
-                                                checked={configuraciones.validarTimbradoIngreso}
-                                                onChange={handleChecked}
-                                                color="primary"
-                                                style={{transform: "scale(2)"}}
-                                                inputProps={{'aria-label': 'primary checkbox'}}
-                                                name="validarTimbradoIngreso"
-                                            />
+                                        <Box  display="flex">
+                                            <Box width="66%" my={0.5}>
+                                                <div className={classes.subtitulo}>Permitir modificar este valor en Embarque</div>
+                                            </Box>
+                                            <Box width="34%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.modificarValorEmbarque}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="modificarValorEmbarque"
+                                                />
+                                            </Box>
                                         </Box>
-                                    </Box>
+                                    </div>
                                     <Box width="50%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Validar timbrado de informes</div>
