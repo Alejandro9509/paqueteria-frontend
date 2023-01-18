@@ -86,7 +86,7 @@ function obtenerRecoleccionCancelada(id) {
 }
 
 function obtenerRecoleccionId(id) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Recoleccion/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
