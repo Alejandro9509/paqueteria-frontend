@@ -416,8 +416,8 @@ export function readExcel(FORMAT,file){
                     embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
                     if (!embarqueResumen.citaPendiente) {
                         embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
-                        embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinima]).format('HH:mm')
-                        embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaxima]).format('HH:mm')
+                        embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinimaCita]).format('HH:mm')
+                        embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaximaCita]).format('HH:mm')
                     }
                 }
                 embarqueResumen.paquetes = arrayPaquetes.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
