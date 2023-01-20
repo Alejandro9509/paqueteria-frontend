@@ -1005,7 +1005,7 @@ class AgregarViaje extends Component {
                     return (
                         <div>
                             {
-                                row.row.m_bSePuedeBorrar && this.state.estatusListado === 8?
+                                row.row.m_bSePuedeBorrar || this.state.estatusListado === 8?
                                 <Tooltip title={"Desasignar"}>
                                     <a
                                         onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
