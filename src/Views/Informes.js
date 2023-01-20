@@ -1723,6 +1723,7 @@ function Informes({history}) {
                                                                                         id="tipoTimbrado"
                                                                                         name="tipoTimbrado"
                                                                                         read="true"
+                                                                                        disabled={state.FolioInforme !== 0}
                                                                                         onChange={handleSelectTipoTimbrado}
                                                                                         value={state.tipoTimbrado}
                                                                                     >
