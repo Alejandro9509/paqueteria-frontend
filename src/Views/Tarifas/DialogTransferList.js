@@ -81,7 +81,7 @@ export default function DialogTransferList(props) {
                 </Grid>
                 <TransferList
                     onSelectionChange={handleOnSelectionChange}
-                    leftList={dataFiltered}
+                    leftList={dataFiltered.filter((value) => !selection.some(s => value.m_nIdProducto === s.m_nIdProducto))}
                     rightList={selection}
                     disabled={props.disabled}
                 />
