@@ -190,7 +190,6 @@ function ParametrosConfiguracion() {
             plantillaImportarEmbarquesNombreArchivo: configuraciones.plantillaImportarEmbarquesNombreArchivo
         }
         console.log(params)
-        return
         modificarParametrosConfiguracion(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
