@@ -156,7 +156,6 @@ function ParametrosConfiguracion() {
     };
 
     function onSubmit() {
-        convertirABase64()
         console.log(configuraciones.plantillaImportarEmbarquesBase64)
         let params = {
             estatusRecoleccion: configuraciones.estatusRecoleccion,
@@ -186,8 +185,8 @@ function ParametrosConfiguracion() {
             validarTimbrado: configuraciones.validarTimbrado,
             idComplemento: configuraciones.idComplemento,
             validarTimbradoIngreso: configuraciones.validarTimbradoIngreso,
-            plantillaImportarEmbarquesBase64: configuraciones.plantillaImportarEmbarquesBase64,
-            plantillaImportarEmbarquesNombreArchivo: configuraciones.plantillaImportarEmbarquesNombreArchivo
+            plantillaImportarEmbarquesBase64: "",
+            plantillaImportarEmbarquesNombreArchivo: ''
         }
         console.log(params)
         modificarParametrosConfiguracion(params)
@@ -236,8 +235,8 @@ function ParametrosConfiguracion() {
                     validarTimbrado: respuesta.data.ValidarTimbrado,
                     idComplemento: respuesta.data.IdComplemento,
                     validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
-                    plantillaImportarEmbarquesBase64: respuesta.data.PlantillaImportarEmbarquesBase64,
-                    plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo
+                    plantillaImportarEmbarquesBase64: "",
+                    plantillaImportarEmbarquesNombreArchivo: ""
                 }
             })
 
@@ -373,7 +372,7 @@ function ParametrosConfiguracion() {
 
     }
 
-    const descargarPlantillaImportar = () => {
+    /*const descargarPlantillaImportar = () => {
         if (configuraciones.plantillaImportarEmbarquesBase64 === ''){
             return
         }
@@ -385,17 +384,17 @@ function ParametrosConfiguracion() {
         document.body.appendChild(a);
         a.click();
         a.remove();
-    }
+    }*/
 
-    const handleOnupdatefiles = (newFiles) => {
-        convertirABase64(newFiles[0].file)
+    /*const handleOnupdatefiles = (newFiles) => {
+        // convertirABase64(newFiles[0].file)
         setFiles(newFiles)
-    }
+    }*/
 
-    const convertirABase64 = (file) => {
-        /*if(files.length === 0){
+    /*const convertirABase64 = (file) => {
+        /!*if(files.length === 0){
             return
-        }*/
+        }*!/
         let fileName = file.name
         let fileBase64 = toBase64(file)
         console.log(fileBase64)
@@ -406,7 +405,7 @@ function ParametrosConfiguracion() {
                 plantillaImportarEmbarquesNombreArchivo: fileName
             }
         })
-    }
+    }*/
 
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
@@ -645,7 +644,7 @@ function ParametrosConfiguracion() {
                                         />
                                     </Box>
                                 </Box>
-                                <Box width="100%" p={1} my={0.5} display="flex">
+                                {/*<Box width="100%" p={1} my={0.5} display="flex">
                                     <Box width="40%" p={1} my={0.5}>
                                         <h2>Plantilla importar embarques</h2>
                                     </Box>
@@ -667,7 +666,7 @@ function ParametrosConfiguracion() {
                                             convertir a base64
                                         </Button>
                                     </Box>
-                                </Box>
+                                </Box>*/}
 
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101408)} variant="contained" color="primary"
