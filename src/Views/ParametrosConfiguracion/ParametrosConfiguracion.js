@@ -241,9 +241,9 @@ function ParametrosConfiguracion() {
                     validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
                     modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
                     tipoTimbrado: respuesta.data.TipoTimbrado,
-                    foliosPorSucursal: respuesta.data.FoliosPorSucursal,
                     plantillaImportarEmbarquesBase64: "",
-                    plantillaImportarEmbarquesNombreArchivo: ""
+                    plantillaImportarEmbarquesNombreArchivo: "",
+                    foliosPorSucursal: respuesta.data.FoliosPorSucursal
                 }
             })
 
@@ -1179,6 +1179,7 @@ function ParametrosConfiguracion() {
                                                     style={{transform: "scale(2)"}}
                                                     inputProps={{'aria-label': 'primary checkbox'}}
                                                     name="validarTimbradoIngreso"
+                                                disabled
                                                 />
                                             </Box>
                                         </Box>
