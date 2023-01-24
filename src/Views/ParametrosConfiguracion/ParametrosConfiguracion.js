@@ -1148,6 +1148,7 @@ function ParametrosConfiguracion() {
                                                 style={{transform: "scale(2)"}}
                                                 inputProps={{'aria-label': 'primary checkbox'}}
                                                 name="validarTimbradoIngreso"
+                                                disabled
                                             />
                                         </Box>
                                     </Box>
