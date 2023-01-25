@@ -74,6 +74,8 @@ import Button from "@material-ui/core/Button";
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import {confirmAlert} from "react-confirm-alert";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1083,6 +1085,23 @@ function Informes({history}) {
         getAllSucursales();
         getAllCiudades();
         getAllUnidades();
+        getParametrosConfiguracion("Agregar")
+    }
+
+    function getParametrosConfiguracion(operacion) {
+
+        obtenerParametrosConfiguracion().then(respuesta => {
+            if (operacion === "Agregar") {
+                setState((config) => {
+                    return {
+                        ...config,
+                        tipoTimbrado: respuesta.data.TipoTimbrado,
+                    }
+                })
+            }
+
+        })
+
     }
 
     function getAllUnidades() {
@@ -1694,9 +1713,6 @@ function Informes({history}) {
                                                                                         onChange={handleSelectTipoTimbrado}
                                                                                         value={state.tipoTimbrado}
                                                                                     >
-                                                                                        <option key={0}
-                                                                                                value="0">Seleccionar
-                                                                                        </option>
                                                                                         <option key={"1"}
                                                                                                 value={1}
                                                                                         >
