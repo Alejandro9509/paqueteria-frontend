@@ -413,7 +413,7 @@ function Informes({history}) {
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},
-        sucursalEmisora: '',
+        sucursalEmisora: localStorage.getItem("Sucursal"),
         sucursalReceptora: '',
         IdOperador: null,
         IdRemolque1: null,
@@ -471,7 +471,7 @@ function Informes({history}) {
                 DerechoBorrar: 151,
                 EstatusInforme: 5,
                 IdViaje: {},
-                sucursalEmisora: '',
+                sucursalEmisora: localStorage.getItem("Sucursal"),
                 sucursalReceptora: '',
                 IdOperador: null,
                 IdRemolque1: null,
@@ -1596,39 +1596,6 @@ function Informes({history}) {
                                                             <div className="row">
                                                                 <div className="col-md-12">
                                                                     <div className="row">
-                                                                        {/*****************************************Sucursal**********************************************************/}
-                                                                        <div
-                                                                            className="col-sm-12 col-md-6 unit">
-                                                                            <label className="input select">
-                                                                                <FormControl fullWidth
-                                                                                             variant="outlined"
-                                                                                             margin="dense">
-                                                                                    <InputLabel
-                                                                                        id="IdSucursalLabel">Sucursal</InputLabel>
-                                                                                    <Select
-                                                                                        labelId="IdSucursalLabel"
-                                                                                        label="Sucursal"
-                                                                                        className="form-control"
-                                                                                        required
-                                                                                        id="IdSucursal"
-                                                                                        value={state.IdSucursal}
-                                                                                        disabled
-                                                                                    >
-                                                                                        <option
-                                                                                            value="0">Todas
-                                                                                        </option>
-                                                                                        {dataSucursal.map((sucursal) => (
-                                                                                            <option
-                                                                                                key={sucursal.m_nIdSucursal}
-                                                                                                value={sucursal.m_nIdSucursal}
-                                                                                            >
-                                                                                                {sucursal.m_sSucursal}
-                                                                                            </option>
-                                                                                        ))}
-                                                                                    </Select>
-                                                                                </FormControl>
-                                                                            </label>
-                                                                        </div>
                                                                         <div
                                                                             className="col-sm-6 col-md-6 col-xs-12 unit">
                                                                             <div className="input">
@@ -1765,6 +1732,7 @@ function Informes({history}) {
                                                                                         value={state.sucursalEmisora}
                                                                                         id="sucursalEmisora"
                                                                                         onChange={handleSelectSucursalEmisora}
+                                                                                        disabled
                                                                                     >
                                                                                         {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
                                                                                                 <option
