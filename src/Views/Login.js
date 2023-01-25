@@ -132,11 +132,11 @@ function Login() {
               </span>
             </div>
 
-            <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center" }}>
+            {/*<div className="col-xs-11 col-sm-11 col-md-11 col-lg-11" style={{ textAlign: "center" }}>
               <label style={{ color: "#FFFFFF", fontSize: "1vw", textAlign: "center", marginLeft: "0%" }}>
                 Versión 1.0
               </label>
-            </div>
+            </div>*/}
 
           </form>
 
