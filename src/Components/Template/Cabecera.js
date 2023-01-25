@@ -116,6 +116,9 @@ function Cabecera({ titulo, children }) {
                             </div>
                         
             </div>
+            <div>
+                VERSION: 1.2.1
+            </div>
             <div className="topbar-left pull-left" style={{height: "60px" }}>
                 <div className="clearfix">
                     <ul className="left-branding pull-left clickablemenu ttmenu dark-style menu-color-gradient">
