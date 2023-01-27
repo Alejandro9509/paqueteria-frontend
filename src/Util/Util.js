@@ -524,6 +524,7 @@ export function readExcelPlantillaLineal(FORMAT,file){
                     peso: c[FORMAT.complementosSat.pesoComplemento],
                     claveProductoServicio: c[FORMAT.complementosSat.claveProductoServicio],
                     claveUnidadMedida: c[FORMAT.complementosSat.claveUnidadMedida],
+                    numeroProducto: c[FORMAT.paquetes.numeroProducto],
                 }))
                 return embarqueResumen
             })

@@ -353,6 +353,7 @@ function ImportarEmbarques(props) {
                                                                                         <Grid item xs={6}>
                                                                                             Remitente: {e.data.nombreRemitente}<br/>
                                                                                             Código Postal: {e.data.codigoPostalRemitente}<br/>
+                                                                                            Domicilio: {e.data.domicilioRemitente + ', ' + e.data.estadoRemitente + ', '  + e.data.paisRemitente}<br/>
                                                                                             Correo: {e.data.correoRemitente}<br/>
                                                                                             Origen: {e.data.origen}<br/>
                                                                                             Zona operativa recolección: {e.data.zonaRecoleccion}<br/>
@@ -360,6 +361,7 @@ function ImportarEmbarques(props) {
                                                                                         <Grid item xs={6}>
                                                                                             Destinatario: {e.data.nombreDestinatario}<br/>
                                                                                             Código Postal: {e.data.codigoPostalDestinatario}<br/>
+                                                                                            Domicilio: {e.data.domicilioDestinatario + ', ' + e.data.estadoDestinatario + ', '  + e.data.paisDestinatario}<br/>
                                                                                             Correo: {e.data.correoDestinatario}<br/>
                                                                                             Destino: {e.data.destino}<br/>
                                                                                             Zona operativa entrega: {e.data.zonaEntrega}<br/>
