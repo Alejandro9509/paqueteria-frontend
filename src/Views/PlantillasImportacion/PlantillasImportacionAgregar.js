@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-    Button,
+    Button, Checkbox,
     Dialog,
     DialogContent, FormControl,
     FormControlLabel,
@@ -103,7 +103,8 @@ export default function PlantillasImportacionAgregar(props){
         "claveMaterialPeligroso": "",
         "claveEmbalaje": "",
         "descripcionEmbalajeComplemento": "",
-        "claveFraccionArancelaria": ""
+        "claveFraccionArancelaria": "",
+        "usarNumeroEquivalencia": false
     })
     const restartState = () => {
         setState({
@@ -172,7 +173,8 @@ export default function PlantillasImportacionAgregar(props){
             "claveMaterialPeligroso": "",
             "claveEmbalaje": "",
             "descripcionEmbalajeComplemento": "",
-            "claveFraccionArancelaria": ""
+            "claveFraccionArancelaria": "",
+            "usarNumeroEquivalencia": false
         })
         setFiles([])
     }
@@ -269,6 +271,7 @@ export default function PlantillasImportacionAgregar(props){
                 "claveEmbalaje": state.claveEmbalaje,
                 "descripcionEmbalajeComplemento": state.descripcionEmbalajeComplemento,
                 "claveFraccionArancelaria": state.claveFraccionArancelaria,
+                "usarNumeroEquivalencia": state.usarNumeroEquivalencia,
             }
             if (state.idPlantilla > 0){
                 if (files.length === 0){
@@ -314,13 +317,17 @@ export default function PlantillasImportacionAgregar(props){
     }
 
     const handleOnChange = (event) => {
-        console.log(event)
-        console.log(event.target.name)
-        console.log(event.target.value)
-        setState({
-            ...state,
-            [event.target.name]: event.target.value
-        })
+        if (event.target.name === "usarNumeroEquivalencia"){
+            setState({
+                ...state,
+                [event.target.name]: event.target.checked
+            })
+        }else {
+            setState({
+                ...state,
+                [event.target.name]: event.target.value
+            })
+        }
     }
 
     return(
@@ -1221,6 +1228,27 @@ function PlantillaLineal(props) {
                             onChange={handleOnChange}
                             required
                         />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.REMITENTE}>
+                        <Tooltip title="Al activar se buscará el destinatario cuyo no. de equivalencia coincida con el ingresado."
+                                 arrow
+                                 placement="right"
+                        >
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={props.value.usarNumeroEquivalencia}
+                                        onChange={handleOnChange}
+                                        name="usarNumeroEquivalencia"
+                                        color="primary"
+                                        style={{
+                                            transform: "scale(1.5)",
+                                        }}
+                                    />
+                                }
+                                label="Usar como número de equivalencia"
+                            />
+                        </Tooltip>
                     </Grid>
                 </Grid>
             </section>
