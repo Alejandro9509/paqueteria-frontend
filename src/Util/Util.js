@@ -433,6 +433,110 @@ export function readExcel(FORMAT,file){
     return promise
 }
 
+const arrayUniqueByKey = (array, key) => {
+    return [...new Map(array.map(item =>
+        [item[key], item])).values()]
+}
+
+const arrayUniqueByKeyAndFilterBy = (array, keyToUniqueBy, keyToFilterBy, valueToFilterBy) => {
+    return arrayUniqueByKey(array.filter(i => i[keyToFilterBy] === valueToFilterBy), keyToUniqueBy)
+}
+export function readExcelPlantillaLineal(FORMAT,file){
+    const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+
+        fileReader.onload = (e) => {
+            const bufferArray = e.target.result;
+            const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
+
+            //SE OBTIENEN LAS HOJAS DEL EXCEL
+            const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
+
+            //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
+            const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+            console.log(data)
+            console.log(arrayUniqueByKey(data,'Número de embarque'))
+            const embarquesUnicos = arrayUniqueByKey(data,'Número de embarque')
+            const paquetes = data.filter(i => i[FORMAT.numeroEmbarque] )
+
+            //VALIDACIONES DE GUIAS
+            const newArray = embarquesUnicos.map(function(item,index){
+                let embarqueResumen = {
+                    fechaRegistro:getCurrentDate(),
+                    horaRegistro:getCurrentTime(),
+                    numeroEmbarque : item[FORMAT.numeroEmbarque],
+                    esRecoleccion : item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SI' || item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SÍ',
+                    idUsuario: localStorage.getItem("UsuarioId"),
+                    valorDeclarado: item[FORMAT.valorDeclarado],
+                    observaciones: item[FORMAT.observacionesEmbarque],
+                    numeroRemitente: item[FORMAT.numeroRemitente],
+                    numeroDestinatario: item[FORMAT.numeroDestinatario],
+/*                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
+                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
+                    latitud: item[FORMAT.latitud],
+                    longitud: item[FORMAT.longitud],
+                    conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
+                    // idTipoServicio: item[FORMAT.idTipoServicio]
+                    tipoServicio: item[FORMAT.tipoServicio]*/
+                }
+                /*if (embarqueResumen.entregaEnSucursal){
+                    // embarqueResumen.idSucursalEntrega = item[FORMAT.idSucursalEntrega]
+                    embarqueResumen.sucursalEntrega = item[FORMAT.sucursalEntrega]
+                }else{
+                    if (embarqueResumen.entregaDiferenteDomicilio) {
+                        embarqueResumen.codigoPostalDiferenteDomicilio = item[FORMAT.codigoPostalDiferenteDomicilio]
+                        embarqueResumen.coloniaDiferenteDomicilio = item[FORMAT.coloniaDiferenteDomicilio]
+                        embarqueResumen.calleNumeroDiferenteDomicilio = item[FORMAT.calleNumeroDiferenteDomicilio]
+                        embarqueResumen.entregarEn = item[FORMAT.entregarEn]
+                        embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionales]
+                    }
+                }*/
+                /*if (embarqueResumen.esRecoleccion){
+                    embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ'
+                    if (embarqueResumen.recoleccionDiferenteDomicilio){
+                        embarqueResumen.codigoPostalDiferenteDomicilioRecoleccion = item[FORMAT.codigoPostalDiferenteDomicilioRecoleccion]
+                        embarqueResumen.coloniaDiferenteDomicilioRecoleccion = item[FORMAT.coloniaDiferenteDomicilioRecoleccion]
+                        embarqueResumen.calleNumeroDiferenteDomicilioRecoleccion = item[FORMAT.calleNumeroDiferenteDomicilioRecoleccion]
+                        embarqueResumen.recogerEn = item[FORMAT.recogerEn]
+                        embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
+                    }
+                }*/
+                /*if (embarqueResumen.conCita){
+                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
+                    if (!embarqueResumen.citaPendiente) {
+                        embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
+                        embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinimaCita]).format('HH:mm')
+                        embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaximaCita]).format('HH:mm')
+                    }
+                }*/
+                console.log(data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)))
+                embarqueResumen.paquetes = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map(p => ({
+                    numeroEmbarque: p[FORMAT.numeroEmbarque],
+                    numeroProducto: p[FORMAT.paquetes.numeroProducto],
+                    cantidad: p[FORMAT.paquetes.cantidadPaquete],
+                    observaciones: p[FORMAT.paquetes.observacionesPaquete] || ""
+                }))
+                embarqueResumen.complementosSAT = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map((c) => ({
+                    numeroEmbarque: c[FORMAT.numeroEmbarque],
+                    cantidad: c[FORMAT.complementosSat.cantidadComplemento],
+                    peso: c[FORMAT.complementosSat.pesoComplemento],
+                    claveProductoServicio: c[FORMAT.complementosSat.claveProductoServicio],
+                    claveUnidadMedida: c[FORMAT.complementosSat.claveUnidadMedida],
+                    numeroProducto: c[FORMAT.paquetes.numeroProducto],
+                }))
+                return embarqueResumen
+            })
+            resolve(newArray);
+        };
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+    return promise
+}
+
 /**Se hace la relacion de los nombres de las columnas en el excel*/
 export const DEFAULT_FORMAT = {
     //Todos son obligatorios

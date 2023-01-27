@@ -14,10 +14,11 @@ import {
 
 import MenuItem from "@material-ui/core/MenuItem";
 import {importarProductos} from "../../Util/Contexts/ProductosContext";
-import {showSuccess,
+import {
+    showSuccess,
     getCurrentDate,
     getCurrentTime,
-    readExcel, DEFAULT_FORMAT
+    readExcel, DEFAULT_FORMAT, readExcelPlantillaLineal
 } from "../../Util/Util";
 import {FilePond} from "react-filepond";
 import 'filepond/dist/filepond.min.css';
@@ -93,27 +94,52 @@ function ImportarEmbarques(props) {
             return
         }
         obtenerPlantillaImportacionByIdCliente(state.cliente.m_nIdCliente).then(respuesta => {
-            readExcel(respuesta.data.data,files[0].file).then((resultado)=>{
-                resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
-                let params = {
-                    embarques: resultado
-                }
-                console.log(resultado)
-                console.log(params)
-                validarEmbarquesImportados(params).then(respuesta => {
-                    console.log(respuesta.data)
-                    setState({
-                        ...state,
-                        embarques: respuesta.data
+            if (respuesta.data.data.idTipoPlantilla === 1){
+                readExcel(respuesta.data.data,files[0].file).then((resultado)=>{
+                    resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
+                    let params = {
+                        embarques: resultado
+                    }
+                    console.log(resultado)
+                    console.log(params)
+                    validarEmbarquesImportados(params).then(respuesta => {
+                        console.log(respuesta.data)
+                        setState({
+                            ...state,
+                            embarques: respuesta.data
+                        })
+                    }).catch((error)=>{
+                        // showMessage(err,2000,"warning")
+                        console.log('error al validar: ' + error)
                     })
-                }).catch((error)=>{
+                }).catch((err)=>{
                     // showMessage(err,2000,"warning")
-                    console.log('error al validar: ' + error)
+                    console.log('error al importar' + err)
                 })
-            }).catch((err)=>{
-                // showMessage(err,2000,"warning")
-                console.log('error al importar' + err)
-            })
+            }else{
+                readExcelPlantillaLineal(respuesta.data.data,files[0].file).then((resultado)=>{
+                    resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
+                    let params = {
+                        embarques: resultado
+                    }
+                    console.log(resultado)
+                    console.log(params)
+                    validarEmbarquesImportados(params).then(respuesta => {
+                        console.log(respuesta.data)
+                        setState({
+                            ...state,
+                            embarques: respuesta.data
+                        })
+                    }).catch((error)=>{
+                        // showMessage(err,2000,"warning")
+                        console.log('error al validar: ' + error)
+                    })
+                }).catch((err)=>{
+                    // showMessage(err,2000,"warning")
+                    console.log('error al importar' + err)
+                })
+            }
+
         })
 
     }
@@ -327,6 +353,7 @@ function ImportarEmbarques(props) {
                                                                                         <Grid item xs={6}>
                                                                                             Remitente: {e.data.nombreRemitente}<br/>
                                                                                             Código Postal: {e.data.codigoPostalRemitente}<br/>
+                                                                                            Domicilio: {e.data.domicilioRemitente + ', ' + e.data.estadoRemitente + ', '  + e.data.paisRemitente}<br/>
                                                                                             Correo: {e.data.correoRemitente}<br/>
                                                                                             Origen: {e.data.origen}<br/>
                                                                                             Zona operativa recolección: {e.data.zonaRecoleccion}<br/>
@@ -334,6 +361,7 @@ function ImportarEmbarques(props) {
                                                                                         <Grid item xs={6}>
                                                                                             Destinatario: {e.data.nombreDestinatario}<br/>
                                                                                             Código Postal: {e.data.codigoPostalDestinatario}<br/>
+                                                                                            Domicilio: {e.data.domicilioDestinatario + ', ' + e.data.estadoDestinatario + ', '  + e.data.paisDestinatario}<br/>
                                                                                             Correo: {e.data.correoDestinatario}<br/>
                                                                                             Destino: {e.data.destino}<br/>
                                                                                             Zona operativa entrega: {e.data.zonaEntrega}<br/>
