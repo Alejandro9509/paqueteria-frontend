@@ -2,7 +2,7 @@ import React, {Component, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     Button, Collapse,
-    Dialog,
+    Dialog, DialogActions,
     DialogContent,
     FormControl,
     Grid,
@@ -50,7 +50,8 @@ function ImportarEmbarques(props) {
         dataSucursal: [],
         archivo: [],
         embarques: [],
-        cliente: null
+        cliente: null,
+        embarqueSelect: null
     })
     useEffect(() => {
         obtenerParametrosConfiguracion().then(respuesta => {
@@ -203,32 +204,64 @@ function ImportarEmbarques(props) {
             cliente: null
         })
     }
+
+    const handleOnRutaChange = (event) => {
+        try {
+            let newList = [...state.embarques]
+            let indexEmbarque = newList.findIndex(i => i.numeroEmbarque === state.embarqueSelect.numeroEmbarque)
+            let ruta = newList[indexEmbarque].data.rutas.find(i => i.idRuta === event.target.value)
+            newList[indexEmbarque].data.idRuta = ruta.idRuta
+            newList[indexEmbarque].data.ruta = ruta.ruta
+            setState({
+                ...state,
+                embarques: newList,
+                openDialog: false
+            })
+        }catch (err){
+            console.log(err)
+        }
+
+    }
+    function SelectRuta(props) {
+        return(
+            <div>
+                <TextField
+                    variant={"outlined"}
+                    label={"Selecciona una ruta"}
+                    margin={"dense"}
+                    select
+                    onChange={props.onChange}
+                >
+                    {props.list.map( item => (
+                        <MenuItem key={item.idRuta} value={item.idRuta}>{item.ruta}</MenuItem>
+                    ))}
+                </TextField>
+            </div>
+        )
+    }
     return(
         <section className={"main-container"} style={{marginLeft: "0px", padding: "0px"}}>
             <Dialog
                 open={state.openDialog}
-                onClose={() => setState({openDialog: false})}
+                onClose={() => setState({...state,openDialog: false})}
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
-                    {state.openDialogToOpen === 'CLIENTES' &&
+                    {(state.openDialog && state.openDialogToOpen === 'CLIENTES') &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                             <DialogTableClientes dialogVisible={(value) => setState({...state, openDialog: value})}
                                                  handlePatrocinadorSelected={handlePatrocinadorSelected}/>
                         </div>
                     }
-                    {/*{this.state.openDialogToOpen === 'DESTINATARIOS' &&
+                    {(state.openDialog && state.openDialogToOpen === 'RUTAS') &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <DialogTableRemDes
-                                dialogVisible={(value) => this.setState({openDialog: value})}
-                                openDialog={this.state.openDialog}
-                                porCliente={true}
-                                idCliente={this.state.idCliente}
-                                handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
-                                agregarEmbarque={true}
+                            <SelectRuta
+                                embarque={state.embarqueSelect}
+                                list={state.embarqueSelect?.data?.rutas || []}
+                                onChange={handleOnRutaChange}
                             />
                         </div>
-                    }*/}
+                    }
                 </DialogContent>
             </Dialog>
             <div className={"content-fluid"}>
@@ -256,29 +289,6 @@ function ImportarEmbarques(props) {
                                             />
                                         </Grid>
 
-                                        {/*<Grid item xs={3}>
-                                            <TextField
-                                                select
-                                                label="Sucursal"
-                                                labelId="IdSucursalLabel"
-                                                value={state.idSucursal ?? ""}
-                                                id="idSucursal"
-                                                name="idSucursal"
-                                                fullWidth
-                                                variant="outlined"
-                                                margin="dense"
-                                                // onChange={handleOnChange}
-                                            >
-                                                {state.dataSucursal.map((sucursal) => (
-                                                    <MenuItem
-                                                        key={sucursal.m_nIdSucursal}
-                                                        value={sucursal.m_nIdSucursal}
-                                                    >
-                                                        {sucursal.m_sSucursal}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                        </Grid>*/}
                                         <Grid item xs={3}>
                                             <FilePond
                                                 files={files}
@@ -348,7 +358,19 @@ function ImportarEmbarques(props) {
                                                                                             Latitud: {e.data.latitud}<br/>
                                                                                             Longitud: {e.data.longitud}<br/>
                                                                                             Entrega con cita: {e.data.conCita?"Sí":"No"}<br/>
-                                                                                            Ruta: {e.data.ruta}
+                                                                                            Ruta: {e.data.ruta}<br/>
+                                                                                            {e.data.rutas.length > 1 &&
+                                                                                                <a
+                                                                                                    onClick={() => {
+                                                                                                        setState({
+                                                                                                            ...state,
+                                                                                                            openDialog: true,
+                                                                                                            openDialogToOpen: 'RUTAS',
+                                                                                                            embarqueSelect: e
+                                                                                                        })
+                                                                                                    }}>Click aqui para seleccionar ruta</a>
+                                                                                            }
+
                                                                                         </Grid>
                                                                                         <Grid item xs={6}>
                                                                                             Remitente: {e.data.nombreRemitente}<br/>
@@ -367,77 +389,6 @@ function ImportarEmbarques(props) {
                                                                                             Zona operativa entrega: {e.data.zonaEntrega}<br/>
                                                                                         </Grid>
                                                                                         <Grid item xs={12} sm={8}>
-                                                                                            {/*<TableContainer style={{
-                                                                                                height: "100%",
-                                                                                                padding: "0px",
-                                                                                                paddingRight: "0px"
-                                                                                            }}>
-                                                                                                <Table size="small">
-                                                                                                    <TableHead>
-                                                                                                        <TableRow>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">
-                                                                                                                Cantidad
-                                                                                                            </TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Descripcion</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Embalaje</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Largo</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Alto</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Ancho</TableCell>
-                                                                                                        </TableRow>
-                                                                                                    </TableHead>
-                                                                                                    <TableBody>
-                                                                                                        {
-                                                                                                            e.data.paquetes.map((item, index) => (
-                                                                                                                <TableRow key={index}>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.cantidad}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.descripcion}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.embalaje}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.largo}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.alto}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.ancho}
-                                                                                                                    </TableCell>
-                                                                                                                </TableRow>
-                                                                                                            ))
-                                                                                                        }
-                                                                                                    </TableBody>
-                                                                                                </Table>
-
-                                                                                            </TableContainer>*/}
                                                                                             <br/>
                                                                                             Paquetes
                                                                                             <TablaImportadosPaquetes data={e.data.paquetes}/>
