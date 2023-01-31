@@ -1308,17 +1308,6 @@ function PlantillaLineal(props) {
                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                         <TextField
                             variant="outlined"
-                            label="Peso"
-                            margin="dense"
-                            name="pesoComplemento"
-                            value={props.value.pesoComplemento}
-                            onChange={handleOnChange}
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
-                        <TextField
-                            variant="outlined"
                             label="Clave producto/servicio"
                             margin="dense"
                             name="claveProductoServicio"
