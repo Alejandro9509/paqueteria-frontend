@@ -1241,7 +1241,6 @@ function PlantillaLineal(props) {
                     </Grid>
                 </Grid>
             </section>
-
             <section id={"sucursa"} style={STYLES}>
                 <h2>Datos para entrega en sucursal</h2>
                 <br/>
@@ -1268,6 +1267,73 @@ function PlantillaLineal(props) {
                     </Grid>
                 </Grid>
             </section>
+            <section id={"entregaDiferenteDomicilio"} style={STYLES}>
+                <h2>Datos para entrega en diferente domicilio</h2>
+                <br/>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Entrega en diferente"
+                            margin="dense"
+                            name="entregaDiferenteDomicilio"
+                            value={props.value.entregaDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Código postal"
+                            margin="dense"
+                            name="codigoPostalDiferenteDomicilio"
+                            value={props.value.codigoPostalDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Colonia"
+                            margin="dense"
+                            name="coloniaDiferenteDomicilio"
+                            value={props.value.coloniaDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Calle y número"
+                            margin="dense"
+                            name="calleNumeroDiferenteDomicilio"
+                            value={props.value.calleNumeroDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Entregar en"
+                            margin="dense"
+                            name="entregarEn"
+                            value={props.value.entregarEn}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Datos adicionales"
+                            margin="dense"
+                            name="datosAdicionales"
+                            value={props.value.datosAdicionales}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                </Grid>
+            </section>
+
             <section id={"paquetes"} style={STYLES}>
                 <h2>Datos de paquetes</h2>
                 <br/>

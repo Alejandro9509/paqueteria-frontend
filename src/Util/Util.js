@@ -463,7 +463,6 @@ export function readExcelPlantillaLineal(FORMAT,file){
                     fechaRegistro:getCurrentDate(),
                     horaRegistro:getCurrentTime(),
                     numeroEmbarque : item[FORMAT.numeroEmbarque],
-                    esRecoleccion : item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SI' || item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SÍ',
                     idUsuario: localStorage.getItem("UsuarioId"),
                     valorDeclarado: item[FORMAT.valorDeclarado],
                     observaciones: item[FORMAT.observacionesEmbarque],
@@ -477,8 +476,7 @@ export function readExcelPlantillaLineal(FORMAT,file){
                     // idTipoServicio: item[FORMAT.idTipoServicio]
                     tipoServicio: item[FORMAT.tipoServicio]*/
                 }
-                /*if (embarqueResumen.entregaEnSucursal){
-                    // embarqueResumen.idSucursalEntrega = item[FORMAT.idSucursalEntrega]
+                if (embarqueResumen.entregaEnSucursal){
                     embarqueResumen.sucursalEntrega = item[FORMAT.sucursalEntrega]
                 }else{
                     if (embarqueResumen.entregaDiferenteDomicilio) {
@@ -488,7 +486,7 @@ export function readExcelPlantillaLineal(FORMAT,file){
                         embarqueResumen.entregarEn = item[FORMAT.entregarEn]
                         embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionales]
                     }
-                }*/
+                }
                 /*if (embarqueResumen.esRecoleccion){
                     embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ'
                     if (embarqueResumen.recoleccionDiferenteDomicilio){
