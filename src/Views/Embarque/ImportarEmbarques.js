@@ -40,6 +40,7 @@ import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusEmbarque: 0,
+        estatusRecoleccion: 0,
         // plantillaImportarEmbarquesNombreArchivo: ''
     })
     const [files, setFiles] = useState([])
@@ -49,7 +50,6 @@ function ImportarEmbarques(props) {
         openDialog: false,
         openDialogToOpen: '',
         dataSucursal: [],
-        archivo: [],
         embarques: [],
         cliente: null,
         embarqueSelect: null,
@@ -59,7 +59,7 @@ function ImportarEmbarques(props) {
         obtenerParametrosConfiguracion().then(respuesta => {
             setConfiguraciones({
                 estatusEmbarque: respuesta.data.EstatusEmbarque,
-                // plantillaImportarEmbarquesNombreArchivo: respuesta.data.PlantillaImportarEmbarquesNombreArchivo,
+                estatusRecoleccion: respuesta.data.EstatusRecoleccion,
             })
         })
     }, [])
@@ -89,7 +89,6 @@ function ImportarEmbarques(props) {
                 URL.revokeObjectURL(href);
             })
         })
-
     }
 
     const handleOnImportarClick = () => {
@@ -99,7 +98,10 @@ function ImportarEmbarques(props) {
         obtenerPlantillaImportacionByIdCliente(state.cliente.m_nIdCliente).then(respuesta => {
             if (respuesta.data.data.idTipoPlantilla === 1){
                 readExcel(respuesta.data.data,files[0].file).then((resultado)=>{
-                    resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
+                    resultado.forEach(item => {
+                        item.idCliente = state.cliente.m_nIdCliente
+                        item.esRecoleccion = !!props.esRecoleccion
+                    })
                     let params = {
                         embarques: resultado
                     }
@@ -114,14 +116,19 @@ function ImportarEmbarques(props) {
                     }).catch((error)=>{
                         // showMessage(err,2000,"warning")
                         console.log('error al validar: ' + error)
+                        showSuccess("Error al validar datos dados, intente de nuevo.")
                     })
                 }).catch((err)=>{
                     // showMessage(err,2000,"warning")
                     console.log('error al importar' + err)
+                    showSuccess("Error al leer datos dados, intente de nuevo.")
                 })
             }else{
                 readExcelPlantillaLineal(respuesta.data.data,files[0].file).then((resultado)=>{
-                    resultado.forEach(item => item.idCliente = state.cliente.m_nIdCliente)
+                    resultado.forEach(item => {
+                        item.idCliente = state.cliente.m_nIdCliente
+                        item.esRecoleccion = !!props.esRecoleccion
+                    })
                     let params = {
                         embarques: resultado
                     }
@@ -136,13 +143,16 @@ function ImportarEmbarques(props) {
                     }).catch((error)=>{
                         // showMessage(err,2000,"warning")
                         console.log('error al validar: ' + error)
+                        showSuccess("Error al validar datos dados, intente de nuevo.")
                     })
                 }).catch((err)=>{
                     // showMessage(err,2000,"warning")
                     console.log('error al importar' + err)
+                    showSuccess("Error al leer datos dados, intente de nuevo.")
                 })
             }
-
+        }).catch(err => {
+            showSuccess(err.response.data.message)
         })
 
     }
@@ -157,14 +167,16 @@ function ImportarEmbarques(props) {
             console.log(state.embarques[0].data.longitud)
             console.log(state.embarques[0].data.latitud.length > 0 && state.embarques[0].data.longitud.length > 0)
             let params = {
-                embarques: state.embarques.filter(emb => emb.success === true && emb.data.idRuta > 0 && (emb.data.latitud.length > 0 && emb.data.longitud.length > 0)).map(emb => emb.data)
+                embarques: props.esRecoleccion ?
+                    state.embarques.filter(emb => emb.success === true && (emb.data.latitud.length > 0 && emb.data.longitud.length > 0)).map(emb => emb.data)
+                    :state.embarques.filter(emb => emb.success === true && emb.data.idRuta > 0 && (emb.data.latitud.length > 0 && emb.data.longitud.length > 0)).map(emb => emb.data)
             }
             params.embarques.forEach(embarque => {
                 embarque.fechaRegistro = getCurrentDate()
                 embarque.horaRegistro = getCurrentTime()
                 embarque.idSucursalRegistro = localStorage.getItem("Sucursal")
                 embarque.idUsuarioRegistro = localStorage.getItem("UsuarioId")
-                embarque.idEstatus = configuraciones.estatusEmbarque
+                embarque.idEstatus = props.esRecoleccion ? configuraciones.estatusRecoleccion : configuraciones.estatusEmbarque
                 embarque.idCotizacion = embarque.conceptosFacturacion[0]?.m_nIdCotizacion
                 embarque.conceptosFacturacion = embarque.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion!==true)
             })
@@ -177,9 +189,11 @@ function ImportarEmbarques(props) {
             }).catch((error)=>{
                 // showMessage(err,2000,"warning")
                 console.log('error al agregar: ' + error)
+                showSuccess("Error al guardar información, intente de nuevo.")
             })
         }catch (err){
             console.log('error al agregar: ' + err)
+            showSuccess("Hubo un problema, intente de nuevo.")
         }
 
     }
@@ -208,7 +222,6 @@ function ImportarEmbarques(props) {
             openDialog: false,
             openDialogToOpen: '',
             dataSucursal: [],
-            archivo: [],
             embarques: [],
             cliente: null,
             embarqueSelect: null,
@@ -280,8 +293,54 @@ function ImportarEmbarques(props) {
 
     const obtenerDatosDireccion = (esRecoleccion) => {
         try {
-            let esDiferenteDomicilio = state.embarqueSelect.data.entregaDiferenteDomicilio
-            if (!esRecoleccion) {
+            let esDiferenteDomicilio = esRecoleccion ? state.embarqueSelect.recoleccionDiferenteDomicilio : state.embarqueSelect.data.entregaDiferenteDomicilio
+            if (esRecoleccion) {
+                if (esDiferenteDomicilio) {
+                    return {
+                        nombreLugar: state.embarqueSelect.data.nombreRemitente,
+                        numeroInterior: '',
+                        numeroExterior: '',
+                        calle: state.embarqueSelect.data.calleNumeroDiferenteDomicilioRecoleccion,
+                        colonia: state.embarqueSelect.data.coloniaDiferenteDomicilioRecoleccion,
+                        ciudad: state.embarqueSelect.data.municipioDiferenteDomicilioRecoleccion,
+                        estado: state.embarqueSelect.data.estadoDiferenteDomicilioRecoleccion,
+                        pais: state.embarqueSelect.data.paisDiferenteDomicilioRecoleccion,
+                        codigoPostal: state.embarqueSelect.data.codigoPostalDiferenteDomicilioRecoleccion,
+                        direccionCompleta: getAddressFormated(
+                            state.embarqueSelect.data.calleNumeroDiferenteDomicilioRecoleccion,
+                            null,
+                            null,
+                            state.embarqueSelect.data.coloniaDiferenteDomicilioRecoleccion,
+                            state.embarqueSelect.data.codigoPostalDiferenteDomicilioRecoleccion,
+                            state.embarqueSelect.data.municipioDiferenteDomicilioRecoleccion,
+                            state.embarqueSelect.data.estadoDiferenteDomicilioRecoleccion,
+                            state.embarqueSelect.data.paisDiferenteDomicilioRecoleccion
+                        )
+                    }
+                } else {
+                    return {
+                        nombreLugar: state.embarqueSelect.data.nombreRemitente,
+                        numeroInterior: state.embarqueSelect.data.numeroInteriorRemitente,
+                        numeroExterior: state.embarqueSelect.data.numeroExteriorRemitente,
+                        calle: state.embarqueSelect.data.calleRemitente,
+                        colonia: state.embarqueSelect.data.coloniaRemitente,
+                        ciudad: state.embarqueSelect.data.municipioRemitente,
+                        estado: state.embarqueSelect.data.estadoRemitente,
+                        pais: state.embarqueSelect.data.paisRemitente,
+                        codigoPostal: state.embarqueSelect.data.codigoPostalRemitente,
+                        direccionCompleta: getAddressFormated(
+                            state.embarqueSelect.data.calleRemitente,
+                            state.embarqueSelect.data.numeroExteriorRemitente,
+                            state.embarqueSelect.data.numeroInteriorRemitente,
+                            state.embarqueSelect.data.coloniaRemitente,
+                            state.embarqueSelect.data.codigoPostalRemitente,
+                            state.embarqueSelect.data.municipioRemitente,
+                            state.embarqueSelect.data.estadoRemitente,
+                            state.embarqueSelect.data.paisRemitente
+                        )
+                    }
+                }
+            }else {
                 if (esDiferenteDomicilio) {
                     return {
                         nombreLugar: state.embarqueSelect.data.nombreDestinatario,
@@ -361,10 +420,10 @@ function ImportarEmbarques(props) {
             {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
-                                    titulo={"Entrega"}
-                                    remitente={false}
+                                    titulo={props.esRecoleccion ? "Recoleccion" :"Entrega"}
+                                    remitente={!!props.esRecoleccion}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
-                                    direccion={obtenerDatosDireccion(false)}
+                                    direccion={obtenerDatosDireccion(!!props.esRecoleccion)}
                 />
             }
             <div className={"content-fluid"}>
@@ -373,7 +432,7 @@ function ImportarEmbarques(props) {
                         <form className="j-forms" >
                             <div className="widget-container">
                                 <div className="widget-content">
-                                    <h2>Importar Embarques</h2>
+                                    <h2>Importar</h2>
                                     <Grid container spacing={1}>
                                         <Grid item xs={3}>
                                             <TextField
@@ -405,7 +464,7 @@ function ImportarEmbarques(props) {
                                                     color={"primary"}
                                                     variant={"contained"}
                                                     onClick={() => handleOnImportarClick()}
-                                                    disabled={!state.cliente}
+                                                    disabled={!state.cliente || files.length === 0}
                                             >Importar</Button>
                                         </Grid>
                                         <Grid item xs={2}>
@@ -413,7 +472,7 @@ function ImportarEmbarques(props) {
                                                     color={"primary"}
                                                     variant={"outlined"}
                                                     onClick={() => handleOnDescargarPlantillaClick()}
-                                                    // disabled={configuraciones.plantillaImportarEmbarquesNombreArchivo===''}
+                                                    disabled={!state.cliente}
                                             >Descargar plantilla</Button>
                                         </Grid>
                                         <Grid item xs={1}>
@@ -423,7 +482,7 @@ function ImportarEmbarques(props) {
                                                     onClick={() => handleOnLimpiarClick()}
                                             >Limpiar</Button>
                                         </Grid>
-                                        <Grid item xs={12}>Embarques</Grid>
+                                        <Grid item xs={12}>Vista previa</Grid>
                                         <Grid item xs={12}>
 
                                             <List>
@@ -436,7 +495,7 @@ function ImportarEmbarques(props) {
                                                                           onClick={() => setState({...state, embarqueSeleccionado: i === state.embarqueSeleccionado ? -1 : i})}>
                                                                     <ListItemText primary={e.data.esRecoleccion ? "Recolección #" + (e.numeroEmbarque) : "Embarque #" + (e.numeroEmbarque)}/>
                                                                     {!e.success && <InfoRoundedIcon color={"error"} fontSize={"large"}/> }
-                                                                    {(e.data.rutas?.length > 1 && !(e.data.idRuta > 0)) &&
+                                                                    {(!props.esRecoleccion && e.data.rutas?.length > 1 && !(e.data.idRuta > 0)) &&
                                                                         <Tooltip title="Necesita seleccionar una ruta" >
                                                                             <InfoRoundedIcon color={"error"} fontSize={"large"}/>
                                                                         </Tooltip>
@@ -484,21 +543,28 @@ function ImportarEmbarques(props) {
                                                                                                 </>
                                                                                             }
                                                                                             Entrega con cita: {e.data.conCita?"Sí":"No"}<br/>
-                                                                                            Ruta: {e.data.ruta}<br/>
-                                                                                            {e.data.rutas.length > 1 &&
+                                                                                            {
+                                                                                                !props.esRecoleccion &&
                                                                                                 <>
-                                                                                                    <a
-                                                                                                        style={{color:'red'}}
-                                                                                                    onClick={() => {
-                                                                                                        setState({
-                                                                                                            ...state,
-                                                                                                            openDialog: true,
-                                                                                                            openDialogToOpen: 'RUTAS',
-                                                                                                            embarqueSelect: e
-                                                                                                        })
-                                                                                                    }}>Click aqui para seleccionar ruta</a><br/>
+                                                                                                    Ruta: {e.data.ruta}<br/>
+                                                                                                    {e.data.rutas.length > 1 &&
+                                                                                                        <>
+                                                                                                            <a
+                                                                                                                style={{color:'red'}}
+                                                                                                                onClick={() => {
+                                                                                                                    setState({
+                                                                                                                        ...state,
+                                                                                                                        openDialog: true,
+                                                                                                                        openDialogToOpen: 'RUTAS',
+                                                                                                                        embarqueSelect: e
+                                                                                                                    })
+                                                                                                                }}>Click aqui para seleccionar ruta</a><br/>
+                                                                                                        </>
+                                                                                                    }
                                                                                                 </>
+
                                                                                             }
+
 
                                                                                         </Grid>
                                                                                         <Grid item xs={6}>
