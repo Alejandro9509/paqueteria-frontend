@@ -1333,7 +1333,62 @@ function PlantillaLineal(props) {
                     </Grid>
                 </Grid>
             </section>
-
+            <section id={"cita"} style={{padding: '10px'}}>
+                <h2>Datos de cita</h2>
+                <br/>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Agregar cita"
+                            margin="dense"
+                            name="conCita"
+                            value={props.value.conCita}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Dejar cita pendiente"
+                            margin="dense"
+                            name="citaPendiente"
+                            value={props.value.citaPendiente}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Fecha de cita"
+                            margin="dense"
+                            name="fechaCita"
+                            value={props.value.fechaCita}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Hora mínima de cita"
+                            margin="dense"
+                            name="horaMinimaCita"
+                            value={props.value.horaMinimaCita}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Hora máxima de cita"
+                            margin="dense"
+                            name="horaMaximaCita"
+                            value={props.value.horaMaximaCita}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                </Grid>
+            </section>
             <section id={"paquetes"} style={STYLES}>
                 <h2>Datos de paquetes</h2>
                 <br/>

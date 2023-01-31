@@ -470,11 +470,7 @@ export function readExcelPlantillaLineal(FORMAT,file){
                     numeroDestinatario: item[FORMAT.numeroDestinatario],
                     entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
                     entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
-/*                    latitud: item[FORMAT.latitud],
-                    longitud: item[FORMAT.longitud],
                     conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
-                    // idTipoServicio: item[FORMAT.idTipoServicio]
-                    tipoServicio: item[FORMAT.tipoServicio]*/
                 }
                 if (embarqueResumen.entregaEnSucursal){
                     embarqueResumen.sucursalEntrega = item[FORMAT.sucursalEntrega]
@@ -497,14 +493,14 @@ export function readExcelPlantillaLineal(FORMAT,file){
                         embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
                     }
                 }*/
-                /*if (embarqueResumen.conCita){
+                if (embarqueResumen.conCita){
                     embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
                     if (!embarqueResumen.citaPendiente) {
                         embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
                         embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinimaCita]).format('HH:mm')
                         embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaximaCita]).format('HH:mm')
                     }
-                }*/
+                }
                 embarqueResumen.paquetes = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map(p => ({
                     numeroEmbarque: p[FORMAT.numeroEmbarque],
                     numeroProducto: p[FORMAT.paquetes.numeroProducto],
