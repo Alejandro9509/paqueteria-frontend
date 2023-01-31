@@ -5,6 +5,7 @@ import {API_HEADERS} from "../Constants";
 import * as XLSX from "xlsx";
 import moment from "moment";
 import Noty from "noty";
+import {es} from "date-fns/locale";
 
 const XRouteClient = window.XRouteClient;
 const XLoadClient = window.XLoadClient;
@@ -306,7 +307,7 @@ export function getAddressFormated(calle, numeroExterior, numeroInterior, coloni
     return addressComplete
 }
 
-export function readExcel(FORMAT,file){
+export function readExcel(FORMAT,file, esRecoleccion){
     const promise = new Promise((resolve, reject) => {
         const fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
@@ -363,7 +364,7 @@ export function readExcel(FORMAT,file){
                     fechaRegistro:getCurrentDate(),
                     horaRegistro:getCurrentTime(),
                     numeroEmbarque : item[FORMAT.numeroEmbarque],
-                    esRecoleccion : item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SI' || item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SÍ',
+                    esRecoleccion : esRecoleccion,
                     idUsuario: localStorage.getItem("UsuarioId"),
                     moneda: item[FORMAT.moneda],
                     tipoCambio: item[FORMAT.tipoCambio],
@@ -439,7 +440,7 @@ const arrayUniqueByKey = (array, key) => {
         [item[key], item])).values()]
 }
 
-export function readExcelPlantillaLineal(FORMAT,file){
+export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
     const promise = new Promise((resolve, reject) => {
         const fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
@@ -460,6 +461,7 @@ export function readExcelPlantillaLineal(FORMAT,file){
             //VALIDACIONES DE GUIAS
             const newArray = embarquesUnicos.map(function(item,index){
                 let embarqueResumen = {
+                    esRecoleccion: esRecoleccion,
                     fechaRegistro:getCurrentDate(),
                     horaRegistro:getCurrentTime(),
                     numeroEmbarque : item[FORMAT.numeroEmbarque],
@@ -483,7 +485,7 @@ export function readExcelPlantillaLineal(FORMAT,file){
                         embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionales]
                     }
                 }
-                /*if (embarqueResumen.esRecoleccion){
+                if (embarqueResumen.esRecoleccion){
                     embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ'
                     if (embarqueResumen.recoleccionDiferenteDomicilio){
                         embarqueResumen.codigoPostalDiferenteDomicilioRecoleccion = item[FORMAT.codigoPostalDiferenteDomicilioRecoleccion]
@@ -492,7 +494,7 @@ export function readExcelPlantillaLineal(FORMAT,file){
                         embarqueResumen.recogerEn = item[FORMAT.recogerEn]
                         embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
                     }
-                }*/
+                }
                 if (embarqueResumen.conCita){
                     embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
                     if (!embarqueResumen.citaPendiente) {

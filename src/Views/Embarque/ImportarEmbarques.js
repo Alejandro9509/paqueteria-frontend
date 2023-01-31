@@ -97,10 +97,9 @@ function ImportarEmbarques(props) {
         }
         obtenerPlantillaImportacionByIdCliente(state.cliente.m_nIdCliente).then(respuesta => {
             if (respuesta.data.data.idTipoPlantilla === 1){
-                readExcel(respuesta.data.data,files[0].file).then((resultado)=>{
+                readExcel(respuesta.data.data,files[0].file, !!props.esRecoleccion).then((resultado)=>{
                     resultado.forEach(item => {
                         item.idCliente = state.cliente.m_nIdCliente
-                        item.esRecoleccion = !!props.esRecoleccion
                     })
                     let params = {
                         embarques: resultado
@@ -124,10 +123,9 @@ function ImportarEmbarques(props) {
                     showSuccess("Error al leer datos dados, intente de nuevo.")
                 })
             }else{
-                readExcelPlantillaLineal(respuesta.data.data,files[0].file).then((resultado)=>{
+                readExcelPlantillaLineal(respuesta.data.data,files[0].file,!!props.esRecoleccion).then((resultado)=>{
                     resultado.forEach(item => {
                         item.idCliente = state.cliente.m_nIdCliente
-                        item.esRecoleccion = !!props.esRecoleccion
                     })
                     let params = {
                         embarques: resultado
