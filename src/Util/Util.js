@@ -439,9 +439,6 @@ const arrayUniqueByKey = (array, key) => {
         [item[key], item])).values()]
 }
 
-const arrayUniqueByKeyAndFilterBy = (array, keyToUniqueBy, keyToFilterBy, valueToFilterBy) => {
-    return arrayUniqueByKey(array.filter(i => i[keyToFilterBy] === valueToFilterBy), keyToUniqueBy)
-}
 export function readExcelPlantillaLineal(FORMAT,file){
     const promise = new Promise((resolve, reject) => {
         const fileReader = new FileReader();
@@ -459,7 +456,6 @@ export function readExcelPlantillaLineal(FORMAT,file){
             console.log(data)
             console.log(arrayUniqueByKey(data,'Número de embarque'))
             const embarquesUnicos = arrayUniqueByKey(data,'Número de embarque')
-            const paquetes = data.filter(i => i[FORMAT.numeroEmbarque] )
 
             //VALIDACIONES DE GUIAS
             const newArray = embarquesUnicos.map(function(item,index){
@@ -473,9 +469,9 @@ export function readExcelPlantillaLineal(FORMAT,file){
                     observaciones: item[FORMAT.observacionesEmbarque],
                     numeroRemitente: item[FORMAT.numeroRemitente],
                     numeroDestinatario: item[FORMAT.numeroDestinatario],
-/*                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
+                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
                     entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
-                    latitud: item[FORMAT.latitud],
+/*                    latitud: item[FORMAT.latitud],
                     longitud: item[FORMAT.longitud],
                     conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
                     // idTipoServicio: item[FORMAT.idTipoServicio]
@@ -511,7 +507,6 @@ export function readExcelPlantillaLineal(FORMAT,file){
                         embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaximaCita]).format('HH:mm')
                     }
                 }*/
-                console.log(data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)))
                 embarqueResumen.paquetes = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map(p => ({
                     numeroEmbarque: p[FORMAT.numeroEmbarque],
                     numeroProducto: p[FORMAT.paquetes.numeroProducto],

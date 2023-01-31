@@ -1241,6 +1241,33 @@ function PlantillaLineal(props) {
                     </Grid>
                 </Grid>
             </section>
+
+            <section id={"sucursa"} style={STYLES}>
+                <h2>Datos para entrega en sucursal</h2>
+                <br/>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={grid.SUCURSAL}>
+                        <TextField
+                            variant="outlined"
+                            label="Entrega en sucursal"
+                            margin="dense"
+                            name="entregaEnSucursal"
+                            value={props.value.entregaEnSucursal}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.SUCURSAL}>
+                        <TextField
+                            variant="outlined"
+                            label="Sucursal de entrega"
+                            margin="dense"
+                            name="sucursalEntrega"
+                            value={props.value.sucursalEntrega}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                </Grid>
+            </section>
             <section id={"paquetes"} style={STYLES}>
                 <h2>Datos de paquetes</h2>
                 <br/>
