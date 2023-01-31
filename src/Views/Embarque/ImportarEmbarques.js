@@ -2,14 +2,14 @@ import React, {Component, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     Button, Collapse,
-    Dialog,
+    Dialog, DialogActions,
     DialogContent,
     FormControl,
     Grid,
     Input,
     InputLabel, List, ListItem, ListItemIcon, ListItemText,
     Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    TextField
+    TextField, Tooltip
 } from "@material-ui/core";
 
 import MenuItem from "@material-ui/core/MenuItem";
@@ -18,7 +18,7 @@ import {
     showSuccess,
     getCurrentDate,
     getCurrentTime,
-    readExcel, DEFAULT_FORMAT, readExcelPlantillaLineal
+    readExcel, DEFAULT_FORMAT, readExcelPlantillaLineal, getAddressFormated, validarDerecho
 } from "../../Util/Util";
 import {FilePond} from "react-filepond";
 import 'filepond/dist/filepond.min.css';
@@ -35,6 +35,7 @@ import {
     obtenerNombrePlantillaImportacionByIdCliente,
     obtenerPlantillaImportacionByIdCliente
 } from "../../Util/Contexts/PlantillasContext";
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -50,7 +51,9 @@ function ImportarEmbarques(props) {
         dataSucursal: [],
         archivo: [],
         embarques: [],
-        cliente: null
+        cliente: null,
+        embarqueSelect: null,
+        showConfirmarUbicacion: false
     })
     useEffect(() => {
         obtenerParametrosConfiguracion().then(respuesta => {
@@ -146,8 +149,15 @@ function ImportarEmbarques(props) {
 
     const handleOnClickAceptar = (e) => {
         try {
+            console.log(state.embarques[0].data.idRuta > 0)
+            console.log(state.embarques[0].data.latitud.length > 0)
+            console.log(state.embarques[0].data.latitud.length)
+            console.log(state.embarques[0].data.latitud)
+            console.log(state.embarques[0].data.longitud.length > 0)
+            console.log(state.embarques[0].data.longitud)
+            console.log(state.embarques[0].data.latitud.length > 0 && state.embarques[0].data.longitud.length > 0)
             let params = {
-                embarques: state.embarques.filter(emb => emb.success === true).map(emb => emb.data)
+                embarques: state.embarques.filter(emb => emb.success === true && emb.data.idRuta > 0 && (emb.data.latitud.length > 0 && emb.data.longitud.length > 0)).map(emb => emb.data)
             }
             params.embarques.forEach(embarque => {
                 embarque.fechaRegistro = getCurrentDate()
@@ -200,37 +210,163 @@ function ImportarEmbarques(props) {
             dataSucursal: [],
             archivo: [],
             embarques: [],
-            cliente: null
+            cliente: null,
+            embarqueSelect: null,
+            showConfirmarUbicacion: false
         })
     }
+
+    const handleOnRutaChange = (event) => {
+        try {
+            let newList = [...state.embarques]
+            let indexEmbarque = newList.findIndex(i => i.numeroEmbarque === state.embarqueSelect.numeroEmbarque)
+            let ruta = newList[indexEmbarque].data.rutas.find(i => i.idRuta === event.target.value)
+            newList[indexEmbarque].data.idRuta = ruta.idRuta
+            newList[indexEmbarque].data.ruta = ruta.ruta
+            setState({
+                ...state,
+                embarques: newList,
+                openDialog: false
+            })
+        }catch (err){
+            console.log(err)
+        }
+
+    }
+    function SelectRuta(props) {
+        return(
+            <div>
+                <TextField
+                    variant={"outlined"}
+                    label={"Selecciona una ruta"}
+                    margin={"dense"}
+                    select
+                    onChange={props.onChange}
+                >
+                    {props.list.map( item => (
+                        <MenuItem key={item.idRuta} value={item.idRuta}>{item.ruta}</MenuItem>
+                    ))}
+                </TextField>
+            </div>
+        )
+    }
+
+    /**
+     * coordenadas: {lat: 12.34,lng:56.467}*/
+    function confirmarUbicacion(coordenadas, e) {
+        try {
+            let newList = [...state.embarques]
+            let indexEmbarque = newList.findIndex(i => i.numeroEmbarque === state.embarqueSelect.numeroEmbarque)
+            newList[indexEmbarque].data.latitud = coordenadas.lat.toString()
+            newList[indexEmbarque].data.longitud = coordenadas.lng.toString()
+            setState({
+                ...state,
+                embarques: newList,
+                showConfirmarUbicacion: false
+            })
+        }catch (err){
+            console.log(err)
+        }
+    }
+
+    const mostrarDialogoMapa = (isVisible) => {
+        setState(state => {
+            return {
+                ...state,
+                showConfirmarUbicacion: isVisible,
+            }
+        })
+    }
+
+    const obtenerDatosDireccion = (esRecoleccion) => {
+        try {
+            let esDiferenteDomicilio = state.embarqueSelect.data.entregaDiferenteDomicilio
+            if (!esRecoleccion) {
+                if (esDiferenteDomicilio) {
+                    return {
+                        nombreLugar: state.embarqueSelect.data.nombreDestinatario,
+                        numeroInterior: '',
+                        numeroExterior: '',
+                        calle: state.embarqueSelect.data.calleNumeroDiferenteDomicilio,
+                        colonia: state.embarqueSelect.data.coloniaDiferenteDomicilio,
+                        ciudad: state.embarqueSelect.data.municipioDiferenteDomicilio,
+                        estado: state.embarqueSelect.data.estadoDiferenteDomicilio,
+                        pais: state.embarqueSelect.data.paisDiferenteDomicilio,
+                        codigoPostal: state.embarqueSelect.data.codigoPostalDiferenteDomicilio,
+                        direccionCompleta: getAddressFormated(
+                            state.embarqueSelect.data.calleNumeroDiferenteDomicilio,
+                            null,
+                            null,
+                            state.embarqueSelect.data.coloniaDiferenteDomicilio,
+                            state.embarqueSelect.data.codigoPostalDiferenteDomicilio,
+                            state.embarqueSelect.data.municipioDiferenteDomicilio,
+                            state.embarqueSelect.data.estadoDiferenteDomicilio,
+                            state.embarqueSelect.data.paisDiferenteDomicilio
+                        )
+                    }
+                } else {
+                    return {
+                        nombreLugar: state.embarqueSelect.data.nombreDestinatario,
+                        numeroInterior: state.embarqueSelect.data.numeroInteriorDestinatario,
+                        numeroExterior: state.embarqueSelect.data.numeroExteriorDestinatario,
+                        calle: state.embarqueSelect.data.calleDestinatario,
+                        colonia: state.embarqueSelect.data.coloniaDestinatario,
+                        ciudad: state.embarqueSelect.data.municipioDestinatario,
+                        estado: state.embarqueSelect.data.estadoDestinatario,
+                        pais: state.embarqueSelect.data.paisDestinatario,
+                        codigoPostal: state.embarqueSelect.data.codigoPostalDestinatario,
+                        direccionCompleta: getAddressFormated(
+                            state.embarqueSelect.data.calleDestinatario,
+                            state.embarqueSelect.data.numeroExteriorDestinatario,
+                            state.embarqueSelect.data.numeroInteriorDestinatario,
+                            state.embarqueSelect.data.coloniaDestinatario,
+                            state.embarqueSelect.data.codigoPostalDestinatario,
+                            state.embarqueSelect.data.municipioDestinatario,
+                            state.embarqueSelect.data.estadoDestinatario,
+                            state.embarqueSelect.data.paisDestinatario
+                        )
+                    }
+                }
+            }
+        }catch (err){
+            console.log(err)
+        }
+    }
+
     return(
         <section className={"main-container"} style={{marginLeft: "0px", padding: "0px"}}>
             <Dialog
                 open={state.openDialog}
-                onClose={() => setState({openDialog: false})}
+                onClose={() => setState({...state,openDialog: false})}
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
-                    {state.openDialogToOpen === 'CLIENTES' &&
+                    {(state.openDialog && state.openDialogToOpen === 'CLIENTES') &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                             <DialogTableClientes dialogVisible={(value) => setState({...state, openDialog: value})}
                                                  handlePatrocinadorSelected={handlePatrocinadorSelected}/>
                         </div>
                     }
-                    {/*{this.state.openDialogToOpen === 'DESTINATARIOS' &&
+                    {(state.openDialog && state.openDialogToOpen === 'RUTAS') &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <DialogTableRemDes
-                                dialogVisible={(value) => this.setState({openDialog: value})}
-                                openDialog={this.state.openDialog}
-                                porCliente={true}
-                                idCliente={this.state.idCliente}
-                                handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
-                                agregarEmbarque={true}
+                            <SelectRuta
+                                embarque={state.embarqueSelect}
+                                list={state.embarqueSelect?.data?.rutas || []}
+                                onChange={handleOnRutaChange}
                             />
                         </div>
-                    }*/}
+                    }
                 </DialogContent>
             </Dialog>
+            {
+                state.showConfirmarUbicacion &&
+                <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
+                                    titulo={"Entrega"}
+                                    remitente={false}
+                                    mostrarDialogoMapa={mostrarDialogoMapa}
+                                    direccion={obtenerDatosDireccion(false)}
+                />
+            }
             <div className={"content-fluid"}>
                 <div className={'row'}>
                     <div className="widget-wrap">
@@ -256,29 +392,6 @@ function ImportarEmbarques(props) {
                                             />
                                         </Grid>
 
-                                        {/*<Grid item xs={3}>
-                                            <TextField
-                                                select
-                                                label="Sucursal"
-                                                labelId="IdSucursalLabel"
-                                                value={state.idSucursal ?? ""}
-                                                id="idSucursal"
-                                                name="idSucursal"
-                                                fullWidth
-                                                variant="outlined"
-                                                margin="dense"
-                                                // onChange={handleOnChange}
-                                            >
-                                                {state.dataSucursal.map((sucursal) => (
-                                                    <MenuItem
-                                                        key={sucursal.m_nIdSucursal}
-                                                        value={sucursal.m_nIdSucursal}
-                                                    >
-                                                        {sucursal.m_sSucursal}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                        </Grid>*/}
                                         <Grid item xs={3}>
                                             <FilePond
                                                 files={files}
@@ -323,6 +436,16 @@ function ImportarEmbarques(props) {
                                                                           onClick={() => setState({...state, embarqueSeleccionado: i === state.embarqueSeleccionado ? -1 : i})}>
                                                                     <ListItemText primary={e.data.esRecoleccion ? "Recolección #" + (e.numeroEmbarque) : "Embarque #" + (e.numeroEmbarque)}/>
                                                                     {!e.success && <InfoRoundedIcon color={"error"} fontSize={"large"}/> }
+                                                                    {(e.data.rutas?.length > 1 && !(e.data.idRuta > 0)) &&
+                                                                        <Tooltip title="Necesita seleccionar una ruta" >
+                                                                            <InfoRoundedIcon color={"error"} fontSize={"large"}/>
+                                                                        </Tooltip>
+                                                                         }
+                                                                    {(e.data.solicitarCoordenadas && (e.data.latitud.length === 0 || e.data.longitud.length === 0)) &&
+                                                                        <Tooltip title="Necesita confirmar coordenadas" >
+                                                                            <InfoRoundedIcon color={"error"} fontSize={"large"}/>
+                                                                        </Tooltip>
+                                                                    }
                                                                     {open ? <ExpandLess/> : <ExpandMore/>}
                                                                 </ListItem>
                                                                 <Collapse in={open}
@@ -347,8 +470,36 @@ function ImportarEmbarques(props) {
                                                                                             Entrega en diferente domicilio: {e.data.entregaDiferenteDomicilio?"Sí":"No"}<br/>
                                                                                             Latitud: {e.data.latitud}<br/>
                                                                                             Longitud: {e.data.longitud}<br/>
+                                                                                            {(e.data.solicitarCoordenadas)&&
+                                                                                                <>
+                                                                                                    <a
+                                                                                                        style={{color:'red'}}
+                                                                                                        onClick={() => {
+                                                                                                            setState({
+                                                                                                                ...state,
+                                                                                                                showConfirmarUbicacion: true,
+                                                                                                                embarqueSelect: e
+                                                                                                            })
+                                                                                                        }}>Click aqui para confirmar coordenadas</a><br/>
+                                                                                                </>
+                                                                                            }
                                                                                             Entrega con cita: {e.data.conCita?"Sí":"No"}<br/>
-                                                                                            Ruta: {e.data.ruta}
+                                                                                            Ruta: {e.data.ruta}<br/>
+                                                                                            {e.data.rutas.length > 1 &&
+                                                                                                <>
+                                                                                                    <a
+                                                                                                        style={{color:'red'}}
+                                                                                                    onClick={() => {
+                                                                                                        setState({
+                                                                                                            ...state,
+                                                                                                            openDialog: true,
+                                                                                                            openDialogToOpen: 'RUTAS',
+                                                                                                            embarqueSelect: e
+                                                                                                        })
+                                                                                                    }}>Click aqui para seleccionar ruta</a><br/>
+                                                                                                </>
+                                                                                            }
+
                                                                                         </Grid>
                                                                                         <Grid item xs={6}>
                                                                                             Remitente: {e.data.nombreRemitente}<br/>
@@ -367,77 +518,6 @@ function ImportarEmbarques(props) {
                                                                                             Zona operativa entrega: {e.data.zonaEntrega}<br/>
                                                                                         </Grid>
                                                                                         <Grid item xs={12} sm={8}>
-                                                                                            {/*<TableContainer style={{
-                                                                                                height: "100%",
-                                                                                                padding: "0px",
-                                                                                                paddingRight: "0px"
-                                                                                            }}>
-                                                                                                <Table size="small">
-                                                                                                    <TableHead>
-                                                                                                        <TableRow>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">
-                                                                                                                Cantidad
-                                                                                                            </TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Descripcion</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Embalaje</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Largo</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Alto</TableCell>
-                                                                                                            <TableCell
-                                                                                                                style={{borderBottom: "none",fontWeight: "bold"}}
-                                                                                                                align="left">Ancho</TableCell>
-                                                                                                        </TableRow>
-                                                                                                    </TableHead>
-                                                                                                    <TableBody>
-                                                                                                        {
-                                                                                                            e.data.paquetes.map((item, index) => (
-                                                                                                                <TableRow key={index}>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.cantidad}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.descripcion}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.embalaje}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.largo}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.alto}
-                                                                                                                    </TableCell>
-                                                                                                                    <TableCell
-                                                                                                                        style={{borderBottom: "none"}}
-                                                                                                                        align="left">
-                                                                                                                        {item.ancho}
-                                                                                                                    </TableCell>
-                                                                                                                </TableRow>
-                                                                                                            ))
-                                                                                                        }
-                                                                                                    </TableBody>
-                                                                                                </Table>
-
-                                                                                            </TableContainer>*/}
                                                                                             <br/>
                                                                                             Paquetes
                                                                                             <TablaImportadosPaquetes data={e.data.paquetes}/>
