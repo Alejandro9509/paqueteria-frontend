@@ -47,7 +47,6 @@ export default function PlantillasImportacionAgregar(props){
         "hojaPaquetes": "",
         "hojaComplementos": "",
         "numeroEmbarque": "",
-        "esRecoleccion": "",
         "moneda": "",
         "tipoCambio": "",
         "tipoCobro": "",
@@ -214,7 +213,7 @@ export default function PlantillasImportacionAgregar(props){
                 "hojaPaquetes": state.hojaPaquetes,
                 "hojaComplementos": state.hojaComplementos,
                 "numeroEmbarque": state.numeroEmbarque,
-                "esRecoleccion": state.esRecoleccion,
+                // "esRecoleccion": state.esRecoleccion,
                 "moneda": state.moneda,
                 "tipoCambio": state.tipoCambio,
                 "tipoCobro": state.tipoCobro,
@@ -427,16 +426,6 @@ export default function PlantillasImportacionAgregar(props){
                                             margin="dense"
                                             name="numeroEmbarque"
                                             value={state.numeroEmbarque}
-                                            onChange={handleOnChange}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={grid.GENERALES}>
-                                        <TextField
-                                            variant="outlined"
-                                            label="Es recolección"
-                                            margin="dense"
-                                            name="esRecoleccion"
-                                            value={state.esRecoleccion}
                                             onChange={handleOnChange}
                                         />
                                     </Grid>
@@ -1157,7 +1146,7 @@ function PlantillaLineal(props) {
                             required
                         />
                     </Grid>
-                    <Grid item xs={12} sm={grid.GENERALES}>
+                    {/*<Grid item xs={12} sm={grid.GENERALES}>
                         <TextField
                             variant="outlined"
                             label="Es recolección"
@@ -1167,7 +1156,7 @@ function PlantillaLineal(props) {
                             onChange={handleOnChange}
                             required
                         />
-                    </Grid>
+                    </Grid>*/}
                 </Grid>
             </section>
             <section id={"seguro"} style={STYLES}>
@@ -1301,17 +1290,6 @@ function PlantillaLineal(props) {
                             margin="dense"
                             name="cantidadComplemento"
                             value={props.value.cantidadComplemento}
-                            onChange={handleOnChange}
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
-                        <TextField
-                            variant="outlined"
-                            label="Peso"
-                            margin="dense"
-                            name="pesoComplemento"
-                            value={props.value.pesoComplemento}
                             onChange={handleOnChange}
                             required
                         />

@@ -520,7 +520,6 @@ export function readExcelPlantillaLineal(FORMAT,file){
                 embarqueResumen.complementosSAT = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map((c) => ({
                     numeroEmbarque: c[FORMAT.numeroEmbarque],
                     cantidad: c[FORMAT.complementosSat.cantidadComplemento],
-                    peso: c[FORMAT.complementosSat.pesoComplemento],
                     claveProductoServicio: c[FORMAT.complementosSat.claveProductoServicio],
                     claveUnidadMedida: c[FORMAT.complementosSat.claveUnidadMedida],
                     numeroProducto: c[FORMAT.paquetes.numeroProducto],

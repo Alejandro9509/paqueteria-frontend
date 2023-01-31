@@ -113,6 +113,7 @@ import Cotizador from "./ConceptosFacturacion/Cotizador";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 import Evidencias from "./Evidencias";
 import DialogoEvidenciasUltimaMilla from "./UltimaMilla/DialogoEvidenciasUltimaMilla";
+import ImportarEmbarques from "./Embarque/ImportarEmbarques";
 
 let timer;
 
@@ -1607,7 +1608,7 @@ function Recoleccion() {
                         }
                     })
                     $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(3).addClass('active');
+                    $('.nav-tabs li').eq(2).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Cancelar').addClass('in show');}
 
@@ -3013,6 +3014,15 @@ function Recoleccion() {
         }
     }
 
+    const handleShowImportar = (event) => {
+        if (event) {
+            event.stopPropagation();
+        }
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(3).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Importar').addClass('in show');
+    }
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -3346,7 +3356,13 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        <li className="hide">
+                        <li>
+                            <a onClick={() => handleShowImportar()}>
+                                <i className="fa fa-print"/> Importar
+                            </a>
+                        </li>
+
+                        {/*<li className="hide">
                             <a onClick={() => handleShowSalidaLlegada(4)}
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Salida
@@ -3358,7 +3374,7 @@ function Recoleccion() {
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Llegada
                             </a>
-                        </li>
+                        </li>*/}
 
                         <li style={{float: "right"}}>
                             <a data-toggle="tab" href="#" className={(state.idRecoleccion === 0 || !validarDerecho(9101417)) ? classes.disabled : ""}
@@ -4325,7 +4341,13 @@ function Recoleccion() {
                             </div>
                         </div>
 
-                        <div id="Salida-Llegada" className="tab-pane fade">
+                        <div id="Importar" className="tab-pane fade">
+                            <ImportarEmbarques
+                                esRecoleccion={true}
+                            />
+                        </div>
+
+                        {/*<div id="Salida-Llegada" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
@@ -4528,7 +4550,7 @@ function Recoleccion() {
                                                         </div>
                                                     </div>
 
-                                                    {/*<div className="form-footer" className="col-md-12">
+                                                    <div className="form-footer" className="col-md-12">
                                                         <button
                                                             onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
 
@@ -4542,7 +4564,7 @@ function Recoleccion() {
                                                         >
                                                             Aceptar
                                                         </button>
-                                                    </div>*/}
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -4550,9 +4572,9 @@ function Recoleccion() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
 
-                        <div id="Prueba" className="tab-pane fade">
+                        {/*<div id="Prueba" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
@@ -4573,7 +4595,7 @@ function Recoleccion() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
 
 
                     </div>
