@@ -15,24 +15,25 @@ import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {FilePond} from "react-filepond";
 import {agregarPlantillaImportacion, modificarPlantillaImportacion} from "../../Util/Contexts/PlantillasContext";
 import {toBase64} from "../../Util/GlobalFunctions";
+import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
 
 export default function PlantillasImportacionAgregar(props){
     const grid = {
-        IDENTIFICACION: 4,
-        GENERALES: 4,
-        SEGURO: 3,
-        TIMBRADO: 3,
-        REMITENTE: 3,
-        SUCURSAL: 3,
-        DIFERENTE_DOM: 3,
-        UBICACION: 3,
-        CITA: 3,
+        IDENTIFICACION: 3,
+        GENERALES: 2,
+        SEGURO: 2,
+        TIMBRADO: 2,
+        REMITENTE: 2,
+        SUCURSAL: 2,
+        DIFERENTE_DOM: 2,
+        UBICACION: 2,
+        CITA: 2,
         PAQUETES: 4,
         COMPLEMENTOS: 4,
     }
     const STYLES = {
         padding: '10px',
-        paddingLeft:'40px',
+        paddingLeft:'20px',
         paddingRight: '40px'
     }
     const [files, setFiles] = useState([])
@@ -369,14 +370,12 @@ export default function PlantillasImportacionAgregar(props){
                                     labelIdle={'Haz click aquí para seleccionar un documento'}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>Archivo adjunto: {state.archivoNombre === "" ? "Sin archivo": state.archivoNombre }</Grid>
-
-                            <Grid item xs={12} sm={6}></Grid>
+                            <Grid item xs={12} sm={3}>Archivo adjunto: {state.archivoNombre === "" ? "Sin archivo": state.archivoNombre }</Grid>
                         </Grid>
                     </section>
                     {   parseInt(state.idTipoPlantilla) === 1 &&
                         <>
-                            <section id={"identificacion"} style={{padding: '10px'}}>
+                            <section id={"identificacion"} style={STYLES}>
                                 <h2>Datos de identificacion</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -387,7 +386,7 @@ export default function PlantillasImportacionAgregar(props){
                                             margin="dense"
                                             name="hojaEmbarques"
                                             value={state.hojaEmbarques}
-                                            helperText={"Es el nombre que tendrá la hoja donde se agregará los datos del embarque."}
+                                            helperText={"Nombre de la hoja donde se estarán los datos del embarque."}
                                             onChange={handleOnChange}
                                         />
                                     </Grid>
@@ -398,7 +397,7 @@ export default function PlantillasImportacionAgregar(props){
                                             margin="dense"
                                             name="hojaPaquetes"
                                             value={state.hojaPaquetes}
-                                            helperText={"Es el nombre que tendrá la hoja donde se agregará los paquetes del embarque."}
+                                            helperText={"Nombre de la hoja donde se estarán los paquetes del embarque."}
                                             onChange={handleOnChange}
                                         />
                                     </Grid>
@@ -409,13 +408,13 @@ export default function PlantillasImportacionAgregar(props){
                                             margin="dense"
                                             name="hojaComplementos"
                                             value={state.hojaComplementos}
-                                            helperText={"Es el nombre que tendrá la hoja donde se agregará los complementos SAT del embarque."}
+                                            helperText={"Nombre de la hoja donde se estarán los complementos SAT del embarque."}
                                             onChange={handleOnChange}
                                         />
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"generales"} style={{padding: '10px'}}>
+                            <section id={"generales"} style={STYLES}>
                                 <h2>Datos de generales</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -461,7 +460,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"seguro"} style={{padding: '10px'}}>
+                            <section id={"seguro"} style={STYLES}>
                                 <h2>Datos de seguro</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -507,7 +506,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"timbrado"} style={{padding: '10px'}}>
+                            <section id={"timbrado"} style={STYLES}>
                                 <h2>Datos de timbrado</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -533,7 +532,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"remitente"} style={{padding: '10px'}}>
+                            <section id={"remitente"} style={STYLES}>
                                 <h2>Datos de remitente</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -579,7 +578,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"destinatario"} style={{padding: '10px'}}>
+                            <section id={"destinatario"} style={STYLES}>
                                 <h2>Datos de destinatario</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -625,7 +624,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"sucursa"} style={{padding: '10px'}}>
+                            <section id={"sucursa"} style={STYLES}>
                                 <h2>Datos para entrega en sucursal</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -651,7 +650,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"entregaDiferenteDomicilio"} style={{padding: '10px'}}>
+                            <section id={"entregaDiferenteDomicilio"} style={STYLES}>
                                 <h2>Datos para entrega en diferente domicilio</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -717,7 +716,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"recoleccionDiferenteDomicilio"} style={{padding: '10px'}}>
+                            <section id={"recoleccionDiferenteDomicilio"} style={STYLES}>
                                 <h2>Datos para recolección en diferente domicilio</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -783,7 +782,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"ubicacion"} style={{padding: '10px'}}>
+                            <section id={"ubicacion"} style={STYLES}>
                                 <h2>Datos de ubicación</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -809,7 +808,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"cita"} style={{padding: '10px'}}>
+                            <section id={"cita"} style={STYLES}>
                                 <h2>Datos de cita</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -865,7 +864,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"paquetes"} style={{padding: '10px'}}>
+                            <section id={"paquetes"} style={STYLES}>
                                 <h2>Datos de paquetes</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -961,7 +960,7 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                 </Grid>
                             </section>
-                            <section id={"complementos"} style={{padding: '10px'}}>
+                            <section id={"complementos"} style={STYLES}>
                                 <h2>Datos de complementos SAT</h2>
                                 <br/>
                                 <Grid container spacing={1}>
@@ -1090,7 +1089,7 @@ export default function PlantillasImportacionAgregar(props){
 
 function PlantillaLineal(props) {
     const grid = {
-        IDENTIFICACION: 4,
+        IDENTIFICACION: 3,
         GENERALES: 2,
         SEGURO: 2,
         TIMBRADO: 3,
@@ -1098,13 +1097,13 @@ function PlantillaLineal(props) {
         SUCURSAL: 2,
         DIFERENTE_DOM: 2,
         UBICACION: 3,
-        CITA: 3,
+        CITA: 2,
         PAQUETES: 2,
-        COMPLEMENTOS: 4,
+        COMPLEMENTOS: 3,
     }
     const STYLES = {
         padding: '10px',
-        paddingLeft:'40px',
+        paddingLeft:'20px',
         paddingRight: '40px'
     }
 
@@ -1238,6 +1237,220 @@ function PlantillaLineal(props) {
                                 label="Usar como número de equivalencia"
                             />
                         </Tooltip>
+                    </Grid>
+                </Grid>
+            </section>
+            <section id={"sucursa"} style={STYLES}>
+                <h2>Datos para entrega en sucursal</h2>
+                <br/>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={grid.SUCURSAL}>
+                        <TextField
+                            variant="outlined"
+                            label="Entrega en sucursal"
+                            margin="dense"
+                            name="entregaEnSucursal"
+                            value={props.value.entregaEnSucursal}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.SUCURSAL}>
+                        <TextField
+                            variant="outlined"
+                            label="Sucursal de entrega"
+                            margin="dense"
+                            name="sucursalEntrega"
+                            value={props.value.sucursalEntrega}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                </Grid>
+            </section>
+            <section id={"entregaDiferenteDomicilio"} style={STYLES}>
+                <h2>Datos para entrega en diferente domicilio</h2>
+                <br/>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Entrega en diferente"
+                            margin="dense"
+                            name="entregaDiferenteDomicilio"
+                            value={props.value.entregaDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Código postal"
+                            margin="dense"
+                            name="codigoPostalDiferenteDomicilio"
+                            value={props.value.codigoPostalDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Colonia"
+                            margin="dense"
+                            name="coloniaDiferenteDomicilio"
+                            value={props.value.coloniaDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Calle y número"
+                            margin="dense"
+                            name="calleNumeroDiferenteDomicilio"
+                            value={props.value.calleNumeroDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Entregar en"
+                            margin="dense"
+                            name="entregarEn"
+                            value={props.value.entregarEn}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Datos adicionales"
+                            margin="dense"
+                            name="datosAdicionales"
+                            value={props.value.datosAdicionales}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                </Grid>
+            </section>
+            <section id={"recoleccionDiferenteDomicilio"} style={STYLES}>
+                <h2>Datos para recolección en diferente domicilio</h2>
+                <br/>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Recoleccion en diferente"
+                            margin="dense"
+                            name="recoleccionDiferenteDomicilio"
+                            value={props.value.recoleccionDiferenteDomicilio}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Código postal"
+                            margin="dense"
+                            name="codigoPostalDiferenteDomicilioRecoleccion"
+                            value={props.value.codigoPostalDiferenteDomicilioRecoleccion}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Colonia"
+                            margin="dense"
+                            name="coloniaDiferenteDomicilioRecoleccion"
+                            value={props.value.coloniaDiferenteDomicilioRecoleccion}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Calle y número"
+                            margin="dense"
+                            name="calleNumeroDiferenteDomicilioRecoleccion"
+                            value={props.value.calleNumeroDiferenteDomicilioRecoleccion}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Recogerr en"
+                            margin="dense"
+                            name="recogerEn"
+                            value={props.value.recogerEn}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.DIFERENTE_DOM}>
+                        <TextField
+                            variant="outlined"
+                            label="Datos adicionales"
+                            margin="dense"
+                            name="datosAdicionalesRecoleccion"
+                            value={props.value.datosAdicionalesRecoleccion}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                </Grid>
+            </section>
+            <section id={"cita"} style={STYLES}>
+                <h2>Datos de cita</h2>
+                <br/>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Agregar cita"
+                            margin="dense"
+                            name="conCita"
+                            value={props.value.conCita}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Dejar cita pendiente"
+                            margin="dense"
+                            name="citaPendiente"
+                            value={props.value.citaPendiente}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Fecha de cita"
+                            margin="dense"
+                            name="fechaCita"
+                            value={props.value.fechaCita}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Hora mínima de cita"
+                            margin="dense"
+                            name="horaMinimaCita"
+                            value={props.value.horaMinimaCita}
+                            onChange={handleOnChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.CITA}>
+                        <TextField
+                            variant="outlined"
+                            label="Hora máxima de cita"
+                            margin="dense"
+                            name="horaMaximaCita"
+                            value={props.value.horaMaximaCita}
+                            onChange={handleOnChange}
+                        />
                     </Grid>
                 </Grid>
             </section>
