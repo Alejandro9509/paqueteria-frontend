@@ -231,7 +231,7 @@ function ImportarEmbarques(props) {
         try {
             let newList = [...state.embarques]
             let indexEmbarque = newList.findIndex(i => i.numeroEmbarque === state.embarqueSelect.numeroEmbarque)
-            let ruta = newList[indexEmbarque].data.rutas.find(i => i.idRuta === event.target.value)
+            let ruta = newList[indexEmbarque].data.rutas?.find(i => i.idRuta === event.target.value)
             newList[indexEmbarque].data.idRuta = ruta.idRuta
             newList[indexEmbarque].data.ruta = ruta.ruta
             setState({
@@ -545,7 +545,7 @@ function ImportarEmbarques(props) {
                                                                                                 !props.esRecoleccion &&
                                                                                                 <>
                                                                                                     Ruta: {e.data.ruta}<br/>
-                                                                                                    {e.data.rutas.length > 1 &&
+                                                                                                    {e.data.rutas?.length > 1 &&
                                                                                                         <>
                                                                                                             <a
                                                                                                                 style={{color:'red'}}

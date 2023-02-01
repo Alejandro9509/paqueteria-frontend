@@ -42,6 +42,7 @@ export default function PlantillasImportacionAgregar(props){
         "idPlantilla": 0,
         idTipoPlantilla: "1",
         cliente: null,
+        "responsablePago": "",
         "archivoBase64": "",
         "archivoNombre": "",
         "hojaEmbarques": "",
@@ -104,13 +105,15 @@ export default function PlantillasImportacionAgregar(props){
         "claveEmbalaje": "",
         "descripcionEmbalajeComplemento": "",
         "claveFraccionArancelaria": "",
-        "usarNumeroEquivalencia": false
+        "usarNumeroEquivalenciaDestinatario": false,
+        "usarNumeroEquivalenciaResponsablePago": false
     })
     const restartState = () => {
         setState({
             "idPlantilla": 0,
             idTipoPlantilla: "1",
             cliente: null,
+            "responsablePago": "",
             "archivoBase64": "",
             "archivoNombre": "",
             "hojaEmbarques": "",
@@ -174,7 +177,8 @@ export default function PlantillasImportacionAgregar(props){
             "claveEmbalaje": "",
             "descripcionEmbalajeComplemento": "",
             "claveFraccionArancelaria": "",
-            "usarNumeroEquivalencia": false
+            "usarNumeroEquivalenciaDestinatario": false,
+            "usarNumeroEquivalenciaResponsablePago": false
         })
         setFiles([])
     }
@@ -271,7 +275,9 @@ export default function PlantillasImportacionAgregar(props){
                 "claveEmbalaje": state.claveEmbalaje,
                 "descripcionEmbalajeComplemento": state.descripcionEmbalajeComplemento,
                 "claveFraccionArancelaria": state.claveFraccionArancelaria,
-                "usarNumeroEquivalencia": state.usarNumeroEquivalencia,
+                "usarNumeroEquivalenciaDestinatario": state.usarNumeroEquivalenciaDestinatario,
+                "responsablePago": state.responsablePago,
+                "usarNumeroEquivalenciaResponsablePago": state.usarNumeroEquivalenciaResponsablePago,
             }
             if (state.idPlantilla > 0){
                 if (files.length === 0){
@@ -317,7 +323,7 @@ export default function PlantillasImportacionAgregar(props){
     }
 
     const handleOnChange = (event) => {
-        if (event.target.name === "usarNumeroEquivalencia"){
+        if (event.target.name === "usarNumeroEquivalenciaDestinatario"){
             setState({
                 ...state,
                 [event.target.name]: event.target.checked
@@ -1165,6 +1171,43 @@ function PlantillaLineal(props) {
                     <Grid item xs={12} sm={grid.SEGURO}>
                         <TextField
                             variant="outlined"
+                            label="Responsable de pago"
+                            margin="dense"
+                            name="responsablePago"
+                            value={props.value.responsablePago}
+                            onChange={handleOnChange}
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={1}>
+                        <Tooltip title="Corresponde al número de remitente/destinatario del cual se tomará cliente que será responsable de pago" >
+                            <InfoRoundedIcon color={"primary"} fontSize={"large"}/>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={12} sm={grid.SEGURO}>
+                        <Tooltip title="Al activar se buscará el remitente/destinatario cuyo no. de equivalencia coincida con el ingresado."
+                                 arrow
+                                 placement="right"
+                        >
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={props.value.usarNumeroEquivalenciaResponsablePago}
+                                        onChange={handleOnChange}
+                                        name="usarNumeroEquivalenciaResponsablePago"
+                                        color="primary"
+                                        style={{
+                                            transform: "scale(1.5)",
+                                        }}
+                                    />
+                                }
+                                label="Usar como número de equivalencia"
+                            />
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={12} sm={grid.SEGURO}>
+                        <TextField
+                            variant="outlined"
                             label="Valor declarado"
                             margin="dense"
                             name="valorDeclarado"
@@ -1225,9 +1268,9 @@ function PlantillaLineal(props) {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={props.value.usarNumeroEquivalencia}
+                                        checked={props.value.usarNumeroEquivalenciaDestinatario}
                                         onChange={handleOnChange}
-                                        name="usarNumeroEquivalencia"
+                                        name="usarNumeroEquivalenciaDestinatario"
                                         color="primary"
                                         style={{
                                             transform: "scale(1.5)",
