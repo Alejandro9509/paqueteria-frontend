@@ -467,6 +467,7 @@ export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
                     numeroEmbarque : item[FORMAT.numeroEmbarque],
                     idUsuario: localStorage.getItem("UsuarioId"),
                     valorDeclarado: item[FORMAT.valorDeclarado],
+                    responsablePago: item[FORMAT.responsablePago],
                     observaciones: item[FORMAT.observacionesEmbarque],
                     numeroRemitente: item[FORMAT.numeroRemitente],
                     numeroDestinatario: item[FORMAT.numeroDestinatario],
