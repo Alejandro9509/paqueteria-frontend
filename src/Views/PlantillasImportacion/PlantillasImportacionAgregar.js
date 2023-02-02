@@ -323,7 +323,7 @@ export default function PlantillasImportacionAgregar(props){
     }
 
     const handleOnChange = (event) => {
-        if (event.target.name === "usarNumeroEquivalenciaDestinatario"){
+        if (event.target.name === "usarNumeroEquivalenciaDestinatario" || event.target.name === "usarNumeroEquivalenciaResponsablePago"){
             setState({
                 ...state,
                 [event.target.name]: event.target.checked
