@@ -533,6 +533,7 @@ function Embarque(props) {
         porcentajeSeguro: 0,
         aplicaSeguro: false,
         idTipoTarifa: '',
+        referencia: '',
 
         //Entrega
         entregaEnSucursal: false,
@@ -602,6 +603,7 @@ function Embarque(props) {
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
                 idTipoTarifa: '',
+                referencia: '',
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
@@ -1272,6 +1274,7 @@ function Embarque(props) {
             m_nIdComplemento: state.idComplemento,
             m_nIdTipoDocumento: state.idTipoDocumento,
             m_bValidarTimbradoIngreso: state.validarTimbrado,
+            m_sReferencia: state.referencia
         }
         params.m_bEntregaEnSucursal = state.entregaEnSucursal
         /**Si es entrega en sucursal*/
@@ -2050,7 +2053,8 @@ function Embarque(props) {
                 observaciones: respuesta.data.m_sObservaciones,
                 idTipoDocumento: respuesta.data.m_nIdTipoDocumento,
                 idComplemento: respuesta.data.m_nIdComplemento,
-                validarTimbrado: respuesta.data.m_bValidarTimbraoIngreso
+                validarTimbrado: respuesta.data.m_bValidarTimbraoIngreso,
+                referencia: respuesta.data.m_sReferencia
             }
         });
 
@@ -3699,60 +3703,47 @@ function Embarque(props) {
                                                             </label>
                                                         </Grid>
                                                     </Grid>
-                                                    {/*    <Grid item xs>*/}
-                                                    {/*        <label className="input select">*/}
-                                                    {/*            <FormControl fullWidth variant="outlined"*/}
-                                                    {/*                         margin="dense" required>*/}
-                                                    {/*                <InputLabel> Tipo de Documento</InputLabel>*/}
-                                                    {/*                <Select*/}
-                                                    {/*                    label="Tipo de Documento"*/}
-                                                    {/*                    className="form-control"*/}
-                                                    {/*                    onChange={handleChange}*/}
-                                                    {/*                    name="idTipoDocumento"*/}
-                                                    {/*                    required*/}
-                                                    {/*                    value={ state.idTipoDocumento || "" }*/}
-                                                    {/*                    disabled={state.agregar === "Consultar"}*/}
-                                                    {/*                >¿*/}
-                                                    {/*                    {*/}
-                                                    {/*                        dataTipoDocumento.map(d => {*/}
-                                                    {/*                            return (*/}
-                                                    {/*                                <option key={d.IdDocumento}*/}
-                                                    {/*                                        value={d.IdDocumento}>{d.Documento}</option>*/}
-                                                    {/*                            )*/}
-                                                    {/*                        })*/}
-                                                    {/*                    }*/}
-
-                                                    {/*                </Select>*/}
-                                                    {/*            </FormControl>*/}
-                                                    {/*        </label>*/}
-                                                    {/*    </Grid>*/}
-                                                    {/*</Grid>*/}
                                                     <Grid container spacing={2}
                                                           style={{marginBottom: '10px', paddingRight: '15px'}}>
-                                                        <Grid item xs>
-                                                            <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                <div className="input">
-                                                                    <TextField
-                                                                        variant="outlined"
-                                                                        label="Observaciones"
-                                                                        margin="dense"
-                                                                        type="text"
-                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                        value={state.observaciones}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                observaciones: event.target.value,
-                                                                            });
-                                                                        }}
-                                                                        name="observaciones"
-                                                                        id="observaciones"
-                                                                        placeholder={"sin observaciones"}
-                                                                        InputLabelProps={{shrink: true}}
-                                                                    />
-                                                                </div>
-                                                            </div>
+                                                        <Grid item xs={6}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Observaciones"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                value={state.observaciones}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        observaciones: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="observaciones"
+                                                                id="observaciones"
+                                                                placeholder={"sin observaciones"}
+                                                                InputLabelProps={{shrink: true}}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Referencia"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Consultar"}
+                                                                value={state.referencia}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        referencia: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="referencia"
+                                                                id="referencia"
+                                                            />
                                                         </Grid>
                                                     </Grid>
                                                 </div>
