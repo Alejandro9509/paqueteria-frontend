@@ -341,6 +341,7 @@ function Recoleccion() {
         recoleccionConEmbarque: false,
         receptorRecoleccion: '',
         setOpenDialogEvidencias: false,
+        referencia: '',
     });
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -962,6 +963,7 @@ function Recoleccion() {
             params.m_nIdTipoSeguro = state.idTipoSeguro
             params.m_xPorcentajeSeguro = state.porcentajeSeguro
             params.m_bAplicaSeguro = state.aplicaSeguro
+            params.m_sReferencia = state.referencia
             //Remitente
             params.m_sNombreRemitente = remitente.nombreRemitente
             params.m_sRFCRemitente = remitente.RFCRemitente
@@ -1488,6 +1490,7 @@ function Recoleccion() {
                 // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 receptorRecoleccion: respuesta.data.m_sReceptorRecoleccion,
+                referencia: respuesta.data.m_sReferencia,
 
             }
         });
@@ -1699,7 +1702,8 @@ function Recoleccion() {
                 fechaHoraLlegada: '',
                 zonaOperativaSucursal: null,
                 idSucursalEntrega: '',
-                receptorRecoleccion: ''
+                receptorRecoleccion: '',
+                referencia: '',
             }
         });
         setDataPaquetes([])
@@ -3816,31 +3820,46 @@ function Recoleccion() {
                                                         </Grid>
                                                     </Grid>
                                                     <Grid container style={{marginBottom:'10px'}}>
-                                                        <Grid item xs>
-                                                            <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                <div className="input">
-                                                                    <TextField
-                                                                        variant="outlined"
-                                                                        margin="dense"
-                                                                        className="form-control"
-                                                                        type= "text"
-                                                                        label="Observaciones"
-                                                                        value={state.observaciones}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                observaciones: event.target.value,
-                                                                            });
-                                                                        }}
-                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                        id="observaciones"
-                                                                        name="observaciones"
-                                                                        placeholder={"sin observaciones"}
-                                                                        InputLabelProps={{shrink: true}}
-                                                                    />
-                                                                </div>
-                                                            </div>
+                                                        <Grid item xs={6}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                margin="dense"
+                                                                className="form-control"
+                                                                type= "text"
+                                                                label="Observaciones"
+                                                                value={state.observaciones}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        observaciones: event.target.value,
+                                                                    });
+                                                                }}
+                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                id="observaciones"
+                                                                name="observaciones"
+                                                                placeholder={"sin observaciones"}
+                                                                InputLabelProps={{shrink: true}}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Referencia"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Consultar"}
+                                                                value={state.referencia}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        referencia: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="referencia"
+                                                                id="referencia"
+                                                            />
                                                         </Grid>
                                                     </Grid>
                                                 </div>

@@ -1828,7 +1828,8 @@ function Embarque(props) {
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 //observaciones
-                observaciones: respuesta.data.m_sObservaciones
+                observaciones: respuesta.data.m_sObservaciones,
+                referencia: respuesta.data.m_sRefencia,
             }
         });
     }
