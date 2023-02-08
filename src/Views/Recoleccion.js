@@ -3819,7 +3819,7 @@ function Recoleccion() {
                                                             </div>
                                                         </Grid>
                                                     </Grid>
-                                                    <Grid container style={{marginBottom:'10px'}}>
+                                                    <Grid container spacing={2} style={{marginBottom:'10px'}}>
                                                         <Grid item xs={6}>
                                                             <TextField
                                                                 variant="outlined"
