@@ -278,7 +278,8 @@ function Guia(props) {
         openDialog: false,
         openDialogEtiquetas:false,
         detallesPaquetesEtiquetas:[],
-        receptorGuia:[]
+        receptorGuia:[],
+        referencia:[],
 
     })
     const columns = React.useMemo(() => [
@@ -896,7 +897,8 @@ function Guia(props) {
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
                 tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
-                receptorGuia: respuesta.data.m_sReceptorGuia
+                receptorGuia: respuesta.data.m_sReceptorGuia,
+                referencia: respuesta.data.m_sReferencia,
 
             }
         })
@@ -1321,6 +1323,7 @@ function Guia(props) {
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
+                referencia: respuesta.data.m_sReferencia,
             }
         })
         // obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
@@ -1434,6 +1437,7 @@ function Guia(props) {
                 zonaTarifaRemitente: '',
                 zonaTarifaDestinatario: '',
                 receptorGuia: '',
+                referencia: '',
             }
         })
         setConceptosAdicionales([])
@@ -2362,7 +2366,7 @@ function Guia(props) {
                                                         </Grid>
                                                     </Grid>
                                                     <Grid container spacing={2} style={{marginBottom: '15px'}}>
-                                                        <Grid item xs>
+                                                        <Grid item xs={2}>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
@@ -2380,7 +2384,7 @@ function Guia(props) {
                                                                 />
                                                             </div>
                                                         </Grid>
-                                                        <Grid item xs>
+                                                        <Grid item xs={2}>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
@@ -2396,7 +2400,7 @@ function Guia(props) {
                                                                 />
                                                             </div>
                                                         </Grid>
-                                                        <Grid item xs>
+                                                        <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
@@ -2432,7 +2436,7 @@ function Guia(props) {
                                                                 </FormControl>
                                                             </label>
                                                         </Grid>
-                                                        <Grid item xs>
+                                                        <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
@@ -2467,7 +2471,7 @@ function Guia(props) {
                                                                 </FormControl>
                                                             </label>
                                                         </Grid>
-                                                        <Grid item xs>
+                                                        <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
@@ -2500,7 +2504,7 @@ function Guia(props) {
                                                                 <i className="fa fa-arrow-down"/>
                                                             </label>
                                                         </Grid>
-                                                        <Grid item xs>
+                                                        <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense" required>
@@ -2521,6 +2525,18 @@ function Guia(props) {
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
+                                                        </Grid>
+
+                                                        <Grid item xs={3}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Referencia"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled
+                                                                readOnly
+                                                                value={state.referencia}
+                                                            />
                                                         </Grid>
                                                     </Grid>
                                                 </div>
