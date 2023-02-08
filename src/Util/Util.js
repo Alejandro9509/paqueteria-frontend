@@ -388,7 +388,8 @@ export function readExcel(FORMAT,file, esRecoleccion){
                     longitud: item[FORMAT.longitud],
                     conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
                     // idTipoServicio: item[FORMAT.idTipoServicio]
-                    tipoServicio: item[FORMAT.tipoServicio]
+                    tipoServicio: item[FORMAT.tipoServicio],
+                    referencia: item[FORMAT.referencia]
                 }
                 if (embarqueResumen.entregaEnSucursal){
                     // embarqueResumen.idSucursalEntrega = item[FORMAT.idSucursalEntrega]
@@ -473,6 +474,7 @@ export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
                     entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
                     entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
                     conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
+                    referencia: item[FORMAT.referencia],
                 }
                 if (embarqueResumen.entregaEnSucursal){
                     embarqueResumen.sucursalEntrega = item[FORMAT.sucursalEntrega]

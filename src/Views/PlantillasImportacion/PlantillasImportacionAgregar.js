@@ -106,7 +106,8 @@ export default function PlantillasImportacionAgregar(props){
         "descripcionEmbalajeComplemento": "",
         "claveFraccionArancelaria": "",
         "usarNumeroEquivalenciaDestinatario": false,
-        "usarNumeroEquivalenciaResponsablePago": false
+        "usarNumeroEquivalenciaResponsablePago": false,
+        "referencia": ''
     })
     const restartState = () => {
         setState({
@@ -178,7 +179,8 @@ export default function PlantillasImportacionAgregar(props){
             "descripcionEmbalajeComplemento": "",
             "claveFraccionArancelaria": "",
             "usarNumeroEquivalenciaDestinatario": false,
-            "usarNumeroEquivalenciaResponsablePago": false
+            "usarNumeroEquivalenciaResponsablePago": false,
+            "referencia": ''
         })
         setFiles([])
     }
@@ -278,6 +280,7 @@ export default function PlantillasImportacionAgregar(props){
                 "usarNumeroEquivalenciaDestinatario": state.usarNumeroEquivalenciaDestinatario,
                 "responsablePago": state.responsablePago,
                 "usarNumeroEquivalenciaResponsablePago": state.usarNumeroEquivalenciaResponsablePago,
+                "referencia": state.referencia,
             }
             if (state.idPlantilla > 0){
                 if (files.length === 0){
@@ -462,6 +465,17 @@ export default function PlantillasImportacionAgregar(props){
                                             name="tipoCobro"
                                             value={state.tipoCobro}
                                             onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.GENERALES}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Referencia"
+                                            margin="dense"
+                                            name="referencia"
+                                            value={state.referencia}
+                                            onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                 </Grid>
@@ -1147,6 +1161,17 @@ function PlantillaLineal(props) {
                             margin="dense"
                             name="numeroEmbarque"
                             value={props.value.numeroEmbarque}
+                            onChange={handleOnChange}
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={grid.GENERALES}>
+                        <TextField
+                            variant="outlined"
+                            label="Referencia"
+                            margin="dense"
+                            name="referencia"
+                            value={props.value.referencia}
                             onChange={handleOnChange}
                             required
                         />
