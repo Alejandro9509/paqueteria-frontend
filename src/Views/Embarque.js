@@ -1864,7 +1864,7 @@ function Embarque(props) {
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 //observaciones
                 observaciones: respuesta.data.m_sObservaciones,
-                referencia: respuesta.data.m_sRefencia,
+                referencia: respuesta.data.m_sReferencia,
             }
         });
     }
