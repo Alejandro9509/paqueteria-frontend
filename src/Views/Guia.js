@@ -387,6 +387,11 @@ function Guia(props) {
             width: 150,
         },
         {
+            headerName: "Referencia",
+            field: "m_sReferencia",
+            width: 150,
+        },
+        {
             headerName: "Total",
             field: "m_cTotal",
             width: 125,
@@ -413,14 +418,9 @@ function Guia(props) {
             field: "m_sFolioEmbarque",
             width: 150,
         },
-        /* {
-            headerName: "Observaciones",
-            field: "m_sObservaciones",
-            width: 150,
-        }, */
         {
-            field: 'Fecha de Cancelación',
             headerName: 'Fecha de Cancelación',
+            field: 'Fecha de Cancelación',
             width: 200,
             renderCell: (row) => {
                 return (
