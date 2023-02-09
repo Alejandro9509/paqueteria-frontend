@@ -1920,6 +1920,11 @@ function Recoleccion() {
             width: 150,
         },
         {
+            headerName: "Referencia",
+            field: "m_sReferencia",
+            width: 150,
+        },
+        {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
             width: 150,
@@ -1944,16 +1949,11 @@ function Recoleccion() {
             field: "m_sFechaHoraDetalleRec",
             width: 250,
         },
-        /*{
-            headerName: "Operador",
-            field: "m_sOperador",
-            width: 250,
-        },
         {
-            headerName: "Unidad",
-            field: "m_sUnidad",
-            width: 125,
-        }*/
+            headerName: "Referencia",
+            field: "m_sReferencia",
+            width: 150,
+        },
     ]);
 
     const columnsCP = React.useMemo(() => [
