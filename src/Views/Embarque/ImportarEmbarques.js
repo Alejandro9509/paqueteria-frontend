@@ -157,13 +157,6 @@ function ImportarEmbarques(props) {
 
     const handleOnClickAceptar = (e) => {
         try {
-            console.log(state.embarques[0].data.idRuta > 0)
-            console.log(state.embarques[0].data.latitud.length > 0)
-            console.log(state.embarques[0].data.latitud.length)
-            console.log(state.embarques[0].data.latitud)
-            console.log(state.embarques[0].data.longitud.length > 0)
-            console.log(state.embarques[0].data.longitud)
-            console.log(state.embarques[0].data.latitud.length > 0 && state.embarques[0].data.longitud.length > 0)
             let params = {
                 embarques: props.esRecoleccion ?
                     state.embarques.filter(emb => emb.success === true && (emb.data.latitud.length > 0 && emb.data.longitud.length > 0)).map(emb => emb.data)
@@ -184,6 +177,7 @@ function ImportarEmbarques(props) {
             // return
             agregarEmbarquesImportados(params).then(respuesta => {
                 showSuccess(respuesta.data)
+                handleOnLimpiarClick()
             }).catch((error)=>{
                 // showMessage(err,2000,"warning")
                 console.log('error al agregar: ' + error)
