@@ -73,7 +73,9 @@ import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import Button from "@material-ui/core/Button";
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { confirmAlert } from "react-confirm-alert";
+import {confirmAlert} from "react-confirm-alert";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -127,7 +129,7 @@ function Informes({history}) {
 
     const handleChangeOrden = () => {
 
-        if (!ordenAscendente){
+        if (!ordenAscendente) {
             setDataGuias(dataGuias.sort(function (a, b) {
                 if (a.m_nFolioGuia > b.m_nFolioGuia) {
                     return -1;
@@ -138,7 +140,7 @@ function Informes({history}) {
                 // a must be equal to b
                 return 0;
             }))
-        }else{
+        } else {
             setDataGuias(dataGuias.sort(function (a, b) {
                 if (a.m_nFolioGuia > b.m_nFolioGuia) {
                     return 1;
@@ -200,9 +202,10 @@ function Informes({history}) {
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
                         <Tooltip title="Reporte">
-                            <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)} disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
-                                                                                                           style={{color: "#F9A03E"}}/></a>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}
+                               disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
+                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <a
@@ -303,10 +306,10 @@ function Informes({history}) {
         },
     ]);
 
-    function generarReporte(id, folio){
+    function generarReporte(id, folio) {
         obtenerInformeReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Informe " + folio;
         })
@@ -450,7 +453,7 @@ function Informes({history}) {
 
     const getEmptyState = () => {
         setState(state => {
-            return{
+            return {
                 ...state,
                 showPopUp: false,
                 identificadorModal: "",
@@ -509,13 +512,13 @@ function Informes({history}) {
         setDataGuias([])
     }
 
-   /* const getCurrentDateTime = () => {
-        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
-        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }*/
+    /* const getCurrentDateTime = () => {
+         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+     }*/
 
     const handleAceptar = (e) => {
-        if (e){
+        if (e) {
             e.preventDefault();
         }
         var params = {
@@ -545,6 +548,7 @@ function Informes({history}) {
             TotalGeneral: 0,
             m_nCreadoPor: state.CreadoPor,
             m_arrClsProInformeGuia: dataGuias.filter(g => g.select),
+            m_nTipoTimbrado: state.tipoTimbrado
         };
         console.log(params)
         console.log(JSON.stringify(params))
@@ -600,6 +604,14 @@ function Informes({history}) {
         setState({
             ...state,
             sucursalReceptora: event.target.value
+        });
+
+    }
+    const handleSelectTipoTimbrado = event => {
+        event.preventDefault()
+        setState({
+            ...state,
+            tipoTimbrado: event.target.value
         });
 
     }
@@ -971,7 +983,7 @@ function Informes({history}) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
                 usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
                 estatusCancelacion: respuesta.data.m_sEstatusInforme,
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
             });
 
             if (!respuesta.data.m_bSePuedeCancelar) {
@@ -985,7 +997,7 @@ function Informes({history}) {
     }
 
     const handleCancelar = (e) => {
-        if (e){
+        if (e) {
             e.preventDefault();
         }
         let params = {
@@ -995,7 +1007,7 @@ function Informes({history}) {
         };
         console.log(params)
         console.log(JSON.stringify(params))
-        cancelarInformes(state.IdInforme,params).then((respuesta) => {
+        cancelarInformes(state.IdInforme, params).then((respuesta) => {
             console.log(respuesta.data);
             showSuccess(respuesta.data)
             handleShowListado()
@@ -1004,14 +1016,14 @@ function Informes({history}) {
 
     function getAllGuiasFrom(cubicar) {
         if (!cubicar) {
-            obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad).then((respuesta) => {
+            obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad, state.tipoTimbrado).then((respuesta) => {
                 if (respuesta.data !== "Vacio") {
-                    if (state.agregar ==="Modificar"){
+                    if (state.agregar === "Modificar") {
                         let arr = []
                         arr = arr.concat(state.guiasInforme)
                         arr = arr.concat(respuesta.data)
                         setDataGuias(arr);
-                    }else {
+                    } else {
                         setDataGuias(respuesta.data);
 
                     }
@@ -1064,7 +1076,7 @@ function Informes({history}) {
     }, []);
 
     const getDataParaListado = () => {
-       getAllData();
+        getAllData();
 
     }
 
@@ -1073,10 +1085,27 @@ function Informes({history}) {
         getAllSucursales();
         getAllCiudades();
         getAllUnidades();
+        getParametrosConfiguracion("Agregar")
+    }
+
+    function getParametrosConfiguracion(operacion) {
+
+        obtenerParametrosConfiguracion().then(respuesta => {
+            if (operacion === "Agregar") {
+                setState((config) => {
+                    return {
+                        ...config,
+                        tipoTimbrado: respuesta.data.TipoTimbrado,
+                    }
+                })
+            }
+
+        })
+
     }
 
     function getAllUnidades() {
-        if (dataUnidades > 0){
+        if (dataUnidades > 0) {
             return
         }
         obtenerUnidadesInforme().then((respuesta) => {
@@ -1085,7 +1114,7 @@ function Informes({history}) {
     }
 
     function getAllEstatusInformes() {
-        if (dataEstatusInformes > 0){
+        if (dataEstatusInformes > 0) {
             return
         }
         obtenerEstatusInforme().then((respuesta) => {
@@ -1094,7 +1123,7 @@ function Informes({history}) {
     }
 
     function getAllSucursales() {
-        if (dataSucursal > 0){
+        if (dataSucursal > 0) {
             return
         }
         obtenerSucursales().then((respuesta) => {
@@ -1108,9 +1137,9 @@ function Informes({history}) {
             getAllGuiasFrom();
 
         }
-    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar])
+    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
 
-    const handleShowListado = () =>{
+    const handleShowListado = () => {
         getDataParaListado()
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
@@ -1139,14 +1168,14 @@ function Informes({history}) {
     }
 
     function handleShowModificar(id, row) {
-        if (parseInt(row.m_nIdEstatusInforme) !== 5){
+        if (parseInt(row.m_nIdEstatusInforme) !== 5) {
             showSuccess("Solo se pueden modificar informes con estatus pendiente")
             return
         }
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
-            setDataParaModificarConsultar(data,"Modificar")
+            setDataParaModificarConsultar(data, "Modificar")
         });
     }
 
@@ -1161,11 +1190,11 @@ function Informes({history}) {
         });
     }
 
-    const setDataParaModificarConsultar = (data,accion) => {
+    const setDataParaModificarConsultar = (data, accion) => {
         setState(state => {
             return {
                 ...state,
-                fechaHora: data.m_dFecha + 'T' + data.m_tHora.substr(0,5),
+                fechaHora: data.m_dFecha + 'T' + data.m_tHora.substr(0, 5),
                 IdInforme: data.m_nIdInforme,
                 guiasInforme: data.m_arrClsProGuia,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
@@ -1182,16 +1211,18 @@ function Informes({history}) {
                 PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
                 EstatusInforme: data.m_nIdEstatusInforme,
-                agregar: accion
+                agregar: accion,
+                tipoTimbrado:data.m_nTipoTimbrado
             }
         });
     }
 
     const setDataParaAgregar = () => {
         console.log(dataUnidades)
-        setDataUnidades(dataUnidades.filter(m=>m.m_nIdentificador == 1 || m.m_nIdentificador == 4))
-    //    setDataUnidades()
+        setDataUnidades(dataUnidades.filter(m => m.m_nIdentificador == 1 || m.m_nIdentificador == 4))
+        //    setDataUnidades()
     }
+
     function handleEliminar(id) {
         var derecho;
         validarPermisos(state)
@@ -1404,49 +1435,49 @@ function Informes({history}) {
                         </div>
                     )}
                     {state.tipoModal === 6 &&
-                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                        <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
-                        <div>
-                            <label className="input select" style={{width: "100%"}}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
-                                    <Select
-                                        labelId="sucursalListadoLabel"
-                                        label="Formato"
-                                        className="form-control"
-                                        required
-                                        value={state.formatoSeleccionado}
-                                        onChange={(event) => setState({
-                                            ...state,
-                                            formatoSeleccionado: event.target.value
-                                        })}
-                                        id="formatoSeleccionado"
-                                        name="formatoSeleccionado"
-                                    >
-                                        {dataFormatos.map((formato) => (
-                                            <option
-                                                key={formato.m_nIdFormato}
-                                                value={formato.m_nIdFormato}
-                                            >
-                                                {formato.m_sFormato}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <i></i>
-                            </label>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
+                            <div>
+                                <label className="input select" style={{width: "100%"}}>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
+                                        <Select
+                                            labelId="sucursalListadoLabel"
+                                            label="Formato"
+                                            className="form-control"
+                                            required
+                                            value={state.formatoSeleccionado}
+                                            onChange={(event) => setState({
+                                                ...state,
+                                                formatoSeleccionado: event.target.value
+                                            })}
+                                            id="formatoSeleccionado"
+                                            name="formatoSeleccionado"
+                                        >
+                                            {dataFormatos.map((formato) => (
+                                                <option
+                                                    key={formato.m_nIdFormato}
+                                                    value={formato.m_nIdFormato}
+                                                >
+                                                    {formato.m_sFormato}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                    <i></i>
+                                </label>
+                            </div>
+
+                            <DialogActions style={{justifyContent: "left"}}>
+
+                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                                </button>
+                                <button onClick={() => setState({...state, openDialog: false})}
+                                        className="btn btn-secondary secondary-btn">Cerrar
+                                </button>
+
+                            </DialogActions>
                         </div>
-
-                        <DialogActions style={{justifyContent: "left"}}>
-
-                            <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
-                            </button>
-                            <button onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn">Cerrar
-                            </button>
-
-                        </DialogActions>
-                    </div>
                     }
                 </DialogContent>
             </Dialog>
@@ -1476,8 +1507,8 @@ function Informes({history}) {
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li>                            
-                            <a className= {validarDerecho(9101431)? "":classes.disabled} onClick= {handleShowAgregar} >
+                        <li>
+                            <a className={validarDerecho(9101431) ? "" : classes.disabled} onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -1502,7 +1533,7 @@ function Informes({history}) {
                                 data-toggle="tab"
                                 href="#Cancelar"
                                 onClick={handleShowCancelar}
-                                className={state.IdInforme == 0 && !validarDerecho(9101436)? classes.disabled : ""}
+                                className={state.IdInforme == 0 && !validarDerecho(9101436) ? classes.disabled : ""}
                             >
                                 <i className="fa fa-ban"/> Cancelar
                             </a>
@@ -1510,7 +1541,7 @@ function Informes({history}) {
 
                         <li>
                             <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}
-                               className= {validarDerecho(9101437)? "":classes.disabled}>
+                               className={validarDerecho(9101437) ? "" : classes.disabled}>
                                 <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
                             </a>
                         </li>
@@ -1525,15 +1556,15 @@ function Informes({history}) {
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
-                                <div className="row">
-                                    <div className="col-md-12">
+                                    <div className="row">
+                                        <div className="col-md-12">
 
-                                        <Filtros
-                                            listaResultado={setDataListado}
-                                            informe={true}
-                                        />
+                                            <Filtros
+                                                listaResultado={setDataListado}
+                                                informe={true}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
 
                                     <div className="row" style={{height: state.height - 250, width: "100%"}}>
                                         <DataGrid
@@ -1560,7 +1591,11 @@ function Informes({history}) {
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
-                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
+                                if (e.code === 13) {
+                                    e.preventDefault()
+                                }
+                            }}>
 
 
                                 <div className="row">
@@ -1620,102 +1655,151 @@ function Informes({history}) {
                                                                         </div>
                                                                     </div>
                                                                     {/*****************************************Hora*******************************************************/}
- {/*****************************************Estatus de Entrega*************************************************/}
- <div className="col-sm-6 col-md-6 unit">
-
-<label className="input select">
-    <FormControl required fullWidth
-                 variant="outlined"
-                 margin="dense">
-        <InputLabel
-            id="EstatusInformeLabel">Estatus</InputLabel>
-        <Select
-            labelId="EstatusInformeLabel"
-            label="Estatus"
-            className="form-control"
-            required
-            onChange={handleSelectEstatus}
-            value={state.EstatusInforme}
-            id="EstatusInforme"
-            disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
-        >
-            <option
-                value="">Seleccionar
-            </option>
-            {dataEstatusInformes.map(
-                    (EstatusInforme) => (
-                        <option
-                            key={EstatusInforme.m_nIdEstatusInforme}
-                            value={EstatusInforme.m_nIdEstatusInforme}
-                        >{EstatusInforme.m_sEstatus}
-                        </option>
-                    )
-                )
-            }
-        </Select>
-    </FormControl>
-</label>
-</div>
-                                                                    {/*****************************************Oficina Emisora***************************************************/}
+                                                                    {/*****************************************Estatus de Entrega*************************************************/}
                                                                     <div className="col-sm-6 col-md-6 unit">
 
                                                                         <label className="input select">
-                                                                            <FormControl fullWidth
+                                                                            <FormControl required fullWidth
                                                                                          variant="outlined"
-                                                                                         margin="dense" required>
+                                                                                         margin="dense">
                                                                                 <InputLabel
-                                                                                    id="sucursalEmisoraLabel">Oficina
-                                                                                    Emisora</InputLabel>
+                                                                                    id="EstatusInformeLabel">Estatus</InputLabel>
                                                                                 <Select
-                                                                                    labelId="sucursalEmisoraLabel"
-                                                                                    label="Oficina Emisora"
+                                                                                    labelId="EstatusInformeLabel"
+                                                                                    label="Estatus"
                                                                                     className="form-control"
                                                                                     required
-                                                                                    value={state.sucursalEmisora}
-                                                                                    id="sucursalEmisora"
-                                                                                    onChange={handleSelectSucursalEmisora}
-                                                                                    disabled
+                                                                                    onChange={handleSelectEstatus}
+                                                                                    value={state.EstatusInforme}
+                                                                                    id="EstatusInforme"
+                                                                                    disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
                                                                                 >
-                                                                                    {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
-                                                                                            <option key={sucursalEmisora.m_nIdSucursal} value={sucursalEmisora.m_nIdSucursal}>
-                                                                                                {sucursalEmisora.m_sSucursal}
+                                                                                    <option
+                                                                                        value="">Seleccionar
+                                                                                    </option>
+                                                                                    {dataEstatusInformes.map(
+                                                                                        (EstatusInforme) => (
+                                                                                            <option
+                                                                                                key={EstatusInforme.m_nIdEstatusInforme}
+                                                                                                value={EstatusInforme.m_nIdEstatusInforme}
+                                                                                            >{EstatusInforme.m_sEstatus}
                                                                                             </option>
                                                                                         )
-                                                                                    )}
+                                                                                    )
+                                                                                    }
                                                                                 </Select>
                                                                             </FormControl>
                                                                         </label>
                                                                     </div>
-                                                                    {/*****************************************Oficina Receptora*************************************************/}
-                                                                    <div className="col-sm-6 col-md-6 unit">
+                                                                    <div className="row">
+                                                                        <div className="col-sm-12 col-md-6 unit">
 
-                                                                        <label className="input select">
-                                                                            <FormControl fullWidth
-                                                                                         variant="outlined"
-                                                                                         margin="dense" required>
-                                                                                <InputLabel
-                                                                                    id="sucursalReceptoraLabel">Oficina
-                                                                                    Receptora</InputLabel>
-                                                                                <Select
-                                                                                    labelId="sucursalReceptoraLabel"
-                                                                                    label="Oficina Receptora"
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    value={state.sucursalReceptora}
-                                                                                    id="sucursalReceptora"
-                                                                                    onChange={handleSelectSucursalReceptora}
-                                                                                >
-                                                                                    {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalEmisora)).map(
-                                                                                        (sucursalReceptora) => (
-                                                                                            <option key={sucursalReceptora.m_nIdSucursal} value={sucursalReceptora.m_nIdSucursal}>
-                                                                                                {sucursalReceptora.m_sSucursal}
-                                                                                            </option>
-                                                                                        )
-                                                                                    )}
-                                                                                </Select>
-                                                                            </FormControl>
-                                                                        </label>
+                                                                            <label className="input select">
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
+                                                                                             margin="dense" required>
+                                                                                    <InputLabel
+                                                                                        id="tipoTimbradoLabel">Tipo de servicio</InputLabel>
+                                                                                    <Select
+                                                                                        native
+                                                                                        labelId="tipoTimbradoLabel"
+                                                                                        label="Tipo de timbrado"
+                                                                                        className="form-control"
+                                                                                        required
+                                                                                        id="tipoTimbrado"
+                                                                                        name="tipoTimbrado"
+                                                                                        read="true"
+                                                                                        disabled={state.FolioInforme !== 0}
+                                                                                        onChange={handleSelectTipoTimbrado}
+                                                                                        value={state.tipoTimbrado}
+                                                                                    >
+                                                                                        <option key={"1"}
+                                                                                                value={1}
+                                                                                        >
+                                                                                            Consolidado
+                                                                                        </option>
+                                                                                        <option key={"2"}
+                                                                                                value={2}
+                                                                                        >
+                                                                                            Paquetería
+                                                                                        </option>
+                                                                                    </Select>
+                                                                                </FormControl>
+                                                                            </label>
+                                                                        </div>
                                                                     </div>
+
+                                                                    <div className="row">
+                                                                        {/*****************************************Oficina Emisora***************************************************/}
+                                                                        <div className="col-sm-6 col-md-6 unit">
+
+                                                                            <label className="input select">
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
+                                                                                             margin="dense" required>
+                                                                                    <InputLabel
+                                                                                        id="sucursalEmisoraLabel">Oficina
+                                                                                        Emisora</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="sucursalEmisoraLabel"
+                                                                                        label="Oficina Emisora"
+                                                                                        className="form-control"
+                                                                                        required
+                                                                                        value={state.sucursalEmisora}
+                                                                                        id="sucursalEmisora"
+                                                                                        onChange={handleSelectSucursalEmisora}
+                                                                                        disabled
+                                                                                    >
+                                                                                        {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
+                                                                                                <option
+                                                                                                    key={sucursalEmisora.m_nIdSucursal}
+                                                                                                    value={sucursalEmisora.m_nIdSucursal}>
+                                                                                                    {sucursalEmisora.m_sSucursal}
+                                                                                                </option>
+                                                                                            )
+                                                                                        )}
+                                                                                    </Select>
+                                                                                </FormControl>
+                                                                            </label>
+
+                                                                        </div>
+
+
+                                                                        {/*****************************************Oficina Receptora*************************************************/}
+                                                                        <div className="col-sm-12 col-md-6 unit">
+
+                                                                            <label className="input select">
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
+                                                                                             margin="dense" required>
+                                                                                    <InputLabel
+                                                                                        id="sucursalReceptoraLabel">Oficina
+                                                                                        Receptora</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="sucursalReceptoraLabel"
+                                                                                        label="Oficina Receptora"
+                                                                                        className="form-control"
+                                                                                        required
+                                                                                        value={state.sucursalReceptora}
+                                                                                        id="sucursalReceptora"
+                                                                                        onChange={handleSelectSucursalReceptora}
+                                                                                    >
+                                                                                        {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalEmisora)).map(
+                                                                                            (sucursalReceptora) => (
+                                                                                                <option
+                                                                                                    key={sucursalReceptora.m_nIdSucursal}
+                                                                                                    value={sucursalReceptora.m_nIdSucursal}>
+                                                                                                    {sucursalReceptora.m_sSucursal}
+                                                                                                </option>
+                                                                                            )
+                                                                                        )}
+                                                                                    </Select>
+                                                                                </FormControl>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {/*****************************************TipoTimbrado*************************************************/}
+
 
 
                                                                     {/*****************************************Remolque*************************************************/}
@@ -1965,232 +2049,245 @@ function Informes({history}) {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             {dataGuias.length !== 0 &&
-                                                            <form className="j-forms" noValidate>
-                                                                <div className="form-content">
-                                                                    <FormControlLabel
-                                                                        checked={todasGuiasSeleccionadas()}
-                                                                        control={
-                                                                            <Checkbox
-                                                                                name="selecionarGuias"
-                                                                                onClick={(e) => setDataGuias(dataGuias.map(d => {d.select = e.target.checked ; return d;} ))}
-                                                                                color="primary"
-                                                                            />
-                                                                        }
-                                                                        label="Seleccionar todas"
-                                                                    />
-                                                                    <IconButton aria-label="delete" className={classes.margin} onClick={handleChangeOrden}>
-                                                                        {
-                                                                            ordenAscendente ?
-                                                                                <ArrowUpwardIcon fontSize="default" />
-                                                                                :
-                                                                                <ArrowDownwardIcon fontSize="default" />
-                                                                        }
-                                                                        {
-                                                                            ordenAscendente ?
-                                                                                "Ordenar ascendentemente"
-                                                                                :
-                                                                                "Ordenar descendentemente"
-                                                                        }
+                                                                <form className="j-forms" noValidate>
+                                                                    <div className="form-content">
+                                                                        <FormControlLabel
+                                                                            checked={todasGuiasSeleccionadas()}
+                                                                            control={
+                                                                                <Checkbox
+                                                                                    name="selecionarGuias"
+                                                                                    onClick={(e) => setDataGuias(dataGuias.map(d => {
+                                                                                        d.select = e.target.checked;
+                                                                                        return d;
+                                                                                    }))}
+                                                                                    color="primary"
+                                                                                />
+                                                                            }
+                                                                            label="Seleccionar todas"
+                                                                        />
+                                                                        <IconButton aria-label="delete"
+                                                                                    className={classes.margin}
+                                                                                    onClick={handleChangeOrden}>
+                                                                            {
+                                                                                ordenAscendente ?
+                                                                                    <ArrowUpwardIcon
+                                                                                        fontSize="default"/>
+                                                                                    :
+                                                                                    <ArrowDownwardIcon
+                                                                                        fontSize="default"/>
+                                                                            }
+                                                                            {
+                                                                                ordenAscendente ?
+                                                                                    "Ordenar ascendentemente"
+                                                                                    :
+                                                                                    "Ordenar descendentemente"
+                                                                            }
 
-                                                                    </IconButton>
-                                                                    <div style={{
-                                                                        padding: "10px",
-                                                                        maxHeight: "500px",
-                                                                        overflow: "scroll"
-                                                                    }}>
-                                                                        {dataGuias.map((value, index) => {
-                                                                            return (
-                                                                                <div>
-                                                                                    <br/>
-                                                                                    <ButtonBase
-                                                                                        style={{
-                                                                                            width: "100%",
-                                                                                            borderRadius: "10px",
-                                                                                        }}
-                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                        onClick={() => selectGuia(index)}
-                                                                                    >
-                                                                                        <Grid container spacing={2}>
-                                                                                            <Grid
-                                                                                                item
-                                                                                                sm={1}
-                                                                                                justify="center"
-                                                                                                alignItems="center"
-                                                                                                style={{
-                                                                                                    display: "flex",
-                                                                                                    justifyContent: "center",
-                                                                                                    alignItems: "center",
-                                                                                                    textAlign: "center",
-                                                                                                    backgroundColor: value.select
-                                                                                                        ? "#F9A03E"
-                                                                                                        : "gray",
-                                                                                                }}
-                                                                                            >
-                                                                                                {index + 1}
-                                                                                            </Grid>
-                                                                                            <Grid
-                                                                                                item
-                                                                                                sm={11}
-                                                                                                style={{
-                                                                                                    width: "100%",
-                                                                                                    borderRadius: "10px",
-                                                                                                }}
-                                                                                            >
-                                                                                                <Grid container
-                                                                                                      spacing={2}>
-                                                                                                    <Grid item sm={12}
-                                                                                                          md={4}>
-                                                                                                        <div
-                                                                                                            className="input">
+                                                                        </IconButton>
+                                                                        <div style={{
+                                                                            padding: "10px",
+                                                                            maxHeight: "500px",
+                                                                            overflow: "scroll"
+                                                                        }}>
+                                                                            {dataGuias.map((value, index) => {
+                                                                                return (
+                                                                                    <div>
+                                                                                        <br/>
+                                                                                        <ButtonBase
+                                                                                            style={{
+                                                                                                width: "100%",
+                                                                                                borderRadius: "10px",
+                                                                                            }}
+                                                                                            disabled={state.agregar === "Consultar"}
+                                                                                            onClick={() => selectGuia(index)}
+                                                                                        >
+                                                                                            <Grid container spacing={2}>
+                                                                                                <Grid
+                                                                                                    item
+                                                                                                    sm={1}
+                                                                                                    justify="center"
+                                                                                                    alignItems="center"
+                                                                                                    style={{
+                                                                                                        display: "flex",
+                                                                                                        justifyContent: "center",
+                                                                                                        alignItems: "center",
+                                                                                                        textAlign: "center",
+                                                                                                        backgroundColor: value.select
+                                                                                                            ? "#F9A03E"
+                                                                                                            : "gray",
+                                                                                                    }}
+                                                                                                >
+                                                                                                    {index + 1}
+                                                                                                </Grid>
+                                                                                                <Grid
+                                                                                                    item
+                                                                                                    sm={11}
+                                                                                                    style={{
+                                                                                                        width: "100%",
+                                                                                                        borderRadius: "10px",
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <Grid container
+                                                                                                          spacing={2}>
+                                                                                                        <Grid item
+                                                                                                              sm={12}
+                                                                                                              md={4}>
+                                                                                                            <div
+                                                                                                                className="input">
 
-                                                                                                            <TextField
-                                                                                                                variant="outlined"
-                                                                                                                margin="dense"
-                                                                                                                label="Folio Guía"
-                                                                                                                onChange={handleChange}
-                                                                                                                value={value.m_nFolioGuia}
-                                                                                                                className="form-control"
-                                                                                                                type="text"
-                                                                                                                disabled="true"
-                                                                                                                id={"folio-" + index}
-                                                                                                            />
-                                                                                                        </div>
-                                                                                                    </Grid>
-                                                                                                    <Grid item sm={12}
-                                                                                                          md={4}>
-                                                                                                        <div
-                                                                                                            className="input">
+                                                                                                                <TextField
+                                                                                                                    variant="outlined"
+                                                                                                                    margin="dense"
+                                                                                                                    label="Folio Guía"
+                                                                                                                    onChange={handleChange}
+                                                                                                                    value={value.m_nFolioGuia}
+                                                                                                                    className="form-control"
+                                                                                                                    type="text"
+                                                                                                                    disabled="true"
+                                                                                                                    id={"folio-" + index}
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Grid>
+                                                                                                        <Grid item
+                                                                                                              sm={12}
+                                                                                                              md={4}>
+                                                                                                            <div
+                                                                                                                className="input">
 
-                                                                                                            <TextField
-                                                                                                                variant="outlined"
-                                                                                                                margin="dense"
-                                                                                                                label="Estatus Guía"
-                                                                                                                className="form-control"
-                                                                                                                type="text"
-                                                                                                                disabled="true"
-                                                                                                                value={
-                                                                                                                    value.m_sEstatusGuia
-                                                                                                                }
-                                                                                                                id={"estatus-" + index}
-                                                                                                            />
-                                                                                                        </div>
-                                                                                                    </Grid>
-                                                                                                    <Grid item sm={12}
-                                                                                                          md={4}>
-                                                                                                        <div
-                                                                                                            className="input">
+                                                                                                                <TextField
+                                                                                                                    variant="outlined"
+                                                                                                                    margin="dense"
+                                                                                                                    label="Estatus Guía"
+                                                                                                                    className="form-control"
+                                                                                                                    type="text"
+                                                                                                                    disabled="true"
+                                                                                                                    value={
+                                                                                                                        value.m_sEstatusGuia
+                                                                                                                    }
+                                                                                                                    id={"estatus-" + index}
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Grid>
+                                                                                                        <Grid item
+                                                                                                              sm={12}
+                                                                                                              md={4}>
+                                                                                                            <div
+                                                                                                                className="input">
 
-                                                                                                            <TextField
-                                                                                                                variant="outlined"
-                                                                                                                margin="dense"
-                                                                                                                label="Total"
-                                                                                                                value={`$${value.m_xTotal.toFixed(2)}` }
-                                                                                                                disabled="true"
-                                                                                                                className="form-control"
-                                                                                                                type="text"
-                                                                                                                id={"total-" + index}
-                                                                                                            />
-                                                                                                        </div>
-                                                                                                    </Grid>
-                                                                                                    <Grid item sm={12}
-                                                                                                          md={6}>
-                                                                                                        <div
-                                                                                                            className="input">
+                                                                                                                <TextField
+                                                                                                                    variant="outlined"
+                                                                                                                    margin="dense"
+                                                                                                                    label="Total"
+                                                                                                                    value={`$${value.m_xTotal.toFixed(2)}`}
+                                                                                                                    disabled="true"
+                                                                                                                    className="form-control"
+                                                                                                                    type="text"
+                                                                                                                    id={"total-" + index}
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Grid>
+                                                                                                        <Grid item
+                                                                                                              sm={12}
+                                                                                                              md={6}>
+                                                                                                            <div
+                                                                                                                className="input">
 
-                                                                                                            <TextField
-                                                                                                                variant="outlined"
-                                                                                                                margin="dense"
-                                                                                                                label="Destino"
-                                                                                                                value={value.m_sCiudadDestino}
-                                                                                                                className="form-control"
-                                                                                                                type="text"
-                                                                                                                disabled="true"
-                                                                                                                id={"destino-" + index}
-                                                                                                            />
-                                                                                                        </div>
-                                                                                                    </Grid>
-                                                                                                    <Grid item sm={12}
-                                                                                                          md={6}>
-                                                                                                        <div
-                                                                                                            className="input">
+                                                                                                                <TextField
+                                                                                                                    variant="outlined"
+                                                                                                                    margin="dense"
+                                                                                                                    label="Destino"
+                                                                                                                    value={value.m_sCiudadDestino}
+                                                                                                                    className="form-control"
+                                                                                                                    type="text"
+                                                                                                                    disabled="true"
+                                                                                                                    id={"destino-" + index}
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Grid>
+                                                                                                        <Grid item
+                                                                                                              sm={12}
+                                                                                                              md={6}>
+                                                                                                            <div
+                                                                                                                className="input">
 
-                                                                                                            <TextField
-                                                                                                                variant="outlined"
-                                                                                                                margin="dense"
-                                                                                                                label="Tipo de Servicio"
-                                                                                                                disabled="true"
-                                                                                                                value={value.m_sTipoServicio}
-                                                                                                                className="form-control"
-                                                                                                                type="text"
-                                                                                                                id={"servicio-" + index}
-                                                                                                            />
-                                                                                                        </div>
-                                                                                                    </Grid>
-                                                                                                    <Grid item sm={12}
-                                                                                                          md={12}>
-                                                                                                        <div
-                                                                                                            className="input">
+                                                                                                                <TextField
+                                                                                                                    variant="outlined"
+                                                                                                                    margin="dense"
+                                                                                                                    label="Tipo de Servicio"
+                                                                                                                    disabled="true"
+                                                                                                                    value={parseInt(state.tipoTimbrado) === 1? 'Consolidad' : parseInt(state.tipoTimbrado) === 2?'Paqueteria':'Indefinido'}
+                                                                                                                    className="form-control"
+                                                                                                                    type="text"
+                                                                                                                    id={"servicio-" + index}
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Grid>
+                                                                                                        <Grid item
+                                                                                                              sm={12}
+                                                                                                              md={12}>
+                                                                                                            <div
+                                                                                                                className="input">
 
-                                                                                                            <TextField
-                                                                                                                variant="outlined"
-                                                                                                                margin="dense"
-                                                                                                                label="Observaciones"
-                                                                                                                disabled="true"
-                                                                                                                value={
-                                                                                                                    value.m_sObservaciones
-                                                                                                                }
-                                                                                                                className="form-control"
-                                                                                                                type="text"
-                                                                                                                id={
-                                                                                                                    "observacion-" + index
-                                                                                                                }
-                                                                                                            />
-                                                                                                        </div>
+                                                                                                                <TextField
+                                                                                                                    variant="outlined"
+                                                                                                                    margin="dense"
+                                                                                                                    label="Observaciones"
+                                                                                                                    disabled="true"
+                                                                                                                    value={
+                                                                                                                        value.m_sObservaciones
+                                                                                                                    }
+                                                                                                                    className="form-control"
+                                                                                                                    type="text"
+                                                                                                                    id={
+                                                                                                                        "observacion-" + index
+                                                                                                                    }
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Grid>
                                                                                                     </Grid>
                                                                                                 </Grid>
                                                                                             </Grid>
-                                                                                        </Grid>
-                                                                                    </ButtonBase>
-                                                                                    <br/>
-                                                                                </div>
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                    <br/>
-                                                                    <Grid
-                                                                        container
-                                                                        style={{
-                                                                            borderStyle: "solid",
-                                                                            borderRadius: "10px",
-                                                                        }}
-                                                                        spacing={1}
-                                                                    >
+                                                                                        </ButtonBase>
+                                                                                        <br/>
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                        <br/>
                                                                         <Grid
-                                                                            item
-                                                                            sm={4}
-                                                                            justify="center"
-                                                                            alignItems="center"
+                                                                            container
                                                                             style={{
-                                                                                display: "flex",
-                                                                                justifyContent: "center",
-                                                                                alignItems: "center",
-                                                                                textAlign: "center",
+                                                                                borderStyle: "solid",
+                                                                                borderRadius: "10px",
                                                                             }}
+                                                                            spacing={1}
                                                                         >
-                                                                            Total de guías :{" "}
-                                                                            {dataGuias.filter((g) => g.select).length}
-                                                                        </Grid>
-                                                                        <Grid
-                                                                            item
-                                                                            sm={8}
-                                                                            style={{
-                                                                                justifyContent: "left",
-                                                                                alignItems: "left",
-                                                                                textAlign: "left",
-                                                                            }}
-                                                                        >
-                                                                            <Grid container>
-                                                                                {/*<Grid
+                                                                            <Grid
+                                                                                item
+                                                                                sm={4}
+                                                                                justify="center"
+                                                                                alignItems="center"
+                                                                                style={{
+                                                                                    display: "flex",
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    textAlign: "center",
+                                                                                }}
+                                                                            >
+                                                                                Total de guías :{" "}
+                                                                                {dataGuias.filter((g) => g.select).length}
+                                                                            </Grid>
+                                                                            <Grid
+                                                                                item
+                                                                                sm={8}
+                                                                                style={{
+                                                                                    justifyContent: "left",
+                                                                                    alignItems: "left",
+                                                                                    textAlign: "left",
+                                                                                }}
+                                                                            >
+                                                                                <Grid container>
+                                                                                    {/*<Grid
                                                                                     item
                                                                                     sm={6}
                                                                                     style={{
@@ -2212,7 +2309,7 @@ function Informes({history}) {
                                                                                 >
                                                                                     ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>*/}
-                                                                                {/*<Grid
+                                                                                    {/*<Grid
                                                                                     item
                                                                                     sm={6}
                                                                                     style={{
@@ -2234,30 +2331,30 @@ function Informes({history}) {
                                                                                 >
                                                                                     ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>*/}
-                                                                                {/*<Grid*/}
-                                                                                {/*    item*/}
-                                                                                {/*    sm={6}*/}
-                                                                                {/*    style={{*/}
-                                                                                {/*        justifyContent: "left",*/}
-                                                                                {/*        alignItems: "left",*/}
-                                                                                {/*        textAlign: "left",*/}
-                                                                                {/*    }}*/}
-                                                                                {/*>*/}
-                                                                                {/*    Total Pagado en Mostrador*/}
-                                                                                {/*</Grid>*/}
-                                                                                {/*<Grid*/}
-                                                                                {/*    item*/}
-                                                                                {/*    sm={6}*/}
-                                                                                {/*    style={{*/}
-                                                                                {/*        justifyContent: "right",*/}
-                                                                                {/*        alignItems: "right",*/}
-                                                                                {/*        textAlign: "right",*/}
-                                                                                {/*    }}*/}
-                                                                                {/*>*/}
-                                                                                {/*    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}*/}
-                                                                                {/*</Grid>*/}
+                                                                                    {/*<Grid*/}
+                                                                                    {/*    item*/}
+                                                                                    {/*    sm={6}*/}
+                                                                                    {/*    style={{*/}
+                                                                                    {/*        justifyContent: "left",*/}
+                                                                                    {/*        alignItems: "left",*/}
+                                                                                    {/*        textAlign: "left",*/}
+                                                                                    {/*    }}*/}
+                                                                                    {/*>*/}
+                                                                                    {/*    Total Pagado en Mostrador*/}
+                                                                                    {/*</Grid>*/}
+                                                                                    {/*<Grid*/}
+                                                                                    {/*    item*/}
+                                                                                    {/*    sm={6}*/}
+                                                                                    {/*    style={{*/}
+                                                                                    {/*        justifyContent: "right",*/}
+                                                                                    {/*        alignItems: "right",*/}
+                                                                                    {/*        textAlign: "right",*/}
+                                                                                    {/*    }}*/}
+                                                                                    {/*>*/}
+                                                                                    {/*    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}*/}
+                                                                                    {/*</Grid>*/}
 
-                                                                                {/*    <Grid
+                                                                                    {/*    <Grid
                                                                                     item
                                                                                     sm={6}
                                                                                     style={{
@@ -2279,53 +2376,54 @@ function Informes({history}) {
                                                                                 >
                                                                                     ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>*/}
-                                                                                <Grid
-                                                                                    item
-                                                                                    sm={6}
-                                                                                    style={{
-                                                                                        justifyContent: "left",
-                                                                                        alignItems: "left",
-                                                                                        textAlign: "left",
-                                                                                    }}
-                                                                                >
-                                                                                    <b style={{fontWeight: "bold"}}>
-                                                                                        Total Flete:  ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(  curr.m_xTotal), 0)).toFixed(2)}` }
-                                                                                    </b>
-                                                                                </Grid>
-                                                                                <Grid
-                                                                                    item
-                                                                                    sm={6}
-                                                                                    style={{
-                                                                                        justifyContent: "right",
-                                                                                        alignItems: "right",
-                                                                                        textAlign: "right",
-                                                                                    }}
-                                                                                >
-                                                                                   
+                                                                                    <Grid
+                                                                                        item
+                                                                                        sm={6}
+                                                                                        style={{
+                                                                                            justifyContent: "left",
+                                                                                            alignItems: "left",
+                                                                                            textAlign: "left",
+                                                                                        }}
+                                                                                    >
+                                                                                        <b style={{fontWeight: "bold"}}>
+                                                                                            Total Flete:
+                                                                                            ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0)).toFixed(2)}`}
+                                                                                        </b>
+                                                                                    </Grid>
+                                                                                    <Grid
+                                                                                        item
+                                                                                        sm={6}
+                                                                                        style={{
+                                                                                            justifyContent: "right",
+                                                                                            alignItems: "right",
+                                                                                            textAlign: "right",
+                                                                                        }}
+                                                                                    >
+
+                                                                                    </Grid>
+
                                                                                 </Grid>
 
                                                                             </Grid>
+                                                                            <Grid
+                                                                                item
+                                                                                sm={4}
+                                                                                justify="center"
+                                                                                alignItems="center"
+                                                                                style={{
+                                                                                    display: "flex",
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    textAlign: "center",
+                                                                                }}
+                                                                            >
+                                                                                Peso total : {" "}
+                                                                                {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xPeso), 0))).toFixed(2)}`} kg
+                                                                            </Grid>
 
                                                                         </Grid>
-                                                                        <Grid
-                                                                            item
-                                                                            sm={4}
-                                                                            justify="center"
-                                                                            alignItems="center"
-                                                                            style={{
-                                                                                display: "flex",
-                                                                                justifyContent: "center",
-                                                                                alignItems: "center",
-                                                                                textAlign: "center",
-                                                                            }}
-                                                                        >
-                                                                            Peso total : {" "}
-                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xPeso), 0))).toFixed(2)}` } kg
-                                                                        </Grid>
-
-                                                                    </Grid>
-                                                                </div>
-                                                            </form>
+                                                                    </div>
+                                                                </form>
                                                             }
 
                                                         </div>
@@ -2376,7 +2474,11 @@ function Informes({history}) {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {
+                                                if (e.code === 13) {
+                                                    e.preventDefault()
+                                                }
+                                            }}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
@@ -2406,7 +2508,8 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Fecha de cancelación"
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Fecha de cancelación"
                                                                        className="form-control"
                                                                        type="datetime-local"
                                                                        value={state.fechaCancelacion}

@@ -1316,7 +1316,7 @@ function Guia(props) {
                 idGuia: respuesta.data.m_nIdGuia,
                 creadoEl: respuesta.data.m_dCreadoEl,
                 idEstatusGuia: 4,
-                idTipoServicio: 2,
+                idTipoServicio: respuesta.data.m_nTipoTimbrado ?? 1,
                 tieneRecoleccion: respuesta.data.m_bEsRecoleccion,
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaRecoleccion: false,
@@ -3080,17 +3080,16 @@ function Guia(props) {
                                                                                         <option key={0}
                                                                                                 value="0">Seleccionar
                                                                                         </option>
-                                                                                        {dataTipoServicio.map(
-                                                                                            (tipoServicio) => (
-                                                                                                <option
-                                                                                                    key={tipoServicio.m_nIdTipoServicio}
-                                                                                                    value={tipoServicio.m_nIdTipoServicio}>
-                                                                                                    {
-                                                                                                        tipoServicio.m_sDescripcion
-                                                                                                    }
-                                                                                                </option>
-                                                                                            )
-                                                                                        )}
+                                                                                        <option key={"1"}
+                                                                                                value={1}
+                                                                                        >
+                                                                                            Consolidado
+                                                                                        </option>
+                                                                                        <option key={"2"}
+                                                                                                value={2}
+                                                                                        >
+                                                                                            Paquetería
+                                                                                        </option>
                                                                                     </Select>
                                                                                 </FormControl>
                                                                             </label>
