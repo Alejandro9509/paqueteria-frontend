@@ -5,6 +5,7 @@ import {API_HEADERS} from "../Constants";
 import * as XLSX from "xlsx";
 import moment from "moment";
 import Noty from "noty";
+import {es} from "date-fns/locale";
 
 const XRouteClient = window.XRouteClient;
 const XLoadClient = window.XLoadClient;
@@ -306,7 +307,7 @@ export function getAddressFormated(calle, numeroExterior, numeroInterior, coloni
     return addressComplete
 }
 
-export function readExcel(FORMAT,file){
+export function readExcel(FORMAT,file, esRecoleccion){
     const promise = new Promise((resolve, reject) => {
         const fileReader = new FileReader();
         fileReader.readAsArrayBuffer(file);
@@ -363,7 +364,7 @@ export function readExcel(FORMAT,file){
                     fechaRegistro:getCurrentDate(),
                     horaRegistro:getCurrentTime(),
                     numeroEmbarque : item[FORMAT.numeroEmbarque],
-                    esRecoleccion : item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SI' || item[FORMAT.esRecoleccion]?.toUpperCase().trim() === 'SÍ',
+                    esRecoleccion : esRecoleccion,
                     idUsuario: localStorage.getItem("UsuarioId"),
                     moneda: item[FORMAT.moneda],
                     tipoCambio: item[FORMAT.tipoCambio],
@@ -388,7 +389,8 @@ export function readExcel(FORMAT,file){
                     longitud: item[FORMAT.longitud],
                     conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
                     // idTipoServicio: item[FORMAT.idTipoServicio]
-                    tipoServicio: item[FORMAT.tipoServicio]
+                    tipoServicio: item[FORMAT.tipoServicio],
+                    referencia: item[FORMAT.referencia]
                 }
                 if (embarqueResumen.entregaEnSucursal){
                     // embarqueResumen.idSucursalEntrega = item[FORMAT.idSucursalEntrega]
@@ -422,6 +424,101 @@ export function readExcel(FORMAT,file){
                 }
                 embarqueResumen.paquetes = arrayPaquetes.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
                 embarqueResumen.complementosSAT = arrayComplementos.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
+                return embarqueResumen
+            })
+            resolve(newArray);
+        };
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+    return promise
+}
+
+const arrayUniqueByKey = (array, key) => {
+    return [...new Map(array.map(item =>
+        [item[key], item])).values()]
+}
+
+export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
+    const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+
+        fileReader.onload = (e) => {
+            const bufferArray = e.target.result;
+            const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
+
+            //SE OBTIENEN LAS HOJAS DEL EXCEL
+            const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
+
+            //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
+            const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+            console.log(data)
+            console.log(arrayUniqueByKey(data,'Número de embarque'))
+            const embarquesUnicos = arrayUniqueByKey(data,'Número de embarque')
+
+            //VALIDACIONES DE GUIAS
+            const newArray = embarquesUnicos.map(function(item,index){
+                let embarqueResumen = {
+                    esRecoleccion: esRecoleccion,
+                    fechaRegistro:getCurrentDate(),
+                    horaRegistro:getCurrentTime(),
+                    numeroEmbarque : item[FORMAT.numeroEmbarque],
+                    idUsuario: localStorage.getItem("UsuarioId"),
+                    valorDeclarado: item[FORMAT.valorDeclarado],
+                    responsablePago: item[FORMAT.responsablePago],
+                    observaciones: item[FORMAT.observacionesEmbarque],
+                    numeroRemitente: item[FORMAT.numeroRemitente],
+                    numeroDestinatario: item[FORMAT.numeroDestinatario],
+                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
+                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
+                    conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
+                    referencia: item[FORMAT.referencia],
+                }
+                if (embarqueResumen.entregaEnSucursal){
+                    embarqueResumen.sucursalEntrega = item[FORMAT.sucursalEntrega]
+                }else{
+                    if (embarqueResumen.entregaDiferenteDomicilio) {
+                        embarqueResumen.codigoPostalDiferenteDomicilio = item[FORMAT.codigoPostalDiferenteDomicilio]
+                        embarqueResumen.coloniaDiferenteDomicilio = item[FORMAT.coloniaDiferenteDomicilio]
+                        embarqueResumen.calleNumeroDiferenteDomicilio = item[FORMAT.calleNumeroDiferenteDomicilio]
+                        embarqueResumen.entregarEn = item[FORMAT.entregarEn]
+                        embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionales]
+                    }
+                }
+                if (embarqueResumen.esRecoleccion){
+                    embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ'
+                    if (embarqueResumen.recoleccionDiferenteDomicilio){
+                        embarqueResumen.codigoPostalDiferenteDomicilioRecoleccion = item[FORMAT.codigoPostalDiferenteDomicilioRecoleccion]
+                        embarqueResumen.coloniaDiferenteDomicilioRecoleccion = item[FORMAT.coloniaDiferenteDomicilioRecoleccion]
+                        embarqueResumen.calleNumeroDiferenteDomicilioRecoleccion = item[FORMAT.calleNumeroDiferenteDomicilioRecoleccion]
+                        embarqueResumen.recogerEn = item[FORMAT.recogerEn]
+                        embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
+                    }
+                }
+                if (embarqueResumen.conCita){
+                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
+                    if (!embarqueResumen.citaPendiente) {
+                        embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
+                        embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinimaCita]).format('HH:mm')
+                        embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaximaCita]).format('HH:mm')
+                    }
+                }
+                embarqueResumen.paquetes = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map(p => ({
+                    numeroEmbarque: p[FORMAT.numeroEmbarque],
+                    numeroProducto: p[FORMAT.paquetes.numeroProducto],
+                    cantidad: p[FORMAT.paquetes.cantidadPaquete],
+                    observaciones: p[FORMAT.paquetes.observacionesPaquete] || ""
+                }))
+                embarqueResumen.complementosSAT = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map((c) => ({
+                    numeroEmbarque: c[FORMAT.numeroEmbarque],
+                    cantidad: c[FORMAT.complementosSat.cantidadComplemento],
+                    claveProductoServicio: c[FORMAT.complementosSat.claveProductoServicio],
+                    claveUnidadMedida: c[FORMAT.complementosSat.claveUnidadMedida],
+                    numeroProducto: c[FORMAT.paquetes.numeroProducto],
+                }))
                 return embarqueResumen
             })
             resolve(newArray);

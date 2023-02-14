@@ -113,6 +113,7 @@ import Cotizador from "./ConceptosFacturacion/Cotizador";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 import Evidencias from "./Evidencias";
 import DialogoEvidenciasUltimaMilla from "./UltimaMilla/DialogoEvidenciasUltimaMilla";
+import ImportarEmbarques from "./Embarque/ImportarEmbarques";
 
 let timer;
 
@@ -340,6 +341,7 @@ function Recoleccion() {
         recoleccionConEmbarque: false,
         receptorRecoleccion: '',
         setOpenDialogEvidencias: false,
+        referencia: '',
     });
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -961,6 +963,7 @@ function Recoleccion() {
             params.m_nIdTipoSeguro = state.idTipoSeguro
             params.m_xPorcentajeSeguro = state.porcentajeSeguro
             params.m_bAplicaSeguro = state.aplicaSeguro
+            params.m_sReferencia = state.referencia
             //Remitente
             params.m_sNombreRemitente = remitente.nombreRemitente
             params.m_sRFCRemitente = remitente.RFCRemitente
@@ -1487,6 +1490,7 @@ function Recoleccion() {
                 // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 receptorRecoleccion: respuesta.data.m_sReceptorRecoleccion,
+                referencia: respuesta.data.m_sReferencia,
 
             }
         });
@@ -1607,7 +1611,7 @@ function Recoleccion() {
                         }
                     })
                     $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(3).addClass('active');
+                    $('.nav-tabs li').eq(2).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Cancelar').addClass('in show');}
 
@@ -1698,7 +1702,8 @@ function Recoleccion() {
                 fechaHoraLlegada: '',
                 zonaOperativaSucursal: null,
                 idSucursalEntrega: '',
-                receptorRecoleccion: ''
+                receptorRecoleccion: '',
+                referencia: '',
             }
         });
         setDataPaquetes([])
@@ -1910,6 +1915,11 @@ function Recoleccion() {
             width: 150,
         },
         {
+            headerName: "Referencia",
+            field: "m_sReferencia",
+            width: 150,
+        },
+        {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
             width: 150,
@@ -1934,16 +1944,11 @@ function Recoleccion() {
             field: "m_sFechaHoraDetalleRec",
             width: 250,
         },
-        /*{
-            headerName: "Operador",
-            field: "m_sOperador",
-            width: 250,
-        },
         {
-            headerName: "Unidad",
-            field: "m_sUnidad",
-            width: 125,
-        }*/
+            headerName: "Referencia",
+            field: "m_sReferencia",
+            width: 150,
+        },
     ]);
 
     const columnsCP = React.useMemo(() => [
@@ -3008,6 +3013,15 @@ function Recoleccion() {
         }
     }
 
+    const handleShowImportar = (event) => {
+        if (event) {
+            event.stopPropagation();
+        }
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(3).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Importar').addClass('in show');
+    }
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -3341,7 +3355,13 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        <li className="hide">
+                        <li>
+                            <a onClick={() => handleShowImportar()}>
+                                <i className="fa fa-print"/> Importar
+                            </a>
+                        </li>
+
+                        {/*<li className="hide">
                             <a onClick={() => handleShowSalidaLlegada(4)}
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Salida
@@ -3353,7 +3373,7 @@ function Recoleccion() {
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Llegada
                             </a>
-                        </li>
+                        </li>*/}
 
                         <li style={{float: "right"}}>
                             <a data-toggle="tab" href="#" className={(state.idRecoleccion === 0 || !validarDerecho(9101417)) ? classes.disabled : ""}
@@ -3799,32 +3819,47 @@ function Recoleccion() {
                                                             </div>
                                                         </Grid>
                                                     </Grid>
-                                                    <Grid container style={{marginBottom:'10px'}}>
-                                                        <Grid item xs>
-                                                            <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                <div className="input">
-                                                                    <TextField
-                                                                        variant="outlined"
-                                                                        margin="dense"
-                                                                        className="form-control"
-                                                                        type= "text"
-                                                                        label="Observaciones"
-                                                                        value={state.observaciones}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                observaciones: event.target.value,
-                                                                            });
-                                                                        }}
-                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                        id="observaciones"
-                                                                        name="observaciones"
-                                                                        placeholder={"sin observaciones"}
-                                                                        InputLabelProps={{shrink: true}}
-                                                                    />
-                                                                </div>
-                                                            </div>
+                                                    <Grid container spacing={2} style={{marginBottom:'10px'}}>
+                                                        <Grid item xs={6}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                margin="dense"
+                                                                className="form-control"
+                                                                type= "text"
+                                                                label="Observaciones"
+                                                                value={state.observaciones}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        observaciones: event.target.value,
+                                                                    });
+                                                                }}
+                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                id="observaciones"
+                                                                name="observaciones"
+                                                                placeholder={"sin observaciones"}
+                                                                InputLabelProps={{shrink: true}}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Referencia"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Consultar"}
+                                                                value={state.referencia}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        referencia: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="referencia"
+                                                                id="referencia"
+                                                            />
                                                         </Grid>
                                                     </Grid>
                                                 </div>
@@ -4319,7 +4354,13 @@ function Recoleccion() {
                             </div>
                         </div>
 
-                        <div id="Salida-Llegada" className="tab-pane fade">
+                        <div id="Importar" className="tab-pane fade">
+                            <ImportarEmbarques
+                                esRecoleccion={true}
+                            />
+                        </div>
+
+                        {/*<div id="Salida-Llegada" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
@@ -4522,7 +4563,7 @@ function Recoleccion() {
                                                         </div>
                                                     </div>
 
-                                                    {/*<div className="form-footer" className="col-md-12">
+                                                    <div className="form-footer" className="col-md-12">
                                                         <button
                                                             onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
 
@@ -4536,7 +4577,7 @@ function Recoleccion() {
                                                         >
                                                             Aceptar
                                                         </button>
-                                                    </div>*/}
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -4544,9 +4585,9 @@ function Recoleccion() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
 
-                        <div id="Prueba" className="tab-pane fade">
+                        {/*<div id="Prueba" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
@@ -4567,7 +4608,7 @@ function Recoleccion() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
 
 
                     </div>

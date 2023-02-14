@@ -431,11 +431,6 @@ function Embarque(props) {
             field: "m_sCiudadDestino",
             width: 200,
         },
-        /*{
-            headerName: "Folio Relacionado",
-            field: "m_sFolioEmbarqueRelacionado",
-            width: 150,
-        },*/
         {
             headerName: "Cliente",
             field: "m_sNombreCliente",
@@ -469,6 +464,11 @@ function Embarque(props) {
                     </div>
                 );
             },
+        },
+        {
+            headerName: "Referencia",
+            field: "m_sReferencia",
+            width: 150,
         },
         {
             headerName: "Folio Recolección",
@@ -565,6 +565,7 @@ function Embarque(props) {
         porcentajeSeguro: 0,
         aplicaSeguro: false,
         idTipoTarifa: '',
+        referencia: '',
 
         //Entrega
         entregaEnSucursal: false,
@@ -634,6 +635,7 @@ function Embarque(props) {
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
                 idTipoTarifa: '',
+                referencia: '',
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
@@ -1306,6 +1308,7 @@ function Embarque(props) {
             m_nIdTipoDocumento: state.idTipoDocumento,
             m_bValidarTimbradoIngreso: state.validarTimbrado,
             m_nTipoTimbrado: state.tipoTimbrado,
+            m_sReferencia: state.referencia
         }
         params.m_bEntregaEnSucursal = state.entregaEnSucursal
         /**Si es entrega en sucursal*/
@@ -1697,6 +1700,7 @@ function Embarque(props) {
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
+
         respuesta.data.recoleccionById = true
         setDataEmbarqueConsulta(respuesta)
         getDataParaEditar("Agregar")
@@ -1723,7 +1727,7 @@ function Embarque(props) {
         setDataPaquetes(respuesta.data.m_parrPaquetes)
 
         //COMPLEMENTOS SAT
-        respuesta.data.m_arrClsComplementoSAT.forEach(item => {
+        /*respuesta.data.m_arrClsComplementoSAT.forEach(item => {
             item.id = item.m_nIdComplementoSAT
             item.cantidad = item.m_nCantidad
             item.claveProducto = item.m_sClaveProductoServicio
@@ -1740,7 +1744,7 @@ function Embarque(props) {
             item.embalajeSAT = item.m_sTipoEmbalaje
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
-        })
+        })*/
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
 
         //CLIENTE
@@ -1859,7 +1863,8 @@ function Embarque(props) {
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 //observaciones
-                observaciones: respuesta.data.m_sObservaciones
+                observaciones: respuesta.data.m_sObservaciones,
+                referencia: respuesta.data.m_sReferencia,
             }
         });
     }
@@ -2085,7 +2090,8 @@ function Embarque(props) {
                 idTipoDocumento: respuesta.data.m_nIdTipoDocumento,
                 idComplemento: respuesta.data.m_nIdComplemento,
                 validarTimbrado: respuesta.data.m_bValidarTimbraoIngreso,
-                tipoTimbrado: respuesta.data.m_nTipoTimbrado
+                tipoTimbrado: respuesta.data.m_nTipoTimbrado,
+                referencia: respuesta.data.m_sReferencia
             }
         });
 
@@ -2226,13 +2232,14 @@ function Embarque(props) {
                 porcentajeSeguro: row.data.m_cPorcentajeSeguro,
                 aplicaSeguro: row.data.m_bTieneSeguro,
                 tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
+                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Póliza: " + row.data.m_sPoliza) : "",
                 openDialog: false,
             }
         })
     }
 
     const getDataParaEditar = (operacion) => {
+        console.log(operacion)
         getAllSucursales();
         getAllEstatusEmbarque();
         getAllTipoCobro();
@@ -2245,7 +2252,6 @@ function Embarque(props) {
 
 
     async function getParametrosConfiguracion(operacion) {
-
         obtenerParametrosConfiguracion().then(respuesta => {
             obtenerTiposDocumentoSucursal(localStorage.getItem("Sucursal")).then(({data}) => {
                 setDataTipoDocumento(data)
@@ -3778,30 +3784,45 @@ function Embarque(props) {
 
                                                     <Grid container spacing={2}
                                                           style={{marginBottom: '10px', paddingRight: '15px'}}>
-                                                        <Grid item xs>
-                                                            <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                <div className="input">
-                                                                    <TextField
-                                                                        variant="outlined"
-                                                                        label="Observaciones"
-                                                                        margin="dense"
-                                                                        type="text"
-                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                        value={state.observaciones}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                observaciones: event.target.value,
-                                                                            });
-                                                                        }}
-                                                                        name="observaciones"
-                                                                        id="observaciones"
-                                                                        placeholder={"sin observaciones"}
-                                                                        InputLabelProps={{shrink: true}}
-                                                                    />
-                                                                </div>
-                                                            </div>
+                                                        <Grid item xs={6}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Observaciones"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                value={state.observaciones}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        observaciones: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="observaciones"
+                                                                id="observaciones"
+                                                                placeholder={"sin observaciones"}
+                                                                InputLabelProps={{shrink: true}}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={3}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Referencia"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Consultar"}
+                                                                value={state.referencia}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        referencia: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="referencia"
+                                                                id="referencia"
+                                                            />
                                                         </Grid>
                                                     </Grid>
                                                 </div>
@@ -3818,6 +3839,7 @@ function Embarque(props) {
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                             cliente={state.clientePaga}
+                                            seCalculaTarifa={seCalculaTarifa}
                                             limpiarProducto={configuraciones.limpiarProducto}
                                         />
 
