@@ -58,6 +58,7 @@ export default function PlantillasImportacionMain(){
 
     const handleOnConsultarRowClick = (item) => {
         obtenerPlantillasImportacionById(item.idPlantilla).then(respuesta => {
+            respuesta.data.data.idTipoPlantilla = respuesta.data.data.idTipoPlantilla.toString()
             setState({...state,plantillaSeleccionada: respuesta.data.data})
             handleChangeTab(TABS.AGREGAR)
         })
