@@ -296,11 +296,15 @@ class UltimaMilla extends Component {
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
                     if (results) {
-                        /*if (results.vehicleIdsNotPlanned) {
-                            if (results.vehicleIdsNotPlanned.length > 0) {
-                                unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
-                            }
-                        }*/
+                        if (results.tours.length === 0){
+                            results.unassigned?.forEach(i => {
+                                if (i.reasons[0]?.code === 'TIME_WINDOW_CONSTRAINT'){
+                                    showSuccess("El punto de entrega de una de las guías está demasiado lejos del operador para entregarla en un día")
+                                }else{
+                                    showSuccess("No se pudo calcular la ruta.")
+                                }
+                            })
+                        }
                         results.tours.map(t => t.color = randomColor(10))
 
                         console.log(guias)
