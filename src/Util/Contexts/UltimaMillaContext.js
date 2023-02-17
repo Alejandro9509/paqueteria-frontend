@@ -411,7 +411,8 @@ async function ordenarParada(idParada, guias) {
         lat: g.lat.toString(),
         lng: g.lng.toString(),
         orden: index + 1,
-        esRecoleccion: g.m_bEsRecoleccion
+        esRecoleccion: g.m_bEsRecoleccion,
+        idParadaGuia: g.m_nIdParadaGuia
     }))
     trackPromise(
         result = axios.put(url, Object.assign({}, {
