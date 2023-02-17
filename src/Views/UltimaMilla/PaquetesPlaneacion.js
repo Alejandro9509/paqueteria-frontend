@@ -50,7 +50,7 @@ class PaquetesPlaneacion extends Component {
     }
 
     componentDidMount() {
-        obtenerInformesEstatus(7).then(({data}) => {
+        /*obtenerInformesEstatus(7).then(({data}) => {
             this.setState({
                 dataInformes: data
             })
@@ -65,7 +65,7 @@ class PaquetesPlaneacion extends Component {
         })
         obtenerOperadores().then(({data}) => {
             this.setState({dataOperadores: data})
-        })
+        })*/
         // this.getAllPaquetes()
     }
 
