@@ -156,7 +156,7 @@ function DialogAsignarSeguros(props) {
                                  className="form-control"
                                  type="text"
                                  required
-                                 label="Poliza"
+                                 label="Póliza"
                                  onChange={(e) => {e.preventDefault();setState({...state, poliza: e.target.value})}}
                                  value={state.poliza}
                                  id="poliza"
