@@ -51,7 +51,7 @@ export default function DialogoNuevoPaquete(props) {
         errorCantidad:false,
         nameInput:'',
         errorTexto:""
-       
+
     })
 
     const resetErrores = () => {
@@ -199,6 +199,8 @@ export default function DialogoNuevoPaquete(props) {
                     resetPaquete()
                     resetErrores()
                 }
+            }else{
+                showSuccess("El producto no se encuentra en la lista")
             }
         }
 
@@ -242,16 +244,16 @@ export default function DialogoNuevoPaquete(props) {
                 console.log("valida si es numero"+isNaN(Number(event.target.value)))
                 if(Number(event.target.value)<=0){
                         setErrores(errores=>{
-                            return{ 
+                            return{
                                 ...errores,
                              errorCantidad:true,
                              errorTexto:"Ingrese un numero mayor a 0"
-                            
+
                             }
                          })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorCantidad:true,
                          errorTexto:"Ingrese solo digitos"
@@ -259,36 +261,36 @@ export default function DialogoNuevoPaquete(props) {
                      })
                 }else{
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorCantidad:false}
                      })
                 }
             }else{
                 setErrores(errores=>{
-                    return{ 
+                    return{
                         ...errores,
                      errorCantidad:false}
                  })
             }
-                
+
         }else
 
         if(event.target.name == "m_rLargo"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                         setErrores(errores=>{
-                            return{ 
+                            return{
                                 ...errores,
                              errorLargo:true,
                              errorTexto:"Ingrese un numero mayor a 0"
 
                             }
                          })
-                         
+
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorLargo:true,
                          errorTexto:"Ingrese solo digitos"
@@ -296,14 +298,14 @@ export default function DialogoNuevoPaquete(props) {
                      })
                 }else{
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorLargo:false}
                      })
                 }
             }else{
                 setErrores(errores=>{
-                    return{ 
+                    return{
                         ...errores,
                      errorLargo:false}
                  })
@@ -313,16 +315,16 @@ export default function DialogoNuevoPaquete(props) {
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                         setErrores(errores=>{
-                            return{ 
+                            return{
                                 ...errores,
                              errorAlto:true,
                              errorTexto:"Ingrese un numero mayor a 0"
-                            
+
                             }
                          })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorAlto:true,
                          errorTexto:"Ingrese solo digitos"
@@ -330,14 +332,14 @@ export default function DialogoNuevoPaquete(props) {
                      })
                 }else{
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorAlto:false}
                      })
                 }
             }else{
                 setErrores(errores=>{
-                    return{ 
+                    return{
                         ...errores,
                      errorAlto:false}
                  })
@@ -347,16 +349,16 @@ export default function DialogoNuevoPaquete(props) {
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                         setErrores(errores=>{
-                            return{ 
+                            return{
                                 ...errores,
                              errorAncho:true,
                              errorTexto:"Ingrese un numero mayor a 0"
-                            
+
                             }
                          })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorAncho:true,
                          errorTexto:"Ingrese solo digitos"
@@ -364,14 +366,14 @@ export default function DialogoNuevoPaquete(props) {
                      })
                 }else{
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorAncho:false}
                      })
                 }
             }else{
                 setErrores(errores=>{
-                    return{ 
+                    return{
                         ...errores,
                      errorAncho:false}
                  })
@@ -381,16 +383,16 @@ export default function DialogoNuevoPaquete(props) {
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                         setErrores(errores=>{
-                            return{ 
+                            return{
                                 ...errores,
                              errorPeso:true,
                              errorTexto:"Ingrese un numero mayor a 0"
-                            
+
                             }
                          })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorPeso:true,
                          errorTexto:"Ingrese solo digitos"
@@ -398,20 +400,20 @@ export default function DialogoNuevoPaquete(props) {
                      })
                 }else{
                     setErrores(errores=>{
-                        return{ 
+                        return{
                             ...errores,
                          errorPeso:false}
                      })
                 }
             }else{
                 setErrores(errores=>{
-                    return{ 
+                    return{
                         ...errores,
                      errorPeso:false}
                  })
             }
         }
-        
+
         setPaquete(paquete => {
             return {
                 ...paquete,
