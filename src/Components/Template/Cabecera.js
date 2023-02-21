@@ -117,7 +117,7 @@ function Cabecera({ titulo, children }) {
                         
             </div>
             <div>
-                VERSION: 1.6.27
+                VERSION: 1.6.31
             </div>
             <div className="topbar-left pull-left" style={{height: "60px" }}>
                 <div className="clearfix">
