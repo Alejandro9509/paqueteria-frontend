@@ -701,7 +701,7 @@ class FiltersMap extends Component {
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
                                 onClick={() => {this.setState({unidadesSeleccionadas:[],paquetesSeleccionadas: []});this.props.guardarRuta()}}
-                                disabled={(moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) && !validarDerecho(9101448)}
+                                disabled={((moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) && !validarDerecho(9101448)) || this.props.data.tour?.tour?.unassigned?.length > 0}
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",

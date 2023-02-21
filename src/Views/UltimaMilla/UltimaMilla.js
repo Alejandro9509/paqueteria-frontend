@@ -14,7 +14,7 @@ import {
     Dialog,
     DialogContent,
     DialogActions,
-    DialogTitle, Button, MenuItem
+    DialogTitle, Button, MenuItem, DialogContentText
 } from "@material-ui/core";
 import FaceIcon from "@material-ui/icons/Face";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -95,7 +95,8 @@ class UltimaMilla extends Component {
             ultimaMilla: null,
             openDialog: false,
             closeFiltersMapDialogs: false,
-            closeResumenParadas:false
+            closeResumenParadas:false,
+            openDialogGenerarRutaError: false
 
         }
         this.generarRuta = this.generarRuta.bind(this)
@@ -250,7 +251,6 @@ class UltimaMilla extends Component {
 
 
     async generarRuta(data) {
-        console.log(data)
         this.setState({tour: null})
         if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
@@ -269,45 +269,24 @@ class UltimaMilla extends Component {
             if (unidadYaAsignada){
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
             }else{
-                /*let unidadesDisponibles = true
-                let fechaActual = data.finishDate
-                for (let i = 0; i < data.unidadesSeleccionadas.length ; i++){
-                    let resultado = await validarUnidadOcupada(data.unidadesSeleccionadas[i].m_nIdUnidad, fechaActual, data.sucursalSeleccionada.m_nIdSucursal)
-                    unidadesDisponibles = resultado.data.UnidadDisponible
-                }
-                if (unidadesDisponibles){
-                    let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
-                    obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
-                        if (results) {
-                            if (results.vehicleIdsNotPlanned) {
-                                if (results.vehicleIdsNotPlanned.length > 0) {
-                                    unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
-                                }
-                            }
-                            results.tours.map(t => t.color = randomColor(10))
-
-                            console.log(guias)
-                            this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
-                        }
-                    })
-                }else{
-                    showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
-                }*/
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
                     if (results) {
-                        if (results.tours.length === 0){
+                        if (results.unassigned?.length > 0){
                             results.unassigned?.forEach(i => {
+                                let index = i.jobId.substring(4);
                                 if (i.reasons[0]?.code === 'TIME_WINDOW_CONSTRAINT'){
-                                    showSuccess("El punto de entrega de una de las guías está demasiado lejos del operador para entregarla en un día")
+                                    i.reasons[0].descripcion = `El registro ${guias[index].m_sFolio} no puede ser agregado a la ruta porque no alcanzaría a ser completado en un día`
+                                }else if (i.reasons[0]?.code === 'REACHABLE_CONSTRAINT'){
+                                    i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
                                 }else{
-                                    showSuccess("No se pudo calcular la ruta.")
+                                    i.reasons[0].descripcion = `No se pudo agregar a la ruta el registro ${guias[index].m_sFolio}.`
                                 }
                             })
+                            this.setState({openDialogGenerarRutaError: true})
+                        }else{
+                            results.tours.map(t => t.color = randomColor(10))
                         }
-                        results.tours.map(t => t.color = randomColor(10))
-
-                        console.log(guias)
                         this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
                     }
                 })
@@ -425,7 +404,10 @@ class UltimaMilla extends Component {
                         </DialogContent>
                     </Dialog>
                 }
-
+                <DialogGenerarRutaError
+                    selectedValue={this.state.tour?.tour?.unassigned || null}
+                    open={this.state.openDialogGenerarRutaError}
+                    onClose={() => this.setState({openDialogGenerarRutaError: false})} />
                 {
                     !this.state.fullScreen &&
                     <header className="topbar clearfix">
@@ -536,14 +518,30 @@ UltimaMilla.propTypes = {};
 export default UltimaMilla;
 
 
-function TripPoint(props) {
-    const [state, setState] = React.useState({polygon: []})
-    const blackOptions = {color: '#65a0f4'}
-    useEffect(value => {
+function DialogGenerarRutaError(props) {
 
-    }, [])
+    const handleClose = () => {
+        props.onClose();
+    };
 
-    return <Polyline pathOptions={blackOptions} positions={state.polygon}/>;
+    return (
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={props.open} maxWidth={"sm"} fullWidth>
+            <DialogTitle id="simple-dialog-title">Problemas encontrados al generar ruta</DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    {
+                        props.selectedValue?.length > 0 &&
+                        props.selectedValue.map(i => (<h6>{i.reasons[0].descripcion}</h6>))
+                    }
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary" autoFocus>
+                    Aceptar
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
 }
 
 
