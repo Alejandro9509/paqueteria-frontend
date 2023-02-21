@@ -455,8 +455,8 @@ export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
             //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
             const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
             console.log(data)
-            console.log(arrayUniqueByKey(data,'Número de embarque'))
-            const embarquesUnicos = arrayUniqueByKey(data,'Número de embarque')
+            console.log(arrayUniqueByKey(data,FORMAT.numeroEmbarque))
+            const embarquesUnicos = arrayUniqueByKey(data,FORMAT.numeroEmbarque)
 
             //VALIDACIONES DE GUIAS
             const newArray = embarquesUnicos.map(function(item,index){
