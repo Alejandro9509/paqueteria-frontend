@@ -966,7 +966,7 @@ class DetalleParadas extends Component {
                                                                                                         color="primary">
                                                                                                         
                                                                                                         {
-                                                                                                            // !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            // !g.m_bTimbrado && g.m_nEstatusUlimaMilla === 1 && tour.m_bActiva &&
                                                                                                             (false) &&
                                                                                                             <IconButton
                                                                                                                 onClick={() => {
