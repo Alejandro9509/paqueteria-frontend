@@ -146,11 +146,12 @@ function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
     return result
 }
 
-function obtenerGuiaPendientes(idOrigen, idDestino) {
+function obtenerGuiaPendientes(idOrigen, idDestino, tipoTimbrado) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetListadoPendientes/` +
         idOrigen +
         "/" +
-        idDestino
+        idDestino+
+        "/" + tipoTimbrado
         ;
     let result;
     trackPromise(

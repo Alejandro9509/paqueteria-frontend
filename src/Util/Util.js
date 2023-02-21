@@ -2,6 +2,10 @@ import {useEffect, useRef} from "react";
 import axios from "axios";
 import {trackPromise} from "react-promise-tracker";
 import {API_HEADERS} from "../Constants";
+import * as XLSX from "xlsx";
+import moment from "moment";
+import Noty from "noty";
+import {es} from "date-fns/locale";
 
 const XRouteClient = window.XRouteClient;
 const XLoadClient = window.XLoadClient;
@@ -12,6 +16,15 @@ xload.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 
 const headers = API_HEADERS
+
+export function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "8000",
+    }).show();
+}
 
 export function useInterval(callback, delay) {
     const savedCallback = useRef();
@@ -292,4 +305,301 @@ export function getAddressFormated(calle, numeroExterior, numeroInterior, coloni
         addressComplete += ","+pais
     }
     return addressComplete
+}
+
+export function readExcel(FORMAT,file, esRecoleccion){
+    const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+
+        fileReader.onload = (e) => {
+            const bufferArray = e.target.result;
+
+            const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
+
+            //SE OBTIENEN LAS HOJAS DEL EXCEL
+            const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
+            const wsPaquetes = (wb.Sheets[FORMAT.hojaPaquetes]);
+            const wsComplementosSat = (wb.Sheets[FORMAT.hojaComplementos]);
+
+            //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
+            const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+            const dataPaquetes = XLSX.utils.sheet_to_json(wsPaquetes, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+            const dataComplementosSat = XLSX.utils.sheet_to_json(wsComplementosSat, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+
+            //SE RECORREN LAS FILAS CON DATOS Y SE TOMAN LOS DATOS CORRESPONDIENTES
+            const arrayPaquetes = dataPaquetes.map((item) => ({
+                numeroEmbarque: item[FORMAT.numeroEmbarque],
+                // idProducto: item[FORMAT.paquetes.idProducto],
+                numeroProducto: item[FORMAT.paquetes.numeroProducto],
+                // idEmbalaje: item[FORMAT.paquetes.idEmbalaje],
+                embalaje: item[FORMAT.paquetes.embalajePaquete],
+                alto: item[FORMAT.paquetes.alto],
+                ancho: item[FORMAT.paquetes.ancho],
+                largo: item[FORMAT.paquetes.largo],
+                peso: item[FORMAT.paquetes.pesoPaquete],
+                volumen: parseFloat(item[FORMAT.paquetes.alto]) * parseFloat(item[FORMAT.paquetes.ancho]) * parseFloat(item[FORMAT.paquetes.largo]),
+                cantidad: item[FORMAT.paquetes.cantidadPaquete],
+                descripcion: item[FORMAT.paquetes.descripcionPaquete],
+                observaciones: item[FORMAT.paquetes.observacionesPaquete] || ""
+            }))
+            console.log(dataComplementosSat[0])
+            const arrayComplementos = dataComplementosSat.map((item) => ({
+                numeroEmbarque: item[FORMAT.numeroEmbarque],
+                cantidad: item[FORMAT.complementosSat.cantidadComplemento],
+                peso: item[FORMAT.complementosSat.pesoComplemento],
+                claveProductoServicio: item[FORMAT.complementosSat.claveProductoServicio],
+                claveUnidadMedida: item[FORMAT.complementosSat.claveUnidadMedida],
+                esMaterialPeligroso: (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase().trim() === 'SI'|| (item[FORMAT.complementosSat.esMaterialPeligroso])?.toUpperCase().trim() === 'SÍ',
+                claveMaterialPeligroso: item[FORMAT.complementosSat.claveMaterialPeligroso],
+                claveEmbalaje: item[FORMAT.complementosSat.claveEmbalaje],
+                descripcionEmbalaje: item[FORMAT.complementosSat.descripcionEmbalajeComplemento],
+                claveFraccionArancelaria: item[FORMAT.complementosSat.claveFraccionArancelaria],
+            }))
+            console.log(arrayComplementos)
+
+            //VALIDACIONES DE GUIAS
+            const newArray = data.map(function(item,index){
+                let embarqueResumen = {
+                    fechaRegistro:getCurrentDate(),
+                    horaRegistro:getCurrentTime(),
+                    numeroEmbarque : item[FORMAT.numeroEmbarque],
+                    esRecoleccion : esRecoleccion,
+                    idUsuario: localStorage.getItem("UsuarioId"),
+                    moneda: item[FORMAT.moneda],
+                    tipoCambio: item[FORMAT.tipoCambio],
+                    tipoCobro: item[FORMAT.tipoCobro],
+                    tipoSeguro: item[FORMAT.tipoSeguro],
+                    porcentajeSeguro: item[FORMAT.porcentajeSeguro],
+                    valorDeclarado: item[FORMAT.valorDeclarado],
+                    validarTimbradoFactura: item[FORMAT.validarTimbradoFactura]?.toUpperCase().trim() === 'SI' || item[FORMAT.validarTimbradoFactura]?.toUpperCase().trim() === 'SÍ',
+                    observaciones: item[FORMAT.observacionesEmbarque],
+                    numeroRemitente: item[FORMAT.numeroRemitente],
+                    correoRemitente: item[FORMAT.correoRemitente],
+                    telefonoRemitente: item[FORMAT.telefonoRemitente],
+                    contactoRemitente: item[FORMAT.contactoRemitente],
+                    // idDestinatario: item[FORMAT.idDestinatario],
+                    numeroDestinatario: item[FORMAT.numeroDestinatario],
+                    correoDestinatario: item[FORMAT.correoDestinatario],
+                    telefonoDestinatario: item[FORMAT.telefonoDestinatario],
+                    contactoDestinatario: item[FORMAT.contactoDestinatario],
+                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
+                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
+                    latitud: item[FORMAT.latitud],
+                    longitud: item[FORMAT.longitud],
+                    conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
+                    // idTipoServicio: item[FORMAT.idTipoServicio]
+                    tipoServicio: item[FORMAT.tipoServicio],
+                    referencia: item[FORMAT.referencia]
+                }
+                if (embarqueResumen.entregaEnSucursal){
+                    // embarqueResumen.idSucursalEntrega = item[FORMAT.idSucursalEntrega]
+                    embarqueResumen.sucursalEntrega = item[FORMAT.sucursalEntrega]
+                }else{
+                    if (embarqueResumen.entregaDiferenteDomicilio) {
+                        embarqueResumen.codigoPostalDiferenteDomicilio = item[FORMAT.codigoPostalDiferenteDomicilio]
+                        embarqueResumen.coloniaDiferenteDomicilio = item[FORMAT.coloniaDiferenteDomicilio]
+                        embarqueResumen.calleNumeroDiferenteDomicilio = item[FORMAT.calleNumeroDiferenteDomicilio]
+                        embarqueResumen.entregarEn = item[FORMAT.entregarEn]
+                        embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionales]
+                    }
+                }
+                if (embarqueResumen.esRecoleccion){
+                    embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ'
+                    if (embarqueResumen.recoleccionDiferenteDomicilio){
+                        embarqueResumen.codigoPostalDiferenteDomicilioRecoleccion = item[FORMAT.codigoPostalDiferenteDomicilioRecoleccion]
+                        embarqueResumen.coloniaDiferenteDomicilioRecoleccion = item[FORMAT.coloniaDiferenteDomicilioRecoleccion]
+                        embarqueResumen.calleNumeroDiferenteDomicilioRecoleccion = item[FORMAT.calleNumeroDiferenteDomicilioRecoleccion]
+                        embarqueResumen.recogerEn = item[FORMAT.recogerEn]
+                        embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
+                    }
+                }
+                if (embarqueResumen.conCita){
+                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
+                    if (!embarqueResumen.citaPendiente) {
+                        embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
+                        embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinimaCita]).format('HH:mm')
+                        embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaximaCita]).format('HH:mm')
+                    }
+                }
+                embarqueResumen.paquetes = arrayPaquetes.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
+                embarqueResumen.complementosSAT = arrayComplementos.filter(itemPaquete => parseInt(itemPaquete.numeroEmbarque) === parseInt(embarqueResumen.numeroEmbarque))
+                return embarqueResumen
+            })
+            resolve(newArray);
+        };
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+    return promise
+}
+
+const arrayUniqueByKey = (array, key) => {
+    return [...new Map(array.map(item =>
+        [item[key], item])).values()]
+}
+
+export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
+    const promise = new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsArrayBuffer(file);
+
+        fileReader.onload = (e) => {
+            const bufferArray = e.target.result;
+            const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
+
+            //SE OBTIENEN LAS HOJAS DEL EXCEL
+            const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
+
+            //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
+            const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
+            console.log(data)
+            console.log(arrayUniqueByKey(data,'Número de embarque'))
+            const embarquesUnicos = arrayUniqueByKey(data,'Número de embarque')
+
+            //VALIDACIONES DE GUIAS
+            const newArray = embarquesUnicos.map(function(item,index){
+                let embarqueResumen = {
+                    esRecoleccion: esRecoleccion,
+                    fechaRegistro:getCurrentDate(),
+                    horaRegistro:getCurrentTime(),
+                    numeroEmbarque : item[FORMAT.numeroEmbarque],
+                    idUsuario: localStorage.getItem("UsuarioId"),
+                    valorDeclarado: item[FORMAT.valorDeclarado],
+                    responsablePago: item[FORMAT.responsablePago],
+                    observaciones: item[FORMAT.observacionesEmbarque],
+                    numeroRemitente: item[FORMAT.numeroRemitente],
+                    numeroDestinatario: item[FORMAT.numeroDestinatario],
+                    entregaEnSucursal: item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaEnSucursal]?.toUpperCase().trim() === 'SÍ',
+                    entregaDiferenteDomicilio: item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.entregaDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ',
+                    conCita: item[FORMAT.conCita]?.toUpperCase().trim() === 'SI' || item[FORMAT.conCita]?.toUpperCase().trim() === 'SÍ',
+                    referencia: item[FORMAT.referencia],
+                }
+                if (embarqueResumen.entregaEnSucursal){
+                    embarqueResumen.sucursalEntrega = item[FORMAT.sucursalEntrega]
+                }else{
+                    if (embarqueResumen.entregaDiferenteDomicilio) {
+                        embarqueResumen.codigoPostalDiferenteDomicilio = item[FORMAT.codigoPostalDiferenteDomicilio]
+                        embarqueResumen.coloniaDiferenteDomicilio = item[FORMAT.coloniaDiferenteDomicilio]
+                        embarqueResumen.calleNumeroDiferenteDomicilio = item[FORMAT.calleNumeroDiferenteDomicilio]
+                        embarqueResumen.entregarEn = item[FORMAT.entregarEn]
+                        embarqueResumen.datosAdicionalesEntrega = item[FORMAT.datosAdicionales]
+                    }
+                }
+                if (embarqueResumen.esRecoleccion){
+                    embarqueResumen.recoleccionDiferenteDomicilio = item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SI' || item[FORMAT.recoleccionDiferenteDomicilio]?.toUpperCase().trim() === 'SÍ'
+                    if (embarqueResumen.recoleccionDiferenteDomicilio){
+                        embarqueResumen.codigoPostalDiferenteDomicilioRecoleccion = item[FORMAT.codigoPostalDiferenteDomicilioRecoleccion]
+                        embarqueResumen.coloniaDiferenteDomicilioRecoleccion = item[FORMAT.coloniaDiferenteDomicilioRecoleccion]
+                        embarqueResumen.calleNumeroDiferenteDomicilioRecoleccion = item[FORMAT.calleNumeroDiferenteDomicilioRecoleccion]
+                        embarqueResumen.recogerEn = item[FORMAT.recogerEn]
+                        embarqueResumen.datosAdicionalesRecoleccion = item[FORMAT.datosAdicionalesRecoleccion]
+                    }
+                }
+                if (embarqueResumen.conCita){
+                    embarqueResumen.citaPendiente = item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SI' || item[FORMAT.citaPendiente]?.toUpperCase().trim() === 'SÍ'
+                    if (!embarqueResumen.citaPendiente) {
+                        embarqueResumen.fechaCita = moment(item[FORMAT.fechaCita]).format('YYYY-MM-DD')
+                        embarqueResumen.horaCitaMinima = moment(item[FORMAT.horaMinimaCita]).format('HH:mm')
+                        embarqueResumen.horaCitaMaxima = moment(item[FORMAT.horaMaximaCita]).format('HH:mm')
+                    }
+                }
+                embarqueResumen.paquetes = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map(p => ({
+                    numeroEmbarque: p[FORMAT.numeroEmbarque],
+                    numeroProducto: p[FORMAT.paquetes.numeroProducto],
+                    cantidad: p[FORMAT.paquetes.cantidadPaquete],
+                    observaciones: p[FORMAT.paquetes.observacionesPaquete] || ""
+                }))
+                embarqueResumen.complementosSAT = data.filter(itemPaquete => parseInt(itemPaquete[FORMAT.numeroEmbarque]) === parseInt(embarqueResumen.numeroEmbarque)).map((c) => ({
+                    numeroEmbarque: c[FORMAT.numeroEmbarque],
+                    cantidad: c[FORMAT.complementosSat.cantidadComplemento],
+                    claveProductoServicio: c[FORMAT.complementosSat.claveProductoServicio],
+                    claveUnidadMedida: c[FORMAT.complementosSat.claveUnidadMedida],
+                    numeroProducto: c[FORMAT.paquetes.numeroProducto],
+                }))
+                return embarqueResumen
+            })
+            resolve(newArray);
+        };
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+    return promise
+}
+
+/**Se hace la relacion de los nombres de las columnas en el excel*/
+export const DEFAULT_FORMAT = {
+    //Todos son obligatorios
+    numeroEmbarque:'Número de embarque',
+    // idMoneda: 'IdMoneda',
+    // idTipoCambio: 'IdTipoCambio',
+    // idTipoCobro: 'IdTipoCobro',
+    moneda: 'Moneda',
+    tipoCambio: 'Tipo de cambio',
+    tipoCobro: 'Tipo de cobro',
+    // idCliente: 'IdCliente',
+    // idTipoSeguro: 'IdTipoSeguro',
+    tipoSeguro: 'Tipo de seguro',
+    porcentajeSeguro: 'Porcentaje de Seguro',
+    valorDeclarado: 'Valor declarado',
+    validarTimbradoFactura: 'Validar timbrado factura',
+    observaciones: 'Observaciones',
+    // idTipoServicio: 'IdTipoServicio',
+    tipoServicio: 'Tipo de servicio',
+    // idRemitente: 'IdRemitente',
+    numeroRemitente: 'No. Remitente',
+    correoRemitente: 'Correo remitente',
+    telefonoRemitente: 'Telefono remitente',
+    contactoRemitente: 'Contacto remitente',
+    // idDestinatario: 'IdDestinatario',
+    numeroDestinatario: 'No. Destinatario',
+    correoDestinatario: 'Correo destinatario',
+    telefonoDestinatario: 'Telefono destinatario',
+    contactoDestinatario: 'Contacto destinatario',
+    entregaEnSucursal: 'Entrega en sucursal',
+    // idSucursalEntrega: 'IdSucursalEntrega',
+    sucursalEntrega: 'Sucursal de entrega',
+    entregaDiferenteDomicilio: 'Entrega en diferente domicilio',
+    codigoPostalDiferenteDomicilio: 'Codigo postal',
+    coloniaDiferenteDomicilio: 'Colonia',
+    calleNumeroDiferenteDomicilio: 'Calle y numero',
+    entregarEn: 'Entregar en',
+    datosAdicionalesEntrega: 'Datos adicionales de entrega',
+    latitud: 'Latitud',
+    longitud: 'Longitud',
+    entregaConCita: 'Entrega con cita',
+    citaPendiente: 'Cita pendiente',
+    fechaCita: 'Fecha cita',
+    horaCitaMinima: 'Hora mínima',
+    horaCitaMaxima: 'Hora máxima',
+    paquetes:{
+        numeroEmbarque: 'Número de embarque',
+        cantidad: 'Cantidad',
+        // idProducto: 'IdProducto',
+        numeroProducto: 'Número de producto',
+        descripcion: 'Descripcion',
+        // idEmbalaje: 'IdEmbalaje',
+        embalaje: 'Embalaje',
+        largo: 'Largo',
+        alto: 'Alto',
+        ancho: 'Ancho',
+        peso: 'Peso',
+        observaciones: 'Observaciones'
+    },
+    complementosSat:{
+        numeroEmbarque: 'Número de embarque',
+        cantidad: 'Cantidad',
+        peso: 'Peso',
+        claveProducto: 'Clave producto o servicio',
+        claveUnidadMedida: 'Clave unidad medida',
+        esMaterialPeligroso: 'Es material peligroso',
+        claveMaterialPeligroso: 'Clave material peligroso',
+        claveEmbalaje: 'Clave embalaje',
+        descripcionEmbalaje: 'Descripcion embalaje',
+        claveFraccionArancelaria: 'Clave fracción arancelaria',
+    }
 }

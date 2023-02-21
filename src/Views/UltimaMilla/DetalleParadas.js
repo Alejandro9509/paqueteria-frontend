@@ -865,7 +865,7 @@ class DetalleParadas extends Component {
 
 
                                                         {
-                                                            tour.m_bActiva &&
+                                                            false &&
                                                             <Button disabled={!validarDerecho(9101447) || tour.m_arrClsProGuia.some(g=> 
                                                                 g.m_nEstatusUlimaMilla != 1)} variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
@@ -937,7 +937,7 @@ class DetalleParadas extends Component {
                                                                                                     display: "inline-block"
                                                                                                 }}
                                                                                                 align="left">
-                                                                                                {index + 1}-{g.m_sFolio}
+                                                                                                {index + 1}-{g.m_sFolio} <br/>{g.m_bEsEntregaParcial ? "Es parcial" : ""}
                                                                                             </TableCell>
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
@@ -967,9 +967,8 @@ class DetalleParadas extends Component {
                                                                                                         
                                                                                                         {
                                                                                                             // !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
-                                                                                                            false &&
+                                                                                                            (false) &&
                                                                                                             <IconButton
-                                                                                                                /* disabled={!validarDerecho(9101449)} */
                                                                                                                 onClick={() => {
                                                                                                                     console.log(JSON.stringify(g))
                                                                                                                     this.openPaquetesParciales(tour, g)
@@ -985,7 +984,7 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         
                                                                                                         {
-                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            false &&
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101449)}
                                                                                                                 onClick={() => this.openRemplazarPaquete(tour, g)}

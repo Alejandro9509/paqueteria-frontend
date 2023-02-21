@@ -306,7 +306,7 @@ export default function DiferenteDomicilioForm(props){
                     )}
                     onKeyDown={e => {
                         if (e.code === "Enter") {
-                            console.log(e)
+                            // console.log(e)
                             e.preventDefault()
                         }
                     }}
@@ -323,7 +323,10 @@ export default function DiferenteDomicilioForm(props){
                                 required={props.required}
                                 onKeyDown={e => {
                                     if (e.key === "Enter") {
-                                        console.log(e)
+                                       let value = {
+                                        m_sCP:e.target.value
+                                       }
+                                        handleChangeAutocomplete("codigoPostal",value )
                                         e.preventDefault()
                                     }
                                 }}

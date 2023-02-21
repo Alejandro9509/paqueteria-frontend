@@ -1120,7 +1120,7 @@ function Viajes() {
     };
 
     function envioCorreoAction(data) {
-        enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault).then(({data}) => {
+        enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault,viajeSeleccionado.id).then(({data}) => {
             showSuccess(data);
             descargarPDF(viajeSeleccionado.id,state.idInforme, state.folio)
             setState(state => {

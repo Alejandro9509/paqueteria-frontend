@@ -182,7 +182,7 @@ h2 {
 .MuiDataGrid-root {
   font-size: var(--font-size) !important;
   font-family: "Gill Sans", "Gill Sans MT", "Calibri", "Trebuchet MS",
-    sans-serif !important;
+  sans-serif !important;
   color: #444444 !important;
   border: 0px !important;
   overflow-y: hidden !important;
@@ -325,11 +325,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   padding-right: 0px !important;
 }
 
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 /* Track */
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px grey;
@@ -344,6 +344,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
+  width: 12px;
+  height: 12px;
   background: #f98522;
 }
 .leaflet-popup-content p {
