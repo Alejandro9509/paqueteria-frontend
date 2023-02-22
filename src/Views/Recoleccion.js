@@ -1789,6 +1789,11 @@ function Recoleccion() {
     };
     const handleEntregaEnSucursalCheckbox = (event) => {
         setRepetirConceptos(true)
+        if(destinatario.idDestinatario === ''){//Evita que cambie de estatus el check de entrega en sucursal
+            showSuccess("Se requiere seleccionar Destinatario")
+            return
+        }
+       
         setState({
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
@@ -4087,7 +4092,7 @@ function Recoleccion() {
                                                                                         name: "idSucursalEntrega",
                                                                                     }}
                                                                                 >
-                                                                                    {dataSucursal.map((sucursal) => (
+                                                                                    {dataSucursal.filter(suc=>suc.m_nIdEstado == destinatario.estadoDestinatario).map((sucursal) => (
                                                                                         <MenuItem
                                                                                             key={sucursal.m_nIdSucursal}
                                                                                             value={sucursal.m_nIdSucursal}
