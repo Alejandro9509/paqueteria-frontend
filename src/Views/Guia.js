@@ -392,8 +392,8 @@ function Guia(props) {
             width: 150,
         },
         {
-            headerName: "Total",
-            field: "m_cTotal",
+            headerName: "Subtotal",
+            field: "m_cSubtotal",
             width: 125,
             valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
 
