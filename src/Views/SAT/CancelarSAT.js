@@ -260,6 +260,7 @@ export function RecoleccionResumen(props) {
         longitud: ''
     })
     const [erroresCotizacion,setErroresCotizacion] = React.useState([])
+    const [repetirConceptos,setRepetirConceptos] = React.useState(false)
     const [state, setState] = useState({
         openDialog: false,
         openDialogRemitentes: false
@@ -606,9 +607,16 @@ export function RecoleccionResumen(props) {
         return status
     }
 
+    const seCalculaTarifa = () => {
+        setRepetirConceptos(true)
+    }
+
     const handleOnClickGuardar = (event) => {
         try {
-
+            if(repetirConceptos){
+                showSuccess("Se requiere calcular tarifa otra vez")
+                return;
+            }
             let params = {
                 "m_nIdRecoleccion": props.idRecoleccion,
                 "m_nIdCliente": data.clientePaga?.m_nIdCliente,
@@ -808,6 +816,7 @@ export function RecoleccionResumen(props) {
                     onChangeList={handleListPaquetesChange}
                     // disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                     cliente={data.clientePaga}
+                    seCalculaTarifa={seCalculaTarifa}
                     limpiarProducto={configuraciones.limpiarProducto}
                 />
             </section>
