@@ -199,6 +199,8 @@ export default function DialogoNuevoPaquete(props) {
                     resetPaquete()
                     resetErrores()
                 }
+            }else{
+                showSuccess("El producto no se encuentra en la lista")
             }
         }
 

@@ -3878,6 +3878,7 @@ function Recoleccion() {
                                         </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
+                                            seCalculaTarifa={seCalculaTarifa}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                             cliente={state.clientePaga}
