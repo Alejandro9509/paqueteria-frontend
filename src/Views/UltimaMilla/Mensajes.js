@@ -38,7 +38,8 @@ class Mensajes extends Component {
             indexOpen: -1,
             searchText: "",
             mensajes: [],
-            newMessageText: ""
+            newMessageText: "",
+            idIntervalo:null,
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
         this.openChat = this.openChat.bind(this)
@@ -58,6 +59,7 @@ class Mensajes extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+
         console.log(document.getElementById("listMessage"))
         if(document.getElementById("listMessage")){
             document.getElementById("listMessage").scrollTo(0,document.getElementById("listMessage").scrollHeight)
@@ -75,9 +77,27 @@ class Mensajes extends Component {
     }
 
     openChat(index) {
+   console.log("index"+index)
         obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador,this.props.fecha).then(({data}) => {
             this.setState({indexOpen: index === this.state.indexOpen ? -1 : index, mensajes: data, newMessageText: ""})
         })
+        var intervalo = 0;
+        if( index === this.state.indexOpen){//se cierra
+              console.log(this.state.idIntervalo)
+              clearInterval(this.state.idIntervalo)
+        }else{
+
+        intervalo = setInterval(()=>{
+            console.log("entra cada 5")
+            obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador,this.props.fecha).then(({data}) => {
+                this.setState({mensajes: data})
+            })
+             },5000)
+             console.log("dentro de"+intervalo)
+             this.setState({idIntervalo:intervalo})
+        }
+     
+
 
     }
 
@@ -151,7 +171,9 @@ class Mensajes extends Component {
                                     style={{height: "30px"}}
                                     onClick={() => this.setState({openDetail: false})}
                                 >
-                                    <CloseIcon style={{fill: "white"}}/>
+                                    <CloseIcon style={{fill: "white"}} onClick={()=>{ 
+                                         this.setState({indexOpen:-1 })
+                                        clearInterval(this.state.idIntervalo)}}/>
                                 </IconButton>
                             </div>
                         </div>

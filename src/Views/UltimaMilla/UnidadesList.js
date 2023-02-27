@@ -220,7 +220,7 @@ class UnidadesList extends Component {
                                                 <Checkbox
                                                     onClick={(event) => this.solicitarRemolques( u)}
                                                     checked={isItemSelected}
-                                                    disabled={!u.m_nIdOperador}
+                                                    disabled={!u.m_nIdOperador ||(this.props.unidadesSeleccionadas.length>0 && !isItemSelected) }
                                                     inputProps={{'aria-labelledby': labelId}}
                                                 />
                                             </TableCell>
