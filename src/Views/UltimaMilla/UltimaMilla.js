@@ -215,8 +215,8 @@ class UltimaMilla extends Component {
     guardarRuta() {
         if (this.state.ultimaMilla) {
             if (this.state.tour) { 
-                console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
-              
+                // console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
+
              /*   validarUnidadesSeleccionadas(Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad))).then(respuesta=>{
                     if(respuesta.data.sePuedeSeleccionar){
                         showSuccess("se puede seleccionar")
@@ -250,7 +250,7 @@ class UltimaMilla extends Component {
 
 
     async generarRuta(data) {
-        console.log(data)
+        // console.log(data)
         this.setState({tour: null})
         if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
@@ -303,7 +303,7 @@ class UltimaMilla extends Component {
                         }*/
                         results.tours.map(t => t.color = randomColor(10))
 
-                        console.log(guias)
+                        // console.log(guias)
                         this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
                     }
                 })
@@ -363,7 +363,7 @@ class UltimaMilla extends Component {
     }
 
     closeResumenParada(isVisible){
-        console.log("linea is visible"+isVisible)
+        // console.log("linea is visible"+isVisible)
         this.setState({
             closeResumenParadas:isVisible
         })
