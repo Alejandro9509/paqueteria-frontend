@@ -18,6 +18,8 @@ import moment from "moment";
 import 'moment/locale/es';
 import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
 import DialogoEvidenciasUltimaMilla from "../UltimaMilla/DialogoEvidenciasUltimaMilla";
+import { Autocomplete } from "@material-ui/lab";
+import { obtenerFoliosSeguimiento } from "../../Util/Contexts/SeguimientoContext";
 
 const events = [
     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
@@ -39,6 +41,7 @@ class Seguimiento extends Component {
             esRecoleccion:false,
             setOpenDialogEvidenciasRecoleccion:false,
             setOpenDialogEvidenciasEntrega:false,
+            foliosAutocomplete: {},
         }
         this.handleChage = this.handleChage.bind(this)
         this.buscarAction = this.buscarAction.bind(this)
@@ -49,7 +52,15 @@ class Seguimiento extends Component {
     }
 
     componentDidMount() {
-        
+        obtenerFoliosSeguimiento()
+            .then((res) => {
+                this.setState({
+                    foliosAutocomplete: res.data.embarques
+                        .concat(res.data.recolecciones)
+                        .concat(res.data.guias),
+                });
+            })
+            .catch((err) => {});
     }
 
     handleChage(e){
@@ -145,11 +156,51 @@ class Seguimiento extends Component {
 
                                 <Grid item>
                                     <Typography style={{display: "flex", alignItems: "center"}}>Folio
-                                        seguimiento: <input type={"text"}
+                                        seguimiento: {/* <input type={"text"}
                                                                 style={{width: "50%", height:"20px"}}
                                                                 onChange={this.handleChage}
                                                                 value={this.state.folioBusqueda}
-                                                                name={"folioBusqueda"}/></Typography>
+                                                                name={"folioBusqueda"}/> */}</Typography>
+                                </Grid>
+                                <Grid item>
+                                    {/* <input type={"text"}
+                                                                style={{width: "50%", height:"20px"}}
+                                                                onChange={this.handleChage}
+                                                                value={this.state.folioBusqueda}
+                                                                name={"folioBusqueda"}/> */}
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            marginBottom: "10px",
+                                        }}
+                                    >
+                                        <Autocomplete
+                                            id="free-solo-demo"
+                                            freeSolo
+                                            style={{
+                                                width: "150px",
+                                                paddingRight: "8px",
+                                                paddingLeft: "8px",
+                                            }}
+                                            onChange={(event, newValue) => {
+                                                this.setState({
+                                                    folioBusqueda: newValue,
+                                                });
+                                            }}
+                                            options={this.state.foliosAutocomplete}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                    name={"folioBusqueda"}
+                                                    onChange={this.handleChage}
+                                                />
+                                            )}
+                                        />
+                                    </div>
                                 </Grid>
                                 <Grid item>
                                     <RadioGroup row aria-label="position" onChange={this.handleChage} name="tipoBusqueda" value={this.state.tipoBusqueda} defaultValue="top">
