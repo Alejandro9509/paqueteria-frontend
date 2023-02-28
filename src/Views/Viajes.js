@@ -54,8 +54,7 @@ import {
     cancelarViaje,
     validarSalidaParada,
     cancelarTrayecto,
-    eliminarViaje,
-    validarCFDI
+    eliminarViaje
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -575,43 +574,38 @@ function Viajes() {
     }
 
     function generarCFDI(idParada, folio, idViaje, sustituir, idInforme) {
-        validarCFDI(idInforme).then(respuesta=>{
-            obtenerParametrosConfiguracion().then(respuesta => {
-                let titulo;
-                let mensaje;
-                if (respuesta.data.TimbradoPruebaGuia){
-                    titulo = 'Confirmar timbrado de prueba'
-                    mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
-                }else{
-                    titulo = 'Confirmar timbrado ante el SAT'
-                    mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
-                }
-                confirmAlert({
-                    title: titulo,
-                    message: mensaje,
-                    buttons: [
-                        {
-                            label: 'Sí',
-                            onClick: () => {
-                                obtenerCFDI(idParada,sustituir).then((result) => {
-                                    setState({...state, openEnvioCorreo: true, idInforme: idInforme, folio: folio, idViaje: idViaje})
-                                }).catch((error) => {
-                                    if (error.response){
-                                        showError(error.response.data)
-                                    }
-                                })
-                            }
-                        },
-                        {
-                            label: 'No',
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar timbrado de prueba'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar timbrado ante el SAT'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            obtenerCFDI(idParada,sustituir).then((result) => {
+                                setState({...state, openEnvioCorreo: true, idInforme: idInforme, folio: folio, idViaje: idViaje})
+                            }).catch((error) => {
+                                if (error.response){
+                                    showError(error.response.data)
+                                }
+                            })
                         }
-                    ]
-                })
+                    },
+                    {
+                        label: 'No',
+                    }
+                ]
             })
-        }).catch(error=>{
-            showError(error.response.data)
         })
-       
 
     }
 

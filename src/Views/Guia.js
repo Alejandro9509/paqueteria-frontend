@@ -291,11 +291,10 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
-                            <a
-                                onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
-                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
-                                                                      style={{color: "#F9A03E"}}/></a>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || parseInt(row.row.m_nIdEstatusGuia) !== 4}>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}>
+                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
+                            </a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -311,21 +310,19 @@ function Guia(props) {
                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        { row.row.EntregaEnSucursal &&
                         <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        }
                         <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
-                                                                                                                                          style={{color: "#F9A03E"}}/></a>
+                                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        {/*} <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
+                       {/*} <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
                                                                                  style={{color: "#F9A03E"}}/></a>
@@ -338,6 +335,8 @@ function Guia(props) {
                                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
+
+
                     </div>
                 )
             }
@@ -2181,6 +2180,7 @@ function Guia(props) {
                                                     folioInforme:row.data.m_sFolioInforme
                                                 })
                                             }}
+
                                         />
                                     </div>
 
@@ -3224,7 +3224,7 @@ function Guia(props) {
                                         </div>
 
                                     </div>
-                                 
+
                                     <div className="form-footer col-md-12">
 
                                         {/*<button
@@ -3367,7 +3367,6 @@ function Guia(props) {
                                                                        }}
                                                                        value={state.folioGuia}
                                                                        id="folioGuia"
-                                                                       disabled
                                                                        name="folioGuia"
                                                                        readOnly
                                                             />
@@ -3381,7 +3380,6 @@ function Guia(props) {
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
-                                                                       disabled
                                                                        value={state.sucursalCancelacion}
                                                                        id="sucursalCancelacion"
                                                                        name="sucursalCancelacion"
@@ -3400,7 +3398,6 @@ function Guia(props) {
                                                                        InputLabelProps={{
                                                                            shrink: true,
                                                                        }}
-                                                                       disabled
                                                                        value={state.fechaCancelado}
                                                                        id="fechaCancelado"
                                                                        name="fechaCancelado"
@@ -3416,7 +3413,6 @@ function Guia(props) {
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
-                                                                       disabled
                                                                        InputLabelProps={{
                                                                            shrink: true,
                                                                        }}
@@ -3435,7 +3431,6 @@ function Guia(props) {
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
-                                                                       disabled
                                                                        InputLabelProps={{
                                                                            shrink: true,
                                                                        }}

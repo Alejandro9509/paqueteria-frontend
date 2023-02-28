@@ -14,14 +14,4 @@ function obtenerInformeFolioTipo(folio, tipo, headersAux ) {
     return result
 }
 
-function obtenerFoliosSeguimiento() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Seguimiento/folios`;
-    let result;
-
-    trackPromise(
-        result = axios.get(url, { headers: headers })
-    );
-    return result
-}
-
-export {obtenerInformeFolioTipo,obtenerFoliosSeguimiento}
+export {obtenerInformeFolioTipo}

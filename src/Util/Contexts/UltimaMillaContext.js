@@ -43,7 +43,7 @@ async function convertData(trucks, guias) {
                                 "lat": parseFloat(p.lat),
                                 "lng": parseFloat(p.lng)
                             },
-                            "duration": 0,
+                            "duration": 6000,
                             "tag": "Index_"+index
                         }],
 
@@ -411,8 +411,7 @@ async function ordenarParada(idParada, guias) {
         lat: g.lat.toString(),
         lng: g.lng.toString(),
         orden: index + 1,
-        esRecoleccion: g.m_bEsRecoleccion,
-        idParadaGuia: g.m_nIdParadaGuia
+        esRecoleccion: g.m_bEsRecoleccion
     }))
     trackPromise(
         result = axios.put(url, Object.assign({}, {

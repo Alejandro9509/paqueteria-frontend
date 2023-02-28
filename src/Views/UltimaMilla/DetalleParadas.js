@@ -98,7 +98,7 @@ class DetalleParadas extends Component {
             tour: null,
             openRemplazar: false,
             openParciales: false,
-            openOrdenarParadas: false,
+            openAgregar: false,
 
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
@@ -122,7 +122,6 @@ class DetalleParadas extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla
             || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0)
-            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_nUltimaMillaOrden * d.m_nIdParadaGuia), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_nUltimaMillaOrden * d.m_nIdParadaGuia), 0), 0)
             || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0)
             || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)
             || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0)) {
@@ -431,7 +430,7 @@ class DetalleParadas extends Component {
     onSubmitOrdenarPaquetes(paquetes) {
         ordenarParada(this.state.tour.m_nIdParadaUltimaMilla, paquetes).then(({data}) => {
             showSuccess("Parada Actualizada")
-            this.setState({openOrdenarParadas: false})
+            this.setState({openAgregar: false})
             this.props.refresh()
         })
     }
@@ -609,13 +608,13 @@ class DetalleParadas extends Component {
                     </ConfirmarUbicacion>
                 }
                 {
-                    this.state.openOrdenarParadas &&
+                    this.state.openAgregar &&
                     <AgregarPaqueteUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
                                                tour={this.state.tour}
                                                onSubmit={this.onSubmitOrdenarPaquetes}
                                                tipoServicio={parseInt(this.props.filtros.tipoBusqueda)}
-                                               close={() => this.setState({openOrdenarParadas: false})}
-                                               open={this.state.openOrdenarParadas} paquetes={this.state.paquetes}/>
+                                               close={() => this.setState({openAgregar: false})}
+                                               open={this.state.openAgregar} paquetes={this.state.paquetes}/>
                 }
 
                 {(this.state.openRemplazar && this.state.paqueteSeleccionado) &&
@@ -866,17 +865,18 @@ class DetalleParadas extends Component {
 
 
                                                         {
-                                                            // Desactivado si alguna guia tiene estatus diferente a pendiente
-                                                            <Button
-                                                                disabled={!validarDerecho(9101447)/* || tour.m_arrClsProGuia.some(g => g.m_nEstatusUlimaMilla !== 1)*/}
-                                                                variant={"contained"}
-                                                                color={"primary"}
-                                                                onClick={() => this.setState({
-                                                                    paquetes: tour.m_arrClsProGuia,
-                                                                    tour: tour,
-                                                                    openOrdenarParadas: true
-                                                                })}>Ordenar Paradas</Button>
+                                                            false &&
+                                                            <Button disabled={!validarDerecho(9101447) || tour.m_arrClsProGuia.some(g=> 
+                                                                g.m_nEstatusUlimaMilla != 1)} variant={"contained"} color={"primary"}
+                                                                    onClick={() => this.setState({
+                                                                        paquetes: tour.m_arrClsProGuia,
+                                                                        tour: tour,
+                                                                        openAgregar: true
+                                                                    })}>Ordenar
+                                                                Paradas</Button>
                                                         }
+
+
 
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",

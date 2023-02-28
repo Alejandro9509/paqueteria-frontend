@@ -97,31 +97,23 @@ class AgregarPaqueteUltimaMilla extends Component {
 
                 <Dialog
                     fullWidth={true}
-                    maxWidth={'sm'}
+                    maxWidth={'xl'}
                     open={this.props.open}
                     onClose={this.props.close}
                     aria-labelledby="max-width-dialog-title"
                 >
                     <DialogTitle><Typography variant={"h4"}>Paquetes - {this.state.paradaSeleccionada.m_snNombreOperador} </Typography></DialogTitle>
                     <DialogContent>
-                        { false &&
-                            <div align={"right"} style={{width: "100%"}}>
-                                <Button variant={"contained"} color={"primary"}
-                                        onClick={() => this.openSeleccionarPaquetes()}>Agregar Paquetes</Button>
+                        <div align={"right"} style={{width: "100%"}}>
+                            <Button variant={"contained"} color={"primary"} onClick={() => this.openSeleccionarPaquetes()}>Agregar Paquetes</Button>
 
-                            </div>
-                        }
+                        </div>
 
                         <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
 
                             {items.map((value, index) => {
                                 return (
-                                <SortableItem  disabled={value.m_nEstatusUlimaMilla !== 1}
-                                               quitarPaquete={this.quitarPaquete}
-                                               key={`item-${value.m_sFolio}`}
-                                               index={index}
-                                               position={index}
-                                               primary={value.m_sFolio}
+                                <SortableItem  disabled={value.m_nEstatusUlimaMilla === 4 || value.m_nEstatusUlimaMilla === 3} quitarPaquete={this.quitarPaquete} key={`item-${value.m_sFolio}`} index={index} position={index} primary={value.m_sFolio}
                                               secundary={value.m_bEsRecoleccion ? value.m_sDomicilioRemitente : value.m_sDomicilioDestinatario}/>
                                 )})}
                         </SortableContainer>
@@ -154,7 +146,7 @@ const SortableItem = sortableElement(({primary, secundary, quitarPaquete, positi
             <DragHandle />
         </ListItemIcon>
         <ListItemText primary={`${primary}`} secondary={secundary}/>
-        {/*<DeleteIcon onClick={() => quitarPaquete(position)}/>*/}
+        <DeleteIcon onClick={() => quitarPaquete(position)}/>
     </ListItem>
 )});
 

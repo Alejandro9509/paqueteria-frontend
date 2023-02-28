@@ -38,7 +38,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false,seCalculaTarifa}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
@@ -238,36 +238,18 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
 
         }*/
         const arraynew = []
-        let entra = false
-        if (dataPaquetes.find(item => item.m_nIdPaquete === data.m_nIdPaquete)){//aqui entra en la modificacion
+        if (dataPaquetes.find(item => item.m_nIdPaquete === data.m_nIdPaquete)){
             dataPaquetes.forEach(item => {
-                if (item.m_nIdPaquete === data.m_nIdPaquete){//verifica que tengan el mismo id
-                     if(item.m_nCantidad != data.m_nCantidad ||
-                    item.m_nIdProducto != data.m_nIdProducto ||
-                    item.m_nIdTipo != data.m_nIdTipo ||
-                    item.m_nIdTipoEmbalaje != data.m_nIdTipoEmbalaje ||
-                    item.m_rAlto != data.m_rAlto ||
-                    item.m_rAncho != data.m_rAncho ||
-                    item.m_rLargo != data.m_rLargo ||
-                    item.m_rPeso != data.m_rPeso ||
-                    item.m_rVolumen != data.m_rVolumen){
-
-                        entra = true
-                    }
+                if (item.m_nIdPaquete === data.m_nIdPaquete){
                     item = data
-
                 }
                 arraynew.push(item)
             })
-            if(entra){
-                seCalculaTarifa()
-            }
-        }else{//aqui solo agrega el paquete
+        }else{
             dataPaquetes.push(paq);
             dataPaquetes.forEach(item => {
                 arraynew.push(item)
             })
-            seCalculaTarifa()
         }
         /*dataPaquetes.push(paq);
         resetPaquete()*/
