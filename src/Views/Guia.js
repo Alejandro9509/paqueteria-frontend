@@ -291,10 +291,11 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || parseInt(row.row.m_nIdEstatusGuia) !== 4}>
-                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}>
-                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
-                            </a>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
+                            <a
+                                onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
+                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -310,33 +311,33 @@ function Guia(props) {
                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        { row.row.EntregaEnSucursal &&
                         <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        }
                         <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
-                                                                                 style={{color: "#F9A03E"}}/></a>
+                                                                                                                                          style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                       {/*} <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
+                         <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                         */}
+
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
                                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
-
-
                     </div>
                 )
             }
@@ -751,7 +752,7 @@ function Guia(props) {
         }).catch(err => {
             console.log(err.response.data)
         })
-      
+
     }
 
     function handleShowConsultar(id) {
@@ -1053,7 +1054,7 @@ function Guia(props) {
                 console.log(respuesta.data)
                 setState({
                             ...state,
-                            validarEmbarqueGuia:true 
+                            validarEmbarqueGuia:true
                 })
                 setDataFromEmbarque(respuesta)
                 obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
@@ -1237,7 +1238,7 @@ function Guia(props) {
             })
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
-     
+
         setDataPaquetes(respuesta.data.m_arrPaquetes)
         let conceptosCast = []
         conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
@@ -1899,7 +1900,7 @@ function Guia(props) {
     const mostrarDialogoEtiqueta = (event,id)=>{
         event.stopPropagation();
         obtenerGuiaId(id).then(({data}) => {
-        var guia = data                
+        var guia = data
         setState({
             ...state,
             openDialogEtiquetas: true,
@@ -2001,7 +2002,7 @@ function Guia(props) {
              setShowDialogEtiqueta(false)
              }} detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
              </Dialog>
-               
+
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2085,7 +2086,7 @@ function Guia(props) {
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li>     
+                        <li>
                             <a className= {validarDerecho(9101456)? "":classes.disabled} onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
@@ -2281,7 +2282,7 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="label">
-                                                             {state.agregar == "Agregar" &&  
+                                                             {state.agregar == "Agregar" &&
                                                               <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
                                                                     <InputLabel id="idEmbarqueLabel">Folio
@@ -2327,8 +2328,8 @@ function Guia(props) {
                                                                     value={state.folioEmbarque}
                                                                     disabled
                                                          />
-                                                                
-                                                                
+
+
                                                                 }
                                                             </label>
                                                         </Grid>
@@ -2346,8 +2347,8 @@ function Guia(props) {
                                                                            name="FolioGuiaRelacionada"
                                                                            disabled
                                                                 />
-                                                            </div> 
-                                                        </Grid>*/} 
+                                                            </div>
+                                                        </Grid>*/}
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
