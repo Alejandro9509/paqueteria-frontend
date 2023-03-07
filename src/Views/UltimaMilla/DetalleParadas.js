@@ -560,7 +560,7 @@ class DetalleParadas extends Component {
     }
 
     validarPaquetes(paquetes){
-        return this.stableSort(this.state.paquetes, this.getComparator("asc", "m_sDescripcion")).map((u, index) =>{  
+        return this.stableSort(this.state.paquetes, this.getComparator("asc", "m_sDescripcion")).map((u, index) =>{
             u.isItemSelected = this.props.paquetesSeleccionadas.find(a => a.m_nId === u.m_nId) != null;
             return u})
     }
@@ -636,7 +636,7 @@ class DetalleParadas extends Component {
                 {
                     !this.state.openDetail &&
                     <IconButton
-                        onClick={(e) => { this.setState({openDetail: true}); 
+                        onClick={(e) => { this.setState({openDetail: true});
                         this.props.changeFiltersMapDialogsState(e)} }
                         style={{
                             color: "white",
