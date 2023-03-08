@@ -271,6 +271,7 @@ function ComplementosSAT(props) {
                     ...dataComplemento,
                     claveProducto: data.m_sClaveSAT,
                     esPeligroso: data.m_bMaterialPeligroso,
+                    esPeligrosoOpcional: data.m_bMaterialPeligrosoOpcional,
                     ProductoSAT: data.m_sDescripcion,
                 }
             });
