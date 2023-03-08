@@ -7,25 +7,6 @@ const headersMultipart = API_MULTIPART_HEADERS;
 
 
 
-function modificarFormatosImpresion(id, params, file, image){
-    var bodyFormData = new FormData();
-
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Modificar/${id}`;
-    let result;
-    var json = JSON.stringify({...params});
-    var blob = new Blob([json] , { type: 'application/json' });
-    bodyFormData.append("request", blob);
-    bodyFormData.append("file", file, file.name);
-    if (image){
-        bodyFormData.append("image", image, image.name);
-    }
-
-    trackPromise(
-        result =  axios.pust(url, bodyFormData, { headers: headersMultipart })
-    );
-    return result
-}
-
 function agregarFormatosImpresion( params, file, image){
     var bodyFormData = new FormData();
 
@@ -44,15 +25,6 @@ function agregarFormatosImpresion( params, file, image){
     return result
 }
 
-function eliminarFormatosImpresion(id){
-    const url = `${process.env.REACT_APP_API_URL}/FormatosImpresion/Eliminar/` + id;
-    let result;
-    trackPromise(
-        result =  axios.delete(url, { headers })
-        );
-    return result
-}
-
 function obtenerFormatosImpresion(){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/GetListado`;
     let result;
@@ -62,14 +34,6 @@ function obtenerFormatosImpresion(){
     return result
 }
 
-function obtenerFormatosImpresionId(id){
-    const url = `${process.env.REACT_APP_API_URL}/FormatosImpresion/GetById/${id}`;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-        );
-    return result
-}
 function obtenerFormatosImpresionProceso(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Proceso/${id}`;
     let result;
@@ -88,4 +52,4 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
     return result
 }
 
-export {modificarFormatosImpresion, agregarFormatosImpresion, eliminarFormatosImpresion, obtenerFormatosImpresionId, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso}
+export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso}

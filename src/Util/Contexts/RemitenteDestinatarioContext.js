@@ -5,16 +5,6 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
 
-function modificarRemitentesDestinatarios(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Modificar/` + id;
-    let result;
-    trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
-        );
-    return result
-}
-
-
 function obtenerUbicacion(city, address, subdistrict, number, code) {
     var result;
     var addressComplete = address + ", " + subdistrict + ", " + city
@@ -42,24 +32,6 @@ function obtenerUbicacion(city, address, subdistrict, number, code) {
     return result
 }
 
-function agregarRemitentesDestinatarios( params){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Agregar`;
-    let result;
-    trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
-        );
-    return result
-}
-
-function eliminarRemitentesDestinatarios(id, idEliminadoPor){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Eliminar/` + id + `/${idEliminadoPor}`;
-    let result;
-    trackPromise(
-        result =  axios.delete(url, { headers })
-        );
-    return result
-}
-
 function obtenerRemitentesDestinatarios(){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetListado`;
     let result;
@@ -76,15 +48,6 @@ function actualizarRemitentesDestinatarios(){
     );
     return result
 }
-function validarNumeroRemitente(state){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ValidaNumeroRemDes/` + state.numero;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-        );
-    return result
-}
-
 function obtenerRemitentesDestinatariosId(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetById/${id}`;
     let result;
@@ -110,5 +73,5 @@ function obtenerClientesPaginado(pagina,registros, busqueda){
         );
     return result
 }
-export {modificarRemitentesDestinatarios, agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, obtenerRemitentesDestinatarios,
-    obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion, actualizarRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado,obtenerClientesPaginado}
+export {obtenerRemitentesDestinatarios,
+    obtenerRemitentesDestinatariosId, obtenerUbicacion, actualizarRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado,obtenerClientesPaginado}

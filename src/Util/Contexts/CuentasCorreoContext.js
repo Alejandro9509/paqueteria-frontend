@@ -23,15 +23,6 @@ function agregarCuentasCorreo( params){
     return result
 }
 
-function eliminarCuentasCorreo(id){
-    const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/Eliminar/` + id;
-    let result;
-    trackPromise(
-        result =  axios.delete(url, { headers })
-        );
-    return result
-}
-
 function obtenerCuentasCorreo(){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/CuentasCorreo/GetListado`;
     let result;
@@ -41,13 +32,4 @@ function obtenerCuentasCorreo(){
     return result
 }
 
-function obtenerCuentasCorreoUsuarioId(id){
-    const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/GetByIdUsuario/` + id;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-        );
-    return result
-}
-
-export {modificarCuentasCorreo, agregarCuentasCorreo, eliminarCuentasCorreo, obtenerCuentasCorreo, obtenerCuentasCorreoUsuarioId}
+export {modificarCuentasCorreo, agregarCuentasCorreo, obtenerCuentasCorreo}
