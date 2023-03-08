@@ -15,7 +15,6 @@ import "../node_modules/noty/lib/noty.css";
 import "../node_modules/noty/lib/themes/mint.css"; 
 import Indicadores from './Views/Indicadores';
 import Tracking from './Views/Seguimiento/Tracking';
-import cabeceraRoutes from "./routesCabecera";
 import LoginExterno from "./Components/Login/LoginExterno";
 import {IdleTimeOutModal} from "./Components/Login/IdleTimeOutModal";
 
@@ -55,9 +54,6 @@ render(){
             })}
             {configuracionRoutes.map((r, key) => {
                 return r.visible ? (<Route exact key={r.path} path={r.path} component={r.component} />) : ""
-            })}
-            {cabeceraRoutes.map((r, key) => {
-              return  (<Route exact key={r.path} path={r.path} component={r.component} />)
             })}
             <Redirect from="/" to="/Indicadores"/>
           </Switch>
