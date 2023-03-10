@@ -2273,7 +2273,7 @@ function Embarque(props) {
                     return {
                         ...state,
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
-                        tipoTimbrado: respuesta.data.TipoTimbrado
+                        // tipoTimbrado: respuesta.data.TipoTimbrado
                     }
                 })
                 setConfiguraciones((config) => {
