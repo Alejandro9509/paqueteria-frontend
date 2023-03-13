@@ -150,7 +150,13 @@ const useStyles = makeStyles({
         cursor: "default",
     }
 });
-
+const TIPOS_SEGURO = {
+    CON_POLIZA: 1,
+    NO_ASEGURA: 2,
+    SEGUN_SOLICITA: 3,
+    OBLIGATORIO: 4,
+    SIN_ASIGNAR: 5
+}
 function Recoleccion() {
     const today = new Date();
     const classes = useStyles();
@@ -1626,14 +1632,13 @@ function Recoleccion() {
     const handlePatrocinadorSelected = (row) => {
         setState(state => {
             return {
-            ...state,
+                ...state,
                 clientePaga: row.data,
-                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
-                porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
-                aplicaSeguro: row.data.m_bTieneSeguro,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
                 tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
-
+                observaciones: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.CON_POLIZA ? ("Aseguradora: " + row.data.m_sAseguradora + ", Póliza: " + row.data.m_sPoliza) : "",
                 openDialog: false,
             }
         })
@@ -2893,12 +2898,14 @@ function Recoleccion() {
 
     const handleChangeTipoSeguro = (event) => {
         setRepetirConceptos(true)
-        setState({
-            ...state,
-            idTipoSeguro: event.target.value,
-            porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
-            aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
-            valorDeclarado: 0
+        setState(state => {
+            return {
+                ...state,
+                idTipoSeguro: event.target.value,
+                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
+                valorDeclarado: 0
+            }
         });
     }
 
