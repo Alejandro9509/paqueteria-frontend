@@ -235,7 +235,13 @@ const styles = {
     },
 };
 const useStyles = makeStyles(styles);
-
+const TIPOS_SEGURO = {
+    CON_POLIZA: 1,
+    NO_ASEGURA: 2,
+    SEGUN_SOLICITA: 3,
+    OBLIGATORIO: 4,
+    SIN_ASIGNAR: 5
+}
 function Embarque(props) {
     var today = new Date();
     const classes = useStyles();
@@ -561,7 +567,7 @@ function Embarque(props) {
         clientePaga: {},
         observaciones: '',
         valorDeclarado: 0,
-        idTipoSeguro: 5,
+        idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
         porcentajeSeguro: 0,
         aplicaSeguro: false,
         idTipoTarifa: '',
@@ -631,7 +637,7 @@ function Embarque(props) {
                 moneda: '',
                 estatusEmbarque: 0,
                 valorDeclarado: 0,
-                idTipoSeguro: 5,
+                idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
                 idTipoTarifa: '',
@@ -1857,7 +1863,7 @@ function Embarque(props) {
                 estatusEmbarque: 16,
                 //Datos entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
-                idTipoSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_nIdTipoSeguro : 5,
+                idTipoSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
                 porcentajeSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_xPorcentajeSeguro : 0,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
@@ -2228,11 +2234,11 @@ function Embarque(props) {
             return {
                 ...state,
                 clientePaga: row.data,
-                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
                 porcentajeSeguro: row.data.m_cPorcentajeSeguro,
-                aplicaSeguro: row.data.m_bTieneSeguro,
+                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
                 tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Póliza: " + row.data.m_sPoliza) : "",
+                observaciones: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.CON_POLIZA ? ("Aseguradora: " + row.data.m_sAseguradora + ", Póliza: " + row.data.m_sPoliza) : "",
                 openDialog: false,
             }
         })
@@ -2790,7 +2796,7 @@ function Embarque(props) {
                 ...state,
                 idTipoSeguro: event.target.value,
                 porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
-                aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
+                aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
                 valorDeclarado: 0
             }
         });
