@@ -275,7 +275,7 @@ function CrearConceptoSAT(props) {
                                             checked={props.dataComplemento.esPeligroso}
                                             onChange={handleChange}
                                             name="esPeligroso"
-                                            disabled
+                                            disabled={!props.dataComplemento.esPeligrosoOpcional}
                                             color="primary"
                                         />
                                     }
