@@ -1,12 +1,6 @@
 import React from 'react';
-import DepartamentoPage from './Views/Departamento';
 import MonedaPage from './Views/Moneda';
-import PaisesPage from './Views/Paises';
-import CiudadesCodigoPostalPage from './Views/Ciudades';
-import SucursalesPage from './Views/Sucursal';
-import UsuariosPage from './Views/Usuarios';
 import FormatoImpresionPage from './Views/FormatosImpresion/FormatoImpresion';
-import ZonasPage from './Views/Zonas/Zonas';
 
 import {ReactComponent as GParametroIcon} from './iconos/Configuracion/Icono Parametros/icono_parametro.svg';
 import {ReactComponent as GUsuarioIcon} from './iconos/Configuracion/Icono Usuarios/icono_usuarios.svg';
@@ -20,7 +14,6 @@ import {ReactComponent as GTipoCambioIcon} from './iconos/Configuracion/Icono Ti
 import {ReactComponent as GMonedaIcon} from './iconos/Configuracion/Icono Moneda/icono_moneda.svg';
 import {ReactComponent as GCuentaCorreoIcon} from './iconos/Configuracion/Icono Correo/icono_correo.svg';
 import {ReactComponent as GBitacoraIcon} from './iconos/Configuracion/Icono Bitacora/icono_bitacora.svg';
-import Folios from "./Views/Folios/Folios";
 import CuentasCorreo from "./Views/CuentasCorreo/CuentasCorreo";
 import {validarDerecho} from "./Util/Util";
 

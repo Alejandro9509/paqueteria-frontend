@@ -752,7 +752,7 @@ function Guia(props) {
         }).catch(err => {
             console.log(err.response.data)
         })
-      
+
     }
 
     function handleShowConsultar(id) {
@@ -1054,7 +1054,7 @@ function Guia(props) {
                 console.log(respuesta.data)
                 setState({
                             ...state,
-                            validarEmbarqueGuia:true 
+                            validarEmbarqueGuia:true
                 })
                 setDataFromEmbarque(respuesta)
                 obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
@@ -1238,7 +1238,7 @@ function Guia(props) {
             })
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
-     
+
         setDataPaquetes(respuesta.data.m_arrPaquetes)
         let conceptosCast = []
         conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
@@ -1900,7 +1900,7 @@ function Guia(props) {
     const mostrarDialogoEtiqueta = (event,id)=>{
         event.stopPropagation();
         obtenerGuiaId(id).then(({data}) => {
-        var guia = data                
+        var guia = data
         setState({
             ...state,
             openDialogEtiquetas: true,
@@ -2002,7 +2002,7 @@ function Guia(props) {
              setShowDialogEtiqueta(false)
              }} detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
              </Dialog>
-               
+
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2086,7 +2086,7 @@ function Guia(props) {
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li>     
+                        <li>
                             <a className= {validarDerecho(9101456)? "":classes.disabled} onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
@@ -2281,7 +2281,7 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="label">
-                                                             {state.agregar == "Agregar" &&  
+                                                             {state.agregar == "Agregar" &&
                                                               <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
                                                                     <InputLabel id="idEmbarqueLabel">Folio
@@ -2327,8 +2327,8 @@ function Guia(props) {
                                                                     value={state.folioEmbarque}
                                                                     disabled
                                                          />
-                                                                
-                                                                
+
+
                                                                 }
                                                             </label>
                                                         </Grid>
@@ -2346,8 +2346,8 @@ function Guia(props) {
                                                                            name="FolioGuiaRelacionada"
                                                                            disabled
                                                                 />
-                                                            </div> 
-                                                        </Grid>*/} 
+                                                            </div>
+                                                        </Grid>*/}
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"

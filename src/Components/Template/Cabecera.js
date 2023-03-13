@@ -10,8 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Tooltip from '@material-ui/core/Tooltip';
 import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
-import GrupoClientePage from "../../Views/GrupoCliente";
-import {obtenerAtajosUsuario} from "../../Util/Contexts/AccesosDirectosContext";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 function Cabecera({ titulo, children }) {
 
@@ -58,13 +56,13 @@ function Cabecera({ titulo, children }) {
     const menuOpen = Boolean(menuVisible);
     const shortcutsOpen = Boolean(shortcutsVisible);
 
-    const handleShortcutsClick = (event) => {
+    /*const handleShortcutsClick = (event) => {
         setShortcutsVisible(event.currentTarget);
         obtenerAtajosUsuario(localStorage.getItem("UsuarioId")).then((respuesta) => {
             setAtajos(respuesta.data)
             // console.log(respuesta.data)
         })
-    };
+    };*/
     const handleShortcutsClose = () => {
         setShortcutsVisible(null);
     };

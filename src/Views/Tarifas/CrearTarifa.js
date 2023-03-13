@@ -16,7 +16,6 @@ import {
 } from '@material-ui/core';
 import ConceptosAdicionales from './ConceptosAdicionales';
 import ConceptosAdicionalesManiobra from './ConceptosAdicionalesManiobra';
-import ConceptosAdicionalesEntrega from './ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './ConceptosAdicionalesRecoleccion';
 import TipoCobro from './TipoCobro';
 import TipoServicio from './TipoServicio';
@@ -486,25 +485,6 @@ class CrearTarifa extends Component {
             dataProductosTemp: todosProductos,
             dataProductosSeleccionados: productosSeleccionados
         })
-    }
-
-    getAllDestinos(){
-        /*const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
-            this.setState({ dataDestinos: respuesta.data, dataDestinosTemp: respuesta.data, agregar: "Agregar" })
-            if (this.props.edit) {
-                const { select } = this.props
-                this.state.dataDestinosTemp = respuesta.data
-                select.m_arrArDestinos.forEach((p) => {
-                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nId != p.m_nId)
-                })
-                this.setState({
-                    dataDestinosSeleccionados: select.m_arrArDestinos,
-                    dataDestinosTemp: this.state.dataDestinosTemp
-                })
-            }
-
-        });*/
     }
 
     actualizarDestinos = (todosDestinos, destinosSeleccionados) => {

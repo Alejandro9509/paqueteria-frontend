@@ -217,7 +217,7 @@ class UltimaMilla extends Component {
         if (this.state.ultimaMilla) {
             if (this.state.tour) { 
                 // console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
-              
+
              /*   validarUnidadesSeleccionadas(Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad))).then(respuesta=>{
                     if(respuesta.data.sePuedeSeleccionar){
                         showSuccess("se puede seleccionar")
