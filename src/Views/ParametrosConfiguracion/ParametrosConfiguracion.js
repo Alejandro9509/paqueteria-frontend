@@ -5,14 +5,14 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import {
     Box,
     Button,
-    Checkbox,
+    Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
     FormControl, Grid,
     InputLabel, MenuItem,
     Paper,
     Select,
     Tab,
     Tabs,
-    TextField,
+    TextField, Tooltip,
     Typography
 } from "@material-ui/core";
 import {
@@ -43,6 +43,9 @@ import {FilePond} from "react-filepond";
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
 import {toBase64} from "../../Util/GlobalFunctions";
+import {confirmAlert} from "react-confirm-alert";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import {obtenerTiposDocumento} from "../../Util/Contexts/TiposDocumentosContext";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -81,8 +84,12 @@ function ParametrosConfiguracion() {
         }
     ]
     const [dataConceptos, setDataConceptos] = useState([]);
-
-    const [files, setFiles] = useState([])
+    const [dataTiposDocumento, setDataTiposDocumento] = useState([]);
+    const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
+        open: false,
+        idSucursal: 0,
+        idTipoDocumento: 0
+    })
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -113,7 +120,8 @@ function ParametrosConfiguracion() {
         plantillaImportarEmbarquesBase64: '',
         plantillaImportarEmbarquesNombreArchivo: '',
         modificarValorEmbarque:false,
-        foliosPorSucursal: false
+        foliosPorSucursal: false,
+        documentos:[]
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -190,7 +198,8 @@ function ParametrosConfiguracion() {
             modificarValorEmbarque: configuraciones.modificarValorEmbarque,
             tipoTimbrado: configuraciones.tipoTimbrado,
             plantillaImportarEmbarquesBase64: "",
-            plantillaImportarEmbarquesNombreArchivo: ''
+            plantillaImportarEmbarquesNombreArchivo: '',
+            documentos: configuraciones.documentos
         }
         console.log(params)
         modificarParametrosConfiguracion(params)
@@ -243,7 +252,8 @@ function ParametrosConfiguracion() {
                     tipoTimbrado: respuesta.data.TipoTimbrado,
                     plantillaImportarEmbarquesBase64: "",
                     plantillaImportarEmbarquesNombreArchivo: "",
-                    foliosPorSucursal: respuesta.data.FoliosPorSucursal
+                    foliosPorSucursal: respuesta.data.FoliosPorSucursal,
+                    documentos: respuesta.data.documentos || []
                 }
             })
 
@@ -308,6 +318,12 @@ function ParametrosConfiguracion() {
     async function getConceptosFacturacion() {
         obtenerConceptosFacturacion().then(respuesta => {
             setDataConceptos(respuesta.data);
+        });
+    }
+
+    async function getTiposDocumento() {
+        obtenerTiposDocumento().then(respuesta => {
+            setDataTiposDocumento(respuesta.data);
         });
     }
 
@@ -379,40 +395,39 @@ function ParametrosConfiguracion() {
 
     }
 
-    /*const descargarPlantillaImportar = () => {
-        if (configuraciones.plantillaImportarEmbarquesBase64 === ''){
-            return
-        }
-        let mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
-        let a = document.createElement('a');
-        a.href = mediaType+encodeURI(configuraciones.plantillaImportarEmbarquesBase64);
-        a.download = configuraciones.plantillaImportarEmbarquesNombreArchivo;
-        a.textContent = 'Descargar Archivo';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-    }*/
-
-    /*const handleOnupdatefiles = (newFiles) => {
-        // convertirABase64(newFiles[0].file)
-        setFiles(newFiles)
-    }*/
-
-    /*const convertirABase64 = (file) => {
-        /!*if(files.length === 0){
-            return
-        }*!/
-        let fileName = file.name
-        let fileBase64 = toBase64(file)
-        console.log(fileBase64)
-        setConfiguraciones(configuraciones => {
-            return{
-                ...configuraciones,
-                plantillaImportarEmbarquesBase64: fileBase64,
-                plantillaImportarEmbarquesNombreArchivo: fileName
-            }
+    const handleShowEditTipoDocumento = (row) => {
+        setDialogTipoDocumento({
+            ...dialogTipoDocumento,
+            open: true,
+            idSucursal: row.idSucursal,
+            idTipoDocumento: row.idTipoDocumento
         })
-    }*/
+    }
+
+    const handleOnCloseDialogTipoDocumento = (data) => {
+        try {
+            console.log(data)
+            let array = [...configuraciones.documentos]
+            let index = array.findIndex((obj => obj.idSucursal === data.idSucursal))
+            console.log(array)
+            console.log(index)
+            array[index].idTipoDocumento = data.idTipoDocumento
+            array[index].documento = dataTiposDocumento.find(obj => obj.idDocumento === data.idTipoDocumento)?.documento || array[index].documento
+            setConfiguraciones({
+                ...configuraciones,
+                documentos: array
+            })
+            setDialogTipoDocumento({
+                ...dialogTipoDocumento,
+                open: false,
+                idSucursal: 0,
+                idTipoDocumento: 0
+            })
+        }catch (e) {
+            console.log(e)
+        }
+
+    }
 
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
@@ -425,10 +440,16 @@ function ParametrosConfiguracion() {
         getTipoCobro()
         getAllEstatusGuia()
         getConceptosFacturacion()
+        getTiposDocumento()
     }, [])
     return (
 
         <div>
+            {
+                dialogTipoDocumento.open &&
+                <FormDialog open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento} options={dataTiposDocumento}/>
+            }
+
             <header className="topbar clearfix">
                 <Cabecera titulo="Parametros Configuración">
                     <div className="page-header">
@@ -1191,6 +1212,10 @@ function ParametrosConfiguracion() {
                                             </Box>
                                         </Box>
                                     </Grid>
+                                    <Grid item xs={12}>
+                                        <div className={classes.subtitulo}>Documento por sucursal</div>
+                                        <DataGridDemo rows={configuraciones.documentos} handleEditRow={handleShowEditTipoDocumento}/>
+                                    </Grid>
                                     <Grid container item xs={12} justifyContent="center" >
                                         <Box margin={"0 auto"}>
                                             <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
@@ -1210,6 +1235,90 @@ function ParametrosConfiguracion() {
             </TabContext>
         </div>
 
+    );
+}
+
+function DataGridDemo(props) {
+    const columns = [
+        {
+            field: 'sucursal',
+            headerName: 'Sucursal',
+            width: 200,
+        },
+        {
+            field: 'documento',
+            headerName: 'Documento',
+            width: 250,
+        },
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false, width: 120,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar" >
+                            <a onClick={() => { props.handleEditRow(row.row) }}
+                                className="btn btn-default btn-xs">
+                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
+                            </a>
+                        </Tooltip>
+
+                    </div>
+                );
+            },
+        },
+    ];
+    return (
+        <div style={{height: 400,width: '50%'}}>
+            <DataGrid
+                rows={props.rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                getRowId={(row) => row.idSucursal}
+                autoHeight {...{dataSet: 'Commodity', rowLength: 4, maxColumns: 6}}
+                density={"compact"}
+            />
+        </div>
+    );
+}
+
+function FormDialog(props) {
+    const [state, setState] = useState({idSucursal: props.value.idSucursal || 0, idTipoDocumento: props.value.idTipoDocumento || 0})
+    return (
+        <div>
+            <Dialog open={props.open} onClose={props.handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Selecciona el tipo de documento con el que se creará el viaje en el ERP
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        name="idDocumento"
+                        label="Documento"
+                        fullWidth
+                        select
+                        value={state.idTipoDocumento}
+                        onChange={(e) => setState({...state, idTipoDocumento: e.target.value})}
+                    >
+                        {props.options.map(obj => (
+                            <MenuItem key={obj.idDocumento} value={obj.idDocumento}>{obj.documento}</MenuItem>
+                        ))}
+                    </TextField>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => props.onClose(props.value)} color="primary">
+                        Cancelar
+                    </Button>
+                    <Button onClick={() => props.onClose(state)} color="primary">
+                        Guardar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
     );
 }
 
