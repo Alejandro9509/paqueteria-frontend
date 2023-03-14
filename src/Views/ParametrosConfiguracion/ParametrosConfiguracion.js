@@ -1111,11 +1111,10 @@ function ParametrosConfiguracion() {
                             </Correos>
                         </TabPanel>
                         <TabPanel value="6">
-                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
-                                 flexDirection="column">
-                                <Box display="flex" p={1} my={0.5} flexDirection="column">
-                                    <Box width="100%" p={1} my={0.5}>
-                                        <FormControl fullWidth variant="outlined" width="25%">
+                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper">
+                                <Grid container spacing={1}>
+                                    <Grid item sm={2} xs={12}>
+                                        <FormControl variant="outlined" fullWidth>
                                             <InputLabel id="idComplementoLabel">Tipo de servicio</InputLabel>
                                             <Select
                                                 labelId="idComplementoLabel"
@@ -1127,102 +1126,84 @@ function ParametrosConfiguracion() {
                                                 name="tipoTimbrado"
                                                 onChange={handleChange}
                                             >
-                                                <option key={"1"}
-                                                        value={1}
+                                                <MenuItem key={"1"}
+                                                          value={1}
                                                 >
                                                     Consolidado
-                                                </option>
-                                                <option key={"2"}
-                                                        value={2}
+                                                </MenuItem>
+                                                <MenuItem key={"2"}
+                                                          value={2}
                                                 >
                                                     Paquetería
-                                                </option>
+                                                </MenuItem>
                                             </Select>
                                         </FormControl>
-                                    </Box>
-                                    {/*<Box width="100%" p={1} my={0.5}>
-                                        <FormControl fullWidth variant="outlined" width="25%">
-                                            <InputLabel id="idComplementoLabel">Complemento</InputLabel>
-                                            <Select
-                                                labelId="idComplementoLabel"
-                                                className="form-control"
-                                                required
-                                                value={configuraciones.idComplemento}
-                                                label="Complemento"
-                                                id="idComplemento"
-                                                name="idComplemento"
-                                                onChange={handleChange}
-                                            >
-                                                <option key={"1"}
-                                                        value={2}
-                                                >
-                                                    Ingreso
-                                                </option>
-                                                <option key={"2"}
-                                                        value={3}
-                                                >
-                                                    Ninguno
-                                                </option>
-                                            </Select>
-                                        </FormControl>
-                                    </Box>*/}
-                                    <div style={{display:"grid", gridTemplateColumns: "repeat(1, 1fr)",width:"400px",margin:"10px",gap: "10px",border:"1px solid #ccc",borderRadius:"20px"}}>
-                                        <Box display="flex">
-                                            <Box width="66%"  my={0.5}>
-                                                <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <div style={{display:"grid", gridTemplateColumns: "repeat(1, 1fr)",width:"400px",margin:"10px",gap: "10px",border:"1px solid #ccc",borderRadius:"20px"}}>
+                                            <Box display="flex">
+                                                <Box width="66%"  my={0.5}>
+                                                    <div className={classes.subtitulo}>Validar facturas de ingreso</div>
+                                                </Box>
+                                                <Box width="34%" p={1} my={0.5}>
+                                                    <Checkbox
+                                                        checked={configuraciones.validarTimbradoIngreso}
+                                                        onChange={handleChecked}
+                                                        color="primary"
+                                                        style={{transform: "scale(2)"}}
+                                                        inputProps={{'aria-label': 'primary checkbox'}}
+                                                        name="validarTimbradoIngreso"
+                                                        disabled
+                                                    />
+                                                </Box>
                                             </Box>
-                                            <Box width="34%" p={1} my={0.5}>
+                                            <Box  display="flex">
+                                                <Box width="66%" my={0.5}>
+                                                    <div className={classes.subtitulo}>Permitir modificar este valor en Embarque</div>
+                                                </Box>
+                                                <Box width="34%" p={1} my={0.5}>
+                                                    <Checkbox
+                                                        checked={configuraciones.modificarValorEmbarque}
+                                                        onChange={handleChecked}
+                                                        color="primary"
+                                                        style={{transform: "scale(2)"}}
+                                                        inputProps={{'aria-label': 'primary checkbox'}}
+                                                        name="modificarValorEmbarque"
+                                                    />
+                                                </Box>
+                                            </Box>
+                                        </div>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Box width="50%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Validar timbrado de informes</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
                                                 <Checkbox
-                                                    checked={configuraciones.validarTimbradoIngreso}
+                                                    checked={configuraciones.validarTimbrado}
                                                     onChange={handleChecked}
                                                     color="primary"
                                                     style={{transform: "scale(2)"}}
                                                     inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="validarTimbradoIngreso"
-                                                disabled
+                                                    name="validarTimbrado"
                                                 />
                                             </Box>
                                         </Box>
-                                        <Box  display="flex">
-                                            <Box width="66%" my={0.5}>
-                                                <div className={classes.subtitulo}>Permitir modificar este valor en Embarque</div>
-                                            </Box>
-                                            <Box width="34%" p={1} my={0.5}>
-                                                <Checkbox
-                                                    checked={configuraciones.modificarValorEmbarque}
-                                                    onChange={handleChecked}
-                                                    color="primary"
-                                                    style={{transform: "scale(2)"}}
-                                                    inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="modificarValorEmbarque"
-                                                />
-                                            </Box>
+                                    </Grid>
+                                    <Grid container item xs={12} justifyContent="center" >
+                                        <Box margin={"0 auto"}>
+                                            <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
+                                                    style={{width: "100px"}}
+                                                    onClick={onSubmit}>
+                                                Modificar
+                                            </Button>
                                         </Box>
-                                    </div>
-                                    <Box width="50%" display="flex">
-                                        <Box width="40%" p={1} my={0.5}>
-                                            <div className={classes.subtitulo}>Validar timbrado de informes</div>
-                                        </Box>
-                                        <Box width="60%" p={1} my={0.5}>
-                                            <Checkbox
-                                                checked={configuraciones.validarTimbrado}
-                                                onChange={handleChecked}
-                                                color="primary"
-                                                style={{transform: "scale(2)"}}
-                                                inputProps={{'aria-label': 'primary checkbox'}}
-                                                name="validarTimbrado"
-                                            />
-                                        </Box>
-                                    </Box>
-                                </Box>
-                                <Box margin={"0 auto"}>
-                                    <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
-                                            style={{width: "100px"}}
-                                            onClick={onSubmit}>
-                                        Modificar
-                                    </Button>
-                                </Box>
-                            </Box></TabPanel>
+                                    </Grid>
+                                </Grid >
+                            </Box>
+
+                        </TabPanel>
                     </div>
                 </section>
 
