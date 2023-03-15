@@ -46,6 +46,7 @@ import {toBase64} from "../../Util/GlobalFunctions";
 import {confirmAlert} from "react-confirm-alert";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import {obtenerTiposDocumento} from "../../Util/Contexts/TiposDocumentosContext";
+import DialogTiposDocumentoSucursal from "./DialogTiposDocumentoSucursal";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -84,11 +85,15 @@ function ParametrosConfiguracion() {
         }
     ]
     const [dataConceptos, setDataConceptos] = useState([]);
-    const [dataTiposDocumento, setDataTiposDocumento] = useState([]);
     const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
         open: false,
-        idSucursal: 0,
-        idTipoDocumento: 0
+        seleccion: {
+            idSucursal: 0,
+            sucursal: '',
+            idTipoDocumento: 0,
+            documento: 'SIN DEFINIR'
+        }
+
     })
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -321,12 +326,6 @@ function ParametrosConfiguracion() {
         });
     }
 
-    async function getTiposDocumento() {
-        obtenerTiposDocumento().then(respuesta => {
-            setDataTiposDocumento(respuesta.data);
-        });
-    }
-
     function modificarCorreo(data, variable) {
         setConfiguraciones({...configuraciones, [variable]: data})
     }
@@ -399,20 +398,15 @@ function ParametrosConfiguracion() {
         setDialogTipoDocumento({
             ...dialogTipoDocumento,
             open: true,
-            idSucursal: row.idSucursal,
-            idTipoDocumento: row.idTipoDocumento
+            seleccion: row,
         })
     }
 
     const handleOnCloseDialogTipoDocumento = (data) => {
         try {
-            console.log(data)
             let array = [...configuraciones.documentos]
             let index = array.findIndex((obj => obj.idSucursal === data.idSucursal))
-            console.log(array)
-            console.log(index)
-            array[index].idTipoDocumento = data.idTipoDocumento
-            array[index].documento = dataTiposDocumento.find(obj => obj.idDocumento === data.idTipoDocumento)?.documento || array[index].documento
+            array[index] = data
             setConfiguraciones({
                 ...configuraciones,
                 documentos: array
@@ -420,15 +414,19 @@ function ParametrosConfiguracion() {
             setDialogTipoDocumento({
                 ...dialogTipoDocumento,
                 open: false,
-                idSucursal: 0,
-                idTipoDocumento: 0
+                seleccion: {
+                    idSucursal: 0,
+                    sucursal: '',
+                    idTipoDocumento: 0,
+                    documento: 'SIN DEFINIR'
+                }
+
             })
         }catch (e) {
             console.log(e)
         }
 
     }
-
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
     useEffect(value => {
@@ -440,15 +438,11 @@ function ParametrosConfiguracion() {
         getTipoCobro()
         getAllEstatusGuia()
         getConceptosFacturacion()
-        getTiposDocumento()
     }, [])
     return (
 
         <div>
-            {
-                dialogTipoDocumento.open &&
-                <FormDialog open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento} options={dataTiposDocumento}/>
-            }
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
 
             <header className="topbar clearfix">
                 <Cabecera titulo="Parametros Configuración">
@@ -1214,7 +1208,7 @@ function ParametrosConfiguracion() {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <div className={classes.subtitulo}>Documento por sucursal</div>
-                                        <DataGridDemo rows={configuraciones.documentos} handleEditRow={handleShowEditTipoDocumento}/>
+                                        <DataGridTiposDocumentoSucursal rows={configuraciones.documentos} handleEditRow={handleShowEditTipoDocumento}/>
                                     </Grid>
                                     <Grid container item xs={12} justifyContent="center" >
                                         <Box margin={"0 auto"}>
@@ -1238,7 +1232,7 @@ function ParametrosConfiguracion() {
     );
 }
 
-function DataGridDemo(props) {
+function DataGridTiposDocumentoSucursal(props) {
     const columns = [
         {
             field: 'sucursal',
@@ -1284,42 +1278,6 @@ function DataGridDemo(props) {
     );
 }
 
-function FormDialog(props) {
-    const [state, setState] = useState({idSucursal: props.value.idSucursal || 0, idTipoDocumento: props.value.idTipoDocumento || 0})
-    return (
-        <div>
-            <Dialog open={props.open} onClose={props.handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Selecciona el tipo de documento con el que se creará el viaje en el ERP
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        name="idDocumento"
-                        label="Documento"
-                        fullWidth
-                        select
-                        value={state.idTipoDocumento}
-                        onChange={(e) => setState({...state, idTipoDocumento: e.target.value})}
-                    >
-                        {props.options.map(obj => (
-                            <MenuItem key={obj.idDocumento} value={obj.idDocumento}>{obj.documento}</MenuItem>
-                        ))}
-                    </TextField>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => props.onClose(props.value)} color="primary">
-                        Cancelar
-                    </Button>
-                    <Button onClick={() => props.onClose(state)} color="primary">
-                        Guardar
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    );
-}
+
 
 export default ParametrosConfiguracion;
