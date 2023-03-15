@@ -42,10 +42,6 @@ import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturac
 import {FilePond} from "react-filepond";
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
-import {toBase64} from "../../Util/GlobalFunctions";
-import {confirmAlert} from "react-confirm-alert";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import {obtenerTiposDocumento} from "../../Util/Contexts/TiposDocumentosContext";
 import DialogTiposDocumentoSucursal from "./DialogTiposDocumentoSucursal";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({

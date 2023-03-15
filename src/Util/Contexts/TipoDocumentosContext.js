@@ -13,4 +13,13 @@ function obtenerTiposDocumentoSucursal(id) {
     return result
 }
 
-export {obtenerTiposDocumentoSucursal}
+function obtenerTiposDocumento() {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoDocumento/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export {obtenerTiposDocumentoSucursal,obtenerTiposDocumento}

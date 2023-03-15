@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {obtenerTiposDocumento} from "../../Util/Contexts/TiposDocumentosContext";
+import {obtenerTiposDocumento, obtenerTiposDocumentoSucursal} from "../../Util/Contexts/TipoDocumentosContext";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField} from "@material-ui/core";
 import DialogContentText from "@material-ui/core/DialogContentText";
 
@@ -7,11 +7,19 @@ export default function DialogTiposDocumentoSucursal(props) {
     const [dataTiposDocumento, setDataTiposDocumento] = useState([]);
 
     useEffect(() => {
-        getTiposDocumento()
-    }, [])
+        if (props.value.idSucursal > 0){
+            getTiposDocumento()
+        }
+
+    }, [props.value.idSucursal])
     async function getTiposDocumento() {
-        obtenerTiposDocumento().then(respuesta => {
-            setDataTiposDocumento(respuesta.data);
+        obtenerTiposDocumentoSucursal(props.value.idSucursal).then(respuesta => {
+            let array = respuesta.data.map(obj => ({
+                idDocumento: obj.IdDocumento,
+                documento: obj.Documento,
+                idComplemento: obj.IdComplemento
+            }))
+            setDataTiposDocumento(array);
         });
     }
     const handleOnChangeSelection = (selection) => {
@@ -29,10 +37,11 @@ export default function DialogTiposDocumentoSucursal(props) {
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                <DialogTitle id="form-dialog-title">Definir documento de timbrado por defecto</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Selecciona el tipo de documento con el que se creará el viaje en el ERP
+                        Selecciona el tipo de documento con el que se creará el viaje en el ERP. <br/>
+                        En caso de que no se despliegue un listado verifique en el sistema ERP que la sucursal actual tiene documentos asignados. El documento puede ser cambiado en cualquier momento desde parámetros de configuración.
                     </DialogContentText>
                     <TextField
                         autoFocus
