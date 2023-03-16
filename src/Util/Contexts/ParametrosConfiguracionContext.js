@@ -20,4 +20,31 @@ function modificarParametrosConfiguracion(params){
     );
     return result
 }
-export { obtenerParametrosConfiguracion,modificarParametrosConfiguracion }
+
+function asignarTipoDocumento(params){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/AgregarTipoDocumento`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
+
+/*function consultarDocumentoTimbradoSucursal(idSucursal) {
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ParametrosConfiguracion/GetDocumentoTimbradoSucursal/`+idSucursal;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}*/
+
+function validarRequiereDocumentoTimbrado(idSucursal) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/ValidarRequiereDocumentoTimbrado/`+idSucursal;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+export { obtenerParametrosConfiguracion,modificarParametrosConfiguracion,asignarTipoDocumento,validarRequiereDocumentoTimbrado }
