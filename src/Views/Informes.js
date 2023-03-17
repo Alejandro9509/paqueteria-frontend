@@ -308,10 +308,20 @@ function Informes({history}) {
 
     function generarReporte(id, folio) {
         obtenerInformeReporte(id).then(({data}) => {
-            let pdfWindow = window.open("");
+            /*let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe " + folio;
+            pdfWindow.document.title = "Informe " + folio;*/
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "Informe " + folio);
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo descargar el pdf")
+            }
         })
     }
 
