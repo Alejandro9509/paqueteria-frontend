@@ -562,14 +562,44 @@ function Viajes() {
 
     function descargarPDF(id, idInforme, folio) {
         obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
-            try {
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "CFDI_ " + folio);
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo abrir el pdf")
+            }
+            /*try {
+                var filename = folio+".pdf";
+                var pom = document.createElement('a');
+                var bb = new Blob([data], {type: 'application/pdf;base64'});
+                pom.setAttribute('href', window.URL.createObjectURL(bb));
+                pom.setAttribute('download', filename);
+
+                pom.dataset.downloadurl = ['application/pdf;base64', pom.download, pom.href].join(':');
+                pom.draggable = true;
+                pom.classList.add('dragout');
+
+                pom.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo abrir el pdf")
+            }*/
+
+            /*try {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "CFDI_ " + folio;
+
+
             } catch (e) {
+                console.log(e)
                 showSuccess("No se pudo abrir el pdf")
-            }
+            }*/
         })
 
     }
