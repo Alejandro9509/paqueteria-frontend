@@ -43,7 +43,7 @@ async function convertData(trucks, guias) {
                                 "lat": parseFloat(p.lat),
                                 "lng": parseFloat(p.lng)
                             },
-                            "duration": 0,
+                            "duration": 6000,
                             "tag": "Index_"+index
                         }],
 

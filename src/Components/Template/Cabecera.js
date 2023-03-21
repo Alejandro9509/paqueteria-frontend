@@ -136,8 +136,7 @@ function Cabecera({ titulo, children }) {
                          display:'flex',
                          flexDirection:'row',
                          alignItems: 'center',
-                         height: 60,
-                         position:"static"
+                         height: 60
                      }
                  }>
                 {/*<div>
