@@ -49,7 +49,7 @@ useEffect(() => {
 
 //--------------------------->Funciones<----------------------------------------------------------------------
 function cargarDesdeServidor(pagina,registros){
-  return new obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
+  obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
     setRow(respuesta.data)
 
   })
