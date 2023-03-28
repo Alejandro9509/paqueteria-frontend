@@ -49,15 +49,6 @@ function obtenerTarifaRangosById(id) {
     return result
 }
 
-function obtenerTarifas() {
-    const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-    );
-    return result
-}
-
 function obtenerTarifasByTipo(idTipotarifa) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/GetByTipo/` + idTipotarifa;
     let result;
@@ -103,4 +94,4 @@ function obtenerTarifaBy(id) {
     return result
 }
 
-export {modificarTarifa,eliminarTarifa, obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}
+export {modificarTarifa,eliminarTarifa, obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}

@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom';
 import $ from 'jquery';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
-import AgregarFolio from "./Folios/AgregarFolios";
 import CuentasCorreo from "./CuentasCorreo/CuentasCorreo";
 window.jQuery = window.$ = $;
 

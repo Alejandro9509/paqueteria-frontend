@@ -1,4 +1,3 @@
-import DepartamentoPage from './Views/Departamento';
 import RecoleccionPage from './Views/Recoleccion';
 import EmbarquePage from './Views/Embarque';
 import GuiaPage from './Views/Guia';

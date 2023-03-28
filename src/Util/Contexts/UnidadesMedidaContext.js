@@ -12,13 +12,4 @@ function obtenerUnidadesMedida() {
         );
     return result
 }
-function obtenerUnidadesMedidaId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-        );
-    return result
-}
-
 export {obtenerUnidadesMedida}
