@@ -116,7 +116,11 @@ import {agregarGuia, modificarGuia, obtenerGuiasFiltro} from "../Util/Contexts/G
 import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
-import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    asignarTipoDocumento,
+    obtenerParametrosConfiguracion,
+    validarRequiereDocumentoTimbrado
+} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerRutasId} from "../Util/Contexts/RutasContext";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 
@@ -126,6 +130,7 @@ import {
 } from "react-router-dom";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import ImportarEmbarques from "./Embarque/ImportarEmbarques";
+import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
 
 function useQuery() {
     const {search} = useLocation();
@@ -506,8 +511,17 @@ function Embarque(props) {
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
-    const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
-    const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+
+    const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
+        open: false,
+        seleccion: {
+            idSucursal: 0,
+            sucursal: '',
+            idTipoDocumento: 0,
+            documento: 'SIN DEFINIR'
+        }
+
+    })
     const [dataConceptos, setDataConceptos] = useState([])
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -2795,7 +2809,6 @@ function Embarque(props) {
             }
         });
     }
-
     const generarGuia = (idEmbarque) => {
 
         if (dataConceptos.length === 0) {
@@ -2834,14 +2847,30 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
         if (idEmbarque > 0) {
-            agregarGuia(params).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err.response?.data)
-                handleShowListado()
-            });
+
+            validarRequiereDocumentoTimbrado(state.idSucursalAgregar).then(({data}) => {
+                if (data.tieneDocumentoAsignado){
+                    agregarGuia(params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                        handleShowListado()
+                    });
+                }else{
+                    setDialogTipoDocumento({
+                        ...dialogTipoDocumento,
+                        open: true,
+                        seleccion: {
+                            idSucursal: state.idSucursalAgregar,
+                            sucursal: '',
+                            idTipoDocumento: 0,
+                            documento: 'SIN DEFINIR'
+                        },
+                    })
+                }
+            })
         } else {
             showSuccess("Hubo un problema al tratar de generar la guia.")
         }
@@ -2922,6 +2951,45 @@ function Embarque(props) {
         }
     }
 
+    const handleOnCloseDialogTipoDocumento = (data) => {
+        try {
+            asignarTipoDocumento(data).then((respuesta) => {
+                showSuccess('Se guardó el documento por defecto.')
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                generarGuia(state.idEmbarque)
+
+            }).catch(e => {
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                handleShowListado()
+                showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+            })
+        }catch (e) {
+            console.log(e)
+            handleShowListado()
+            showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+        }
+
+    }
     return (
         <div>
 
@@ -3214,7 +3282,7 @@ function Embarque(props) {
                     }
                 </DialogContent>
             </Dialog>
-
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
             <header className="topbar clearfix">
                 <Cabecera titulo="Embarque">
                     <div className="page-header">
