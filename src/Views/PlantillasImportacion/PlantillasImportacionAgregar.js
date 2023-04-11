@@ -317,6 +317,7 @@ export default function PlantillasImportacionAgregar(props){
 
         }catch (e){
             console.log(e)
+            showSuccess("Adjunte el archivo de la plantilla base para el cliente.")
         }
 
     }
