@@ -435,28 +435,20 @@ function Viajes() {
             headerName: "Usuario de cancelación",
             field: "UsuarioCancelacion",
             width: 250,
+        },
+        {
+            headerName: "Total Liquidación",
+            field: "m_nTotalCalculoLiquidacionPorcentajeSobreImpFlete",
+            width: 150,
+            valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
         }
-        //   {
-        //   headerName: "Origen",
-        //   field: "m_sDescripcion",
-        //   width: 150,
-        // }, {
-        //   headerName: "Destino",
-        //   field: "m_sDescripcion",
-        //   width: 150,
-        // },
-        //   {
-        //       headerName: "Ruta General",
-        //       field: "m_sDescripcion",
-        //       width: 150,
-        //   },
-        //   {
-        //       headerName: "Estatus de Documento",
-        //       field: "m_sEstatus",
-        //       width: 200,
-        //   }
 
     ]);
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
 
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
