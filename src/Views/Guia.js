@@ -2092,31 +2092,28 @@ function Guia(props) {
                             </a>
                         </li>
 
-                        <li className="hide">
+                        {/*<li className="hide">
                             <a data-toggle="tab" href="#Importar">
                                 <i className="fa fa-upload"/> Importar
                             </a>
+                        </li>*/}
+
+                        <li>
+                            <a className={(state.idGuia !== 0 && state.cambioCobro) && validarDerecho(3900001) ? "" : classes.disabled}
+                               onClick={() => setState({...state, openTipoCobro: true})}>
+                                <i className="fa fa-refresh"/> Cambiar Tipo Cobro
+                            </a>
                         </li>
 
-                            <li>
-                                <a className={(state.idGuia !== 0 && state.cambioCobro) && validarDerecho(3900001) ? "" : classes.disabled}
-                                   onClick={() => setState({...state, openTipoCobro: true})}>
-                                    <i className="fa fa-refresh"/> Cambiar Tipo Cobro
-                                </a>
-                            </li>
-
-                        {
-                            ((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) || (guiaSeleccionada?.m_nIdEstatusGuia === 14)) &&
-                            <li>
-                                <a className={validarDerecho(9101459) ? "" : classes.disabled}
-                                   onClick={() => {
-                                       getAllDataEstatusGuia()
-                                       setState({...state, openCambiarEstatus: true})
-                                   }}>
-                                    <i className="fa fa-refresh"/> Cambiar tipo de entrega
-                                </a>
-                            </li>
-                        }
+                        <li className={((guiaSeleccionada?.m_nIdEstatusGuia === 7 && guiaSeleccionada?.EntregaEnSucursal) || (guiaSeleccionada?.m_nIdEstatusGuia === 14)) ? "" : "hide"}>
+                            <a className={validarDerecho(9101459) ? "" : classes.disabled}
+                               onClick={() => {
+                                   getAllDataEstatusGuia()
+                                   setState({...state, openCambiarEstatus: true})
+                               }}>
+                                <i className="fa fa-refresh"/> Cambiar tipo de entrega
+                            </a>
+                        </li>
 
                         <li>
                             <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}
@@ -2128,7 +2125,7 @@ function Guia(props) {
                         </li>
 
                         <li>
-                            <a data-toggle="tab"  onClick={handleShowCancelar}
+                            <a onClick={handleShowCancelar}
                                className={(state.idGuia === 0 || !validarDerecho(9101461) ||  state.estatusGuia == 8)? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
