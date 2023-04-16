@@ -441,6 +441,11 @@ function Viajes() {
             field: "m_nTotalCalculoLiquidacionPorcentajeSobreImpFlete",
             width: 150,
             valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+        },
+        {
+            headerName: "Viaje ERP",
+            field: "FolioERP",
+            width: 200,
         }
 
     ]);
