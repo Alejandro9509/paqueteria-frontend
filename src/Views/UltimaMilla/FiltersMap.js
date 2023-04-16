@@ -36,7 +36,7 @@ import MomentUtils from "@date-io/moment";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
+import {obtenerOperadores, obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
 import MessageIcon from "@material-ui/icons/Message";
 import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
@@ -252,7 +252,7 @@ class FiltersMap extends Component {
         })
     }
     reasignarOperador(unidad) {
-        obtenerOperadores().then(({data}) => {
+        obtenerOperadoresPorSucursal(this.state.sucursalSeleccionada?.m_nIdSucursal).then(({data}) => {
 
             this.setState({
                 operadores: data,
