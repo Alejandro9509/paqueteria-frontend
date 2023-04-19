@@ -266,7 +266,7 @@ function Informes({history}) {
         {
             headerName: "Viaje",
             field: "m_sFolioViaje",
-            width: 125,
+            width: 200,
         },
         {
             headerName: "Oficina Emisora",
