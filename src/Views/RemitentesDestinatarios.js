@@ -655,6 +655,7 @@ if(input=="codigoPostal"){
                       value={state.nombre}
                       placeholder={"Alias (Nombre)"}
                       InputLabelProps={{ shrink: true }}
+                      onClick={handleClickModal}
                       InputProps={{
                         style: {
                           height: "33px",
@@ -665,12 +666,11 @@ if(input=="codigoPostal"){
                         endAdornment: (
                             <InputAdornment position="end">
                               <IconButton
-                                  disabled={props.consulta}
+                                  disabled
                                   padding="0px"
                                   style={{
                                     paddingRight: "0px",
                                   }}
-                                  onClick={handleClickModal}
                               >
                                 <SearchIcon
                                     style={{
@@ -1226,7 +1226,7 @@ if(input=="codigoPostal"){
           </div>
       }
 
-      
+
 
     </div>
   );
