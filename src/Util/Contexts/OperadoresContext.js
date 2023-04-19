@@ -24,4 +24,13 @@ function obtenerOperadoresId(id) {
     return result
 }
 
-export { obtenerOperadoresId, obtenerOperadores }
+function obtenerOperadoresPorSucursal(idSucursal) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Operadores/GetListado/PorSucursal/${idSucursal}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { obtenerOperadoresId, obtenerOperadores, obtenerOperadoresPorSucursal }
