@@ -476,8 +476,12 @@ function Guia(props) {
         {
             headerName: "Factura",
             field: "m_sFactura",
-            width: 200,
-            hide:true
+            width: 225
+        },
+        {
+            headerName: "Folio ERP",
+            field: "FolioERP",
+            width: 200
         },
 
 
