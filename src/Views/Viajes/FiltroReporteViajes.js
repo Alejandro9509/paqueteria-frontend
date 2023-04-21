@@ -77,27 +77,14 @@ class FiltroReporteViajes extends Component {
         else if(this.props.select?.m_nIdFormato===93) {
             imprimirFormatosECCId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal, this.state.cliente.m_nIdCliente,1).then(({data}) => {
                 console.log(data)
-                var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
-                var a = document.createElement('a');
-                a.href = mediaType+encodeURI(data.m_sArchivo);
-                a.download = this.props.select.m_sFormato+'.xlsx';
-                a.textContent = 'Descargar Archivo';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                /*var mediaType="data:text/plain;charset=utf-8,";
-                var a = document.createElement('a');
-                a.href = mediaType+encodeURI(data.m_sArchivo);
-                a.download = this.props.select.m_sFormato+'.txt';
-                a.textContent = 'Descargar Archivo';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();*/
+                const blob = new Blob([data.m_sArchivo], {type: 'text/csv'});
+                const elem = window.document.createElement('a');
+                elem.href = window.URL.createObjectURL(blob);
+                elem.download = this.props.select.m_sFormato+'.txt';
+                document.body.appendChild(elem);
+                elem.click();
+                document.body.removeChild(elem);
 
-                /*let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo)+"'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = this.props.select.m_sFormato;*/
             })
 
         }
