@@ -13,6 +13,14 @@ function modificarRecoleccion(id, params) {
         );
     return result
 }
+function modificarRecoleccionSAT(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ModificarSAT`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
 
 function obtenerRecoleccionReporte(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Recoleccion/${id}`;
@@ -115,4 +123,4 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
     return result
 }
 
-export {actualizarCoordenadasRecoleccion, modificarRecoleccion, agregarRecoleccion, obtenerRecoleccionReporte, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, obtenerRecoleccionFiltro }
+export {modificarRecoleccionSAT, actualizarCoordenadasRecoleccion, modificarRecoleccion, agregarRecoleccion, obtenerRecoleccionReporte, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, obtenerRecoleccionFiltro }

@@ -1,9 +1,7 @@
 import "../App.css";
 import React, { useEffect, useState, setData, useMemo, Component } from "react";
-import $ from "jquery";
 import { obtenerMunicipiosByIdEstado } from "../Util/Contexts/MunicipiosContext";
 import {
-  obtenerCodigoPostalId,
   obtenerCodigosPostalesPorEstadoMunicipio,
 } from "../Util/Contexts/CodigoPostalContext";
 import Noty from "noty";
@@ -12,26 +10,17 @@ import {
   obtenerZonaOperativaByIdCodigoPostal,
 } from "../Util/Contexts/ZonaOperativaContext";
 import {
-  obtenerByIdZonaTarifa,
   obtenerZonaTarifaByIdCodigoPostal,
 } from "../Util/Contexts/ZonaTarifaContext";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
-import {
-  actualizarRemitentesDestinatarios,
-  obtenerRemitentesDestinatariosId,
-} from "../Util/Contexts/RemitenteDestinatarioContext";
-import { Dialog, DialogContent } from "@material-ui/core";
-import ReplayIcon from "@material-ui/icons/Replay";
+import { Dialog, DialogContent, Grid } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
 import { obtenerCiudadId } from "../Util/Contexts/CiudadesContext";
 import DialogTableRemDes from "./RemitenteDestinatario/DialogTableRemDes";
-// window.jQuery = window.$ = $;
+import {tr} from "date-fns/locale";
 function showSuccess(mensaje) {
   new Noty({
     type: "information",
@@ -265,19 +254,6 @@ function RemitenteDestinatario(props) {
         }
       }
   );
-    /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
-      setDataMunicipios(data);
-    });*/
-    /*obtenerCodigoPostalId(
-        respuesta.data.m_sIdCodigoPostalDestinatario
-    ).then((cp) => {
-      setState((state) => {
-        return {
-          ...state,
-
-        };
-      });
-    });*/
     obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(
         ({ data }) => {
           setState((state) => {
@@ -300,16 +276,6 @@ function RemitenteDestinatario(props) {
           };
         });
       });
-      /*obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(
-          ({ data }) => {
-            setState((state) => {
-              return {
-                ...state,
-                zonaTarifa: data,
-              };
-            });
-          }
-      );*/
     }
   }
 
@@ -576,7 +542,10 @@ if(input=="codigoPostal"){
         showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
         return
       }
-    props.seCalculaTarifa()
+      if (props.componentePadre !== 'CANCELAR_SAT'){
+        props.seCalculaTarifa()
+      }
+
       obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
           ( zonaOperativa ) => {
             console.log(JSON.stringify(zonaOperativa))
@@ -670,186 +639,164 @@ if(input=="codigoPostal"){
             />
           </DialogContent>
         </Dialog>
-      
-      <div className="col-md-6">
-        <div className="col-sm-12 col-md-12    unit">
-          <div className="input">
-            <TextField
-              label={"Alias (Nombre)"}
-              margin="dense"
-              variant="outlined"
-              required
-              disabled={props.consulta}
-              value={state.nombre}
-              placeholder={"Alias (Nombre)"}
-              InputLabelProps={{ shrink: true }}
-              InputProps={{
-                style: {
-                  height: "33px",
-                  fontSize: "14px",
-                },
-                type: "search",
-                disableUnderline: true,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
+
+      {
+        props.componentePadre !== 'CANCELAR_SAT' &&
+          <>
+            <div className="col-md-6">
+              <div className="col-sm-12 col-md-12    unit">
+                <div className="input">
+                  <TextField
+                      label={"Alias (Nombre)"}
+                      margin="dense"
+                      variant="outlined"
+                      required
                       disabled={props.consulta}
-                      padding="0px"
-                      style={{
-                        paddingRight: "0px",
+                      value={state.nombre}
+                      placeholder={"Alias (Nombre)"}
+                      InputLabelProps={{ shrink: true }}
+                      InputProps={{
+                        style: {
+                          height: "33px",
+                          fontSize: "14px",
+                        },
+                        type: "search",
+                        disableUnderline: true,
+                        endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                  disabled={props.consulta}
+                                  padding="0px"
+                                  style={{
+                                    paddingRight: "0px",
+                                  }}
+                                  onClick={handleClickModal}
+                              >
+                                <SearchIcon
+                                    style={{
+                                      color: "#F9A03E",
+                                      fontSize: 32,
+                                      paddingInlineEnd: 0,
+                                      paddingRight: 0,
+                                      paddingBlockEnd: 0,
+                                      paddingLeft: 0,
+                                      paddingBlock: 0,
+                                      cursor:"pointer"
+                                    }}
+                                />
+                              </IconButton>
+                            </InputAdornment>
+                        ),
                       }}
-                      onClick={handleClickModal}
-                    >
-                      <SearchIcon
-                        style={{
-                          color: "#F9A03E",
-                          fontSize: 32,
-                          paddingInlineEnd: 0,
-                          paddingRight: 0,
-                          paddingBlockEnd: 0,
-                          paddingLeft: 0,
-                          paddingBlock: 0,
-                          cursor:"pointer"
-                        }}
-                      />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
-        </div>
-        {/*<div className="col-md-2">
-          <IconButton
-            style={{
-              padding: "0px",
-            }}
-            disabled={props.consulta}
-            onClick={() => {
-              actualizarRemitentesDestinatarios().then(({ data }) => {
-                setDataRemitenteDestinatario(data);
-              });
-            }}
-          >
-            <ReplayIcon
-              style={{
-                color: "#F9A03E",
-                fontSize: 32,
-                paddingInlineEnd: 0,
-                paddingRight: 0,
-                paddingBlockEnd: 0,
-                paddingLeft: 0,
-                paddingBlock: 0,
-              }}
-            />
-          </IconButton>
-        </div>*/}
+                  />
+                </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              label="RFC"
-              pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-              title="Favor de introducir un RFC válido."
-              required
-              fullWidth
-              value={state.RFC}
-              disabled={props.consulta || props.modificar || props.agregar}
-              name="RFC"
-            />
-          </div>
-        </div>
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <TextField
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      label="RFC"
+                      pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                      title="Favor de introducir un RFC válido."
+                      required
+                      fullWidth
+                      value={state.RFC}
+                      disabled={props.consulta || props.modificar || props.agregar}
+                      name="RFC"
+                  />
+                </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              required
-              label="Domicilio"
-              value={state.domicilio}
-              disabled={props.consulta || props.modificar || props.agregar}
-              name="domicilio"
-            />
-          </div>
-        </div>
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <TextField
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      required
+                      label="Domicilio"
+                      value={state.domicilio}
+                      disabled={props.consulta || props.modificar || props.agregar}
+                      name="domicilio"
+                  />
+                </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              required
-              label="Calle"
-              value={state.calle}
-              disabled={props.consulta || props.modificar || props.agregar}
-              name="calle"
-            />
-          </div>
-        </div>
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <TextField
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      required
+                      label="Calle"
+                      value={state.calle}
+                      disabled={props.consulta || props.modificar || props.agregar}
+                      name="calle"
+                  />
+                </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              label="Número interior"
-              value={state.numeroInt}
-              disabled={props.consulta || props.modificar || props.agregar}
-              name="numeroInt"
-            />
-          </div>
-        </div>
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <TextField
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      label="Número interior"
+                      value={state.numeroInt}
+                      disabled={props.consulta || props.modificar || props.agregar}
+                      name="numeroInt"
+                  />
+                </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              label="Número exterior"
-              value={state.numeroExt}
-              disabled={props.consulta || props.modificar || props.agregar}
-              name="numeroExt"
-            />
-          </div>
-        </div>
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <TextField
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      label="Número exterior"
+                      value={state.numeroExt}
+                      disabled={props.consulta || props.modificar || props.agregar}
+                      name="numeroExt"
+                  />
+                </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              required
-              label="Colonia / Localidad"
-              value={state.colonia}
-              disabled={props.consulta || props.modificar || props.agregar}
-              name="colonia"
-            />
-          </div>
-        </div>
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <TextField
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      required
+                      label="Colonia / Localidad"
+                      value={state.colonia}
+                      disabled={props.consulta || props.modificar || props.agregar}
+                      name="colonia"
+                  />
+                </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12  unit">
-          {/*<label className="input select">
+              <div className="col-sm-12 col-md-12  unit">
+                {/*<label className="input select">
             <FormControl fullWidth variant="outlined" margin="dense" required>
               <InputLabel id="idEstadoLabel">Estado</InputLabel>
               <Select
@@ -870,20 +817,20 @@ if(input=="codigoPostal"){
               </Select>
             </FormControl>
           </label>*/}
-          <TextField
-              variant="outlined"
-              margin="dense"
-              className="form-control"
-              label="Estado"
-              value={state.estadoTexto}
-              disabled
-              name="estado"
-          />
-        </div>
-      </div>
-      <div className="col-md-6">
-        <div className="col-sm-12 col-md-12 unit">
-          {/*<FormControl
+                <TextField
+                    variant="outlined"
+                    margin="dense"
+                    className="form-control"
+                    label="Estado"
+                    value={state.estadoTexto}
+                    disabled
+                    name="estado"
+                />
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="col-sm-12 col-md-12 unit">
+                {/*<FormControl
             className="input select"
             fullWidth
             variant="outlined"
@@ -912,259 +859,375 @@ if(input=="codigoPostal"){
               ))}
             </Select>
           </FormControl>*/}
-          <TextField
-              variant="outlined"
-              margin="dense"
-              className="form-control"
-              label="Municipio"
-              value={state.municipioTexto}
-              disabled
-              name="municipio"
-          />
-        </div>
-
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <Autocomplete
-              freeSolo
-              onChange={(event, newValue) =>
-                handleChangeAutocomplete("codigoPostal", newValue)
-              }
-              value={state.codigoPostal}
-              disabled={props.consulta || props.modificar || props.agregar}
-              name="codigoPostal"
-              disableClearable
-              forcePopupIcon={false}
-              options={dataCodigosPostales}
-              getOptionLabel={(option) =>
-                option ? `${option.m_sCP} - ${option.m_sColonia}` : ""
-              }
-              style={{
-                transform: "translate(14px, 10px) scale(1) !important",
-              }}
-              renderInput={(params) => (
-                <div>
-                  <TextField
-                    label="Código Postal"
-                    margin="dense"
+                <TextField
                     variant="outlined"
-                    onClick={(e) =>
-                      handleClickCodigosPostalesInput("codigoPostal")
-                    }
-                    required
-                    {...params}
+                    margin="dense"
+                    className="form-control"
+                    label="Municipio"
+                    value={state.municipioTexto}
+                    disabled
+                    name="municipio"
+                />
+              </div>
+
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <Autocomplete
+                      freeSolo
+                      onChange={(event, newValue) =>
+                          handleChangeAutocomplete("codigoPostal", newValue)
+                      }
+                      value={state.codigoPostal}
+                      disabled={props.consulta || props.modificar || props.agregar}
+                      name="codigoPostal"
+                      disableClearable
+                      forcePopupIcon={false}
+                      options={dataCodigosPostales}
+                      getOptionLabel={(option) =>
+                          option ? `${option.m_sCP} - ${option.m_sColonia}` : ""
+                      }
+                      style={{
+                        transform: "translate(14px, 10px) scale(1) !important",
+                      }}
+                      renderInput={(params) => (
+                          <div>
+                            <TextField
+                                label="Código Postal"
+                                margin="dense"
+                                variant="outlined"
+                                onClick={(e) =>
+                                    handleClickCodigosPostalesInput("codigoPostal")
+                                }
+                                required
+                                {...params}
+                            />
+                          </div>
+                      )}
                   />
                 </div>
-              )}
-            />
-          </div>
-        </div>
+              </div>
 
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              label="Correo Electrónico"
-              onChange={handleChange}
-              className="form-control"
-              type="email"
-              required
-              value={state.correo}
-              disabled={props.consulta}
-              name="correo"
-            />
-          </div>
-        </div>
-
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              label="Teléfono"
-              required
-              value={state.telefono}
-              disabled={props.consulta }
-              name="telefono"
-            />
-          </div>
-        </div>
-
-        <div className="col-sm-12 col-md-12 unit">
-          <div className="input">
-            <TextField
-              variant="outlined"
-              margin="dense"
-              onChange={handleChange}
-              className="form-control"
-              type="text"
-              required
-              label="Contacto"
-              value={state.contacto}
-              disabled={props.consulta}
-              name="contacto"
-            />
-          </div>
-        </div>
-
-        {props.remitente && (
-          <div className="col-sm-12 col-md-12 unit">
-            <div className="input">
-              <Autocomplete
-                freeSolo
-                onChange={(event, newValue) =>
-                  handleChangeAutocomplete("origen", newValue)
-                }
-                value={state.origen}
-                disabled={props.consulta || props.modificar || props.agregar}
-                id="origenRemitente"
-                name="origenRemitente"
-                disableClearable
-                forcePopupIcon={false}
-                options={props.dataCiudad}
-                getOptionLabel={(option) => option.m_sCiudad || ""}
-                style={{
-                  transform: "translate(14px, 10px) scale(1) !important",
-                }}
-                renderInput={(params) => (
-                  <div>
-                    <TextField
-                      label="Origen"
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
+                  <TextField
+                      variant="outlined"
                       margin="dense"
-                      variant="outlined"
-                      required
-                      onClick={props.handleClickCiudad}
-                      {...params}
-                    />
-                  </div>
-                )}
-              />
-            </div>
-          </div>
-        )}
-
-        {props.destinatario && (
-          <div className="col-sm-12 col-md-12  unit">
-            <div className="input">
-              <Autocomplete
-                freeSolo
-                onChange={(event, newValue) =>
-                  handleChangeAutocomplete("destino", newValue)
-                }
-                value={state.destino}
-                disabled={props.consulta || props.modificar || props.agregar}
-                destino="destino"
-                disableClearable
-                forcePopupIcon={false}
-                options={props.dataCiudad}
-                getOptionLabel={(option) => option.m_sCiudad || ""}
-                variant="outlined"
-                style={{
-                  transform: "translate(14px, 10px) scale(1) !important",
-                }}
-                renderInput={(params) => (
-                  <div>
-                    <TextField
-                      required
-                      variant="outlined"
+                      label="Correo Electrónico"
+                      onChange={handleChange}
                       className="form-control"
-                      label="Destino"
-                      margin="dense"
-                      {...params}
-                      onClick={props.handleClickCiudad}
-                    />
-                  </div>
-                )}
-              />
-            </div>
-          </div>
-        )}
+                      type="email"
+                      required
+                      value={state.correo}
+                      disabled={props.consulta}
+                      name="correo"
+                  />
+                </div>
+              </div>
 
-        {props.mostrarZonas && (
-          <div className="col-sm-12 col-md-12 unit">
-            <div className="input">
-              <Autocomplete
-                value={state.zonaOperativa}
-                freeSolo
-                onChange={(event, newValue) =>
-                  handleChangeAutocomplete("zonaOperativa", newValue)
-                }
-                id="zonaOperativa"
-                disableClearable
-                forcePopupIcon={false}
-                options={dataZonasOperativas}
-                disabled={props.consulta || props.modificar || props.agregar}
-                getOptionLabel={(option) =>
-                  option
-                    ? `${option.m_sCodigoZona} - CP: ${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
-                    : ""
-                }
-                variant="outlined"
-                name={"zonaOperativa"}
-                style={{
-                  transform: "translate(14px, 10px) scale(1) !important",
-                }}
-                renderInput={(params) => (
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
                   <TextField
-                    variant="outlined"
-                    label="Zona Operativa"
-                    margin="dense"
-                    required={
-                      !state.diferenteEntrega && !state.entregaEnSucursal
-                    }
-                    onClick={() => handleClickZona()}
-                    {...params}
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      label="Teléfono"
+                      required
+                      value={state.telefono}
+                      disabled={props.consulta }
+                      name="telefono"
                   />
-                )}
-              />
-            </div>
-          </div>
-        )}
-        {/*props.mostrarZonas*/false && (
-          <div className="col-sm-12 col-md-12 unit">
-            <div className="input">
-              <Autocomplete
-                value={state.zonaTarifa}
-                freeSolo
-                onChange={(event, newValue) =>
-                  handleChangeAutocomplete("zonaTarifa", newValue)
-                }
-                id="zonaTarifa"
-                disableClearable
-                forcePopupIcon={false}
-                options={dataZonasTarifa}
-                disabled={props.consulta || props.modificar || props.agregar}
-                getOptionLabel={(option) =>
-                  option
-                    ? option.m_sCodigoZona || "Código Postal sin zona asignada"
-                    : ""
-                }
-                variant="outlined"
-                name={"zonaTarifa"}
-                style={{
-                  transform: "translate(14px, 10px) scale(1) !important",
-                }}
-                renderInput={(params) => (
+                </div>
+              </div>
+
+              <div className="col-sm-12 col-md-12 unit">
+                <div className="input">
                   <TextField
-                    variant="outlined"
-                    label="Zona Tarifa"
-                    margin="dense"
-                    required={
-                      !state.diferenteEntrega && !state.entregaEnSucursal
-                    }
-                    onClick={handleClickZona}
-                    {...params}
+                      variant="outlined"
+                      margin="dense"
+                      onChange={handleChange}
+                      className="form-control"
+                      type="text"
+                      required
+                      label="Contacto"
+                      value={state.contacto}
+                      disabled={props.consulta}
+                      name="contacto"
                   />
-                )}
-              />
+                </div>
+              </div>
+
+              {props.remitente && (
+                  <div className="col-sm-12 col-md-12 unit">
+                    <div className="input">
+                      <Autocomplete
+                          freeSolo
+                          onChange={(event, newValue) =>
+                              handleChangeAutocomplete("origen", newValue)
+                          }
+                          value={state.origen}
+                          disabled={props.consulta || props.modificar || props.agregar}
+                          id="origenRemitente"
+                          name="origenRemitente"
+                          disableClearable
+                          forcePopupIcon={false}
+                          options={props.dataCiudad}
+                          getOptionLabel={(option) => option.m_sCiudad || ""}
+                          style={{
+                            transform: "translate(14px, 10px) scale(1) !important",
+                          }}
+                          renderInput={(params) => (
+                              <div>
+                                <TextField
+                                    label="Origen"
+                                    margin="dense"
+                                    variant="outlined"
+                                    required
+                                    onClick={props.handleClickCiudad}
+                                    {...params}
+                                />
+                              </div>
+                          )}
+                      />
+                    </div>
+                  </div>
+              )}
+
+              {props.destinatario && (
+                  <div className="col-sm-12 col-md-12  unit">
+                    <div className="input">
+                      <Autocomplete
+                          freeSolo
+                          onChange={(event, newValue) =>
+                              handleChangeAutocomplete("destino", newValue)
+                          }
+                          value={state.destino}
+                          disabled={props.consulta || props.modificar || props.agregar}
+                          destino="destino"
+                          disableClearable
+                          forcePopupIcon={false}
+                          options={props.dataCiudad}
+                          getOptionLabel={(option) => option.m_sCiudad || ""}
+                          variant="outlined"
+                          style={{
+                            transform: "translate(14px, 10px) scale(1) !important",
+                          }}
+                          renderInput={(params) => (
+                              <div>
+                                <TextField
+                                    required
+                                    variant="outlined"
+                                    className="form-control"
+                                    label="Destino"
+                                    margin="dense"
+                                    {...params}
+                                    onClick={props.handleClickCiudad}
+                                />
+                              </div>
+                          )}
+                      />
+                    </div>
+                  </div>
+              )}
+
+              {props.mostrarZonas && (
+                  <div className="col-sm-12 col-md-12 unit">
+                    <div className="input">
+                      <Autocomplete
+                          value={state.zonaOperativa}
+                          freeSolo
+                          onChange={(event, newValue) =>
+                              handleChangeAutocomplete("zonaOperativa", newValue)
+                          }
+                          id="zonaOperativa"
+                          disableClearable
+                          forcePopupIcon={false}
+                          options={dataZonasOperativas}
+                          disabled={props.consulta || props.modificar || props.agregar}
+                          getOptionLabel={(option) =>
+                              option
+                                  ? `${option.m_sCodigoZona} - CP: ${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
+                                  : ""
+                          }
+                          variant="outlined"
+                          name={"zonaOperativa"}
+                          style={{
+                            transform: "translate(14px, 10px) scale(1) !important",
+                          }}
+                          renderInput={(params) => (
+                              <TextField
+                                  variant="outlined"
+                                  label="Zona Operativa"
+                                  margin="dense"
+                                  required={
+                                      !state.diferenteEntrega && !state.entregaEnSucursal
+                                  }
+                                  onClick={() => handleClickZona()}
+                                  {...params}
+                              />
+                          )}
+                      />
+                    </div>
+                  </div>
+              )}
+              {/*props.mostrarZonas*/false && (
+                  <div className="col-sm-12 col-md-12 unit">
+                    <div className="input">
+                      <Autocomplete
+                          value={state.zonaTarifa}
+                          freeSolo
+                          onChange={(event, newValue) =>
+                              handleChangeAutocomplete("zonaTarifa", newValue)
+                          }
+                          id="zonaTarifa"
+                          disableClearable
+                          forcePopupIcon={false}
+                          options={dataZonasTarifa}
+                          disabled={props.consulta || props.modificar || props.agregar}
+                          getOptionLabel={(option) =>
+                              option
+                                  ? option.m_sCodigoZona || "Código Postal sin zona asignada"
+                                  : ""
+                          }
+                          variant="outlined"
+                          name={"zonaTarifa"}
+                          style={{
+                            transform: "translate(14px, 10px) scale(1) !important",
+                          }}
+                          renderInput={(params) => (
+                              <TextField
+                                  variant="outlined"
+                                  label="Zona Tarifa"
+                                  margin="dense"
+                                  required={
+                                      !state.diferenteEntrega && !state.entregaEnSucursal
+                                  }
+                                  onClick={handleClickZona}
+                                  {...params}
+                              />
+                          )}
+                      />
+                    </div>
+                  </div>
+              )}
             </div>
+          </>
+      }
+
+      {
+          props.componentePadre === 'CANCELAR_SAT' &&
+          <div>
+            <Grid container spacing={2}>
+              <Grid item xs>
+                <TextField
+                    label={"Alias (Nombre)"}
+                    margin="dense"
+                    variant="outlined"
+                    required
+                    disabled={props.consulta}
+                    value={state.nombre}
+                    placeholder={"Alias (Nombre)"}
+                    InputLabelProps={{ shrink: true }}
+                    InputProps={{
+                      style: {
+                        height: "33px",
+                        fontSize: "14px",
+                      },
+                      type: "search",
+                      disableUnderline: true,
+                      endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                                disabled={props.consulta}
+                                padding="0px"
+                                style={{
+                                  paddingRight: "0px",
+                                }}
+                                onClick={handleClickModal}
+                            >
+                              <SearchIcon
+                                  style={{
+                                    color: "#F9A03E",
+                                    fontSize: 32,
+                                    paddingInlineEnd: 0,
+                                    paddingRight: 0,
+                                    paddingBlockEnd: 0,
+                                    paddingLeft: 0,
+                                    paddingBlock: 0,
+                                    cursor:"pointer"
+                                  }}
+                              />
+                            </IconButton>
+                          </InputAdornment>
+                      ),
+                    }}
+                />
+              </Grid>
+              <Grid item xs>
+                <Autocomplete
+                    value={state.zonaOperativa}
+                    freeSolo
+                    id="zonaOperativa"
+                    disableClearable
+                    forcePopupIcon={false}
+                    disabled={true}
+                    getOptionLabel={(option) =>
+                        option
+                            ? `${option.m_sCodigoZona} - CP: ${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
+                            : ""
+                    }
+                    variant="outlined"
+                    name={"zonaOperativa"}
+                    style={{
+                      transform: "translate(14px, 10px) scale(1) !important",
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            variant="outlined"
+                            label="Zona Operativa"
+                            margin="dense"
+                            {...params}
+                        />
+                    )}
+                />
+              </Grid>
+              <Grid item xs>
+                <Autocomplete
+                    freeSolo
+                    onChange={(event, newValue) =>
+                        handleChangeAutocomplete("origen", newValue)
+                    }
+                    value={state.origen}
+                    disabled={true}
+                    id="origenRemitente"
+                    name="origenRemitente"
+                    disableClearable
+                    forcePopupIcon={false}
+                    getOptionLabel={(option) => option.m_sCiudad || ""}
+                    style={{
+                      transform: "translate(14px, 10px) scale(1) !important",
+                    }}
+                    renderInput={(params) => (
+                        <div>
+                          <TextField
+                              label="Origen"
+                              margin="dense"
+                              variant="outlined"
+                              required
+                              {...params}
+                          />
+                        </div>
+                    )}
+                />
+              </Grid>
+            </Grid>
+
           </div>
-        )}
-      </div>
+      }
+
+      
+
     </div>
   );
 }
