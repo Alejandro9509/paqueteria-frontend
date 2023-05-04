@@ -1,10 +1,8 @@
 import {
     Box,
-    Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    Grid,
     Typography,
     Button,
     makeStyles,
@@ -17,30 +15,20 @@ import CloseIcon from '@material-ui/icons/Close';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
     TableRow,
     Table,
-    withStyles
 } from "@material-ui/core";
 import PropTypes from 'prop-types';
-import {DataGrid} from '@material-ui/data-grid';
 
 export default function ImprimirEtiquetas2(props) {
 
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    const [valuePage, setValuePage] = React.useState([0, 0]);
-    const [idsPaquetesSeleccionadas, setIdsPaquetesSeleccionadas] = React.useState([])
     const [Paquetes, setPaquetes] = React.useState([])
     const handleChange = (event, newValue) => {
-
         setValue(newValue);
     };
 
@@ -61,7 +49,6 @@ export default function ImprimirEtiquetas2(props) {
                 "checked": true
             }
         })
-        // setIdsPaquetesSeleccionadas(arrayAux)
         props.closeEtiquetas(arrayAux.filter((i) => i.checked))
     }
 
@@ -114,10 +101,7 @@ export default function ImprimirEtiquetas2(props) {
                     </Tabs>
 
                     {/*------------------------------TAB PANEL--------------------------------------*/}
-
-
                     {Paquetes.map((paquete, index, array) => {
-
                         return (
                             <TabPanel value={value} index={index} className={classes.tab}>
                                 <Table>
