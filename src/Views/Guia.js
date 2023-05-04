@@ -144,7 +144,6 @@ function Guia(props) {
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
 
-    const [stepActive, setStepActive] = React.useState(1);
     //Listado de sucursales. Se usa en listado y agregar.
     const [dataSucursal, setDataSucursal] = React.useState([])
     const [dataMoneda, setDataMoneda] = React.useState([])
@@ -154,7 +153,6 @@ function Guia(props) {
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
-    const [showDialogEtiqueta, setShowDialogEtiqueta] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
     const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
@@ -1559,49 +1557,6 @@ function Guia(props) {
 
     }
 
-    function openSection(index) {
-        closeSeccions()
-        var $section;
-        switch (index) {
-            case 1:
-                setStepActive(1);
-                $section = $("#informacionGeneral")
-                break;
-            case 2:
-                setStepActive(2);
-                $section = $("#remitenteDestinatario")
-
-                break;
-            case 3:
-                setStepActive(3);
-                $section = $("#paquetesSobres")
-
-                break;
-
-            case 4:
-                setStepActive(4);
-                $section = $("#detalleFacturacion")
-
-                break;
-
-            case 5:
-                setStepActive(5);
-                $section = $("#conceptosFacturacion")
-
-                break;
-            case 6:
-                setStepActive(6);
-                $section = $("#general")
-                break;
-            default:
-        }
-
-        $('html, body').animate({
-            scrollTop: parseInt($section.offset().top - 150)
-        }, 200);
-
-    }
-
     const framesPaqueteImp = state.paquetesI.map((p, index) => {
         return (
             <div key={`paqueteI${index}`}>
@@ -1891,16 +1846,6 @@ function Guia(props) {
         });
     }
 
-    function a11yProps(index) {
-        return {
-            id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
-        };
-    }
-
-    function handleTabChange(event, newValue) {
-        setState({...state, tab: newValue});
-    }
     const mostrarDialogoEtiqueta = (event,id)=>{
         event.stopPropagation();
         obtenerGuiaId(id).then(({data}) => {
@@ -1910,7 +1855,6 @@ function Guia(props) {
             openDialogEtiquetas: true,
             detallesPaquetesEtiquetas: guia.m_arrClsDetalle
         })
-        setShowDialogEtiqueta(true)
         })
     }
     const mostrarDialogoOcurre = (event, id) => {
@@ -2001,11 +1945,13 @@ function Guia(props) {
                 fullWidth maxWidth="md"
                 aria-labelledby="form-dialog-title"
             >
-            <ImprimirEtiquetas2 handleImprimirEtiquetas ={handleImprimirEtiquetas} open={state.openDialogEtiquetas} closeEtiquetas={() => {
-             setState({...state, openDialogEtiquetas: false})
-             setShowDialogEtiqueta(false)
-             }} detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
-             </Dialog>
+                <ImprimirEtiquetas2 open={state.openDialogEtiquetas}
+                                    closeEtiquetas={() => {
+                                        setState({...state, openDialogEtiquetas: false})
+                                    }}
+                                    handleImprimirEtiquetas={handleImprimirEtiquetas}
+                                    detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
+            </Dialog>
 
             <Dialog
                 open={state.openDialog}
