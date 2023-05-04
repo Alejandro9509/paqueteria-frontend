@@ -44,64 +44,50 @@ export default function ImprimirEtiquetas2(props) {
         setValue(newValue);
     };
 
-    const handleToggle = (value) => {
-        const currentIndex = idsPaquetesSeleccionadas.indexOf(value);
-        let nuevoChecado = [...idsPaquetesSeleccionadas];
-
-        if (currentIndex === -1) {
-            nuevoChecado.push(value);
-        } else {
-            nuevoChecado.splice(currentIndex, 1);
-        }
-        setIdsPaquetesSeleccionadas(nuevoChecado);
+    const handleToggle = (value, event) => {
+        const currentIndex = Paquetes.indexOf(value);
+        let nuevoChecado = [...Paquetes];
+        nuevoChecado[currentIndex].checked = event.target.checked
+        setPaquetes(nuevoChecado);
     };
     const imprimirTodasEtiquetas = (value) => {
         let arrayAux = props.detallesPaquetesEtiquetas.map((paquetes) => {
-            let paquete = {
-                "m_nIdEmbarqueDetalle": 0,
-                "m_nCantidad": 0,
-                "m_nRango": [0, 0],
-                "m_sEmbalaje": ""
-            };
-            paquete.m_nIdEmbarqueDetalle = paquetes.m_nIdEmbarqueDetalle
-            paquete.m_nCantidad = paquetes.ctd
-            paquete.m_nRango = [0, paquetes.ctd]
-            paquete.m_sEmbalaje = paquetes.m_sEmbalaje
-            return paquete
+            return {
+                "m_nIdEmbarqueDetalle": paquetes.m_nIdEmbarqueDetalle,
+                "m_nCantidad": paquetes.ctd,
+                "m_nRango": [1, paquetes.ctd],
+                "m_sEmbalaje": paquetes.m_sEmbalaje,
+                "m_sDescripcion": paquetes.m_sDescripcion,
+                "checked": true
+            }
         })
-        console.log(JSON.stringify(arrayAux))
-        setIdsPaquetesSeleccionadas(arrayAux)
+        // setIdsPaquetesSeleccionadas(arrayAux)
+        props.closeEtiquetas(arrayAux.filter((i) => i.checked))
     }
 
     useEffect(() => {
+        // EN CUANTO SE ABRE EL DIALOGO, TOMA LOS PAQUETES DE PROPS PARA CREAR UN NUEVO ARREGLO CON MENOS VARIABLES
         let arrayAux = props.detallesPaquetesEtiquetas.map((paquetes) => {
-            let paquete = {
-                "m_nIdEmbarqueDetalle": 0,
-                "m_nCantidad": 0,
-                "m_nRango": [0, 0],
-                "m_sEmbalaje": ""
-            };
-            paquete.m_nIdEmbarqueDetalle = paquetes.m_nIdEmbarqueDetalle
-            paquete.m_nCantidad = paquetes.ctd
-            paquete.m_nRango = [0, 0]
-            paquete.m_sEmbalaje = paquetes.m_sEmbalaje
-            return paquete
+            return {
+                "m_nIdEmbarqueDetalle": paquetes.m_nIdEmbarqueDetalle,
+                "m_nCantidad": paquetes.ctd,
+                "m_nRango": [1, 1],
+                "m_sEmbalaje": paquetes.m_sEmbalaje,
+                "m_sDescripcion": paquetes.m_sDescripcion,
+                "checked": false
+            }
         })
         setPaquetes(arrayAux)
-        console.log(JSON.stringify(arrayAux))
     }, [props.open])
 
     return (
-        <form onSubmit={(e) => {
-            e.preventDefault();
-            props.handleImprimirEtiquetas(idsPaquetesSeleccionadas)
-        }}>
+        <form >
             <DialogTitle>
                 <Box display="flex">
                     <Box width="90%"><Typography variant={"h1"}>Etiquetas</Typography>
                     </Box>
                     <Box width="10%">
-                        <IconButton aria-label="close" onClick={() => props.closeEtiquetas()}
+                        <IconButton aria-label="close" onClick={() => props.closeEtiquetas(null)}
                                     style={{position: 'absolute', right: '20px', top: '20px', padding: '5px'}}>
                             <CloseIcon style={{fontSize: '30px'}}/>
                         </IconButton>
@@ -122,7 +108,7 @@ export default function ImprimirEtiquetas2(props) {
                     >
                         {Paquetes.map((paquete, index) => {
                             return (
-                                <Tab label={paquete.m_sEmbalaje} {...a11yProps(index)} />
+                                <Tab label={paquete.m_sDescripcion} {...a11yProps(index)} />
                             );
                         })}
                     </Tabs>
@@ -147,8 +133,10 @@ export default function ImprimirEtiquetas2(props) {
                                         <TableRow key={index}>
                                             <TableCell padding="checkbox" align="center">
                                                 <Checkbox
-                                                    checked={idsPaquetesSeleccionadas.indexOf(paquete) !== -1}
-                                                    onChange={() => handleToggle(paquete)}
+                                                    checked={paquete.checked}
+                                                    onChange={event => {
+                                                        handleToggle(paquete, event)
+                                                    }}
                                                 />
                                             </TableCell>
                                             <TableCell align="center">{paquete.m_nIdEmbarqueDetalle}</TableCell>
@@ -156,16 +144,15 @@ export default function ImprimirEtiquetas2(props) {
                                                 <Slider
                                                     value={paquete.m_nRango}
                                                     onChange={(event, newValue) => {
-                                                        paquete.m_nRango = newValue
-                                                        array[index] = paquete
-                                                        // console.log(JSON.stringify(array))
-                                                        setPaquetes(array)
-                                                        setIdsPaquetesSeleccionadas([...array]);
+                                                        const currentIndex = Paquetes.indexOf(paquete);
+                                                        let nuevoChecado = [...Paquetes];
+                                                        nuevoChecado[currentIndex].m_nRango = newValue
+                                                        setPaquetes(nuevoChecado);
                                                     }}
                                                     valueLabelDisplay="on"
                                                     aria-labelledby="range-slider"
-                                                    min={0}
-                                                    disabled={idsPaquetesSeleccionadas.indexOf(paquete) == -1}
+                                                    min={1}
+                                                    disabled={!paquete.checked}
                                                     max={paquete.m_nCantidad}
                                                 />
 
@@ -186,12 +173,14 @@ export default function ImprimirEtiquetas2(props) {
                     <Button size="medium" type={"submit"} variant={"contained"} color={"primary"}
                             onClick={(e) => {
                                 imprimirTodasEtiquetas()
-                                props.closeEtiquetas()
+                                props.closeEtiquetas(null)
                             }}
                             className={classes.botonesImprimir}>Imprimir Todas</Button>
-                    <Button size="medium" type={"submit"} variant={"contained"} color={"primary"}
-                            onClick={(e) => props.closeEtiquetas()}
-                            className={classes.botonesImprimir}>Imprimir</Button>
+                    <Button size="medium" variant={"contained"} color={"primary"}
+                            onClick={(e) => props.closeEtiquetas(Paquetes.filter((i) => i.checked))}
+                            className={classes.botonesImprimir}
+                            disabled={Paquetes.filter((i) => i.checked).length === 0}
+                    >Imprimir</Button>
                 </Box>
             </DialogActions>
         </form>

@@ -1946,7 +1946,14 @@ function Guia(props) {
                 aria-labelledby="form-dialog-title"
             >
                 <ImprimirEtiquetas2 open={state.openDialogEtiquetas}
-                                    closeEtiquetas={() => {
+                                    closeEtiquetas={(data) => {
+                                        if (data) {
+                                            console.log("Imprimir etiqueteas")
+                                            console.log(data)
+                                        }else {
+                                            console.log("Impresion cancelada")
+                                        }
+
                                         setState({...state, openDialogEtiquetas: false})
                                     }}
                                     handleImprimirEtiquetas={handleImprimirEtiquetas}
