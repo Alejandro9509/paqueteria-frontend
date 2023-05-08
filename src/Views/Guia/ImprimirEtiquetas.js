@@ -23,7 +23,7 @@ import {
 } from "@material-ui/core";
 import PropTypes from 'prop-types';
 
-export default function ImprimirEtiquetas2(props) {
+export default function ImprimirEtiquetas(props) {
 
     const classes = useStyles();
     const [value, setValue] = React.useState(0);

@@ -64,7 +64,7 @@ import {
     asignarTrayectos,
     validarEliminarGuia,
     obtenerGuiaReporteEtiqueta,
-    validarCancelarGuia
+    validarCancelarGuia, obtenerGuiaReporteEtiquetaParcial
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -92,7 +92,7 @@ import Filtros from "./Filtros/Filtros";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
-import ImprimirEtiquetas2 from "./Guia/ImprimirEtiquetas2";
+import ImprimirEtiquetas from "./Guia/ImprimirEtiquetas";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
 
@@ -641,10 +641,6 @@ function Guia(props) {
 
         }
     }
-    const handleImprimirEtiquetas = (data) => {//TODO: LOGICA PARA IMPRIMIR ETIQUETAS PARCIALES
-        console.log("se envia"+JSON.stringify(data))
-    }
-
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
@@ -1037,6 +1033,14 @@ function Guia(props) {
     }
     function generarReporteEtiqueta(id, folio) {
         obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + folio;
+        })
+    }
+    function generarReporteEtiquetaParcial(params, folio) {
+        obtenerGuiaReporteEtiquetaParcial(params).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
@@ -1945,19 +1949,27 @@ function Guia(props) {
                 fullWidth maxWidth="md"
                 aria-labelledby="form-dialog-title"
             >
-                <ImprimirEtiquetas2 open={state.openDialogEtiquetas}
-                                    closeEtiquetas={(value) => {
+                <ImprimirEtiquetas open={state.openDialogEtiquetas}
+                                   closeEtiquetas={(value) => {
                                         if (value) {
-                                            console.log("Imprimir etiqueteas")
-                                            console.log(value)
+                                            let newArray = []
+                                            value.forEach((obj) => {
+                                                for (let i = obj.m_nRango[0]; i <= obj.m_nRango[1]; i++) {
+                                                    newArray.push({
+                                                        "idPaquete": obj.m_nIdEmbarqueDetalle,
+                                                        "idGuia": guiaSeleccionada.m_nIdGuia,
+                                                        "indice": i,
+                                                        "idImpresion": 0
+                                                    })
+                                                }
+                                            })
+                                            generarReporteEtiquetaParcial(newArray, guiaSeleccionada.m_nFolioGuia)
                                         }else {
                                             console.log("Impresion cancelada")
                                         }
-
-                                        setState({...state, openDialogEtiquetas: false})
+                                        // setState({...state, openDialogEtiquetas: false})
                                     }}
-                                    handleImprimirEtiquetas={handleImprimirEtiquetas}
-                                    detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
+                                   detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
             </Dialog>
 
             <Dialog
