@@ -61,7 +61,7 @@ class FiltroReporteViajes extends Component {
     imprimirFormato(event){
         event.preventDefault()
 
-        if(this.props.select?.m_nIdFormato!==93 && this.props.select?.m_nIdFormato!==94){
+        if((this.props.select?.m_nTipoProceso !==43)&&(this.props.select?.m_nTipoProceso !==44)){
             if (this.state.sucursalesSeleccionadas.length === 0) {
                 showError("Es necesario seleccionar al menos un destino")
                 return
@@ -74,9 +74,9 @@ class FiltroReporteViajes extends Component {
                 pdfWindow.document.title = this.props.select.m_sFormato;
             })
         }
-        else if(this.props.select?.m_nIdFormato===93) {
-            imprimirFormatosECCId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal, this.state.cliente.m_nIdCliente,1).then(({data}) => {
-                console.log(data)
+        else if(this.props.select?.m_nTipoProceso !==44) {
+            imprimirFormatosECCId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal, this.state.cliente.m_nIdCliente).then(({data}) => {
+                /*console.log(data)
                 var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
                 var a = document.createElement('a');
                 a.href = mediaType+encodeURI(data.m_sArchivo);
@@ -84,25 +84,21 @@ class FiltroReporteViajes extends Component {
                 a.textContent = 'Descargar Archivo';
                 document.body.appendChild(a);
                 a.click();
-                a.remove();
-                /*var mediaType="data:text/plain;charset=utf-8,";
+                a.remove();*/
+                var mediaType="data:text/plain;charset=utf-8,";
                 var a = document.createElement('a');
                 a.href = mediaType+encodeURI(data.m_sArchivo);
                 a.download = this.props.select.m_sFormato+'.txt';
                 a.textContent = 'Descargar Archivo';
                 document.body.appendChild(a);
                 a.click();
-                a.remove();*/
+                a.remove();
 
-                /*let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo)+"'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = this.props.select.m_sFormato;*/
             })
 
         }
         else{
-            imprimirFormatosECCId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal, this.state.cliente.m_nIdCliente,2).then(({data}) => {
+            imprimirFormatosECCId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal, this.state.cliente.m_nIdCliente).then(({data}) => {
 
                 console.log(data)
                 var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
@@ -193,7 +189,7 @@ class FiltroReporteViajes extends Component {
                                         name="fechaFinal"/>
                                 </Grid>
                                 {
-                                    this.props.select?.m_nIdFormato!==93 && this.props.select?.m_nIdFormato!==94 &&
+                                    this.props.select?.m_nTipoProceso !==43 && this.props.select?.m_nTipoProceso !==44 &&
                                     <Grid item md={12}>
                                         <Typography variant={"h4"}>Destinos:</Typography>
                                         <MultiSelect
@@ -214,7 +210,7 @@ class FiltroReporteViajes extends Component {
                                 }
 
                                 {
-                                    (this.props.select?.m_nIdFormato === 93 || this.props.select?.m_nIdFormato === 94) &&
+                                    (this.props.select?.m_nTipoProceso !==43 || this.props.select?.m_nTipoProceso !==44) &&
                                     <Grid item xs={3}>
                                         <TextField
                                             variant="outlined"

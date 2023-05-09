@@ -117,7 +117,19 @@ class AgregarFormatoImpresion extends Component {
                                                     key={42}
                                                     value={42}
                                                 >
-                                                    Viajes Paqueteria
+                                                    Viajes Paquetería
+                                                </option>
+                                                <option
+                                                    key={43}
+                                                    value={43}
+                                                >
+                                                    Viajes Cliente TXT
+                                                </option>
+                                                <option
+                                                    key={44}
+                                                    value={44}
+                                                >
+                                                    Viajes Cliente EXCEL
                                                 </option>
                                             </Select>
                                         </FormControl>

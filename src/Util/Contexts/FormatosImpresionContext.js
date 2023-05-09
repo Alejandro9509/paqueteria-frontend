@@ -51,11 +51,11 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
         );
     return result
 }
-function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente,tipoFormato){
+function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
     trackPromise(
-        result =  axios.post(url,Object.assign({}, {fechaInicio: fechaInicial, fechaFinal: fechaFinal, idCliente:idCliente,tipoFormato:tipoFormato}), { headers})
+        result =  axios.post(url,Object.assign({}, {fechaInicio: fechaInicial, fechaFinal: fechaFinal, idCliente:idCliente}), { headers})
     );
     return result
 }
