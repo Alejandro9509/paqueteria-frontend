@@ -94,6 +94,10 @@ class FiltroReporteViajes extends Component {
                 a.click();
                 a.remove();
 
+                /*let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo)+"'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = this.props.select.m_sFormato;*/
             })
 
         }
