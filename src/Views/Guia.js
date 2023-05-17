@@ -322,17 +322,17 @@ function Guia(props) {
                                onClick={(event) => {
                                    /*mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)*/
                                    printTicket(row.row.m_nIdGuia)
-                               }}><i
-                                className="zmdi zmdi-print"
-                                style={{color: "#F9A03E"}}/></a>
+                               }}>
+                                <i className="zmdi zmdi-print" style={{color: "#F9A03E"}}/>
+                            </a>
 
                         </Tooltip>
-                         {/*<Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
-                                                                                 style={{color: "#F9A03E"}}/></a>
+                        <Tooltip title="Descargar PFD con etiquetas" disabled={!validarDerecho(9101465)}>
+                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
+                                <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
+                            </a>
 
-                        </Tooltip>*/}
+                        </Tooltip>
 
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
@@ -1035,6 +1035,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
     function generarReporteEtiqueta(id, folio) {
         obtenerGuiaReporteEtiqueta(id).then(({data}) => {
             let pdfWindow = window.open("");
@@ -1043,6 +1044,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
     function generarReporteEtiquetaParcial(params, folio) {
         obtenerGuiaReporteEtiquetaParcial(params).then(({data}) => {
             let pdfWindow = window.open("");
@@ -1051,6 +1053,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
     /**Entreando a guias por primera vez*/
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
