@@ -1218,7 +1218,6 @@ function Guia(props) {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
             let rfcCliente = localStorage.getItem("RFC")
-            return
             if (totalEtiquetas >= 10) {
                 confirmAlert({
                     title: 'Confirmación',
