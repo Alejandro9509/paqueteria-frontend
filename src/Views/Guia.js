@@ -1129,7 +1129,7 @@ function Guia(props) {
                             label: 'Sí',
                             onClick: async () => {
                                 if (selected_device === null || selected_device === undefined){
-                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la paguina e intente de nuevo.')
+                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
                                 }
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
@@ -1173,7 +1173,7 @@ function Guia(props) {
                 });
             } else {
                 if (selected_device === null || selected_device === undefined){
-                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la paguina e intente de nuevo.')
+                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
                 }
                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                     for (let i = 0; i < p.ctd; i++) {
