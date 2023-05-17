@@ -1128,6 +1128,9 @@ function Guia(props) {
                         {
                             label: 'Sí',
                             onClick: async () => {
+                                if (selected_device === null || selected_device === undefined){
+                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la paguina e intente de nuevo.')
+                                }
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
                                         console.log('guia: ', guia)
@@ -1136,11 +1139,27 @@ function Guia(props) {
                                         console.log(i + 1 + ' de ' + p.ctd)
                                         let result
                                         if (rfcCliente === 'PTR170523BI6'){
-                                            result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
-                                            console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                            try{
+                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
+                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                                showSuccess('Impresión en curso.')
+                                            }catch (e) {
+                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                                console.log(e)
+                                                break
+                                            }
+
                                         }else {
-                                            result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                            console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                            try{
+                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                                showSuccess('Impresión en curso.')
+                                            }catch (e) {
+                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                                console.log(e)
+                                                break
+                                            }
+
                                         }
 
                                     }
@@ -1153,6 +1172,9 @@ function Guia(props) {
                     ]
                 });
             } else {
+                if (selected_device === null || selected_device === undefined){
+                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la paguina e intente de nuevo.')
+                }
                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                     for (let i = 0; i < p.ctd; i++) {
                         console.log('guia: ', guia)
@@ -1160,15 +1182,30 @@ function Guia(props) {
                         console.log('index: ', i + 1)
                         console.log(i + 1 + ' de ' + p.ctd)
                         let result
-                        if (rfcCliente === 'PTR170523BI6'){
-                            result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
-                            console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
-                        }else {
-                            result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                            console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                        if (rfcCliente === 'PTR170523BI6') {
+                            try {
+                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
+                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                showSuccess('Impresión en curso.')
+                            } catch (e) {
+                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                console.log(e)
+                                break
+                            }
+                        } else {
+                            try {
+                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                showSuccess('Impresión en curso.')
+                            } catch (e) {
+                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                console.log(e)
+                                break
+                            }
                         }
                     }
                 })
+
             }
 
 
