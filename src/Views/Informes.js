@@ -315,7 +315,7 @@ function Informes({history}) {
             try{
                 const link = document.createElement('a');
                 link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Informe " + folio);
+                link.setAttribute('download', "Informe " + folio.replace(/\./g, ' '));
                 document.body.appendChild(link);
                 link.click();
             }catch (e) {
