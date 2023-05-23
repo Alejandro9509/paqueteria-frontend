@@ -88,7 +88,7 @@ import {obtenerEstatusEmbarque} from "../Util/Contexts/EstatusContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {
-    imprimirFormatosId,
+    imprimirFormatosIdIdTipoReporte,
     obtenerFormatosImpresion,
     obtenerFormatosImpresionProceso
 } from "../Util/Contexts/FormatosImpresionContext";
@@ -366,7 +366,7 @@ function Embarque(props) {
                         </Tooltip>
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101425)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i
+                               onClick={() => generarReporte(row.row)}><i
                                 className="zmdi zmdi-file"
                                 style={{color: "#F9A03E"}}/></a>
 
@@ -907,6 +907,7 @@ function Embarque(props) {
 
     function generarReporte(row) {
         setSeleccion(row)
+        console.log(row)
         setOpenDialog(true)
       /*  e.preventDefault()
         console.log(state.reporteSeleccionado)
@@ -953,12 +954,12 @@ function Embarque(props) {
             return
         }
 
-        imprimirFormatosId(state.reporteSeleccionado, seleccion.IdCita).then(({data}) => { //poner aqui el id de Embarque
+        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdEmbarque).then(({data}) => { //poner aqui el id de Embarque
             console.log(data)
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Cita " + seleccion.FolioCita;
+            pdfWindow.document.title = "Embarque" + seleccion.m_sFolioEmbarque;
         })
         setState({
             ...state,
@@ -3013,7 +3014,7 @@ function Embarque(props) {
                     fullWidth maxWidth="md"
                 >
                     <DialogTitle>
-                        Reporte de Cita
+                        Reporte de Embarque
                     </DialogTitle>
                     <DialogContent>
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
