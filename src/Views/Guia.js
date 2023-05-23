@@ -42,7 +42,7 @@ import {
     TextField,
     Tooltip
 } from "@material-ui/core";
-import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
+import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE, TICKET_ZABRA_TAMPLATE_PLATEROS} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
 import {obtenerEmbarquesId, obtenerEmbarqueMoneda, obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
@@ -325,14 +325,18 @@ function Guia(props) {
                         }
                         <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
-                                                                                                                                          style={{color: "#F9A03E"}}/></a>
+                               onClick={(event) => {
+                                   /*mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)*/
+                                   printTicket(row.row.m_nIdGuia)
+                               }}>
+                                <i className="zmdi zmdi-print" style={{color: "#F9A03E"}}/>
+                            </a>
 
                         </Tooltip>
-                         <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
-                                                                                 style={{color: "#F9A03E"}}/></a>
+                        <Tooltip title="Descargar PFD con etiquetas" disabled={!validarDerecho(9101465)}>
+                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
+                                <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
+                            </a>
 
                         </Tooltip>
 
@@ -1129,6 +1133,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
     function generarReporteEtiqueta(id, folio) {
         obtenerGuiaReporteEtiqueta(id).then(({data}) => {
             let pdfWindow = window.open("");
@@ -1137,6 +1142,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
     function generarReporteEtiquetaParcial(params, folio) {
         obtenerGuiaReporteEtiquetaParcial(params).then(({data}) => {
             let pdfWindow = window.open("");
@@ -1145,6 +1151,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
     /**Entreando a guias por primera vez*/
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
@@ -1213,6 +1220,7 @@ function Guia(props) {
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
+            let rfcCliente = localStorage.getItem("RFC")
             if (totalEtiquetas >= 10) {
                 confirmAlert({
                     title: 'Confirmación',
@@ -1221,14 +1229,40 @@ function Guia(props) {
                         {
                             label: 'Sí',
                             onClick: async () => {
+                                if (selected_device === null || selected_device === undefined){
+                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                                }
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
                                         console.log('guia: ', guia)
                                         console.log('paquete: ', p)
                                         console.log('index: ', i + 1)
                                         console.log(i + 1 + ' de ' + p.ctd)
-                                        var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                        let result
+                                        if (rfcCliente === 'PTR170523BI6'){
+                                            try{
+                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
+                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                                showSuccess('Impresión en curso.')
+                                            }catch (e) {
+                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                                console.log(e)
+                                                break
+                                            }
+
+                                        }else {
+                                            try{
+                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                                showSuccess('Impresión en curso.')
+                                            }catch (e) {
+                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                                console.log(e)
+                                                break
+                                            }
+
+                                        }
+
                                     }
                                 })
                             }
@@ -1239,16 +1273,40 @@ function Guia(props) {
                     ]
                 });
             } else {
+                if (selected_device === null || selected_device === undefined){
+                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                }
                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                     for (let i = 0; i < p.ctd; i++) {
                         console.log('guia: ', guia)
                         console.log('paquete: ', p)
                         console.log('index: ', i + 1)
                         console.log(i + 1 + ' de ' + p.ctd)
-                        var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                        let result
+                        if (rfcCliente === 'PTR170523BI6') {
+                            try {
+                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
+                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                showSuccess('Impresión en curso.')
+                            } catch (e) {
+                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                console.log(e)
+                                break
+                            }
+                        } else {
+                            try {
+                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                showSuccess('Impresión en curso.')
+                            } catch (e) {
+                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                console.log(e)
+                                break
+                            }
+                        }
                     }
                 })
+
             }
 
 
