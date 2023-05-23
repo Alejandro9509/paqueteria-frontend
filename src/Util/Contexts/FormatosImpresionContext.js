@@ -51,6 +51,14 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
         );
     return result
 }
+function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte}), { headers})
+    );
+    return result
+}
 function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -59,5 +67,21 @@ function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     );
     return result
 }
+function imprimirFormatosIdTimbradoViajes(id,idViaje,idInforme){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url,Object.assign({}, {idViaje:idViaje,idInforme:idInforme}), { headers})
+    );
+    return result
+}
+function imprimirFormatosIdCorteCajaResumen(id,idDestino,fechaRegistro){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url,Object.assign({}, {idDestino:idDestino,fechaREgistro:fechaRegistro}), { headers})
+    );
+    return result
+}
 
-export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId}
+export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaResumen}
