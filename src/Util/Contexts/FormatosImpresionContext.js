@@ -26,7 +26,7 @@ function agregarFormatosImpresion( params, file, image){
 }
 
 function obtenerFormatosImpresion(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -51,5 +51,13 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
         );
     return result
 }
+function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url,Object.assign({}, {fechaInicio: fechaInicial, fechaFinal: fechaFinal, idCliente:idCliente}), { headers})
+    );
+    return result
+}
 
-export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso}
+export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId}

@@ -175,6 +175,15 @@ function obtenerGuiaReporteEtiqueta(id) {
     );
     return result
 }
+function obtenerGuiaReporteEtiquetaParcial(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasParcialesGuia`;
+    let result;
+    trackPromise(
+        // result =  axios.get(url, { headers })
+        result =  axios.post(url, params, { headers })
+    );
+    return result
+}
 function ultimoFolioGuia() {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetUltimoFolio`;
     let result;
@@ -270,4 +279,4 @@ function obtenerBancos() {
 
 export {cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaParcial}

@@ -42,7 +42,7 @@ import {
     TextField,
     Tooltip
 } from "@material-ui/core";
-import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
+import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE, TICKET_ZABRA_TAMPLATE_PLATEROS} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
 import {obtenerEmbarquesId, obtenerEmbarqueMoneda, obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
@@ -64,7 +64,7 @@ import {
     asignarTrayectos,
     validarEliminarGuia,
     obtenerGuiaReporteEtiqueta,
-    validarCancelarGuia
+    validarCancelarGuia, obtenerGuiaReporteEtiquetaParcial
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -92,7 +92,7 @@ import Filtros from "./Filtros/Filtros";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
-import ImprimirEtiquetas2 from "./Guia/ImprimirEtiquetas2";
+import ImprimirEtiquetas from "./Guia/ImprimirEtiquetas";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
 
@@ -144,7 +144,6 @@ function Guia(props) {
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
 
-    const [stepActive, setStepActive] = React.useState(1);
     //Listado de sucursales. Se usa en listado y agregar.
     const [dataSucursal, setDataSucursal] = React.useState([])
     const [dataMoneda, setDataMoneda] = React.useState([])
@@ -154,7 +153,6 @@ function Guia(props) {
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
-    const [showDialogEtiqueta, setShowDialogEtiqueta] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
     const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
@@ -321,14 +319,18 @@ function Guia(props) {
                         }
                         <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
-                                                                                                                                          style={{color: "#F9A03E"}}/></a>
+                               onClick={(event) => {
+                                   /*mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)*/
+                                   printTicket(row.row.m_nIdGuia)
+                               }}>
+                                <i className="zmdi zmdi-print" style={{color: "#F9A03E"}}/>
+                            </a>
 
                         </Tooltip>
-                         <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
-                                                                                 style={{color: "#F9A03E"}}/></a>
+                        <Tooltip title="Descargar PFD con etiquetas" disabled={!validarDerecho(9101465)}>
+                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
+                                <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
+                            </a>
 
                         </Tooltip>
 
@@ -643,10 +645,6 @@ function Guia(props) {
 
         }
     }
-    const handleImprimirEtiquetas = (data) => {//TODO: LOGICA PARA IMPRIMIR ETIQUETAS PARCIALES
-        console.log("se envia"+JSON.stringify(data))
-    }
-
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
@@ -1037,6 +1035,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
     function generarReporteEtiqueta(id, folio) {
         obtenerGuiaReporteEtiqueta(id).then(({data}) => {
             let pdfWindow = window.open("");
@@ -1045,6 +1044,16 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
+
+    function generarReporteEtiquetaParcial(params, folio) {
+        obtenerGuiaReporteEtiquetaParcial(params).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + folio;
+        })
+    }
+
     /**Entreando a guias por primera vez*/
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
@@ -1113,6 +1122,7 @@ function Guia(props) {
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
+            let rfcCliente = localStorage.getItem("RFC")
             if (totalEtiquetas >= 10) {
                 confirmAlert({
                     title: 'Confirmación',
@@ -1121,14 +1131,40 @@ function Guia(props) {
                         {
                             label: 'Sí',
                             onClick: async () => {
+                                if (selected_device === null || selected_device === undefined){
+                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                                }
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
                                         console.log('guia: ', guia)
                                         console.log('paquete: ', p)
                                         console.log('index: ', i + 1)
                                         console.log(i + 1 + ' de ' + p.ctd)
-                                        var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                        let result
+                                        if (rfcCliente === 'PTR170523BI6'){
+                                            try{
+                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
+                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                                showSuccess('Impresión en curso.')
+                                            }catch (e) {
+                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                                console.log(e)
+                                                break
+                                            }
+
+                                        }else {
+                                            try{
+                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                                showSuccess('Impresión en curso.')
+                                            }catch (e) {
+                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                                console.log(e)
+                                                break
+                                            }
+
+                                        }
+
                                     }
                                 })
                             }
@@ -1139,16 +1175,40 @@ function Guia(props) {
                     ]
                 });
             } else {
+                if (selected_device === null || selected_device === undefined){
+                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                }
                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                     for (let i = 0; i < p.ctd; i++) {
                         console.log('guia: ', guia)
                         console.log('paquete: ', p)
                         console.log('index: ', i + 1)
                         console.log(i + 1 + ' de ' + p.ctd)
-                        var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                        let result
+                        if (rfcCliente === 'PTR170523BI6') {
+                            try {
+                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
+                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                showSuccess('Impresión en curso.')
+                            } catch (e) {
+                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                console.log(e)
+                                break
+                            }
+                        } else {
+                            try {
+                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                showSuccess('Impresión en curso.')
+                            } catch (e) {
+                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                console.log(e)
+                                break
+                            }
+                        }
                     }
                 })
+
             }
 
 
@@ -1559,49 +1619,6 @@ function Guia(props) {
 
     }
 
-    function openSection(index) {
-        closeSeccions()
-        var $section;
-        switch (index) {
-            case 1:
-                setStepActive(1);
-                $section = $("#informacionGeneral")
-                break;
-            case 2:
-                setStepActive(2);
-                $section = $("#remitenteDestinatario")
-
-                break;
-            case 3:
-                setStepActive(3);
-                $section = $("#paquetesSobres")
-
-                break;
-
-            case 4:
-                setStepActive(4);
-                $section = $("#detalleFacturacion")
-
-                break;
-
-            case 5:
-                setStepActive(5);
-                $section = $("#conceptosFacturacion")
-
-                break;
-            case 6:
-                setStepActive(6);
-                $section = $("#general")
-                break;
-            default:
-        }
-
-        $('html, body').animate({
-            scrollTop: parseInt($section.offset().top - 150)
-        }, 200);
-
-    }
-
     const framesPaqueteImp = state.paquetesI.map((p, index) => {
         return (
             <div key={`paqueteI${index}`}>
@@ -1891,16 +1908,6 @@ function Guia(props) {
         });
     }
 
-    function a11yProps(index) {
-        return {
-            id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
-        };
-    }
-
-    function handleTabChange(event, newValue) {
-        setState({...state, tab: newValue});
-    }
     const mostrarDialogoEtiqueta = (event,id)=>{
         event.stopPropagation();
         obtenerGuiaId(id).then(({data}) => {
@@ -1910,7 +1917,6 @@ function Guia(props) {
             openDialogEtiquetas: true,
             detallesPaquetesEtiquetas: guia.m_arrClsDetalle
         })
-        setShowDialogEtiqueta(true)
         })
     }
     const mostrarDialogoOcurre = (event, id) => {
@@ -2001,11 +2007,28 @@ function Guia(props) {
                 fullWidth maxWidth="md"
                 aria-labelledby="form-dialog-title"
             >
-            <ImprimirEtiquetas2 handleImprimirEtiquetas ={handleImprimirEtiquetas} open={state.openDialogEtiquetas} closeEtiquetas={() => {
-             setState({...state, openDialogEtiquetas: false})
-             setShowDialogEtiqueta(false)
-             }} detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
-             </Dialog>
+                <ImprimirEtiquetas open={state.openDialogEtiquetas}
+                                   closeEtiquetas={(value) => {
+                                        if (value) {
+                                            let newArray = []
+                                            value.forEach((obj) => {
+                                                for (let i = obj.m_nRango[0]; i <= obj.m_nRango[1]; i++) {
+                                                    newArray.push({
+                                                        "idPaquete": obj.m_nIdEmbarqueDetalle,
+                                                        "idGuia": guiaSeleccionada.m_nIdGuia,
+                                                        "indice": i,
+                                                        "idImpresion": 0
+                                                    })
+                                                }
+                                            })
+                                            generarReporteEtiquetaParcial(newArray, guiaSeleccionada.m_nFolioGuia)
+                                        }else {
+                                            console.log("Impresion cancelada")
+                                        }
+                                        // setState({...state, openDialogEtiquetas: false})
+                                    }}
+                                   detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
+            </Dialog>
 
             <Dialog
                 open={state.openDialog}
