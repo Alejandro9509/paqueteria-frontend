@@ -333,7 +333,7 @@ function Guia(props) {
                             </a>
 
                         </Tooltip>
-                        <Tooltip title="Descargar PFD con etiquetas" disabled={!validarDerecho(9101465)}>
+                        <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465)}>
                             <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
@@ -1140,6 +1140,16 @@ function Guia(props) {
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Guía " + folio;
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "Guía " + folio);
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo descargar el pdf")
+            }
         })
     }
 
