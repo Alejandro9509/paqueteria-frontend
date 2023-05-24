@@ -7,10 +7,10 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    FormControl,
+    FormControl, FormControlLabel, FormGroup, FormLabel,
     Grid,
-    InputLabel, MenuItem,
-    Select,
+    InputLabel, MenuItem, Radio, RadioGroup,
+    Select, ThemeProvider,
     Tooltip
 } from "@material-ui/core";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
@@ -28,6 +28,9 @@ import {obtenerGuiaId, obtenerGuiasFiltro, obtenerGuiasFiltroCorteCaja} from "..
 import Noty from "noty";
 import {agregarCorte, modificarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
 import {obtenerTiposPago} from "../../Util/Contexts/TipoPagoContext";
+import {getCurrentDate, getCurrentTime} from "../../Util/Util";
+import {Switch} from "react-router-dom";
+import {createMuiTheme} from "@material-ui/core/styles";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -55,7 +58,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     });
     const columnsGuias = React.useMemo(() => [
         {
-            headerName: "Fecha/Hora",
+            headerName: "Fecha entrega",
             field: "m_sFechaHora",
             flex: 1,
         }, {
@@ -67,40 +70,8 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
             field: "m_sEstatusGuia",
             flex: 1,
         }, {
-            headerName: "Origen",
-            field: "m_sCiudadOrigen",
-            flex: 1,
-        }, {
-            headerName: "Destino",
+            headerName: "Destinatario",
             field: "m_sCiudadDestino",
-            flex: 1,
-        },{
-            headerName: "Cliente",
-            field: "m_sCliente",
-            flex: 1,
-        },{
-            headerName: "Importe",
-            field: "m_cImporte",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            flex: 1,
-        },{
-            headerName: "Importe IVA",
-            field: "m_cImporteIva",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            flex: 1,
-        },{
-            headerName: "Importe Retiene",
-            field: "m_cImporteRetiene",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            flex: 1,
-        },{
-            headerName: "Descuento",
-            field: "m_cDescuento",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },{
             headerName: "Total",
@@ -111,10 +82,10 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         },
     ]);
     const [infoGeneral, setInfoGeneral] = useState({
-        idUsuario: localStorage.getItem("UsuarioId"),
-        idSucursal: localStorage.getItem("Sucursal"),
-        fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
-        horaRegistro: `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+        idUsuario: null,
+        operador: null,
+        fechaRegistro: getCurrentDate(),
+        horaRegistro: getCurrentTime(),
     })
     const [guiasSeleccionadas, setGuiasSeleccionadas] = useState([])
     const [state, setState] = useState({
@@ -127,6 +98,44 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         idEstatus: 0
     })
 
+    const [filtros, setFiltros] = useState({
+        busquedaPorUsuario: false,
+        usuario: null,
+        operador: null,
+        fechaRegistro: getCurrentDate(),
+        horaRegistro: getCurrentTime(),
+    })
+    const theme = createMuiTheme({
+        overrides: {
+            MuiSwitch: {
+                switchBase: {
+                    // Controls default (unchecked) color for the thumb
+                    color: "#ccc"
+                },
+                colorPrimary: {
+                    "&$checked": {
+                        // Controls checked color for the thumb
+                        color: "rgb(249, 160, 62)",
+                        "&$disabled": {
+                            // Controls checked color for the thumb
+                            color: "rgb(249, 160, 62)"
+                        }
+                    },
+
+                },
+                track: {
+                    // Controls default (unchecked) color for the track
+                    opacity: 0.2,
+                    backgroundColor: "#ccc",
+                    "$checked$checked + &": {
+                        // Controls checked color for the track
+                        opacity: 0.7,
+                        backgroundColor: "#F9A03E"
+                    }
+                }
+            }
+        }
+    });
     const listado = 1
     const agregar = 2
     const modificar = 3
@@ -286,10 +295,10 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         })
     }
 
-    const handleChange = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value,
+    const handleChange = (input, value) => {
+        setFiltros({
+            ...filtros,
+            [input]: value,
         });
     };
 
@@ -536,70 +545,58 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                             </div>
                             <div className="widget-container">
                                 <div className="widget-content">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <Grid container spacing={2}>
-                                                <Grid item xs={4}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel
-                                                            id="idSucursalLabel">Sucursal</InputLabel>
-                                                        <Select
-                                                            labelId="idSucursalLabel"
-                                                            label="Sucursal"
-                                                            className="form-control"
-                                                            required
-                                                            value={infoGeneral.idSucursal}
-                                                            onChange={handleChangeInfoGeneral}
-                                                            id="idSucursal"
-                                                            name="idSucursal"
-                                                            disabled="disabled"
-                                                        >
-                                                            {dataSucursal.map((sucursal) => (
-                                                                <option
-                                                                    key={sucursal.m_nIdSucursal}
-                                                                    value={sucursal.m_nIdSucursal}
-                                                                >
-                                                                    {sucursal.m_sSucursal}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={4}>
-                                                    <div className="input">
-                                                        <TextField
-                                                            variant="outlined"
-                                                            id="fechaRegistro"
-                                                            label="Fecha de registro"
-                                                            type="date"
-                                                            onChange={(e) => setInfoGeneral({...infoGeneral,fechaRegistro: e.target.value}) }
-                                                            value={infoGeneral.fechaRegistro}
-                                                            className={"form-control"}
-                                                            InputLabelProps={{shrink: true,}}
-                                                            // required={state.recoleccionConCita}
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                variant="outlined"
+                                                id="fechaRegistro"
+                                                label="Fecha de registro"
+                                                type="date"
+                                                onChange={(e) => handleChange('fechaRegistro', e.target.value) }
+                                                value={filtros.fechaRegistro}
+                                                className={"form-control"}
+                                                InputLabelProps={{shrink: true,}}
+                                                // required={state.recoleccionConCita}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                variant="outlined"
+                                                id="horaRegistro"
+                                                label="Hora de registro"
+                                                type="time"
+                                                value={filtros.horaRegistro}
+                                                // onChange={handleHoraCitaMinima}
+                                                className={"form-control"}
+                                                disabled={true}
+                                                InputLabelProps={{shrink: true,}}
+                                                inputProps={{step: 300,}}
+                                                // required={state.recoleccionConCita}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <ThemeProvider theme={theme}>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Switch
+                                                            checked={filtros.busquedaPorUsuario}
+                                                            onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                                            color="primary"
                                                         />
-                                                    </div>
-                                                </Grid>
-                                                <Grid item xs={4}>
-                                                <div className="input">
-                                                    <TextField
-                                                        variant="outlined"
-                                                        id="horaRegistro"
-                                                        label="Hora de registro"
-                                                        type="time"
-                                                        value={infoGeneral.horaRegistro}
-                                                        // onChange={handleHoraCitaMinima}
-                                                        className={"form-control"}
-                                                        disabled={true}
-                                                        InputLabelProps={{shrink: true,}}
-                                                        inputProps={{step: 300,}}
-                                                        // required={state.recoleccionConCita}
-                                                    />
-                                                </div>
-                                            </Grid>
-                                            </Grid>
-                                        </div>
-                                    </div>
+                                                    }
+                                                    label="Busqueda por usuario"
+                                                />
+                                            </ThemeProvider>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                variant="outlined"
+                                                label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
+                                                value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.nombre || ''}
+                                                margin={'dense'}
+                                            />
+                                        </Grid>
+                                    </Grid>
                                 </div>
                             </div>
                         </div>
