@@ -409,17 +409,17 @@ function Guia(props) {
         {
             headerName: "Sucursal",
             field: "m_sSucursal",
-            width: 125,
+            width: 200,
         },
         {
             headerName: "Folio Informe",
             field: "m_sFolioInforme",
-            width: 125,
+            width: 200,
         },
         {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
-            width: 150,
+            width: 200,
         },
         {
             headerName: 'Fecha de Cancelación',
