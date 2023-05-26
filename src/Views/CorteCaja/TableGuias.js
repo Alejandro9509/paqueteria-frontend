@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@material-ui/core';
 
 const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
-    const [selectedRows, setSelectedRows] = useState([]);
 
     const handleRowSelection = (event, id) => {
         const selectedIndex = selectedRows2.indexOf(id);
@@ -29,6 +28,7 @@ const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
                         <TableCell>Fecha de Entrega</TableCell>
                         <TableCell>Operador/Usuario</TableCell>
                         <TableCell>Tipo de Cobro</TableCell>
+                        <TableCell align={"right"}>Total</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -48,6 +48,7 @@ const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
                             <TableCell>{item.fueEntregada ? item.fechaEntrega : 'NO APLICA'}</TableCell>
                             <TableCell>{item.nombrePersona}</TableCell>
                             <TableCell>{item.tipoCobro}</TableCell>
+                            <TableCell align={"right"}>{item.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

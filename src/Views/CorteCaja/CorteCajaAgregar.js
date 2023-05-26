@@ -3,6 +3,7 @@ import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import TextField from "@material-ui/core/TextField";
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
@@ -217,6 +218,20 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         setGuias(listadoResultado);
         setGuiasSeleccionadas([])
     };
+
+    const TotalComponent = () => {
+        // Calcula el total sumando los totales de cada objeto
+        const totalSum = guias.reduce((acc, obj) => acc + obj.total, 0);
+        // Formatea el total como moneda
+        const formattedTotal = totalSum.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+
+        return (
+            <div>
+                <h3>TOTAL CORTE: {formattedTotal}</h3>
+            </div>
+        );
+    };
+
     return(
         <div>
             <MyDialog
@@ -292,172 +307,20 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                 />
                             </Grid>
                         </Grid>
-                        <Button onClick={handleOpenDialogGuias}>
-                            Agregar Guias
-                        </Button>
-                        <Button onClick={handleDescartarGuias}>
-                            Descartar Guias
-                        </Button>
+                        <Box display="flex" justifyContent="flex-end">
+                            <Button onClick={handleDescartarGuias}  color={"primary"}>
+                                Descartar Guias
+                            </Button>
+                            <Button onClick={handleOpenDialogGuias} variant={"contained"} color={"primary"}>
+                                Agregar Guias
+                            </Button>
+                        </Box>
                         <TableGuias data={guias} handleSelection={handleRowSelection}
                                     selectedRows2={guiasSeleccionadas} />
+                        <br/>
+                        <br/>
+                        <TotalComponent/>
                     </Paper>
-
-                    {/*<div className={'row'}>
-                        <div className="widget-wrap">
-                            <div>
-                                <form className="j-forms">
-                                    <div className="widget-container">
-                                        <div className="widget-content">
-                                            <div className="row">
-                                                <Grid container spacing={2}>
-                                                    <Grid item xs={4}>
-                                                        <div className="input">
-                                                            <Autocomplete
-                                                                freeSolo
-                                                                onChange={(event, newValue) =>
-                                                                    setState({
-                                                                        ...state,
-                                                                        ciudadDestino: newValue,
-                                                                    })
-                                                                }
-                                                                value={state.ciudadDestino}
-                                                                disabled={state.agregar === "Consultar"}
-                                                                id="ciudadDestino"
-                                                                disableClearable
-                                                                forcePopupIcon={false}
-                                                                options={dataCiudad}
-                                                                getOptionLabel={(option) => option.m_sCiudad}
-                                                                variant="outlined"
-                                                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                                renderInput={(params) => (
-                                                                    <div>
-                                                                        <TextField
-                                                                            margin="dense"
-                                                                            variant="outlined"
-                                                                            label={"Destino"}
-                                                                            required
-                                                                            {...params}
-                                                                        />
-                                                                    </div>
-                                                                )}
-                                                            />
-                                                        </div>
-                                                    </Grid>
-                                                    <Grid item xs={4}>
-                                                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
-                                                            <InputLabel id="idMonedaLabel">Moneda</InputLabel>
-                                                            <Select
-                                                                fullWidth
-                                                                labelId={"idMonedaLabel"}
-                                                                label={"Moneda"}
-                                                                className="form-control"
-                                                                value={state.idTipoMoneda}
-                                                                disabled={state.agregar === "Consultar"}
-                                                                onChange={handleChange}
-                                                                id="idTipoMoneda"
-                                                                name="idTipoMoneda"
-                                                                InputProps={{name: "moneda"}}
-                                                            >
-                                                                {dataTipoMoneda.map((moneda) => (
-                                                                    <MenuItem
-                                                                        key={moneda.m_nIdMoneda}
-                                                                        value={moneda.m_nIdMoneda}
-                                                                    >
-                                                                        {moneda.m_sMoneda}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={4}>
-                                                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
-                                                            <InputLabel id="idTipoPagoLabel">Tipo de pago</InputLabel>
-                                                            <Select
-                                                                fullWidth
-                                                                labelId={"idTipoPagoLabel"}
-                                                                label={"Tipo Pago"}
-                                                                className="form-control"
-                                                                value={state.idTipoPago}
-                                                                disabled={state.agregar === "Consultar"}
-                                                                onChange={handleChange}
-                                                                id="idTipoPago"
-                                                                name="idTipoPago"
-                                                                InputProps={{name: "idTipoPago"}}
-                                                            >
-                                                                {dataTipoPago.map((moneda) => (
-                                                                    <MenuItem
-                                                                        key={moneda.m_nIdTipoPago}
-                                                                        value={moneda.m_nIdTipoPago}
-                                                                    >
-                                                                        {moneda.m_sTipoPago}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={10}>
-                                                        <div className="widget-header">
-                                                            <h2>Guias</h2>
-                                                        </div>
-                                                    </Grid>
-                                                    <Grid item xs={1}>
-                                                        <button
-                                                            type={"button"}
-                                                            disabled={!guiaSelect || consult}
-                                                            onClick={handleEliminarGuia}
-                                                            className="btn btn-primary primary-btn"
-                                                        >
-                                                            Eliminar Guia
-                                                        </button>
-                                                    </Grid>
-                                                    <Grid item xs={1}>
-                                                        <button
-                                                            type={"button"}
-                                                            onClick={() => {
-                                                                setGuiasSeleccionadas([])
-                                                                setShowDialog(true)
-                                                            }}
-                                                            disabled={consult}
-                                                            className="btn btn-primary primary-btn"
-                                                        >
-                                                            Agregar Guia
-                                                        </button>
-                                                    </Grid>
-                                                </Grid>
-                                            </div>
-                                            <div className="row" style={{ height: 500}}>
-                                                <DataGrid
-                                                    localeText={dataGridLocaleText}
-                                                    density="compact"
-                                                    pageSize={10}
-                                                    columns={columnsGuias}
-                                                    rows={dataGuias}
-                                                    getRowId={(row) => row.m_nIdGuia}
-                                                    onRowSelected={(row) => handleGuiaClick(row.data)}
-                                                />
-                                            </div>
-                                            <div className="row">
-                                                <Grid container spacing={2}>
-                                                    <Grid item xs={12}>
-                                                        <h3>Total: {currencyFormatter.format(Number(state.total.toFixed(2)))}</h3>
-                                                    </Grid>
-                                                    <Grid item xs={12}>
-                                                        <button type={"button"} className="btn btn-primary primary-btn" disabled={consult} onClick={handleCerrarCorte}>
-                                                            Cerrar corte
-                                                        </button>
-                                                        <button type={"button"} className="btn btn-primary primary-btn" disabled={consult} onClick={handleGuardarCorte}>
-                                                            Guardar sin cerrar
-                                                        </button>
-                                                    </Grid>
-
-                                                </Grid>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>*/}
                 </div>
             </section>
         </div>
