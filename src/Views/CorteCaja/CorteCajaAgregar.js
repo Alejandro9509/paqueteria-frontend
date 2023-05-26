@@ -9,7 +9,7 @@ import {
     DialogContent,
     FormControl, FormControlLabel, FormGroup, FormLabel,
     Grid,
-    InputLabel, MenuItem, Radio, RadioGroup,
+    InputLabel, MenuItem, Paper, Radio, RadioGroup,
     Select, Switch, ThemeProvider,
     Tooltip
 } from "@material-ui/core";
@@ -31,6 +31,8 @@ import {obtenerTiposPago} from "../../Util/Contexts/TipoPagoContext";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import {createMuiTheme} from "@material-ui/core/styles";
 import MyDialog from "./DialogOperador";
+import DialogGuias from "./DialogGuias";
+import TableGuias from "./TableGuias";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -87,6 +89,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         fechaRegistro: getCurrentDate(),
         horaRegistro: getCurrentTime(),
     })
+    const [guias, setGuias] = useState([])
     const [guiasSeleccionadas, setGuiasSeleccionadas] = useState([])
     const [state, setState] = useState({
         idCorte: 0,
@@ -107,7 +110,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     })
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [dialogData, setDialogData] = useState('');
+    const [openDialogGuias, setOpenDialogGuias] = useState(false);
     const theme = createMuiTheme({
         overrides: {
             MuiSwitch: {
@@ -259,7 +262,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
 
         setDataGuias([])
         setDataGuiasAgregar([])
-        setGuiasSeleccionadas([])
+        // setGuiasSeleccionadas([])
         setGuiaSelect(null)
     }
 
@@ -524,7 +527,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     };
 
     const handleAcceptData = (data) => {
-        setDialogData(data);
         if (filtros.busquedaPorUsuario){
             setFiltros({
                 ...filtros,
@@ -538,8 +540,35 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 operador: data
             })
         }
-
         handleCloseDialog();
+    };
+
+    const handleOpenDialogGuias = () => {
+        setOpenDialogGuias(true);
+    };
+
+    const handleCloseDialogGuias = () => {
+        setOpenDialogGuias(false);
+    };
+
+    const handleAcceptDataGuias = (data) => {
+
+        setGuias([...guias, ...data])
+        handleCloseDialogGuias();
+    };
+
+    const handleRowSelection = (selectedRows) => {
+        setGuiasSeleccionadas(selectedRows)
+    };
+
+    const handleDescartarGuias = () => {
+        let sel = [...guiasSeleccionadas]
+        const listadoResultado = guias.filter((objeto1) => {
+            // Comprobar si el objeto está presente en listado2
+            return !sel.some((objeto2) => objeto2.idGuia === objeto1.idGuia);
+        });
+        setGuias(listadoResultado);
+        setGuiasSeleccionadas([])
     };
     return(
         <div>
@@ -592,70 +621,84 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 handleClose={handleCloseDialog}
                 handleAccept={handleAcceptData}
             />
+            <DialogGuias
+                open={openDialogGuias}
+                handleClose={handleCloseDialogGuias}
+                handleAccept={handleAcceptDataGuias}
+                filtros={{
+                    busquedaPorUsuario: filtros.busquedaPorUsuario,
+                    idOperador: filtros.operador?.m_nIdOperador,
+                    idUsuario: filtros.usuario?.idUsuario,
+                    fecha: filtros.fechaRegistro
+                }}
+                idsRowsHiden={guias.map((i) => i.idGuia)}
+            />
             <section className={"main-container"} style={{ marginLeft: "0px", padding: "0px" }}>
                 <div className={"content-fluid"}>
-                    <div className={'row'}>
-                        <div className="widget-wrap">
-                            <div className="widget-container">
-                                <div className="widget-content">
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={2}>
-                                            <TextField
-                                                variant="outlined"
-                                                id="fechaRegistro"
-                                                label="Fecha de registro"
-                                                type="date"
-                                                onChange={(e) => handleChange('fechaRegistro', e.target.value) }
-                                                value={filtros.fechaRegistro}
-                                                className={"form-control"}
-                                                InputLabelProps={{shrink: true,}}
-                                                // required={state.recoleccionConCita}
+                    <Paper style={{padding: '16px'}}>
+                        <Grid container spacing={1}>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    id="fechaRegistro"
+                                    label="Fecha de registro"
+                                    type="date"
+                                    onChange={(e) => handleChange('fechaRegistro', e.target.value) }
+                                    value={filtros.fechaRegistro}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true,}}
+                                    // required={state.recoleccionConCita}
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    id="horaRegistro"
+                                    label="Hora de registro"
+                                    type="time"
+                                    value={filtros.horaRegistro}
+                                    // onChange={handleHoraCitaMinima}
+                                    className={"form-control"}
+                                    disabled={true}
+                                    InputLabelProps={{shrink: true,}}
+                                    inputProps={{step: 300,}}
+                                    // required={state.recoleccionConCita}
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <ThemeProvider theme={theme}>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={filtros.busquedaPorUsuario}
+                                                onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                                color="primary"
                                             />
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <TextField
-                                                variant="outlined"
-                                                id="horaRegistro"
-                                                label="Hora de registro"
-                                                type="time"
-                                                value={filtros.horaRegistro}
-                                                // onChange={handleHoraCitaMinima}
-                                                className={"form-control"}
-                                                disabled={true}
-                                                InputLabelProps={{shrink: true,}}
-                                                inputProps={{step: 300,}}
-                                                // required={state.recoleccionConCita}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <ThemeProvider theme={theme}>
-                                                <FormControlLabel
-                                                    control={
-                                                        <Switch
-                                                            checked={filtros.busquedaPorUsuario}
-                                                            onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
-                                                            color="primary"
-                                                        />
-                                                    }
-                                                    label="Busqueda por usuario"
-                                                />
-                                            </ThemeProvider>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <TextField
-                                                variant="outlined"
-                                                label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
-                                                value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
-                                                margin={'dense'}
-                                                onClick={(e) => !filtros.busquedaPorUsuario && handleOpenDialog()}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={'row'}>
+                                        }
+                                        label="Busqueda por usuario"
+                                    />
+                                </ThemeProvider>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <TextField
+                                    variant="outlined"
+                                    label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
+                                    value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
+                                    margin={'dense'}
+                                    onClick={(e) => !filtros.busquedaPorUsuario && handleOpenDialog()}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Button onClick={handleOpenDialogGuias}>
+                            Agregar Guias
+                        </Button>
+                        <Button onClick={handleDescartarGuias}>
+                            Descartar Guias
+                        </Button>
+                        <TableGuias data={guias} handleSelection={handleRowSelection} />
+                    </Paper>
+
+                    {/*<div className={'row'}>
                         <div className="widget-wrap">
                             <div>
                                 <form className="j-forms">
@@ -810,7 +853,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
             </section>
         </div>
