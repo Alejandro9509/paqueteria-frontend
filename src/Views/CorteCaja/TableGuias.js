@@ -17,6 +17,12 @@ const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
         handleSelection(newSelectedRows);
     };
 
+    function totalSum(items) {
+        return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+    }
+
+    const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+
     return (
         <TableContainer>
             <Table size="small">
@@ -51,6 +57,11 @@ const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
                             <TableCell align={"right"}>{item.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                         </TableRow>
                     ))}
+                    <TableRow>
+                        <TableCell colSpan={5} />
+                        <TableCell colSpan={1}>TOTAL</TableCell>
+                        <TableCell align="right">{totalFinal}</TableCell>
+                    </TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

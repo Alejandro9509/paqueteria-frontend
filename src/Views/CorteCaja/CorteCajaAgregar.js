@@ -219,7 +219,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         setGuiasSeleccionadas([])
     };
 
-    const TotalComponent = () => {
+    /*const TotalComponent = () => {
         // Calcula el total sumando los totales de cada objeto
         const totalSum = guias.reduce((acc, obj) => acc + obj.total, 0);
         // Formatea el total como moneda
@@ -230,7 +230,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 <h3>TOTAL CORTE: {formattedTotal}</h3>
             </div>
         );
-    };
+    };*/
 
     return(
         <div>
@@ -251,78 +251,84 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 }}
                 idsRowsHiden={guias.map((i) => i.idGuia)}
             />
-            <section className={"main-container"} style={{ marginLeft: "0px", padding: "0px" }}>
-                <div className={"content-fluid"}>
-                    <Paper style={{padding: '16px'}}>
-                        <Grid container spacing={1}>
-                            <Grid item xs={2}>
-                                <TextField
-                                    variant="outlined"
-                                    id="fechaRegistro"
-                                    label="Fecha de registro"
-                                    type="date"
-                                    onChange={(e) => handleChange('fechaRegistro', e.target.value) }
-                                    value={filtros.fechaRegistro}
-                                    className={"form-control"}
-                                    InputLabelProps={{shrink: true,}}
-                                    // required={state.recoleccionConCita}
-                                />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <TextField
-                                    variant="outlined"
-                                    id="horaRegistro"
-                                    label="Hora de registro"
-                                    type="time"
-                                    value={filtros.horaRegistro}
-                                    // onChange={handleHoraCitaMinima}
-                                    className={"form-control"}
-                                    disabled={true}
-                                    InputLabelProps={{shrink: true,}}
-                                    inputProps={{step: 300,}}
-                                    // required={state.recoleccionConCita}
-                                />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <ThemeProvider theme={theme}>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={filtros.busquedaPorUsuario}
-                                                onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Busqueda por usuario"
-                                    />
-                                </ThemeProvider>
-                            </Grid>
-                            <Grid item xs={3}>
-                                <TextField
-                                    variant="outlined"
-                                    label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
-                                    value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
-                                    margin={'dense'}
-                                    onClick={(e) => !filtros.busquedaPorUsuario && handleOpenDialog()}
-                                />
-                            </Grid>
+            <Paper style={{padding: '16px'}}>
+                <section>
+                    <Grid container spacing={1}>
+                        <Grid item xs={2}>
+                            <TextField
+                                variant="outlined"
+                                id="fechaRegistro"
+                                label="Fecha de registro"
+                                type="date"
+                                onChange={(e) => handleChange('fechaRegistro', e.target.value) }
+                                value={filtros.fechaRegistro}
+                                className={"form-control"}
+                                InputLabelProps={{shrink: true,}}
+                                // required={state.recoleccionConCita}
+                            />
                         </Grid>
-                        <Box display="flex" justifyContent="flex-end">
-                            <Button onClick={handleDescartarGuias}  color={"primary"}>
-                                Descartar Guias
-                            </Button>
-                            <Button onClick={handleOpenDialogGuias} variant={"contained"} color={"primary"}>
-                                Agregar Guias
-                            </Button>
-                        </Box>
-                        <TableGuias data={guias} handleSelection={handleRowSelection}
-                                    selectedRows2={guiasSeleccionadas} />
-                        <br/>
-                        <br/>
-                        <TotalComponent/>
-                    </Paper>
+                        <Grid item xs={2}>
+                            <TextField
+                                variant="outlined"
+                                id="horaRegistro"
+                                label="Hora de registro"
+                                type="time"
+                                value={filtros.horaRegistro}
+                                // onChange={handleHoraCitaMinima}
+                                className={"form-control"}
+                                disabled={true}
+                                InputLabelProps={{shrink: true,}}
+                                inputProps={{step: 300,}}
+                                // required={state.recoleccionConCita}
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <ThemeProvider theme={theme}>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={filtros.busquedaPorUsuario}
+                                            onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Busqueda por usuario"
+                                />
+                            </ThemeProvider>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField
+                                variant="outlined"
+                                label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
+                                value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
+                                margin={'dense'}
+                                onClick={(e) => !filtros.busquedaPorUsuario && handleOpenDialog()}
+                            />
+                        </Grid>
+                    </Grid>
+                </section>
+                <section style={{height: '100%'}}>
+                    <Box display="flex" justifyContent="flex-end">
+                        <Button onClick={handleDescartarGuias}  color={"primary"}>
+                            Descartar Guias
+                        </Button>
+                        <Button onClick={handleOpenDialogGuias} variant={"contained"} color={"primary"}>
+                            Agregar Guias
+                        </Button>
+                    </Box>
+                    <TableGuias data={guias} handleSelection={handleRowSelection}
+                                selectedRows2={guiasSeleccionadas} />
+                </section>
+
+                {/*<br/>
+                <br/>
+                <TotalComponent/>*/}
+            </Paper>
+            {/*<section className={"main-container"} style={{ marginLeft: "0px", padding: "0px" }}>
+                <div className={"content-fluid"}>
+
                 </div>
-            </section>
+            </section>*/}
         </div>
     )
 }
