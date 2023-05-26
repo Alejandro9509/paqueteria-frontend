@@ -53,7 +53,9 @@ function DialogGuias({ open, handleClose, handleAccept, filtros,idsRowsHiden }) 
                         Las guías mostradas coinciden con los datos dados.
                     </DialogContentText>
                     <TableGuias data={listado.filter((i) => !idsRowsHiden.some((j) => j === i.idGuia))}
-                                handleSelection={handleRowSelection} />
+                                handleSelection={handleRowSelection}
+                                selectedRows2={listadoSeleccion}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseClick}>Cerrar</Button>

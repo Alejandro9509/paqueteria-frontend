@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@material-ui/core';
 
-const TableGuias = ({ data, handleSelection }) => {
+const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
     const [selectedRows, setSelectedRows] = useState([]);
 
     const handleRowSelection = (event, id) => {
-        const selectedIndex = selectedRows.indexOf(id);
+        const selectedIndex = selectedRows2.indexOf(id);
         let newSelectedRows = [];
 
         if (selectedIndex === -1) {
-            newSelectedRows = [...selectedRows, id];
+            newSelectedRows = [...selectedRows2, id];
         } else {
-            newSelectedRows = selectedRows.filter(rowId => rowId.idGuia !== id.idGuia);
+            newSelectedRows = selectedRows2.filter(rowId => rowId.idGuia !== id.idGuia);
         }
 
-        setSelectedRows(newSelectedRows);
+        // setSelectedRows(newSelectedRows);
         handleSelection(newSelectedRows);
     };
 
@@ -35,11 +35,11 @@ const TableGuias = ({ data, handleSelection }) => {
                     {data.map((item) => (
                         <TableRow key={item.idGuia}
                                   onClick={(event) => handleRowSelection(event, item)} // Maneja el evento de clic en la fila
-                                  selected={selectedRows.indexOf(item) !== -1} // Marca la fila como seleccionada si es igual al registro seleccionado
+                                  selected={selectedRows2.indexOf(item) !== -1} // Marca la fila como seleccionada si es igual al registro seleccionado
                         >
                             <TableCell>
                                 <Checkbox
-                                    checked={selectedRows.indexOf(item) !== -1}
+                                    checked={selectedRows2.indexOf(item) !== -1}
                                     onChange={(event) => handleRowSelection(event, item)}
                                 />
                             </TableCell>
