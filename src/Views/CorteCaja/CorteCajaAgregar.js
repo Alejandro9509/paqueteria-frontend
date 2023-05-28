@@ -232,6 +232,52 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         );
     };*/
 
+    function totalSum(items) {
+        return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+    }
+
+    function isDataValid(idUsuario, idOperador){
+        if (idOperador > 0 && idUsuario > 0) {
+            console.log("No se puede seleccionar operador y usuario.");
+            return false;
+        } else if (idOperador > 0 || idUsuario > 0) {
+            console.log("Válido.");
+            return true;
+        } else {
+            console.log("Seleccione operador o usuario.");
+            return false;
+        }
+    }
+
+    const handleGuardar = () => {
+        const {fechaRegistro, horaRegistro, usuario, operador} = filtros
+        if (!isDataValid(usuario?.idUsuario,operador?.m_nIdOperador)){
+            console.log("NO Guardar.");
+            return
+        }
+        console.log("Guardar.");
+        let params = {
+            "m_cTotal": totalSum(guias),
+            "m_sFechaRegistro": fechaRegistro,
+            "m_sHoraRegistro": horaRegistro,
+            "m_nIdUsuario": usuario?.idUsuario || 0,
+            "m_nIdOperador": operador?.m_nIdOperador || 0,
+            "m_arrGuias": guias.map((i) => ({
+                "m_nIdGuia": i.idGuia,
+                "m_nTotal": i.total
+            }))
+        }
+        console.log(params)
+        console.log(JSON.stringify(params))
+        agregarCorte(params)
+            .then((respuesta) => {
+                console.log(respuesta.data)
+            })
+            .catch((error) => {
+                console.log(error.toString())
+            })
+    }
+
     return(
         <div>
             <MyDialog
@@ -307,7 +353,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                         </Grid>
                     </Grid>
                 </section>
-                <section style={{height: '100%'}}>
+                <section style={{height: '50vh'}}>
                     <Box display="flex" justifyContent="flex-end">
                         <Button onClick={handleDescartarGuias}  color={"primary"}>
                             Descartar Guias
@@ -316,8 +362,19 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                             Agregar Guias
                         </Button>
                     </Box>
+                    <br/>
                     <TableGuias data={guias} handleSelection={handleRowSelection}
                                 selectedRows2={guiasSeleccionadas} />
+                </section>
+                <section>
+                    <Box display="flex" justifyContent="flex-end">
+                        {/*<Button onClick={handleDescartarGuias}  color={"primary"}>
+                            Descartar Guias
+                        </Button>*/}
+                        <Button fullWidth onClick={handleGuardar} variant={"contained"} color={"primary"}>
+                            Guardar
+                        </Button>
+                    </Box>
                 </section>
 
                 {/*<br/>

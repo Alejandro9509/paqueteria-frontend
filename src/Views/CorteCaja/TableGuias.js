@@ -24,8 +24,8 @@ const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
     const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
 
     return (
-        <TableContainer>
-            <Table size="small">
+        <TableContainer style={{ height: '400px' }}>
+            <Table size="small" stickyHeader>
                 <TableHead>
                     <TableRow>
                         <TableCell>Seleccionar</TableCell>
