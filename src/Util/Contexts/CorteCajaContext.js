@@ -34,7 +34,7 @@ function eliminarCorte(id, idEliminadoPor) {
 
 
 function obtenerCortes() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/CorteCaja/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

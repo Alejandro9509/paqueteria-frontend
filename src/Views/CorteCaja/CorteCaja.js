@@ -40,6 +40,7 @@ import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import File from "@material-ui/icons/AttachFile";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
+import TableCortesCaja from "./TableCortesCaja";
 
 window.jQuery = window.$ = $;
 
@@ -169,21 +170,13 @@ function CorteCaja(){
 
     useEffect(value => {
         getAllCortes()
-        getAllCiudades()
+        // getAllCiudades()
     }, [])
 
     const getAllCortes = () => {
         obtenerCortes().then(({data}) => {
-            data.map((i) => i.destinoFecha = i.m_sDestino+i.m_sFechaRegistro)
-            let group = groupBy(data, 'destinoFecha')
-            console.log(group)
-            // debugger
-            let newArray = []
-            Object.keys(group).forEach(function(k){
-                console.log(k + ' - ' + group[k]);
-                newArray.push(group[k])
-            });
-            setListaCortes(newArray)
+
+            setListaCortes(data)
             setFiltros({
                 ...filtros,
                 fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
@@ -387,7 +380,8 @@ function CorteCaja(){
 
                     <div className={"row"} className={"tab-content"}>
                         <div id="Listado" className="tab-pane fade in show">
-                            <div className="widget-wrap">
+                            <TableCortesCaja data={listaCortes}/>
+                            {/*<div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row">
                                         <div className="col-md-12">
@@ -494,7 +488,7 @@ function CorteCaja(){
                                     </div>
 
                                 </div>
-                            </div>
+                            </div>*/}
                         </div>
 
                         <div id="Agregar" className="tab-pane fade">
