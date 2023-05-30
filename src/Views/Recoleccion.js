@@ -3090,7 +3090,6 @@ function Recoleccion() {
     }
     return (
         <div>
-            {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
             {
                 openDialog &&
                 <Dialog
@@ -3154,7 +3153,8 @@ function Recoleccion() {
                         </div>
                     </DialogContent>
                 </Dialog>
-            }
+            }{/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
+
             {state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
