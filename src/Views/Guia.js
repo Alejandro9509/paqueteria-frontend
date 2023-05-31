@@ -1150,7 +1150,7 @@ function Guia(props) {
             pdfWindow.document.title = "Guía Etiqueta" + seleccionEtiqueta.m_nFolioGuia;
             try{
                 const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
+                link.href = "data:application/pdf;base64," + data.m_sArchivo;
                 link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia);
                 document.body.appendChild(link);
                 link.click();
@@ -2222,7 +2222,7 @@ function Guia(props) {
                                 <DialogActions>
 
                                     <button className="btn btn-secondary secondary-btn" onClick={() => {
-                                        setOpenDialog(false)
+                                        setOpenDialogEtiqueta(false)
                                         setState({
                                             ...state,
                                             reporteSeleccionado: null
