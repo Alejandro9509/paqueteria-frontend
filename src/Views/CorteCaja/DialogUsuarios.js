@@ -10,18 +10,20 @@ import {
 import TableOperadores from "./TableOperadores";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {showSuccess} from "../../Util/Util";
+import {getListado} from "../../Util/Contexts/UsuarioContext";
+import TableUsuarios from "./TableUsuarios";
 
 function DialogOperadores({ open, handleClose, handleAccept }) {
     const [selectedRow, setSelectedRow] = useState(null);
-    const [listadoOperadores, setListadoOperadores] = useState([]);
+    const [listado, setListado] = useState([]);
 
     useEffect(() => {
         if (open){
-            obtenerOperadores().then((respuesta) => {
-                setListadoOperadores(respuesta.data)
+            getListado().then((respuesta) => {
+                setListado(respuesta.data)
             }).catch((e) => {
                 console.log(e.toString())
-                showSuccess('Hubo un problema al cargar el listado de operadores. Intente de nuevo.')
+                showSuccess('Hubo un problema al cargar el listado de usuarios. Intente de nuevo.')
                 handleClose();
             })
         }
@@ -38,12 +40,12 @@ function DialogOperadores({ open, handleClose, handleAccept }) {
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
-                <DialogTitle>Selecciona un operador</DialogTitle>
+                <DialogTitle>Selecciona un usuario</DialogTitle>
                 <DialogContent>
                     {/*<DialogContentText>
                         Se buscaran las guías que fueron entregadas en última milla por el operador seleccionado.
                     </DialogContentText>*/}
-                    <TableOperadores data={listadoOperadores} handleSelection={handleRowSelection} />
+                    <TableUsuarios data={listado} handleSelection={handleRowSelection} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cerrar</Button>

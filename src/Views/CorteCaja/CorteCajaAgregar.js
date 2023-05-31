@@ -1,39 +1,20 @@
 import React, {useState, useEffect} from 'react'
-import Cabecera from "../../Components/Template/Cabecera";
-import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import TextField from "@material-ui/core/TextField";
 import {
     Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    FormControl, FormControlLabel, FormGroup, FormLabel,
+    FormControlLabel,
     Grid,
-    InputLabel, MenuItem, Paper, Radio, RadioGroup,
-    Select, Switch, ThemeProvider,
-    Tooltip
+    Paper,
+    Switch, ThemeProvider,
 } from "@material-ui/core";
-import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import IconButton from "@material-ui/core/IconButton";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
-import {DataGrid} from "@material-ui/data-grid";
-import {dataGridLocaleText} from "../../Constants";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import PageviewIcon from "@material-ui/icons/Pageview";
-import {obtenerCiudades, obtenerCiudadId} from "../../Util/Contexts/CiudadesContext";
-import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
-import {obtenerGuiaId, obtenerGuiasFiltro, obtenerGuiasFiltroCorteCaja} from "../../Util/Contexts/GuiaContext";
 import Noty from "noty";
-import {agregarCorte, modificarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
-import {obtenerTiposPago} from "../../Util/Contexts/TipoPagoContext";
+import {agregarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import {createMuiTheme} from "@material-ui/core/styles";
-import MyDialog from "./DialogOperador";
 import DialogGuias from "./DialogGuias";
 import TableGuias from "./TableGuias";
+import DialogOperadores from "./DialogOperador";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -280,7 +261,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
 
     return(
         <div>
-            <MyDialog
+            <DialogOperadores
                 open={openDialog}
                 handleClose={handleCloseDialog}
                 handleAccept={handleAcceptData}

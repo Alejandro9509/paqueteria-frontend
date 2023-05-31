@@ -41,6 +41,8 @@ import File from "@material-ui/icons/AttachFile";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import TableCortesCaja from "./TableCortesCaja";
+import Filtros from "./Filtros";
+import {getCurrentDate} from "../../Util/Util";
 
 window.jQuery = window.$ = $;
 
@@ -158,8 +160,10 @@ function CorteCaja(){
     })
     const [dataCiudad, setDataCiudad] = useState([])
     const [filtros, setFiltros] = useState({
-        fechaRegistro: 0,
-        idCiudad: 0
+        fecha: getCurrentDate(),
+        operador: null,
+        usuario: null,
+        busquedaPorUsuario: false
     })
     const [openItemKey, setOpenItemKey] = useState(0);
 
@@ -272,26 +276,16 @@ function CorteCaja(){
         });
     }
 
-    const handleChangeFiltros = (event) => {
-        event.preventDefault()
-        const {target} = event
-        setFiltros(filtros => {
-            return {
-                ...filtros,
-                [target.name]: target.value
-            }
-        })
-        if (target.name === "fechaRegistro"){
-            getCortesByFiltros(target.value, filtros.idCiudad)
-        }else if (target.name === "idCiudad"){
-            getCortesByFiltros(filtros.fechaRegistro, target.value)
-        }
+    const handleChangeFiltros = (newData) => {
+        setFiltros(newData)
     }
 
     const resetFiltros = () => {
         setFiltros({
-            fechaRegistro: 0,
-            idCiudad: 0
+            fecha: getCurrentDate(),
+            operador: null,
+            usuario: null,
+            busquedaPorUsuario: false
         })
     }
     const getCortesByFiltros = (fecha, ciudad) =>{
@@ -309,8 +303,17 @@ function CorteCaja(){
         })
     }
 
-    const handleClick = (itemKey) => {
-        setOpenItemKey(itemKey);
+    const handleFiltrarClick = () => {
+        let fecha = filtros.fecha ? filtros.fecha : 0
+        let idOperador = filtros.operador?.m_nIdOperador ? filtros.operador?.m_nIdOperador : 0
+        let idUsuario = filtros.usuario?.idUsuario ? filtros.usuario?.idUsuario : 0
+        obtenerCortesByFiltros(fecha, idOperador, idUsuario)
+            .then(({data}) => {
+                setListaCortes(data)
+            })
+            .catch(err => {
+                showSuccess(err.toString())
+            })
     };
 
     function generarReporte(id) {
@@ -341,6 +344,8 @@ function CorteCaja(){
         style: 'currency',
         currency: 'USD',
     });
+
+
     return(
         <div>
             <header className="topbar clearfix">
@@ -380,6 +385,7 @@ function CorteCaja(){
 
                     <div className={"row"} className={"tab-content"}>
                         <div id="Listado" className="tab-pane fade in show">
+                            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick}/>
                             <TableCortesCaja data={listaCortes}/>
                             {/*<div className="widget-wrap">
                                 <div className="widget-content">
