@@ -455,17 +455,17 @@ function Guia(props) {
         {
             headerName: "Sucursal",
             field: "m_sSucursal",
-            width: 125,
+            width: 200,
         },
         {
             headerName: "Folio Informe",
             field: "m_sFolioInforme",
-            width: 125,
+            width: 200,
         },
         {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
-            width: 150,
+            width: 200,
         },
         {
             headerName: 'Fecha de Cancelación',
@@ -1148,6 +1148,16 @@ function Guia(props) {
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Guía Etiqueta" + seleccionEtiqueta.m_nFolioGuia;
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia);
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo descargar el pdf")
+            }
         })
         setState({
             ...state,

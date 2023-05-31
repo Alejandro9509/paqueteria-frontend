@@ -877,7 +877,7 @@ function Viajes() {
         {
             headerName: "Folio Informe",
             field: "m_sFolioInforme",
-            width: 130,
+            width: 200,
         },
         {
             headerName: "Origen - Destino",

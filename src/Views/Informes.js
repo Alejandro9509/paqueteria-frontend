@@ -340,7 +340,7 @@ function Informes({history}) {
             try{
                 const link = document.createElement('a');
                 link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Informe " + folio);
+                link.setAttribute('download', "Informe " + folio.replace(/\./g, ' '));
                 document.body.appendChild(link);
                 link.click();
             }catch (e) {
@@ -2345,7 +2345,7 @@ function Informes({history}) {
                                                                                                                     margin="dense"
                                                                                                                     label="Tipo de Servicio"
                                                                                                                     disabled="true"
-                                                                                                                    value={parseInt(state.tipoTimbrado) === 1? 'Consolidad' : parseInt(state.tipoTimbrado) === 2?'Paqueteria':'Indefinido'}
+                                                                                                                    value={parseInt(state.tipoTimbrado) === 1? 'Consolidado' : parseInt(state.tipoTimbrado) === 2?'Paqueteria':'Indefinido'}
                                                                                                                     className="form-control"
                                                                                                                     type="text"
                                                                                                                     id={"servicio-" + index}
