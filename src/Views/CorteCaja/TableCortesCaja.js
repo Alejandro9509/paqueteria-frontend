@@ -50,7 +50,7 @@ const CollapsibleTable = ({ data }) => {
                         {row.idCorte}
                     </TableCell>
                     <TableCell>{row.fechaCorte}</TableCell>
-                    <TableCell>{row.nombrePersona}</TableCell>
+                    {/*<TableCell>{row.nombrePersona}</TableCell>*/}
                     <TableCell align="right">{row.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -102,7 +102,7 @@ const CollapsibleTable = ({ data }) => {
                         <TableCell/>
                         <TableCell>Id Corte</TableCell>
                         <TableCell>FECHA DE CORTE</TableCell>
-                        <TableCell>OPERADOR/USUARIO</TableCell>
+                        {/*<TableCell>OPERADOR/USUARIO</TableCell>*/}
                         <TableCell align="right">TOTAL CORTE</TableCell>
                         {/*<TableCell colSpan={6} />*/}
                     </TableRow>
