@@ -49,9 +49,13 @@ function CorteCajaListado(){
     }, [])
 
     const getAllCortes = () => {
-        obtenerCortesByFiltros(filtros.fecha, 0, 0).then(({data}) => {
-            setListaCortes(data)
-        })
+        obtenerCortesByFiltros(filtros.fecha, 0, 0)
+            .then(({data}) => {
+                setListaCortes(data)
+            })
+            .catch(err => {
+                showSuccess(err.toString())
+            })
     }
 
     const handleShowModificar = (corte) => {
