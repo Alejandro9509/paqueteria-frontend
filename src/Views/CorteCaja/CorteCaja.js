@@ -43,6 +43,7 @@ import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
 import {getCurrentDate} from "../../Util/Util";
+import CorteCajaListado from "./CorteCajaListado";
 
 window.jQuery = window.$ = $;
 
@@ -385,8 +386,7 @@ function CorteCaja(){
 
                     <div className={"row"} className={"tab-content"}>
                         <div id="Listado" className="tab-pane fade in show">
-                            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick}/>
-                            <TableCortesCaja data={listaCortes}/>
+                            <CorteCajaListado/>
                             {/*<div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row">
