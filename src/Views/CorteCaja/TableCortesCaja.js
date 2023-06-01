@@ -33,6 +33,35 @@ const CollapsibleTable = ({ data }) => {
         }));
     };
 
+    function totalSum(items) {
+        return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+    }
+    const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+
+    function sumarTotalPorPersona(items) {
+        console.log(data)
+        const sumByPerson = {};
+
+        items.forEach((item) => {
+            const idPersona = item.idPersona;
+            const total = item.total;
+
+            if (!sumByPerson[idPersona]) {
+                sumByPerson[idPersona] = {
+                    total: 0,
+                    nombrePersona: item.nombrePersona,
+                    idPersona: idPersona
+                };
+            }
+
+            sumByPerson[idPersona].total += total;
+        });
+        console.log(sumByPerson)
+        console.log(Object.values(sumByPerson))
+        return Object.values(sumByPerson);
+    }
+    const sumByPerson = sumarTotalPorPersona(data);
+
     function Row(props) {
         const { row } = props;
         const [open, setOpen] = React.useState(false);
@@ -50,7 +79,7 @@ const CollapsibleTable = ({ data }) => {
                         {row.idCorte}
                     </TableCell>
                     <TableCell>{row.fechaCorte}</TableCell>
-                    {/*<TableCell>{row.nombrePersona}</TableCell>*/}
+                    <TableCell/>
                     <TableCell align="right">{row.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -101,10 +130,9 @@ const CollapsibleTable = ({ data }) => {
                     <TableRow>
                         <TableCell/>
                         <TableCell>Id Corte</TableCell>
-                        <TableCell>FECHA DE CORTE</TableCell>
-                        {/*<TableCell>OPERADOR/USUARIO</TableCell>*/}
+                        <TableCell >FECHA DE CORTE</TableCell>
+                        <TableCell/>
                         <TableCell align="right">TOTAL CORTE</TableCell>
-                        {/*<TableCell colSpan={6} />*/}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -151,6 +179,19 @@ const CollapsibleTable = ({ data }) => {
                                 </TableCell>
                             </TableRow>
                         </React.Fragment>*/
+                    ))}
+
+                    <TableRow>
+                        <TableCell colSpan={3} />
+                        <TableCell colSpan={1}>TOTAL CORTES</TableCell>
+                        <TableCell align="right">{totalFinal}</TableCell>
+                    </TableRow>
+                    {sumByPerson.map((item) => (
+                        <TableRow>
+                            <TableCell colSpan={3} />
+                            <TableCell colSpan={1}>TOTAL {item.nombrePersona}</TableCell>
+                            <TableCell align="right">{item.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
+                        </TableRow>
                     ))}
                 </TableBody>
             </Table>

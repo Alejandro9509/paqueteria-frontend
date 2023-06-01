@@ -1,8 +1,15 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@material-ui/core";
 
 export default function TableOperadores({ data, handleSelection }) {
     const [selectedRow, setSelectedRow] = useState(null);
+    const textFieldRef = useRef(null);
+
+    useEffect(() => {
+        if (data.length > 0) {
+            textFieldRef.current.focus();
+        }
+    }, [data]);
 
     const handleRowClick = (row) => {
         setSelectedRow(row);
@@ -19,7 +26,8 @@ export default function TableOperadores({ data, handleSelection }) {
     });
     return (
         <div>
-            <TextField label="Filtrar por nombre o número" value={filtro} onChange={handleChangeFiltro} variant="outlined" margin={"dense"}/>
+            <TextField label="Filtrar por nombre o número" value={filtro} onChange={handleChangeFiltro}
+                       variant="outlined" margin={"dense"} inputRef={textFieldRef}/>
             <br/>
             <br/>
             <TableContainer/* component={Paper}*/ style={{ height: '400px' }}>
