@@ -21,15 +21,8 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function CorteCajaListado(){
+function CorteCajaListado({onRowClick}){
     const [listaCortes, setListaCortes] = useState([])
-    const [corteSeleccionado, setCorteSeleccionado] = useState(0)
-    const [pantallaActiva, setPantallaActiva ] = useState(1)
-    const [consult, setConsult] = useState(false)
-    const [state, setState] = useState({
-        agregar: "Agregar",
-        height: window. innerHeight,
-    })
     const [filtros, setFiltros] = useState({
         fecha: getCurrentDate(),
         operador: null,
@@ -37,64 +30,18 @@ function CorteCajaListado(){
         busquedaPorUsuario: false
     })
 
-    const modificar = 3
-
-    const ACTIONS = {
-        MODIFICAR: 'MODIFICAR',
-        CONSULTAR: 'CONSULTAR',
-    }
-
     useEffect(value => {
         getAllCortes()
     }, [])
 
     const getAllCortes = () => {
-        obtenerCortesByFiltros(filtros.fecha, 0, 0)
+        obtenerCortesByFiltros(0, 0, 0)
             .then(({data}) => {
                 setListaCortes(data)
             })
             .catch(err => {
                 showSuccess(err.toString())
             })
-    }
-
-    const handleShowModificar = (corte) => {
-        setConsult(false)
-        setCorteSeleccionado(corte.m_nIdCorte)
-        setPantallaActiva(modificar)
-        setState(state =>{
-            return {
-                ...state,
-                agregar: "Modificar",
-            }
-        });
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
-    }
-    const handleShowConsultar = (corte) => {
-        setCorteSeleccionado(corte.m_nIdCorte)
-        setPantallaActiva(modificar)
-        setConsult(true)
-        setState(state =>{
-            return {
-                ...state,
-                agregar: "Consultar",
-            }
-        });
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
-    }
-
-    const handleEliminar = (corte) => {
-        eliminarCorte(corte.m_nIdCorte, 0).then(respuesta => {
-            console.log(respuesta)
-            showSuccess(respuesta.data);
-            getAllCortes()
-        });
     }
 
     const handleChangeFiltros = (newData) => {
@@ -114,10 +61,14 @@ function CorteCajaListado(){
             })
     };
 
+    const handleRowClick = (selectedItem, action) => {
+        onRowClick(selectedItem, action)
+    };
+
     return(
         <div>
             <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick}/>
-            <TableCortesCaja data={listaCortes}/>
+            <TableCortesCaja data={listaCortes} onRowClick={handleRowClick}/>
         </div>
     )
 }

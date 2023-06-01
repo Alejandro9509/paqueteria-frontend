@@ -15,8 +15,9 @@ import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {makeStyles} from "@material-ui/core/styles";
+import EditIcon from '@material-ui/icons/Edit';
 
-const CollapsibleTable = ({ data }) => {
+const TableCortesCaja = ({ data, onRowClick }) => {
     const useRowStyles = makeStyles({
         root: {
             '& > *': {
@@ -24,13 +25,13 @@ const CollapsibleTable = ({ data }) => {
             },
         },
     });
-    const [open, setOpen] = React.useState({});
+    const ACTIONS = {
+        MODIFICAR: 'MODIFICAR',
+        CONSULTAR: 'CONSULTAR',
+    }
 
-    const handleRowClick = (idCorte) => {
-        setOpen((prevState) => ({
-            ...prevState,
-            [idCorte]: !prevState[idCorte]
-        }));
+    const handleRowClick = (selectedItem, action) => {
+        onRowClick(selectedItem, action)
     };
 
     function totalSum(items) {
@@ -63,7 +64,7 @@ const CollapsibleTable = ({ data }) => {
     const sumByPerson = sumarTotalPorPersona(data);
 
     function Row(props) {
-        const { row } = props;
+        const { row, onRowClick } = props;
         const [open, setOpen] = React.useState(false);
         const classes = useRowStyles();
 
@@ -73,6 +74,11 @@ const CollapsibleTable = ({ data }) => {
                     <TableCell>
                         <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        </IconButton>
+                    </TableCell>
+                    <TableCell>
+                        <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.MODIFICAR)}>
+                            <EditIcon />
                         </IconButton>
                     </TableCell>
                     <TableCell component="th" scope="row">
@@ -129,6 +135,7 @@ const CollapsibleTable = ({ data }) => {
                 <TableHead>
                     <TableRow>
                         <TableCell/>
+                        <TableCell/>
                         <TableCell>Id Corte</TableCell>
                         <TableCell >FECHA DE CORTE</TableCell>
                         <TableCell/>
@@ -137,7 +144,7 @@ const CollapsibleTable = ({ data }) => {
                 </TableHead>
                 <TableBody>
                     {data.map((item) => (
-                        <Row key={item.idCorte} row={item} />
+                        <Row key={item.idCorte} row={item} onRowClick={handleRowClick} />
                         /*<React.Fragment key={item.idCorte}>
                             <TableRow onClick={() => handleRowClick(item.idCorte)}>
                                 <TableCell>
@@ -199,4 +206,4 @@ const CollapsibleTable = ({ data }) => {
     );
 };
 
-export default CollapsibleTable;
+export default TableCortesCaja;

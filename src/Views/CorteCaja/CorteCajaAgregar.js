@@ -25,12 +25,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function CorteCajaAgregar({pantallaActiva, select, consult}){
-
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    });
+function CorteCajaAgregar({value, disaled}){
     const [guias, setGuias] = useState([])
     const [guiasSeleccionadas, setGuiasSeleccionadas] = useState([])
 
@@ -75,44 +70,32 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
             }
         }
     });
-    const listado = 1
-    const agregar = 2
-    const modificar = 3
 
-    useEffect( value => {
-        if (pantallaActiva === listado){
-            limpiarCampos()
-        }else if (pantallaActiva === agregar){
-            limpiarCampos()
-        }else if (pantallaActiva === modificar){
-            limpiarCampos()
-            obtenerCorteId(select).then(({data}) =>{
 
-                let totalTotal = 0.0
-                data.m_arrGuias.forEach((i) => {
-                    let m_cImporte = 0
-                    let m_cImporteIva = 0
-                    let m_cImporteRetiene = 0
-                    let m_cTotal = 0
-                    let m_c_Descuento = 0
-                    i.m_arClsGuiaConceptos.forEach((j) => {
-                        m_cImporte += parseFloat(j.m_cImporte)
-                        m_cImporteIva += parseFloat(j.m_cImporteIva)
-                        m_cImporteRetiene += parseFloat(j.m_cImporteRetiene)
-                        m_cTotal += parseFloat(j.m_cTotal)
-                        m_c_Descuento += parseFloat(j.m_c_Descuento)
-                    })
-                    i.m_cImporte = m_cImporte
-                    i.m_cImporteIva = m_cImporteIva
-                    i.m_cImporteRetiene = m_cImporteRetiene
-                    i.m_cDescuento = m_c_Descuento
-                    i.m_cTotal = m_cTotal
-                    totalTotal += parseFloat(m_cTotal)
-                })
-
+    useEffect( () => {
+        if (value?.idCorte > 0){
+            console.log('valid')
+            setFiltros({
+                busquedaPorUsuario: value.busquedaPorUsuario,
+                usuario: value.usuario,
+                operador: value.operador,
+                fechaRegistro: value.fechaRegistro,
+                horaRegistro: value.horaRegistro,
             })
+            setGuias(value.guias)
         }
-    }, [pantallaActiva])
+        if (!value?.idCorte > 0){
+            console.log('invalid')
+            setFiltros({
+                busquedaPorUsuario: false,
+                usuario: null,
+                operador: null,
+                fechaRegistro: getCurrentDate(),
+                horaRegistro: getCurrentTime(),
+            })
+            setGuias([])
+        }
+    }, [value])
 
     const limpiarCampos = () => {
 
@@ -200,19 +183,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         setGuiasSeleccionadas([])
     };
 
-    /*const TotalComponent = () => {
-        // Calcula el total sumando los totales de cada objeto
-        const totalSum = guias.reduce((acc, obj) => acc + obj.total, 0);
-        // Formatea el total como moneda
-        const formattedTotal = totalSum.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
-
-        return (
-            <div>
-                <h3>TOTAL CORTE: {formattedTotal}</h3>
-            </div>
-        );
-    };*/
-
     function totalSum(items) {
         return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
     }
@@ -250,13 +220,22 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         }
         console.log(params)
         console.log(JSON.stringify(params))
-        agregarCorte(params)
-            .then((respuesta) => {
-                console.log(respuesta.data)
-            })
-            .catch((error) => {
-                console.log(error.toString())
-            })
+        if (disaled){
+            return;
+        }
+        if (value?.idCorte > 0){
+            return;
+        }
+        if (!value?.idCorte > 0){
+            agregarCorte(params)
+                .then((respuesta) => {
+                    console.log(respuesta.data)
+                })
+                .catch((error) => {
+                    console.log(error.toString())
+                })
+        }
+
     }
 
     return(

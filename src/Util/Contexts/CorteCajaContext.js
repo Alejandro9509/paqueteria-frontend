@@ -43,7 +43,7 @@ function obtenerCortes() {
 }
 
 function obtenerCorteId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/CorteCaja/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
