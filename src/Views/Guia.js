@@ -1249,10 +1249,9 @@ function Guia(props) {
                                         console.log('index: ', i + 1)
                                         console.log(i + 1 + ' de ' + p.ctd)
                                         let result
-                                        if (rfcCliente === 'PTR170523BI6'){
+                                        if (rfcCliente === 'PTR170523BI6' || rfcCliente === 'SOPO110101PQ1'){
                                             try{
                                                 result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
-                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                                                 showSuccess('Impresión en curso.')
                                             }catch (e) {
                                                 showSuccess('Hubo un error al imprimir. Intente de nuevo.')
@@ -1263,7 +1262,6 @@ function Guia(props) {
                                         }else {
                                             try{
                                                 result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                                                 showSuccess('Impresión en curso.')
                                             }catch (e) {
                                                 showSuccess('Hubo un error al imprimir. Intente de nuevo.')
@@ -1293,10 +1291,9 @@ function Guia(props) {
                         console.log('index: ', i + 1)
                         console.log(i + 1 + ' de ' + p.ctd)
                         let result
-                        if (rfcCliente === 'PTR170523BI6') {
+                        if (rfcCliente === 'PTR170523BI6' || rfcCliente === 'SOPO110101PQ1') {
                             try {
                                 result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
-                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                                 showSuccess('Impresión en curso.')
                             } catch (e) {
                                 showSuccess('Hubo un error al imprimir. Intente de nuevo.')
@@ -1306,7 +1303,6 @@ function Guia(props) {
                         } else {
                             try {
                                 result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                                 showSuccess('Impresión en curso.')
                             } catch (e) {
                                 showSuccess('Hubo un error al imprimir. Intente de nuevo.')
