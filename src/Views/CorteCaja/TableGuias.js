@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@material-ui/core';
 
-const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
+const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
 
     const handleRowSelection = (event, id) => {
         const selectedIndex = selectedRows2.indexOf(id);
@@ -40,13 +40,15 @@ const TableGuias = ({ data, handleSelection, selectedRows2 }) => {
                 <TableBody>
                     {data.map((item) => (
                         <TableRow key={item.idGuia}
-                                  onClick={(event) => handleRowSelection(event, item)} // Maneja el evento de clic en la fila
+                                  // onClick={(event) => !disabled && handleRowSelection(event, item)} // Maneja el evento de clic en la fila
                                   selected={selectedRows2.indexOf(item) !== -1} // Marca la fila como seleccionada si es igual al registro seleccionado
+                                  aria-disabled={disabled}
                         >
                             <TableCell>
                                 <Checkbox
                                     checked={selectedRows2.indexOf(item) !== -1}
                                     onChange={(event) => handleRowSelection(event, item)}
+                                    disabled={disabled || !item.fueEntregada}
                                 />
                             </TableCell>
                             <TableCell>{item.folioGuia}</TableCell>

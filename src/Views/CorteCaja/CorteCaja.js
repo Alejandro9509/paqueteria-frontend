@@ -123,6 +123,27 @@ function CorteCaja(){
                     showSuccess(err.toString())
                 })
         }
+        if (action === 'CONSULTAR'){
+            // handleOpenDialog()
+            obtenerCorteId(selectedItem.idCorte)
+                .then(({data}) => {
+                    setState(state =>{
+                        return {
+                            ...state,
+                            agregar: "Consultar",
+                        }
+                    });
+                    setConsult(true)
+                    setCorteSeleccionado(data)
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(1).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Agregar').addClass('in show');
+                })
+                .catch((err) => {
+                    showSuccess(err.toString())
+                })
+        }
     };
 
     return(
@@ -172,7 +193,7 @@ function CorteCaja(){
                         <div id="Agregar" className="tab-pane fade">
                             <CorteCajaAgregar
                                 value={corteSeleccionado}
-                                disaled={false}
+                                disaled={consult}
                             />
                         </div>
                     </div>

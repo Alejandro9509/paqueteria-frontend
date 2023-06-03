@@ -226,7 +226,7 @@ function CorteCajaAgregar({value, disaled}){
         if (value?.idCorte > 0){
             modificarCorte(value.idCorte, params)
                 .then((respuesta) => {
-                    console.log(respuesta.data)
+                    showSuccess(respuesta.data)
                 })
                 .catch((error) => {
                     console.log(error.toString())
@@ -235,7 +235,7 @@ function CorteCajaAgregar({value, disaled}){
         if (!value?.idCorte > 0){
             agregarCorte(params)
                 .then((respuesta) => {
-                    console.log(respuesta.data)
+                    showSuccess(respuesta.data)
                 })
                 .catch((error) => {
                     console.log(error.toString())
@@ -276,7 +276,8 @@ function CorteCajaAgregar({value, disaled}){
                                 value={filtros.fechaRegistro}
                                 className={"form-control"}
                                 InputLabelProps={{shrink: true,}}
-                                // required={state.recoleccionConCita}
+                                required
+                                disabled={disaled}
                             />
                         </Grid>
                         <Grid item xs={2}>
@@ -286,12 +287,10 @@ function CorteCajaAgregar({value, disaled}){
                                 label="Hora de registro"
                                 type="time"
                                 value={filtros.horaRegistro}
-                                // onChange={handleHoraCitaMinima}
                                 className={"form-control"}
                                 disabled={true}
                                 InputLabelProps={{shrink: true,}}
                                 inputProps={{step: 300,}}
-                                // required={state.recoleccionConCita}
                             />
                         </Grid>
                         <Grid item xs={2}>
@@ -302,6 +301,7 @@ function CorteCajaAgregar({value, disaled}){
                                             checked={filtros.busquedaPorUsuario}
                                             onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
                                             color="primary"
+                                            disabled={disaled}
                                         />
                                     }
                                     label="Busqueda por usuario"
@@ -315,43 +315,46 @@ function CorteCajaAgregar({value, disaled}){
                                 value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
                                 margin={'dense'}
                                 onClick={(e) => !filtros.busquedaPorUsuario && handleOpenDialog()}
+                                disabled={disaled}
                             />
                         </Grid>
                     </Grid>
                 </section>
                 <section style={{height: '50vh'}}>
                     <Box display="flex" justifyContent="flex-end">
-                        <Button onClick={handleDescartarGuias}  color={"primary"}>
+                        <Button
+                            onClick={handleDescartarGuias}
+                            color={"primary"}
+                            disabled={disaled}>
                             Descartar Guias
                         </Button>
-                        <Button onClick={handleOpenDialogGuias} variant={"contained"} color={"primary"}>
+                        <Button
+                            onClick={handleOpenDialogGuias}
+                            variant={"contained"}
+                            color={"primary"}
+                            disabled={disaled}>
                             Agregar Guias
                         </Button>
                     </Box>
                     <br/>
                     <TableGuias data={guias} handleSelection={handleRowSelection}
-                                selectedRows2={guiasSeleccionadas} />
+                                selectedRows2={guiasSeleccionadas}
+                                disabled={disaled}
+                    />
                 </section>
                 <section>
                     <Box display="flex" justifyContent="flex-end">
-                        {/*<Button onClick={handleDescartarGuias}  color={"primary"}>
-                            Descartar Guias
-                        </Button>*/}
-                        <Button fullWidth onClick={handleGuardar} variant={"contained"} color={"primary"}>
+                        <Button
+                            fullWidth
+                            onClick={handleGuardar}
+                            variant={"contained"}
+                            color={"primary"}
+                            disabled={disaled}>
                             Guardar
                         </Button>
                     </Box>
                 </section>
-
-                {/*<br/>
-                <br/>
-                <TotalComponent/>*/}
             </Paper>
-            {/*<section className={"main-container"} style={{ marginLeft: "0px", padding: "0px" }}>
-                <div className={"content-fluid"}>
-
-                </div>
-            </section>*/}
         </div>
     )
 }
