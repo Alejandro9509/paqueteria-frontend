@@ -9,7 +9,7 @@ import {
     Switch, ThemeProvider,
 } from "@material-ui/core";
 import Noty from "noty";
-import {agregarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
+import {agregarCorte, modificarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import {createMuiTheme} from "@material-ui/core/styles";
 import DialogGuias from "./DialogGuias";
@@ -224,7 +224,13 @@ function CorteCajaAgregar({value, disaled}){
             return;
         }
         if (value?.idCorte > 0){
-            return;
+            modificarCorte(value.idCorte, params)
+                .then((respuesta) => {
+                    console.log(respuesta.data)
+                })
+                .catch((error) => {
+                    console.log(error.toString())
+                })
         }
         if (!value?.idCorte > 0){
             agregarCorte(params)

@@ -145,58 +145,17 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                 <TableBody>
                     {data.map((item) => (
                         <Row key={item.idCorte} row={item} onRowClick={handleRowClick} />
-                        /*<React.Fragment key={item.idCorte}>
-                            <TableRow onClick={() => handleRowClick(item.idCorte)}>
-                                <TableCell>
-                                    <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-                                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell>{item.idCorte}</TableCell>
-                                <TableCell>{item.total}</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell colSpan={2}>
-                                    <Collapse in={open[item.idCorte]} timeout="auto" unmountOnExit>
-                                        <Box margin={1}>
-                                            <Table>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell>Folio Guía</TableCell>
-                                                        <TableCell>Nombre Persona</TableCell>
-                                                        <TableCell>Total</TableCell>
-                                                        <TableCell>Tipo Cobro</TableCell>
-                                                        <TableCell>Estatus Guía</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {item.guias.map((guia) => (
-                                                        <TableRow key={guia.idGuia}>
-                                                            <TableCell>{guia.folioGuia}</TableCell>
-                                                            <TableCell>{guia.nombrePersona}</TableCell>
-                                                            <TableCell>{guia.total}</TableCell>
-                                                            <TableCell>{guia.tipoCobro}</TableCell>
-                                                            <TableCell>{guia.estatusGuia}</TableCell>
-                                                        </TableRow>
-                                                    ))}
-                                                </TableBody>
-                                            </Table>
-                                        </Box>
-                                    </Collapse>
-                                </TableCell>
-                            </TableRow>
-                        </React.Fragment>*/
                     ))}
 
                     <TableRow>
                         <TableCell colSpan={3} />
-                        <TableCell colSpan={1}>TOTAL CORTES</TableCell>
+                        <TableCell colSpan={2}>TOTAL CORTES</TableCell>
                         <TableCell align="right">{totalFinal}</TableCell>
                     </TableRow>
                     {sumByPerson.map((item) => (
                         <TableRow>
                             <TableCell colSpan={3} />
-                            <TableCell colSpan={1}>TOTAL {item.nombrePersona}</TableCell>
+                            <TableCell colSpan={2}>TOTAL {item.nombrePersona}</TableCell>
                             <TableCell align="right">{item.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                         </TableRow>
                     ))}

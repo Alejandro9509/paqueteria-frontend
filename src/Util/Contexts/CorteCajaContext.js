@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarCorte(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Modificar/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/CorteCaja/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
