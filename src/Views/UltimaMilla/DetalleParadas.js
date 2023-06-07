@@ -86,6 +86,9 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+const REPORTE_INFORME_ULTIMAMILLA=1
+const REPORTE_CFDI_PRIMERA_MILLA=2
+const REPORTE_CFDI_ULTIMAMILLA=3
 
 class DetalleParadas extends Component {
     constructor(props) {
@@ -105,7 +108,11 @@ class DetalleParadas extends Component {
             openOrdenarParadas: false,
             openDialog:false,
             dataReportes:[],
-            seleccion:null
+            dataReportesCFDIPrimeraMilla:[],
+            dataReportesCFDIUltimaMilla:[],
+            seleccion:null,
+            tipoReporte:0,
+            mensajeTitulo:""
 
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
@@ -127,11 +134,28 @@ class DetalleParadas extends Component {
 
     }
     componentDidMount() {
-        obtenerFormatosImpresionProceso(215).then(({data}) => {
-            this.setState({
-                dataReportes:data
+    /*    if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
+            obtenerFormatosImpresionProceso(215).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
             })
-        })
+        }
+        if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
+            obtenerFormatosImpresionProceso(216).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        if(this.state.tipoReporte===REPORTE_CFDI_ULTIMAMILLA){
+            obtenerFormatosImpresionProceso(217).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }*/
+
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -244,7 +268,39 @@ class DetalleParadas extends Component {
         })
     }
     obtenerPDFCFDI(id,esRecoleccion, folio){
-            if (esRecoleccion){
+
+        if(esRecoleccion){
+            this.setState({
+                idParada: id,
+                esRecoleccion: esRecoleccion,
+                folio: folio,
+                openDialog:true,
+                tipoReporte:REPORTE_CFDI_PRIMERA_MILLA,
+                mensajeTitulo:"CFDI Primera Milla/Recolección"
+            })
+            obtenerFormatosImpresionProceso(216).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        else{
+            this.setState({
+                idParada: id,
+                esRecoleccion: esRecoleccion,
+                folio: folio,
+                openDialog:true,
+                tipoReporte:REPORTE_CFDI_ULTIMAMILLA,
+                mensajeTitulo:"CFDI Última Milla/Guía"
+            })
+            obtenerFormatosImpresionProceso(217).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+
+           /* if (esRecoleccion){
                 obtenerReporteCFDIRecoleccion(id).then(({data}) => {
                     console.log(data)
                     let pdfWindow = window.open("");
@@ -259,8 +315,9 @@ class DetalleParadas extends Component {
                     pdfWindow.document.body.style.margin = "0px";
                     pdfWindow.document.title = "CFDI_ " + folio;
                 })
-            }
+            }*/
     }
+
     generarCFDI(id,esRecoleccion, folio) {
         obtenerParametrosConfiguracion().then(respuesta => {
             let titulo;
@@ -533,7 +590,14 @@ class DetalleParadas extends Component {
         console.log('data: ' + data)
         this.setState({
             seleccion:data,
-            openDialog:true
+            openDialog:true,
+            tipoReporte:REPORTE_INFORME_ULTIMAMILLA,
+            mensajeTitulo:"Última Milla"
+        })
+        obtenerFormatosImpresionProceso(215).then(({data}) => {
+            this.setState({
+                dataReportes:data
+            })
         })
         /*obtenerUltimaMillaReporte(id).then(({data}) => {
             // console.log(data)
@@ -559,14 +623,35 @@ class DetalleParadas extends Component {
             showError("Es necesario seleccionar al menos un reporte")
             return
         }
+        if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.seleccion.m_nIdParadaUltimaMilla).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Última Milla" + this.state.seleccion.m_nIdUltimaMilla;
+            })
+        }
+        else if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI Primera Milla" + this.state.folio;
+            })
+        }
+        else{
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI Última Milla" + this.state.folio;
+            })
+        }
 
-        imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.seleccion.m_nIdParadaUltimaMilla).then(({data}) => {
-            console.log(data)
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Última Milla" + this.state.seleccion.m_nIdUltimaMilla;
-        })
+
         this.setState({
             reporteSeleccionado: null,
             openDialog:false
@@ -645,7 +730,7 @@ class DetalleParadas extends Component {
                         fullWidth maxWidth="md"
                     >
                         <DialogTitle>
-                            Reporte de Informe de Última Milla
+                            Reporte de Informe de {this.state.mensajeTitulo}
                         </DialogTitle>
                         <DialogContent>
                             <div className="row" style={{backgroundColor: '#FFFFFF'}}>
@@ -1145,7 +1230,7 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() =>
-                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
+                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)//g
                                                                                                                 }
                                                                                                                 aria-label="Timbrar SAT">
                                                                                                                 <Tooltip
@@ -1177,7 +1262,7 @@ class DetalleParadas extends Component {
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar PDF"}>
                                                                                                                     <PictureAsPdfIcon
-                                                                                                                        onClick={() => this.obtenerPDFCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
+                                                                                                                        onClick={() => this.obtenerPDFCFDI(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
