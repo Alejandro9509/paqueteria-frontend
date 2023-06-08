@@ -250,10 +250,10 @@ ${guia.m_sDomicilioRemitente.length > 20 ?
             guia.m_sDomicilioRemitente.length > 75 ? (
                 `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
             ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26,70)}^FS^CI27
-            ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(71)}^FS^CI27`
+            ^FT72,910^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(71)}^FS^CI27`
             ) : (
                 `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
-            ^FT65,910^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26)}^FS^CI27`
+            ^FT72,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26)}^FS^CI27`
             )
         ) : `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario}}^FS^CI27`
     }
