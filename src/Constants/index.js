@@ -219,7 +219,7 @@ export const TICKET_ZABRA_TAMPLATE_PLATEROS = (guia, paquete, index) => (
 ^FO46,255^GB697,333,4,,1^FS
 ^FT61,161^A0N,35,43^FH\^CI28^FDORIGEN:^FS^CI27
 ^FT50,245^A0N,35,48^FH\^CI28^FDREMITENTE^FS^CI27
-^FT61,304^A0N,35,35^FH\^CI28^FD${guia.m_sNOmbreRemitente}^FS^CI27
+^FT61,303^A0N,31,30^FH\^CI28^FD${guia.m_sNOmbreRemitente}^FS^CI27
 ^FT61,359^A0N,35,48^FH\^CI28^FDTEL:^FS^CI27
 ^FT150,359^A0N,35,43^FH\^CI28^FD${guia.m_sTelefonoRemitente}^FS^CI27
 ^FT61,415^A0N,35,48^FH\^CI28^FDDIRECCIÓN:^FS^CI27
@@ -237,7 +237,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT61,565^A0N,35,48^FH\^CI28^FD${guia.m_sCiudadOrigen}^FS^CI27
 ^FO50,645^GB697,335,4,,1^FS
 ^FT53,633^A0N,35,48^FH\^CI28^FDDESTINO:^FS^CI27
-^FT65,693^A0N,35,48^FH\^CI28^FD${guia.m_sNombreDestinatario}^FS^CI27
+^FT65,691^A0N,31,33^FH\\^CI28^FD${guia.m_sNombreDestinatario}^FS^CI27
 ^FT65,747^A0N,35,48^FH\^CI28^FDTEL:^FS^CI27
 ^FT154,747^A0N,35,41^FH\^CI28^FD${guia.m_sTelefonoDestinatario}^FS^CI27
 ^FT65,804^A0N,35,48^FH\^CI28^FDDIRECCIÓN:^FS^CI27
@@ -250,10 +250,10 @@ ${guia.m_sDomicilioRemitente.length > 20 ?
             guia.m_sDomicilioRemitente.length > 75 ? (
                 `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
             ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26,70)}^FS^CI27
-            ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(71)}^FS^CI27`
+            ^FT72,910^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(71)}^FS^CI27`
             ) : (
                 `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
-            ^FT65,910^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26)}^FS^CI27`
+            ^FT72,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26)}^FS^CI27`
             )
         ) : `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario}}^FS^CI27`
     }
