@@ -162,7 +162,7 @@ export const dataGridLocaleText = {
 }
 
 export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
-`^XA
+    `^XA
 
 ^CI28
 ^MUm
@@ -223,10 +223,16 @@ export const TICKET_ZABRA_TAMPLATE_PLATEROS = (guia, paquete, index) => (
 ^FT61,359^A0N,35,48^FH\^CI28^FDTEL:^FS^CI27
 ^FT150,359^A0N,35,43^FH\^CI28^FD${guia.m_sTelefonoRemitente}^FS^CI27
 ^FT61,415^A0N,35,48^FH\^CI28^FDDIRECCIÓN:^FS^CI27
-${guia.m_sDomicilioRemitente.length > 20 ?
+${guia.m_sDomicilioRemitente.length > 30 ?
         (
-            `^FT291,415^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS^CI27
-            ^FT291,459^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(26)}^FS^CI27`
+            guia.m_sDomicilioRemitente.length > 75 ? (
+                `^FT291,415^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS^CI27
+        ^FT65,459^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(26, 70)}^FS^CI27
+        ^FT65,513^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(71)}^FS^CI27`
+            ) : (
+                `^FT291,415^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS^CI27
+            ^FT65,459^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(26)}^FS^CI27`
+            )
         ) : `^FT291,415^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente}^FS^CI27`}
 ^FT61,565^A0N,35,48^FH\^CI28^FD${guia.m_sCiudadOrigen}^FS^CI27
 ^FO50,645^GB697,335,4,,1^FS
@@ -241,8 +247,14 @@ ${guia.m_sDomicilioRemitente.length > 20 ?
 ^FH\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioRemitente.length > 20 ?
         (
-            `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
-            ^FT291,848^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26)}^FS^CI27`
+            guia.m_sDomicilioRemitente.length > 75 ? (
+                `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
+            ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26,70)}^FS^CI27
+            ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(71)}^FS^CI27`
+            ) : (
+                `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
+            ^FT65,910^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26)}^FS^CI27`
+            )
         ) : `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario}}^FS^CI27`
     }
 ^PQ1,0,1,Y
@@ -251,10 +263,10 @@ ${guia.m_sDomicilioRemitente.length > 20 ?
 
 export const TOOLBAR_OPTIONS = {
     options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'remove', 'history'],
-    inline: { inDropdown: true },
-    list: { inDropdown: true },
-    textAlign: { inDropdown: true },
-    link: { inDropdown: true },
-    history: { inDropdown: true },
+    inline: {inDropdown: true},
+    list: {inDropdown: true},
+    textAlign: {inDropdown: true},
+    link: {inDropdown: true},
+    history: {inDropdown: true},
 };
 
