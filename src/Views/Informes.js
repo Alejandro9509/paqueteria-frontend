@@ -17,7 +17,7 @@ import {
     ListItem,
     ListItemIcon,
     ListItemSecondaryAction,
-    ListItemText,
+    ListItemText, MenuItem,
     Select,
     Step,
     StepLabel,
@@ -67,7 +67,11 @@ import {
 } from "../Util/Contexts/InformesContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
-import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+import {
+    imprimirFormatosId, imprimirFormatosIdIdTipoReporte,
+    obtenerFormatosImpresion,
+    obtenerFormatosImpresionProceso
+} from "../Util/Contexts/FormatosImpresionContext";
 import Filtros from "./Filtros/Filtros";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import Button from "@material-ui/core/Button";
@@ -85,7 +89,14 @@ function showSuccess(mensaje) {
         timeout: "8000",
     }).show();
 }
-
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
 
 const styles = {
     seleccionado: {
@@ -119,7 +130,17 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
+    const [openDialog, setOpenDialog] = useState(false)
+    const [dataReportes, setDataReportes] = useState([])
+    const [seleccion, setSeleccion] = useState(null)
 
+
+    useEffect(()=>{
+
+        obtenerFormatosImpresionProceso(214).then(({data}) => {
+            setDataReportes(data)
+        })
+    }, [])
     const handleChange = (event) => {
         setState({
             ...state,
@@ -203,7 +224,7 @@ function Informes({history}) {
                         </a>
                         <Tooltip title="Reporte">
                             <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}
+                               onClick={() => generarReporte(row.row)}
                                disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
                                                                       style={{color: "#F9A03E"}}/></a>
 
@@ -216,7 +237,7 @@ function Informes({history}) {
                                 message: '¿Está seguro de eliminar informe?',
                                 buttons: [
                                     {
-                                        label: 'Si',
+                                        label: 'Sí',
                                         onClick: () => handleEliminar(row.row.m_nIdInforme)
                                     },
                                     {
@@ -306,12 +327,16 @@ function Informes({history}) {
         },
     ]);
 
-    function generarReporte(id, folio) {
-        obtenerInformeReporte(id).then(({data}) => {
-            /*let pdfWindow = window.open("");
+    function generarReporte(row) {
+
+        setSeleccion(row)
+        setOpenDialog(true)
+
+        /*obtenerInformeReporte(id).then(({data}) => {
+            /!*let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe " + folio;*/
+            pdfWindow.document.title = "Informe " + folio;*!/
             try{
                 const link = document.createElement('a');
                 link.href = "data:application/pdf;base64," + data;
@@ -322,7 +347,37 @@ function Informes({history}) {
                 console.log(e)
                 showSuccess("No se pudo descargar el pdf")
             }
+        })*/
+    }
+    const handleOnChangeReporte = (data) => {
+        console.log(data)
+        setState({
+            ...state,
+            reporteSeleccionado: data
         })
+    }
+    const handleGenerarReporte=(e)=>{
+        e.preventDefault()
+        console.log(state.reporteSeleccionado)
+        console.log(seleccion)
+
+        if (state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+
+        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdInforme).then(({data}) => {
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Informe" + seleccion.m_sFolioInforme;
+        })
+        setState({
+            ...state,
+            reporteSeleccionado: null
+        })
+        setOpenDialog(false)
     }
 
     function handleSelectDatos(id, cp) {
@@ -831,7 +886,7 @@ function Informes({history}) {
                                                     message: '¿Está seguro de eliminar Embarque?',
                                                     buttons: [
                                                         {
-                                                            label: 'Si',
+                                                            label: 'Sí',
                                                             onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
                                                         },
                                                         {
@@ -855,7 +910,7 @@ function Informes({history}) {
                                                     message: '¿Está seguro de eliminar Embarque?',
                                                     buttons: [
                                                         {
-                                                            label: 'Si',
+                                                            label: 'Sí',
                                                             onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
                                                         },
                                                         {
@@ -1310,6 +1365,71 @@ function Informes({history}) {
 
     return (
         <div>
+
+            {
+                openDialog &&
+                <Dialog
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                    fullWidth maxWidth="md"
+                >
+                    <DialogTitle>
+                        Reporte de Informe
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <form onSubmit={handleGenerarReporte}>
+                                <Grid container spacing={1}>
+                                    <Grid item sm={6}>
+                                        <FormControl
+                                            className="input select"
+                                            fullWidth variant="outlined"
+                                            required
+                                            margin="dense">
+                                            <InputLabel
+                                                id="idReporteLabel">Formato de Reporte</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="idReporteLabel"
+                                                label="Reporte"
+                                                className="form-control"
+                                                value={state.reporteSeleccionado ?? ''}
+                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
+                                                name="reporteSeleccionado"
+                                            >
+                                                {dataReportes.map((reporte) => (
+                                                    <MenuItem
+                                                        key={reporte.m_nIdFormato}
+                                                        value={reporte.m_nIdFormato}
+                                                    >
+                                                        {reporte.m_sFormato}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <DialogActions>
+
+                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                        setOpenDialog(false)
+                                        setState({
+                                            ...state,
+                                            reporteSeleccionado: null
+                                        })
+                                    }
+                                    }>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                        Aceptar
+                                    </button>
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            }
 
             <Dialog
                 open={state.openDialog}

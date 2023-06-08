@@ -89,7 +89,11 @@ import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
-import {obtenerFormatosImpresion, imprimirFormatosId} from "../Util/Contexts/FormatosImpresionContext";
+import {
+    obtenerFormatosImpresion,
+    imprimirFormatosId,
+    obtenerFormatosImpresionProceso, imprimirFormatosIdIdTipoReporte
+} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
@@ -124,6 +128,14 @@ function showSuccess(mensaje) {
         text: mensaje,
         timeout: "3000"
     }).show()
+}
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
 }
 
 window.jQuery = window.$ = $;
@@ -241,6 +253,9 @@ function Recoleccion() {
     const [isModificar, setIsModificar] = useState(false);
     const [pagina, setPagina] = useState(0);
     const [errores,setErrores] = React.useState([])
+    const [openDialog, setOpenDialog] = useState(false)
+    const [dataReportes, setDataReportes] = useState([])
+    const [seleccion, setSeleccion] = useState(null)
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
         estatusEmbarque: 0,
@@ -401,6 +416,7 @@ function Recoleccion() {
         })
         //  console.log(data.zonaOperativa)
     };
+
 
     const handleClickCodigosPostalesInput = (input) => {
         if (input === "codigoPostalRemitente"){
@@ -603,6 +619,12 @@ function Recoleccion() {
             </GridOverlay>
         );
     }
+    useEffect(()=>{
+
+        obtenerFormatosImpresionProceso(210).then(({data}) => {
+            setDataReportes(data)
+        })
+    }, [])
 
     useEffect(value => {
 
@@ -1846,7 +1868,7 @@ function Recoleccion() {
                         </Tooltip>
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101418)}>
                             <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row.m_nIdRecoleccion, row.row.m_sFolioRecoleccion)}><i className="zmdi zmdi-file"
+                                onClick={() => generarReporte(row.row)}><i className="zmdi zmdi-file"
                                                                                                                          style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -2037,15 +2059,47 @@ function Recoleccion() {
             accessor: "m_nIdTipoUnidad",
         }
     ]);
-    function generarReporte(id, folio){
-        obtenerRecoleccionReporte(id).then(({data}) => {
+    function generarReporte(row){
+        setSeleccion(row)
+        console.log(row)
+        setOpenDialog(true)
+       /* obtenerRecoleccionReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Recolección " + folio;
+        })*/
+    }
+    const handleOnChangeReporte = (data) => {
+        console.log(data)
+        setState({
+            ...state,
+            reporteSeleccionado: data
         })
     }
+    const handleGenerarReporte=(e)=>{
+        e.preventDefault()
+        console.log(state.reporteSeleccionado)
+        console.log(seleccion)
 
+        if (state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+
+        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Recolección" + seleccion.m_sFolioRecoleccion;
+        })
+        setState({
+            ...state,
+            reporteSeleccionado: null
+        })
+        setOpenDialog(false)
+    }
     const columnsUnidades = React.useMemo(() => [
         {
             Name: "Descripcion",
@@ -3036,7 +3090,71 @@ function Recoleccion() {
     }
     return (
         <div>
-            {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
+            {
+                openDialog &&
+                <Dialog
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                    fullWidth maxWidth="md"
+                >
+                    <DialogTitle>
+                        Reporte de Recolección
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <form onSubmit={handleGenerarReporte}>
+                                <Grid container spacing={1}>
+                                    <Grid item sm={6}>
+                                        <FormControl
+                                            className="input select"
+                                            fullWidth variant="outlined"
+                                            required
+                                            margin="dense">
+                                            <InputLabel
+                                                id="idReporteLabel">Formato de Reporte</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="idReporteLabel"
+                                                label="Reporte"
+                                                className="form-control"
+                                                value={state.reporteSeleccionado ?? ''}
+                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
+                                                name="reporteSeleccionado"
+                                            >
+                                                {dataReportes.map((reporte) => (
+                                                    <MenuItem
+                                                        key={reporte.m_nIdFormato}
+                                                        value={reporte.m_nIdFormato}
+                                                    >
+                                                        {reporte.m_sFormato}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <DialogActions>
+
+                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                        setOpenDialog(false)
+                                        setState({
+                                            ...state,
+                                            reporteSeleccionado: null
+                                        })
+                                    }
+                                    }>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                        Aceptar
+                                    </button>
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            }{/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
+
             {state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     mostrarDialogoMapa={mostrarDialogoMapa}

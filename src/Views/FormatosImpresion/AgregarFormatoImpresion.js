@@ -131,6 +131,72 @@ class AgregarFormatoImpresion extends Component {
                                                 >
                                                     Viajes Cliente EXCEL
                                                 </option>
+                                                <option
+                                                    key={210}
+                                                    value={210}
+                                                >
+                                                   Recolección
+                                                </option>
+                                                <option
+                                                    key={211}
+                                                    value={211}
+                                                >
+                                                    Embarque
+                                                </option>
+                                                <option
+                                                    key={212}
+                                                    value={212}
+                                                >
+                                                    Guía
+                                                </option>
+                                                <option
+                                                    key={213}
+                                                    value={213}
+                                                >
+                                                    Guía Etiqueta
+                                                </option>
+                                                <option
+                                                    key={214}
+                                                    value={214}
+                                                >
+                                                    Informe
+                                                </option>
+                                                <option
+                                                    key={215}
+                                                    value={215}
+                                                >
+                                                    Informe Última Milla
+                                                </option>
+                                                <option
+                                                    key={216}
+                                                    value={216}
+                                                >
+                                                    CFDI Primera Milla
+                                                </option>
+                                                <option
+                                                    key={217}
+                                                    value={217}
+                                                >
+                                                    CFDI Última Milla
+                                                </option>
+                                                <option
+                                                    key={218}
+                                                    value={218}
+                                                >
+                                                    CFDI Timbrado Viajes
+                                                </option>
+                                                <option
+                                                    key={219}
+                                                    value={219}
+                                                >
+                                                    Corte de Caja
+                                                </option>
+                                                <option
+                                                    key={220}
+                                                    value={220}
+                                                >
+                                                    Corte de Caja Resumen
+                                                </option>
                                             </Select>
                                         </FormControl>
                                     </label>

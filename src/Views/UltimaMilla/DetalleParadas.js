@@ -12,7 +12,7 @@ import {
     ListItem,
     ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, ButtonGroup, Popover, Fade, Dialog, DialogContent, DialogTitle, DialogActions,
-    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip
+    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip, MenuItem
 } from "@material-ui/core";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -65,6 +65,10 @@ import {
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 import {getAddressFormated, validarDerecho} from "../../Util/Util";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    imprimirFormatosIdIdTipoReporte,
+    obtenerFormatosImpresionProceso
+} from "../../Util/Contexts/FormatosImpresionContext";
 
 function showError(mensaje) {
     new Noty({
@@ -82,6 +86,9 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+const REPORTE_INFORME_ULTIMAMILLA=1
+const REPORTE_CFDI_PRIMERA_MILLA=2
+const REPORTE_CFDI_ULTIMAMILLA=3
 
 class DetalleParadas extends Component {
     constructor(props) {
@@ -99,6 +106,13 @@ class DetalleParadas extends Component {
             openRemplazar: false,
             openParciales: false,
             openOrdenarParadas: false,
+            openDialog:false,
+            dataReportes:[],
+            dataReportesCFDIPrimeraMilla:[],
+            dataReportesCFDIUltimaMilla:[],
+            seleccion:null,
+            tipoReporte:0,
+            mensajeTitulo:""
 
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
@@ -115,9 +129,34 @@ class DetalleParadas extends Component {
         this.showCancelarCFDI = this.showCancelarCFDI.bind(this)
         this.cancelarCFDI = this.cancelarCFDI.bind(this)
         this.envioCorreoAction = this.envioCorreoAction.bind(this)
+        this.handleOnChangeReporte=this.handleOnChangeReporte.bind(this)
+        this.handleGenerarReporte=this.handleGenerarReporte.bind(this)
 
     }
+    componentDidMount() {
+    /*    if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
+            obtenerFormatosImpresionProceso(215).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
+            obtenerFormatosImpresionProceso(216).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        if(this.state.tipoReporte===REPORTE_CFDI_ULTIMAMILLA){
+            obtenerFormatosImpresionProceso(217).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }*/
 
+    }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla
@@ -229,7 +268,39 @@ class DetalleParadas extends Component {
         })
     }
     obtenerPDFCFDI(id,esRecoleccion, folio){
-            if (esRecoleccion){
+
+        if(esRecoleccion){
+            this.setState({
+                idParada: id,
+                esRecoleccion: esRecoleccion,
+                folio: folio,
+                openDialog:true,
+                tipoReporte:REPORTE_CFDI_PRIMERA_MILLA,
+                mensajeTitulo:"CFDI Primera Milla/Recolección"
+            })
+            obtenerFormatosImpresionProceso(216).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        else{
+            this.setState({
+                idParada: id,
+                esRecoleccion: esRecoleccion,
+                folio: folio,
+                openDialog:true,
+                tipoReporte:REPORTE_CFDI_ULTIMAMILLA,
+                mensajeTitulo:"CFDI Última Milla/Guía"
+            })
+            obtenerFormatosImpresionProceso(217).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+
+           /* if (esRecoleccion){
                 obtenerReporteCFDIRecoleccion(id).then(({data}) => {
                     console.log(data)
                     let pdfWindow = window.open("");
@@ -244,8 +315,9 @@ class DetalleParadas extends Component {
                     pdfWindow.document.body.style.margin = "0px";
                     pdfWindow.document.title = "CFDI_ " + folio;
                 })
-            }
+            }*/
     }
+
     generarCFDI(id,esRecoleccion, folio) {
         obtenerParametrosConfiguracion().then(respuesta => {
             let titulo;
@@ -513,16 +585,76 @@ class DetalleParadas extends Component {
 
 
     }
-    generarReporte(e, id) {
+    generarReporte(e, data) {
         e.preventDefault()
-        console.log(' id: ' + id)
-        obtenerUltimaMillaReporte(id).then(({data}) => {
+        console.log('data: ' + data)
+        this.setState({
+            seleccion:data,
+            openDialog:true,
+            tipoReporte:REPORTE_INFORME_ULTIMAMILLA,
+            mensajeTitulo:"Última Milla"
+        })
+        obtenerFormatosImpresionProceso(215).then(({data}) => {
+            this.setState({
+                dataReportes:data
+            })
+        })
+        /*obtenerUltimaMillaReporte(id).then(({data}) => {
             // console.log(data)
             // debugger
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Última Milla";
+        })*/
+    }
+   handleOnChangeReporte (data) {
+        console.log(data)
+        this.setState({
+            reporteSeleccionado: data
+        })
+    }
+    handleGenerarReporte(e){
+        e.preventDefault()
+        console.log(this.state.reporteSeleccionado)
+        console.log(this.state.seleccion)
+
+        if (this.state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+        if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.seleccion.m_nIdParadaUltimaMilla).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Última Milla" + this.state.seleccion.m_nIdUltimaMilla;
+            })
+        }
+        else if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI Primera Milla" + this.state.folio;
+            })
+        }
+        else{
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI Última Milla" + this.state.folio;
+            })
+        }
+
+
+        this.setState({
+            reporteSeleccionado: null,
+            openDialog:false
         })
     }
     validarRutasCompletadas(tour){
@@ -588,6 +720,71 @@ class DetalleParadas extends Component {
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia)) || []
         return (
             <div>
+                {
+                    this.state.openDialog &&
+                    <Dialog
+                        open={this.state.openDialog}
+                        onClose={() => this.setState({
+                            openDialog:false
+                        })}
+                        fullWidth maxWidth="md"
+                    >
+                        <DialogTitle>
+                            Reporte de Informe de {this.state.mensajeTitulo}
+                        </DialogTitle>
+                        <DialogContent>
+                            <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                                <form onSubmit={this.handleGenerarReporte}>
+                                    <Grid container spacing={1}>
+                                        <Grid item sm={6}>
+                                            <FormControl
+                                                className="input select"
+                                                fullWidth variant="outlined"
+                                                required
+                                                margin="dense">
+                                                <InputLabel
+                                                    id="idReporteLabel">Formato de Reporte</InputLabel>
+                                                <Select
+                                                    fullWidth
+                                                    labelId="idReporteLabel"
+                                                    label="Reporte"
+                                                    className="form-control"
+                                                    value={this.state.reporteSeleccionado ?? ''}
+                                                    onChange={(e) => this.handleOnChangeReporte(e.target.value)}
+                                                    name="reporteSeleccionado"
+                                                >
+                                                    {this.state.dataReportes.map((reporte) => (
+                                                        <MenuItem
+                                                            key={reporte.m_nIdFormato}
+                                                            value={reporte.m_nIdFormato}
+                                                        >
+                                                            {reporte.m_sFormato}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                    <DialogActions>
+
+                                        <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                           this.setState({
+                                                openDialog:false,
+                                                reporteSeleccionado: null
+                                            })
+                                        }
+                                        }>
+                                            Cancelar
+                                        </button>
+                                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                            Aceptar
+                                        </button>
+                                    </DialogActions>
+                                </form>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                }
                 {
                     this.state.openEnvioCorreo &&
                     <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
@@ -825,7 +1022,7 @@ class DetalleParadas extends Component {
                                                             </Grid>
                                                             <Grid item sm={1}
                                                             >
-                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour)}>
                                                                     <InsertDriveFile fontSize={"large"}/>
                                                                 </IconButton>
                                                             </Grid>
@@ -1033,7 +1230,7 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() =>
-                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
+                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)//g
                                                                                                                 }
                                                                                                                 aria-label="Timbrar SAT">
                                                                                                                 <Tooltip
@@ -1065,7 +1262,7 @@ class DetalleParadas extends Component {
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar PDF"}>
                                                                                                                     <PictureAsPdfIcon
-                                                                                                                        onClick={() => this.obtenerPDFCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
+                                                                                                                        onClick={() => this.obtenerPDFCFDI(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
