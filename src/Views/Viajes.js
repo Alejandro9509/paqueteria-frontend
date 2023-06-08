@@ -32,7 +32,7 @@ import {
     List,
     ListItem,
     Collapse,
-    ListItemText, Link, Chip, Grid
+    ListItemText, Link, Chip, Grid, MenuItem
 } from "@material-ui/core";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
@@ -81,6 +81,10 @@ import ReportesViajes from "./Viajes/Reportes";
 import { RowingSharp } from "@material-ui/icons";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    imprimirFormatosIdIdTipoReporte, imprimirFormatosIdTimbradoViajes,
+    obtenerFormatosImpresionProceso
+} from "../Util/Contexts/FormatosImpresionContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -141,7 +145,16 @@ function Viajes() {
 
 
     })
+    const [openDialog, setOpenDialog] = useState(false)
+    const [dataReportes, setDataReportes] = useState([])
+    const [seleccion, setSeleccion] = useState(null)
 
+    useEffect(()=>{
+
+        obtenerFormatosImpresionProceso(218).then(({data}) => {
+            setDataReportes(data)
+        })
+    }, [])
 
 
     function getAllEstatusDocumento() {
@@ -180,7 +193,7 @@ function Viajes() {
                 message: '¿Está seguro de eliminar viaje?',
                 buttons: [
                     {
-                        label: 'Si',
+                        label: 'Sí',
                         onClick: () => {
 
                           eliminarViaje(id,idEstatus).then(respuesta => {
@@ -557,8 +570,17 @@ function Viajes() {
 
     }
 
-    function descargarPDF(id, idInforme, folio) {
-        obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
+    function descargarPDF(idViaje,idInforme,folio) {
+
+        setSeleccion({
+            m_nIdViaje:idViaje,
+            m_nIdInforme:idInforme,
+            m_sFolioInforme:folio
+        })
+        setOpenDialog(true)
+
+
+        /*obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
             try{
                 const link = document.createElement('a');
                 link.href = "data:application/pdf;base64," + data;
@@ -568,7 +590,7 @@ function Viajes() {
             }catch (e) {
                 console.log(e)
                 showSuccess("No se pudo abrir el pdf")
-            }
+            }*/
             /*try {
                 var filename = folio+".pdf";
                 var pom = document.createElement('a');
@@ -597,8 +619,40 @@ function Viajes() {
                 console.log(e)
                 showSuccess("No se pudo abrir el pdf")
             }*/
-        })
+       /* })*/
 
+    }
+
+    const handleOnChangeReporte = (data) => {
+        console.log(data)
+        setState({
+            ...state,
+            reporteSeleccionado: data
+        })
+    }
+
+    const handleGenerarReporte=(e)=>{
+        e.preventDefault()
+        console.log(state.reporteSeleccionado)
+        console.log(seleccion)
+
+        if (state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+
+        imprimirFormatosIdTimbradoViajes(state.reporteSeleccionado,seleccion.m_nIdViaje, seleccion.m_nIdInforme).then(({data}) => {
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "CFDI Timbrado Viajes" + seleccion.m_sFolioInforme;
+        })
+        setState({
+            ...state,
+            reporteSeleccionado: null
+        })
+        setOpenDialog(false)
     }
 
     function generarCFDI(idParada, folio, idViaje, sustituir, idInforme) {
@@ -842,7 +896,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i
+                                   onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
                                     className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -1177,6 +1231,70 @@ function Viajes() {
 
     return (
         <div>
+            {
+                openDialog &&
+                <Dialog
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                    fullWidth maxWidth="md"
+                >
+                    <DialogTitle>
+                        Reporte de CFDI TimbradoViajes
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <form onSubmit={handleGenerarReporte}>
+                                <Grid container spacing={1}>
+                                    <Grid item sm={6}>
+                                        <FormControl
+                                            className="input select"
+                                            fullWidth variant="outlined"
+                                            required
+                                            margin="dense">
+                                            <InputLabel
+                                                id="idReporteLabel">Formato de Reporte</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="idReporteLabel"
+                                                label="Reporte"
+                                                className="form-control"
+                                                value={state.reporteSeleccionado ?? ''}
+                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
+                                                name="reporteSeleccionado"
+                                            >
+                                                {dataReportes.map((reporte) => (
+                                                    <MenuItem
+                                                        key={reporte.m_nIdFormato}
+                                                        value={reporte.m_nIdFormato}
+                                                    >
+                                                        {reporte.m_sFormato}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <DialogActions>
+
+                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                        setOpenDialog(false)
+                                        setState({
+                                            ...state,
+                                            reporteSeleccionado: null
+                                        })
+                                    }
+                                    }>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                        Aceptar
+                                    </button>
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            }
             {
                 state.openEnvioCorreo &&
                 <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={() => {
