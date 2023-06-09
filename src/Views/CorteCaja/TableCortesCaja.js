@@ -17,6 +17,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {makeStyles} from "@material-ui/core/styles";
 import EditIcon from '@material-ui/icons/Edit';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 
 const TableCortesCaja = ({ data, onRowClick }) => {
     const useRowStyles = makeStyles({
@@ -29,6 +30,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
     const ACTIONS = {
         MODIFICAR: 'MODIFICAR',
         CONSULTAR: 'CONSULTAR',
+        REPORTE_CORTE: 'REPORTE_CORTE',
     }
 
     const handleRowClick = (selectedItem, action) => {
@@ -83,6 +85,9 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                         </IconButton>
                         <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.MODIFICAR)}>
                             <EditIcon />
+                        </IconButton>
+                        <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.REPORTE_CORTE)}>
+                            <InsertDriveFileIcon />
                         </IconButton>
                     </TableCell>
                     <TableCell component="th" scope="row">
