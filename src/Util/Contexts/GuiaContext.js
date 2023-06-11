@@ -239,7 +239,22 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
     return result
 }
 
-function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
+function obtenerGuiasFiltroCorteCaja(busquedaPorUsuario, idOperador, idUsuario, fecha) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja`
+    let result;
+    let params = {
+        "busquedaPorUsuario": busquedaPorUsuario, //boolean
+        "idOperador": idOperador,
+        "idUsuario": idUsuario,
+        "fecha": fecha?.length === 0 ? null : fecha // STRING. PUEDE SER NULL
+    }
+    trackPromise(
+        result =  axios.post(url, params, { headers })
+    );
+    return result
+}
+
+function obtenerGuiasFiltroCorteCajaVIEJO(fecha, destino, idMoneda, idTipoPago) {
 
     const url =
         `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja/` +

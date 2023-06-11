@@ -51,8 +51,8 @@ function obtenerCorteId(id) {
     return result
 }
 
-function obtenerCortesByFiltros(fecha, idSucursal) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListadoByFiltros/` + fecha +`/` + idSucursal;
+function obtenerCortesByFiltros(fecha, idOperador, idUsuario) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListadoByFiltros/` + fecha +`/` + idOperador +`/` + idUsuario;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -67,8 +67,8 @@ function obtenerCorteReporte(id) {
     );
     return result
 }
-function obtenerCortesResumenReporte(idDestino, fecha) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCajaResumen/${idDestino}/${fecha}`;
+function obtenerCortesGeneralReporte(fecha) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCaja/General/${fecha}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -76,4 +76,4 @@ function obtenerCortesResumenReporte(idDestino, fecha) {
     return result
 }
 
-export { obtenerCorteReporte,obtenerCortesResumenReporte,obtenerCortesByFiltros,modificarCorte, obtenerCorteId, obtenerCortes, eliminarCorte, agregarCorte}
+export { obtenerCorteReporte,obtenerCortesGeneralReporte,obtenerCortesByFiltros,modificarCorte, obtenerCorteId, obtenerCortes, eliminarCorte, agregarCorte}
