@@ -240,7 +240,7 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
 }
 
 function obtenerGuiasFiltroCorteCaja(busquedaPorUsuario, idOperador, idUsuario, fecha) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guias/GetListadoFiltrosCorteCaja`
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja`
     let result;
     let params = {
         "busquedaPorUsuario": busquedaPorUsuario, //boolean

@@ -8,6 +8,7 @@ import {
 import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
 import {getCurrentDate} from "../../Util/Util";
+import * as XLSX from "xlsx";
 
 window.jQuery = window.$ = $;
 
@@ -83,6 +84,23 @@ function CorteCajaListado({onRowClick}){
             .catch((err) => {
                 showSuccess(err.toString())
             })
+
+        /*var jsonData = [
+            { Nombre: 'John Doe', Edad: 30, Ciudad: 'Nueva York' },
+            { Nombre: 'Jane Smith', Edad: 28, Ciudad: 'Los Ángeles' },
+            { Nombre: 'Juan Pérez', Edad: 35, Ciudad: 'Ciudad de México' }
+        ];
+        // Crear una hoja de cálculo nueva
+        var workbook = XLSX.utils.book_new();
+
+        // Convertir el JSON a una hoja de cálculo
+        var worksheet = XLSX.utils.json_to_sheet(jsonData);
+
+        // Agregar la hoja de cálculo al libro
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos');
+
+        // Guardar el archivo Excel
+        XLSX.writeFile(workbook, 'datos.xlsx');*/
     };
 
     return(
