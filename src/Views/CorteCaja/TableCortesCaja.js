@@ -80,15 +80,21 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                         </IconButton>
                     </TableCell>
                     <TableCell>
-                        <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.CONSULTAR)}>
-                            <VisibilityIcon />
-                        </IconButton>
-                        <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.MODIFICAR)}>
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.REPORTE_CORTE)}>
-                            <InsertDriveFileIcon />
-                        </IconButton>
+                        <Tooltip title="Consultar">
+                            <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.CONSULTAR)}>
+                                <VisibilityIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Modificar">
+                            <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.MODIFICAR)}>
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Descargar reporte">
+                            <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.REPORTE_CORTE)}>
+                                <InsertDriveFileIcon />
+                            </IconButton>
+                        </Tooltip>
                     </TableCell>
                     <TableCell component="th" scope="row">
                         {row.idCorte}

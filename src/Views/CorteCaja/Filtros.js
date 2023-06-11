@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import {Paper, Grid, TextField, Button, ThemeProvider, FormControlLabel, Switch} from '@material-ui/core';
 import DialogOperadores from "./DialogOperador";
-import {getCurrentDate, getCurrentTime} from "../../Util/Util";
+import {getCurrentDate, getCurrentTime, validarDerecho} from "../../Util/Util";
 import DialogUsuarios from "./DialogUsuarios";
 import {createMuiTheme} from "@material-ui/core/styles";
+import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 
-const Filtros = ({value, onChange, onFiltrarClick}) => {
+const Filtros = ({value, onChange, onFiltrarClick, onReportClick}) => {
     const [clicked, setClicked] = useState(false);
     const [date, setDate] = useState('');
     const [openDialog, setOpenDialog] = useState(false);
@@ -48,11 +51,8 @@ const Filtros = ({value, onChange, onFiltrarClick}) => {
         }
     });
 
-    const handleDateChange = (event) => {
-        onChange({
-            ...filtros,
-            fecha: event.target.value
-        });
+    const handleReportClick = () => {
+        onReportClick()
     };
 
     const handleButtonClick = () => {
@@ -156,6 +156,13 @@ const Filtros = ({value, onChange, onFiltrarClick}) => {
                         <Button variant="contained" onClick={handleButtonClick} fullWidth color={"primary"}>
                             Buscar
                         </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Tooltip title="Descargar reporte general">
+                            <IconButton aria-label="edit" size="medium" onClick={() => handleReportClick()}>
+                                <InsertDriveFileIcon fontSize={"large"} />
+                            </IconButton>
+                        </Tooltip>
                     </Grid>
                 </Grid>
             </Paper>

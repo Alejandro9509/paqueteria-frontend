@@ -3,7 +3,7 @@ import $ from "jquery";
 import Noty from "noty";
 import {
     eliminarCorte,
-    obtenerCortesByFiltros
+    obtenerCortesByFiltros, obtenerCortesGeneralReporte
 } from "../../Util/Contexts/CorteCajaContext";
 import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
@@ -65,9 +65,29 @@ function CorteCajaListado({onRowClick}){
         onRowClick(selectedItem, action)
     };
 
+    const handleReportGeneralClick = () => {
+        let fecha = filtros.fecha
+        obtenerCortesGeneralReporte(fecha)
+            .then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "REPORTE " + fecha;
+
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "REPORTE " + fecha);
+                document.body.appendChild(link);
+                link.click();
+            })
+            .catch((err) => {
+                showSuccess(err.toString())
+            })
+    };
+
     return(
         <div>
-            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick}/>
+            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick}/>
             <TableCortesCaja data={listaCortes} onRowClick={handleRowClick}/>
         </div>
     )
