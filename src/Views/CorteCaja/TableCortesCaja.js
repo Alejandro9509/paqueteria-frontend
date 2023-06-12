@@ -98,7 +98,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                         </Tooltip>
                     </TableCell>
                     <TableCell component="th" scope="row">
-                        {row.idCorte}
+                        {row.folioCorte}
                     </TableCell>
                     <TableCell>{row.fechaCorte}</TableCell>
                     <TableCell/>

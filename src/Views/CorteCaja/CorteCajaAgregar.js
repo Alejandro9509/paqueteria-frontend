@@ -189,13 +189,13 @@ function CorteCajaAgregar({value, disaled}){
 
     function isDataValid(idUsuario, idOperador){
         if (idOperador > 0 && idUsuario > 0) {
-            console.log("No se puede seleccionar operador y usuario.");
+            showSuccess("No se puede seleccionar operador y usuario.");
             return false;
         } else if (idOperador > 0 || idUsuario > 0) {
             console.log("Válido.");
             return true;
         } else {
-            console.log("Seleccione operador o usuario.");
+            showSuccess("Seleccione operador o usuario.");
             return false;
         }
     }
@@ -203,7 +203,7 @@ function CorteCajaAgregar({value, disaled}){
     const handleGuardar = () => {
         const {fechaRegistro, horaRegistro, usuario, operador} = filtros
         if (!isDataValid(usuario?.idUsuario,operador?.m_nIdOperador)){
-            console.log("NO Guardar.");
+            console.log("N Guardar.");
             return
         }
         console.log("Guardar.");
@@ -213,6 +213,7 @@ function CorteCajaAgregar({value, disaled}){
             "m_sHoraRegistro": horaRegistro,
             "m_nIdUsuario": usuario?.idUsuario || 0,
             "m_nIdOperador": operador?.m_nIdOperador || 0,
+            "m_nIdSucursal": localStorage.getItem("Sucursal") || 0,
             "m_arrGuias": guias.map((i) => ({
                 "m_nIdGuia": i.idGuia,
                 "m_nTotal": i.total
