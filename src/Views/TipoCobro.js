@@ -47,7 +47,6 @@ function TipoCobro() {
         descripcion: "",
         idTipoPago: '',
         bloqueaUM: false,
-        solicitaMonto: false,
         DerechoBorrar: 126,
         agregar: "Agregar",
         height: window.innerHeight,
@@ -63,7 +62,6 @@ function TipoCobro() {
             "descripcion": state.descripcion,
             "idTipoPago": state.idTipoPago,
             "bloqueaUltimaMilla": state.bloqueaUM,
-            "solicitaMonto": state.solicitaMonto,
             "creadoPor": state.CreadoPor,
             "modificadoPor": state.ModificadoPor
         }
@@ -190,20 +188,6 @@ function TipoCobro() {
                     </div>
                 )
             }
-        }, {
-            headerName: "Solicita monto",
-            field: "m_bSolicitarMonto",
-            width: 100,
-            renderCell: (row) => {
-                return (
-                    <div>
-                        {row.row.m_bSolicitarMonto ?
-                            <div>Sí</div> :
-                            <div>No</div>
-                        }
-                    </div>
-                )
-            }
         }
     ]);
 
@@ -306,7 +290,6 @@ function TipoCobro() {
                 descripcion: respuesta.data.Descripcion,
                 idTipoPago: respuesta.data.IdTipoPago,
                 bloqueaUM: respuesta.data.BloquearUltimaMilla,
-                solicitaMonto: respuesta.data.SolicitarMonto,
             }
         })
         showTab(1)
@@ -321,7 +304,6 @@ function TipoCobro() {
                 descripcion: "",
                 idTipoPago: "",
                 bloqueaUM: false,
-                solicitaMonto: false,
             }
         })
     }
@@ -466,25 +448,6 @@ function TipoCobro() {
                                                             </Tooltip>
                                                         </Grid>
                                                         <Grid item xs={12} sm={9}/>
-                                                        <Grid item xs={12} sm={2}>
-                                                            <FormControlLabel
-                                                                control={
-                                                                    <Checkbox
-                                                                        checked={state.solicitaMonto}
-                                                                        onChange={handleChangeCheckbox}
-                                                                        name="solicitaMonto"
-                                                                        color="primary"
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                    />
-                                                                }
-                                                                label="Solicita monto"
-                                                            />
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={1}>
-                                                            <Tooltip title="Si la guia tiene este tipo de cobro se solicitará el tipo de pago para finalizar el viaje la guia.">
-                                                                <HelpOutlineOutlinedIcon/>
-                                                            </Tooltip>
-                                                        </Grid>
 
                                                     </Grid>
 
