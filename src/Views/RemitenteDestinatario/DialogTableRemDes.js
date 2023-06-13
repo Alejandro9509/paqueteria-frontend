@@ -5,7 +5,21 @@ import { dataGridLocaleText } from "../../Constants";
 import {Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@material-ui/icons/Search";
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles({
+    root: {
+        '& .MuiDataGrid-dataContainer': {
+            minHeight: 'auto !important',
+        },
+        '& .MuiDataGrid-row': {
+            minHeight: 'auto !important',
+        },
+        '& .MuiDataGrid-cell': {
+            minHeight: 'auto !important',
+        }
+    },
+});
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
 function showSuccess(mensaje) {
   
@@ -18,6 +32,7 @@ function showSuccess(mensaje) {
 }
 let rowSelect
 function DialogTableRemDes(props) {
+    const classes = useStyles();
     let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
@@ -84,7 +99,7 @@ function cargarDesdeServidor(pagina,registros){
             }}}
             style={{width:'60ch'}}
         />
-        <div style={{height: "500px", padding: "5px"}}>
+        <div className={classes.root} style={{height: "400px", padding: "5px"}}>
             <DataGrid
                 localeText={dataGridLocaleText}
                 columns={columns}
