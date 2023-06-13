@@ -66,6 +66,7 @@ function CorteCajaListado({onRowClick}){
         onRowClick(selectedItem, action)
     };
 
+
     const handleReportGeneralClick = () => {
         let fecha = filtros.fecha
         obtenerCortesGeneralReporte(fecha)
@@ -84,12 +85,101 @@ function CorteCajaListado({onRowClick}){
             .catch((err) => {
                 showSuccess(err.toString())
             })
+    };
 
-        /*var jsonData = [
-            { Nombre: 'John Doe', Edad: 30, Ciudad: 'Nueva York' },
-            { Nombre: 'Jane Smith', Edad: 28, Ciudad: 'Los Ángeles' },
-            { Nombre: 'Juan Pérez', Edad: 35, Ciudad: 'Ciudad de México' }
-        ];
+    function totalSum(items) {
+        return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+    }
+    function sumarTotalPorPersona(items) {
+        const sumByPerson = {};
+
+        items.forEach((item) => {
+            const idPersona = item.idPersona;
+            const total = item.total;
+
+            if (!sumByPerson[idPersona]) {
+                sumByPerson[idPersona] = {
+                    total: 0,
+                    nombrePersona: item.nombrePersona,
+                    idPersona: idPersona
+                };
+            }
+
+            sumByPerson[idPersona].total += total;
+        });
+        return Object.values(sumByPerson);
+    }
+
+    const handleExcelClick = () => {
+        let arrayExcel = [];
+        listaCortes.forEach(corte => {
+            arrayExcel.push({
+                'FOLIO CORTE': corte.folioCorte,
+                'FOLIO GUIA': '',
+                'FECHA ENTREGA': '',
+                'OPERADOR/USUARIO': '',
+                'FORMA DE PAGO': '',
+                'TOTAL GUIA': '',
+                'TOTAL CORTE': ''
+            })
+            corte.guias.forEach(guia => {
+                arrayExcel.push({
+                    'FOLIO CORTE': '',
+                    'FOLIO GUIA': guia.folioGuia,
+                    'FECHA ENTREGA': guia.fechaEntrega,
+                    'OPERADOR/USUARIO': guia.nombrePersona,
+                    'FORMA DE PAGO': guia.tipoPago,
+                    'TOTAL GUIA': guia.total,
+                    'TOTAL CORTE': ''
+                })
+            })
+            arrayExcel.push({
+                'FOLIO CORTE': '',
+                'FOLIO GUIA': '',
+                'FECHA ENTREGA': '',
+                'OPERADOR/USUARIO': '',
+                'FORMA DE PAGO': '',
+                'TOTAL GUIA': '',
+                'TOTAL CORTE': corte.total
+            })
+        })
+        /*ESTE ES SOLO PARA HACER UNA SEPARACION*/
+        arrayExcel.push({
+            'FOLIO CORTE': '',
+            'FOLIO GUIA': '',
+            'FECHA ENTREGA': '',
+            'OPERADOR/USUARIO': '',
+            'FORMA DE PAGO': '',
+            'TOTAL GUIA': '',
+            'TOTAL CORTE': ''
+        })
+        const totalFinal = totalSum(listaCortes);
+        arrayExcel.push({
+            'FOLIO CORTE': '',
+            'FOLIO GUIA': '',
+            'FECHA ENTREGA': '',
+            'OPERADOR/USUARIO': '',
+            'FORMA DE PAGO': 'TOTAL CORTES',
+            'TOTAL GUIA': '',
+            'TOTAL CORTE': totalFinal
+        })
+        const sumByPerson = sumarTotalPorPersona(listaCortes);
+        sumByPerson.forEach(person => {
+            arrayExcel.push({
+                'FOLIO CORTE': '',
+                'FOLIO GUIA': '',
+                'FECHA ENTREGA': '',
+                'OPERADOR/USUARIO': '',
+                'FORMA DE PAGO': 'TOTAL ' + person.nombrePersona,
+                'TOTAL GUIA': '',
+                'TOTAL CORTE': person.total
+            })
+        })
+        exportarAExcel(arrayExcel)
+    };
+
+    function exportarAExcel(jsonData) {
+
         // Crear una hoja de cálculo nueva
         var workbook = XLSX.utils.book_new();
 
@@ -97,15 +187,15 @@ function CorteCajaListado({onRowClick}){
         var worksheet = XLSX.utils.json_to_sheet(jsonData);
 
         // Agregar la hoja de cálculo al libro
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos');
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Tabla');
 
         // Guardar el archivo Excel
-        XLSX.writeFile(workbook, 'datos.xlsx');*/
-    };
+        XLSX.writeFile(workbook, 'CORTES_CAJA.xlsx');
+    }
 
-    return(
+        return(
         <div>
-            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick}/>
+            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick} onExcelClick={handleExcelClick}/>
             <TableCortesCaja data={listaCortes} onRowClick={handleRowClick}/>
         </div>
     )
