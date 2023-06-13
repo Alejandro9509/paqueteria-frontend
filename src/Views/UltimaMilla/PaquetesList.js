@@ -38,10 +38,12 @@ class PaquetesList extends Component {
             paquetes: [],
             order: "asc",
             orderBy: "m_sDescripcion",
+            filtro: ''
         }
         this.getAllPaquetes = this.getAllPaquetes.bind(this)
         this.handleRequestSort = this.handleRequestSort.bind(this)
         this.handleSelectAllClickevent = this.handleSelectAllClickevent.bind(this)
+        this.handleChangeFiltro = this.handleChangeFiltro.bind(this)
     }
 
     componentDidMount() {
@@ -122,15 +124,31 @@ class PaquetesList extends Component {
         this.props.selectPaquetes(newSelected)
     };
 
+    handleChangeFiltro = (event) => {
+        this.setState({
+            filtro: event.target.value
+        });
+    };
+
+
+
     render() {
         const {classes} = this.props;
         const isSelected = (row, esRecoleccion) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row && u.m_bEsRecoleccion === esRecoleccion) != null;
-
+        const datosFiltrados = this.stableSort(this.state.paquetes, this.getComparator(this.state.order, this.state.orderBy)).filter((objeto) => {
+            return (objeto.m_sFolio).toLowerCase().includes(this.state.filtro.toLowerCase());
+        });
 
         return (
-            <TableContainer className={"j-forms"} style={{height:"300px"}}>
-                <Typography variant={"h4"}>Seleccionar Paquetes </Typography>
-                {/*<Grid container spacing={2} style={{padding:"10px"}}>
+            <div>
+                <br/>
+                <TextField label="Filtrar por folio" value={this.state.filtro} onChange={this.handleChangeFiltro}
+                           variant="outlined" margin={"dense"}/>
+                <br/>
+                <br/>
+                <TableContainer className={"j-forms"} style={{height:"300px"}}>
+                    <Typography variant={"h4"}>Seleccionar Paquetes </Typography>
+                    {/*<Grid container spacing={2} style={{padding:"10px"}}>
                     <Grid item >
                         <div className="input">
                             <TextField variant="outlined" margin="dense" label="Fecha inicial"
@@ -188,105 +206,107 @@ class PaquetesList extends Component {
                         </div>
                     </Grid>
                 </Grid>*/}
-                <Table>
-                    <TableHead>
+                    <Table>
+                        <TableHead>
 
-                        <TableRow>
-                            <TableCell padding="checkbox">
-                                <Checkbox
-                                    indeterminate={this.props.paquetesSeleccionadas.length > 0 && this.props.paquetesSeleccionadas.length < this.state.paquetes.length}
-                                    checked={this.state.paquetes.length > 0 && this.props.paquetesSeleccionadas.length === this.state.paquetes.length}
-                                    onChange={this.handleSelectAllClickevent}
-                                    inputProps={{'aria-label': 'select all desserts'}}
-                                />
-                            </TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sFolio" ? this.state.order : false}
-                                align="left">
-                                <TableSortLabel
-                                    active={this.state.orderBy === "m_sFolio"}
-                                    direction={this.state.orderBy === "m_sFolio" ? this.state.order : 'asc'}
-                                    onClick={(event) => this.createSortHandler("m_sFolio", event)}
-                                >
-                                    Folio
-                                    {this.state.orderBy === "m_sFolio" ? (
-                                        <span className={classes.visuallyHidden}>
+                            <TableRow>
+                                <TableCell padding="checkbox">
+                                    <Checkbox
+                                        indeterminate={this.props.paquetesSeleccionadas.length > 0 && this.props.paquetesSeleccionadas.length < this.state.paquetes.length}
+                                        checked={this.state.paquetes.length > 0 && this.props.paquetesSeleccionadas.length === this.state.paquetes.length}
+                                        onChange={this.handleSelectAllClickevent}
+                                        inputProps={{'aria-label': 'select all desserts'}}
+                                    />
+                                </TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sFolio" ? this.state.order : false}
+                                    align="left">
+                                    <TableSortLabel
+                                        active={this.state.orderBy === "m_sFolio"}
+                                        direction={this.state.orderBy === "m_sFolio" ? this.state.order : 'asc'}
+                                        onClick={(event) => this.createSortHandler("m_sFolio", event)}
+                                    >
+                                        Folio
+                                        {this.state.orderBy === "m_sFolio" ? (
+                                            <span className={classes.visuallyHidden}>
                                             {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                         </span>
-                                    ) : null}
-                                </TableSortLabel>
+                                        ) : null}
+                                    </TableSortLabel>
 
-                            </TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                align="left">Tipo</TableCell>
-                            {/*<TableCell
+                                </TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
+                                    align="left">Tipo</TableCell>
+                                {/*<TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Volumen</TableCell>*/}
 
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                align="left">Tipo de cobro</TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sZona" ? this.state.order : false}
-                                align="left">Zona</TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                align="left">Cliente</TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_bClienteBloqueado" ? this.state.order : false}
-                                align="left">Estatus cliente</TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
-                                align="left">Domicilio</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
+                                    align="left">Tipo de cobro</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sZona" ? this.state.order : false}
+                                    align="left">Zona</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
+                                    align="left">Cliente</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_bClienteBloqueado" ? this.state.order : false}
+                                    align="left">Estatus cliente</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
+                                    align="left">Domicilio</TableCell>
 
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
-                                align="left">Ventana de entrega</TableCell>
-                            <TableCell sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false}
-                                       align="left">Fecha</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
+                                    align="left">Ventana de entrega</TableCell>
+                                <TableCell sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false}
+                                           align="left">Fecha</TableCell>
 
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
-                                align="left">Estatus</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            this.stableSort(this.state.paquetes, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
-                                const isItemSelected = isSelected(u.m_nId, u.m_bEsRecoleccion);
-                                const labelId = `enhanced-table-checkbox-${index}`;
-                                return (
-                                    <TableRow>
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                disabled={u.m_bClienteBloqueado}
-                                                onClick={(event) => this.handleClick(event, u)}
-                                                checked={isItemSelected}
-                                                inputProps={{'aria-labelledby': labelId}}
-                                            />
-                                        </TableCell>
-                                        <TableCell align="left">{u.m_sFolio}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
-{/*
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
+                                    align="left">Estatus</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                datosFiltrados.map((u, index) => {
+                                    const isItemSelected = isSelected(u.m_nId, u.m_bEsRecoleccion);
+                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                    return (
+                                        <TableRow>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    disabled={u.m_bClienteBloqueado}
+                                                    onClick={(event) => this.handleClick(event, u)}
+                                                    checked={isItemSelected}
+                                                    inputProps={{'aria-labelledby': labelId}}
+                                                />
+                                            </TableCell>
+                                            <TableCell align="left">{u.m_sFolio}</TableCell>
+                                            <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
+                                            {/*
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_xVolumen, 0)}</TableCell>
 */}
-                                        <TableCell align="left">{u.m_sTipoCobro}</TableCell>
-                                        <TableCell align="left">{u.m_sZona}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
-                                        <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
-                                                   align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? (u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaRecoleccionCita + " " + u.m_sHoraCitarRecoleccionMinima + " a " + u.m_sHoraCitaRecoleccionMaxima)) : "Sin cita") : u.m_bEmbarqueConCita ? u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaEmbarqueCita + " " + u.m_sHoraEmbarqueCitaMinima + " a " + u.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}</TableCell>
-                                        <TableCell align="left">{u.m_dFechaRegistro}</TableCell>
-                                        <TableCell align="left">{u.m_sEstatusUltimaMilla}</TableCell>
-                                    </TableRow>
-                                )
-                            })
-                        }
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                                            <TableCell align="left">{u.m_sTipoCobro}</TableCell>
+                                            <TableCell align="left">{u.m_sZona}</TableCell>
+                                            <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
+                                            <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
+                                                       align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
+                                            <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
+                                            <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? (u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaRecoleccionCita + " " + u.m_sHoraCitarRecoleccionMinima + " a " + u.m_sHoraCitaRecoleccionMaxima)) : "Sin cita") : u.m_bEmbarqueConCita ? u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaEmbarqueCita + " " + u.m_sHoraEmbarqueCitaMinima + " a " + u.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}</TableCell>
+                                            <TableCell align="left">{u.m_dFechaRegistro}</TableCell>
+                                            <TableCell align="left">{u.m_sEstatusUltimaMilla}</TableCell>
+                                        </TableRow>
+                                    )
+                                })
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+
         );
     }
 }
