@@ -87,7 +87,11 @@ import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {obtenerEstatusEmbarque} from "../Util/Contexts/EstatusContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
-import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+import {
+    imprimirFormatosIdIdTipoReporte,
+    obtenerFormatosImpresion,
+    obtenerFormatosImpresionProceso
+} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
@@ -139,6 +143,14 @@ function showSuccess(mensaje) {
         layout: "topCenter",
         text: mensaje,
         timeout: "8000",
+    }).show();
+}
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
     }).show();
 }
 
@@ -261,6 +273,9 @@ function Embarque(props) {
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
     const [dataClientes, setDataClientes] = useState([])
     const [stepActive, setStepActive] = React.useState(1);
+    const [openDialog, setOpenDialog] = useState(false)
+    const [dataReportes, setDataReportes] = useState([])
+    const [seleccion, setSeleccion] = useState(null)
     const [Modal, open, close, isOpen] = useModal("root", {
         preventScroll: true,
     });
@@ -351,7 +366,7 @@ function Embarque(props) {
                         </Tooltip>
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101425)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i
+                               onClick={() => generarReporte(row.row)}><i
                                 className="zmdi zmdi-file"
                                 style={{color: "#F9A03E"}}/></a>
 
@@ -614,6 +629,13 @@ function Embarque(props) {
         embarqueConGuia: false
     });
     let query = useQuery();
+
+    useEffect(()=>{
+
+        obtenerFormatosImpresionProceso(211).then(({data}) => {
+            setDataReportes(data)
+        })
+    }, [])
 
     //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
     function limpiarCamposAgregar() {
@@ -883,13 +905,67 @@ function Embarque(props) {
         })
     }
 
-    function generarReporte(id, folio) {
-        obtenerEmbarqueReporte(id).then(({data}) => {
+    function generarReporte(row) {
+        setSeleccion(row)
+        console.log(row)
+        setOpenDialog(true)
+      /*  e.preventDefault()
+        console.log(state.reporteSeleccionado)
+        console.log(seleccion)
+
+        if (state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+
+        imprimirFormatosId(state.reporteSeleccionado, seleccion.IdCita).then(({data}) => { //poner aqui el id de Embarque
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Cita " + seleccion.FolioCita;
+        })
+        setState({
+            ...state,
+            reporteSeleccionado: null
+        })
+        setOpenDialog(false)*/
+       /* obtenerEmbarqueReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Embarque " + folio;
+        })*/
+    }
+    const handleOnChangeReporte = (data) => {
+        console.log(data)
+        setState({
+            ...state,
+            reporteSeleccionado: data
         })
+    }
+    const handleGenerarReporte=(e)=>{
+        e.preventDefault()
+        console.log(state.reporteSeleccionado)
+        console.log(seleccion)
+
+        if (state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+
+        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdEmbarque).then(({data}) => { //poner aqui el id de Embarque
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Embarque" + seleccion.m_sFolioEmbarque;
+        })
+        setState({
+            ...state,
+            reporteSeleccionado: null
+        })
+        setOpenDialog(false)
     }
 
     const handleOnChangeEntregaDD = (newValue) => {
@@ -2930,7 +3006,70 @@ function Embarque(props) {
 
     return (
         <div>
+            {
+                openDialog &&
+                <Dialog
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                    fullWidth maxWidth="md"
+                >
+                    <DialogTitle>
+                        Reporte de Embarque
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <form onSubmit={handleGenerarReporte}>
+                                <Grid container spacing={1}>
+                                    <Grid item sm={6}>
+                                        <FormControl
+                                            className="input select"
+                                            fullWidth variant="outlined"
+                                            required
+                                            margin="dense">
+                                            <InputLabel
+                                                id="idReporteLabel">Formato de Reporte</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="idReporteLabel"
+                                                label="Reporte"
+                                                className="form-control"
+                                                value={state.reporteSeleccionado ?? ''}
+                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
+                                                name="reporteSeleccionado"
+                                            >
+                                                {dataReportes.map((reporte) => (
+                                                    <MenuItem
+                                                        key={reporte.m_nIdFormato}
+                                                        value={reporte.m_nIdFormato}
+                                                    >
+                                                        {reporte.m_sFormato}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <DialogActions>
 
+                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                        setOpenDialog(false)
+                                        setState({
+                                            ...state,
+                                            reporteSeleccionado: null
+                                        })
+                                    }
+                                    }>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                        Aceptar
+                                    </button>
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            }
             {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
