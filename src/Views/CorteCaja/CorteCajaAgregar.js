@@ -15,6 +15,7 @@ import {createMuiTheme} from "@material-ui/core/styles";
 import DialogGuias from "./DialogGuias";
 import TableGuias from "./TableGuias";
 import DialogOperadores from "./DialogOperador";
+import DialogUsuarios from "./DialogUsuarios";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -74,7 +75,6 @@ function CorteCajaAgregar({value, disaled}){
 
     useEffect( () => {
         if (value?.idCorte > 0){
-            console.log('valid')
             setFiltros({
                 busquedaPorUsuario: value.busquedaPorUsuario,
                 usuario: value.usuario,
@@ -85,7 +85,6 @@ function CorteCajaAgregar({value, disaled}){
             setGuias(value.guias)
         }
         if (!value?.idCorte > 0){
-            console.log('invalid')
             setFiltros({
                 busquedaPorUsuario: false,
                 usuario: null,
@@ -101,32 +100,20 @@ function CorteCajaAgregar({value, disaled}){
 
     }
 
-    const handleChange = (input, value) => {
+    const handleChange = (input, newValue) => {
         if (input !== 'busquedaPorUsuario'){
             setFiltros({
                 ...filtros,
-                [input]: value,
+                [input]: newValue,
             });
         }
         if (input === 'busquedaPorUsuario'){
-            if (value){
-                setFiltros({
-                    ...filtros,
-                    [input]: value,
-                    operador: null,
-                    usuario: {
-                        idUsuario: localStorage.getItem("UsuarioId"),
-                        nombre: localStorage.getItem("Nombre")
-                    }
-                });
-            }else {
-                setFiltros({
-                    ...filtros,
-                    [input]: value,
-                    operador: null,
-                    usuario: null
-                });
-            }
+            setFiltros({
+                ...filtros,
+                [input]: newValue,
+                operador: null,
+                usuario: null
+            });
         }
     };
 
@@ -142,7 +129,10 @@ function CorteCajaAgregar({value, disaled}){
         if (filtros.busquedaPorUsuario){
             setFiltros({
                 ...filtros,
-                usuario: data,
+                usuario: {
+                    idUsuario: data.idUsuario,
+                    nombre: data.nombre
+                },
                 operador: null
             })
         }else {
@@ -248,7 +238,12 @@ function CorteCajaAgregar({value, disaled}){
     return(
         <div>
             <DialogOperadores
-                open={openDialog}
+                open={!!(openDialog && !filtros.busquedaPorUsuario)}
+                handleClose={handleCloseDialog}
+                handleAccept={handleAcceptData}
+            />
+            <DialogUsuarios
+                open={!!(openDialog && filtros.busquedaPorUsuario)}
                 handleClose={handleCloseDialog}
                 handleAccept={handleAcceptData}
             />
@@ -315,7 +310,7 @@ function CorteCajaAgregar({value, disaled}){
                                 label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
                                 value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
                                 margin={'dense'}
-                                onClick={(e) => !filtros.busquedaPorUsuario && handleOpenDialog()}
+                                onClick={(e) => handleOpenDialog()}
                                 disabled={disaled}
                             />
                         </Grid>
