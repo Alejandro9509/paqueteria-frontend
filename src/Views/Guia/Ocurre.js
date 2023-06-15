@@ -4,15 +4,17 @@ import {
     Button,
     Checkbox,
     DialogActions,
-    DialogContent,
+    DialogContent, DialogTitle,
     FormControl,
     FormControlLabel,
     Grid,
     InputLabel,
     Select,
-    TextField
+    TextField, Typography
 } from "@material-ui/core";
 import { obtenerBancos } from '../../Util/Contexts/GuiaContext';
+import MenuItem from "@material-ui/core/MenuItem";
+import {numberToMoneyFormatt} from "../../Util/Util";
 
 class MyComponent extends Component {
     constructor(props) {
@@ -83,8 +85,9 @@ class MyComponent extends Component {
         return (
             <form onSubmit={(e) => {e.preventDefault();
             this.props.handleEntregaOcurre(this.state)}}>
+                <DialogTitle>Registrar entrega ocurre</DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={3}>
+                    <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField
                                 variant="outlined"
@@ -115,12 +118,13 @@ class MyComponent extends Component {
                                 required={this.props.showDialogOcurre}
                             />
                         </Grid>
-                        <Grid item xs={6}>
+                        {/*<Grid item xs={2}/>*/}
+                        <Grid item xs={12}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
                                 <Select
                                     labelId={"idTipoCobroLabel"}
-                                    label={"Tipo Cobro"}
+                                    label={"Tipo de cobro"}
                                     key={"tipoCobroOcurre"}
                                     className="form-control"
                                     value={this.props.dataOcurre.tipoCobroOcurre}
@@ -142,37 +146,21 @@ class MyComponent extends Component {
                                             key={tipoCobro.m_nIdTipoCobro}
                                             value={tipoCobro.m_nIdTipoCobro}
                                         >
-                                            {tipoCobro.m_sDescripcion}
+                                            {tipoCobro.m_sDescripcion.toUpperCase()}
                                         </option>
                                     ))}
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={6}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <TextField variant="outlined" margin="dense" label="Comentarios"
-                                           onChange={(event) => this.handleChangeDataOcurre(event)}
-                                           className="form-control"
-                                           type="text"
-                                           autoFocus
-                                           key={"comentarioOcurre"}
-                                           value={this.state.comentariosOcurre}
-                                           disabled={this.props.agregar === "Consultar"}
-                                           placeholder="Comentarios"
-                                           name="comentariosOcurre"
-                                />
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={6}>
+                        {/*<Grid item xs={2}/>*/}
+                        <Grid item xs={12}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
                                 <Select
                                     labelId={"idTipoPagoLabel"}
-                                    label={"Tipo Pago"}
+                                    label={"Método de pago"}
                                     key={"idTipoPagoOcurre"}
                                     className="form-control"
-                                    disabled={!this.props.dataTipoCobro.find(i => i.m_nIdTipoCobro == this.props.dataOcurre.tipoCobroOcurre)?.m_bSolicitarMonto}
                                     value={this.state.tipoPago}
                                     onChange={(event) => this.handleChangeDataOcurre(event)}
                                     id="tipoPago"
@@ -183,24 +171,40 @@ class MyComponent extends Component {
                                     name={"tipoPago"}
                                 >
                                     {this.props.dataTipoPago.map((tipoPago) => (
-                                        <option
+                                        <MenuItem
                                             key={tipoPago.m_nIdTipoPago}
                                             value={tipoPago.m_nIdTipoPago}
                                         >
                                             {tipoPago.m_sTipoPago}
-                                        </option>
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
                         </Grid>
+                        {/*<Grid item xs={2}/>*/}
                         <Grid item xs={12}>
-                        <FormControlLabel
-                         control={
-                         <Checkbox checked={this.state.aplicaDetalle}
-                         onChange={this.handleChangeChecked} 
-                         name="aplicaDetalle" />}
-                         label="Aplica detalle de pago"
-                         />
+                            <TextField
+                                variant="outlined" label="Comentarios"
+                                onChange={(event) => this.handleChangeDataOcurre(event)}
+                                className="form-control"
+                                type="text"
+                                autoFocus
+                                key={"comentarioOcurre"}
+                                value={this.state.comentariosOcurre}
+                                disabled={this.props.agregar === "Consultar"}
+                                placeholder="Comentarios"
+                                name="comentariosOcurre"
+                                multiline
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox checked={this.state.aplicaDetalle}
+                                              onChange={this.handleChangeChecked}
+                                              name="aplicaDetalle"/>}
+                                label="Aplica detalle de pago"
+                            />
                         </Grid>
 
                         {this.state.aplicaDetalle && <>
@@ -249,7 +253,7 @@ class MyComponent extends Component {
                         </Grid>
                         </>
                         }
-                        {(this.state.tipoPago == 1) &&
+                        {/*{(this.state.tipoPago == 1) &&
                         <Grid item xs={6}>
                             <TextField variant="outlined" margin="dense" label="Importe recibido"
                                        onChange={(event) => this.handleChangeDataOcurre(event)}
@@ -267,12 +271,10 @@ class MyComponent extends Component {
                                 marginTop: '5px'
                             }}> {`Cambio: $${this.state.importeOcurre ? parseFloat(this.state.importeTotal) - parseFloat(this.state.importeOcurre) : 0.0}`}</p>
                         </Grid>
-                        }
-                        <Grid item xs={6}>
-                            <p> {`Importe a pagar: $${parseFloat(this.state.importeTotal)}`}</p>
+                        }*/}
+                        <Grid item xs={12}>
+                            <Typography variant={'h1'}> {`Importe a guía: $${numberToMoneyFormatt(this.state.importeTotal)}`}</Typography>
                         </Grid>
-
-
                     </Grid>
                     <DialogActions>
                         <Button onClick={() => {
