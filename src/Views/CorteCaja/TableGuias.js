@@ -35,6 +35,7 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
                         <TableCell>Fecha de Entrega</TableCell>
                         <TableCell>Operador/Usuario</TableCell>
                         <TableCell>Tipo de Cobro</TableCell>
+                        <TableCell>Método de pago</TableCell>
                         <TableCell align={"right"}>Total</TableCell>
                     </TableRow>
                 </TableHead>
@@ -57,6 +58,7 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
                             <TableCell>{item.fueEntregada ? item.fechaEntrega : 'NO APLICA'}</TableCell>
                             <TableCell>{item.nombrePersona}</TableCell>
                             <TableCell>{item.tipoCobro}</TableCell>
+                            <TableCell>{item.metodoPago}</TableCell>
                             <TableCell align={"right"}>{item.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                         </TableRow>
                     ))}
