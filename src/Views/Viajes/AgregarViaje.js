@@ -189,6 +189,7 @@ class AgregarViaje extends Component {
         this.handleChangeRuta = this.handleChangeRuta.bind(this);
         this.onSubmitDestinoInforme = this.onSubmitDestinoInforme.bind(this);
         this.handleChangeDataPermisionario = this.handleChangeDataPermisionario.bind(this);
+        this.imprimir = this.imprimir.bind(this);
 
     }
 
@@ -906,6 +907,11 @@ class AgregarViaje extends Component {
 
     }
 
+    imprimir(){
+        console.log(this.state);
+        console.log(this.state.operador.m_nIdOperador);
+    }
+
     render() {
 
         const columnspRorAsignar = [
@@ -1533,7 +1539,11 @@ class AgregarViaje extends Component {
                                     />
                                     </div>
                                 </div>
+                                {/*JesusTics*/}
+                                <div>
+                                    <Button onClick={this.imprimir}>Imprimir</Button>
 
+                                </div>
                                 <div className="row">
                                     <div className="widget-header">
                                         <h2>Operador</h2>
