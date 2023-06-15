@@ -56,7 +56,6 @@ function CorteCajaListado({onRowClick}){
     })
     const [openDialog, setOpenDialog] = useState(false)
     const [dataReportes, setDataReportes] = useState([])
-    const [seleccion, setSeleccion] = useState(null)
     const [state, setState] = useState({
         reporteSeleccionado: null
 
@@ -147,6 +146,17 @@ function CorteCajaListado({onRowClick}){
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "REPORTE " + fecha;
+
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data.m_sArchivo;
+                link.setAttribute('download', "REPORTE " + fecha);
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo descargar el pdf")
+            }
         }).catch((err) => {
             showError(err.toString())
         })
