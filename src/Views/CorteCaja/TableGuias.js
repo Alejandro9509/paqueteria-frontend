@@ -17,8 +17,9 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
         handleSelection(newSelectedRows);
     };
 
+    /*SOLO SUMARA EL IMPORTE DE LAS GUIAS CON TIPO DE COBRO "POR COBRAR" Y "PAGO CONTRA ENTREGA"*/
     function totalSum(items) {
-        return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+        return items.filter((item) => item.idTipoCobro === 10 || item.idTipoCobro === 13).map(({ total }) => total).reduce((sum, i) => sum + i, 0);
     }
 
     const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
