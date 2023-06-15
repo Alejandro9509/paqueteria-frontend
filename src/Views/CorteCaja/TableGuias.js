@@ -17,8 +17,9 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
         handleSelection(newSelectedRows);
     };
 
+    /*SOLO SUMARA EL IMPORTE DE LAS GUIAS CON TIPO DE COBRO "POR COBRAR" Y "PAGO CONTRA ENTREGA"*/
     function totalSum(items) {
-        return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+        return items.filter((item) => item.idTipoCobro === 10 || item.idTipoCobro === 13).map(({ total }) => total).reduce((sum, i) => sum + i, 0);
     }
 
     const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
@@ -34,6 +35,7 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
                         <TableCell>Fecha de Entrega</TableCell>
                         <TableCell>Operador/Usuario</TableCell>
                         <TableCell>Tipo de Cobro</TableCell>
+                        <TableCell>Método de pago</TableCell>
                         <TableCell align={"right"}>Total</TableCell>
                     </TableRow>
                 </TableHead>
@@ -56,11 +58,12 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
                             <TableCell>{item.fueEntregada ? item.fechaEntrega : 'NO APLICA'}</TableCell>
                             <TableCell>{item.nombrePersona}</TableCell>
                             <TableCell>{item.tipoCobro}</TableCell>
+                            <TableCell>{item.metodoPago}</TableCell>
                             <TableCell align={"right"}>{item.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                         </TableRow>
                     ))}
                     <TableRow>
-                        <TableCell colSpan={5} />
+                        <TableCell colSpan={6} />
                         <TableCell colSpan={1}>TOTAL</TableCell>
                         <TableCell align="right">{totalFinal}</TableCell>
                     </TableRow>

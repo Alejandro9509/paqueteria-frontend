@@ -164,6 +164,10 @@ function CorteCaja(){
         }
     };
 
+    const handleSetDisabled = (selectedItem, action) => {
+
+    };
+
     return(
         <div>
             <header className="topbar clearfix">
@@ -212,6 +216,7 @@ function CorteCaja(){
                             <CorteCajaAgregar
                                 value={corteSeleccionado}
                                 disaled={consult}
+                                setDisabled={(value) => setConsult(value)}
                             />
                         </div>
                     </div>
