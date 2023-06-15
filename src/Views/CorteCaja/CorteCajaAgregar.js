@@ -26,7 +26,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function CorteCajaAgregar({value, disaled}){
+function CorteCajaAgregar({value, disaled, setDisabled}){
     const [guias, setGuias] = useState([])
     const [guiasSeleccionadas, setGuiasSeleccionadas] = useState([])
 
@@ -97,7 +97,15 @@ function CorteCajaAgregar({value, disaled}){
     }, [value])
 
     const limpiarCampos = () => {
-
+        setFiltros({
+            busquedaPorUsuario: false,
+            usuario: null,
+            operador: null,
+            fechaRegistro: getCurrentDate(),
+            horaRegistro: getCurrentTime(),
+        })
+        setGuiasSeleccionadas([])
+        setGuias([])
     }
 
     const handleChange = (input, newValue) => {
@@ -193,10 +201,8 @@ function CorteCajaAgregar({value, disaled}){
     const handleGuardar = () => {
         const {fechaRegistro, horaRegistro, usuario, operador} = filtros
         if (!isDataValid(usuario?.idUsuario,operador?.m_nIdOperador)){
-            console.log("N Guardar.");
             return
         }
-        console.log("Guardar.");
         let params = {
             "m_cTotal": totalSum(guias),
             "m_sFechaRegistro": fechaRegistro,
@@ -214,22 +220,31 @@ function CorteCajaAgregar({value, disaled}){
         if (disaled){
             return;
         }
+        setDisabled(true)
         if (value?.idCorte > 0){
             modificarCorte(value.idCorte, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
+                    setDisabled(false)
+                    limpiarCampos()
                 })
                 .catch((error) => {
                     console.log(error.toString())
+                    showSuccess('Ocurrió un problema al guardar la información. Intente de nuevo.')
+                    setDisabled(false)
                 })
         }
         if (!value?.idCorte > 0){
             agregarCorte(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
+                    setDisabled(false)
+                    limpiarCampos()
                 })
                 .catch((error) => {
                     console.log(error.toString())
+                    showSuccess('Ocurrió un problema al guardar la información. Intente de nuevo.')
+                    setDisabled(false)
                 })
         }
 
