@@ -63,7 +63,7 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
                         </TableRow>
                     ))}
                     <TableRow>
-                        <TableCell colSpan={5} />
+                        <TableCell colSpan={6} />
                         <TableCell colSpan={1}>TOTAL</TableCell>
                         <TableCell align="right">{totalFinal}</TableCell>
                     </TableRow>
