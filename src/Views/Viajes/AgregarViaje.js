@@ -52,6 +52,7 @@ import SeleccionarRuta from "../Rutas/SeleccionarRuta";
 import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 import DialogUnidades from "./DialogUnidades";
+import DialogRemolques from "./DialogRemolques";
 
 const headers = API_HEADERS
 
@@ -784,16 +785,16 @@ class AgregarViaje extends Component {
     handleDollyFiltro(event, newValue) {
         event.preventDefault();
         if (newValue){
-        if (!this.isUnidadAvailable(newValue, "DOLLY")){
-            showSuccess("La unidad elegida ya se encuentra seleccionada.");
-            return
-        }
-        this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
-        /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
+            if (!this.isUnidadAvailable(newValue, "DOLLY")){
+                showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                return
+            }
+            this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
+            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
 
-            this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
-        }*/
+                this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+                    this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
+            }*/
         }
         else{
             this.setState({IdDolly: null, placasDolly: "",dollySelect:false})
@@ -830,7 +831,7 @@ class AgregarViaje extends Component {
 
     handleChangeAutocomplete = (input, value) => {
         console.log(JSON.stringify(value))
-           if(value.m_bEsPermisionario){
+        if(value.m_bEsPermisionario){
             console.log("entra a validar")
             this.setState(state => {
                 return {
@@ -942,6 +943,39 @@ class AgregarViaje extends Component {
         this.setState({ openDialogRemolques: true })
     }
 
+    handleCloseDialogRemolques(){
+        this.setState({ openDialogRemolques: false })
+    }
+
+    handleAcceptDataRemolques = (data) => {
+        console.log(data);
+
+        if(data.length <= 0){
+            this.handleCloseDialogUnidades();
+            return;
+        }
+
+        const [firstData, secondData] = data;
+
+        const newState = {
+            IdRemolque1: firstData,
+            placasRemolque1: firstData.m_sPlacas,
+            colorRemolque1: firstData.ColorEstatus,
+            estatusRemolque1: firstData.EstatusUnidad
+        };
+
+        if(secondData){
+            newState.IdRemolque2 = secondData;
+            newState.placasRemolque2 = secondData.m_sPlacas;
+            newState.colorRemolque2 = secondData.ColorEstatus;
+            newState.estatusRemolque2 = secondData.EstatusUnidad;
+            newState.Remolque2Select = true;
+        }
+
+        this.setState(newState);
+        this.handleCloseDialogUnidades();
+    }
+
     render() {
 
         const columnspRorAsignar = [
@@ -1042,14 +1076,14 @@ class AgregarViaje extends Component {
                         <div>
                             {
                                 row.row.m_bSePuedeBorrar || this.state.estatusListado === 8?
-                                <Tooltip title={"Desasignar"}>
-                                    <a
-                                        onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
-                                        className="btn btn-default btn-xs">
-                                        <i className={"fa fa-trash"}
-                                           style={{color: "#F9A03E"}}/>
-                                    </a>
-                                </Tooltip> : ""
+                                    <Tooltip title={"Desasignar"}>
+                                        <a
+                                            onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
+                                            className="btn btn-default btn-xs">
+                                            <i className={"fa fa-trash"}
+                                               style={{color: "#F9A03E"}}/>
+                                        </a>
+                                    </Tooltip> : ""
                             }
 
                         </div>
@@ -1178,6 +1212,8 @@ class AgregarViaje extends Component {
                     </Dialog>
                 }*/}
                 <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador.m_nIdOperador} />
+                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />
+                {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} />*/}
                 <Dialog
                     fullWidth={true}
                     maxWidth={'xl'}
@@ -1188,37 +1224,37 @@ class AgregarViaje extends Component {
                     <DialogTitle>Seleccione el destino al cual llegara el informe</DialogTitle>
                     <DialogContent>
                         <form onSubmit={this.onSubmitDestinoInforme}>
-                        <div className="input">
-                            <Autocomplete
-                                freeSolo
-                                onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
-                                value={this.state.destinoSeleccionado}
-                                //disabled={state.agregar == "Consultar"}
-                                id="origenRemitente"
-                                disableClearable
-                                forcePopupIcon={false}
-                                options={this.state.trayectos}
-                                getOptionLabel={(option) =>
-                                    option.Destino
-                                }
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important"
-                                }}
-                                renderInput={(params) => (
-                                    <div>
-                                        <TextField
-                                            label="Destino"
-                                            margin="dense"
-                                            variant="outlined"
-                                            {...params}
-                                        />
-                                    </div>
-                                )}
-                            />
-                        </div>
-                        <DialogActions>
-                            <Button type={"submit"}>Aceptar</Button>
-                        </DialogActions>
+                            <div className="input">
+                                <Autocomplete
+                                    freeSolo
+                                    onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
+                                    value={this.state.destinoSeleccionado}
+                                    //disabled={state.agregar == "Consultar"}
+                                    id="origenRemitente"
+                                    disableClearable
+                                    forcePopupIcon={false}
+                                    options={this.state.trayectos}
+                                    getOptionLabel={(option) =>
+                                        option.Destino
+                                    }
+                                    style={{
+                                        transform: "translate(14px, 10px) scale(1) !important"
+                                    }}
+                                    renderInput={(params) => (
+                                        <div>
+                                            <TextField
+                                                label="Destino"
+                                                margin="dense"
+                                                variant="outlined"
+                                                {...params}
+                                            />
+                                        </div>
+                                    )}
+                                />
+                            </div>
+                            <DialogActions>
+                                <Button type={"submit"}>Aceptar</Button>
+                            </DialogActions>
                         </form>
                     </DialogContent>
 
@@ -1318,7 +1354,7 @@ class AgregarViaje extends Component {
                                 />
                             </div>
                         </div>
-                            {/*<DataGrid
+                        {/*<DataGrid
                                 localeText={dataGridLocaleText}
                                 rows={this.state.dataInformesPorAsignar}
                                 columns={columnspRorAsignar}
@@ -1693,19 +1729,19 @@ class AgregarViaje extends Component {
                                                 />
                                             </Grid>
                                         } {
-                                            this.state.esOperadorPermisionario &&
-                                            <Grid item xs={2}>
-                                                <TextField
-                                                    margin={"dense"}
-                                                    variant={"outlined"}
-                                                    label={"No. de licencia"}
-                                                    name={"licenciaPermisionario"}
-                                                    required={this.state.esOperadorPermisionario}
-                                                    value={this.state.licenciaPermisionario}
-                                                    onChange={this.handleChangeDataPermisionario}
-                                                />
-                                            </Grid>
-                                        }
+                                        this.state.esOperadorPermisionario &&
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"No. de licencia"}
+                                                name={"licenciaPermisionario"}
+                                                required={this.state.esOperadorPermisionario}
+                                                value={this.state.licenciaPermisionario}
+                                                onChange={this.handleChangeDataPermisionario}
+                                            />
+                                        </Grid>
+                                    }
                                         {
                                             this.state.esOperadorPermisionario &&
                                             <Grid item xs={2}>

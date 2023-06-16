@@ -10,7 +10,7 @@ function obtenerUnidades() {
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-        );
+    );
     return result
 }
 
@@ -43,7 +43,7 @@ function obtenerUnidadesId(id) {
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-        );
+    );
     return result
 }
 
@@ -70,7 +70,7 @@ function obtenerUnidadesTipo(id) {
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-        );
+    );
     return result
 }
 
@@ -83,4 +83,13 @@ function obtenerUnidadesOperador(id) {
     return result
 }
 
-export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, obtenerUnidadesId, obtenerUnidades, obtenerUnidadesTipo, obtenerEstatusUnidadeId, obtenerUnidadesOperador }
+function obtenerUnidadesConvoy(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ByConvoy/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, obtenerUnidadesId, obtenerUnidades, obtenerUnidadesTipo, obtenerEstatusUnidadeId, obtenerUnidadesOperador, obtenerUnidadesConvoy }
