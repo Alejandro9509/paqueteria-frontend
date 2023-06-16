@@ -55,6 +55,7 @@ function DialogGuias({ open, handleClose, handleAccept, filtros,idsRowsHiden }) 
                     <TableGuias data={listado.filter((i) => !idsRowsHiden.some((j) => j === i.idGuia))}
                                 handleSelection={handleRowSelection}
                                 selectedRows2={listadoSeleccion}
+                                sumarTotalSeleccion={true}
                     />
                 </DialogContent>
                 <DialogActions>

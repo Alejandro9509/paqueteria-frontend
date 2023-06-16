@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@material-ui/core';
 
-const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
+const TableGuias = ({ data, handleSelection, selectedRows2, disabled, sumarTotalSeleccion }) => {
 
     const handleRowSelection = (event, id) => {
         const selectedIndex = selectedRows2.indexOf(id);
@@ -17,9 +17,14 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
         handleSelection(newSelectedRows);
     };
 
-    /*SOLO SUMARA EL IMPORTE DE LAS GUIAS CON TIPO DE COBRO "POR COBRAR" Y "PAGO CONTRA ENTREGA"*/
+    /*SI SE HABILITA LA SUMA DE SELECCION SE HACE, SI NO SE SUMA EL TOTAL DE TODO EL LISTADO*/
     function totalSum(items) {
-        return items.filter((item) => item.idTipoCobro === 10 || item.idTipoCobro === 13).map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+        if (sumarTotalSeleccion){
+            return selectedRows2.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+        } else {
+            return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+
+        }
     }
 
     const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });

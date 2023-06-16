@@ -22,7 +22,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function CorteCajaListado({onRowClick}){
+function CorteCajaListado({onRowClick, value}){
     const [listaCortes, setListaCortes] = useState([])
     const [filtros, setFiltros] = useState({
         fecha: getCurrentDate(),
@@ -34,6 +34,12 @@ function CorteCajaListado({onRowClick}){
     useEffect(value => {
         getAllCortes()
     }, [])
+
+    useEffect(() => {
+        if (value.listadoCortes) {
+            setListaCortes(value.listadoCortes)
+        }
+    }, [value])
 
     const getAllCortes = () => {
         obtenerCortesByFiltros(0, 0, 0)

@@ -58,7 +58,9 @@ function CorteCaja(){
     }
 
     const handleShowListado = (event) => {
-        event.stopPropagation();
+        if (event){
+            event.stopPropagation();
+        }
         resetFiltros()
         getAllCortes()
         // limpiarInputsAgregar()
@@ -164,9 +166,9 @@ function CorteCaja(){
         }
     };
 
-    const handleSetDisabled = (selectedItem, action) => {
-
-    };
+    const handleOnSaveSuccess = () => {
+        handleShowListado(null)
+    }
 
     return(
         <div>
@@ -209,6 +211,7 @@ function CorteCaja(){
                         <div id="Listado" className="tab-pane fade in show">
                             <CorteCajaListado
                                 onRowClick={handleRowClick}
+                                value={{listadoCortes : listaCortes}}
                             />
                         </div>
 
@@ -217,6 +220,7 @@ function CorteCaja(){
                                 value={corteSeleccionado}
                                 disaled={consult}
                                 setDisabled={(value) => setConsult(value)}
+                                onSaveSuccess={handleOnSaveSuccess}
                             />
                         </div>
                     </div>

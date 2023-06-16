@@ -26,7 +26,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function CorteCajaAgregar({value, disaled, setDisabled}){
+function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
     const [guias, setGuias] = useState([])
     const [guiasSeleccionadas, setGuiasSeleccionadas] = useState([])
 
@@ -198,6 +198,11 @@ function CorteCajaAgregar({value, disaled, setDisabled}){
         }
     }
 
+    const handleOnSaveSuccess = () =>{
+        limpiarCampos()
+        onSaveSuccess()
+    }
+
     const handleGuardar = () => {
         const {fechaRegistro, horaRegistro, usuario, operador} = filtros
         if (!isDataValid(usuario?.idUsuario,operador?.m_nIdOperador)){
@@ -226,7 +231,7 @@ function CorteCajaAgregar({value, disaled, setDisabled}){
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
                     setDisabled(false)
-                    limpiarCampos()
+                    handleOnSaveSuccess()
                 })
                 .catch((error) => {
                     console.log(error.toString())
@@ -239,7 +244,7 @@ function CorteCajaAgregar({value, disaled, setDisabled}){
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
                     setDisabled(false)
-                    limpiarCampos()
+                    handleOnSaveSuccess()
                 })
                 .catch((error) => {
                     console.log(error.toString())
