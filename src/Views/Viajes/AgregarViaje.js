@@ -53,6 +53,7 @@ import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 import DialogUnidades from "./DialogUnidades";
 import DialogRemolques from "./DialogRemolques";
+import DialogDollys from "./DialogDollys";
 
 const headers = API_HEADERS
 
@@ -167,6 +168,7 @@ class AgregarViaje extends Component {
             //Cambios de la 801
             openDialogUnidades: false,
             openDialogRemolques: false,
+            openDialogDollys: false,
             identificadorConvoyUnidad: ""
         }
 
@@ -201,6 +203,8 @@ class AgregarViaje extends Component {
         this.handleAcceptDataUnidades = this.handleAcceptDataUnidades.bind(this);
         this.handleCloseDialogRemolques = this.handleCloseDialogRemolques.bind(this);
         this.handleAcceptDataRemolques = this.handleAcceptDataRemolques.bind(this);
+        this.handleCloseDialogDollys = this.handleCloseDialogDollys.bind(this);
+        this.handleAcceptDataDollys = this.handleAcceptDataDollys.bind(this);
 
     }
 
@@ -948,8 +952,6 @@ class AgregarViaje extends Component {
     }
 
     handleAcceptDataRemolques = (data) => {
-        console.log(data);
-
         if(data.length <= 0){
             this.handleCloseDialogUnidades();
             return;
@@ -973,6 +975,22 @@ class AgregarViaje extends Component {
         }
 
         this.setState(newState);
+        this.handleCloseDialogUnidades();
+        this.setState({ openDialogDollys: true })
+    }
+
+    handleCloseDialogDollys(){
+        this.setState({ openDialogDollys: false })
+    }
+
+    handleAcceptDataDollys = (data) => {
+        console.log(data);
+        this.handleCloseDialogDollys();
+        this.setState({
+            IdDolly: data,
+            placasDolly: data.m_sPlacas,
+            dollySelect:true
+        })
         this.handleCloseDialogUnidades();
     }
 
@@ -1212,8 +1230,9 @@ class AgregarViaje extends Component {
                     </Dialog>
                 }*/}
                 <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador.m_nIdOperador} />
-                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />
-                {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} />*/}
+                {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />*/}
+                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} />
+                <DialogDollys open={this.state.openDialogDollys} handleClose={this.handleCloseDialogDollys} handleAccept={this.handleAcceptDataDollys} idConvoy={this.state.identificadorConvoyUnidad} />
                 <Dialog
                     fullWidth={true}
                     maxWidth={'xl'}

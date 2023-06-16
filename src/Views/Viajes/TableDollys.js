@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Checkbox} from "@material-ui/core";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@material-ui/core";
 
-export default function TableRemolques({ data, handleSelection }) {
-    const [selectedRows, setSelectedRows] = useState([]);
+export default function TableDollys({ data, handleSelection }) {
+    const [selectedRow, setSelectedRow] = useState(null);
     const textFieldRef = useRef(null);
 
     useEffect(() => {
@@ -12,18 +12,9 @@ export default function TableRemolques({ data, handleSelection }) {
     }, [data]);
 
     const handleRowClick = (row) => {
-        let newSelectedRows = [...selectedRows];
-        if (selectedRows.find(r => r.m_nIdUnidad === row.m_nIdUnidad)) {
-            newSelectedRows = newSelectedRows.filter(r => r.m_nIdUnidad !== row.m_nIdUnidad);
-        } else {
-            if (newSelectedRows.length < 2) {
-                newSelectedRows.push(row);
-            }
-        }
-        setSelectedRows(newSelectedRows);
-        handleSelection(newSelectedRows);
+        setSelectedRow(row);
+        handleSelection(row);
     };
-
     const [filtro, setFiltro] = useState('');
 
     const handleChangeFiltro = (event) => {
@@ -42,8 +33,6 @@ export default function TableRemolques({ data, handleSelection }) {
                 <Table size="small" stickyHeader>
                     <TableHead>
                         <TableRow>
-                            <TableCell padding="checkbox">
-                            </TableCell>
                             <TableCell align="center">Código de Unidad</TableCell>
                             <TableCell>Descripción</TableCell>
                             <TableCell>Tipo de unidad</TableCell>
@@ -55,17 +44,8 @@ export default function TableRemolques({ data, handleSelection }) {
                             <TableRow
                                 key={item.m_nIdUnidad}
                                 onClick={() => handleRowClick(item)}
-                                selected={selectedRows.some(r => r.m_nIdUnidad === item.m_nIdUnidad)}
+                                selected={selectedRow?.m_nIdUnidad === item.m_nIdUnidad}
                             >
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        checked={selectedRows.some(r => r.m_nIdUnidad === item.m_nIdUnidad)}
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                            handleRowClick(item);
-                                        }}
-                                    />
-                                </TableCell>
                                 <TableCell align="center">{item.m_sCodigo}</TableCell>
                                 <TableCell>{item.m_sDescripcion}</TableCell>
                                 <TableCell>{item.m_sTipoUnidad}</TableCell>
@@ -76,5 +56,6 @@ export default function TableRemolques({ data, handleSelection }) {
                 </Table>
             </TableContainer>
         </div>
+
     );
 }

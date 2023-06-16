@@ -4,16 +4,15 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle
 } from '@material-ui/core';
-import TableRemolques from "./TableRemolques";
+import TableDollys from "./TableDollys";
 import { obtenerUnidadesConvoy } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
 
-function DialogRemolques({ open, handleClose, handleAccept, idConvoy }) {
+function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
     const [selectedRow, setSelectedRow] = useState(null);
-    const [listadoRemolques, setListadoRemolques] = useState([]);
+    const [listadoDollys, setListadoDollys] = useState([]);
 
     useEffect(() => {
         if (open){
@@ -23,14 +22,16 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy }) {
             } else {
                 obtenerUnidadesConvoy(idConvoy).then((respuesta) => {
                     if(respuesta.data.length <= 0){
-                        showSuccess('No hay remolques que pertenezcan al mismo Convoy')
+                        showSuccess('No hay dollys que pertenezcan al mismo Convoy')
                         handleClose()
                     }
                     console.log(respuesta.data);
-                    setListadoRemolques(respuesta.data)
+                    // Filtra los Dollys
+                    const dollys = respuesta.data.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28);
+                    setListadoDollys(dollys)
                 }).catch((e) => {
                     console.log(e.toString())
-                    showSuccess('Hubo un problema al cargar el listado de remolques. Intente de nuevo.')
+                    showSuccess('Hubo un problema al cargar el listado de dollys. Intente de nuevo.')
                     handleClose();
                 })
             }
@@ -48,9 +49,9 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy }) {
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
-                <DialogTitle>Seleccoine una Unidad</DialogTitle>
+                <DialogTitle>Seleccoine un Dolly</DialogTitle>
                 <DialogContent>
-                    <TableRemolques data={listadoRemolques} handleSelection={handleRowSelection} />
+                    <TableDollys data={listadoDollys} handleSelection={handleRowSelection} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cerrar</Button>
@@ -63,4 +64,4 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy }) {
     );
 }
 
-export default DialogRemolques;
+export default DialogDollys;

@@ -25,7 +25,7 @@ function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
                 setListadoUnidades(respuesta.data)
             }).catch((e) => {
                 console.log(e.toString())
-                showSuccess('Hubo un problema al cargar el listado de operadores. Intente de nuevo.')
+                showSuccess('Hubo un problema al cargar el listado de unidades. Intente de nuevo.')
                 handleClose();
             })
         }
