@@ -4,21 +4,25 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle
 } from '@material-ui/core';
-import TableOperadores from "./TableOperadores";
-import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
+import TableUnidades from "./TableUnidades";
+import { obtenerUnidadesOperador } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
 
-function DialogUnidades({ open, handleClose, handleAccept }) {
+function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
     const [selectedRow, setSelectedRow] = useState(null);
-    const [listadoOperadores, setListadoOperadores] = useState([]);
+    const [listadoUnidades, setListadoUnidades] = useState([]);
 
     useEffect(() => {
         if (open){
-            obtenerOperadores().then((respuesta) => {
-                setListadoOperadores(respuesta.data)
+            obtenerUnidadesOperador(idOperador).then((respuesta) => {
+                if(respuesta.data.length <= 0){
+                    showSuccess('No hay unidades disponibles asignadas a este operador. Seleccione manualmente')
+                    handleClose();
+                }
+                console.log(respuesta.data);
+                setListadoUnidades(respuesta.data)
             }).catch((e) => {
                 console.log(e.toString())
                 showSuccess('Hubo un problema al cargar el listado de operadores. Intente de nuevo.')
@@ -40,10 +44,7 @@ function DialogUnidades({ open, handleClose, handleAccept }) {
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
                 <DialogTitle>Seleccoine una Unidad</DialogTitle>
                 <DialogContent>
-                    {/*<DialogContentText>
-                        Se buscaran las guías que fueron entregadas en última milla por el operador seleccionado.
-                    </DialogContentText>*/}
-                    <TableOperadores data={listadoOperadores} handleSelection={handleRowSelection} />
+                    <TableUnidades data={listadoUnidades} handleSelection={handleRowSelection} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cerrar</Button>

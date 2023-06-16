@@ -51,6 +51,7 @@ import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from 
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
 import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
+import DialogUnidades from "./DialogUnidades";
 
 const headers = API_HEADERS
 
@@ -160,7 +161,12 @@ class AgregarViaje extends Component {
             dataOperadores: [],
             openDialogInformes:false,
             Remolque2Select:false,
-            dollySelect:false
+            dollySelect:false,
+
+            //Cambios de la 801
+            openDialogUnidades: false,
+            openDialogRemolques: false,
+            identificadorConvoyUnidad: ""
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -190,6 +196,10 @@ class AgregarViaje extends Component {
         this.onSubmitDestinoInforme = this.onSubmitDestinoInforme.bind(this);
         this.handleChangeDataPermisionario = this.handleChangeDataPermisionario.bind(this);
         this.imprimir = this.imprimir.bind(this);
+        this.handleCloseDialogUnidades = this.handleCloseDialogUnidades.bind(this);
+        this.handleAcceptDataUnidades = this.handleAcceptDataUnidades.bind(this);
+        this.handleCloseDialogRemolques = this.handleCloseDialogRemolques.bind(this);
+        this.handleAcceptDataRemolques = this.handleAcceptDataRemolques.bind(this);
 
     }
 
@@ -833,7 +843,8 @@ class AgregarViaje extends Component {
         }
         this.setState({
             [input]: value,
-            esOperadorPermisionario: value.m_bEsPermisionario
+            esOperadorPermisionario: value.m_bEsPermisionario,
+            openDialogUnidades: true
         });
 
     }
@@ -910,6 +921,25 @@ class AgregarViaje extends Component {
     imprimir(){
         console.log(this.state);
         console.log(this.state.operador.m_nIdOperador);
+    }
+    handleCloseDialogUnidades(){
+        this.setState({ openDialogUnidades: false })
+    }
+
+    handleAcceptDataUnidades = (data) => {
+        console.log(data);
+        this.handleCloseDialogUnidades();
+        this.setState({
+            unidad: data,
+            placaIntUnidad: data.m_sPlacas,
+            estatusUnidad: data.EstatusUnidad,
+            colorUnidad: data.ColorEstatus,
+            kms: data.m_nOdometro,
+            identificadorConvoyUnidad: data.IdentificadorConvoy
+            // horas: newValue.m_nHorasTrabajadasMotorNoGPS,
+            // aplicaRemolque: newValue.m_bAplicaRemolque
+        })
+        this.setState({ openDialogRemolques: true })
     }
 
     render() {
@@ -1147,6 +1177,7 @@ class AgregarViaje extends Component {
                         </DialogContent>
                     </Dialog>
                 }*/}
+                <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador.m_nIdOperador} />
                 <Dialog
                     fullWidth={true}
                     maxWidth={'xl'}
