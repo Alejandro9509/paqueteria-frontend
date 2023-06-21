@@ -95,6 +95,7 @@ import AsignarTrayectos from "./Guia/AsignarTrayectos";
 import ImprimirEtiquetas from "./Guia/ImprimirEtiquetas";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
+import Cubicar from "./Cubicar/Cubicar";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -938,6 +939,17 @@ function Guia(props) {
             showSuccess(err)
         })
 
+
+    }
+
+    //Muestra la pestaña de cancelar
+    function handleShowSandBox(event) {
+        event.preventDefault()
+
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(5).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Sandbox').addClass('in show');
 
     }
 
@@ -2161,6 +2173,12 @@ function Guia(props) {
                             <a onClick={handleShowCancelar}
                                className={(state.idGuia === 0 || !validarDerecho(9101461) ||  state.estatusGuia == 8)? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
+                            </a>
+                        </li>
+
+                        <li>
+                            <a onClick={handleShowSandBox}>
+                                <i className="fa fa-times-circle"/> Sandbox
                             </a>
                         </li>
                     </ul>
@@ -3517,7 +3535,32 @@ function Guia(props) {
                             </div>
 
                         </div>
-
+                        <div id={"Sandbox"} className="tab-pane fade">
+                            <Cubicar
+                                espacio={'CAJA'}
+                                open={true}
+                                close={() => {console.log('cerrao')}}
+                                data={{
+                                    anchoEspacio: 10,
+                                    altoEspacio: 20,
+                                    largoEspacio: 30,
+                                    productos: [
+                                        {
+                                            asignado: true,
+                                            descripcion: 'TOMATOS',
+                                            posicionX: 1,
+                                            ancho: 2,
+                                            posicionZ: 1,
+                                            alto: 2,
+                                            posicionY: 1,
+                                            largo: 2
+                                        }
+                                    ]
+                                }}
+                                largoEspacio={'100'}
+                                anchoEspacio={'200'}
+                                altoEspacio={'300'}/>
+                        </div>
                     </div>
                 </div>
 
