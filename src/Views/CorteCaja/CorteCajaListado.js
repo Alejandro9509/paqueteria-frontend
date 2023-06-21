@@ -7,7 +7,7 @@ import {
 } from "../../Util/Contexts/CorteCajaContext";
 import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
-import {getCurrentDate} from "../../Util/Util";
+import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import * as XLSX from "xlsx";
 
 window.jQuery = window.$ = $;
@@ -75,7 +75,9 @@ function CorteCajaListado({onRowClick, value}){
 
     const handleReportGeneralClick = () => {
         let fecha = filtros.fecha
-        obtenerCortesGeneralReporte(fecha)
+        let hora = getCurrentTime()
+        let dateTime = fecha + ' ' + hora
+        obtenerCortesGeneralReporte(dateTime)
             .then(({data}) => {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
