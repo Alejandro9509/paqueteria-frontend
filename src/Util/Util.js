@@ -603,3 +603,7 @@ export const DEFAULT_FORMAT = {
         claveFraccionArancelaria: 'Clave fracción arancelaria',
     }
 }
+
+export function numberToMoneyFormatt(number) {
+    return number.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
+}

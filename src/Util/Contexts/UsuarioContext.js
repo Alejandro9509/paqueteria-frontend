@@ -13,4 +13,13 @@ function validarPermisos(state){
     return result
 }
 
-export {validarPermisos}
+function getListado(){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Usuarios/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export {validarPermisos,getListado}

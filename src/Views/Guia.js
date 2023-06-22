@@ -2039,10 +2039,9 @@ function Guia(props) {
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
-                fullWidth maxWidth="md"
+                fullWidth maxWidth="xs"
                 aria-labelledby="form-dialog-title"
             >
-                {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 {
                     dataOcurre &&
                     <Ocurre
