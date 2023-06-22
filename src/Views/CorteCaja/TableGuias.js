@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@material-ui/core';
 
-const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
+const TableGuias = ({ data, handleSelection, selectedRows2, disabled, sumarTotalSeleccion }) => {
 
     const handleRowSelection = (event, id) => {
         const selectedIndex = selectedRows2.indexOf(id);
@@ -17,8 +17,14 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
         handleSelection(newSelectedRows);
     };
 
+    /*SI SE HABILITA LA SUMA DE SELECCION SE HACE, SI NO SE SUMA EL TOTAL DE TODO EL LISTADO*/
     function totalSum(items) {
-        return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+        if (sumarTotalSeleccion){
+            return selectedRows2.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+        } else {
+            return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
+
+        }
     }
 
     const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
@@ -34,6 +40,7 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
                         <TableCell>Fecha de Entrega</TableCell>
                         <TableCell>Operador/Usuario</TableCell>
                         <TableCell>Tipo de Cobro</TableCell>
+                        <TableCell>Método de pago</TableCell>
                         <TableCell align={"right"}>Total</TableCell>
                     </TableRow>
                 </TableHead>
@@ -56,11 +63,12 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled }) => {
                             <TableCell>{item.fueEntregada ? item.fechaEntrega : 'NO APLICA'}</TableCell>
                             <TableCell>{item.nombrePersona}</TableCell>
                             <TableCell>{item.tipoCobro}</TableCell>
+                            <TableCell>{item.metodoPago}</TableCell>
                             <TableCell align={"right"}>{item.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                         </TableRow>
                     ))}
                     <TableRow>
-                        <TableCell colSpan={5} />
+                        <TableCell colSpan={6} />
                         <TableCell colSpan={1}>TOTAL</TableCell>
                         <TableCell align="right">{totalFinal}</TableCell>
                     </TableRow>

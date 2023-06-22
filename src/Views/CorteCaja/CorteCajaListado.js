@@ -7,7 +7,7 @@ import {
 } from "../../Util/Contexts/CorteCajaContext";
 import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
-import {getCurrentDate} from "../../Util/Util";
+import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import * as XLSX from "xlsx";
 import {
     imprimirFormatosIdCorteCajaGeneral,
@@ -46,7 +46,7 @@ function showError(mensaje) {
     }).show();
 }
 
-function CorteCajaListado({onRowClick}){
+function CorteCajaListado({onRowClick, value}){
     const [listaCortes, setListaCortes] = useState([])
     const [filtros, setFiltros] = useState({
         fecha: getCurrentDate(),
@@ -71,6 +71,12 @@ function CorteCajaListado({onRowClick}){
             setDataReportes(data)
         })
     }, [])
+    useEffect(() => {
+        if (value.listadoCortes) {
+            setListaCortes(value.listadoCortes)
+        }
+    }, [value])
+
     const getAllCortes = () => {
         obtenerCortesByFiltros(0, 0, 0)
             .then(({data}) => {
@@ -134,7 +140,7 @@ function CorteCajaListado({onRowClick}){
         e.preventDefault()
         console.log(state.reporteSeleccionado)
         let fecha = filtros.fecha
-
+        let hora = getCurrentTime()
         if (state.reporteSeleccionado.length === 0) {
             showError("Es necesario seleccionar al menos un reporte")
             return

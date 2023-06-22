@@ -93,7 +93,9 @@ function CorteCaja() {
     }
 
     const handleShowListado = (event) => {
-        event.stopPropagation();
+        if (event){
+            event.stopPropagation();
+        }
         resetFiltros()
         getAllCortes()
         // limpiarInputsAgregar()
@@ -249,6 +251,9 @@ function CorteCaja() {
             })
             setOpenDialog(false)
         }
+    const handleOnSaveSuccess = () => {
+        handleShowListado(null)
+    }
 
         return (
             <div>
@@ -351,24 +356,28 @@ function CorteCaja() {
                             </li>*/}
                         </ul>
 
-                        <div className={"row"} className={"tab-content"}>
-                            <div id="Listado" className="tab-pane fade in show">
-                                <CorteCajaListado
-                                    onRowClick={handleRowClick}
-                                />
-                            </div>
+                    <div className={"row"} className={"tab-content"}>
+                        <div id="Listado" className="tab-pane fade in show">
+                            <CorteCajaListado
+                                onRowClick={handleRowClick}
+                                value={{listadoCortes : listaCortes}}
+                            />
+                        </div>
 
-                            <div id="Agregar" className="tab-pane fade">
-                                <CorteCajaAgregar
-                                    value={corteSeleccionado}
-                                    disaled={consult}
-                                />
-                            </div>
+                        <div id="Agregar" className="tab-pane fade">
+                            <CorteCajaAgregar
+                                value={corteSeleccionado}
+                                disaled={consult}
+                                setDisabled={(value) => setConsult(value)}
+                                onSaveSuccess={handleOnSaveSuccess}
+                            />
                         </div>
                     </div>
-                </section>
-            </div>
-        )
+                </div>
+            </section>
+        </div>
+    )
+}
 
 }
 export default CorteCaja;
