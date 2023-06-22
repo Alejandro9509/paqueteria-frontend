@@ -146,7 +146,7 @@ function CorteCajaListado({onRowClick, value}){
             return
         }
 
-        imprimirFormatosIdCorteCajaGeneral(state.reporteSeleccionado, fecha).then(({data}) => { //poner aqui el id de Embarque
+        imprimirFormatosIdCorteCajaGeneral(state.reporteSeleccionado, fecha,hora).then(({data}) => { //poner aqui el id de Embarque
             console.log(data)
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");

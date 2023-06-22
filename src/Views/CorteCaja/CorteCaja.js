@@ -379,5 +379,5 @@ function CorteCaja() {
     )
 }
 
-}
+
 export default CorteCaja;
