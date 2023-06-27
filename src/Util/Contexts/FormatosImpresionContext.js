@@ -75,13 +75,13 @@ function imprimirFormatosIdTimbradoViajes(id,idViaje,idInforme){
     );
     return result
 }
-function imprimirFormatosIdCorteCajaResumen(id,idDestino,fechaRegistro){
+function imprimirFormatosIdCorteCajaGeneral(id,fechaRegistro,horaRegistro){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
     trackPromise(
-        result =  axios.post(url,Object.assign({}, {idDestino:idDestino,fechaREgistro:fechaRegistro}), { headers})
+        result =  axios.post(url,Object.assign({}, {fechaRegistro:fechaRegistro,horaRegistro:horaRegistro}), { headers})
     );
     return result
 }
 
-export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaResumen}
+export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral}
