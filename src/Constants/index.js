@@ -161,7 +161,8 @@ export const dataGridLocaleText = {
     nextIconButtonText: 'Siguiente página',
 }
 
-export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
+//OBSOLETA DESDE JUNIO 26 2023
+export const TICKET_ZABRA_TAMPLATE_OLD = (guia, paquete, index) => (
     `^XA
 
 ^CI28
@@ -189,7 +190,7 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
 ^MUd
 ^XZ`)
 
-export const TICKET_ZABRA_TAMPLATE_PLATEROS = (guia, paquete, index) => (
+export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => (
     `CT~~CD,~CC^~CT~
 ^XA
 ~TA000
