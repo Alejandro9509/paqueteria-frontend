@@ -228,14 +228,14 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
         (
             guia.m_sDomicilioRemitente.length > 75 ? (
                 `^FT291,415^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS^CI27
-        ^FT65,459^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(26, 70)}^FS^CI27
-        ^FT65,513^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(71)}^FS^CI27`
+        ^FT65,459^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(25, 70)}^FS^CI27
+        ^FT65,513^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(70)}^FS^CI27`
             ) : (
                 `^FT291,415^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS^CI27
-            ^FT65,459^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(26)}^FS^CI27`
+            ^FT65,459^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente.substring(25)}^FS^CI27`
             )
         ) : `^FT291,415^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioRemitente}^FS^CI27`}
-^FT61,565^A0N,35,48^FH\\^CI28^FD${guia.m_sSucursalOrigen}^FS^CI27
+^FT61,565^A0N,35,48^FH\\^CI28^FD${guia.m_sSucursalorigen}^FS^CI27
 ^FO50,645^GB697,287,4,,2^FS
 ^FT53,633^A0N,35,48^FH\^CI28^FDDESTINO:^FS^CI27
 ^FT65,691^A0N,31,33^FH\\^CI28^FD${guia.m_sNombreDestinatario}^FS^CI27
@@ -246,15 +246,15 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT100,1120^A0N,35,43^FH\^CI28^FD${index + 1} DE ${paquete.ctd}^FS^CI27
 ^FT500,1195^BQN,2,7
 ^FH\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-${guia.m_sDomicilioDestinatario.length > 20 ?
+${guia.m_sDomicilioDestinatario.length > 30 ?
         (
-            guia.m_sDomicilioDestinatario.length > 75 ? (
+            guia.m_sDomicilioDestinatario.length > 72 ? (
                 `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
-            ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26,70)}^FS^CI27
-            ^FT72,910^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(71)}^FS^CI27`
+            ^FT65,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(25,70)}^FS^CI27
+            ^FT72,910^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(70)}^FS^CI27`
             ) : (
                 `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS^CI27
-            ^FT72,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(26)}^FS^CI27`
+            ^FT72,856^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario.substring(25)}^FS^CI27`
             )
         ) : `^FT291,804^A0N,35,30^FH\^CI28^FD${guia.m_sDomicilioDestinatario}}^FS^CI27`
     }
