@@ -136,7 +136,7 @@ function CorteCajaListado({onRowClick, value}){
                     'FOLIO GUIA': guia.folioGuia,
                     'FECHA ENTREGA': guia.fechaEntrega,
                     'OPERADOR/USUARIO': guia.nombrePersona,
-                    'FORMA DE PAGO': guia.tipoPago,
+                    'FORMA DE PAGO': guia.metodoPago,
                     'TOTAL GUIA': guia.total,
                     'TOTAL CORTE': ''
                 })
