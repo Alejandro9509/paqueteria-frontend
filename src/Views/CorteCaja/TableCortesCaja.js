@@ -129,7 +129,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                                                 </TableCell>
                                                 <TableCell>{historyRow.fechaEntrega}</TableCell>
                                                 <TableCell>{historyRow.nombrePersona}</TableCell>
-                                                <TableCell>{historyRow.tipoPago}</TableCell>
+                                                <TableCell>{historyRow.metodoPago}</TableCell>
                                                 <TableCell align="right">
                                                     {historyRow.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}
                                                 </TableCell>
