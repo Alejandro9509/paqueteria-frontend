@@ -483,6 +483,11 @@ function Guia(props) {
             field: "FolioERP",
             width: 200
         },
+        {
+            headerName: "Fecha última milla",
+            field: "m_sFechaUltimaMilla",
+            width: 200
+        },
 
 
     ]);
