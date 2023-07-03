@@ -5,6 +5,17 @@ import { dataGridLocaleText } from "../../Constants";
 import { DialogActions, TextField } from "@material-ui/core";
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import SearchIcon from "@material-ui/icons/Search";
+import { makeStyles } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles({
+    root: {
+        '& .MuiDataGrid-dataContainer': {
+            minHeight: 'auto !important',
+        },
+    },
+});
+
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
 function showSuccess(mensaje) {
   new Noty({
@@ -16,6 +27,7 @@ function showSuccess(mensaje) {
 }
 let rowSelect
 function DialogTableClientes(props) {
+    const classes = useStyles();
     let {dialogVisible,handlePatrocinadorSelected} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
@@ -84,7 +96,7 @@ function cargarDesdeServidor(pagina,registros){
             }}}
             style={{width: '60ch'}}
         />
-        <div style={{height:"300px", padding:"5px"}}>
+        <div className={classes.root} style={{height:"300px", padding:"5px", marginBottom: 0}}>
             <DataGrid
                 localeText={dataGridLocaleText}
                 columns={columns}
