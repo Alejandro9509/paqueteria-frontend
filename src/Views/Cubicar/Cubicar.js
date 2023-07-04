@@ -1,6 +1,5 @@
+/*
 import React, {Component, useRef, useState} from 'react'
-import {Canvas, useLoader} from '@react-three/fiber'
-import {Html, OrbitControls, PerspectiveCamera} from '@react-three/drei'
 import boxImage from "../../iconos/Cubicar/crate_box_assing.jpg"
 import boxImageAsignada from "../../iconos/Cubicar/crate_box.jpg"
 import {Button, Dialog, DialogContent, DialogTitle, Typography} from "@material-ui/core";
@@ -43,32 +42,32 @@ class Cubicar extends Component {
                             position={[(this.state.data.anchoEspacio / 2), (this.state.data.altoEspacio / 2), (this.state.data.largoEspacio / 2)]}
                             size={[this.state.data.anchoEspacio, this.state.data.altoEspacio,this.state.data.largoEspacio]}/>
 
-                       {/* <mesh
+                       {/!* <mesh
                             position={[(this.state.data.largoEspacio / 2),0, this.state.data.anchoEspacio + 1]}
                             scale={1}>
                             <boxGeometry args={[this.state.data.anchoEspacio,0.05,0.05]}/>
                             <meshStandardMaterial  />
-                        </mesh>*/}
+                        </mesh>*!/}
                         <Html style={{color:"white"}}  position={[(this.state.data.anchoEspacio + 1.2),0,(this.state.data.largoEspacio / 2)]} className="html-story-label html-story-label-b">
                            Largo: {this.props.largoEspacio + " mts"}
                         </Html>
 
-                        {/*<mesh
+                        {/!*<mesh
                             position={[0,(this.state.data.altoEspacio / 2), this.state.data.anchoEspacio + 1]}
                             scale={1}>
                             <boxGeometry args={[0.05,this.state.data.altoEspacio,0.05]}/>
                             <meshStandardMaterial  />
-                        </mesh>*/}
+                        </mesh>*!/}
                         <Html style={{color:"white"}}  position={[0,(this.state.data.altoEspacio / 2), this.state.data.anchoEspacio + 1.2]} className="html-story-label html-story-label-b">
                             Alto: {this.props.altoEspacio + " mts"}
                         </Html>
 
-                        {/*<mesh
+                        {/!*<mesh
                             position={[this.state.data.largoEspacio+1,0, this.state.data.anchoEspacio/2]}
                             scale={1}>
                             <boxGeometry args={[0.05,0.05,this.state.data.anchoEspacio]}/>
                             <meshStandardMaterial  />
-                        </mesh>*/} 
+                        </mesh>*!/}
                         <Html style={{color:"white"}}  position={[this.state.data.anchoEspacio/2,0,this.state.data.largoEspacio+1.2 ]} className="html-story-label html-story-label-b">
                           Ancho:  {this.props.anchoEspacio + " mts"}
                         </Html>
@@ -189,3 +188,4 @@ function BoxPackAssigned(props) {
         </>
     )
 }
+*/

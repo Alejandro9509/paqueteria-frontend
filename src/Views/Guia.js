@@ -95,7 +95,6 @@ import AsignarTrayectos from "./Guia/AsignarTrayectos";
 import ImprimirEtiquetas from "./Guia/ImprimirEtiquetas";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
-import Cubicar from "./Cubicar/Cubicar";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -3534,32 +3533,6 @@ function Guia(props) {
                                 </div>
                             </div>
 
-                        </div>
-                        <div id={"Sandbox"} className="tab-pane fade">
-                            <Cubicar
-                                espacio={'CAJA'}
-                                open={true}
-                                close={() => {console.log('cerrao')}}
-                                data={{
-                                    anchoEspacio: 10,
-                                    altoEspacio: 20,
-                                    largoEspacio: 30,
-                                    productos: [
-                                        {
-                                            asignado: true,
-                                            descripcion: 'TOMATOS',
-                                            posicionX: 1,
-                                            ancho: 2,
-                                            posicionZ: 1,
-                                            alto: 2,
-                                            posicionY: 1,
-                                            largo: 2
-                                        }
-                                    ]
-                                }}
-                                largoEspacio={'100'}
-                                anchoEspacio={'200'}
-                                altoEspacio={'300'}/>
                         </div>
                     </div>
                 </div>
