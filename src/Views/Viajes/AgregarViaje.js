@@ -51,6 +51,7 @@ import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from 
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
 import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
+import ProgressBarCubicaje from "./ProgressBarCubicaje";
 
 const headers = API_HEADERS
 
@@ -194,14 +195,14 @@ class AgregarViaje extends Component {
 
     componentWillMount() {
        
-        this.getAllCiudades()
+       /* this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
         this.getAllSucursales()
         this.getAllEstatusViaje();
         this.getAllUnidades();
         this.getAllRemolques();
-        this.getAllOperadores();
+        this.getAllOperadores();*/
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -1892,6 +1893,9 @@ class AgregarViaje extends Component {
                                                             dataInformesAsignados={this.state.dataInformesAsignados}
                                         />
                                     </div>
+
+                                    <br/>
+                                    <ProgressBarCubicaje value={60}>Espacio de carga usado: 60%</ProgressBarCubicaje>
                                 </div>
 
                                 {/*<div className={"row"}>
