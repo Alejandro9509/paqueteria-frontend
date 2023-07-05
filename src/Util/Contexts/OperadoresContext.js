@@ -33,14 +33,4 @@ function obtenerOperadoresPorSucursal(idSucursal) {
     return result
 }
 
-function validarDatosOperadorTimbrado(idOperador, fecha) {
-    const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Operador/ValidarDatosTimbrado/${idOperador}/${fecha}`;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-    );
-    return result
-}
-
-export { obtenerOperadoresId, obtenerOperadores, obtenerOperadoresPorSucursal, validarDatosOperadorTimbrado }
+export { obtenerOperadoresId, obtenerOperadores, obtenerOperadoresPorSucursal}
