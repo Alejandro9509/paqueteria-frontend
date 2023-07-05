@@ -15,7 +15,7 @@ import {
     Grid,
     Tooltip
 } from "@material-ui/core";
-import {getCurrentDate, getCurrentDateTime} from "../../Util/Util"
+import {getCurrentDateTime} from "../../Util/Util"
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
@@ -44,17 +44,8 @@ import {ContactsOutlined} from "@material-ui/icons";
 import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesContext";
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
-import {
-    obtenerEstatusUnidadeId,
-    obtenerRemolques,
-    obtenerUnidades,
-    validarDatosUnidadTimbrado
-} from "../../Util/Contexts/UnidadesContext";
-import {
-    obtenerOperadores,
-    obtenerOperadoresId,
-    validarDatosOperadorTimbrado
-} from "../../Util/Contexts/OperadoresContext";
+import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
+import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
@@ -202,7 +193,7 @@ class AgregarViaje extends Component {
     }
 
     componentWillMount() {
-       
+
         this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
@@ -737,14 +728,6 @@ class AgregarViaje extends Component {
                         })
                         return
                     }
-
-                    validarDatosUnidadTimbrado(newValue.m_nIdUnidad, getCurrentDate()).then(respuesta => {
-                        if(!respuesta.data.success){
-                            showSuccess(respuesta.data.message)
-                        }
-                    }).catch(err => {
-                        showSuccess(err.response.data.message)
-                    })
                     this.setState({
                         unidad: newValue,
                         placaIntUnidad: newValue.m_sPlacas,
@@ -847,14 +830,6 @@ class AgregarViaje extends Component {
                 }
             });
         }
-        validarDatosOperadorTimbrado(value.m_nIdOperador, getCurrentDate()).then(respuesta => {
-            if(!respuesta.data.success){
-                showSuccess(respuesta.data.message)
-            }
-        }).catch(err => {
-            showSuccess(err.response.data.message)
-        })
-
         this.setState({
             [input]: value,
             esOperadorPermisionario: value.m_bEsPermisionario

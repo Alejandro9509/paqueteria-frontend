@@ -114,14 +114,4 @@ function obtenerUnidadesTipo(id) {
     return result
 }
 
-function validarDatosUnidadTimbrado(idUnidad, fecha) {
-    const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ValidarDatosTimbrado/${idUnidad}/${fecha}`;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-    );
-    return result
-}
-
-export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId,validarDatosUnidadTimbrado }
+export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }

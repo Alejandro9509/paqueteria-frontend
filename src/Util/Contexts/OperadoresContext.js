@@ -64,14 +64,4 @@ function obtenerOperadoresId(id) {
     return result
 }
 
-function validarDatosOperadorTimbrado(idOperador, fecha) {
-    const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Operador/ValidarDatosTimbrado/${idOperador}/${fecha}`;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-    );
-    return result
-}
-
-export { modificarOperadores, agregarOperadores, eliminarOperadores, obtenerOperadoresId, obtenerOperadores, validarNumeroOperadores, validarDatosOperadorTimbrado }
+export { modificarOperadores, agregarOperadores, eliminarOperadores, obtenerOperadoresId, obtenerOperadores, validarNumeroOperadores }
