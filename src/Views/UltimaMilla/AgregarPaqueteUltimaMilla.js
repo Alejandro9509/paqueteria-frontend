@@ -104,13 +104,11 @@ class AgregarPaqueteUltimaMilla extends Component {
                 >
                     <DialogTitle><Typography variant={"h4"}>Paquetes - {this.state.paradaSeleccionada.m_snNombreOperador} </Typography></DialogTitle>
                     <DialogContent>
-                        { false &&
-                            <div align={"right"} style={{width: "100%"}}>
-                                <Button variant={"contained"} color={"primary"}
-                                        onClick={() => this.openSeleccionarPaquetes()}>Agregar Paquetes</Button>
+                        <div align={"right"} style={{width: "100%"}}>
+                            <Button variant={"contained"} color={"primary"}
+                                    onClick={() => this.openSeleccionarPaquetes()}>Agregar Paquetes</Button>
 
-                            </div>
-                        }
+                        </div>
 
                         <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
 
