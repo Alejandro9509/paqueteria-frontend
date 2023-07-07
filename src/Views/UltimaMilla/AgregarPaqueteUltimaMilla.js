@@ -24,13 +24,14 @@ import {
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import IconButton from "@material-ui/core/IconButton";
+import {showSuccess} from "../../Util/Util";
 
 class AgregarPaqueteUltimaMilla extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: props.paquetes,
-            itemsSinModificar: props.paquetes,
+            items: [...this.props.paquetes],
+            itemsSinModificar: [...this.props.paquetes],
             itemsDescartados: [],
             paquetes: [],
             openRemplazar: false,
@@ -41,11 +42,10 @@ class AgregarPaqueteUltimaMilla extends Component {
         this.onSubmitPaquetesSeleccionados = this.onSubmitPaquetesSeleccionados.bind(this)
         this.quitarPaquete = this.quitarPaquete.bind(this)
         this.onSubmitData = this.onSubmitData.bind(this)
-        //this.getAllPaquetes = this.getAllPaquetes.bind(this)
     }
 
     componentDidMount() {
-        this.setState({items: this.props.paquetes})
+        this.setState({items: [...this.props.paquetes]})
     }
 
     onSubmitData(e) {
@@ -63,7 +63,6 @@ class AgregarPaqueteUltimaMilla extends Component {
 
 
     openSeleccionarPaquetes() {
-        //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
         obtenerGuiaUltimaMilla(this.props.zonasIds, this.props.tipoServicio).then(({data}) => {
 
             this.setState({paquetes: data, openRemplazar: true})
@@ -77,11 +76,15 @@ class AgregarPaqueteUltimaMilla extends Component {
     };
 
     quitarPaquete(index){
-        const items = this.state.items
-        const paquetesDescartados = this.state.itemsDescartados
-        paquetesDescartados.push(items[index])
-        items.splice(index,1)
-        this.setState({items: items, itemsDescartados: paquetesDescartados})
+        if (this.state.items.length === 1){
+            showSuccess("No se pueden borrar todas las paradas de la ruta.")
+        } else {
+            const items = this.state.items
+            const paquetesDescartados = this.state.itemsDescartados
+            paquetesDescartados.push(items[index])
+            items.splice(index,1)
+            this.setState({items: items, itemsDescartados: paquetesDescartados})
+        }
     }
 
     render() {
