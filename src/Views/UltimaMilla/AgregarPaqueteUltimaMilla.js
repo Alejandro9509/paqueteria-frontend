@@ -23,6 +23,7 @@ import {
 } from 'react-sortable-hoc';
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
+import IconButton from "@material-ui/core/IconButton";
 
 class AgregarPaqueteUltimaMilla extends Component {
     constructor(props) {
@@ -30,6 +31,7 @@ class AgregarPaqueteUltimaMilla extends Component {
         this.state = {
             items: props.paquetes,
             itemsSinModificar: props.paquetes,
+            itemsDescartados: [],
             paquetes: [],
             openRemplazar: false,
             paradaSeleccionada: props.tour
@@ -43,14 +45,12 @@ class AgregarPaqueteUltimaMilla extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.paquetes)
         this.setState({items: this.props.paquetes})
     }
 
-
     onSubmitData(e) {
         e.preventDefault()
-        this.props.onSubmit(this.state.items)
+        this.props.onSubmit(this.state.items, this.state.itemsDescartados)
     }
 
     onSubmitPaquetesSeleccionados(seleccionados){
@@ -58,8 +58,6 @@ class AgregarPaqueteUltimaMilla extends Component {
         const {items} = this.state
         array = array.concat(items)
         array = array.concat(seleccionados)
-        console.log(array)
-
         this.setState({items: array, openRemplazar: false})
     }
 
@@ -80,8 +78,10 @@ class AgregarPaqueteUltimaMilla extends Component {
 
     quitarPaquete(index){
         const items = this.state.items
+        const paquetesDescartados = this.state.itemsDescartados
+        paquetesDescartados.push(items[index])
         items.splice(index,1)
-        this.setState({items: items})
+        this.setState({items: items, itemsDescartados: paquetesDescartados})
     }
 
     render() {
@@ -115,6 +115,7 @@ class AgregarPaqueteUltimaMilla extends Component {
                             {items.map((value, index) => {
                                 return (
                                 <SortableItem  disabled={value.m_nEstatusUlimaMilla !== 1}
+                                               apagao={value.m_nEstatusUlimaMilla !== 1}
                                                quitarPaquete={this.quitarPaquete}
                                                key={`item-${value.m_sFolio}`}
                                                index={index}
@@ -145,14 +146,16 @@ export default AgregarPaqueteUltimaMilla;
 
 const DragHandle = sortableHandle(() => <DragHandleIcon fontSize={"large"}/>);
 
-const SortableItem = sortableElement(({primary, secundary, quitarPaquete, position}) => {
+const SortableItem = sortableElement(({primary, secundary, quitarPaquete, position, apagao}) => {
     return (
     <ListItem style={{zIndex: 3000000000}}>
         <ListItemIcon>
             <DragHandle />
         </ListItemIcon>
         <ListItemText primary={`${primary}`} secondary={secundary}/>
-        {/*<DeleteIcon onClick={() => quitarPaquete(position)}/>*/}
+        <IconButton onClick={() => quitarPaquete(position)} disabled={apagao}>
+            <DeleteIcon />
+        </IconButton>
     </ListItem>
 )});
 
