@@ -807,18 +807,28 @@ class AgregarViaje extends Component {
 
 
             arrayInformesAsignados.push(informeAsignar)
-            const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array,i) => array.concat(i.m_arrClsDetalle), [])),[]);
-            const params = {
-                idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
-                idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
-                paquetes: paquetes.map(p => ({alto: p.m_xAlto, ancho: p.m_xAncho, largo: p.m_xLargo, peso: p.m_nPeso, cantidad: p.ctd}))
+            try {
+                const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
+                const params = {
+                    idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
+                    idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
+                    paquetes: paquetes.map(p => ({
+                        alto: p.m_xAlto,
+                        ancho: p.m_xAncho,
+                        largo: p.m_xLargo,
+                        peso: p.m_xPeso,
+                        cantidad: p.ctd
+                    }))
+                }
+                cubicarGuia(params).then(({data}) => {
+                    this.setState({utilizacion: data.utilizacion.toFixed(0)})
+                }).catch(e => {
+                    this.setState({utilizacion: 0})
+                    showError(e.response?.data)
+                })
+            } catch (e) {
+                showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado pero hubo un error al calcular cubicaje con el informe seleccionado.")
             }
-            cubicarGuia(params).then(({data}) => {
-                this.setState({utilizacion: data.utilizacion.toFixed(0)})
-            }).catch(e => {
-                this.setState({utilizacion: 0})
-                showError(e.response?.data)
-            })
             this.setState({dataInformesAsignados: arrayInformesAsignados})
             showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
         }else{
