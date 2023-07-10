@@ -49,9 +49,10 @@ import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/Operad
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
-import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
+import {cubicarGuia, validarEliminarGuia} from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 import ProgressBarCubicaje from "./ProgressBarCubicaje";
+import {showError} from "../../Util/GlobalFunctions";
 
 const headers = API_HEADERS
 
@@ -106,6 +107,7 @@ class AgregarViaje extends Component {
             showDialog: false,
             identificadorModal: "",
             tipoModal: 0,
+            utilizacion: 0,
             dataRutas: [],
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
@@ -195,14 +197,14 @@ class AgregarViaje extends Component {
 
     componentWillMount() {
        
-       /* this.getAllCiudades()
+       this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
         this.getAllSucursales()
         this.getAllEstatusViaje();
         this.getAllUnidades();
         this.getAllRemolques();
-        this.getAllOperadores();*/
+        this.getAllOperadores();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -792,7 +794,7 @@ class AgregarViaje extends Component {
 
 
     handleAgregarInforme(id) {
-        if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
+        if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined) {
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
             informeAsignar.m_bSePuedeBorrar = true
             if (this.state.trayectos.map(t => t.IdDestino).includes(informeAsignar.m_nIdDestino) === false) {
@@ -803,7 +805,20 @@ class AgregarViaje extends Component {
             informeAsignar.m_nDestinoSeleccionado = informeAsignar.m_nIdDestino
             informeAsignar.m_sDestinoSeleccionado = informeAsignar.m_sCiudadDestino
 
+
             arrayInformesAsignados.push(informeAsignar)
+            const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array,i) => array.concat(i.m_arrClsDetalle), [])),[]);
+            const params = {
+                idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
+                idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
+                paquetes: paquetes.map(p => ({alto: p.m_xAlto, ancho: p.m_xAncho, largo: p.m_xLargo, peso: p.m_nPeso, cantidad: p.ctd}))
+            }
+            cubicarGuia(params).then(({data}) => {
+                this.setState({utilizacion: data.utilizacion.toFixed(0)})
+            }).catch(e => {
+                this.setState({utilizacion: 0})
+                showError(e.response?.data)
+            })
             this.setState({dataInformesAsignados: arrayInformesAsignados})
             showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
         }else{
@@ -1895,7 +1910,7 @@ class AgregarViaje extends Component {
                                     </div>
 
                                     <br/>
-                                    <ProgressBarCubicaje value={60}>Espacio de carga usado: 60%</ProgressBarCubicaje>
+                                    <ProgressBarCubicaje value={this.state.utilizacion}>Espacio de carga usado: {this.state.utilizacion}%</ProgressBarCubicaje>
                                 </div>
 
                                 {/*<div className={"row"}>

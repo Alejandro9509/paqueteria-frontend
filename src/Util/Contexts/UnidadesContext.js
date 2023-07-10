@@ -30,11 +30,11 @@ function obtenerUnidadesInforme() {
     );
     return result
 }
-function obtenerUnidadesUltimaMilla(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoUltimaMilla/${id}`;
+function obtenerUnidadesUltimaMilla(id, params) {
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Unidades/GetListadoUltimaMilla/${id}`;
     let result;
     trackPromise(
-        result =  axios.get(url, { headers })
+        result =  axios.post(url, params, { headers })
     );
     return result
 }

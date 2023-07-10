@@ -1,3 +1,5 @@
+import Noty from "noty";
+
 export const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -10,3 +12,12 @@ export const toBase64 = file => new Promise((resolve, reject) => {
     };
     reader.onerror = error => reject(error);
 });
+
+export function showError(mensaje) {
+    new Noty({
+        type: "warning",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "8000"
+    }).show()
+}

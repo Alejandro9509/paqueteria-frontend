@@ -13,7 +13,7 @@ export default function ProgressBarCubicaje({value,children}) {
         },
         bar: {
             borderRadius: 5,
-            backgroundColor: '#1a90ff',
+            backgroundColor: value > 90 ? value > 100 ? '#ec3f3f' : '#3bd331' : '#1a90ff',
         },
     }))(LinearProgress);
     return (
