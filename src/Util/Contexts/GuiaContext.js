@@ -32,7 +32,7 @@ function agregarGuia(params) {
     return result
 }
 function cubicarGuia(params) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Cubicar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -40,7 +40,7 @@ function cubicarGuia(params) {
     return result
 }
 function cubicarGuiaInforme(params) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Cubicar/Informe`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar/Informe`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
