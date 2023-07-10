@@ -222,7 +222,7 @@ class UnidadesList extends Component {
 
                                         <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
                                         <TableCell align="left"><ProgressBarCubicaje
-                                            value={u.utilizacion}>{u.utilizacion.toFixed(0)}%</ProgressBarCubicaje></TableCell>
+                                            value={u.utilizacion || 0}>{u.utilizacion?.toFixed(0) || 0}%</ProgressBarCubicaje></TableCell>
                                         <TableCell align="left">{<Link style={{cursor: "pointer"}}
                                                                        onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
                                         <TableCell align="left">{u.m_sPlacas}</TableCell>
