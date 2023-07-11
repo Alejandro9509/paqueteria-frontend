@@ -60,7 +60,7 @@ export function remove_array_element(array, index) {
     return array;
 }
 
-
+/*
 export  function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
     var result;
     trackPromise(
@@ -102,7 +102,7 @@ export  function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
     )
     return result
 
-}
+}*/
 
 async function searchLocation(city) {
     var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
