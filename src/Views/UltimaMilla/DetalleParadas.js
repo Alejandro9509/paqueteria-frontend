@@ -500,8 +500,10 @@ class DetalleParadas extends Component {
         })
     }
 
-    onSubmitOrdenarPaquetes(paquetes) {
-        ordenarParada(this.state.tour.m_nIdParadaUltimaMilla, paquetes).then(({data}) => {
+    onSubmitOrdenarPaquetes(paquetes, paquetesDescartados) {
+        // console.log(paquetes)
+        // console.log(paquetesDescartados)
+        ordenarParada(this.state.tour.m_nIdParadaUltimaMilla, paquetes, paquetesDescartados).then(({data}) => {
             showSuccess("Parada Actualizada")
             this.setState({openOrdenarParadas: false})
             this.props.refresh()

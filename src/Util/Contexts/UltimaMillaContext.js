@@ -401,12 +401,12 @@ function validarUnidadesSeleccionadas(unidades) {
 
 }
 
-async function ordenarParada(idParada, guias) {
+async function ordenarParada(idParada, guias, guiasDescartadas) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/OrdenarParada`;
     let result;
 
     guias = await obtenerGuiasUbicacion(guias)
-    var paquetes = guias.map((g, index) => ({
+    let paquetes = guias.map((g, index) => ({
         idGuia: g.m_nId,
         lat: g.lat.toString(),
         lng: g.lng.toString(),
@@ -414,13 +414,23 @@ async function ordenarParada(idParada, guias) {
         esRecoleccion: g.m_bEsRecoleccion,
         idParadaGuia: g.m_nIdParadaGuia
     }))
+    let paquetesDescartados = guiasDescartadas.map((g, index) => ({
+        idGuia: g.m_nId,
+        lat: g.lat.toString(),
+        lng: g.lng.toString(),
+        orden: index + 1,
+        esRecoleccion: g.m_bEsRecoleccion,
+        idParadaGuia: g.m_nIdParadaGuia
+    }))
+    console.log(JSON.stringify({ m_nIdParadaUltimaMilla: idParada, guias: paquetes,guiasDescartadasDeRuta: paquetesDescartados }))
+    console.log({ m_nIdParadaUltimaMilla: idParada, guias: paquetes,guiasDescartadasDeRuta: paquetesDescartados })
     trackPromise(
         result = axios.put(url, Object.assign({}, {
             m_nIdParadaUltimaMilla: idParada,
-            guias: paquetes
+            guias: paquetes,
+            guiasDescartadasDeRuta: paquetesDescartados
         }), {headers})
-    )
-    ;
+    );
     return result
 }
 
