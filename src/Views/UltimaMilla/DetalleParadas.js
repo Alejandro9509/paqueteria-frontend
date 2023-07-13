@@ -29,7 +29,7 @@ import {PieChart} from 'react-minimal-pie-chart';
 import BlockIcon from '@material-ui/icons/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import PaquetesParcialesGuia from './PaquetesParcialesGuia';
-import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
+import OrdenarParadasUltimaMilla from "./OrdenarParadasUltimaMilla";
 import PaquetesList from "./PaquetesList";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
@@ -612,7 +612,7 @@ class DetalleParadas extends Component {
                 }
                 {
                     this.state.openOrdenarParadas &&
-                    <AgregarPaqueteUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
+                    <OrdenarParadasUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
                                                tour={this.state.tour}
                                                onSubmit={this.onSubmitOrdenarPaquetes}
                                                tipoServicio={parseInt(this.props.filtros.tipoBusqueda)}
