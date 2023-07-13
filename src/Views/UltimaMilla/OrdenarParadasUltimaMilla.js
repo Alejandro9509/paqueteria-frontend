@@ -26,7 +26,7 @@ import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import IconButton from "@material-ui/core/IconButton";
 import {showSuccess} from "../../Util/Util";
 
-class AgregarPaqueteUltimaMilla extends Component {
+class OrdenarParadasUltimaMilla extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -143,9 +143,9 @@ class AgregarPaqueteUltimaMilla extends Component {
     }
 }
 
-AgregarPaqueteUltimaMilla.propTypes = {};
+OrdenarParadasUltimaMilla.propTypes = {};
 
-export default AgregarPaqueteUltimaMilla;
+export default OrdenarParadasUltimaMilla;
 
 const DragHandle = sortableHandle(() => <DragHandleIcon fontSize={"large"}/>);
 
