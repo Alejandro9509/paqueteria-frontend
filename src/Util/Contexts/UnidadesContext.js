@@ -5,52 +5,12 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
 
-function modificarUnidades(id, params) {
-    const url =
-                `${process.env.REACT_APP_API_URL}/Unidad/Modificar/` + id;
-    let result;
-    trackPromise(
-        result =  axios
-                .put(url, Object.assign({}, params), { headers })
-        );
-    return result
-}
-
-function agregarUnidades(params) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/Agregar`;
-    let result;
-    trackPromise(
-        result =  axios
-        .post(url, Object.assign({}, params), { headers })
-        );
-    return result
-}
-
-function eliminarUnidades(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/Eliminar/` + id + `/${idEliminadoPor}`;
-    let result;
-    trackPromise(
-        result =  axios
-        .get(url, { headers })
-        );
-    return result
-}
-function validaCodigoUnidad(code) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidades/ValidaCodigoUnidad/` + code
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-        );
-    return result
-}
-
-
 function obtenerUnidades() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-        );
+    );
     return result
 }
 
@@ -83,7 +43,7 @@ function obtenerUnidadesId(id) {
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-        );
+    );
     return result
 }
 
@@ -110,8 +70,26 @@ function obtenerUnidadesTipo(id) {
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-        );
+    );
     return result
 }
 
-export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }
+function obtenerUnidadesOperador(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ByOperador/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerUnidadesConvoy(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ByConvoy/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, obtenerUnidadesId, obtenerUnidades, obtenerUnidadesTipo, obtenerEstatusUnidadeId, obtenerUnidadesOperador, obtenerUnidadesConvoy }
