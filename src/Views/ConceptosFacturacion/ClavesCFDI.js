@@ -231,20 +231,21 @@ class ClavesCFDI extends Component {
                         </Button>
                         </div>
                     </div>
-                    <div style={{height:"300px", padding:"5px"}}>
-                       <DataGrid
-                                localeText={dataGridLocaleText}
-                                rows={this.props.dataSAT}
-                                columns={this.state.columnsUnidades}
-                                paginationMode="server"
-                                onPageChange={(newPage)=>{this.props.setPagina(newPage)}}
-                                density="compact"
-                                rowCount={100000}
-                                getRowId={ ((row)=> row.m_sClaveSAT)}
-                                onRowSelected={(row) => {
-                                    this.props.selectClase(row);
-                                }}
-                            />
+                    <div className="complementoSAT" style={{height:"300px", padding:"5px"}}>
+                        <DataGrid
+                            localeText={dataGridLocaleText}
+                            rows={this.props.dataSAT}
+                            columns={this.state.columnsUnidades}
+                            paginationMode="server"
+                            rowsPerPageOptions={[25]}
+                            onPageChange={(newPage)=>{this.props.setPagina(newPage)}}
+                            density="compact"
+                            rowCount={100000}
+                            getRowId={ ((row)=> row.m_sClaveSAT)}
+                            onRowSelected={(row) => {
+                                this.props.selectClase(row);
+                            }}
+                        />
                     </div>
 
                 </div>
