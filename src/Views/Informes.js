@@ -664,12 +664,16 @@ function Informes({history}) {
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia.filter(g => g.select)
         }
-        cubicarGuiaInforme(params).then(({data}) => {
-            setUtilizacion( data.utilizacion.toFixed(0))
-        }).catch(e => {
-            setUtilizacion(0)
-            showError(e.response?.data)
-        })
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
         setDataGuias(newGuia);
     };
 
