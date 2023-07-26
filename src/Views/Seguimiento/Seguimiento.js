@@ -258,6 +258,7 @@ class Seguimiento extends Component {
                                     dataPaquetes={this.state.data.paquetes}
                                     onChangeList={() => console.log("")}
                                     disabled={true}
+                                    mostrarPesoFinal={false}
                                 />
                             </div>
                         }

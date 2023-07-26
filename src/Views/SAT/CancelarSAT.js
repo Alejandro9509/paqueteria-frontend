@@ -231,6 +231,8 @@ export function RecoleccionResumen(props) {
         idsTiposCobroSeleccionArray: [],
         detectarTipoCobro: false,
         limpiarProducto: false,
+        tipoTarifa: 0,
+        factorConversion: 0.0
     })
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
@@ -352,6 +354,8 @@ export function RecoleccionResumen(props) {
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
                     limpiarProducto: respuesta.data.LimpiarProducto,
+                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    factorConversion: respuesta.data.FactorConversion,
                 }
             })
         })
@@ -818,6 +822,8 @@ export function RecoleccionResumen(props) {
                     cliente={data.clientePaga}
                     seCalculaTarifa={seCalculaTarifa}
                     limpiarProducto={configuraciones.limpiarProducto}
+                    tipoTarifa={configuraciones.tipoTarifa}
+                    factorConversion={configuraciones.factorConversion}
                 />
             </section>
             <section id={"complementos"}>

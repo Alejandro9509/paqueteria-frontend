@@ -272,6 +272,7 @@ function Recoleccion() {
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
+        factorConversion: 0.0,
     })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
@@ -699,6 +700,7 @@ function Recoleccion() {
                     idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                     idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                    factorConversion: respuesta.data.FactorConversion || 0.0,
                 }
             })
         })
@@ -4008,6 +4010,8 @@ function Recoleccion() {
                                             cliente={state.clientePaga}
                                             seCalculaTarifa={seCalculaTarifa}
                                             limpiarProducto={configuraciones.limpiarProducto}
+                                            tipoTarifa={parseInt(configuraciones.tipoTarifa)}
+                                            factorConversion={configuraciones.factorConversion}
                                         />
                                     </div>
                                     <div className="widget-wrap" id="complementosSat">

@@ -561,7 +561,8 @@ function Embarque(props) {
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
-        modificarValorEmbarque:false
+        modificarValorEmbarque:false,
+        factorConversion: 0.0
     })
     const [errores, setErrores] = React.useState([])
     const [state, setState] = React.useState({
@@ -736,7 +737,8 @@ function Embarque(props) {
             idsTiposCobroSeleccionArray: [],
             idsTiposCobroSeleccionString: '',
             idConceptoFlete: 0,
-            modificarValorEmbarque:false
+            modificarValorEmbarque:false,
+            factorConversion: 0.0
         })
     }
 
@@ -2390,7 +2392,8 @@ function Embarque(props) {
                         idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                         idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                         idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
-                        modificarValorEmbarque: respuesta.data.ModificarValorEmbarque
+                        modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
+                        factorConversion: respuesta.data.FactorConversion
                     }
                 })
                 setDataTipoDocumento(data)
@@ -4054,6 +4057,8 @@ function Embarque(props) {
                                             cliente={state.clientePaga}
                                             seCalculaTarifa={seCalculaTarifa}
                                             limpiarProducto={configuraciones.limpiarProducto}
+                                            tipoTarifa={parseInt(configuraciones.tipoTarifa)}
+                                            factorConversion={configuraciones.factorConversion}
                                         />
 
                                     </div>

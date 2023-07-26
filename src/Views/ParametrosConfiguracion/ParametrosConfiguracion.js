@@ -122,7 +122,8 @@ function ParametrosConfiguracion() {
         plantillaImportarEmbarquesNombreArchivo: '',
         modificarValorEmbarque:false,
         foliosPorSucursal: false,
-        documentos:[]
+        documentos:[],
+        factorConversion: 0.0
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -254,7 +255,8 @@ function ParametrosConfiguracion() {
                     plantillaImportarEmbarquesBase64: "",
                     plantillaImportarEmbarquesNombreArchivo: "",
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal,
-                    documentos: respuesta.data.documentos || []
+                    documentos: respuesta.data.documentos || [],
+                    factorConversion: respuesta.data.FactorConversion
                 }
             })
 
@@ -867,6 +869,18 @@ function ParametrosConfiguracion() {
                                                 </FormControl>
                                             </Box>
                                         </Box>
+                                        { configuraciones.tipoTarifa == 2 &&
+                                            <Box width="40%" display="flex">
+                                                <Box width="40%" p={1} my={0.5}>
+                                                    <div className={classes.subtitulo}>Factor de conversión</div>
+                                                </Box>
+                                                <Box width="60%" p={1} my={0.5}>
+                                                    <Typography variant={'h4'}>
+                                                        {configuraciones.factorConversion}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        }
                                         <Box width="40%" display="flex">
                                             <Box width="40%" p={1} my={0.5}>
                                                 <div className={classes.subtitulo}>Cobro de cita</div>

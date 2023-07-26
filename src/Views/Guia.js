@@ -224,6 +224,7 @@ function Guia(props) {
         idEstatusGuia: 4,
         idMoneda: 1,
         idTipoTarifa: 2,
+        factorConversion: 0.0,
         tipoCambio: 0,
         validarEmbarqueGuia:false,
         //Remitente
@@ -641,13 +642,13 @@ function Guia(props) {
 
     async function getParametrosConfiguracion(){
         obtenerParametrosConfiguracion().then(respuesta=>{
-            console.log(respuesta)
             setState(state=>{
                 return{
                     ...state,
                     estatusGuia:respuesta.data.EstatusGuia,
                     idTipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    idMoneda: respuesta.data.MonedaEmbarque
+                    idMoneda: respuesta.data.MonedaEmbarque,
+                    factorConversion: respuesta.data.FactorConversion
                 }
             })
         })
@@ -3363,6 +3364,9 @@ function Guia(props) {
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={true}
+                                            tipoTarifa={parseInt(state.idTipoTarifa)}
+                                            factorConversion={state.factorConversion}
+
                                         />
 
                                         {/*<div className="col-md-6">
