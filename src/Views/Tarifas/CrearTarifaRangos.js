@@ -221,6 +221,7 @@ export default function CrearTarifaRangos(props) {
             if (i.idViaje === viaje.idViaje ){
                 i.idOrigen = viaje.idOrigen
                 i.idTipoMedida = viaje.idTipoMedida
+                i.fleteMinimo = viaje.fleteMinimo
                 i.idDestino = viaje.idDestino
                 i.grupos = viaje.grupos
             }

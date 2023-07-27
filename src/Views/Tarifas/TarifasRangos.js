@@ -266,6 +266,7 @@ export default function TarifasRangos(props) {
             idOrigen: viaje.IdOrigen || null,
             idTipoMedida: viaje.IdTipoMedida || null,
             idDestino: viaje.IdDestino || null,
+            fleteMinimo: viaje.fleteMinimo || null,
             grupos: data.Grupos.filter(i => i.IdViajeForaneo === viaje.IdViajeForaneo).map(grupo => ({
                 idGrupo: grupo.IdViajeForaneoGrupo || Math.floor(Math.random() * 10000),
                 nombre: grupo.Referencia || '',
@@ -359,6 +360,7 @@ export default function TarifasRangos(props) {
     }
 
     const handleAgregarTarifa = (params) => {
+        console.log(params);
         agregarTarifaRangos(params).then(respuesta => {
             console.log(respuesta.data)
             if (respuesta.data.Estatus){
