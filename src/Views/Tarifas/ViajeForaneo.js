@@ -34,6 +34,7 @@ export default function ViajeForaneo(props) {
         idOrigen: props.viaje.idOrigen || null,
         idTipoMedida: props.viaje.idTipoMedida || null,
         idDestino: props.viaje.idDestino || null,
+        fleteMinimo: props.viaje.fleteMinimo || 0,
         grupos: props.viaje.grupos || [],
     })
     const [dialogGrupo, setDialogGrupo] = useState({
@@ -239,6 +240,20 @@ export default function ViajeForaneo(props) {
                                 startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
                             Eliminar viaje
                         </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            id="fleteMinimo"
+                            inputMode={"decimal"}
+                            label="Flete Mínimo"
+                            value={props.viaje.fleteMinimo}
+                            onChange={handleChangeViajeForaneo}
+                            name="fleteMinimo"
+                            variant="outlined"
+                            margin={"dense"}
+                            required
+                            disabled={props.disabled}
+                        />
                     </Grid>
 
                 </Grid>
