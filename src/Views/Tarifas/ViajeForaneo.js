@@ -34,7 +34,7 @@ export default function ViajeForaneo(props) {
         idOrigen: props.viaje.idOrigen || null,
         idTipoMedida: props.viaje.idTipoMedida || null,
         idDestino: props.viaje.idDestino || null,
-        fleteMinimo: props.viaje.fleteMinimo || null,
+        fleteMinimo: props.viaje.fleteMinimo || 0,
         grupos: props.viaje.grupos || [],
     })
     const [dialogGrupo, setDialogGrupo] = useState({
