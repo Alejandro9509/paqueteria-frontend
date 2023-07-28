@@ -27,6 +27,7 @@ import IconButton from '@material-ui/core/IconButton';
 import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralDerecha from "../../Components/Template/BarraLateralIzquierda";
+import { fontSize } from "@material-ui/system";
 
 const useStyles = makeStyles({
     root: {
@@ -34,6 +35,10 @@ const useStyles = makeStyles({
       borderRadius: 5,
       /* backgroundColor: '#1a90ff', */
     },
+    ol: {
+      fontSize: 30,
+      marginTop: 50
+    }
     
   });
 
@@ -83,16 +88,10 @@ function Tutoriales(props) {
                    <div className="widget-wrap">
                        <div className="widget-container">
                             <div className="widget-content">
-                               <div className="row" style={{height: state.height - 250, width: '100%'}}>
+                               <div className="row" style={{height: state.height - 100, width: '100%'}}>
                                     <div className="widget-header">
-                                        <h2>Descargas: </h2> 
-                                        <a href={'https://drive.google.com/drive/folders/1qhJ2qJGfpkehlCP4qZChjKZhRD1375Qh'} to={{pathname: "https://drive.google.com/drive/folders/1qhJ2qJGfpkehlCP4qZChjKZhRD1375Qh"}} target="_blank">
-                                                    <IconButton /* aria-label="help" component={Link} to={{pathname: "/Tutoriales"}} */ >
-                                                        <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
-                                                    </IconButton>
-                                        </a>
-                                        <button onClick={() => handleOpenPicker()}>Open Picker</button>
-                                        <ul className="new-file-lists">
+                                        <h2 style={{ fontSize: 30}}>Descargas: </h2>
+                                        <ul className = {classes.ol}>
                                             <li><a href={CATALOGOS}><i className="fa fa-file-excel-o" /> CATALOGOS.pdf</a></li>
                                             <li><a href={TARIFARIO}><i className="fa fa-file-excel-o" /> TARIFARIO.pdf</a></li>
                                             <li><a href={CONVENIOS}><i className="fa fa-file-excel-o" /> CONVENIOS.pdf</a></li>

@@ -140,16 +140,19 @@ function Cabecera({ titulo, children }) {
                      }
                  }>
                 <div>
-                    <Tooltip title={"Tutoriales"}>
+                    {/* <Tooltip title={"Tutoriales"}>
                             <a href={'https://drive.google.com/drive/folders/1qhJ2qJGfpkehlCP4qZChjKZhRD1375Qh'} to={{pathname: "https://drive.google.com/drive/folders/1qhJ2qJGfpkehlCP4qZChjKZhRD1375Qh"}} target="_blank">
                                 <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
                             </a>
+                    </Tooltip> */}
+                    <Tooltip title={"Tutoriales"}>
+                        <Link component="a" to={{pathname: "/Tutoriales"}} target="_blank">
+                                    <IconButton >
+                                        <img src={iconoAyuda} style={{height: 30, width:30, margin: 10}}/>
+                                    </IconButton>
+                        </Link>
                     </Tooltip>
-                    {/* <Link component="a" to={{pathname: "/Tutoriales"}} target="_blank">
-                                <button type={"submit"} className="btn btn-primary primary-btn" >
-                                    <img src={iconoAyuda} style={{height: 30, width:30, margin: 10}}/>
-                                </button<Tooltip title={"Tutoriales"}>>
-                    </Link> */}
+                    
                    {/*  <Tooltip title={"Tutoriales"}>
                         
                                    <IconButton aria-label="help" component={Link} to={{
