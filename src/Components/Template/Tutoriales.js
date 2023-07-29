@@ -9,7 +9,6 @@ import {
 import Noty from "noty";
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import CATALOGOS from '../../Files/Tutoriales/Paqueteria/Paqueteria - 1 - CATALOGOS.pdf';
 import TARIFARIO from '../../Files/Tutoriales/Paqueteria/Paqueteria - 2 - TARIFARIO.pdf';
 import CONVENIOS from '../../Files/Tutoriales/Paqueteria/Paqueteria - 3 - CONVENIOS.pdf';
@@ -28,6 +27,16 @@ import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralDerecha from "../../Components/Template/BarraLateralIzquierda";
 import { fontSize } from "@material-ui/system";
+import Box from '@material-ui/core/Box';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import Link from '@material-ui/core/Link';
+import pdficon from '@material-ui/icons/PictureAsPdfRounded';
+import { Link2 } from 'react-router-dom';
+import { circle } from "leaflet";
 
 const useStyles = makeStyles({
     root: {
@@ -36,12 +45,16 @@ const useStyles = makeStyles({
       /* backgroundColor: '#1a90ff', */
     },
     ol: {
-      fontSize: 30,
-      marginTop: 50
+      fontSize: 20,
+      marginTop: 50,
+      listStyle: 'circle'
+    },
+    li: {
+        marginTop: 20,
     }
     
   });
-
+let name = "Paqueteria - "
 function Tutoriales(props) {
     const classes = useStyles();
     const [state, setState] = useState({
@@ -90,20 +103,37 @@ function Tutoriales(props) {
                             <div className="widget-content">
                                <div className="row" style={{height: state.height - 100, width: '100%'}}>
                                     <div className="widget-header">
-                                        <h2 style={{ fontSize: 30}}>Descargas: </h2>
+                                        <h2 style={{ fontSize: 30}}>Listado de Tutoriales </h2>
+                                        
+                                        
+                                       {/*  <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                                            <nav aria-label="main mailbox folders">
+                                                <List>
+                                                    <ListItem disablePadding>
+                                                        <ListItemIcon>
+                                                            <pdficon>
+                                                                <Link Link href={CATALOGOS} underline="hover"> 
+                                                                    <ListItemText primary="Inbox" />     
+                                                                </Link>
+                                                            </pdficon>                                                 
+                                                        </ListItemIcon>
+                                                    </ListItem>
+                                                </List>
+                                            </nav>
+                                        </Box> */}
                                         <ul className = {classes.ol}>
-                                            <li><a href={CATALOGOS}><i className="fa fa-file-excel-o" /> CATALOGOS.pdf</a></li>
-                                            <li><a href={TARIFARIO}><i className="fa fa-file-excel-o" /> TARIFARIO.pdf</a></li>
-                                            <li><a href={CONVENIOS}><i className="fa fa-file-excel-o" /> CONVENIOS.pdf</a></li>
-                                            <li><a href={RECOLECCION}><i className="fa fa-file-excel-o" /> RECOLECCION.pdf</a></li>
-                                            <li><a href={EMBARQUE}><i className="fa fa-file-excel-o" /> EMBARQUE.pdf</a></li>
-                                            <li><a href={GUIAS}><i className="fa fa-file-excel-o" /> GUIAS.pdf</a></li>
-                                            <li><a href={INFORMES}><i className="fa fa-file-excel-o" /> INFORMES.pdf</a></li>
-                                            <li><a href={VIAJES}><i className="fa fa-file-excel-o" /> VIAJES.pdf</a></li>
-                                            <li><a href={ULTIMAMILLA}><i className="fa fa-file-excel-o" /> ULTIMAMILLA.pdf</a></li>
-                                            <li><a href={APPMOVIL}><i className="fa fa-file-excel-o" /> APPMOVIL.pdf</a></li>
-                                            <li><a href={ESCANER}><i className="fa fa-file-excel-o" /> ESCANER.pdf</a></li>
-                                            <li><a href={CORTEDECAJA}><i className="fa fa-file-excel-o" /> CORTEDECAJA.pdf</a></li>
+                                            <li className = {classes.li}><a href={CATALOGOS}><i/> {name} 1 - CATALOGOS.</a></li>
+                                            <li className = {classes.li}><a href={TARIFARIO}><i/> {name} 2 - TARIFARIO.</a></li>
+                                            <li className = {classes.li}><a href={CONVENIOS}><i/>  {name} 3 - CONVENIOS.</a></li>
+                                            <li className = {classes.li}><a href={RECOLECCION}><i/> {name} 4 - RECOLECCION.</a></li>
+                                            <li className = {classes.li}><a href={EMBARQUE}><i/> {name} 5 - EMBARQUE.</a></li>
+                                            <li className = {classes.li}><a href={GUIAS}><i/> {name} 6 - GUIAS.</a></li>
+                                            <li className = {classes.li}><a href={INFORMES}><i/> {name} 7 - INFORMES.</a></li>
+                                            <li className = {classes.li}><a href={VIAJES}><i/> {name} 8 - VIAJES.</a></li>
+                                            <li className = {classes.li}><a href={ULTIMAMILLA}><i/> {name} 9 - ULTIMAMILLA.</a></li>
+                                            <li className = {classes.li}><a href={APPMOVIL}><i/>{name} 10 - APPMOVIL.</a></li>
+                                            <li className = {classes.li}><a href={ESCANER}><i/>{name} 11 - ESCANER.</a></li>
+                                            <li className = {classes.li}><a href={CORTEDECAJA}><i/>{name} 12 - CORTEDECAJA.</a></li>
                                         </ul>
                                     </div>
                               </div>
