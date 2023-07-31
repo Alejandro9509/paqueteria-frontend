@@ -266,6 +266,7 @@ export default function TarifasRangos(props) {
             idOrigen: viaje.IdOrigen || null,
             idTipoMedida: viaje.IdTipoMedida || null,
             idDestino: viaje.IdDestino || null,
+            fleteMinimo: viaje.fleteMinimo || 0,
             grupos: data.Grupos.filter(i => i.IdViajeForaneo === viaje.IdViajeForaneo).map(grupo => ({
                 idGrupo: grupo.IdViajeForaneoGrupo || Math.floor(Math.random() * 10000),
                 nombre: grupo.Referencia || '',
