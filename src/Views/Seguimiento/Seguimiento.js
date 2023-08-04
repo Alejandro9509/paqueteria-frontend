@@ -20,7 +20,7 @@ import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
 import DialogoEvidenciasUltimaMilla from "../UltimaMilla/DialogoEvidenciasUltimaMilla";
 import { Autocomplete } from "@material-ui/lab";
 import { obtenerFoliosSeguimiento } from "../../Util/Contexts/SeguimientoContext";
-import { showError } from '../../Util/GlobalFunctions';
+import {showSuccess} from "../../Util/Util";
 const events = [
     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
     {ts: "2017-09-17T12:21:46.587Z", text: 'Clicked Home Page'},
@@ -85,7 +85,7 @@ class Seguimiento extends Component {
                     })
                 })
             }else{
-                showError(data)
+                showSuccess(data)
                 return;
             }
             
