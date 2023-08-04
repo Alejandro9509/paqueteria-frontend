@@ -20,7 +20,7 @@ import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
 import DialogoEvidenciasUltimaMilla from "../UltimaMilla/DialogoEvidenciasUltimaMilla";
 import { Autocomplete } from "@material-ui/lab";
 import { obtenerFoliosSeguimiento } from "../../Util/Contexts/SeguimientoContext";
-
+import { showError } from '../../Util/GlobalFunctions';
 const events = [
     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
     {ts: "2017-09-17T12:21:46.587Z", text: 'Clicked Home Page'},
@@ -74,15 +74,21 @@ class Seguimiento extends Component {
     buscarAction(e) {
         e.preventDefault()
         obtenerInformeFolioTipo(this.state.folioBusqueda,this.state.tipoBusqueda).then(({data}) => {
-            obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
-                obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
-                    this.setState({
-                        imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
-                        imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
-                        data: data
+            if(data.Estatus == true){
+                obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
+                    obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
+                        this.setState({
+                            imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
+                            imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
+                            data: data
+                        })
                     })
                 })
-            })
+            }else{
+                showError(data)
+                return;
+            }
+            
         })
     }
     handleClickCloseDialogoEvidenciaRecoleccion(openDialog){
@@ -258,7 +264,6 @@ class Seguimiento extends Component {
                                     dataPaquetes={this.state.data.paquetes}
                                     onChangeList={() => console.log("")}
                                     disabled={true}
-                                    mostrarPesoFinal={false}
                                 />
                             </div>
                         }
