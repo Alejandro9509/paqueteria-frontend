@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import Marker from "react-leaflet-enhanced-marker";
 import {Polyline, Popup} from "react-leaflet";
 import {calcularRuta, calcularRutaUltimaMilla, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
-import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
-import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent, Button} from "@material-ui/core";
-import {InsertDriveFile} from "@material-ui/icons";
-import IconButton from "@material-ui/core/IconButton";
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import {obtenerRecoleccionReporte} from "../../Util/Contexts/RecoleccionContext";
 import {decodePolyline} from "../../Util/HereDecoading";
 import DialogoEvidenciasUltimaMilla from "./DialogoEvidenciasUltimaMilla";
+import DatosEntregaRecoleccion from "./DatosEntregaRecoleccion"
 
 class TourUltimaMilla extends Component {
     constructor(props) {
@@ -19,16 +15,19 @@ class TourUltimaMilla extends Component {
         this.state = {
             polygon: [],
             setOpenDialogEvidencias: false,
-            guiaSeleccionada: null
+            guiaSeleccionada: null,
+            openDatos: false
         }
         this.getRoute = this.getRoute.bind(this)
         this.handleClickOpenDialogoEvidencia = this.handleClickOpenDialogoEvidencia.bind(this)
         this.handleClickCloseDialogoEvidencia = this.handleClickCloseDialogoEvidencia.bind(this)
+        this.handleOpenDatos = this.handleOpenDatos.bind(this)
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
 
         if (this.props.data.m_arrClsProGuia.length !== prevProps.data.m_arrClsProGuia.length) {
+            console.log("Ciclo")
             this.getRoute()
         }
     }
@@ -106,6 +105,11 @@ class TourUltimaMilla extends Component {
             guiaSeleccionada: guia
         })
     }
+    handleOpenDatos(){
+        this.setState({
+            openDatos: true
+        })
+    }
 
     render() {
         const blackOptions = {color: this.props.data.color}
@@ -122,67 +126,17 @@ class TourUltimaMilla extends Component {
                 {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
                             return (
-                                <Marker key={index}
+                                <div>
+                                        <Marker key={index}
                                         icon={<MarkerComponent color={this.props.data.color}
                                                                index={g.m_nUltimaMillaOrden}/>}
                                         position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
                                     <Popup>
-                                        <Grid container spacing={1}>
-                                            <Grid item md={12}>
-                                                <Typography
-                                                    variant={"h2"}>{g.m_sFolio} - { g.m_sEstatusUltimaMilla}</Typography>
-                                            </Grid>
-
-                                            <Grid item md={12}>
-                                                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Datos de
-                                                    la {g.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
-                                            </Grid>
-                                            <Grid item md={12}>
-                                                <Typography
-                                                    variant={"body1"}>{g.m_bEsRecoleccion ?   g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
-                                            </Grid>
-                                            <Grid item md={12}>
-                                                <Typography
-                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_bRecoleccionDiferenteDomicilio ? g.m_sDomicilioDetalleRecoleccion : g.m_sDomicilioRemitente : g.m_bEntregaDiferenteDomicilio ? g.m_sDomicilioDetalleEntrega :  g.m_sDomicilioDestinatario}</Typography>
-                                            </Grid>
-                                            <Grid item md={12}>
-                                                <Typography
-                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sContactoRemitente : g.m_sContactoDestinatario}</Typography>
-                                            </Grid>
-                                            <Grid item md={12}>
-                                                <Typography
-                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sTelefonoRemitente : g.m_sTelefonoDestinatario}</Typography>
-                                            </Grid>
-                                            <Grid item md={10}>
-                                                <Typography variant={"body1"}>No.
-                                                    Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.ctd, 0)}</Typography>
-                                            </Grid>
-                                            <Grid item md={2}>
-                                                <IconButton aria-label="file" onClick={() => this.generarReporte(g)}>
-                                                    <InsertDriveFile fontSize={"default"}/>
-                                                </IconButton>
-                                            </Grid>
-                                            <Grid item md={12}>
-                                                <Button fullWidth variant="text" color="primary" onClick={() => this.handleClickOpenDialogoEvidencia(true, g)}>
-                                                    Ver evidencias
-                                                </Button>
-                                            </Grid>
-                                            {/*{
-
-                                                g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
-                                                <Grid item md={12}>
-                                                    <div align={"center"}>
-                                                        <img style={{width: "80px", height: "80px",transform:"rotate(90deg)"}}
-                                                             src={`data:image/jpeg;base64,${g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
-                                                    </div>
-                                                </Grid>
-                                            }*/}
-
-
-                                        </Grid>
-
+                                            <DatosEntregaRecoleccion data={g} open={() => this.handleClickOpenDialogoEvidencia} isTour={true}/>
                                     </Popup>
                                 </Marker>
+                                </div>
+                                
                             )
                         }
                     )

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import "./ParadasStyle.css"
 import {ReactComponent as BanderaIcono} from "../../iconos/Mapa/flagIcon.svg";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import Noty from "noty";
+import DatosEntregaRecoleccion from "./DatosEntregaRecoleccion"
+import {Dialog, DialogContent} from "@material-ui/core";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -17,10 +18,20 @@ function showSuccess(mensaje) {
 class Paradas extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            openDatos: false
+        }
+        this.handleOpenDatos = this.handleOpenDatos.bind(this)
     }
 
     componentDidMount() {
+        console.log(this.props)
+    }
 
+    handleOpenDatos(){
+        this.setState({
+            openDatos: true
+        })
     }
 
     render() {
@@ -35,16 +46,21 @@ class Paradas extends Component {
                                     return (
                                         <div className="pointBarPass"
                                              onClick={()=> {
-                                                 if (parseInt(s.m_nEstatusUlimaMilla) === 1 ) {
-                                                     this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, s.m_nId)
-                                                 }else{
-                                                     showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
-                                                 }
-                                             }}
+                                                this.handleOpenDatos()
+                                                }}
                                              style={{
                                                  left: `${((index+1) / this.props.tour.m_arrClsProGuia.length) * 90}%`,
                                                  color: this.props.color
                                              }}>
+                                                {this.state.openDatos &&
+                                                <Dialog fullWidth
+                                                maxWidth={"sm"} open={this.state.openDatos} onClose={()=> this.setState({openDatos:false})}>
+                                                        <DialogContent>
+                                                            <DatosEntregaRecoleccion data={s} close={()=> this.setState({openDatos:false})}/>
+                                                        </DialogContent>
+                                                </Dialog>
+                                                }
+                                                
                                             {index+1}
                                         </div>
                                     )
