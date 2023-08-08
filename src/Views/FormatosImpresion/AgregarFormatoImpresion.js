@@ -71,6 +71,7 @@ class AgregarFormatoImpresion extends Component {
 
     handleChange = (event) => {
         event.preventDefault();
+        console.log(event.target.value)
         this.setState({
             [event.target.name]: event.target.value,
         });
@@ -155,12 +156,25 @@ class AgregarFormatoImpresion extends Component {
                                                 >
                                                     Guía Etiqueta
                                                 </option>
-                                                <option
-                                                    key={214}
-                                                    value={214}
-                                                >
-                                                    Informe
-                                                </option>
+                                                {
+                                                    localStorage.getItem("RFC")==="ECC9510049KA" &&
+                                                    <option
+                                                        key={222}
+                                                        value={222}
+                                                    >
+                                                        Informe
+                                                    </option>
+                                                }
+                                                {
+                                                    localStorage.getItem("RFC")!=="ECC9510049KA" &&
+                                                    <option
+                                                        key={214}
+                                                        value={214}
+                                                    >
+                                                        Informe
+                                                    </option>
+                                                }
+
                                                 <option
                                                     key={215}
                                                     value={215}

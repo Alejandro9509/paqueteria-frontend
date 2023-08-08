@@ -137,9 +137,17 @@ function Informes({history}) {
 
     useEffect(()=>{
 
-        obtenerFormatosImpresionProceso(214).then(({data}) => {
-            setDataReportes(data)
-        })
+        if( localStorage.getItem("RFC")==="ECC9510049KA"){
+            obtenerFormatosImpresionProceso(222).then(({data}) => {
+                setDataReportes(data)
+            })
+        }
+        else{
+            obtenerFormatosImpresionProceso(214).then(({data}) => {
+                setDataReportes(data)
+            })
+        }
+
     }, [])
     const handleChange = (event) => {
         setState({
