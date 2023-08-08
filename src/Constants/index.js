@@ -166,61 +166,62 @@ export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => (
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
 ^MMT
-^PW815
-^LL1295
+^PW799
+^LL1199
 ^LS0
-^FO32,224^GFA,29440,29440,00092,:Z64:
-eJzt3UtugzAUhWFbDBh6B2UjVbKtDKripXkpXkKGDKq6LcYE1Ieq6J5GUf8zwQP0KboYlNGxc4QQQgghhJAvUgwz7WRvSZfyurWDrV3Sxh6N7Wk3kmj47LrtUPpiKM94XNfD9P19V2XMl2UytsPlxxqP5H0oL59XZll/bX82t49xWYRsbg+pLeIPd12XPi+LozntujbmZ3vbt01ov01W01u/lR9ZZtHZb8H1GXZZYA/10ieBHWK1o8Be0CCxU7UFtOuqPUjsPF8OCtuf5fajwnbVfpLY9UNyktgnua34DLZJKz6DbYcIba+x57fGZ4n9gI39W1vyF6LZCRsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxv7NrZX2hkb+8a2sBvrXvvCpB1q99orp+zaU3YEHhT0H/QmKrsklR2Yyu5OZeeositV2fGq7KZVduoqu4ClHcbK7mVlZ7Sy61rZ0a3sFld2oku73JUd9MrufONjEPYHIYzG9nbGyjMWlGdDEELIP84bdQOLRg==:EED1
-^FO32,640^GFA,32384,32384,00092,:Z64:
-eJzt3UGOgjAYxfE2LLrsBSbDRcx4MaMcjaNwhFm6MFYCraAmxDjfmwT9vwWwID+athBXPufImyUmwzQ3dG1Jp9TNbVs6nWZ0MLbns1Kno+XibeeTcvi1pHt8Gqq/W9k/J5yny9PCfS9lGmw0npJ+UtrHK6tMoz1Y0666LuZ56baX4ssKetPNPWafz5X5UvZLmM+hs7frZjzH1t4uZnmGZUKXbXvaVdn+Edg+74+dwHZHvS14da4DFrw6zm2Go5fY4wYp28U2td5uFXYcjkFjN4PdKOwgt6PGbgdbQecdorQVn+/y1nxLbI+N/bSt+AlR7A02NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2Njb2x9tfQnut/xOP/T62stNirT0fyu6TtfbBKDtylN0+a+07UnZAKburpJ1bO4X9Dz1kym42ZaecsgtP2eFXnmGZMhfKzkRl16Oyo1LaransBFV2mSo7WJXdscrOW+v64psCY2XHsLIbWdrpTMhyLiQvAQ8=:AAD3
+^FO32,192^GFA,29440,29440,00092,:Z64:
+eJzt3T1ug0AURWFGFJTsIGwksrflIopZGkuZJbikiEIS82NQlCiy3omFdG7DFOiT9RiQqztFYYwxBs4QmH4jp0h6GN7Xdh1rD93KPgfb/WYkbeCzK9dDqYZA+Yq3y7rpf77vrpzzbdkF2/XtxwaP5HMob99XYVl+bXUJt4/ttKhzuN1086L95a77UuVpcQyni3Ie82u8neZNGL9NFjNFv5VfmWZRxm/B5RmWGbCb8VJ1gF23o90C9oTWiN2NNkAX5Wg3iJ2vlwNhpwtuPxN2MdoviD1+SE6IfcJt4jM4T5r4DM47BLQTY1/fmpQR+0lb+6828hditjttbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1t7cfYibSztvaDbbAba699YWiH2l575ciuPbIj8EDQ/9CbSHZJkh2YZHcn2TlKdqWSHa9kNy3ZqUt2AaMdxmT3MtkZTXZdkx3dZLc42YmOdrmTHfRkd37wMQjbgxDOwfZ6xuQZC+TZEMYYY4wxxuwsH3Cyi0Y=:AF11
+^FO32,576^GFA,35328,35328,00092,:Z64:
+eJzs3TFuwjAYxXFbGTz6AlVzEQQXQ5Cj5Sg5QkcGhIkSm7ithCr6vaqB/xuSDNEvlu1ETDznCCGEEPIPEpNhuk90a0mnNNS2LZ3OFR2M7XpW2nSyXLxdPSnHD0t6xJeh+i8r++uEy3J5vnPfQ1kGG42nZJyU/vuVVZbRHq1p19wW83Lvtofiywp6080955DPjflSjkuYz2Gwt9tuPsfe3i5meYZlwpBte9o12d4KbJ/3x15gu5PeFrw6twELXh3nNtPRS+x5g5TtYptWb/cKO07HoLG7ye4UdpDbUWP3k62g8w5R2orPd3lr3iW2x8b+sa34CVHsDTY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NvbL229Ce63/E4/9PLay02KtPR/K7pO19sEoO3KU3T5r7TtSdkApu6uknVt7hf0HPWTKbjZlp5yyC0/Z4VeeYZkyF8rORGXXo7KjUtqtqewEVXaZKjtY6+7YKwAAAP//owpCujuWlnfeUvv6YpQLjGl5xzAt70am6Z3Oo2AUjIJRMApGwSgYjgAAQIkBDw==:9BF3
 ^FT274,79^A0N,39,48^FH\^FD${guia.m_nFolioGuia}^FS
-^FT218,161^A0N,35,33^FH\^FD${guia.m_sCiudadOrigen}^FS
-^FT61,161^A0N,35,40^FH\^FDORIGEN:^FS
-^FT50,245^A0N,35,45^FH\^FDREMITENTE^FS
-^FT61,303^A0N,31,28^FH\^FD${guia.m_sNOmbreRemitente}^FS
-^FT61,359^A0N,35,45^FH\^FDTEL:^FS
-^FT150,359^A0N,35,40^FH\^FD${guia.m_sTelefonoRemitente}^FS
-^FT61,416^A0N,35,45^FH\^FDDIRECCI\E3N:^FS
-${guia.m_sDomicilioRemitente.length > 30 ?
+^FT218,137^A0N,35,33^FH\^FD${guia.m_sCiudadOrigen}^FS
+^FT61,137^A0N,35,40^FH\^FDORIGEN:^FS
+^FT50,197^A0N,35,45^FH\^FDREMITENTE^FS
+^FT61,255^A0N,31,31^FH\^FD${guia.m_sNombreRemitente}^FS
+^FT61,311^A0N,34,26^FH\^FDTEL:^FS
+^FT126,311^A0N,34,26^FH\^FD${guia.m_sTelefonoRemitente}^FS
+^FT61,368^A0N,35,26^FH\^FDDIRECCIÓN:^FS
+${guia.guia.m_sDomicilioRemitente.length > 30 ?
         (
             guia.m_sDomicilioRemitente.length > 75 ? (
-                `^FT303,416^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
-        ^FT65,460^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(25, 70)}^FS
-        ^FT65,514^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(70)}^FS`
+                `^FT209,368^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
+                 ^FT65,412^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(25, 70)}^FS
+                 ^FT65,466^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(70)}^FS`
             ) : (
-                `^FT303,416^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
-            ^FT65,460^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(25)}^FS`
+                `^FT209,368^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
+                 ^FT65,412^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(25)}^FS`
             )
-        ) : `^FT303,416^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente}^FS`}
-^FT61,566^A0N,35,45^FH\^FD${guia.m_sSucursalorigen}^FS
-^FT53,634^A0N,35,45^FH\^FDDESTINO:^FS
-^FT65,692^A0N,31,31^FH\^FD${guia.m_sNombreDestinatario}^FS
-^FT65,748^A0N,35,45^FH\^FDTEL:^FS
-^FT154,748^A0N,35,38^FH\^FD${guia.m_sTelefonoDestinatario}^FS
-^FT65,804^A0N,35,45^FH\^FDDIRECCI\E3N:^FS
-^FT50,1031^A0N,35,45^FH\^FD${guia.m_sSucursalDestino}^FS
-^FT292,1240^A0N,45,14^FH\^FD${index + 1} DE ${paquete.ctd}^FS
-^FT500,1282^BQN,2,7
+        ) : `^FT209,368^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente}^FS`}
+^FT61,518^A0N,35,33^FH\^FD${guia.m_sSucursalorigen}^FS
+^FT53,586^A0N,35,45^FH\^FDDESTINO:^FS
+^FT65,644^A0N,31,31^FH\^FD${guia.m_sNombreDestinatario}^FS
+^FT65,700^A0N,35,26^FH\^FDTEL:^FS
+^FT132,700^A0N,35,26^FH\^FD${guia.m_sTelefonoDestinatario}^FS
+^FT65,757^A0N,35,26^FH\^FDDIRECCION:^FS
+^FT50,974^A0N,35,33^FH\^FD${guia.m_sSucursalDestino}^FS
+^FT292,1151^A0N,45,14^FH\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT517,1196^BQN,2,6
 ^FH\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-${guia.m_sDomicilioDestinatario.length > 30 ?
+${guia.guia.m_sDomicilioDestinatario.length > 30 ?
         (
-            guia.m_sDomicilioDestinatario.length > 72 ? (
-                `^FT303,804^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
-            ^FT61,854^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(25,70)}^FS
-            ^FT61,910^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(70)}^FS`
+            guia.m_sDomicilioDestinatario.length > 75 ? (
+                `^FT214,757^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
+                 ^FT61,806^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(25, 70)}^FS
+                 ^FT61,862^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(70)}^FS`
             ) : (
-                `^FT303,804^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
-            ^FT61,854^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(25)}^FS`
+                `^FT214,757^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
+                 ^FT61,806^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(25)}^FS`
             )
-        ) : `^FT303,804^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario}}^FS`
-    }
-^FT292,1082^A0N,20,26^FH\^FDTIPO DE REPARTO^FS
-^FT303,1125^A0N,25,19^FH\^FD${guia.tipoEntrega}^FS
-^FT61,963^A0N,35,28^FH\^FD${guia.zonaEntrega}^FS
-^FT50,1291^BQN,2,7
+        ) : `^FT214,757^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario}^FS`}
+^FT292,1016^A0N,20,26^FH\^FDTIPO DE REPARTO^FS
+^FT295,1060^A0N,28,24^FH\^FD${guia.tipoEntrega}^FS
+^FT61,915^A0N,35,28^FH\^FD${guia.zonaEntrega}^FS
+^FT61,1203^BQN,2,6
 ^FH\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-^FT289,1191^A0N,20,26^FH\^FDPARTIDA:^FS
-^PQ1,0,1,Y^XZ`)
+^FT289,1102^A0N,20,26^FH\^FDPARTIDA:^FS
+^FT243,586^A0N,35,33^FH\^FD${guia.m_sCiudadDestino}^FS
+^PQ1,0,1,Y^XZ
+`)
 
 
 export const TOOLBAR_OPTIONS = {
