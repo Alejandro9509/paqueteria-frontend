@@ -180,7 +180,7 @@ eJzt3UGOgjAYxfE2LLrsBSbDRcx4MaMcjaNwhFm6MFYCraAmxDjfmwT9vwWwID+athBXPufImyUmwzQ3
 ^FT61,303^A0N,31,28^FH\^FD${guia.m_sNOmbreRemitente}^FS
 ^FT61,359^A0N,35,45^FH\^FDTEL:^FS
 ^FT150,359^A0N,35,40^FH\^FD${guia.m_sTelefonoRemitente}^FS
-^FT61,416^A0N,35,45^FH\^FDDIRECCI\E3N:^FS
+^FT61,416^A0N,35,45^FH\^FDDIRECCI\EON:^FS
 ${guia.m_sDomicilioRemitente.length > 30 ?
         (
             guia.m_sDomicilioRemitente.length > 75 ? (
@@ -197,7 +197,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT65,692^A0N,31,31^FH\^FD${guia.m_sNombreDestinatario}^FS
 ^FT65,748^A0N,35,45^FH\^FDTEL:^FS
 ^FT154,748^A0N,35,38^FH\^FD${guia.m_sTelefonoDestinatario}^FS
-^FT65,804^A0N,35,45^FH\^FDDIRECCI\E3N:^FS
+^FT65,804^A0N,35,45^FH\^FDDIRECCI\EON:^FS
 ^FT50,1031^A0N,35,45^FH\^FD${guia.m_sSucursalDestino}^FS
 ^FT292,1240^A0N,45,14^FH\^FD${index + 1} DE ${paquete.ctd}^FS
 ^FT500,1282^BQN,2,7
