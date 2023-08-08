@@ -52,6 +52,7 @@ const columns = [
 let registros=7
 //----------------------------->Hooks useState <----------------------------------------------------------------------
 const [rows, setRow] = React.useState([])
+const [rowsCount, setRowCount] = React.useState(0)
 const [pagina, setPagina] = React.useState(0);
 const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
@@ -62,7 +63,11 @@ useEffect(() => {
 //--------------------------->Funciones<----------------------------------------------------------------------
 function cargarDesdeServidor(pagina,registros){
   obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
-    setRow(respuesta.data)
+    console.log(respuesta.data)
+    console.log(respuesta.data.total)
+    console.log(respuesta.data.data)
+    setRow(respuesta.data.data)
+    setRowCount(respuesta.data.total)
 
   })
 }
@@ -108,7 +113,7 @@ function cargarDesdeServidor(pagina,registros){
                 page={pagina}
                 pagination
                 pageSize={registros}
-                rowCount={3600}
+                rowCount={rowsCount}
                 paginationMode="server"
                 onPageChange={(newPage) => {
                     setPagina(newPage.page)
