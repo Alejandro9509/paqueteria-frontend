@@ -23,6 +23,7 @@ import {
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import { confirmAlert } from "react-confirm-alert";
 import e from "cors";
+import { id } from "date-fns/locale";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -262,10 +263,8 @@ function ComplementosSAT(props) {
         },
     ]);
 
-    const handleChangeComplementoSat = (idComplemento, data) => {
+    const handleChangeComplementoSat = (idComplemento, data,caracter) => {
         if (idComplemento === 1){
-            console.log(data.m_sClaveSAT)
-            console.log(data.m_sDescripcion)
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
@@ -307,6 +306,14 @@ function ComplementosSAT(props) {
                     materialPeligrosoSAT: data.m_sDescripcion
                 }
             });
+        }else  if (idComplemento === 7){
+            setDataComplemento(dataComplemento =>{
+                return {
+                    ...dataComplemento,
+                    ProductoSAT: data.m_sDescripcion
+
+                }
+            });
         }else{
             if (data.target.name === "esPeligroso"){
                 setDataComplemento(dataComplemento =>{
@@ -316,12 +323,23 @@ function ComplementosSAT(props) {
                     }
                 });
             }else{
-                setDataComplemento(dataComplemento =>{
-                    return {
-                        ...dataComplemento,
-                        [data.target.name]: data.target.value,
-                    }
-                });
+                if(caracter){
+                    const value = data.target.value;
+                    const sanitizedValue = value.replace(/[^\w\s]/gi, ''); 
+                    setDataComplemento(dataComplemento =>{
+                        return {
+                            ...dataComplemento,
+                            claveUnidad: sanitizedValue,
+                        }
+                    });
+                }else{
+                    setDataComplemento(dataComplemento =>{
+                        return {
+                            ...dataComplemento,
+                            [data.target.name]: data.target.value,
+                        }
+                    });
+                }
             }
 
         }
