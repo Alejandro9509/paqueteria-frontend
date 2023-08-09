@@ -181,7 +181,7 @@ eJzs3TFuwjAYxXFbGTz6AlVzEQQXQ5Cj5Sg5QkcGhIkSm7ithCr6vaqB/xuSDNEvlu1ETDznCCGEEPIP
 ^FT61,311^A0N,34,26^FH\^FDTEL:^FS
 ^FT126,311^A0N,34,26^FH\^FD${guia.m_sTelefonoRemitente}^FS
 ^FT61,368^A0N,35,26^FH\^FDDIRECCIÓN:^FS
-${guia.guia.m_sDomicilioRemitente.length > 30 ?
+${guia.m_sDomicilioRemitente.length > 30 ?
         (
             guia.m_sDomicilioRemitente.length > 75 ? (
                 `^FT209,368^A0N,35,28^FH\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
@@ -202,7 +202,7 @@ ${guia.guia.m_sDomicilioRemitente.length > 30 ?
 ^FT292,1151^A0N,45,14^FH\^FD${index + 1} DE ${paquete.ctd}^FS
 ^FT517,1196^BQN,2,6
 ^FH\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-${guia.guia.m_sDomicilioDestinatario.length > 30 ?
+${guia.m_sDomicilioDestinatario.length > 30 ?
         (
             guia.m_sDomicilioDestinatario.length > 75 ? (
                 `^FT214,757^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
