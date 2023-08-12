@@ -93,12 +93,18 @@ import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
 import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
 import Filtros from "./Filtros/Filtros";
-import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    asignarTipoDocumento,
+    obtenerParametrosConfiguracion,
+    validarRequiereDocumentoTimbrado
+} from "../Util/Contexts/ParametrosConfiguracionContext";
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
 import ImprimirEtiquetas from "./Guia/ImprimirEtiquetas";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
+import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
+import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -500,6 +506,16 @@ function Guia(props) {
 
     ]);
     const [open, setOpen] = React.useState(false);
+    const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
+        open: false,
+        seleccion: {
+            idSucursal: 0,
+            sucursal: '',
+            idTipoDocumento: 0,
+            documento: 'SIN DEFINIR'
+        }
+
+    })
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -604,8 +620,8 @@ function Guia(props) {
         $("#idBarra" + indice).barcode(valor, "code128");
     }
 
-    const handleAceptar = (e) => {
-        if (e){
+    const handleAceptar = async (e) => {
+        if (e) {
             e.preventDefault()
         }
         if (conceptosAdicionales.length === 0) {
@@ -641,26 +657,108 @@ function Guia(props) {
             })),
 
         }
-      //  console.log(state)
+        //  console.log(state)
         console.log(JSON.stringify(params))
-      if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
-            agregarGuia(params).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err.response?.data)
-            });
-        } else {
-            modificarGuia(state.idGuia, params).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err.response?.data)
-            });
+        // SE REVISA QUE HAYA DOCUMENTO POR DEFECTO DEFINIDO PARA LA SUCURSAL
+        /*await consultarDocumentoTimbradoSucursal(state.idSucursalAgregar).then(async ({data}) => {
+            if (data.idTipoDocumento > 0) {
+                if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+                    agregarGuia(params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
+                } else {
+                    modificarGuia(state.idGuia, params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
 
-        }
+                }
+            } else {
+                // SE OBTIENEN LOS DOCUMENTOS DE LA SUCUSAR ASIGNADOS EN EL ERP
+                await obtenerTiposDocumentoSucursal(state.idSucursalAgregar).then(respuesta => {
+                    let array = respuesta.data.map(obj => ({
+                        idSucursal: state.idSucursalAgregar,
+                        idTipoDocumento: obj.IdDocumento,
+                        documento: obj.Documento
+                    }))
+                    // CUANDO HAY SOLO UN DOCUMENTO PARA LA SUCURSAL EN EL ERP SE DEFINE POR DEFECTO EN AUTOMATICO
+                    if (array.length === 1){
+                        asignarTipoDocumento(array[0]).then((respuesta) => {
+                            showSuccess('Se definió documento de timbrado por defecto ya que solo había uno asignado a la sucursal actual')
+                            setDialogTipoDocumento({
+                                ...dialogTipoDocumento,
+                                open: false,
+                                seleccion: {
+                                    idSucursal: 0,
+                                    sucursal: '',
+                                    idTipoDocumento: 0,
+                                    documento: 'SIN DEFINIR'
+                                }
+
+                            })
+                            handleAceptar(null)
+
+                        })
+                    }else{
+                        showSuccess('No hay un documento de timbrado por defecto asignado a la sucursal actual, defina uno.')
+                        setDialogTipoDocumento({
+                            ...dialogTipoDocumento,
+                            open: true,
+                            seleccion: {
+                                idSucursal: state.idSucursalAgregar,
+                                sucursal: '',
+                                idTipoDocumento: 0,
+                                documento: 'SIN DEFINIR'
+                            },
+                        })
+                    }
+                });
+
+            }
+
+        })*/
+
+        validarRequiereDocumentoTimbrado(state.idSucursalAgregar).then(({data}) => {
+            showSuccess(data.message)
+            if (data.tieneDocumentoAsignado){
+                if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+                    agregarGuia(params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
+                } else {
+                    modificarGuia(state.idGuia, params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
+
+                }
+            }else{
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: true,
+                    seleccion: {
+                        idSucursal: state.idSucursalAgregar,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    },
+                })
+            }
+        })
     }
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
@@ -1987,6 +2085,43 @@ function Guia(props) {
         setData(listado)
     }
 
+    const handleOnCloseDialogTipoDocumento = (data) => {
+        try {
+            asignarTipoDocumento(data).then((respuesta) => {
+                showSuccess('Se guardó el documento por defecto.')
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                handleAceptar(null)
+
+            }).catch(e => {
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+            })
+        }catch (e) {
+            console.log(e)
+            showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+        }
+
+    }
     return (
         <div>
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
@@ -2050,9 +2185,7 @@ function Guia(props) {
                 }
 
             </Dialog>
-            {/*SELECCION COLUMNAS PARA EXPORTAR EXCEL*/}
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth={"sm"}
-        maxWidth={"sm"}>
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth={"sm"} maxWidth={"sm"}>
                    <DialogTitle id="form-dialog-title">Columnas a exportar en Excel</DialogTitle>
         <DialogContent>
         <List className={classes.root}>
@@ -2081,6 +2214,7 @@ function Guia(props) {
         </DialogActions>
     </Dialog>
 
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
 
       {/*CABECERA*/}
             <header className="topbar clearfix">
