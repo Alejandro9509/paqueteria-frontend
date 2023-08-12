@@ -5,14 +5,14 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import {
     Box,
     Button,
-    Checkbox,
+    Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
     FormControl, Grid,
     InputLabel, MenuItem,
     Paper,
     Select,
     Tab,
     Tabs,
-    TextField,
+    TextField, Tooltip,
     Typography
 } from "@material-ui/core";
 import {
@@ -42,7 +42,7 @@ import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturac
 import {FilePond} from "react-filepond";
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
-import {toBase64} from "../../Util/GlobalFunctions";
+import DialogTiposDocumentoSucursal from "./DialogTiposDocumentoSucursal";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -81,8 +81,16 @@ function ParametrosConfiguracion() {
         }
     ]
     const [dataConceptos, setDataConceptos] = useState([]);
+    const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
+        open: false,
+        seleccion: {
+            idSucursal: 0,
+            sucursal: '',
+            idTipoDocumento: 0,
+            documento: 'SIN DEFINIR'
+        }
 
-    const [files, setFiles] = useState([])
+    })
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -114,6 +122,7 @@ function ParametrosConfiguracion() {
         plantillaImportarEmbarquesNombreArchivo: '',
         modificarValorEmbarque:false,
         foliosPorSucursal: false,
+        documentos:[],
         factorConversion: 0.0
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
@@ -191,7 +200,8 @@ function ParametrosConfiguracion() {
             modificarValorEmbarque: configuraciones.modificarValorEmbarque,
             tipoTimbrado: configuraciones.tipoTimbrado,
             plantillaImportarEmbarquesBase64: "",
-            plantillaImportarEmbarquesNombreArchivo: ''
+            plantillaImportarEmbarquesNombreArchivo: '',
+            documentos: configuraciones.documentos
         }
         console.log(params)
         modificarParametrosConfiguracion(params)
@@ -245,6 +255,7 @@ function ParametrosConfiguracion() {
                     plantillaImportarEmbarquesBase64: "",
                     plantillaImportarEmbarquesNombreArchivo: "",
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal,
+                    documentos: respuesta.data.documentos || [],
                     factorConversion: respuesta.data.FactorConversion
                 }
             })
@@ -381,41 +392,39 @@ function ParametrosConfiguracion() {
 
     }
 
-    /*const descargarPlantillaImportar = () => {
-        if (configuraciones.plantillaImportarEmbarquesBase64 === ''){
-            return
-        }
-        let mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
-        let a = document.createElement('a');
-        a.href = mediaType+encodeURI(configuraciones.plantillaImportarEmbarquesBase64);
-        a.download = configuraciones.plantillaImportarEmbarquesNombreArchivo;
-        a.textContent = 'Descargar Archivo';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-    }*/
-
-    /*const handleOnupdatefiles = (newFiles) => {
-        // convertirABase64(newFiles[0].file)
-        setFiles(newFiles)
-    }*/
-
-    /*const convertirABase64 = (file) => {
-        /!*if(files.length === 0){
-            return
-        }*!/
-        let fileName = file.name
-        let fileBase64 = toBase64(file)
-        console.log(fileBase64)
-        setConfiguraciones(configuraciones => {
-            return{
-                ...configuraciones,
-                plantillaImportarEmbarquesBase64: fileBase64,
-                plantillaImportarEmbarquesNombreArchivo: fileName
-            }
+    const handleShowEditTipoDocumento = (row) => {
+        setDialogTipoDocumento({
+            ...dialogTipoDocumento,
+            open: true,
+            seleccion: row,
         })
-    }*/
+    }
 
+    const handleOnCloseDialogTipoDocumento = (data) => {
+        try {
+            let array = [...configuraciones.documentos]
+            let index = array.findIndex((obj => obj.idSucursal === data.idSucursal))
+            array[index] = data
+            setConfiguraciones({
+                ...configuraciones,
+                documentos: array
+            })
+            setDialogTipoDocumento({
+                ...dialogTipoDocumento,
+                open: false,
+                seleccion: {
+                    idSucursal: 0,
+                    sucursal: '',
+                    idTipoDocumento: 0,
+                    documento: 'SIN DEFINIR'
+                }
+
+            })
+        }catch (e) {
+            console.log(e)
+        }
+
+    }
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
     useEffect(value => {
@@ -431,6 +440,8 @@ function ParametrosConfiguracion() {
     return (
 
         <div>
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
+
             <header className="topbar clearfix">
                 <Cabecera titulo="Parametros Configuración">
                     <div className="page-header">
@@ -1205,6 +1216,10 @@ function ParametrosConfiguracion() {
                                             </Box>
                                         </Box>
                                     </Grid>
+                                    <Grid item xs={12}>
+                                        <div className={classes.subtitulo}>Documento por sucursal</div>
+                                        <DataGridTiposDocumentoSucursal rows={configuraciones.documentos} handleEditRow={handleShowEditTipoDocumento}/>
+                                    </Grid>
                                     <Grid container item xs={12} justifyContent="center" >
                                         <Box margin={"0 auto"}>
                                             <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
@@ -1226,5 +1241,53 @@ function ParametrosConfiguracion() {
 
     );
 }
+
+function DataGridTiposDocumentoSucursal(props) {
+    const columns = [
+        {
+            field: 'sucursal',
+            headerName: 'Sucursal',
+            width: 200,
+        },
+        {
+            field: 'documento',
+            headerName: 'Documento',
+            width: 250,
+        },
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false, width: 120,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar" >
+                            <a onClick={() => { props.handleEditRow(row.row) }}
+                                className="btn btn-default btn-xs">
+                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
+                            </a>
+                        </Tooltip>
+
+                    </div>
+                );
+            },
+        },
+    ];
+    return (
+        <div style={{height: 400,width: '50%'}}>
+            <DataGrid
+                rows={props.rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                getRowId={(row) => row.idSucursal}
+                autoHeight {...{dataSet: 'Commodity', rowLength: 4, maxColumns: 6}}
+                density={"compact"}
+            />
+        </div>
+    );
+}
+
+
 
 export default ParametrosConfiguracion;
