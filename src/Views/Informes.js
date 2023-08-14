@@ -1581,7 +1581,7 @@ function Informes({history}) {
                                                                         {/*****************************************Utilización*************************************************/}
 
                                                                         <div className="col-sm-12 col-md-12 unit">
-                                                                            <ProgressBarCubicaje value={utilizacion}>Espacio de carga usado: {utilizacion}%</ProgressBarCubicaje>
+                                                                            <ProgressBarCubicaje value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}</ProgressBarCubicaje>
 
                                                                         </div>
                                                                     </div>
