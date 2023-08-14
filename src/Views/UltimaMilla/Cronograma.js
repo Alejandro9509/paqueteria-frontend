@@ -164,7 +164,7 @@ class Cronograma extends Component {
                                                             var filterEstatus = tour.m_arrClsProGuia.filter(g =>g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3)
                                                             var color = tour.color
                                                             var min = 20, sec = 10;
-                                                            console.log(filterEstatus[0].m_nEstatusUlimaMilla)
+                                                            //console.log(filterEstatus[0].m_nEstatusUlimaMilla)
                                                             return (
                                                                 <TableRow key={index}>
                                                                     <TableCell style={{borderBottom: "none"}}
