@@ -21,7 +21,7 @@ import ULTIMAMILLA from '../../Files/Tutoriales/Paqueteria/Paqueteria - 9 - ULTI
 import APPMOVIL from '../../Files/Tutoriales/Paqueteria/Paqueteria - 10 - APP MOVIL.pdf';
 import ESCANER from '../../Files/Tutoriales/Paqueteria/Paqueteria - 11 - Escaner.pdf';
 import CORTEDECAJA from '../../Files/Tutoriales/Paqueteria/Paqueteria - 12 - Corte de Caja.pdf';
-import useDrivePicker from 'react-google-drive-picker';
+// import useDrivePicker from 'react-google-drive-picker';
 import IconButton from '@material-ui/core/IconButton';
 import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
 import Cabecera from "../../Components/Template/Cabecera";
@@ -62,7 +62,7 @@ function Tutoriales(props) {
         height: window.innerHeight,
     })
 
-    const [openPicker, authResponse] = useDrivePicker();  
+    /*const [openPicker, authResponse] = useDrivePicker();
 
     const handleOpenPicker = () => {
         openPicker({
@@ -82,7 +82,7 @@ function Tutoriales(props) {
             console.log(data)
           },
         })
-      }
+      }*/
 
     /* useEffect(value => {
         console.log(props)
