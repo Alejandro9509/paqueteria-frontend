@@ -1150,9 +1150,9 @@ function Embarque(props) {
         if (!parseFloat(item.peso) > 0) {
             return false
         }
-        if (!item.claveProducto?.length > 0) {
+        if (!(item.claveProducto.toString())?.length > 0) {
             return false
-        }
+        }        
         if (!item.claveUnidad?.length > 0) {
             return false
         }
