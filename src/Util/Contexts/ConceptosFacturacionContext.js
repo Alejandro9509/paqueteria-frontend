@@ -95,4 +95,14 @@ function obtenerConceptosDefectoListado(){
     return result
 }
 
-export {obtenerSATFraccionArancelaria,obtenerSATMaterialPeligroso, obtenerSATPaginado,obtenerSATEmbalajes,obtenerSATServicios,obtenerSATUnidades,obtenerImpuestosByConceptosFacturacion, obtenerConceptosFacturacion,  obtenerConceptosFacturacionManiobra, obtenerConceptosDefectoListado}
+function obtenerSATListado(catalogo,busqueda){
+
+    const url = `${process.env.REACT_APP_API_URL}/api/SAT/GetListado/${catalogo}/${busqueda}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export {obtenerSATFraccionArancelaria,obtenerSATMaterialPeligroso, obtenerSATPaginado,obtenerSATEmbalajes,obtenerSATServicios,obtenerSATUnidades,obtenerImpuestosByConceptosFacturacion, obtenerConceptosFacturacion,  obtenerConceptosFacturacionManiobra, obtenerConceptosDefectoListado,obtenerSATListado}

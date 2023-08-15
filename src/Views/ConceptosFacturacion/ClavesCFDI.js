@@ -72,7 +72,6 @@ class ClavesCFDI extends Component {
     }
 
     componentDidMount() {
-
             this.setState({
                 row:this.props.dataSAT,
                 rowFilter: this.props.dataSAT
