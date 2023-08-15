@@ -22,6 +22,7 @@ import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendar
 import Paradas from "./Paradas";
 import Noty from "noty";
 import Tooltip from "@material-ui/core/Tooltip";
+import { fil } from 'date-fns/locale';
 
 function showSuccess(mensaje) {
     new Noty({
@@ -164,6 +165,7 @@ class Cronograma extends Component {
                                                             var filterEstatus = tour.m_arrClsProGuia.filter(g =>g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3)
                                                             var color = tour.color
                                                             var min = 20, sec = 10;
+                                                            console.log(filterEstatus)
                                                             //console.log(filterEstatus[0].m_nEstatusUlimaMilla)
                                                             return (
                                                                 <TableRow key={index}>
@@ -182,8 +184,12 @@ class Cronograma extends Component {
                                                                                align="left">
                                                                                 <Tooltip title="Remplazar Operador">                                           
                                                                                     <AutorenewIcon color={"primary"} align="center" fontSize={"large"} onClick={()=> {
-                                                                                        if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
-                                                                                            this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, u.m_nId)
+                                                                                        if (filterEstatus.length > 0 ){
+                                                                                            if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
+                                                                                                this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, u.m_nId)
+                                                                                            }else{
+                                                                                                showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
+                                                                                            }
                                                                                         }else{
                                                                                             showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
                                                                                         }
