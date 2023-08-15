@@ -1,4 +1,5 @@
-import {Hidden, Link} from "@material-ui/core";
+import {Hidden} from "@material-ui/core";
+import { Link } from 'react-router-dom';
 import React, {useEffect} from "react";
 import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
 import iconoShortcuts from '../../iconos/Cabecera/icono_shortcuts.svg';
@@ -11,6 +12,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Tooltip from '@material-ui/core/Tooltip';
 import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+
 function Cabecera({ titulo, children }) {
 
     const menu_items = [
@@ -139,13 +142,41 @@ function Cabecera({ titulo, children }) {
                          height: 60
                      }
                  }>
-                {/*<div>
-                    <Tooltip title={"Ayuda en línea"}>
-                        <a href={pdfAyuda} target={"_blank"}>
-                            <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
-                        </a>
+                <div>
+                    {/* <Tooltip title={"Tutoriales"}>
+                            <a href={'https://drive.google.com/drive/folders/1qhJ2qJGfpkehlCP4qZChjKZhRD1375Qh'} to={{pathname: "https://drive.google.com/drive/folders/1qhJ2qJGfpkehlCP4qZChjKZhRD1375Qh"}} target="_blank">
+                                <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
+                            </a>
+                    </Tooltip> */}
+                    <Tooltip title={"Tutoriales"}>
+                        <Link component="a" to={{pathname: "/Tutoriales"}} target="_blank">
+                                    <IconButton >
+                                        <img src={iconoAyuda} style={{height: 30, width:30, margin: 10}}/>
+                                    </IconButton>
+                        </Link>
                     </Tooltip>
-                </div>*/}
+                    
+                   {/*  <Tooltip title={"Tutoriales"}>
+                        
+                                   <IconButton aria-label="help" component={Link} to={{
+                                        pathname: "/Tutoriales",
+                                        search:`?idSucursal=${'entro'}`,
+                                        state:{
+                                            idSucursal: 5
+                                        }
+                                        }}
+                                        
+                                        target="_blank">
+                                        <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
+                                    </IconButton> */}
+                               {/*  <IconButton aria-label="help" component={Link} to={{pathname: "/Tutoriales"}} >
+                                    <HelpOutlineIcon/>
+                                </IconButton> */}
+                        {/* <a href={pdfAyuda} target={"_blank"}>
+                            <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
+                        </a> 
+                    </Tooltip>*/}
+                </div>
 
                     <div style={{height: 40}}>
                         <div className="user-profile clearfix">
