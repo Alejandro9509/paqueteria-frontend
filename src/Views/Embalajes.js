@@ -126,6 +126,7 @@ function Embalaje() {
                 return;
             }
             validarEliminarEmbalajes(id).then(respuesta=>{
+                console.log(respuesta.data)
                 if(respuesta.data.sePuedeEliminar){
                     eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
                         showSuccess("Eliminacion de embalaje exitoso")

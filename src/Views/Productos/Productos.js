@@ -174,7 +174,8 @@ function Productos() {
 
   function handleEliminar(row) {
     eliminarProducto(row.m_nIdProducto).then((respuesta) => {
-      showSuccess("Producto Eliminado");
+      console.log(respuesta.data)
+      showSuccess(respuesta.data);
       handleShowListado();
     })
     .catch((err) => {
