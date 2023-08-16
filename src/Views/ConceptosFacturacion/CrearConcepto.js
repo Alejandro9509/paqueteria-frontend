@@ -186,8 +186,7 @@ function CrearConceptoSAT(props) {
  */    }
 
     const handleClickBuscarClaveSat = (idcomplemento) =>{
-
-        if(idcomplemento === 1){
+        if(idcomplemento === 1 && props.dataComplemento.claveProducto){
             var catalogo = "c_ClaveProdServCP";
             setState({
                 ...state,
@@ -206,7 +205,7 @@ function CrearConceptoSAT(props) {
                     showSuccess(respuesta.data)
                 }
             })        
-        }else if(idcomplemento === 2){
+        }else if(idcomplemento === 2 && props.dataComplemento.claveUnidad){
             var catalogo = "c_ClaveUnidad";
 
             setState({
@@ -226,7 +225,7 @@ function CrearConceptoSAT(props) {
                     showSuccess(respuesta.data)
                 }
             })       
-        }else if(idcomplemento === 3){
+        }else if(idcomplemento === 3 && props.dataComplemento.claveEmbalaje){
             var catalogo = "c_TipoEmbalaje";
 
             setState({
@@ -245,7 +244,7 @@ function CrearConceptoSAT(props) {
                     showSuccess(respuesta.data)
                 }
             })               
-        }else if(idcomplemento === 4){
+        }else if(idcomplemento === 4 && props.dataComplemento.claveFraccion){
             var catalogo = "c_FraccionArancelaria";
 
             setState({
@@ -264,7 +263,7 @@ function CrearConceptoSAT(props) {
                     showSuccess(respuesta.data)
                 }
             })               
-        }else if(idcomplemento === 5){
+        }else if(idcomplemento === 5 && props.dataComplemento.claveMaterialPeligroso){
             var catalogo = "c_MaterialPeligroso";
 
             setState({
