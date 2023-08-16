@@ -214,6 +214,7 @@ class UltimaMilla extends Component {
     }
 
     guardarRuta() {
+        var hora = this.state.filtros.fecha.getHours() + ":" + this.state.filtros.fecha.getMinutes() 
         if (this.state.ultimaMilla) {
             if (this.state.tour) { 
                 // console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
@@ -225,7 +226,7 @@ class UltimaMilla extends Component {
                         showSuccess("No se puede seleccionar la unidad")
                     }
                 })*/
-                agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros).then((data) => {
+                agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros,hora).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
@@ -234,7 +235,7 @@ class UltimaMilla extends Component {
             }
         } else {
             if (this.state.tour) {
-                  agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
+                  agregarRuta(0, this.state.tour, this.state.filtros,hora).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
