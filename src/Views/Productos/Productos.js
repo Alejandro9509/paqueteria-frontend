@@ -174,7 +174,7 @@ function Productos() {
 
   function handleEliminar(row) {
     eliminarProducto(row.m_nIdProducto).then((respuesta) => {
-      showSuccess("Producto Eliminado");
+      showSuccess(respuesta.data);
       handleShowListado();
     })
     .catch((err) => {
@@ -230,7 +230,6 @@ function Productos() {
       m_nNoProducto: form.IdProducto,
       m_bPredeterminado: form.predeterminado
     };
-console.log(params)
      if (form.IdProducto != 0) {
       modificarProducto(form.IdProducto, params)
         .then((respuesta) => {
