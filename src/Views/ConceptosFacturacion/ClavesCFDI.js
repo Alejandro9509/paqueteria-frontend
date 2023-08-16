@@ -69,6 +69,7 @@ class ClavesCFDI extends Component {
         this.handleChangeChecboxRetencionPredeterminado =
             this.handleChangeChecboxRetencionPredeterminado.bind(this);
         this.requestSearch = this.requestSearch.bind(this);
+        this.cancelar = this.cancelar.bind(this);
     }
 
     componentDidMount() {
@@ -185,6 +186,22 @@ class ClavesCFDI extends Component {
         })
     }
 
+    cancelar = () => {
+        console.log(this.props.catalogo)
+        if(this.props.catalogo == "c_ClaveProdServCP"){
+            this.props.cancel(1)
+        }else if (this.props.catalogo == "c_ClaveUnidad"){
+            this.props.cancel(2)
+        }else if (this.props.catalogo == "c_MaterialPeligroso"){
+            this.props.cancel(3)
+        }else if (this.props.catalogo == "c_TipoEmbalaje"){
+            this.props.cancel(4)
+        }else if(this.props.catalogo == "c_FraccionArancelaria"){
+            this.props.cancel(5)
+        }
+        this.props.closeDialog()
+    }
+
     render() {
         return (
             <div>
@@ -215,7 +232,7 @@ class ClavesCFDI extends Component {
                         <div>
                         <Button
                             variant="contained"
-                            onClick={this.props.closeDialog}
+                            onClick={()=> this.cancelar()}
                             color="primary"
                             style={{marginRight:"10px"}}
                         >

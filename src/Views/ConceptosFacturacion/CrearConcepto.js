@@ -49,7 +49,8 @@ function CrearConceptoSAT(props) {
         catalogo: "",
         busqueda: "",
         dataSat: [],
-        titulo:""
+        titulo:"",
+        onFocus: true
     });
     const [errores, setErrores] = useState({
         errorCantidad:false,
@@ -113,12 +114,17 @@ function CrearConceptoSAT(props) {
         setState({ ...state, openDialog: false, catalogo: "" });
         setPagina(0)
     }
+    const cancelDialog = () => {
+        props.onChangeData(0)
+        setState({ ...state, openDialog: false, catalogo: "" });
+        setPagina(0)
+    }
     
     function cargarDesdeServidor(pagina,numRegistros){
-        if (state.catalogo !== "") {
+        if (state.catalogo !== "" && state.onFocus !== true) {
             return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
                 if(respuesta.data.length>0){
-                setState({...state, dataSat: respuesta.data, openDialog: true})
+                setState({...state, dataSat: respuesta.data, openDialog: true, onFocus:false})
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
@@ -126,16 +132,9 @@ function CrearConceptoSAT(props) {
             })
         }
     }
-    /* useEffect(() => {
+    useEffect(() => {
         cargarDesdeServidor(pagina.page,numRegistros)
-    }, [pagina, state.busqueda, state.catalogo]) */
-
-    /* useEffect(() => {
-        obtenerSATListado().then(respuesta => {
-            console.log(respuesta.data)
-            setDataSat(respuesta.data)
-        });
-    }, []) */
+    }, [pagina, state.busqueda, state.catalogo])
 
     const handleKeyDown = e => {
         if (e.key === " ") {
@@ -143,27 +142,27 @@ function CrearConceptoSAT(props) {
         }
       }
     const handleChangeSpecial = (e) => {
-        if(e.target.name == "claveUnidad"){
+        /* if(e.target.name == "claveUnidad"){ */
             const value = e.target.value;
             const sanitizedValue = value.replace(/[^\w\s]/gi, ''); 
             if (value !== sanitizedValue) {
                 setErrores({
                     ...errores,
                     errorCaracteres: true});
-                    setDisableSeleccionar({
+                    /* setDisableSeleccionar({
                         ...disableSeleccionar,
-                        disableUnidad: false});
+                        disableUnidad: false}); */
                     props.onChangeData(6, e,true)
             } else {
                 setErrores({
                     ...errores,
                     errorCaracteres: false});
-                    setDisableSeleccionar({
+/*                     setDisableSeleccionar({
                         ...disableSeleccionar,
-                        disableUnidad: false});                    
+                        disableUnidad: false});  */                   
                     props.onChangeData(6, e)    
             }           
-        }else if (e.target.name == "claveProducto"){
+/*         }else if (e.target.name == "claveProducto"){
             setDisableSeleccionar({
                 ...disableSeleccionar,
                 disableProducto: false});             
@@ -184,7 +183,7 @@ function CrearConceptoSAT(props) {
                 disableFraccion: false});             
             props.onChangeData(6, e)
         }
-    }
+ */    }
 
     const handleClickBuscarClaveSat = (idcomplemento) =>{
 
@@ -195,7 +194,8 @@ function CrearConceptoSAT(props) {
                 catalogo: "c_ClaveProdServCP", 
                 busqueda: "", 
                 complementoSAT: 1,
-                titulo:"Producto o Servicio"
+                titulo:"Producto o Servicio",
+                onFocus: true
             })
 
     
@@ -214,7 +214,8 @@ function CrearConceptoSAT(props) {
                 catalogo: "c_ClaveUnidad", 
                 busqueda: "", 
                 complementoSAT: 2,
-                titulo:"Unidad medida"
+                titulo:"Unidad medida",
+                onFocus: true
             })
     
     
@@ -233,7 +234,8 @@ function CrearConceptoSAT(props) {
                 catalogo: "c_TipoEmbalaje", 
                 busqueda: "", 
                 complementoSAT: 3,
-                titulo:"Embalaje"
+                titulo:"Embalaje",
+                onFocus: true
             })
 
             obtenerSATListado(catalogo,props.dataComplemento.claveEmbalaje).then(respuesta => {
@@ -251,7 +253,8 @@ function CrearConceptoSAT(props) {
                 catalogo: "c_FraccionArancelaria", 
                 busqueda: "", 
                 complementoSAT: 4,
-                titulo:"Fracción arancelaria"
+                titulo:"Fracción arancelaria",
+                onFocus: true
             })
 
             obtenerSATListado(catalogo,props.dataComplemento.claveFraccion).then(respuesta => {
@@ -269,7 +272,8 @@ function CrearConceptoSAT(props) {
                 catalogo: "c_MaterialPeligroso", 
                 busqueda: "", 
                 complementoSAT: 5,
-                titulo:"Material peligroso"
+                titulo:"Material peligroso",
+                onFocus: true
             })
 
             obtenerSATListado(catalogo,props.dataComplemento.claveMaterialPeligroso).then(respuesta => {
@@ -301,6 +305,7 @@ function CrearConceptoSAT(props) {
                                 catalogo={state.catalogo}
                                 setPagina={setPagina}
                                 setBusqueda={(value) => setState({...state, busqueda: value})}
+                                cancel ={props.resetComplemento}
                                 // isProducto={this.state.isProducto}
                             />
 
@@ -358,11 +363,14 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.claveProducto}
                                     name="claveProducto"
                                     required
-                                    onChange={(e)=> handleChangeSpecial(e)/* { props.onChangeData(6, e)} */}
+                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                     aria-readonly={true}
                                     disabled={props.consulta}
                                     InputProps={{
                                         inputProps:{min: 1}
+                                    }}
+                                    onBlur={() => {
+                                        handleClickBuscarClaveSat(1)
                                     }}
                                 />
                             </Grid>
@@ -387,8 +395,8 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() =>  handleClickBuscarClaveSat(1)/* setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"}) */}
-                                    disabled= {disableSeleccionar.disableProducto}
+                                    onClick={() =>  /* handleClickBuscarClaveSat(1) */setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio",onFocus:false})}
+                                    //disabled= {disableSeleccionar.disableProducto}
                                     >
                                     Seleccionar
                                 </Button>
@@ -407,6 +415,9 @@ function CrearConceptoSAT(props) {
                                     name="claveUnidad"
                                     aria-readonly={true}
                                     onKeyDown={handleKeyDown}
+                                    onBlur={() => {
+                                        handleClickBuscarClaveSat(2)
+                                    }}
                                 />
                                 {errores.errorCaracteres &&
                                     <span style={{ color: 'red' }}>Caracteres especiales no estan permitidos.</span>
@@ -434,8 +445,8 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => handleClickBuscarClaveSat(2)}
-                                    disabled= {disableSeleccionar.disableUnidad}
+                                    onClick={() => setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida",onFocus: false}) /* handleClickBuscarClaveSat(2) */}
+                                    //disabled= {disableSeleccionar.disableUnidad}
                                 >
                                     Seleccionar
                                 </Button>
@@ -468,8 +479,11 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     required
                                     value={props.dataComplemento.claveMaterialPeligroso}
-                                    onChange={(e)=> handleChangeSpecial(e)/* props.onChangeData(6, e) */}
+                                    onChange={(e)=>{ props.onChangeData(6, e)}/* props.onChangeData(6, e) */}
                                     name="claveMaterialPeligroso"
+                                    onBlur={() => {
+                                        handleClickBuscarClaveSat(5)
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8}>
@@ -493,9 +507,9 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    disabled= {disableSeleccionar.disableMaterialPeligroso}
+                                    //disabled= {disableSeleccionar.disableMaterialPeligroso}
                                     name="materialPeligrosoSAT"
-                                    onClick={() => handleClickBuscarClaveSat(5)/* () => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"}) */}>
+                                    onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso",onFocus:false})}>
                                     Seleccionar
                                 </Button>
                             </Grid>
@@ -511,7 +525,10 @@ function CrearConceptoSAT(props) {
                                     required
                                     value={props.dataComplemento.claveEmbalaje}
                                     name="claveEmbalaje"
-                                    onChange={(e)=> handleChangeSpecial(e)/* { props.onChangeData(6, e)} */}
+                                    onChange={(e)=>  { props.onChangeData(6, e)}}
+                                    onBlur={() => {
+                                        handleClickBuscarClaveSat(3)
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -548,9 +565,9 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    disabled= {disableSeleccionar.disableEmbalaje}
+                                    //disabled= {disableSeleccionar.disableEmbalaje}
                                     name={"embalajeSAT"}
-                                    onClick={() => handleClickBuscarClaveSat(3)/* () => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"}) */}>
+                                    onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje",onFocus: false})}>
                                     Seleccionar
                                 </Button>
                             </Grid>
@@ -565,7 +582,10 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     value={props.dataComplemento.claveFraccion}
                                     name="claveFraccion"
-                                    onChange={(e)=> handleChangeSpecial(e)/* { props.onChangeData(6, e)} */}
+                                    onChange={(e)=> { props.onChangeData(6, e)}}
+                                    onBlur={() => {
+                                        handleClickBuscarClaveSat(4)
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8}>
@@ -588,9 +608,9 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    disabled= {disableSeleccionar.disableFraccion}
+                                    //disabled= {disableSeleccionar.disableFraccion}
                                     name="fraccionSAT"
-                                    onClick={() => handleClickBuscarClaveSat(4)/* () => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}>
+                                    onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria", onFocus: false})}>
                                     Seleccionar
                                 </Button>
                             </Grid>

@@ -56,25 +56,64 @@ function ComplementosSAT(props) {
     })
 
 
-    const resetDataComplemento = () => {
-        setDataComplemento({
-            id:0,
-            cantidad:0,
-            claveProducto: '',
-            claveUnidad: '',
-            claveFraccion:'',
-            comercioExterior: '',
-            esPeligroso: false,
-            claveMaterialPeligroso: '',
-            claveEmbalaje:'',
-            embalajeSAT:'',
-            descripcionEmbalajeSAT:'',
-            peso: 0,
-            UnidadSAT: '',
-            ProductoSAT: '',
-            fraccionSAT:'',
-            materialPeligrosoSAT:'',
-        })
+    const resetDataComplemento = (catalogo) => {
+        if(catalogo == 1){
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveProducto: '',
+                    ProductoSAT: '',
+                }
+            })
+        }else if(catalogo == 2){
+            setDataComplemento(dataComplemento => {
+                return{
+                    ...dataComplemento,
+                    claveUnidad: '',
+                    UnidadSAT: '',    
+                }
+            })
+        }else if(catalogo == 3){
+            setDataComplemento(dataComplemento => {
+                return{
+                    ...dataComplemento,
+                    claveMaterialPeligroso: '',
+                    materialPeligrosoSAT:'',
+                }
+            })
+        }else if(catalogo == 4){
+            setDataComplemento({
+                claveEmbalaje:'',
+                embalajeSAT:'',
+            })
+        }else if(catalogo == 5){
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveFraccion:'',
+                    fraccionSAT:'',
+                }
+            })
+        }else{
+            setDataComplemento({
+                id:0,
+                cantidad:0,
+                claveProducto: '',
+                claveUnidad: '',
+                claveFraccion:'',
+                comercioExterior: '',
+                esPeligroso: false,
+                claveMaterialPeligroso: '',
+                claveEmbalaje:'',
+                embalajeSAT:'',
+                descripcionEmbalajeSAT:'',
+                peso: 0,
+                UnidadSAT: '',
+                ProductoSAT: '',
+                fraccionSAT:'',
+                materialPeligrosoSAT:'',
+            })
+        }
     }
 
     function RowMenuCell(propss) {
@@ -316,6 +355,7 @@ function ComplementosSAT(props) {
             });
         }else{
             if (data.target.name === "esPeligroso"){
+                console.log(data)
                 setDataComplemento(dataComplemento =>{
                     return {
                         ...dataComplemento,
@@ -488,6 +528,7 @@ function ComplementosSAT(props) {
                                        consulta={props.disabled}
                                        dataComplemento={dataComplemento}
                                        onChangeData={handleChangeComplementoSat}
+                                       resetComplemento={resetDataComplemento}
                         />
                     }
                 </DialogContent>
