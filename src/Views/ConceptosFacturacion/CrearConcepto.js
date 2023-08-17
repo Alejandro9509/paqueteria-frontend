@@ -22,7 +22,7 @@ import { obtenerImpuestos } from "../../Util/Contexts/ImpuestosContext";
 import {
     obtenerSATEmbalajes, obtenerSATPaginado,
     obtenerSATServicios,
-    obtenerSATUnidades,obtenerSATListado
+    obtenerSATUnidades,obtenerSATListado,obtenerSATBusqueda
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import {Autocomplete} from "@material-ui/lab";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
@@ -241,7 +241,7 @@ function CrearConceptoSAT(props) {
             })
             setOnFocus(true)
     
-            obtenerSATListado(catalogo,props.dataComplemento.claveProducto).then(respuesta => {
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveProducto).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(1, respuesta.data)
                 }else{
@@ -260,7 +260,7 @@ function CrearConceptoSAT(props) {
             })
     
             setOnFocus(true)
-            obtenerSATListado(catalogo,props.dataComplemento.claveUnidad).then(respuesta => {
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveUnidad).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(2, respuesta.data)
                 }else{
@@ -278,7 +278,7 @@ function CrearConceptoSAT(props) {
                 titulo:"Embalaje",
             })
             setOnFocus(true)
-            obtenerSATListado(catalogo,props.dataComplemento.claveEmbalaje).then(respuesta => {
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveEmbalaje).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(3, respuesta.data)
                 }else{
@@ -296,7 +296,7 @@ function CrearConceptoSAT(props) {
                 titulo:"Fracción arancelaria",
             })
             setOnFocus(true)
-            obtenerSATListado(catalogo,props.dataComplemento.claveFraccion).then(respuesta => {
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveFraccion).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(4, respuesta.data)
                 }else{
@@ -314,7 +314,7 @@ function CrearConceptoSAT(props) {
                 titulo:"Material peligroso",
             })
             setOnFocus(true)
-            obtenerSATListado(catalogo,props.dataComplemento.claveMaterialPeligroso).then(respuesta => {
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveMaterialPeligroso).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(5, respuesta.data)
                 }else{
