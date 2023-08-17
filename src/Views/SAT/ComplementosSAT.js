@@ -82,9 +82,13 @@ function ComplementosSAT(props) {
                 }
             })
         }else if(catalogo == 4){
-            setDataComplemento({
-                claveEmbalaje:'',
-                embalajeSAT:'',
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveEmbalaje:'',
+                    embalajeSAT:'',
+                    descripcionEmbalajeSAT:''
+                }
             })
         }else if(catalogo == 5){
             setDataComplemento(dataComplemento =>{

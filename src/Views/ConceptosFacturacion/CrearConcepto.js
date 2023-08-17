@@ -43,7 +43,6 @@ function showSuccess(mensaje) {
 
 function CrearConceptoSAT(props) {
     const [pagina, setPagina] = React.useState(0);
-    const [onFocus, setOnFocus] = useState(false)
     const [rows, setRow] = useState([])
     const [state, setState] = React.useState({
         openDialog: false,
@@ -127,7 +126,6 @@ function CrearConceptoSAT(props) {
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_ClaveProdServCP", state.busqueda).then((respuesta) => {
                 if(respuesta.data.length>0){
                 setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"})
-                setOnFocus(false)
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
@@ -137,7 +135,6 @@ function CrearConceptoSAT(props) {
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_ClaveUnidad", state.busqueda).then((respuesta) => {
                 if(respuesta.data.length>0){
                 setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida"})
-                setOnFocus(false)
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
@@ -147,7 +144,6 @@ function CrearConceptoSAT(props) {
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_TipoEmbalaje", state.busqueda).then((respuesta) => {
                 if(respuesta.data.length>0){
                 setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"})
-                setOnFocus(false)
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
@@ -157,7 +153,6 @@ function CrearConceptoSAT(props) {
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_FraccionArancelaria", state.busqueda).then((respuesta) => {
                 if(respuesta.data.length>0){
                 setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"})
-                setOnFocus(false)
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
@@ -167,7 +162,6 @@ function CrearConceptoSAT(props) {
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_MaterialPeligroso", state.busqueda).then((respuesta) => {
                 if(respuesta.data.length>0){
                 setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"})
-                setOnFocus(false)
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
@@ -239,13 +233,14 @@ function CrearConceptoSAT(props) {
                 complementoSAT: 1,
                 titulo:"Producto o Servicio",
             })
-            setOnFocus(true)
     
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveProducto).then(respuesta => {
+                console.log(respuesta.data)
                 if(respuesta.data.Estatus){
                     props.onChangeData(1, respuesta.data)
                 }else{
                     showSuccess(respuesta.data)
+                    props.resetComplemento(1)
                 }
             })        
         }else if(idcomplemento === 2 && props.dataComplemento.claveUnidad){
@@ -259,11 +254,11 @@ function CrearConceptoSAT(props) {
                 titulo:"Unidad medida",
             })
     
-            setOnFocus(true)
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveUnidad).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(2, respuesta.data)
                 }else{
+                    props.resetComplemento(2)
                     showSuccess(respuesta.data)
                 }
             })       
@@ -277,11 +272,11 @@ function CrearConceptoSAT(props) {
                 complementoSAT: 3,
                 titulo:"Embalaje",
             })
-            setOnFocus(true)
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveEmbalaje).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(3, respuesta.data)
                 }else{
+                    props.resetComplemento(4)
                     showSuccess(respuesta.data)
                 }
             })               
@@ -295,11 +290,11 @@ function CrearConceptoSAT(props) {
                 complementoSAT: 4,
                 titulo:"Fracción arancelaria",
             })
-            setOnFocus(true)
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveFraccion).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(4, respuesta.data)
                 }else{
+                    props.resetComplemento(5)
                     showSuccess(respuesta.data)
                 }
             })               
@@ -313,11 +308,11 @@ function CrearConceptoSAT(props) {
                 complementoSAT: 5,
                 titulo:"Material peligroso",
             })
-            setOnFocus(true)
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveMaterialPeligroso).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(5, respuesta.data)
                 }else{
+                    props.resetComplemento(3)
                     showSuccess(respuesta.data)
                 }
             })        
