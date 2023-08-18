@@ -235,7 +235,6 @@ function CrearConceptoSAT(props) {
             })
     
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveProducto).then(respuesta => {
-                console.log(respuesta.data)
                 if(respuesta.data.Estatus){
                     props.onChangeData(1, respuesta.data)
                 }else{
