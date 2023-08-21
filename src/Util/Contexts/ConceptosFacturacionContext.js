@@ -97,7 +97,7 @@ function obtenerConceptosDefectoListado(){
 
 function obtenerSATListado(catalogo,busqueda){
 
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/SAT/GetListado/${catalogo}/${busqueda}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/GetListado/${catalogo}/${busqueda}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -106,7 +106,7 @@ function obtenerSATListado(catalogo,busqueda){
 }
 function obtenerSATBusqueda(catalogo,busqueda){
 
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/SAT/Busqueda/${catalogo}/${busqueda}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/Busqueda/${catalogo}/${busqueda}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
