@@ -369,6 +369,7 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.cantidad}
                                     onChange={handleChange}
                                     name="cantidad"
+                                    InputProps={{ inputProps: { min: 0 } }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -383,6 +384,7 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.peso}
                                     onChange={handleChange}
                                     name="peso"
+                                    InputProps={{ inputProps: { min: 0 } }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
