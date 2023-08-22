@@ -712,12 +712,16 @@ function Informes({history}) {
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia.filter(g => g.select)
         }
-        cubicarGuiaInforme(params).then(({data}) => {
-            setUtilizacion( data.utilizacion.toFixed(0))
-        }).catch(e => {
-            setUtilizacion(0)
-            showError(e.response?.data)
-        })
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
         setDataGuias(newGuia);
     };
 
@@ -964,6 +968,21 @@ function Informes({history}) {
                 tipoTimbrado:data.m_nTipoTimbrado
             }
         });
+        var params = {
+            idRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1)?.m_nIdUnidad ?? null,
+            idRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2)?.m_nIdUnidad ?? null,
+            guias: data.m_arrClsProGuia
+        }
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
     }
 
     const setDataParaAgregar = () => {
@@ -1690,7 +1709,7 @@ function Informes({history}) {
                                                                         {/*****************************************Utilización*************************************************/}
 
                                                                         <div className="col-sm-12 col-md-12 unit">
-                                                                            <ProgressBarCubicaje value={utilizacion}>Espacio de carga usado: {utilizacion}%</ProgressBarCubicaje>
+                                                                            <ProgressBarCubicaje value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}</ProgressBarCubicaje>
 
                                                                         </div>
                                                                     </div>
