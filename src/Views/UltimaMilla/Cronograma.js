@@ -16,15 +16,29 @@ import {
 } from "@material-ui/core"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import DateRangeIcon from "@material-ui/icons/DateRange";
+import AutorenewIcon from '@material-ui/icons/Autorenew';
 import moment from "moment";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 import Paradas from "./Paradas";
+import Noty from "noty";
+import Tooltip from "@material-ui/core/Tooltip";
+import { fil } from 'date-fns/locale';
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 
 class Cronograma extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            openDetail: false
+            openDetail: false,
+            ParaUltimaMilla: {}
         }
     }
 
@@ -33,7 +47,13 @@ class Cronograma extends Component {
     }
 
     componentDidMount() {
-
+        this.props.tour.m_arrClsParadaUltimaMilla.map((u, index) => {
+            this.setState({
+                ...this.state,
+                ParaUltimaMilla: {u}
+            })
+            console.log(u)
+        })
     }
 
     componentWillUnmount() {
@@ -122,6 +142,8 @@ class Cronograma extends Component {
                                                         <TableCell style={{borderBottom: "none"}} align="left"><Box
                                                             fontWeight="fontWeightBold">Repartidor</Box></TableCell>
                                                         <TableCell style={{borderBottom: "none"}} align="left"><Box
+                                                            fontWeight="fontWeightBold">Remplazar Operador</Box></TableCell>
+                                                        <TableCell style={{borderBottom: "none"}} align="left"><Box
                                                             fontWeight="fontWeightBold">Unidad</Box></TableCell>
                                                         {/*<TableCell style={{borderBottom: "none"}} align="left"><Box
                                                             fontWeight="fontWeightBold">Capacidad</Box></TableCell>*/}
@@ -143,6 +165,8 @@ class Cronograma extends Component {
                                                             var filterEstatus = tour.m_arrClsProGuia.filter(g =>g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3)
                                                             var color = tour.color
                                                             var min = 20, sec = 10;
+                                                            console.log(filterEstatus)
+                                                            //console.log(filterEstatus[0].m_nEstatusUlimaMilla)
                                                             return (
                                                                 <TableRow key={index}>
                                                                     <TableCell style={{borderBottom: "none"}}
@@ -156,6 +180,22 @@ class Cronograma extends Component {
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">{u.m_snNombreOperador}</TableCell>
+                                                                    <TableCell style={{borderBottom: "none"}}
+                                                                               align="left">
+                                                                                <Tooltip title="Remplazar Operador">                                           
+                                                                                    <AutorenewIcon color={"primary"} align="center" fontSize={"large"} onClick={()=> {
+                                                                                        if (filterEstatus.length > 0 ){
+                                                                                            if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
+                                                                                                this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, u.m_nId)
+                                                                                            }else{
+                                                                                                showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
+                                                                                            }
+                                                                                        }else{
+                                                                                            showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
+                                                                                        }
+                                                                                    }}/>
+                                                                               </Tooltip>
+                                                                               </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">{u.m_sPlacasUnidad}</TableCell>
                                                                     {/*<TableCell style={{borderBottom: "none"}}
