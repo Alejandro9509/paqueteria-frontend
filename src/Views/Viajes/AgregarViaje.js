@@ -929,6 +929,8 @@ class AgregarViaje extends Component {
     }
     handleCloseDialogUnidades(){
         this.setState({ openDialogUnidades: false })
+        /** Para evitar que se quite la barra de navegacion */
+        document.body.style.overflow = 'auto';
     }
 
     handleAcceptDataUnidades = (data) => {
@@ -949,6 +951,7 @@ class AgregarViaje extends Component {
 
     handleCloseDialogRemolques(){
         this.setState({ openDialogRemolques: false })
+        document.body.style.overflow = 'auto';
     }
 
     handleAcceptDataRemolques = (data) => {
@@ -981,6 +984,7 @@ class AgregarViaje extends Component {
 
     handleCloseDialogDollys(){
         this.setState({ openDialogDollys: false })
+        document.body.style.overflow = 'auto';
     }
 
     handleAcceptDataDollys = (data) => {
