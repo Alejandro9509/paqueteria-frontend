@@ -111,7 +111,8 @@ function CrearConceptoSAT(props) {
     }
 
     const closeDialog = () => {
-        setState({ ...state, openDialog: false, catalogo: "" });
+        console.log(state.dataSat)
+        setState({ ...state, openDialog: false, catalogo: "",busqueda:"" });
         setPagina(0)
     }
     const cancelDialog = () => {
@@ -167,12 +168,27 @@ function CrearConceptoSAT(props) {
                 }
               
             })
+        }else{
+            return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                setState({...state, dataSat: respuesta.data, openDialog: true})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+              
+            })
         }
        /*  } */
     }
-   /*  useEffect(() => {
-        cargarDesdeServidor(pagina.page,numRegistros)
-    }, [pagina, state.busqueda, state.catalogo]) */
+    useEffect(() => {
+        console.log(state.busqueda)
+        console.log(pagina)
+        console.log(numRegistros)
+        console.log(state.catalogo)
+        if(state.busqueda != ""){
+            cargarDesdeServidor(pagina.page,numRegistros)
+        }
+    }, [pagina,state.busqueda,state.catalogo])
 
     const handleKeyDown = e => {
         if (e.key === " ") {

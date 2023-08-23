@@ -160,6 +160,7 @@ class ClavesCFDI extends Component {
     }
 
     requestSearch = (searchValue) => {
+        console.log(searchValue)
             this.setState({
                 searchText:searchValue
             })
@@ -179,6 +180,7 @@ class ClavesCFDI extends Component {
     };
 
     componentWillReceiveProps(props) {
+        console.log(props)
         console.log(this.props.dataSAT)
         this.setState({
             row:this.props.dataSAT,
