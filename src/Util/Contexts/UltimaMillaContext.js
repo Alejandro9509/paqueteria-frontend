@@ -327,12 +327,13 @@ async function searchLocation(city, address) {
     }
 }
 
-function agregarRuta(idUltimaMilla, tour, data) {
+function agregarRuta(idUltimaMilla, tour, data,hora) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GuardarUltimaMilla`;
     let result;
     var ultimaMillaObject = {
         idUltimaMilla: idUltimaMilla,
         fecha: moment(data.fecha).format("YYYY-MM-DD"),
+        hora: hora,
         creadoPor: localStorage.getItem("UsuarioId"),
         idSucursal: data.sucursalSeleccionada.m_nIdSucursal,
         arrZonas: [],
