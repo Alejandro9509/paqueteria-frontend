@@ -1178,7 +1178,7 @@ function Embarque(props) {
 
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-
+        
         if (errores.length > 0) {
             showSuccess("Errores en conceptos de facturacion")
             return;
@@ -3324,8 +3324,8 @@ function Embarque(props) {
 
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
-
-                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
+{/*  */}
+                            <form className="j-forms row" onSubmit={e => {e.preventDefault(); e.stopPropagation()}}  onKeyDown={e => {
                                 if (e.code === 13) {
                                     e.preventDefault()
                                 }
@@ -4450,11 +4450,11 @@ function Embarque(props) {
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
-                                        <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {
+                                        <form className="j-forms"  onSubmit={handleCancelar} onKeyDown={e => {
                                             if (e.code === 13) {
                                                 e.preventDefault()
                                             }
-                                        }}>
+                                        }} >
                                             <div className="form-content">
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
