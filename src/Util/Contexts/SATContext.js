@@ -44,4 +44,12 @@ function enviarCorreoCFDIUltimaMilla(id, correos, correoDefault, esRecoleccion){
     );
     return result
 }
-export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI,enviarCorreoCFDIViaje,enviarCorreoCFDIUltimaMilla}
+function obtenerClavesByInforme(idInforme) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesByInforme/${idInforme}`;
+    let result;
+    trackPromise(
+        result = axios.get(url, { headers })
+    );
+    return result
+}
+export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI,enviarCorreoCFDIViaje,enviarCorreoCFDIUltimaMilla,obtenerClavesByInforme}
