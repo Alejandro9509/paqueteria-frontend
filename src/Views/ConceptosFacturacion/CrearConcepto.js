@@ -111,7 +111,6 @@ function CrearConceptoSAT(props) {
     }
 
     const closeDialog = () => {
-        console.log(state.dataSat)
         setState({ ...state, openDialog: false, catalogo: "",busqueda:"" });
         setPagina(0)
     }
@@ -181,10 +180,6 @@ function CrearConceptoSAT(props) {
        /*  } */
     }
     useEffect(() => {
-        console.log(state.busqueda)
-        console.log(pagina)
-        console.log(numRegistros)
-        console.log(state.catalogo)
         if(state.busqueda != ""){
             cargarDesdeServidor(pagina.page,numRegistros)
         }
