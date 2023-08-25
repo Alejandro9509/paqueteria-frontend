@@ -123,7 +123,8 @@ function ParametrosConfiguracion() {
         modificarValorEmbarque:false,
         foliosPorSucursal: false,
         documentos:[],
-        factorConversion: 0.0
+        factorConversion: 0.0,
+        etiquetasAdicionales:false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -201,7 +202,8 @@ function ParametrosConfiguracion() {
             tipoTimbrado: configuraciones.tipoTimbrado,
             plantillaImportarEmbarquesBase64: "",
             plantillaImportarEmbarquesNombreArchivo: '',
-            documentos: configuraciones.documentos
+            documentos: configuraciones.documentos,
+            etiquetasAdicionales:configuraciones.etiquetasAdicionales
         }
         console.log(params)
         modificarParametrosConfiguracion(params)
@@ -256,7 +258,8 @@ function ParametrosConfiguracion() {
                     plantillaImportarEmbarquesNombreArchivo: "",
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal,
                     documentos: respuesta.data.documentos || [],
-                    factorConversion: respuesta.data.FactorConversion
+                    factorConversion: respuesta.data.FactorConversion,
+                    etiquetasAdicionales:respuesta.data.EtiquetasAdicionales
                 }
             })
 
@@ -771,7 +774,7 @@ function ParametrosConfiguracion() {
                             <Box p={1}>
                                 <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                      flexDirection="column">
-                                    <h2 className={classes.subtitulo}>Guias</h2>
+                                    <h2 className={classes.subtitulo}>Guías</h2>
                                     <Box width="40%" p={1} my={0.5} display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Estatus por defecto</div>
@@ -826,6 +829,21 @@ function ParametrosConfiguracion() {
                                                 style={{transform: "scale(2)"}}
                                                 inputProps={{'aria-label': 'primary checkbox'}}
                                                 name="timbradoPruebaGuia"
+                                            />
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5} display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <h2>¿Requiere etiquetas adicionales?</h2>
+                                        </Box>
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.etiquetasAdicionales}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="etiquetasAdicionales"
                                             />
                                         </Box>
                                     </Box>

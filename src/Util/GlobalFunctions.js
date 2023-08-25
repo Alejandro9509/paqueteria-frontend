@@ -1,3 +1,5 @@
+import {confirmAlert} from "react-confirm-alert";
+
 export const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -10,3 +12,29 @@ export const toBase64 = file => new Promise((resolve, reject) => {
     };
     reader.onerror = error => reject(error);
 });
+export function confirmarEtiquetasAdicionalesDialog() {
+
+    return new Promise(function (resolve, reject) {
+        confirmAlert({
+            title: 'Confirmación',
+            message: '¿Desea imprimir etiquetas adicionales?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => {
+                        resolve(true)
+
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => {
+                        reject(false)
+
+
+                    }
+                }
+            ]
+        })
+    })
+}
