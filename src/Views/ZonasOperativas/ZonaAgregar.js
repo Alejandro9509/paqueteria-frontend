@@ -17,7 +17,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function ZonaAgregar({idZona, consult}) {
+function ZonaAgregar({idZona, consult,nuevo}) {
     const [state, setState] = useState({})
     const [selec, setSelec] = useState({})
     useEffect(value => {
@@ -86,6 +86,7 @@ function ZonaAgregar({idZona, consult}) {
                                         seleccion={selec}
                                         onChange={handleDataCodigosPostalesChange}
                                         consult={consult}
+                                        nuevo={nuevo}
                                     />
                                 </div>
                             </div>
