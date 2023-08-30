@@ -52,4 +52,12 @@ function obtenerClavesByInforme(idInforme) {
     );
     return result
 }
-export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI,enviarCorreoCFDIViaje,enviarCorreoCFDIUltimaMilla,obtenerClavesByInforme}
+function obeterValidacionComplementos(claves) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ValidarComplemento/Importado`;
+    let result;
+    trackPromise(
+        result = axios.post(url, claves, { headers })
+    );
+    return result
+}
+export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI,enviarCorreoCFDIViaje,enviarCorreoCFDIUltimaMilla,obtenerClavesByInforme,obeterValidacionComplementos}

@@ -23,13 +23,21 @@ import {
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import { confirmAlert } from "react-confirm-alert";
 import e from "cors";
-
+import {obeterValidacionComplementos} from "../../Util/Contexts/SATContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
         layout: "topCenter",
         text: mensaje,
         timeout: "3000"
+    }).show()
+}
+function showError(mensaje) {
+    new Noty({
+        type: "warning",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "8000"
     }).show()
 }
 
@@ -428,7 +436,6 @@ function ComplementosSAT(props) {
                 console.log(ws)
 
                 const data = XLSX.utils.sheet_to_json(ws, {range:2});
-
                 resolve(data);
             };
 
@@ -445,7 +452,7 @@ function ComplementosSAT(props) {
                 cantidad: item.Cantidad,
                 peso: item['Peso']?item['Peso']:0,
                 claveProducto: item['Clave productos y servicios'],
-                claveUnidad: item['Clave Unidad'],
+                claveUnidad: item['Clave Unidades de medida y embalaje'],
                 esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
                 claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso']:0,
                 claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje']:0,
@@ -453,8 +460,25 @@ function ComplementosSAT(props) {
                 claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion']:""
             }))
             console.log(newArray)
+            const claves = newArray.map(newClave=>({
+                claveProductoServicio: newClave.claveUnidad,
+                claveUnidadesMedidaEmbalaje: newClave.claveProducto
+            }))
+
+            obeterValidacionComplementos(claves).then(({data}) => {
+                console.log(data)
+                var estatus = data.filter(item => item.Estatus == false);
+                console.log(estatus)
+                let  mensaje = " ";
+                if(estatus.length>0){
+                    for(var i = 0; i< estatus.length; i++){
+                    showError(`Error con la Clave SAT: '${estatus[i].Clave}', corrija la clave en el archivo excel.`)
+                    }
+                    return
+                }
+                props.onChangeList(newArray)
+            })
             // props.dataList.push(newArray)
-            props.onChangeList(newArray)
         });
     };
 
