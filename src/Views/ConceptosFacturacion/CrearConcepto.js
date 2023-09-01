@@ -705,7 +705,7 @@ function CrearConceptoSAT(props) {
                     Cancelar
                 </Button>
                 <Button
-                    //type={"submit"}
+                     //type={"submit"}
                     onClick={() => props.handleAceptar(state)}
                     color={"primary"}
                 >
