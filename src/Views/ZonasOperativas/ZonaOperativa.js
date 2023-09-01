@@ -98,6 +98,7 @@ function ZonaOperativa() {
     const [state, setState] = useState({
         agregar: "Agregar",
         height: window. innerHeight,
+        nuevo: false
     })
     const [seleccion, setSeleccion] = useState({})
 
@@ -115,6 +116,7 @@ function ZonaOperativa() {
             return {
                 ...state,
                 agregar: "Agregar",
+                nuevo: false
             }
         });
         $('.nav-tabs li ').removeClass('active');
@@ -130,6 +132,7 @@ function ZonaOperativa() {
         setState(state => {
             return {
                 ...state,
+                nuevo: true
             }
         });
         $('.nav-tabs li ').removeClass('active');
@@ -147,6 +150,7 @@ function ZonaOperativa() {
             return {
                 ...state,
                 agregar: "Modificar",
+                nuevo: false
             }
         });
         $('.nav-tabs li ').removeClass('active');
@@ -163,6 +167,7 @@ function ZonaOperativa() {
             return {
                 ...state,
                 agregar: "Consultar",
+                nuevo: false
             }
         });
         $('.nav-tabs li ').removeClass('active');
@@ -267,6 +272,7 @@ function ZonaOperativa() {
                                         consult={consult}
                                         idZona={seleccion}
                                         onSubmit={onSubmit}
+                                        nuevo={state.nuevo}
                                     />
                             }
 
