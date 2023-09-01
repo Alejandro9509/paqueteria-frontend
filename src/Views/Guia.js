@@ -22,6 +22,7 @@ import Barra from "../Util/jquery-barcode"
 import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EnvioCorreoDialogo from "../Views/SAT/EnvioCorreoDialogo";
 
 import {
     obtenerZonaTarifaByIdCodigoPostal,
@@ -68,7 +69,7 @@ import {
     asignarTrayectos,
     validarEliminarGuia,
     obtenerGuiaReporteEtiqueta,
-    validarCancelarGuia, obtenerGuiaReporteEtiquetaParcial
+    validarCancelarGuia, obtenerGuiaReporteEtiquetaParcial,enviarCorreoGuia
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -105,7 +106,7 @@ import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
-
+import EmailIcon from '@material-ui/icons/Email';
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -168,6 +169,7 @@ function Guia(props) {
     const [dataConceptosBase, setDataConceptosBase] = useState([])
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [guiaSeleccionada, setGuiaSeleccionada] = useState(null)
+    const [showDialogEnviarCorreo, setShowDialogEnviarCorreo] = useState(false)
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -342,6 +344,12 @@ function Guia(props) {
                             <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
+
+                        </Tooltip>
+
+                        <Tooltip title="Reenviar correo de seguimiento" /* disabled={!validarDerecho(9101458)} */>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => handleReenviarCorreo(row.row.m_nIdGuia)}><EmailIcon style={{paddingTop:"2px"}}/></a>
 
                         </Tooltip>
 
@@ -2122,8 +2130,32 @@ function Guia(props) {
         }
 
     }
+
+    function handleReenviarCorreo(idGuia) {
+        setState({ ...state, idGuia: idGuia})
+        setShowDialogEnviarCorreo(true)
+    }
+
+    function envioCorreoAction(data) {
+        enviarCorreoGuia(state.idGuia, data.correos, data.correoDefault).then(({data}) => {
+            showSuccess(data);
+            setShowDialogEnviarCorreo(false)
+        })
+    }
+
     return (
         <div>
+
+            {
+                showDialogEnviarCorreo &&
+                <EnvioCorreoDialogo
+                    onSubmit={envioCorreoAction} 
+                    open={showDialogEnviarCorreo} 
+                    close={() => {
+                    setShowDialogEnviarCorreo(false);
+                }}/>
+            }
+
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
                               open={state.openTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
