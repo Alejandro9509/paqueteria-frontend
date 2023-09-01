@@ -359,7 +359,6 @@ function ComplementosSAT(props) {
             });
         }else{
             if (data.target.name === "esPeligroso"){
-                console.log(data)
                 setDataComplemento(dataComplemento =>{
                     return {
                         ...dataComplemento,

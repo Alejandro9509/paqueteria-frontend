@@ -111,7 +111,7 @@ function CrearConceptoSAT(props) {
     }
 
     const closeDialog = () => {
-        setState({ ...state, openDialog: false, catalogo: "" });
+        setState({ ...state, openDialog: false, catalogo: "",busqueda:"" });
         setPagina(0)
     }
     const cancelDialog = () => {
@@ -167,12 +167,30 @@ function CrearConceptoSAT(props) {
                 }
               
             })
+        }else{
+            if(state.busqueda != ""){
+                return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+                    if(respuesta.data.length>0){
+                    setState({...state, dataSat: respuesta.data})
+                    }else{
+                        showSuccess("No se encontró ningún registro")
+                    }
+                })
+            }else if(state.busqueda == "" && state.catalogo != ""){
+                return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+                    if(respuesta.data.length>0){
+                    setState({...state, dataSat: respuesta.data})
+                    }else{
+                        showSuccess("No se encontró ningún registro")
+                    }
+                })
+            }
         }
        /*  } */
     }
-   /*  useEffect(() => {
+    useEffect(() => {
         cargarDesdeServidor(pagina.page,numRegistros)
-    }, [pagina, state.busqueda, state.catalogo]) */
+    }, [pagina,state.busqueda,state.catalogo])
 
     const handleKeyDown = e => {
         if (e.key === " ") {
@@ -403,8 +421,13 @@ function CrearConceptoSAT(props) {
                                     InputProps={{
                                         inputProps:{min: 1}
                                     }}
-                                    onBlur={() => {
+                                    onBlur={(e) => {
                                         handleClickBuscarClaveSat(1)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(1)
+                                        }
                                     }}
                                 />
                             </Grid>
@@ -451,6 +474,11 @@ function CrearConceptoSAT(props) {
                                     onKeyDown={handleKeyDown}
                                     onBlur={() => {
                                         handleClickBuscarClaveSat(2)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(2)
+                                        }
                                     }}
                                 />
                                 {errores.errorCaracteres &&
@@ -515,8 +543,13 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.claveMaterialPeligroso}
                                     onChange={(e)=>{ props.onChangeData(6, e)}/* props.onChangeData(6, e) */}
                                     name="claveMaterialPeligroso"
-                                    onBlur={() => {
+                                    onBlur={(e) => {
                                         handleClickBuscarClaveSat(5)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(5)
+                                        }
                                     }}
                                 />
                             </Grid>
@@ -560,8 +593,13 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.claveEmbalaje}
                                     name="claveEmbalaje"
                                     onChange={(e)=>  { props.onChangeData(6, e)}}
-                                    onBlur={() => {
+                                    onBlur={(e) => {
                                         handleClickBuscarClaveSat(3)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(3)
+                                        }
                                     }}
                                 />
                             </Grid>
@@ -617,8 +655,13 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.claveFraccion}
                                     name="claveFraccion"
                                     onChange={(e)=> { props.onChangeData(6, e)}}
-                                    onBlur={() => {
+                                    onBlur={(e) => {
                                         handleClickBuscarClaveSat(4)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(4)
+                                        }
                                     }}
                                 />
                             </Grid>
@@ -664,7 +707,7 @@ function CrearConceptoSAT(props) {
                     Cancelar
                 </Button>
                 <Button
-                    type={"submit"}
+                     //type={"submit"}
                     onClick={() => props.handleAceptar(state)}
                     color={"primary"}
                 >
