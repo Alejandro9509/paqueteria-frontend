@@ -1801,7 +1801,6 @@ function Recoleccion() {
             showSuccess("Se requiere seleccionar Destinatario")
             return
         }
-       console.log(destinatario.zonaOperativaDestinatario)
         setState({
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
