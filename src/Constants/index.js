@@ -165,6 +165,7 @@ export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => (
     `CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
+^CI28
 ^MMT
 ^PW799
 ^LL1199
@@ -199,9 +200,9 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT132,692^A0N,35,26^FH\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT65,740^A0N,35,26^FH\^FDDIRECCION:^FS
 ^FT50,959^A0N,35,33^FH\^FD${guia.m_sSucursalDestino}^FS
-^FT282,1135^A0N,20,26^FH\^FD${index + 1} DE ${paquete.ctd}^FS
-^FT517,1202^BQN,2,8
-^FH\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+^FT290,97^A0I,45,14^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT38,1239^BQN,2,6
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
         (
             guia.m_sDomicilioDestinatario.length > 75 ? (
@@ -213,13 +214,14 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
                  ^FT61,781^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario.substring(25, 70)}^FS`
             )
         ) : `^FT214,740^A0N,35,28^FH\^FD${guia.m_sDomicilioDestinatario}^FS`}
-^FT292,1016^A0N,20,26^FH\^FDTIPO DE REPARTO^FS
-^FT295,1057^A0N,20,26^FH\^FD${guia.tipoEntrega}^FS
+^FT427,204^A0I,28,40^FH\\^FDTIPO DE REPARTO^FS
+^FT420,153^A0I,45,38^FH\\^FD${guia.tipoEntrega}^FS
 ^FT61,890^A0N,35,28^FH\^FD${guia.zonaEntrega}^FS
-^FT61,1209^BQN,2,8
-^FH\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-^FT289,1102^A0N,20,26^FH\^FDPARTIDA:^FS
+^FT534,277^BQN,2,7
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+^FT466,103^A0I,28,40^FH\\^FDPARTIDA:^FS
 ^FT243,586^A0N,35,33^FH\^FD${guia.m_sCiudadDestino}^FS
+^FT569,661^A0I,35,33^FH\\^FD${guia.m_sSucursalDestino}^FS
 ^PQ1,0,1,Y^XZ
 `)
 
