@@ -463,13 +463,14 @@ class FiltersMap extends Component {
                             PopperProps={{
                                 disablePortal: false,
                             }}
-                            onClose={() => this.setState({openZona: false})}
+                            onClose={() => {this.setState({openZona: false})}}
                             open={this.state.openZona}
                             disableFocusListener
                             disableHoverListener
                             disableTouchListener
                             title={
                                 <ZonasList 
+                                           open={this.state.openZona}
                                            close={()=>this.setState({openZona: false})}
                                            zonasSeleccionadas={this.state.zonasSeleccionada}
                                            closeResumen={this.props.closeResumenParada}
@@ -552,7 +553,7 @@ class FiltersMap extends Component {
                             PopperProps={{
                                 disablePortal: false,
                             }}
-                            onClose={() => this.setState({openConfiguration: false})}
+                            onClose={() => {this.setState({openConfiguration: false})}}
                             open={this.state.openConfiguration}
                             disableFocusListener
                             disableHoverListener
@@ -580,7 +581,9 @@ class FiltersMap extends Component {
                                 this.props.closeResumenParada(e)
                             }}
                                 variant="outlined"
-                            />
+                                onClose={() => {this.setState({openConfiguration: false})}}
+                                open={this.state.openConfiguration}
+                                />
                         </BootstrapTooltip>
                         {
                             !this.props.data.modoPlaneacion &&
