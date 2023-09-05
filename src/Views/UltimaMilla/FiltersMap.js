@@ -388,6 +388,10 @@ class FiltersMap extends Component {
 
                     <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: "center"}}>
                         <BootstrapTooltip
+                            onBlur={(e) => {
+                                this.setState({openSucursales: false})
+                                this.props.closeResumenParada(e)}
+                            }
                             PopperProps={{
                                 disablePortal: false,
                             }}
@@ -465,7 +469,9 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <ZonasList zonasSeleccionadas={this.state.zonasSeleccionada}
+                                <ZonasList 
+                                           close={()=>this.setState({openZona: false})}
+                                           zonasSeleccionadas={this.state.zonasSeleccionada}
                                            closeResumen={this.props.closeResumenParada}
                                            selectZona={this.selectZona}
                                            sucursalSeleccionada={this.state.sucursalSeleccionada ? this.state.sucursalSeleccionada.m_nIdSucursal : 0}/>
@@ -494,6 +500,9 @@ class FiltersMap extends Component {
                             />
                         </BootstrapTooltip>
                         <BootstrapTooltip
+                            onBlur={(e) => {
+                                this.setState({openDate: false})
+                            }}
                             PopperProps={{
                                 disablePortal: false,
                             }}
@@ -694,14 +703,20 @@ class FiltersMap extends Component {
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
                                 disabled={(this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))) && !validarDerecho(9101447)}
-                                onClick={() => 
-                                    this.props.generarRuta(this.state)}
+                                onClick={() => {
+                                    this.props.generarRuta(this.state)
+                                    this.setState({openUnidades: false,openUnidades: false,openPaquetes: false,openConfiguration: false,openDate: false})
+                                }
+                                }
+            
                             />
                         </Tooltip>
 
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
-                                onClick={() => {this.setState({unidadesSeleccionadas:[],paquetesSeleccionadas: []});this.props.guardarRuta()}}
+                                onClick={() => {
+                                    this.setState({unidadesSeleccionadas:[],paquetesSeleccionadas: [],openUnidades: false,openUnidades: false,openPaquetes: false,openConfiguration: false,openDate: false});
+                                    this.props.guardarRuta()}}
                                 disabled={((moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) && !validarDerecho(9101448)) || this.props.data.tour?.tour?.unassigned?.length > 0}
                                 style={{
                                     backgroundColor: "white",
