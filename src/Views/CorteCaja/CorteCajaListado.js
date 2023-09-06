@@ -108,7 +108,25 @@ function CorteCajaListado({onRowClick, value}){
         onRowClick(selectedItem, action)
     };
 
+    const handleReportGeneralClickOpcion1 = () => {
+        let fecha = filtros.fecha
+        obtenerCortesGeneralReporte(fecha)
+            .then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "REPORTE " + fecha;
 
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "REPORTE " + fecha);
+                document.body.appendChild(link);
+                link.click();
+            })
+            .catch((err) => {
+                showSuccess(err.toString())
+            })
+    };
     const handleReportGeneralClick = () => {
         setOpenDialog(true)
         /*let fecha = filtros.fecha
@@ -346,7 +364,7 @@ function CorteCajaListado({onRowClick, value}){
                     </DialogContent>
                 </Dialog>
             }
-            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick} onExcelClick={handleExcelClick}/>
+            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick} onExcelClick={handleExcelClick} onReportClickOpcion1={handleReportGeneralClickOpcion1}/>
             <TableCortesCaja data={listaCortes} onRowClick={handleRowClick}/>
         </div>
     )
