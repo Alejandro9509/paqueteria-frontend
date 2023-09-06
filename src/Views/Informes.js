@@ -230,7 +230,14 @@ function Informes({history}) {
                         >
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte opción 1">
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporteOpcion1(row.row)}
+                               disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
+                                                                      style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="Reporte opción 2">
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row)}
                                disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
@@ -335,6 +342,24 @@ function Informes({history}) {
         },
     ]);
 
+    function generarReporteOpcion1(row) {
+        obtenerInformeReporte(row.m_nIdInforme).then(({data}) => {
+            /*let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Informe " + folio;*/
+            try {
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "Informe " + row.m_sFolioInforme.replace(/\./g, ' '));
+                document.body.appendChild(link);
+                link.click();
+            } catch (e) {
+                console.log(e)
+                showSuccess("No se pudo descargar el pdf")
+            }
+        })
+    }
     function generarReporte(row) {
 
         setSeleccion(row)
@@ -379,7 +404,7 @@ function Informes({history}) {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe" + seleccion.m_sFolioInforme;
+            pdfWindow.document.title = "Informe" + seleccion.m_sFolioInforme.replace(/\./g, ' ');
         })
         setState({
             ...state,
