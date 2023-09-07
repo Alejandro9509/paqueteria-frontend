@@ -449,7 +449,7 @@ function ComplementosSAT(props) {
             const newArray = d.map(item => (
                 {
                 id: Math.floor(Math.random() * 10000),
-                cantidad: item.Cantidad,
+                cantidad: item.Cantidad? item.Cantidad : 0,
                 peso: item['Peso']?item['Peso']:0,
                 claveProducto: item['Clave productos y servicios'],
                 claveUnidad: item['Clave Unidades de medida y embalaje'],
@@ -460,6 +460,22 @@ function ComplementosSAT(props) {
                 claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion']:""
             }))
             console.log(newArray)
+            for(let i =0;i<newArray.length;i++){
+                if(newArray[i].cantidad === 0){
+                    showError(`Faltan datos en las cantidades del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                }
+                if(newArray[i].esPeligroso === true){
+                    if(newArray[i].claveMaterialPeligroso === 0){
+                        showError(`Falta el dato Clave material peligroso del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                    }else if(newArray[i].claveEmbalaje === 0){
+                        showError(`Falta el dato Clave Embalaje del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                    }else if(newArray[i].descripcionEmbalajeSAT === ""){
+                        showError(`Falta el dato Descripción embalaje del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                    }else if(newArray[i].claveFraccion === ""){
+                        showError(`Falta el dato Clave Fraccion del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                    }
+                }
+            }
             const claves = newArray.map(newClave=>({
                 claveProductoServicio: newClave.claveUnidad,
                 claveUnidadesMedidaEmbalaje: newClave.claveProducto
