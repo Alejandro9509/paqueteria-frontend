@@ -163,20 +163,20 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     }
 
     const getAllCPByEstadoMunicipio = () =>{
-        if(nuevo){
-            obtenerCodigosPostalesPorEstadoMunicipioDisponibles(state.idEstado, state.idMunicipio).then(({data}) => {
+/*         if(nuevo){
+ */            obtenerCodigosPostalesPorEstadoMunicipioDisponibles(state.idEstado, state.idMunicipio).then(({data}) => {
                 setAllCP(not(data,state.selectedCP))
                 if (data.length==0){
                     showSuccess("No hay codigos postales disponibles.")
                 }
                 // setAllCP(data)
             })
-        }else{
+/*         }else{
             obtenerCodigosPostalesPorEstadoMunicipio(state.idEstado, state.idMunicipio).then(({data}) => {
                 setAllCP(not(data,state.selectedCP))
                 // setAllCP(data)
             })
-        }
+        } */
 
     }
 
