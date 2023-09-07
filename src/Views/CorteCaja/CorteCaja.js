@@ -181,6 +181,24 @@ function CorteCaja() {
                     showSuccess(err.toString())
                 })
         }
+        if (action === 'REPORTE_CORTE_OPCION_1') {
+             obtenerCorteReporte(selectedItem.idCorte)
+                .then(({data}) => {
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "CORTE " + selectedItem.idCorte;
+
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + data;
+                    link.setAttribute('download', "CORTE " + selectedItem.idCorte);
+                    document.body.appendChild(link);
+                    link.click();
+                })
+                .catch((err) => {
+                    showSuccess(err.toString())
+                })
+        }
         if (action === 'REPORTE_CORTE') {
 
 

@@ -334,6 +334,7 @@ function Guia(props) {
 
         obtenerFormatosImpresionProceso(212).then(({data}) => {
             setDataReportes(data)
+            setState({...state, reporteSeleccionado: data[data.length - 1].m_nIdFormato})
         })
         obtenerFormatosImpresionProceso(213).then(({data}) => {
             setDataReportesEtiqueta(data)
@@ -343,7 +344,7 @@ function Guia(props) {
         {
             headerName: "Acciones",
             sortable: false, filterable: false,
-            width: 200,
+            width: 210,
             field: "",
             renderCell: (row) => {
                 return (
@@ -361,7 +362,14 @@ function Guia(props) {
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
+                        <Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101462)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporteOpcion1(row.row)}><i
+                                className="zmdi zmdi-file"
+                                style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="Reporte opción 2" disabled={!validarDerecho(9101462)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row)}><i
                                 className="zmdi zmdi-file"
@@ -386,7 +394,13 @@ function Guia(props) {
                             </a>
 
                         </Tooltip>
-                        <Tooltip title="Descargar PFD con etiquetas" disabled={!validarDerecho(9101465)}>
+                        <Tooltip title="Descargar PFD con etiquetas opción 1" disabled={!validarDerecho(9101465)}>
+                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiquetaOpcion1(row.row)}>
+                                <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
+                            </a>
+
+                        </Tooltip>
+                        <Tooltip title="Descargar PFD con etiquetas opcion 2" disabled={!validarDerecho(9101465)}>
                             <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
@@ -1206,10 +1220,25 @@ function Guia(props) {
         currency: 'USD',
     });
 
-
+    function generarReporteOpcion1(row) {
+        obtenerGuiaReporte(row.m_nIdGuia).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + row.m_nFolioGuia;
+        })
+    }
     function generarReporte(row) {
-        setSeleccion(row)
-        setOpenDialog(true)
+        // console.log(row)
+        // setSeleccion(row)
+        // setOpenDialog(true)
+        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, row.m_nIdGuia).then(({data}) => {
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+        })
         /*obtenerGuiaReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
@@ -1248,6 +1277,14 @@ function Guia(props) {
         })
         setOpenDialog(false)
     }
+    function generarReporteEtiquetaOpcion1(row) {
+        obtenerGuiaReporteEtiqueta(row.m_nIdGuia).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + row.m_nFolioGuia;
+        })
+    }
 
     function generarReporteEtiqueta(row) {
         setSeleccionEtiqueta(row)
@@ -1260,7 +1297,7 @@ function Guia(props) {
         })*/
     }
     const handleOnChangeReporteEtiqueta = (data) => {
-        console.log(data)
+
         setState({
             ...state,
             reporteSeleccionado: data
@@ -1285,7 +1322,7 @@ function Guia(props) {
             try{
                 const link = document.createElement('a');
                 link.href = "data:application/pdf;base64," + data.m_sArchivo;
-                link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia);
+                link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia.replace('.',''));
                 document.body.appendChild(link);
                 link.click();
             }catch (e) {

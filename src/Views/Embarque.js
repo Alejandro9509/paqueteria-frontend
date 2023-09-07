@@ -343,7 +343,7 @@ function Embarque(props) {
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
-            sortable: false, filterable: false, width: 120,
+            sortable: false, filterable: false, width: 130,
             field: "",
             renderCell: (row) => {
                 return (
@@ -369,7 +369,14 @@ function Embarque(props) {
                                 <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
                         </Tooltip>
-                        <Tooltip title="Reporte" disabled={!validarDerecho(9101425)}>
+                        <Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101425)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporteOpcion1(row.row)}><i
+                                className="zmdi zmdi-file"
+                                style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="Reporte opcion 2" disabled={!validarDerecho(9101425)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row)}><i
                                 className="zmdi zmdi-file"
@@ -918,6 +925,15 @@ function Embarque(props) {
             datosAdicionales: '',
             latitud: '',
             longitud: ''*/
+        })
+    }
+
+    function generarReporteOpcion1(row) {
+        obtenerEmbarqueReporte(row.m_nIdEmbarque).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Embarque " + row.m_sFolioEmbarque;
         })
     }
 

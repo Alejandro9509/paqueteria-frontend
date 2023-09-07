@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import GridOnIcon from '@material-ui/icons/GridOn';
 import Tooltip from "@material-ui/core/Tooltip";
 
-const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick}) => {
+const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick, onReportClickOpcion1}) => {
     const [clicked, setClicked] = useState(false);
     const [date, setDate] = useState('');
     const [openDialog, setOpenDialog] = useState(false);
@@ -51,6 +51,11 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
             }
         }
     });
+
+
+    const handleReportClickOpcion1 = () => {
+        onReportClickOpcion1()
+    };
 
     const handleReportClick = () => {
         onReportClick()
@@ -163,7 +168,12 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
-                        <Tooltip title="Descargar reporte general">
+                        <Tooltip title="Descargar reporte general opcion 1">
+                            <IconButton aria-label="edit" size="medium" onClick={() => handleReportClickOpcion1()}>
+                                <InsertDriveFileIcon fontSize={"large"} />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Descargar reporte general opcion 2">
                             <IconButton aria-label="edit" size="medium" onClick={() => handleReportClick()}>
                                 <InsertDriveFileIcon fontSize={"large"} />
                             </IconButton>

@@ -1839,7 +1839,7 @@ function Recoleccion() {
         {
             headerName: "Acciones",
             field: "",
-            width: 120,
+            width: 130,
             sortable: false, filterable: false,
             renderCell: (row) => {
                 return (
@@ -1869,7 +1869,13 @@ function Recoleccion() {
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Reporte" disabled={!validarDerecho(9101418)}>
+                        <Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101418)}>
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporteOpcion1(row.row)}><i className="zmdi zmdi-file"
+                                                                           style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="Reporte opcion 2" disabled={!validarDerecho(9101418)}>
                             <a  className="btn btn-default btn-xs"
                                 onClick={() => generarReporte(row.row)}><i className="zmdi zmdi-file"
                                                                                                                          style={{color: "#F9A03E"}}/></a>
@@ -2062,6 +2068,14 @@ function Recoleccion() {
             accessor: "m_nIdTipoUnidad",
         }
     ]);
+    function generarReporteOpcion1(row){
+        obtenerRecoleccionReporte(row.m_nIdRecoleccion).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Recolección " + row.m_sFolioRecoleccion;
+        })
+    }
     function generarReporte(row){
         setSeleccion(row)
         console.log(row)
