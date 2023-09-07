@@ -321,6 +321,7 @@ function Guia(props) {
 
         obtenerFormatosImpresionProceso(212).then(({data}) => {
             setDataReportes(data)
+            setState({...state, reporteSeleccionado: data[data.length - 1].m_nIdFormato})
         })
         obtenerFormatosImpresionProceso(213).then(({data}) => {
             setDataReportesEtiqueta(data)
@@ -1094,8 +1095,16 @@ function Guia(props) {
         })
     }
     function generarReporte(row) {
-        setSeleccion(row)
-        setOpenDialog(true)
+        // console.log(row)
+        // setSeleccion(row)
+        // setOpenDialog(true)
+        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, row.m_nIdGuia).then(({data}) => {
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+        })
         /*obtenerGuiaReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
@@ -1154,7 +1163,7 @@ function Guia(props) {
         })*/
     }
     const handleOnChangeReporteEtiqueta = (data) => {
-        console.log(data)
+
         setState({
             ...state,
             reporteSeleccionado: data
