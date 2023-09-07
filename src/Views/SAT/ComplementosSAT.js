@@ -319,7 +319,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveProducto: data.m_sClaveSAT,
+                    claveProducto: (data.m_sClaveSAT).toUpperCase(),
                     esPeligroso: data.m_bMaterialPeligroso? true:false,
                     esPeligrosoOpcional: data.m_bMaterialPeligrosoOpcional? true:false,
                     ProductoSAT: data.m_sDescripcion,
@@ -329,7 +329,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveUnidad: data.m_sClaveSAT,
+                    claveUnidad: (data.m_sClaveSAT).toUpperCase(),
                     UnidadSAT: data.m_sDescripcion,
                 }
             });
@@ -337,7 +337,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveEmbalaje: data.m_sClaveSAT,
+                    claveEmbalaje: (data.m_sClaveSAT).toUpperCase(),
                     embalajeSAT: data.m_sDescripcion
                 }
             });
@@ -345,7 +345,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveFraccion: data.m_sClaveSAT,
+                    claveFraccion: (data.m_sClaveSAT).toUpperCase(),
                     fraccionSAT: data.m_sDescripcion
                 }
             });
@@ -353,7 +353,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveMaterialPeligroso: data.m_sClaveSAT,
+                    claveMaterialPeligroso: (data.m_sClaveSAT).toUpperCase(),
                     materialPeligrosoSAT: data.m_sDescripcion
                 }
             });
@@ -366,6 +366,7 @@ function ComplementosSAT(props) {
                 }
             });
         }else{
+            console.log((data.target.value).toUpperCase())
             if (data.target.name === "esPeligroso"){
                 setDataComplemento(dataComplemento =>{
                     return {
@@ -380,14 +381,14 @@ function ComplementosSAT(props) {
                     setDataComplemento(dataComplemento =>{
                         return {
                             ...dataComplemento,
-                            claveUnidad: sanitizedValue,
+                            claveUnidad: (sanitizedValue).toUpperCase(),
                         }
                     });
                 }else{
                     setDataComplemento(dataComplemento =>{
                         return {
                             ...dataComplemento,
-                            [data.target.name]: data.target.value,
+                            [data.target.name]: (data.target.value).toUpperCase(),
                         }
                     });
                 }
