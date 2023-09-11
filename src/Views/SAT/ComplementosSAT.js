@@ -328,11 +328,12 @@ function ComplementosSAT(props) {
     }
 
     const handleAceptar = (data)=>{
-        if(!parseFloat(dataComplemento.cantidad) > 0){
+        console.log(dataComplemento)
+        if(parseFloat(dataComplemento.cantidad) < 0){
             showSuccess("La cantidad debe ser mayor a cero.")
             return
         }
-        if(!parseFloat(dataComplemento.peso) > 0){
+        if(parseFloat(dataComplemento.peso) < 0){
             showSuccess("El peso debe ser mayor a cero.")
             return
         }
