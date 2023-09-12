@@ -362,14 +362,14 @@ function Guia(props) {
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101462)}>
+                        {/*<Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101462)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporteOpcion1(row.row)}><i
                                 className="zmdi zmdi-file"
                                 style={{color: "#F9A03E"}}/></a>
 
-                        </Tooltip>
-                        <Tooltip title="Reporte opción 2" disabled={!validarDerecho(9101462)}>
+                        </Tooltip>*/}
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row)}><i
                                 className="zmdi zmdi-file"
