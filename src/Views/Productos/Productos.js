@@ -230,7 +230,12 @@ function Productos() {
       m_nNoProducto: form.IdProducto,
       m_bPredeterminado: form.predeterminado
     };
+    console.log(params)
      if (form.IdProducto != 0) {
+      if(params.m_nIdEmbalaje == ""){
+        showSuccess("Seleccionar Embalaje")
+        return
+      }
       modificarProducto(form.IdProducto, params)
         .then((respuesta) => {
           showSuccess("Modificado Exitosamente");
@@ -506,6 +511,7 @@ function Productos() {
                                   fullWidth
                                   variant="outlined"
                                   margin="dense"
+                                  required
                                 >
                                   <InputLabel id="m_nIdTipoEmbalajeLabel">
                                     Embalaje
@@ -518,6 +524,7 @@ function Productos() {
                                     name="IdTipoEmbalaje"
                                     onChange={handleChange}
                                     readOnly={state.agregar == "Consultar"}
+                                    required
                                   >
                                     {dataEmbalaje.map((embalaje) => (
                                       <option
