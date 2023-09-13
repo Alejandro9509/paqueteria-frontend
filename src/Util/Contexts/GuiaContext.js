@@ -291,7 +291,16 @@ function obtenerBancos() {
     return result
 }
 
+function enviarCorreoGuia(idGuia, correos, correoDefault){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ReenviarCorreoCartaPorte/${idGuia}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
+    );
+    return result
+}
+
 
 export {cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaParcial}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaParcial,enviarCorreoGuia}
