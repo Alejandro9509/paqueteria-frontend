@@ -415,9 +415,15 @@ export default function CrearTarifaRangos(props) {
             showSuccess("No puede guardar una primera o última milla sin productos")
             return
         }
-        if (props.configuraciones.CobroCargaDescargaTarifa){
-            if (maniobrasTarifa.length === 0){
-                showSuccess("La configuración actual no permite guardar una tarifa sin maniobras.")
+        if (props.configuraciones.CobrarConceptoCarga){
+            if (maniobrasTarifa.filter(i => i.idConcepto === props.configuraciones.IdConceptoCarga).length === 0){
+                showSuccess("La configuración actual no permite guardar una tarifa sin maniobra de carga.")
+                return
+            }
+        }
+        if (props.configuraciones.CobrarConceptoDescarga){
+            if (maniobrasTarifa.filter(i => i.idConcepto === props.configuraciones.IdConceptoDescarga).length === 0){
+                showSuccess("La configuración actual no permite guardar una tarifa sin maniobra de descarga.")
                 return
             }
         }

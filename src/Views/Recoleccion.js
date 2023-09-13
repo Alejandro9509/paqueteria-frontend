@@ -262,7 +262,7 @@ function Recoleccion() {
         receptorRecoleccion: '',
         setOpenDialogEvidencias: false,
         referencia: '',
-    });    
+    });
     const [redirect, setRedirect] = React.useState(false);
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -354,7 +354,6 @@ function Recoleccion() {
         tipoCambioEmbarque: 0,
         estatusGuia: 0,
         tipoTarifa: 0,
-        cobroCargaDescarga: false,
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
@@ -365,7 +364,7 @@ function Recoleccion() {
         idConceptoFlete: 0,
         factorConversion: 0.0,
     })
-    
+
     const [remitente, setRemitente] = useState({
         idRemitente: '',
         aliasRemitente: '',
@@ -692,7 +691,6 @@ function Recoleccion() {
                     tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
                     estatusGuia: respuesta.data.EstatusGuia,
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,

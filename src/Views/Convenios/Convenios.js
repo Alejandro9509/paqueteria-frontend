@@ -58,7 +58,8 @@ function Convenios(){
                 IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
                 IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
                 IdConceptoCita: respuesta.data.IdConceptoCita || 0,
-                CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
+                CobrarConceptoCarga: respuesta.data.CobrarConceptoCarga || false,
+                CobrarConceptoDescarga: respuesta.data.CobrarConceptoDescarga || false
             })
 
         })

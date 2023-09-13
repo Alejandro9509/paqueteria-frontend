@@ -99,8 +99,9 @@ function ParametrosConfiguracion() {
         tipoCambioEmbarque: 0,
         estatusGuia: 0,
         tipoTarifa: 0,
-        cobroCargaDescarga: false,
-        cobroCargaDescargaDisabled: false,
+        cobrarConceptoCarga: false,
+        cobrarConceptoDescarga: false,
+        cobrarCargaDescargaDisabled: false,
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
@@ -134,8 +135,9 @@ function ParametrosConfiguracion() {
                 setConfiguraciones((config) => {
                     return {
                         ...config,
-                        cobroCargaDescarga: false,
-                        cobroCargaDescargaDisabled: false
+                        cobrarConceptoCarga: false,
+                        cobrarConceptoDescarga: false,
+                        cobrarCargaDescargaDisabled: false
                     }
                 })
             }
@@ -152,8 +154,9 @@ function ParametrosConfiguracion() {
         setConfiguraciones((config) => {
             return {
                 ...config,
-                cobroCargaDescarga: false,
-                cobroCargaDescargaDisabled: true
+                cobrarConceptoCarga: false,
+                cobrarConceptoDescarga: false,
+                cobrarCargaDescargaDisabled: true
             }
         })
     }
@@ -177,7 +180,8 @@ function ParametrosConfiguracion() {
             estatusGuia: configuraciones.estatusGuia,
             tipoTarifaTarifas: configuraciones.tipoTarifa,
             costoCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
-            cobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
+            cobrarConceptoCarga: configuraciones.cobrarConceptoCarga,
+            cobrarConceptoDescarga: configuraciones.cobrarConceptoDescarga,
             cobrarCita: configuraciones.cobrarCita,
             detectarTipoCobro: configuraciones.detectarTipoCobro,
             limpiarProducto: configuraciones.limpiarProducto,
@@ -226,7 +230,8 @@ function ParametrosConfiguracion() {
                     tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
                     estatusGuia: respuesta.data.EstatusGuia,
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
+                    cobrarConceptoCarga: respuesta.data.CobrarConceptoCarga,
+                    cobrarConceptoDescargaa: respuesta.data.CobrarConceptoDescarga,
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
@@ -910,17 +915,33 @@ function ParametrosConfiguracion() {
                                         </Box>
                                         <Box width="40%" display="flex">
                                             <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Cobro carga y descarga</div>
+                                                <div className={classes.subtitulo}>Cobrar concepto Carga</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <Checkbox
-                                                    checked={configuraciones.cobroCargaDescarga}
+                                                    checked={configuraciones.cobrarConceptoCarga}
                                                     onChange={handleChecked}
                                                     color="primary"
                                                     style={{transform: "scale(2)"}}
                                                     inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="cobroCargaDescarga"
-                                                    disabled={configuraciones.cobroCargaDescargaDisabled}
+                                                    name="cobrarConceptoCarga"
+                                                    disabled={configuraciones.cobrarCargaDescargaDisabled}
+                                                />
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Cobrar concepto Descarga</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.cobrarConceptoDescarga}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="cobrarConceptoDescarga"
+                                                    disabled={configuraciones.cobrarCargaDescargaDisabled}
                                                 />
                                             </Box>
                                         </Box>
@@ -957,7 +978,7 @@ function ParametrosConfiguracion() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense"
-                                                             required={configuraciones.cobroCargaDescarga}>
+                                                             required={configuraciones.cobrarConceptoCarga}>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
@@ -984,7 +1005,7 @@ function ParametrosConfiguracion() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense"
-                                                             required={configuraciones.cobroCargaDescarga}>
+                                                             required={configuraciones.cobrarConceptoDescarga}>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
