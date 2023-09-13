@@ -461,7 +461,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.cronogramaFullscreen) &&
                                     <Cronograma selectGuiaReasignar={this.selectGuiaReasignar}
-                                                tour={this.state.ultimaMilla}/>
+                                                tour={this.state.ultimaMilla} fecha={this.state.fechaUltimaMilla}/>
                                 }
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.chatFullscreen) &&

@@ -109,7 +109,9 @@ class OrdenarParadasUltimaMilla extends Component {
                     <DialogContent>
                         <div align={"right"} style={{width: "100%"}}>
                             <Button variant={"contained"} color={"primary"}
-                                    onClick={() => this.openSeleccionarPaquetes()}>Agregar Paquetes</Button>
+                                    onClick={() => this.openSeleccionarPaquetes()}
+                                    disabled={this.props.deshabilidarAgregar}
+                            >Agregar Paquetes</Button>
 
                         </div>
 
@@ -118,7 +120,7 @@ class OrdenarParadasUltimaMilla extends Component {
                             {items.map((value, index) => {
                                 return (
                                 <SortableItem  disabled={value.m_nEstatusUlimaMilla !== 1}
-                                               apagao={value.m_nEstatusUlimaMilla !== 1}
+                                               apagao={value.m_nEstatusUlimaMilla !== 1 || this.props.deshabilidarAgregar}
                                                quitarPaquete={this.quitarPaquete}
                                                key={`item-${value.m_sFolio}`}
                                                index={index}
