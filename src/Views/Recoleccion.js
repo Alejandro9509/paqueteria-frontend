@@ -160,97 +160,6 @@ const TIPOS_SEGURO = {
 function Recoleccion() {
     const today = new Date();
     const classes = useStyles();
-    const [state, setState] = React.useState({
-        // ===VARIABLES DE LISTADO===
-        idRecoleccion: 0,
-        valorDeclarado: 0,
-        idTipoSeguro:5,
-        porcentajeSeguro: 0,
-        // ===VARIABLES DE CANCELAR===
-        // folioRecoleccion: '', Se usa en agregar tambien
-        // folioRecoleccion:'', se usa en agregar tambien
-        sucursalCancelacion: '',
-        mostrarFechaCancelacion: '',
-        usuario: localStorage.getItem("Usuario"),
-        // estatusRecoleccion: '', Se usa en agregar tambien
-        motivoCancelacion: '',
-        mostrarCotizador:false,
-        // ==VARIABLES DE LLEGADA/SALIDA===
-        // sucursalCancelacion: '', Se usa en cancelar tambien
-        // folioRecoleccion: '', Se usa en agregar tambien
-        fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-        // fechaRecoleccion: '', se usa en agregar tambien
-        // zonaRecoleccion: '', se usa en agregar tambien
-        // recogerEn: '', se usa en agregar tambien
-        // operador: '', se usa en agregar tambien
-        // motivoCancelacion: '', se usa en cancelar tambien
-        // unidad: se usa en agregar tambien
-
-        // ===VARIABLES DE AGREGAR===
-        idSucursalAgregar: localStorage.getItem("Sucursal"),
-        folioRecoleccion: '',
-        folioEmbarque: '',
-        folioGuia: '',
-        folioInforme: '',
-        fechaHoraRegistro:getCurrentDateTime(),
-        estatusRecoleccion: '',
-        moneda: '',
-        tipoCambio: '',
-        tipoCobro: '',
-        clientePaga: {},
-        observaciones: '',
-        aplicaEntrega:false,
-        // deshabilitarDiferenteDomicilio:false,
-        //Paquetes/Sobres
-        countPaquetes: 1,
-        countSobres: 1,
-        mismoPaquete: false,
-        mismoSobre: false,
-        sobres: [
-            {
-                m_sDescripcion: "",
-                m_nTipo: 2,
-            },
-        ],
-
-        //Cita de recoleccion
-        recoleccionConCita: false,
-        fechaCita: '',
-        horaCitaMinima: '',
-        horaCitaMaxima: '',
-        citaPendiente:false,
-
-        //Entrega
-        diferenteEntrega: false,
-        entregaEnSucursal: false,
-        idSucursalEntrega: "",
-        zonaOperativaSucursal: null,
-
-        //Recoleccion
-        diferenteRecoleccion: false,
-
-        //Operador
-        operador: '',
-        tipoUnidad: '',
-        unidad: '',
-        fechaHoraSalida: '',
-        fechaHoraLlegada: '',
-
-        //VARIABLES DE USO GENERAL
-        identificadorModal: "",
-        tipoModal: 0,
-        DerechoBorrar: 133,
-        agregar: "Agregar",
-        CreadoPor: parseInt(localStorage.getItem("UsuarioId")),
-        ModificadoPor: parseInt(localStorage.getItem("UsuarioId")),
-        fechaCancelacion: "",
-        uploadedFileContent: "<div>Hello</div>",
-        height: window.innerHeight,
-        recoleccionConEmbarque: false,
-        receptorRecoleccion: '',
-        setOpenDialogEvidencias: false,
-        referencia: '',
-    });    
     const [redirect, setRedirect] = React.useState(false);
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -350,7 +259,97 @@ function Recoleccion() {
         idConceptoFlete: 0,
         factorConversion: 0.0,
     })
-    
+    const [state, setState] = React.useState({
+        // ===VARIABLES DE LISTADO===
+        idRecoleccion: 0,
+        valorDeclarado: 0,
+        idTipoSeguro:5,
+        porcentajeSeguro: 0,
+        // ===VARIABLES DE CANCELAR===
+        // folioRecoleccion: '', Se usa en agregar tambien
+        // folioRecoleccion:'', se usa en agregar tambien
+        sucursalCancelacion: '',
+        mostrarFechaCancelacion: '',
+        usuario: localStorage.getItem("Usuario"),
+        // estatusRecoleccion: '', Se usa en agregar tambien
+        motivoCancelacion: '',
+        mostrarCotizador:false,
+        // ==VARIABLES DE LLEGADA/SALIDA===
+        // sucursalCancelacion: '', Se usa en cancelar tambien
+        // folioRecoleccion: '', Se usa en agregar tambien
+        fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+        // fechaRecoleccion: '', se usa en agregar tambien
+        // zonaRecoleccion: '', se usa en agregar tambien
+        // recogerEn: '', se usa en agregar tambien
+        // operador: '', se usa en agregar tambien
+        // motivoCancelacion: '', se usa en cancelar tambien
+        // unidad: se usa en agregar tambien
+
+        // ===VARIABLES DE AGREGAR===
+        idSucursalAgregar: localStorage.getItem("Sucursal"),
+        folioRecoleccion: '',
+        folioEmbarque: '',
+        folioGuia: '',
+        folioInforme: '',
+        fechaHoraRegistro:getCurrentDateTime(),
+        estatusRecoleccion: '',
+        moneda: '',
+        tipoCambio: '',
+        tipoCobro: '',
+        clientePaga: {},
+        observaciones: '',
+        aplicaEntrega:false,
+        // deshabilitarDiferenteDomicilio:false,
+        //Paquetes/Sobres
+        countPaquetes: 1,
+        countSobres: 1,
+        mismoPaquete: false,
+        mismoSobre: false,
+        sobres: [
+            {
+                m_sDescripcion: "",
+                m_nTipo: 2,
+            },
+        ],
+
+        //Cita de recoleccion
+        recoleccionConCita: false,
+        fechaCita: '',
+        horaCitaMinima: '',
+        horaCitaMaxima: '',
+        citaPendiente:false,
+
+        //Entrega
+        diferenteEntrega: false,
+        entregaEnSucursal: false,
+        idSucursalEntrega: "",
+        zonaOperativaSucursal: null,
+
+        //Recoleccion
+        diferenteRecoleccion: false,
+
+        //Operador
+        operador: '',
+        tipoUnidad: '',
+        unidad: '',
+        fechaHoraSalida: '',
+        fechaHoraLlegada: '',
+
+        //VARIABLES DE USO GENERAL
+        identificadorModal: "",
+        tipoModal: 0,
+        DerechoBorrar: 133,
+        agregar: "Agregar",
+        CreadoPor: parseInt(localStorage.getItem("UsuarioId")),
+        ModificadoPor: parseInt(localStorage.getItem("UsuarioId")),
+        fechaCancelacion: "",
+        uploadedFileContent: "<div>Hello</div>",
+        height: window.innerHeight,
+        recoleccionConEmbarque: false,
+        receptorRecoleccion: '',
+        setOpenDialogEvidencias: false,
+        referencia: '',
+    });
     const [remitente, setRemitente] = useState({
         idRemitente: '',
         aliasRemitente: '',
