@@ -1800,12 +1800,12 @@ function Recoleccion() {
             showSuccess("Se requiere seleccionar Destinatario")
             return
         }
-       
         setState({
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
             diferenteEntrega: !state.entregaEnSucursal && false,
             entregaConCita: !state.entregaEnSucursal && false,
+            idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal
         });
     };
     const handleListComplementosSATChange = (newList) => {
