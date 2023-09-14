@@ -181,7 +181,7 @@ eJzt3TGugkAURuGZTEHJDh47eWzJ0sIEljZLmSVYWhhHAzPCy0soyP1jiOc2UJBPnQHtPM4xDPN902bT
 ^FT738,918^A0I,31,28^FH\\^FD${guia.m_sNombreRemitente}^FS
 ^FT738,862^A0I,35,45^FH\\^FDTEL:^FS
 ^FT649,862^A0I,35,40^FH\\^FD${guia.m_sTelefonoRemitente}^FS
-^FT738,806^A0I,35,45^FH\\^FDDIRECCI\\E3N:^FS
+^FT738,806^A0I,35,45^FH\\^FDDIRECCIÓ:^FS
 ${guia.m_sDomicilioRemitente.length > 30 ?
         (
             guia.m_sDomicilioRemitente.length > 75 ? (
@@ -198,7 +198,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT734,530^A0I,31,31^FH\\^FD${guia.m_sNombreDestinatario}^FS
 ^FT734,474^A0I,35,45^FH\\^FDTEL:^FS
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
-^FT734,417^A0I,35,45^FH\\^FDDIRECCI\\E3N:^FS
+^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓ:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
 ^FT274,23^A0I,45,14^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
 ^FT39,1197^BQN,2,6
