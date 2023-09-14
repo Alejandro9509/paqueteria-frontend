@@ -4,7 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 function obtenerParametrosConfiguracion() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/GetListado`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ParametrosConfiguracion/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -13,7 +13,7 @@ function obtenerParametrosConfiguracion() {
 }
 
 function modificarParametrosConfiguracion(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/Modificar`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ParametrosConfiguracion/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })

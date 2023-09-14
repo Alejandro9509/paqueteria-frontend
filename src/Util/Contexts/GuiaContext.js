@@ -175,8 +175,8 @@ function obtenerGuiaReporteEtiqueta(id) {
     );
     return result
 }
-function obtenerGuiaReporteEtiquetaParcial(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasParcialesGuia`;
+function obtenerGuiaReporteEtiquetaGuiaRangos(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuiaRangos`;
     let result;
     trackPromise(
         // result =  axios.get(url, { headers })
@@ -300,7 +300,16 @@ function enviarCorreoGuia(idGuia, correos, correoDefault){
     return result
 }
 
+function obtenerPaquetesGuia(idGuia) {
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guias/GetPaquetes/`+idGuia;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 
 export {cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaParcial,enviarCorreoGuia}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaGuiaRangos,enviarCorreoGuia,obtenerPaquetesGuia}
