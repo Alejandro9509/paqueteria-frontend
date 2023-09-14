@@ -449,32 +449,53 @@ function ComplementosSAT(props) {
             const newArray = d.map(item => (
                 {
                 id: Math.floor(Math.random() * 10000),
-                cantidad: item.Cantidad? item.Cantidad : 0,
-                peso: item['Peso']?item['Peso']:0,
-                claveProducto: item['Clave productos y servicios'],
-                claveUnidad: item['Clave Unidades de medida y embalaje'],
+                cantidad: isNaN(parseInt(item.Cantidad)) ? 0 : parseInt(item.Cantidad),
+                peso: isNaN(parseFloat(item['Peso']))? 0 : parseFloat(item['Peso']),
+                claveProducto: item['Clave productos y servicios'] ? item['Clave productos y servicios']: '',
+                claveUnidad: item['Clave Unidades de medida y embalaje'] ? item['Clave Unidades de medida y embalaje'] : '' ,
                 esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
                 claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso']:0,
-                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje']:0,
+                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje']:'',
                 descripcionEmbalajeSAT:item['Es material peligroso'] === "SI"?item['Descripción embalaje']:"",
                 claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion']:""
             }))
             console.log(newArray)
+            let hayErrores = false
             for(let i =0;i<newArray.length;i++){
                 if(newArray[i].cantidad === 0){
-                    showError(`Faltan datos en las cantidades del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                    showError(`Cantidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
+                }
+                if(newArray[i].peso === 0){
+                    showError(`Peso no válido en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
+                }
+                if (newArray[i].claveProducto.length === 0){
+                    showError(`Clave de producto no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
+                }
+                if (newArray[i].claveUnidad.length === 0){
+                    showError(`Clave de unidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
                 }
                 if(newArray[i].esPeligroso === true){
                     if(newArray[i].claveMaterialPeligroso === 0){
-                        showError(`Falta el dato Clave material peligroso del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                        showError(`Clave material peligroso no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
                     }else if(newArray[i].claveEmbalaje === 0){
-                        showError(`Falta el dato Clave Embalaje del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                        showError(`Clave Embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
                     }else if(newArray[i].descripcionEmbalajeSAT === ""){
-                        showError(`Falta el dato Descripción embalaje del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                        showError(`Descripción embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
                     }else if(newArray[i].claveFraccion === ""){
-                        showError(`Falta el dato Clave Fraccion del producto con clave '${newArray[i].claveProducto}'. Favor de revisar el archivo.`)
+                        showError(`Clave Fraccion no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
                     }
                 }
+            }
+            if (hayErrores) {
+                return
             }
             const claves = newArray.map(newClave=>({
                 claveProductoServicio: newClave.claveUnidad,
