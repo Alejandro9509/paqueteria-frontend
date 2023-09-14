@@ -124,7 +124,7 @@ function ParametrosConfiguracion() {
         foliosPorSucursal: false,
         documentos:[],
         factorConversion: 0.0,
-        etiquetasAdicionales:false
+        imprimirEtiquetasIndividuales:false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -203,9 +203,8 @@ function ParametrosConfiguracion() {
             plantillaImportarEmbarquesBase64: "",
             plantillaImportarEmbarquesNombreArchivo: '',
             documentos: configuraciones.documentos,
-            etiquetasAdicionales:configuraciones.etiquetasAdicionales
+            imprimirEtiquetasIndividuales:configuraciones.imprimirEtiquetasIndividuales
         }
-        console.log(params)
         modificarParametrosConfiguracion(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
@@ -259,7 +258,7 @@ function ParametrosConfiguracion() {
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal,
                     documentos: respuesta.data.documentos || [],
                     factorConversion: respuesta.data.FactorConversion,
-                    etiquetasAdicionales:respuesta.data.EtiquetasAdicionales
+                    imprimirEtiquetasIndividuales:respuesta.data.ImprimirEtiquetasIndividuales
                 }
             })
 
@@ -838,12 +837,12 @@ function ParametrosConfiguracion() {
                                         </Box>
                                         <Box width="40%" p={1} my={0.5}>
                                             <Checkbox
-                                                checked={configuraciones.etiquetasAdicionales}
+                                                checked={configuraciones.imprimirEtiquetasIndividuales}
                                                 onChange={handleChecked}
                                                 color="primary"
                                                 style={{transform: "scale(2)"}}
                                                 inputProps={{'aria-label': 'primary checkbox'}}
-                                                name="etiquetasAdicionales"
+                                                name="imprimirEtiquetasIndividuales"
                                             />
                                         </Box>
                                     </Box>
