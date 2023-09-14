@@ -454,10 +454,10 @@ function ComplementosSAT(props) {
                 claveProducto: item['Clave productos y servicios'] ? item['Clave productos y servicios']: '',
                 claveUnidad: item['Clave Unidades de medida y embalaje'] ? item['Clave Unidades de medida y embalaje'] : '' ,
                 esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
-                claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso']:0,
-                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje']:'',
-                descripcionEmbalajeSAT:item['Es material peligroso'] === "SI"?item['Descripción embalaje']:"",
-                claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion']:""
+                claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso'] : '',
+                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje'] : '',
+                descripcionEmbalajeSAT:item['Es material peligroso'] === "SI"? item['Descripción embalaje'] : '',
+                claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion'] : ''
             }))
             console.log(newArray)
             let hayErrores = false
@@ -479,16 +479,16 @@ function ComplementosSAT(props) {
                     hayErrores = true
                 }
                 if(newArray[i].esPeligroso === true){
-                    if(newArray[i].claveMaterialPeligroso === 0){
+                    if(newArray[i].claveMaterialPeligroso.length === 0){
                         showError(`Clave material peligroso no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
                         hayErrores = true
-                    }else if(newArray[i].claveEmbalaje === 0){
+                    }else if(newArray[i].claveEmbalaje.length === 0){
                         showError(`Clave Embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
                         hayErrores = true
-                    }else if(newArray[i].descripcionEmbalajeSAT === ""){
+                    }else if(newArray[i].descripcionEmbalajeSAT.length === 0){
                         showError(`Descripción embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
                         hayErrores = true
-                    }else if(newArray[i].claveFraccion === ""){
+                    }else if(newArray[i].claveFraccion.length === 0){
                         showError(`Clave Fraccion no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
                         hayErrores = true
                     }
