@@ -569,6 +569,21 @@ function Viajes() {
 
 
     }
+    function descargarPDFOpcion1(id,idInforme,folio) {
+        obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "CFDI_ " + folio);
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo abrir el pdf")
+            }
+         })
+
+    }
 
     function descargarPDF(idViaje,idInforme,folio) {
 
@@ -928,7 +943,16 @@ function Viajes() {
                         }
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
-                            <Tooltip title="Descargar PDF">
+                            <Tooltip title="Descargar PDF opción 1">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (descargarPDFOpcion1(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
+                                    className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
+
+                            </Tooltip>
+                        }
+                        {
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
+                            <Tooltip title="Descargar PDF opción 2">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
                                     className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>

@@ -184,6 +184,10 @@ class Cronograma extends Component {
                                                                                align="left">
                                                                                 <Tooltip title="Remplazar Operador">                                           
                                                                                     <AutorenewIcon color={"primary"} align="center" fontSize={"large"} onClick={()=> {
+                                                                                        if (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) {
+                                                                                            showSuccess("No se pueden modificar rutas de días anteriores.")
+                                                                                            return
+                                                                                        }
                                                                                         if (filterEstatus.length > 0 ){
                                                                                             if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
                                                                                                 this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, u.m_nId)
@@ -195,7 +199,7 @@ class Cronograma extends Component {
                                                                                         }
                                                                                     }}/>
                                                                                </Tooltip>
-                                                                               </TableCell>
+                                                                    </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">{u.m_sPlacasUnidad}</TableCell>
                                                                     {/*<TableCell style={{borderBottom: "none"}}

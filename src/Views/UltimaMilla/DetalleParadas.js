@@ -64,11 +64,13 @@ import {
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 import {getAddressFormated, validarDerecho} from "../../Util/Util";
+import moment from "moment/moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {
     imprimirFormatosIdIdTipoReporte,
     obtenerFormatosImpresionProceso
 } from "../../Util/Contexts/FormatosImpresionContext";
+
 
 function showError(mensaje) {
     new Noty({
@@ -266,6 +268,24 @@ class DetalleParadas extends Component {
                 showError(error.response.data)
             }
         })
+    }
+    obtenerPDFCFDIOpcion1(id,esRecoleccion, folio){
+         if (esRecoleccion){
+             obtenerReporteCFDIRecoleccion(id).then(({data}) => {
+                 console.log(data)
+                 let pdfWindow = window.open("");
+                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                 pdfWindow.document.body.style.margin = "0px";
+                 pdfWindow.document.title = "CFDI_ " + folio;
+             })
+         }else{
+             obtenerReporteCFDIGuia(id).then(({data}) => {
+                 let pdfWindow = window.open("");
+                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                 pdfWindow.document.body.style.margin = "0px";
+                 pdfWindow.document.title = "CFDI_ " + folio;
+             })
+         }
     }
     obtenerPDFCFDI(id,esRecoleccion, folio){
 
@@ -587,6 +607,16 @@ class DetalleParadas extends Component {
 
 
     }
+    generarReporteOpcion1(e, dataTour) {
+        obtenerUltimaMillaReporte(dataTour.m_nIdParadaUltimaMilla).then(({data}) => {
+            // console.log(data)
+            // debugger
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Última Milla";
+        })
+    }
     generarReporte(e, data) {
         e.preventDefault()
         console.log('data: ' + data)
@@ -814,7 +844,9 @@ class DetalleParadas extends Component {
                                                onSubmit={this.onSubmitOrdenarPaquetes}
                                                tipoServicio={parseInt(this.props.filtros.tipoBusqueda)}
                                                close={() => this.setState({openOrdenarParadas: false})}
-                                               open={this.state.openOrdenarParadas} paquetes={this.state.paquetes}/>
+                                               open={this.state.openOrdenarParadas} paquetes={this.state.paquetes}
+                                               deshabilidarAgregar={(moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
+                    />
                 }
 
                 {(this.state.openRemplazar && this.state.paqueteSeleccionado) &&
@@ -1024,9 +1056,16 @@ class DetalleParadas extends Component {
                                                             </Grid>
                                                             <Grid item sm={1}
                                                             >
-                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour)}>
-                                                                    <InsertDriveFile fontSize={"large"}/>
-                                                                </IconButton>
+                                                                <Tooltip title="Reporte opción 1">
+                                                                    <IconButton aria-label="file" onClick={(e) => this.generarReporteOpcion1(e,tour)}>
+                                                                        <InsertDriveFile fontSize={"large"}/>
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                                <Tooltip title="Reporte opción 2">
+                                                                    <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour)}>
+                                                                        <InsertDriveFile fontSize={"large"}/>
+                                                                    </IconButton>
+                                                                </Tooltip>
                                                             </Grid>
 
                                                                 <Grid item sm={2}>
@@ -1065,9 +1104,8 @@ class DetalleParadas extends Component {
 
 
                                                         {
-                                                            // Desactivado si alguna guia tiene estatus diferente a pendiente
                                                             <Button
-                                                                disabled={!validarDerecho(9101447)/* || tour.m_arrClsProGuia.some(g => g.m_nEstatusUlimaMilla !== 1)*/}
+                                                                disabled={!validarDerecho(9101447)}
                                                                 variant={"contained"}
                                                                 color={"primary"}
                                                                 onClick={() => this.setState({
@@ -1201,7 +1239,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
-                                                                                                                disabled={!validarDerecho(9101450)}
+                                                                                                                disabled={!validarDerecho(9101450) || (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                                                                                                 onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
@@ -1260,9 +1298,21 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
                                                                                                             <IconButton
-                                                                                                                aria-label="PDF TASLADO">
+                                                                                                                aria-label="PDF TASLADO Opción 1">
                                                                                                                 <Tooltip
-                                                                                                                    title={"Descargar PDF"}>
+                                                                                                                    title={"Descargar PDF Opción 1"}>
+                                                                                                                    <PictureAsPdfIcon
+                                                                                                                        onClick={() => this.obtenerPDFCFDIOpcion1(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        {
+                                                                                                            !r.m_bUnidadPermisionario && g.m_bTimbrado &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="PDF TASLADO Opción 2">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Descargar PDF Opción 2"}>
                                                                                                                     <PictureAsPdfIcon
                                                                                                                         onClick={() => this.obtenerPDFCFDI(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
                                                                                                                         fontSize="default"/>
@@ -1298,7 +1348,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
-                                                                                                                disabled={!validarDerecho(9101453)}
+                                                                                                                disabled={!validarDerecho(9101453) || (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                                                                                                 onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip

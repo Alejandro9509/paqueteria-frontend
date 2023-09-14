@@ -237,6 +237,11 @@ function ComplementosSAT(props) {
             align: 'left',
         },
         {
+            headerName: "Peso (Kg)",
+            field: "peso",
+            flex: 1,
+        },
+        {
             headerName: "Clave producto o servicio",
             field: "claveProducto",
             width: 180,
@@ -306,12 +311,6 @@ function ComplementosSAT(props) {
             },
             width: 200,
         },
-        {
-            headerName: "Peso (Kg)",
-            field: "peso",
-            hide:true,
-            flex: 1,
-        },
     ]);
 
     const handleChangeComplementoSat = (idComplemento, data,caracter) => {
@@ -319,7 +318,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveProducto: data.m_sClaveSAT,
+                    claveProducto: (data.m_sClaveSAT).toUpperCase(),
                     esPeligroso: data.m_bMaterialPeligroso? true:false,
                     esPeligrosoOpcional: data.m_bMaterialPeligrosoOpcional? true:false,
                     ProductoSAT: data.m_sDescripcion,
@@ -329,7 +328,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveUnidad: data.m_sClaveSAT,
+                    claveUnidad: (data.m_sClaveSAT).toUpperCase(),
                     UnidadSAT: data.m_sDescripcion,
                 }
             });
@@ -337,7 +336,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveEmbalaje: data.m_sClaveSAT,
+                    claveEmbalaje: (data.m_sClaveSAT).toUpperCase(),
                     embalajeSAT: data.m_sDescripcion
                 }
             });
@@ -345,7 +344,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveFraccion: data.m_sClaveSAT,
+                    claveFraccion: (data.m_sClaveSAT).toUpperCase(),
                     fraccionSAT: data.m_sDescripcion
                 }
             });
@@ -353,7 +352,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveMaterialPeligroso: data.m_sClaveSAT,
+                    claveMaterialPeligroso: (data.m_sClaveSAT).toUpperCase(),
                     materialPeligrosoSAT: data.m_sDescripcion
                 }
             });
@@ -366,6 +365,7 @@ function ComplementosSAT(props) {
                 }
             });
         }else{
+            console.log((data.target.value).toUpperCase())
             if (data.target.name === "esPeligroso"){
                 setDataComplemento(dataComplemento =>{
                     return {
@@ -380,14 +380,14 @@ function ComplementosSAT(props) {
                     setDataComplemento(dataComplemento =>{
                         return {
                             ...dataComplemento,
-                            claveUnidad: sanitizedValue,
+                            claveUnidad: (sanitizedValue).toUpperCase(),
                         }
                     });
                 }else{
                     setDataComplemento(dataComplemento =>{
                         return {
                             ...dataComplemento,
-                            [data.target.name]: data.target.value,
+                            [data.target.name]: (data.target.value).toUpperCase(),
                         }
                     });
                 }
@@ -510,17 +510,54 @@ function ComplementosSAT(props) {
             const newArray = d.map(item => (
                 {
                 id: Math.floor(Math.random() * 10000),
-                cantidad: item.Cantidad,
-                peso: item['Peso']?item['Peso']:0,
-                claveProducto: item['Clave productos y servicios'],
-                claveUnidad: item['Clave Unidades de medida y embalaje'],
+                cantidad: isNaN(parseInt(item.Cantidad)) ? 0 : parseInt(item.Cantidad),
+                peso: isNaN(parseFloat(item['Peso']))? 0 : parseFloat(item['Peso']),
+                claveProducto: item['Clave productos y servicios'] ? item['Clave productos y servicios']: '',
+                claveUnidad: item['Clave Unidades de medida y embalaje'] ? item['Clave Unidades de medida y embalaje'] : '' ,
                 esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
-                claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso']:0,
-                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje']:0,
-                descripcionEmbalajeSAT:item['Es material peligroso'] === "SI"?item['Descripción embalaje']:"",
-                claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion']:""
+                claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso'] : '',
+                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje'] : '',
+                descripcionEmbalajeSAT:item['Es material peligroso'] === "SI"? item['Descripción embalaje'] : '',
+                claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion'] : ''
             }))
             console.log(newArray)
+            let hayErrores = false
+            for(let i =0;i<newArray.length;i++){
+                if(newArray[i].cantidad === 0){
+                    showError(`Cantidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
+                }
+                if(newArray[i].peso === 0){
+                    showError(`Peso no válido en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
+                }
+                if (newArray[i].claveProducto.length === 0){
+                    showError(`Clave de producto no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
+                }
+                if (newArray[i].claveUnidad.length === 0){
+                    showError(`Clave de unidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    hayErrores = true
+                }
+                if(newArray[i].esPeligroso === true){
+                    if(newArray[i].claveMaterialPeligroso.length === 0){
+                        showError(`Clave material peligroso no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
+                    }else if(newArray[i].claveEmbalaje.length === 0){
+                        showError(`Clave Embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
+                    }else if(newArray[i].descripcionEmbalajeSAT.length === 0){
+                        showError(`Descripción embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
+                    }else if(newArray[i].claveFraccion.length === 0){
+                        showError(`Clave Fraccion no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        hayErrores = true
+                    }
+                }
+            }
+            if (hayErrores) {
+                return
+            }
             const claves = newArray.map(newClave=>({
                 claveProductoServicio: newClave.claveUnidad,
                 claveUnidadesMedidaEmbalaje: newClave.claveProducto
