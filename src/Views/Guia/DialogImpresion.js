@@ -21,7 +21,7 @@ export default function DialogImpresion({ open, handleClose, handleAccept, paque
             })
             setListadoPaquetes(paquetes)
         }
-    },[open])
+    },[open, paquetes])
 
     const handleAcceptClick = () => {
         paquetes.forEach((i) => {

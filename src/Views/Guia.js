@@ -326,6 +326,7 @@ function Guia(props) {
         receptorGuia:[],
         referencia:[],
         reporteSeleccionado:{},
+        imprimirEtiquetasIndividuales: false,
         paquetesGuiaEtiquetasIndividuales: []
 
     })
@@ -1307,12 +1308,13 @@ function Guia(props) {
         })*/
     }
 
-    function generarReporteEtiquetasIndividuales(params, folio) {
+    function generarReporteEtiquetasIndividuales(params) {
+        params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
         obtenerGuiaReporteEtiquetaGuiaRangos(params).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
+            pdfWindow.document.title = "Guía " + guiaSeleccionada.m_sFolioGuia.replace('.','') ;
         })
     }
 
@@ -1351,7 +1353,9 @@ function Guia(props) {
         getAllDataTipoCobro()
         obtenerFormatosImpresionProceso(212).then(({data}) => {
             setDataReportes(data)
-            setState({...state, reporteSeleccionado: data[data.length - 1].m_nIdFormato})
+            setState(state => {
+                return {...state, reporteSeleccionado: data[data.length - 1].m_nIdFormato}
+            })
         })
         obtenerFormatosImpresionProceso(213).then(({data}) => {
             setDataReportesEtiqueta(data)
@@ -2283,11 +2287,7 @@ function Guia(props) {
         <div>
             <DialogImpresion open={openDialogEtiquetasIndividuales}
                              handleClose={() => setOpenDialogEtiquetasIndividuales(false)}
-                             handleAccept={(data) => {
-                                 // setDialogData(data);
-                                 console.log(data)
-                                 setOpenDialogEtiquetasIndividuales(false);
-                             }}
+                             handleAccept={(data) => { generarReporteEtiquetasIndividuales(data) }}
                              paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
             {
                 showDialogEnviarCorreo &&

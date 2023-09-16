@@ -301,7 +301,7 @@ function enviarCorreoGuia(idGuia, correos, correoDefault){
 }
 
 function obtenerPaquetesGuia(idGuia) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guias/GetPaquetes/`+idGuia;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetPaquetes/`+idGuia;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
