@@ -216,7 +216,7 @@ class FiltersMap extends Component {
     }
 
     selectCiudad(sucursal) {
-        this.setState({
+        this.setState(() => ({
             sucursalSeleccionada: sucursal,
             zonasSeleccionada: [],
             paquetesSeleccionadas: [],
@@ -226,7 +226,7 @@ class FiltersMap extends Component {
             openDate: false,
             openUnidades: false,
             openPaquetes: false, openConfiguration: false
-        })
+        }));
         this.props.changeMapLocation(sucursal)
     }
 
