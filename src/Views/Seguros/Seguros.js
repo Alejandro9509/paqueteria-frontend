@@ -114,12 +114,14 @@ function Seguros() {
 
     function cargarDesdeServidor(pagina,registros){
         return new obtenerClientesPaginado(pagina,registros, state.busqueda).then((respuesta)=>{
-            setData(respuesta.data)
+            console.log(respuesta.data.data)
+            setData(respuesta.data.data)
         })
       }
       function limpiarBuscador(pagina,registros){
         return new obtenerClientesPaginado(pagina,registros, "").then((respuesta)=>{
-            setData(respuesta.data)
+            console.log(respuesta.data.data)
+            setData(respuesta.data.data)
         })
       }
 
