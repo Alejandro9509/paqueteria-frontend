@@ -200,7 +200,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT274,29^A0I,28,12^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT279,29^A0I,33,19^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
 ^FT39,1197^BQN,2,6
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
