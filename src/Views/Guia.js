@@ -205,7 +205,8 @@ function Guia(props) {
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [guiaSeleccionada, setGuiaSeleccionada] = useState(null)
     const [showDialogEnviarCorreo, setShowDialogEnviarCorreo] = useState(false)
-    const [openDialogEtiquetasIndividuales, setOpenDialogEtiquetasIndividuales] = useState(false);
+    const [openDialogEtiquetasIndividualesForPdf, setOpenDialogEtiquetasIndividualesForPdf] = useState(false);
+    const [openDialogEtiquetasIndividualesForPrint, setOpenDialogEtiquetasIndividualesForPrint] = useState(false);
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -1275,35 +1276,34 @@ function Guia(props) {
                             ...state,
                             paquetesGuiaEtiquetasIndividuales: paquetesGuia
                         })
-                        setOpenDialogEtiquetasIndividuales(true)
+                        setOpenDialogEtiquetasIndividualesForPdf(true)
                     }).catch(resultado => {
                         showError("Hubo un error al recuperar los paquetes de la guía.")
                     });
-                    setOpenDialogEtiquetasIndividuales(true)
                 })
                 .catch(resultado => {
                     // El usuario hizo clic en "No", resultado es false
-                    console.log('Usuario hizo clic en No', resultado);
-                    // Aquí puedes realizar acciones relacionadas con "No"
                 });
 
+        } else {
+            obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Guía " + folio.replace('.','');
+                try{
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + data;
+                    link.setAttribute('download', "Guía " + folio);
+                    document.body.appendChild(link);
+                    link.click();
+                }catch (e) {
+                    console.log(e)
+                    showSuccess("No se pudo descargar el pdf")
+                }
+            })
         }
-        /*obtenerGuiaReporteEtiqueta(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Guía " + folio);
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
-            }
-        })*/
+
     }
 
     function generarReporteEtiquetasIndividuales(params) {
@@ -1312,7 +1312,21 @@ function Guia(props) {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + guiaSeleccionada.m_sFolioGuia.replace('.','') ;
+            pdfWindow.document.title = "Guía " + guiaSeleccionada.m_sFolioGuia.replace('.','');
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "Guía " + guiaSeleccionada.m_sFolioGuia.replace('.',''));
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo descargar el pdf")
+            }
+            setState({
+                ...state,
+                paquetesGuiaEtiquetasIndividuales: []
+            })
         })
     }
 
@@ -2262,9 +2276,31 @@ function Guia(props) {
 
     return (
         <div>
-            <DialogImpresion open={openDialogEtiquetasIndividuales}
-                             handleClose={() => setOpenDialogEtiquetasIndividuales(false)}
+            <DialogImpresion open={openDialogEtiquetasIndividualesForPdf}
+                             handleClose={() => {
+                                 setOpenDialogEtiquetasIndividualesForPdf(false)
+                                 setState({
+                                     ...state,
+                                     paquetesGuiaEtiquetasIndividuales: []
+                                 })
+                             }}
                              handleAccept={(data) => { generarReporteEtiquetasIndividuales(data) }}
+                             paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
+            <DialogImpresion open={openDialogEtiquetasIndividualesForPrint}
+                             handleClose={() => {
+                                 setOpenDialogEtiquetasIndividualesForPrint(false)
+                                 setState({
+                                     ...state,
+                                     paquetesGuiaEtiquetasIndividuales: []
+                                 })
+                             }}
+                             handleAccept={(data) => {
+                                 data.forEach((i) => {
+                                     i.m_nIdEmbarqueDetalle = i.idPaquete
+                                     i.ctd = i.cantidad
+                                 })
+                                 // prepararListadoImpresion(data, true)
+                             }}
                              paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
             {
                 showDialogEnviarCorreo &&
