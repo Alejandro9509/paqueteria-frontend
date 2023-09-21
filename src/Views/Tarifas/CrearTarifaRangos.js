@@ -108,7 +108,7 @@ export default function CrearTarifaRangos(props) {
             return
         }
         obtenerUnidadesMedida().then(respuesta => {
-            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38))
+            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38 || i.IdUnidadMedida === 55))
         })
     }
     const getOrigenesDestinos = () => {
@@ -472,11 +472,13 @@ export default function CrearTarifaRangos(props) {
             v.grupos.forEach(g => {
                 g.conceptos = g.rangos.map(rango => ({
                         idConceptoFacturacion: props.configuraciones.IdConceptoFlete,
-                        importe: rango.importe,
-                        minimo: rango.minimo,
-                        maximo: rango.maximo,
-                        idTipoCalculo: rango.idTipoCalculo,
-                        idUnidadMedida: rango.idUnidadMedida
+                        importe: rango.importe || 0,
+                        minimo: rango.minimo || 0,
+                        maximo: rango.maximo || 0,
+                        idTipoCalculo: rango.idTipoCalculo || 0,
+                        idUnidadMedida: rango.idUnidadMedida,
+                        porcentaje: rango.porcentaje || 0,
+
                     })
                 )
                 g.zonas.forEach(zona => {
@@ -510,11 +512,11 @@ export default function CrearTarifaRangos(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idTarifa === 0){
+        /*if (state.idTarifa === 0){
             props.agregarTarifa(params)
         }else{
             props.modificarTarifa(params)
-        }
+        }*/
 
     }
 
