@@ -512,11 +512,11 @@ export default function CrearTarifaRangos(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*if (state.idTarifa === 0){
+        if (state.idTarifa === 0){
             props.agregarTarifa(params)
         }else{
             props.modificarTarifa(params)
-        }*/
+        }
 
     }
 
@@ -532,7 +532,6 @@ export default function CrearTarifaRangos(props) {
         if (value !== null){
             obtenerTarifaRangosById(value.IdTarifa).then(respuesta => {
                 let selection = setDataParaConsultar(respuesta.data)
-                console.log(selection)
                 setViajesLocalesListado(selection?.viajesLocales)
                 setManiobrasTarifa(selection?.maniobras)
                 setViajesForaneosListado(selection?.viajesForaneos)
@@ -607,6 +606,7 @@ export default function CrearTarifaRangos(props) {
                     idUnidadMedida: rango.IdUnidadMedida || null,
                     tipoCalculo: rango.TipoCalculo || '',
                     unidadMedida: rango.UnidadMedida || '',
+                    porcentaje: rango.Porcentaje || 0,
                 })),
                 productos: data.Productos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
                     m_nIdProducto: j.IdProducto,
