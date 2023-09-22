@@ -202,7 +202,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT279,62^A0I,33,19^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
 ^FT39,1180^BQN,2,6
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
@@ -216,12 +216,12 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
                  ^FT738,367^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 70)}^FS`
             )
         ) : `^FT496,417^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario}^FS`}
-^FT411,164^A0I,28,40^FH\\^FDTIPO DE REPARTO^FS
-^FT404,113^A0I,45,38^FH\\^FD${guia.tipoEntrega}^FS
+^FT411,130^A0I,28,40^FH\\^FDTIPO DE REPARTO^FS
+^FT404,79^A0I,45,38^FB315,1,0,C^FH\\^FD${guia.tipoEntrega}^FS
 ^FT738,259^A0I,35,28^FH\\^FDZO.:${guia.zonaEntrega}^FS
 ^FT497,206^BQN,2,8
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-^FT450,63^A0I,28,40^FH\\^FDPARTIDA:^FS
+^FT411,30^A0I,28,40^FH\\^FDPARTIDA:^FS
 ^FT553,588^A0I,35,33^FH\\^FD${guia.m_sSucursalDestino}^FS
 ^PQ1,0,1,Y^XZ
 `)
