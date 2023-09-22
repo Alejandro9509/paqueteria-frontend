@@ -1405,6 +1405,7 @@ function Guia(props) {
                         console.log(i + 1 + ' de ' + p.ctd)
                         let result
                         try {
+                            console.log(TICKET_ZEBRA_TEMPLATE(guia, p, i))
                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
                             showSuccess('Impresión en curso.')
                         } catch (e) {
