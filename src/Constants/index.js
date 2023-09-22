@@ -186,10 +186,10 @@ ${guia.m_sLogoEtiqueta}
 ^FT738,772^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ${guia.m_sDomicilioRemitente.length > 30 ?
         (
-            guia.m_sDomicilioRemitente.length > 75 ? (
+            guia.m_sDomicilioRemitente.length > 70 ? (
                 `^FT496,772^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
-                ^FT734,728^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(25, 70)}^FS
-                ^FT734,674^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(70)}^FS`
+                ^FT734,728^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(25, 73)}^FS
+                ^FT734,674^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(73)}^FS`
             ) : (
                 `^FT496,772^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
                ^FT734,728^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(25)}^FS`
@@ -207,10 +207,10 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
         (
-            guia.m_sDomicilioDestinatario.length > 75 ? (
+            guia.m_sDomicilioDestinatario.length > 70 ? (
                 `^FT496,417^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
-                 ^FT738,367^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 70)}^FS
-                 ^FT738,311^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(70)}^FS`
+                 ^FT738,367^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 73)}^FS
+                 ^FT738,311^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(73)}^FS`
             ) : (
                 `^FT496,417^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
                  ^FT738,367^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 70)}^FS`
