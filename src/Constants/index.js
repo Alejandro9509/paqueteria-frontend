@@ -218,7 +218,7 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
         ) : `^FT496,417^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario}^FS`}
 ^FT411,130^A0I,28,40^FH\\^FDTIPO DE REPARTO^FS
 ^FT404,79^A0I,45,38^FB315,1,0,C^FH\\^FD${guia.tipoEntrega}^FS
-^FT738,259^A0I,35,28^FH\\^FDZO.:${guia.zonaEntrega}^FS
+^FT738,259^A0I,35,45^FH\\^FDZO.:${guia.zonaEntrega}^FS
 ^FT497,206^BQN,2,8
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ^FT411,30^A0I,28,40^FH\\^FDPARTIDA:^FS
