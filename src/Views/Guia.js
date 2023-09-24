@@ -87,7 +87,11 @@ import {
     asignarTrayectos,
     validarEliminarGuia,
     obtenerGuiaReporteEtiqueta,
-    validarCancelarGuia, obtenerGuiaReporteEtiquetaParcial,enviarCorreoGuia
+    validarCancelarGuia,
+    obtenerGuiaReporteEtiquetaParcial,
+    enviarCorreoGuia,
+    obtenerGuiaReporteEtiquetaGuiaRangos,
+    obtenerPaquetesGuia, validarRangosEtiqueta
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -129,6 +133,8 @@ import Evidencias from "./Evidencias";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
 import EmailIcon from '@material-ui/icons/Email';
+import DialogImpresion from "./Guia/DialogImpresion";
+import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -199,6 +205,8 @@ function Guia(props) {
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [guiaSeleccionada, setGuiaSeleccionada] = useState(null)
     const [showDialogEnviarCorreo, setShowDialogEnviarCorreo] = useState(false)
+    const [openDialogEtiquetasIndividualesForPdf, setOpenDialogEtiquetasIndividualesForPdf] = useState(false);
+    const [openDialogEtiquetasIndividualesForPrint, setOpenDialogEtiquetasIndividualesForPrint] = useState(false);
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -316,11 +324,11 @@ function Guia(props) {
         creadoEl: "",
         modificadoEl: "",
         openDialog: false,
-        openDialogEtiquetas:false,
-        detallesPaquetesEtiquetas:[],
         receptorGuia:[],
         referencia:[],
-        reporteSeleccionado:{}
+        reporteSeleccionado:{},
+        imprimirEtiquetasIndividuales: false,
+        paquetesGuiaEtiquetasIndividuales: []
 
     })
     const [openDialog, setOpenDialog] = useState(false)
@@ -330,21 +338,11 @@ function Guia(props) {
     const [dataReportesEtiqueta, setDataReportesEtiqueta] = useState([])
     const [seleccionEtiqueta, setSeleccionEtiqueta] = useState(null)
 
-    useEffect(()=>{
-
-        obtenerFormatosImpresionProceso(212).then(({data}) => {
-            setDataReportes(data)
-            setState({...state, reporteSeleccionado: data[data.length - 1].m_nIdFormato})
-        })
-        obtenerFormatosImpresionProceso(213).then(({data}) => {
-            setDataReportesEtiqueta(data)
-        })
-    }, [])
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
             sortable: false, filterable: false,
-            width: 210,
+            width: 200,
             field: "",
             renderCell: (row) => {
                 return (
@@ -394,14 +392,8 @@ function Guia(props) {
                             </a>
 
                         </Tooltip>
-                        <Tooltip title="Descargar PFD con etiquetas opción 1" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiquetaOpcion1(row.row)}>
-                                <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
-                            </a>
-
-                        </Tooltip>
-                        <Tooltip title="Descargar PFD con etiquetas opcion 2" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row)}>
+                        <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465)}>
+                            <a className="btn btn-default btn-xs" onClick={() => handleOnClickDescargarEtiqutas(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
 
@@ -665,10 +657,6 @@ function Guia(props) {
       setChecked(newChecked);
     };
 
-    useEffect(() => {
-        console.log(conceptosAdicionales.length)
-    }, [conceptosAdicionales])
-
     async function getParametrosConfiguracion(){
         obtenerParametrosConfiguracion().then(respuesta=>{
             setState(state=>{
@@ -677,7 +665,8 @@ function Guia(props) {
                     estatusGuia:respuesta.data.EstatusGuia,
                     idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     idMoneda: respuesta.data.MonedaEmbarque,
-                    factorConversion: respuesta.data.FactorConversion
+                    factorConversion: respuesta.data.FactorConversion,
+                    imprimirEtiquetasIndividuales: respuesta.data.ImprimirEtiquetasIndividuales
                 }
             })
         })
@@ -1277,12 +1266,85 @@ function Guia(props) {
         })
         setOpenDialog(false)
     }
-    function generarReporteEtiquetaOpcion1(row) {
-        obtenerGuiaReporteEtiqueta(row.m_nIdGuia).then(({data}) => {
+
+
+    function handleOnClickDescargarEtiqutas(id, folio) {
+        if (state.imprimirEtiquetasIndividuales) {
+            confirmarEtiquetasAdicionalesDialog()
+                .then(resultado => {
+                    // El usuario hizo clic en "Sí", resultado es true
+                    console.log('Usuario hizo clic en Sí', resultado);
+                    // Aquí puedes realizar acciones relacionadas con "Sí"
+                    obtenerPaquetesGuia(id).then(respuesta => {
+                        let paquetesGuia = respuesta.data.map((i) => ({
+                            idPaquete: i.m_nIdEmbarqueDetalle,
+                            producto: i.m_sProducto,
+                            embalaje: i.m_sEmbalaje,
+                            descripcion: i.m_sDescripcion,
+                            cantidad: i.ctd
+                        }))
+                        setState({
+                            ...state,
+                            paquetesGuiaEtiquetasIndividuales: paquetesGuia
+                        })
+                        setOpenDialogEtiquetasIndividualesForPdf(true)
+                    }).catch(resultado => {
+                        showError("Hubo un error al recuperar los paquetes de la guía.")
+                    });
+                })
+                .catch(resultado => {
+                    // El usuario hizo clic en "No", resultado es false
+                    generarReporteEtiquetas(id, folio)
+                });
+
+        } else {
+            generarReporteEtiquetas(id, folio)
+        }
+
+    }
+
+    const generarReporteEtiquetas = (id, folio) => {
+        obtenerGuiaReporteEtiqueta(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + row.m_nFolioGuia;
+            pdfWindow.document.title = "Guía " + folio.replace('.','');
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "Guía " + folio.replace('.',''));
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo descargar el pdf")
+            }
+        })
+    }
+
+    function generarReporteEtiquetasIndividuales(params) {
+        params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
+        validarRangosEtiqueta(params).then((respuesta) => {
+            obtenerGuiaReporteEtiquetaGuiaRangos(respuesta.data.idImpresion).then(({data}) => {
+                try{
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + data;
+                    link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
+                    document.body.appendChild(link);
+                    link.click();
+                }catch (e) {
+                    console.log(e)
+                    showSuccess("No se pudo descargar el pdf")
+                }
+                setState({
+                    ...state,
+                    paquetesGuiaEtiquetasIndividuales: []
+                })
+            })
         })
     }
 
@@ -1337,16 +1399,6 @@ function Guia(props) {
         setOpenDialogEtiqueta(false)
     }
 
-
-    function generarReporteEtiquetaParcial(params, folio) {
-        obtenerGuiaReporteEtiquetaParcial(params).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
-        })
-    }
-
     /**Entreando a guias por primera vez*/
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
@@ -1380,6 +1432,16 @@ function Guia(props) {
 
         }
         getAllDataTipoCobro()
+        obtenerFormatosImpresionProceso(212).then(({data}) => {
+            setDataReportes(data)
+            setState(state => {
+                return {...state, reporteSeleccionado: data[data.length - 1].m_nIdFormato}
+            })
+        })
+        obtenerFormatosImpresionProceso(213).then(({data}) => {
+            setDataReportesEtiqueta(data)
+        })
+        getParametrosConfiguracion()
     }, []);
 
 
@@ -1411,11 +1473,9 @@ function Guia(props) {
     }, [])
 
     async function printTicket(id) {
-
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
-            let rfcCliente = localStorage.getItem("RFC")
             if (totalEtiquetas >= 10) {
                 confirmAlert({
                     title: 'Confirmación',
@@ -1424,27 +1484,7 @@ function Guia(props) {
                         {
                             label: 'Sí',
                             onClick: async () => {
-                                if (selected_device === null || selected_device === undefined){
-                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
-                                }
-                                guia.m_arrClsDetalle.forEach(async (p, index) => {
-                                    for (let i = 0; i < p.ctd; i++) {
-                                        console.log('guia: ', guia)
-                                        console.log('paquete: ', p)
-                                        console.log('index: ', i + 1)
-                                        console.log(i + 1 + ' de ' + p.ctd)
-                                        let result
-                                        try{
-                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
-                                            showSuccess('Impresión en curso.')
-                                        }catch (e) {
-                                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                                            console.log(e)
-                                            break
-                                        }
-
-                                    }
-                                })
+                                validarImpresoraEImprimir(guia.m_arrClsDetalle, guia)
                             }
                         },
                         {
@@ -1453,35 +1493,35 @@ function Guia(props) {
                     ]
                 });
             } else {
-                if (selected_device === null || selected_device === undefined){
-                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
-                }
-                guia.m_arrClsDetalle.forEach(async (p, index) => {
-                    for (let i = 0; i < p.ctd; i++) {
-                        console.log('guia: ', guia)
-                        console.log('paquete: ', p)
-                        console.log('index: ', i + 1)
-                        console.log(i + 1 + ' de ' + p.ctd)
-                        let result
-                        try {
-                            console.log(TICKET_ZEBRA_TEMPLATE(guia, p, i))
-                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
-                            showSuccess('Impresión en curso.')
-                        } catch (e) {
-                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                            console.log(e)
-                            break
-                        }
-                    }
-                })
-
+                validarImpresoraEImprimir(guia.m_arrClsDetalle, guia)
             }
-
-
         })
-
-
     }
+
+    const validarImpresoraEImprimir = (paquetesImpresion, guia) => {
+        // estructura de paquetesImpresion: { m_nIdEmbarqueDetalle: 0, ctd: 0 }
+        if (selected_device === null || selected_device === undefined){
+            showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+        }
+        paquetesImpresion.forEach(async (p, index) => {
+            for (let i = 0; i < p.ctd; i++) {
+                console.log('guia: ', guia)
+                console.log('paquete: ', p)
+                console.log('index: ', i + 1)
+                console.log(i + 1 + ' de ' + p.ctd)
+                let result
+                try {
+                    result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                    showSuccess('Impresión en curso.')
+                } catch (e) {
+                    showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                    console.log(e)
+                    break
+                }
+            }
+        })
+    }
+
     var errorCallback = function (errorMessage) {
         alert("Error: " + errorMessage);
     }
@@ -1784,7 +1824,6 @@ function Guia(props) {
         getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
         getAllConceptos()
-        getParametrosConfiguracion()
     }
 
     async function getTipoCambio() {
@@ -2306,7 +2345,32 @@ function Guia(props) {
 
     return (
         <div>
-
+            <DialogImpresion open={openDialogEtiquetasIndividualesForPdf}
+                             handleClose={() => {
+                                 setOpenDialogEtiquetasIndividualesForPdf(false)
+                                 setState({
+                                     ...state,
+                                     paquetesGuiaEtiquetasIndividuales: []
+                                 })
+                             }}
+                             handleAccept={(data) => { generarReporteEtiquetasIndividuales(data) }}
+                             paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
+            <DialogImpresion open={openDialogEtiquetasIndividualesForPrint}
+                             handleClose={() => {
+                                 setOpenDialogEtiquetasIndividualesForPrint(false)
+                                 setState({
+                                     ...state,
+                                     paquetesGuiaEtiquetasIndividuales: []
+                                 })
+                             }}
+                             handleAccept={(data) => {
+                                 data.forEach((i) => {
+                                     i.m_nIdEmbarqueDetalle = i.idPaquete
+                                     i.ctd = i.cantidad
+                                 })
+                                 // prepararListadoImpresion(data, true)
+                             }}
+                             paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
             {
                 showDialogEnviarCorreo &&
                 <EnvioCorreoDialogo
@@ -2456,35 +2520,6 @@ function Guia(props) {
             <AsignarTrayectos submit={(id) => handleAsignarTrayectos(id)}
                             open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
                             close={() => setState({...state, openAsignarTrayectos: false})}/>
-            <Dialog
-                open={state.openDialogEtiquetas}
-                onClose={() => setState({...state, openDialogEtiquetas: false})}
-                fullWidth maxWidth="md"
-                aria-labelledby="form-dialog-title"
-            >
-                <ImprimirEtiquetas open={state.openDialogEtiquetas}
-                                   closeEtiquetas={(value) => {
-                                        if (value) {
-                                            let newArray = []
-                                            value.forEach((obj) => {
-                                                for (let i = obj.m_nRango[0]; i <= obj.m_nRango[1]; i++) {
-                                                    newArray.push({
-                                                        "idPaquete": obj.m_nIdEmbarqueDetalle,
-                                                        "idGuia": guiaSeleccionada.m_nIdGuia,
-                                                        "indice": i,
-                                                        "idImpresion": 0
-                                                    })
-                                                }
-                                            })
-                                            generarReporteEtiquetaParcial(newArray, guiaSeleccionada.m_nFolioGuia)
-                                        }else {
-                                            console.log("Impresion cancelada")
-                                        }
-                                        // setState({...state, openDialogEtiquetas: false})
-                                    }}
-                                   detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
-            </Dialog>
-
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
