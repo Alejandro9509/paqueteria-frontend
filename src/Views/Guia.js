@@ -91,7 +91,7 @@ import {
     obtenerGuiaReporteEtiquetaParcial,
     enviarCorreoGuia,
     obtenerGuiaReporteEtiquetaGuiaRangos,
-    obtenerPaquetesGuia
+    obtenerPaquetesGuia, validarRangosEtiqueta
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -393,7 +393,7 @@ function Guia(props) {
 
                         </Tooltip>
                         <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
+                            <a className="btn btn-default btn-xs" onClick={() => handleOnClickDescargarEtiqutas(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
 
@@ -1257,7 +1257,7 @@ function Guia(props) {
     }
 
 
-    function generarReporteEtiqueta(id, folio) {
+    function handleOnClickDescargarEtiqutas(id, folio) {
         if (state.imprimirEtiquetasIndividuales) {
             confirmarEtiquetasAdicionalesDialog()
                 .then(resultado => {
@@ -1283,49 +1283,56 @@ function Guia(props) {
                 })
                 .catch(resultado => {
                     // El usuario hizo clic en "No", resultado es false
+                    generarReporteEtiquetas(id, folio)
                 });
 
         } else {
-            obtenerGuiaReporteEtiqueta(id).then(({data}) => {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "Guía " + folio.replace('.','');
-                try{
-                    const link = document.createElement('a');
-                    link.href = "data:application/pdf;base64," + data;
-                    link.setAttribute('download', "Guía " + folio);
-                    document.body.appendChild(link);
-                    link.click();
-                }catch (e) {
-                    console.log(e)
-                    showSuccess("No se pudo descargar el pdf")
-                }
-            })
+            generarReporteEtiquetas(id, folio)
         }
 
     }
 
-    function generarReporteEtiquetasIndividuales(params) {
-        params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
-        obtenerGuiaReporteEtiquetaGuiaRangos(params).then(({data}) => {
+    const generarReporteEtiquetas = (id, folio) => {
+        obtenerGuiaReporteEtiqueta(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + guiaSeleccionada.m_sFolioGuia.replace('.','');
+            pdfWindow.document.title = "Guía " + folio.replace('.','');
             try{
                 const link = document.createElement('a');
                 link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Guía " + guiaSeleccionada.m_sFolioGuia.replace('.',''));
+                link.setAttribute('download', "Guía " + folio.replace('.',''));
                 document.body.appendChild(link);
                 link.click();
             }catch (e) {
                 console.log(e)
                 showSuccess("No se pudo descargar el pdf")
             }
-            setState({
-                ...state,
-                paquetesGuiaEtiquetasIndividuales: []
+        })
+    }
+
+    function generarReporteEtiquetasIndividuales(params) {
+        params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
+        validarRangosEtiqueta(params).then((respuesta) => {
+            obtenerGuiaReporteEtiquetaGuiaRangos(respuesta.data.idImpresion).then(({data}) => {
+                try{
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + data;
+                    link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
+                    document.body.appendChild(link);
+                    link.click();
+                }catch (e) {
+                    console.log(e)
+                    showSuccess("No se pudo descargar el pdf")
+                }
+                setState({
+                    ...state,
+                    paquetesGuiaEtiquetasIndividuales: []
+                })
             })
         })
     }
