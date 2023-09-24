@@ -1473,9 +1473,11 @@ function Guia(props) {
     }, [])
 
     async function printTicket(id) {
+
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
+            let rfcCliente = localStorage.getItem("RFC")
             if (totalEtiquetas >= 10) {
                 confirmAlert({
                     title: 'Confirmación',
@@ -1484,7 +1486,27 @@ function Guia(props) {
                         {
                             label: 'Sí',
                             onClick: async () => {
-                                validarImpresoraEImprimir(guia.m_arrClsDetalle, guia)
+                                if (selected_device === null || selected_device === undefined){
+                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                                }
+                                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                                    for (let i = 0; i < p.ctd; i++) {
+                                        console.log('guia: ', guia)
+                                        console.log('paquete: ', p)
+                                        console.log('index: ', i + 1)
+                                        console.log(i + 1 + ' de ' + p.ctd)
+                                        let result
+                                        try{
+                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                                            showSuccess('Impresión en curso.')
+                                        }catch (e) {
+                                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                            console.log(e)
+                                            break
+                                        }
+
+                                    }
+                                })
                             }
                         },
                         {
@@ -1493,9 +1515,34 @@ function Guia(props) {
                     ]
                 });
             } else {
-                validarImpresoraEImprimir(guia.m_arrClsDetalle, guia)
+                if (selected_device === null || selected_device === undefined){
+                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                }
+                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                    for (let i = 0; i < p.ctd; i++) {
+                        console.log('guia: ', guia)
+                        console.log('paquete: ', p)
+                        console.log('index: ', i + 1)
+                        console.log(i + 1 + ' de ' + p.ctd)
+                        let result
+                        try {
+                            console.log(TICKET_ZEBRA_TEMPLATE(guia, p, i))
+                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                            showSuccess('Impresión en curso.')
+                        } catch (e) {
+                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                            console.log(e)
+                            break
+                        }
+                    }
+                })
+
             }
+
+
         })
+
+
     }
 
     const validarImpresoraEImprimir = (paquetesImpresion, guia) => {
