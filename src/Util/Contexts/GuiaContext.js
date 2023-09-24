@@ -320,5 +320,5 @@ function obtenerPaquetesGuia(idGuia) {
 
 
 export {cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
-    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,validarRangosEtiqueta,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaGuiaRangos,enviarCorreoGuia,obtenerPaquetesGuia}
+    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaGuiaRangos,enviarCorreoGuia,obtenerPaquetesGuia,validarRangosEtiqueta}
