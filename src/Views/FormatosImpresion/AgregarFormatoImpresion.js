@@ -197,6 +197,12 @@ class AgregarFormatoImpresion extends Component {
                                                 >
                                                     Corte de Caja General
                                                 </option>
+                                                <option
+                                                    key={223}
+                                                    value={223}
+                                                >
+                                                    Guía Etiqueta Rangos
+                                                </option>
                                             </Select>
                                         </FormControl>
                                     </label>
