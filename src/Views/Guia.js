@@ -1411,7 +1411,8 @@ function Guia(props) {
     }, [])
 
     const handleOnClickImprimirEtiquetas = (idGuia) => {
-        if (state.imprimirEtiquetasIndividuales) {
+        // if (state.imprimirEtiquetasIndividuales) {
+        if (false) {
         //     logica para etiquetas individuales
             confirmarEtiquetasAdicionalesDialog()
                 .then((resultado) => {

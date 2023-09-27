@@ -3,11 +3,11 @@ import {
     Button,
     Dialog,
     DialogActions,
-    DialogContent,
+    DialogContent, DialogContentText,
     DialogTitle,
     Table, TableBody, TableCell,
     TableContainer,
-    TableHead, TableRow, TextField
+    TableHead, TableRow, TextField, Typography
 } from "@material-ui/core";
 
 export default function DialogImpresion({ open, handleClose, handleAccept, paquetes }) {
@@ -16,19 +16,27 @@ export default function DialogImpresion({ open, handleClose, handleAccept, paque
     useEffect(() => {
         if (open){
             paquetes.forEach((i) => {
-                i.rangoInicio = 1
-                i.rangoFin = i.cantidad
+                i.rangoInicio = 0
+                i.rangoFin = 0
             })
             setListadoPaquetes(paquetes)
         }
     },[open, paquetes])
 
     const handleAcceptClick = () => {
-        paquetes.forEach((i) => {
+        // paquetes.forEach((i) => {
+        //     i.rangoInicio = parseInt(i.rangoInicio)
+        //     i.rangoFin = parseInt(i.rangoFin)
+        // })
+        let paquetesFinal = [...listadoPaquete]
+        paquetesFinal.forEach((i) => {
             i.rangoInicio = parseInt(i.rangoInicio)
             i.rangoFin = parseInt(i.rangoFin)
         })
-        handleAccept(listadoPaquete);
+        paquetesFinal = paquetesFinal.filter((i) => i.rangoInicio > 0)
+        paquetesFinal = paquetesFinal.filter((i) => i.rangoFin > 0)
+
+        handleAccept(paquetesFinal);
         handleClose();
     };
 
@@ -39,10 +47,14 @@ export default function DialogImpresion({ open, handleClose, handleAccept, paque
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
                 <DialogTitle>Define el rango de etiquetas que deseas imprimir</DialogTitle>
+                    <DialogContentText align={"center"}>
+                        <Typography variant="h5" component={"h3"}>
+                            Los productos con un número inicial o final igual a 0 serán ignorados.
+                        </Typography>
+                    </DialogContentText>
+
                 <DialogContent>
-                    {/*<DialogContentText>
-                        Se buscaran las guías que fueron entregadas en última milla por el operador seleccionado.
-                    </DialogContentText>*/}
+
                     <TablePrint data={listadoPaquete} handleDataChange={handleDataChange} />
                 </DialogContent>
                 <DialogActions>
@@ -62,15 +74,6 @@ function TablePrint({ data, handleDataChange }) {
     const handleRowClick = (row) => {
         setSelectedRow(row);
     };
-    // const [filtro, setFiltro] = useState('');
-
-    // const handleChangeFiltro = (event) => {
-    //     setFiltro(event.target.value);
-    // };
-
-    // const datosFiltrados = data.filter((objeto) => {
-    //     return (objeto.m_nNumeroOperador + ' ' + objeto.m_sNombreCompleto).toLowerCase().includes(filtro.toLowerCase());
-    // });
 
     const datosFiltrados = data;
 
@@ -81,31 +84,31 @@ function TablePrint({ data, handleDataChange }) {
                 return
             }
             if (event.target.name === 'rangoInicio'){
-                if (parseInt(event.target.value) < 1){
-                    console.log('Cantidad fuera del rango válido')
-                    console.log('value: ' + parseInt(event.target.value))
+                if (parseInt(event.target.value) < 0){
+                    // console.log('Cantidad fuera del rango válido')
+                    // console.log('value: ' + parseInt(event.target.value))
                     return;
                 }
                 if (parseInt(event.target.value) > parseInt(selection.rangoFin)){
-                    console.log('Cantidad fuera del rango válido')
-                    console.log('value: ' + parseInt(event.target.value))
-                    console.log('Comparing:' + parseInt(selection.rangoFin))
+                    // console.log('Cantidad fuera del rango válido')
+                    // console.log('value: ' + parseInt(event.target.value))
+                    // console.log('Comparing:' + parseInt(selection.rangoFin))
                     return;
                 }
             }
             if (event.target.name === 'rangoFin'){
                 if (parseInt(event.target.value) < parseInt(selection.rangoInicio)){
-                    console.log('Cantidad fuera del rango válido')
-                    console.log('value: ' + parseInt(event.target.value))
-                    console.log('Comparing:' + parseInt(selection.rangoInicio))
+                    // console.log('Cantidad fuera del rango válido')
+                    // console.log('value: ' + parseInt(event.target.value))
+                    // console.log('Comparing:' + parseInt(selection.rangoInicio))
                     return;
                 }
-                if (parseInt(event.target.value) > parseInt(selection.cantidad)){
-                    console.log('Cantidad fuera del rango válido')
-                    console.log('value: ' + parseInt(event.target.value))
-                    console.log('Comparing:' + parseInt(selection.cantidad))
-                    return;
-                }
+                // if (parseInt(event.target.value) > parseInt(selection.cantidad)){
+                //     console.log('Cantidad fuera del rango válido')
+                //     console.log('value: ' + parseInt(event.target.value))
+                //     console.log('Comparing:' + parseInt(selection.cantidad))
+                //     return;
+                // }
             }
             let indexItemToChange = data.indexOf(itemToChange)
             itemToChange[event.target.name] = event.target.value
@@ -113,7 +116,7 @@ function TablePrint({ data, handleDataChange }) {
             newData[indexItemToChange] = itemToChange
             handleDataChange(newData)
         }catch (e) {
-            console.log('mamó')
+            // console.log('mamó')
             console.log(e)
         }
 
