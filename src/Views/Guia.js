@@ -386,7 +386,7 @@ function Guia(props) {
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => {
                                    /*mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)*/
-                                   printTicket(row.row.m_nIdGuia)
+                                   handleOnClickImprimirEtiquetas(row.row.m_nIdGuia)
                                }}>
                                 <i className="zmdi zmdi-print" style={{color: "#F9A03E"}}/>
                             </a>
@@ -1472,6 +1472,85 @@ function Guia(props) {
         })
     }, [])
 
+    const handleOnClickImprimirEtiquetas = (idGuia) => {
+        // if (state.imprimirEtiquetasIndividuales) {
+        if (false) {
+        //     logica para etiquetas individuales
+            confirmarEtiquetasAdicionalesDialog()
+                .then((resultado) => {
+                //     SI IMPRIMIR ADICIONALES
+                    obtenerPaquetesGuia(idGuia).then(respuesta => {
+                        let paquetesGuia = respuesta.data.map((i) => ({
+                            idPaquete: i.m_nIdEmbarqueDetalle,
+                            producto: i.m_sProducto,
+                            embalaje: i.m_sEmbalaje,
+                            descripcion: i.m_sDescripcion,
+                            cantidad: i.ctd
+                        }))
+                        setState({
+                            ...state,
+                            paquetesGuiaEtiquetasIndividuales: paquetesGuia
+                        })
+                        setOpenDialogEtiquetasIndividualesForPrint(true)
+                    }).catch(resultado => {
+                        showError("Hubo un error al recuperar los paquetes de la guía.")
+                    });
+                })
+                .catch((resultado) => {/*NO IMPRIMIR ADICIONALES*/ printTicket(idGuia)})
+        } else {
+            printTicket(idGuia)
+        }
+    }
+
+    async function printTicketEtiquetasRangos(idGuia, rangosPaquetes) {
+        if (!idGuia > 0) {
+            showError("No se ha seleccionado una guía")
+            return
+        }
+        if (!rangosPaquetes.length > 0) {
+            showError("No se han definido rangos para la impresión")
+            return
+        }
+        obtenerGuiaId(idGuia).then( async ({data}) => {
+            let guia = data;
+            let paquetesParaImprimir = []
+            let paquetazo
+            rangosPaquetes.forEach((rango) => {
+                paquetazo = guia.m_arrClsDetalle.find((paqueteGuia) => paqueteGuia.m_nIdEmbarqueDetalle === rango.idPaquete)
+                // paquetesParaImprimir.push(paquetazo)
+                for (let i = rango.rangoInicio-1; i < rango.rangoFin; i++){
+                    console.log('index: ', i)
+                    paquetazo.index = i
+                    paquetazo.rangoInicio = rango.rangoInicio
+                    paquetazo.rangoFin = rango.rangoFin
+                    console.log('paquetazo: ', paquetazo)
+                    paquetesParaImprimir.push(paquetazo)
+                    console.log('paquetesParaImprimir: ', paquetesParaImprimir)
+                }
+            })
+            if (paquetesParaImprimir.length > 10) {
+
+            } else {
+
+                // FORMA 3 // NO SE GUARDAN CORRECTAMENTE LOS PAQUETES EN EL ARREGLO
+                // for (let i = 0; i < paquetesParaImprimir.length; i++) {
+                //     let result
+                //     try {
+                //         console.log('paquete: ', paquetesParaImprimir[i])
+                //         console.log('index: ', paquetesParaImprimir[i].index + 1)
+                //         console.log(paquetesParaImprimir[i].index + 1 + ' de ' + paquetesParaImprimir[i].rangoFin)
+                //         // result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, paquetesParaImprimir[i], paquetesParaImprimir[i].index), undefined, errorCallback)
+                //         // showSuccess('Impresión en curso.')
+                //     } catch (e) {
+                //         showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                //         break  // Salir del bucle si hay un error
+                //     }
+                // }
+
+            }
+        })
+    }
+
     async function printTicket(id) {
 
         obtenerGuiaId(id).then(({data}) => {
@@ -1491,16 +1570,11 @@ function Guia(props) {
                                 }
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
-                                        console.log('guia: ', guia)
-                                        console.log('paquete: ', p)
-                                        console.log('index: ', i + 1)
-                                        console.log(i + 1 + ' de ' + p.ctd)
                                         let result
                                         try{
                                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
                                             showSuccess('Impresión en curso.')
                                         }catch (e) {
-                                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                                             console.log(e)
                                             break
                                         }
@@ -1520,18 +1594,12 @@ function Guia(props) {
                 }
                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                     for (let i = 0; i < p.ctd; i++) {
-                        console.log('guia: ', guia)
-                        console.log('paquete: ', p)
-                        console.log('index: ', i + 1)
-                        console.log(i + 1 + ' de ' + p.ctd)
                         let result
                         try {
-                            console.log(TICKET_ZEBRA_TEMPLATE(guia, p, i))
                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
                             showSuccess('Impresión en curso.')
                         } catch (e) {
                             showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                            console.log(e)
                             break
                         }
                     }
@@ -2405,17 +2473,15 @@ function Guia(props) {
             <DialogImpresion open={openDialogEtiquetasIndividualesForPrint}
                              handleClose={() => {
                                  setOpenDialogEtiquetasIndividualesForPrint(false)
-                                 setState({
-                                     ...state,
-                                     paquetesGuiaEtiquetasIndividuales: []
-                                 })
+                                 setState({ ...state, paquetesGuiaEtiquetasIndividuales: [] })
                              }}
                              handleAccept={(data) => {
-                                 data.forEach((i) => {
-                                     i.m_nIdEmbarqueDetalle = i.idPaquete
-                                     i.ctd = i.cantidad
-                                 })
+                                 // data.forEach((i) => {
+                                 //     i.m_nIdEmbarqueDetalle = i.idPaquete
+                                 //     i.ctd = i.cantidad
+                                 // })
                                  // prepararListadoImpresion(data, true)
+                                 printTicketEtiquetasRangos(guiaSeleccionada.m_nIdGuia, data)
                              }}
                              paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
             {
