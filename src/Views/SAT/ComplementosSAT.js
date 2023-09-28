@@ -22,6 +22,8 @@ import {
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import { confirmAlert } from "react-confirm-alert";
+import e from "cors";
+
 import {validarComplementoSat} from "../../Util/Contexts/SATContext";
 function showSuccess(mensaje) {
     new Noty({
@@ -421,23 +423,14 @@ function ComplementosSAT(props) {
         const promise = new Promise((resolve, reject) => {
             const fileReader = new FileReader();
             fileReader.readAsArrayBuffer(file);
-
             fileReader.onload = (e) => {
                 const bufferArray = e.target.result;
-
                 const wb = XLSX.read(bufferArray, { type: "buffer" });
-
                 const wsname = wb.SheetNames[0];
-                console.log(wsname)
-
                 const ws = (wb.Sheets[wsname]);
-
-                console.log(ws)
-
                 const data = XLSX.utils.sheet_to_json(ws, {range:2});
                 resolve(data);
             };
-
             fileReader.onerror = (error) => {
                 reject(error);
             };
@@ -456,96 +449,109 @@ function ComplementosSAT(props) {
                     claveMaterialPeligroso: item['Es material peligroso'] === "SI" && item['Clave material peligroso'] ? item['Clave material peligroso'] : '',
                     claveEmbalaje: item['Es material peligroso'] === "SI" && item['Clave Embalaje'] ? item['Clave Embalaje'] : '',
                     descripcionEmbalajeSAT: item['Es material peligroso'] === "SI" && item['Descripción embalaje'] ? item['Descripción embalaje'] : '',
-                    claveFraccion: item['Es material peligroso'] === "SI" && item['Clave Fraccion'] ? item['Clave Fraccion'] : ''
+                    claveFraccion: item['Es material peligroso'] === "SI" && item['Clave Fraccion'] ? item['Clave Fraccion'].toString() : ''
                 }))
             console.log(newArray)
             let hayErrores = false
+            let completeErrorMessage = ''
             for (let i = 0; i < newArray.length; i++) {
-                hayErrores = false
                 if (newArray[i].cantidad === 0) {
-                    showError(`Cantidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    // showError(`Cantidad no válida en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Cantidad no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
                 }
                 if (newArray[i].peso === 0) {
-                    showError(`Peso no válido en registro número '${i + 1}'. Favor de revisar el archivo.`)
-                    hayErrores = true
+                    // showError(`Peso no válido en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Peso no válido en registro número '${i + 1}'.<br />`
+                        hayErrores = true
                 }
                 if (newArray[i].claveProducto.length === 0) {
-                    showError(`Clave de producto no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    // showError(`Clave de producto no válida en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Clave de producto no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
                 } else {
                     await validarComplementoSat(CATALOGOS_SAT.PRODUCTOS_SERVICIOS, newArray[i].claveProducto).then(({data}) => {
                         if (data.success) {
                             newArray[i].claveProducto = data.message
                         } else {
-                            showError(`Clave de producto no válida en registro número '${i + 1}'. La clave no existe.`)
+                            // showError(`Clave de producto no válida en registro número '${i + 1}'. La clave no existe.`)
+                            completeErrorMessage += `Clave de producto no válida en registro número '${i + 1}'. La clave no existe.<br />`
                             hayErrores = true
                         }
                     })
                 }
                 if (newArray[i].claveUnidad.length === 0) {
-                    showError(`Clave de unidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    // showError(`Clave de unidad no válida en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Clave de unidad no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
                 } else {
                     await validarComplementoSat(CATALOGOS_SAT.UNIDADES, newArray[i].claveUnidad).then(({data}) => {
                         if (data.success) {
                             newArray[i].claveUnidad = data.message
                         } else {
-                            showError(`Clave de unidad no válida en registro número '${i + 1}'. La clave no existe.`)
+                            // showError(`Clave de unidad no válida en registro número '${i + 1}'. La clave no existe.`)
+                            completeErrorMessage += `Clave de unidad no válida en registro número '${i + 1}'. La clave no existe.<br />`
                             hayErrores = true
                         }
                     })
                 }
                 if (newArray[i].esPeligroso === true) {
                     if (newArray[i].claveMaterialPeligroso.length === 0) {
-                        showError(`Clave material peligroso no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        // showError(`Clave material peligroso no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Clave material peligroso no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     } else {
                         await validarComplementoSat(CATALOGOS_SAT.MATERIAL_PELIGROSO, newArray[i].claveMaterialPeligroso).then(({data}) => {
                             if (data.success) {
                                 newArray[i].claveMaterialPeligroso = data.message
                             } else {
-                                showError(`Clave material peligroso no válida en registro número '${i + 1}'. La clave no existe.`)
+                                // showError(`Clave material peligroso no válida en registro número '${i + 1}'. La clave no existe.`)
+                                completeErrorMessage += `Clave material peligroso no válida en registro número '${i + 1}'. La clave no existe.<br />`
                                 hayErrores = true
                             }
                         })
                     }
                     if (newArray[i].claveEmbalaje.length === 0) {
-                        showError(`Clave Embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        // showError(`Clave Embalaje no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Clave Embalaje no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     } else {
-                        validarComplementoSat(CATALOGOS_SAT.EMBALAJE, newArray[i].claveEmbalaje).then(({data}) => {
+                        await validarComplementoSat(CATALOGOS_SAT.EMBALAJE, newArray[i].claveEmbalaje).then(({data}) => {
                             if (data.success) {
                                 newArray[i].claveEmbalaje = data.message
                             } else {
-                                showError(`Clave Embalaje no válida en registro número '${i + 1}'. La clave no existe.`)
+                                // showError(`Clave Embalaje no válida en registro número '${i + 1}'. La clave no existe.`)
+                                completeErrorMessage += `Clave Embalaje no válida en registro número '${i + 1}'. La clave no existe.<br />`
                                 hayErrores = true
                             }
                         })
                     }
                     if (newArray[i].descripcionEmbalajeSAT.length === 0) {
-                        showError(`Descripción embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        // showError(`Descripción embalaje no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Descripción embalaje no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     }
                     if (newArray[i].claveFraccion.length === 0) {
-                        showError(`Clave Fraccion no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                        // showError(`Clave Fraccion no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Clave Fraccion no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     } else {
-                        validarComplementoSat(CATALOGOS_SAT.FRACCION_ARANCELARIA, newArray[i].claveFraccion).then(({data}) => {
+                        await validarComplementoSat(CATALOGOS_SAT.FRACCION_ARANCELARIA, newArray[i].claveFraccion).then(({data}) => {
                             if (data.success) {
-                                newArray[i].claveFraccion = data.message
+                                newArray[i].claveFraccion = data.message.toString()
                             } else {
-                                showError(`Clave Fraccion no válida en registro número '${i + 1}'. La clave no existe.`)
+                                // showError(`Clave Fraccion no válida en registro número '${i + 1}'. La clave no existe.`)
+                                completeErrorMessage += `Clave Fraccion no válida en registro número '${i + 1}'. La clave no existe.<br />`
                                 hayErrores = true
                             }
                         })
                     }
                 }
-                if (hayErrores) {
-                    break
-                }
             }
             if (hayErrores) {
+                completeErrorMessage += 'Favor de revisar el archivo.'
+                console.log(completeErrorMessage)
+                showError(completeErrorMessage)
                 return
             }
             props.onChangeList(newArray)
