@@ -64,7 +64,7 @@ import {
 import {
     API_HEADERS,
     dataGridLocaleText,
-    TICKET_ZEBRA_TEMPLATE
+    TICKET_ZEBRA_TEMPLATE, TICKET_ZEBRA_TEMPLATE_NOT_QR
 } from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
@@ -1473,8 +1473,8 @@ function Guia(props) {
     }, [])
 
     const handleOnClickImprimirEtiquetas = (idGuia) => {
-        // if (state.imprimirEtiquetasIndividuales) {
-        if (false) {
+        if (state.imprimirEtiquetasIndividuales) {
+        // if (false) {
         //     logica para etiquetas individuales
             confirmarEtiquetasAdicionalesDialog()
                 .then((resultado) => {
@@ -1511,41 +1511,73 @@ function Guia(props) {
             showError("No se han definido rangos para la impresión")
             return
         }
+        if (selected_device === null || selected_device === undefined){
+            showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+        }
         obtenerGuiaId(idGuia).then( async ({data}) => {
             let guia = data;
-            let paquetesParaImprimir = []
-            let paquetazo
-            rangosPaquetes.forEach((rango) => {
-                paquetazo = guia.m_arrClsDetalle.find((paqueteGuia) => paqueteGuia.m_nIdEmbarqueDetalle === rango.idPaquete)
-                // paquetesParaImprimir.push(paquetazo)
-                for (let i = rango.rangoInicio-1; i < rango.rangoFin; i++){
-                    console.log('index: ', i)
-                    paquetazo.index = i
-                    paquetazo.rangoInicio = rango.rangoInicio
-                    paquetazo.rangoFin = rango.rangoFin
-                    console.log('paquetazo: ', paquetazo)
-                    paquetesParaImprimir.push(paquetazo)
-                    console.log('paquetesParaImprimir: ', paquetesParaImprimir)
+            const paquetesFiltrados = [];
+            for (const rango of rangosPaquetes) {
+                const { idPaquete, rangoInicio, rangoFin } = rango;
+                const embarqueDetalle = guia.m_arrClsDetalle
+                    .filter((paqueteGuia) => paqueteGuia.m_nIdEmbarqueDetalle === idPaquete)
+                    .map((paqueteGuia) => ({ ...paqueteGuia, rangoInicio, rangoFin }));
+
+                paquetesFiltrados.push(...embarqueDetalle);
+            }
+
+            const paquetesConIndex = [];
+            for (const item of paquetesFiltrados) {
+                const { rangoInicio, rangoFin } = item;
+                for (let i = rangoInicio-1; i < rangoFin; i++) {
+                    paquetesConIndex.push({ ...item, index: i });
                 }
-            })
-            if (paquetesParaImprimir.length > 10) {
-
+            }
+            console.log('paquetesFinal ',paquetesConIndex)
+            if (paquetesConIndex.length > 10) {
+                confirmAlert({
+                    title: 'Confirmación',
+                    message: '¿Está segura(o) que desea imprimir ' + paquetesConIndex.length + ' etiqueta(s)?',
+                    buttons: [
+                        {
+                            label: 'Sí',
+                            onClick: async () => {
+                                if (selected_device === null || selected_device === undefined){
+                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                                }
+                                for (let i = 0; i < paquetesConIndex.length; i++) {
+                                    let result
+                                    try{
+                                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                                        showSuccess('Impresión en curso.')
+                                    }catch (e) {
+                                        console.log(e)
+                                        showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                        break
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            label: 'No'
+                        }
+                    ]
+                });
             } else {
-
-                // FORMA 3 // NO SE GUARDAN CORRECTAMENTE LOS PAQUETES EN EL ARREGLO
-                // for (let i = 0; i < paquetesParaImprimir.length; i++) {
-                //     let result
-                //     try {
-                //         console.log('paquete: ', paquetesParaImprimir[i])
-                //         console.log('index: ', paquetesParaImprimir[i].index + 1)
-                //         console.log(paquetesParaImprimir[i].index + 1 + ' de ' + paquetesParaImprimir[i].rangoFin)
-                //         // result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, paquetesParaImprimir[i], paquetesParaImprimir[i].index), undefined, errorCallback)
-                //         // showSuccess('Impresión en curso.')
-                //     } catch (e) {
-                //         showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                //         break  // Salir del bucle si hay un error
-                //     }
-                // }
+                for (let i = 0; i < paquetesConIndex.length; i++) {
+                    let result
+                    try {
+                        // console.log('paquete: ', paquetesConIndex[i])
+                        // console.log((paquetesConIndex[i].index+1) + ' de ' + paquetesConIndex[i].rangoFin)
+                        // console.log('index: ', paquetesConIndex[i].index)
+                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                        // showSuccess('Impresión en curso.')
+                    } catch (e) {
+                        console.log(e)
+                        showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                        break  // Salir del bucle si hay un error
+                    }
+                }
 
             }
         })
@@ -1611,30 +1643,6 @@ function Guia(props) {
         })
 
 
-    }
-
-    const validarImpresoraEImprimir = (paquetesImpresion, guia) => {
-        // estructura de paquetesImpresion: { m_nIdEmbarqueDetalle: 0, ctd: 0 }
-        if (selected_device === null || selected_device === undefined){
-            showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
-        }
-        paquetesImpresion.forEach(async (p, index) => {
-            for (let i = 0; i < p.ctd; i++) {
-                console.log('guia: ', guia)
-                console.log('paquete: ', p)
-                console.log('index: ', i + 1)
-                console.log(i + 1 + ' de ' + p.ctd)
-                let result
-                try {
-                    result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
-                    showSuccess('Impresión en curso.')
-                } catch (e) {
-                    showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                    console.log(e)
-                    break
-                }
-            }
-        })
     }
 
     var errorCallback = function (errorMessage) {
