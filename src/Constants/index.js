@@ -260,7 +260,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT132,692^A0N,35,26^FH\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT65,740^A0N,35,26^FH\^FDDIRECCION:^FS
 ^FT50,959^A0N,35,33^FH\^FD${guia.m_sSucursalDestino}^FS
-^FT282,1135^A0N,20,26^FH\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT282,1135^A0N,20,26^FH\^FD${index + 1} DE ${paquete.rangoFin}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
         (
             guia.m_sDomicilioDestinatario.length > 75 ? (
