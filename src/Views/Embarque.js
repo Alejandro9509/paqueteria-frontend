@@ -1247,6 +1247,7 @@ function Embarque(props) {
     }
 
     const esComplementoValido = (item) => {
+        console.log('error complememto ', item)
         let valid = true
         if (!parseFloat(item.cantidad) > 0) {
             return false
@@ -1264,13 +1265,7 @@ function Embarque(props) {
             if (!item.claveFraccion?.length > 0) {
                 return false
             }
-            /*if (!item.comercioExterior?.length > 0){
-                return false
-            }*/
             if (!item.claveMaterialPeligroso?.length > 0) {
-                return false
-            }
-            if (!item.materialPeligrosoSAT?.length > 0) {
                 return false
             }
             if (!item.claveEmbalaje?.length > 0) {
@@ -1333,7 +1328,6 @@ function Embarque(props) {
             item.m_sClaveFraccionArancelaria = item.claveFraccion
             item.m_sUUIDComercioExterior = item.comercioExterior
             item.m_sClaveMaterialPeligroso = item.claveMaterialPeligroso
-            item.m_sMaterialPeligroso = item.materialPeligrosoSAT
             item.m_bEsMaterialPeligroso = item.esPeligroso
             item.m_sClaveEmbalaje = item.claveEmbalaje
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
