@@ -263,7 +263,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquete.rangoFin}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
         (
             guia.m_sDomicilioDestinatario.length > 70 ? (
