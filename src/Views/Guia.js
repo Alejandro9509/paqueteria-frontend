@@ -337,6 +337,7 @@ function Guia(props) {
     const [openDialogEtiqueta, setOpenDialogEtiqueta] = useState(false)
     const [dataReportesEtiqueta, setDataReportesEtiqueta] = useState([])
     const [seleccionEtiqueta, setSeleccionEtiqueta] = useState(null)
+    const [dataReporteEtiquetaRangos, setDataReporteEtiquetaRangos] = useState(null)
 
     const columns = React.useMemo(() => [
         {
@@ -1314,14 +1315,18 @@ function Guia(props) {
     function generarReporteEtiquetasIndividuales(params) {
         params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
         validarRangosEtiqueta(params).then((respuesta) => {
-            obtenerGuiaReporteEtiquetaGuiaRangos(respuesta.data.idImpresion).then(({data}) => {
+            if (dataReporteEtiquetaRangos === null || !(dataReporteEtiquetaRangos.m_nIdFormato > 0)) {
+                showError("No hay formato de etiqueta adicional en el sistema. Comuniquese con la oficinas de GM.")
+                return
+            }
+            imprimirFormatosIdIdTipoReporte(dataReporteEtiquetaRangos.m_nIdFormato,respuesta.data.idImpresion).then(({data}) => {
                 try{
                     let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                     pdfWindow.document.body.style.margin = "0px";
                     pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
                     const link = document.createElement('a');
-                    link.href = "data:application/pdf;base64," + data;
+                    link.href = "data:application/pdf;base64," + data.m_sArchivo;
                     link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
                     document.body.appendChild(link);
                     link.click();
@@ -1373,11 +1378,16 @@ function Guia(props) {
         obtenerFormatosImpresionProceso(212).then(({data}) => {
             setDataReportes(data)
             setState(state => {
-                return {...state, reporteSeleccionado: data[data.length - 1].m_nIdFormato}
+                return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
             })
         })
         obtenerFormatosImpresionProceso(213).then(({data}) => {
             setDataReportesEtiqueta(data)
+        })
+        obtenerFormatosImpresionProceso(223).then(({data}) => {
+            if (data.length > 0) {
+                setDataReporteEtiquetaRangos(data[0])
+            }
         })
         getParametrosConfiguracion()
     }, []);
