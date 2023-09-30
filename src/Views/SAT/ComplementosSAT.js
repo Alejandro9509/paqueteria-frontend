@@ -185,6 +185,11 @@ function ComplementosSAT(props) {
             align: 'left',
         },
         {
+            headerName: "Peso (Kg)",
+            field: "peso",
+            flex: 1,
+        },
+        {
             headerName: "Clave producto o servicio",
             field: "claveProducto",
             width: 180,
@@ -253,12 +258,6 @@ function ComplementosSAT(props) {
                 )
             },
             width: 200,
-        },
-        {
-            headerName: "Peso (Kg)",
-            field: "peso",
-            hide:true,
-            flex: 1,
         },
     ]);
 
