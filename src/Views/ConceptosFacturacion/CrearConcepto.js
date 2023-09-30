@@ -22,12 +22,13 @@ import { obtenerImpuestos } from "../../Util/Contexts/ImpuestosContext";
 import {
     obtenerSATEmbalajes, obtenerSATPaginado,
     obtenerSATServicios,
-    obtenerSATUnidades,
+    obtenerSATUnidades,obtenerSATListado,obtenerSATBusqueda
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import {Autocomplete} from "@material-ui/lab";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import {API_HEADERS} from "../../Constants";
 import {obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
+import { ContactSupportOutlined } from "@material-ui/icons";
 var numRegistros = 20
 
 
@@ -48,13 +49,23 @@ function CrearConceptoSAT(props) {
         catalogo: "",
         busqueda: "",
         dataSat: [],
-        titulo:""
+        titulo:"",
+        onFocus: true
     });
     const [errores, setErrores] = useState({
         errorCantidad:false,
-        errorTexto:"Ingrese un numero mayor a 0"
-       
+        errorTexto:"Ingrese un numero mayor a 0",
+        errorCaracteres: false,
     })
+    const [disableSeleccionar, setDisableSeleccionar] = React.useState({
+        disableProducto: true,
+        disableUnidad: true,
+        disableMaterialPeligroso: true,
+        disableEmbalaje: true,
+        disableFraccion: true
+    });
+
+    
     
     const handleChange = (event) => {
 
@@ -93,32 +104,237 @@ function CrearConceptoSAT(props) {
             }
         }
         props.onChangeData(0, event)
-    }
+    }    
 
     const selectClase = (row) => {
         props.onChangeData(state.complementoSAT, row.data)
     }
 
     const closeDialog = () => {
+        setState({ ...state, openDialog: false, catalogo: "",busqueda:"" });
+        setPagina(0)
+    }
+    const cancelDialog = () => {
+        props.onChangeData(0)
         setState({ ...state, openDialog: false, catalogo: "" });
         setPagina(0)
     }
     
-    function cargarDesdeServidor(pagina,numRegistros){
-        if (state.catalogo !== "") {
-            return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+    function cargarDesdeServidor(pagina,numRegistros,catalogo){
+        /* if (state.catalogo !== "") { */
+        if (catalogo == 1){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_ClaveProdServCP", state.busqueda).then((respuesta) => {
                 if(respuesta.data.length>0){
-                setState({...state, dataSat: respuesta.data, openDialog: true})
+                setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"})
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
               
             })
+        }else if(catalogo == 2){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_ClaveUnidad", state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida"})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+              
+            })
+        }else if(catalogo == 3){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_TipoEmbalaje", state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+              
+            })
+        }else if (catalogo == 4){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_FraccionArancelaria", state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+              
+            })
+        }else if (catalogo == 5){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_MaterialPeligroso", state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+              
+            })
+        }else{
+            if(state.busqueda != ""){
+                return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+                    if(respuesta.data.length>0){
+                    setState({...state, dataSat: respuesta.data})
+                    }else{
+                        showSuccess("No se encontró ningún registro")
+                    }
+                })
+            }else if(state.busqueda == "" && state.catalogo != ""){
+                return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+                    if(respuesta.data.length>0){
+                    setState({...state, dataSat: respuesta.data})
+                    }else{
+                        showSuccess("No se encontró ningún registro")
+                    }
+                })
+            }
         }
+       /*  } */
     }
     useEffect(() => {
         cargarDesdeServidor(pagina.page,numRegistros)
-    }, [pagina, state.busqueda, state.catalogo])
+    }, [pagina,state.busqueda,state.catalogo])
+
+    const handleKeyDown = e => {
+        if (e.key === " ") {
+          e.preventDefault();
+        }
+      }
+    const handleChangeSpecial = (e) => {
+        /* if(e.target.name == "claveUnidad"){ */
+            const value = e.target.value;
+            const sanitizedValue = value.replace(/[^\w\s]/gi, ''); 
+            if (value !== sanitizedValue) {
+                setErrores({
+                    ...errores,
+                    errorCaracteres: true});
+                    /* setDisableSeleccionar({
+                        ...disableSeleccionar,
+                        disableUnidad: false}); */
+                    props.onChangeData(6, e,true)
+            } else {
+                setErrores({
+                    ...errores,
+                    errorCaracteres: false});
+/*                     setDisableSeleccionar({
+                        ...disableSeleccionar,
+                        disableUnidad: false});  */                   
+                    props.onChangeData(6, e)    
+            }           
+/*         }else if (e.target.name == "claveProducto"){
+            setDisableSeleccionar({
+                ...disableSeleccionar,
+                disableProducto: false});             
+            props.onChangeData(6, e)
+        }else if (e.target.name == "claveMaterialPeligroso"){
+            setDisableSeleccionar({
+                ...disableSeleccionar,
+                disableMaterialPeligroso: false});             
+            props.onChangeData(6, e)
+        }else if(e.target.name == "claveEmbalaje"){
+            setDisableSeleccionar({
+                ...disableSeleccionar,
+                disableEmbalaje: false});             
+            props.onChangeData(6, e)
+        }else if(e.target.name == "claveFraccion"){
+            setDisableSeleccionar({
+                ...disableSeleccionar,
+                disableFraccion: false});             
+            props.onChangeData(6, e)
+        }
+ */    }
+
+    const handleClickBuscarClaveSat = (idcomplemento) =>{
+        if(idcomplemento === 1 && props.dataComplemento.claveProducto){
+            var catalogo = "c_ClaveProdServCP";
+            setState({
+                ...state,
+                catalogo: "c_ClaveProdServCP", 
+                busqueda: "", 
+                complementoSAT: 1,
+                titulo:"Producto o Servicio",
+            })
+    
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveProducto).then(respuesta => {
+                if(respuesta.data.Estatus){
+                    props.onChangeData(1, respuesta.data)
+                }else{
+                    showSuccess(respuesta.data)
+                    props.resetComplemento(1)
+                }
+            })        
+        }else if(idcomplemento === 2 && props.dataComplemento.claveUnidad){
+            var catalogo = "c_ClaveUnidad";
+
+            setState({
+                ...state, 
+                catalogo: "c_ClaveUnidad", 
+                busqueda: "", 
+                complementoSAT: 2,
+                titulo:"Unidad medida",
+            })
+    
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveUnidad).then(respuesta => {
+                if(respuesta.data.Estatus){
+                    props.onChangeData(2, respuesta.data)
+                }else{
+                    props.resetComplemento(2)
+                    showSuccess(respuesta.data)
+                }
+            })       
+        }else if(idcomplemento === 3 && props.dataComplemento.claveEmbalaje){
+            var catalogo = "c_TipoEmbalaje";
+
+            setState({
+                ...state,
+                catalogo: "c_TipoEmbalaje", 
+                busqueda: "", 
+                complementoSAT: 3,
+                titulo:"Embalaje",
+            })
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveEmbalaje).then(respuesta => {
+                if(respuesta.data.Estatus){
+                    props.onChangeData(3, respuesta.data)
+                }else{
+                    props.resetComplemento(4)
+                    showSuccess(respuesta.data)
+                }
+            })               
+        }else if(idcomplemento === 4 && props.dataComplemento.claveFraccion){
+            var catalogo = "c_FraccionArancelaria";
+
+            setState({
+                ...state,
+                catalogo: "c_FraccionArancelaria", 
+                busqueda: "", 
+                complementoSAT: 4,
+                titulo:"Fracción arancelaria",
+            })
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveFraccion).then(respuesta => {
+                if(respuesta.data.Estatus){
+                    props.onChangeData(4, respuesta.data)
+                }else{
+                    props.resetComplemento(5)
+                    showSuccess(respuesta.data)
+                }
+            })               
+        }else if(idcomplemento === 5 && props.dataComplemento.claveMaterialPeligroso){
+            var catalogo = "c_MaterialPeligroso";
+
+            setState({
+                ...state,
+                catalogo: "c_MaterialPeligroso", 
+                busqueda: "", 
+                complementoSAT: 5,
+                titulo:"Material peligroso",
+            })
+            obtenerSATBusqueda(catalogo,props.dataComplemento.claveMaterialPeligroso).then(respuesta => {
+                if(respuesta.data.Estatus){
+                    props.onChangeData(5, respuesta.data)
+                }else{
+                    props.resetComplemento(3)
+                    showSuccess(respuesta.data)
+                }
+            })        
+        }
+    }
 
     return(
         <div>
@@ -139,6 +355,7 @@ function CrearConceptoSAT(props) {
                                 catalogo={state.catalogo}
                                 setPagina={setPagina}
                                 setBusqueda={(value) => setState({...state, busqueda: value})}
+                                cancel ={props.resetComplemento}
                                 // isProducto={this.state.isProducto}
                             />
 
@@ -190,7 +407,7 @@ function CrearConceptoSAT(props) {
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     label="Clave SAT"
                                     value={props.dataComplemento.claveProducto}
@@ -199,6 +416,17 @@ function CrearConceptoSAT(props) {
                                     onChange={(e)=>{ props.onChangeData(6, e)}}
                                     aria-readonly={true}
                                     disabled={props.consulta}
+                                    InputProps={{
+                                        inputProps:{min: 1}
+                                    }}
+                                    onBlur={(e) => {
+                                        handleClickBuscarClaveSat(1)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(1)
+                                        }
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8}>
@@ -213,6 +441,7 @@ function CrearConceptoSAT(props) {
                                     required
                                     onChange={(e)=>{ props.onChangeData(6, e)}}
                                     aria-readonly={true}
+                                    disabled
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -221,7 +450,9 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"})}>
+                                    onClick={() => cargarDesdeServidor(pagina.page,20,1)  /* handleClickBuscarClaveSat(1) *//* setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"}) */}
+                                    //disabled= {disableSeleccionar.disableProducto}
+                                    >
                                     Seleccionar
                                 </Button>
                             </Grid>
@@ -233,12 +464,24 @@ function CrearConceptoSAT(props) {
                                     className="form-control"
                                     label="Clave SAT"
                                     required
-                                    onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    onChange={(e)=>{ handleChangeSpecial(e)}}
                                     disabled={props.consulta}
                                     value={props.dataComplemento.claveUnidad}
                                     name="claveUnidad"
                                     aria-readonly={true}
+                                    onKeyDown={handleKeyDown}
+                                    onBlur={() => {
+                                        handleClickBuscarClaveSat(2)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(2)
+                                        }
+                                    }}
                                 />
+                                {errores.errorCaracteres &&
+                                    <span style={{ color: 'red' }}>Caracteres especiales no estan permitidos.</span>
+                                }
                             </Grid>
                             <Grid item xs={12} sm={8}>
                                 <TextField
@@ -253,6 +496,7 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.UnidadSAT}
                                     name="UnidadSAT"
                                     aria-readonly={true}
+                                    disabled
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -261,9 +505,8 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() =>
-                                        setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida"})
-                                    }
+                                    onClick={() => cargarDesdeServidor(pagina.page,20,2) /* setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida"}) */ /* handleClickBuscarClaveSat(2) */}
+                                    //disabled= {disableSeleccionar.disableUnidad}
                                 >
                                     Seleccionar
                                 </Button>
@@ -296,8 +539,16 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     required
                                     value={props.dataComplemento.claveMaterialPeligroso}
-                                    onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    onChange={(e)=>{ props.onChangeData(6, e)}/* props.onChangeData(6, e) */}
                                     name="claveMaterialPeligroso"
+                                    onBlur={(e) => {
+                                        handleClickBuscarClaveSat(5)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(5)
+                                        }
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8}>
@@ -312,6 +563,7 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.materialPeligrosoSAT}
                                     name="materialPeligrosoSAT"
                                     onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    disabled
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -320,7 +572,9 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"})}>
+                                    //disabled= {disableSeleccionar.disableMaterialPeligroso}
+                                    name="materialPeligrosoSAT"
+                                    onClick={() => cargarDesdeServidor(pagina.page,20,5) /* setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"}) */}>
                                     Seleccionar
                                 </Button>
                             </Grid>
@@ -335,8 +589,16 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     required
                                     value={props.dataComplemento.claveEmbalaje}
-                                    name="claveSATEmbalaje"
-                                    onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    name="claveEmbalaje"
+                                    onChange={(e)=>  { props.onChangeData(6, e)}}
+                                    onBlur={(e) => {
+                                        handleClickBuscarClaveSat(3)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(3)
+                                        }
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -351,6 +613,7 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.embalajeSAT}
                                     name="embalajeSAT"
                                     onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    disabled
                                 />
                             </Grid>
                             <Grid item xs={12} sm={4}>
@@ -372,7 +635,9 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"})}>
+                                    //disabled= {disableSeleccionar.disableEmbalaje}
+                                    name={"embalajeSAT"}
+                                    onClick={() => cargarDesdeServidor(pagina.page,20,3) /* setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"}) */}>
                                     Seleccionar
                                 </Button>
                             </Grid>
@@ -387,7 +652,15 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     value={props.dataComplemento.claveFraccion}
                                     name="claveFraccion"
-                                    onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    onChange={(e)=> { props.onChangeData(6, e)}}
+                                    onBlur={(e) => {
+                                        handleClickBuscarClaveSat(4)
+                                    }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            handleClickBuscarClaveSat(4)
+                                        }
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8}>
@@ -401,6 +674,7 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.fraccionSAT}
                                     name="fraccionSAT"
                                     onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    disabled
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -409,7 +683,9 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"})}>
+                                    //disabled= {disableSeleccionar.disableFraccion}
+                                    name="fraccionSAT"
+                                    onClick={() => cargarDesdeServidor(pagina.page,20,4) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}>
                                     Seleccionar
                                 </Button>
                             </Grid>
@@ -429,7 +705,7 @@ function CrearConceptoSAT(props) {
                     Cancelar
                 </Button>
                 <Button
-                    type={"submit"}
+                     //type={"submit"}
                     onClick={() => props.handleAceptar(state)}
                     color={"primary"}
                 >

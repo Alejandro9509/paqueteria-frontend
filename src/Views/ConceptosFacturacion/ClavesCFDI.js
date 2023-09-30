@@ -69,10 +69,10 @@ class ClavesCFDI extends Component {
         this.handleChangeChecboxRetencionPredeterminado =
             this.handleChangeChecboxRetencionPredeterminado.bind(this);
         this.requestSearch = this.requestSearch.bind(this);
+        this.cancelar = this.cancelar.bind(this);
     }
 
     componentDidMount() {
-
             this.setState({
                 row:this.props.dataSAT,
                 rowFilter: this.props.dataSAT
@@ -179,11 +179,25 @@ class ClavesCFDI extends Component {
     };
 
     componentWillReceiveProps(props) {
-        console.log(this.props.dataSAT)
         this.setState({
             row:this.props.dataSAT,
             rowFilter: this.props.dataSAT
         })
+    }
+
+    cancelar = () => {
+        if(this.props.catalogo == "c_ClaveProdServCP"){
+            this.props.cancel(1)
+        }else if (this.props.catalogo == "c_ClaveUnidad"){
+            this.props.cancel(2)
+        }else if (this.props.catalogo == "c_MaterialPeligroso"){
+            this.props.cancel(3)
+        }else if (this.props.catalogo == "c_TipoEmbalaje"){
+            this.props.cancel(4)
+        }else if(this.props.catalogo == "c_FraccionArancelaria"){
+            this.props.cancel(5)
+        }
+        this.props.closeDialog()
     }
 
     render() {
@@ -216,7 +230,7 @@ class ClavesCFDI extends Component {
                         <div>
                         <Button
                             variant="contained"
-                            onClick={this.props.closeDialog}
+                            onClick={()=> this.cancelar()}
                             color="primary"
                             style={{marginRight:"10px"}}
                         >

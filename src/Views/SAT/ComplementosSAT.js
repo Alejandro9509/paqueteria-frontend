@@ -23,6 +23,7 @@ import {
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import { confirmAlert } from "react-confirm-alert";
 import e from "cors";
+import { id } from "date-fns/locale";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -55,25 +56,68 @@ function ComplementosSAT(props) {
     })
 
 
-    const resetDataComplemento = () => {
-        setDataComplemento({
-            id:0,
-            cantidad:0,
-            claveProducto: '',
-            claveUnidad: '',
-            claveFraccion:'',
-            comercioExterior: '',
-            esPeligroso: false,
-            claveMaterialPeligroso: '',
-            claveEmbalaje:'',
-            embalajeSAT:'',
-            descripcionEmbalajeSAT:'',
-            peso: 0,
-            UnidadSAT: '',
-            ProductoSAT: '',
-            fraccionSAT:'',
-            materialPeligrosoSAT:'',
-        })
+    const resetDataComplemento = (catalogo) => {
+        if(catalogo == 1){
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveProducto: '',
+                    ProductoSAT: '',
+                }
+            })
+        }else if(catalogo == 2){
+            setDataComplemento(dataComplemento => {
+                return{
+                    ...dataComplemento,
+                    claveUnidad: '',
+                    UnidadSAT: '',    
+                }
+            })
+        }else if(catalogo == 3){
+            setDataComplemento(dataComplemento => {
+                return{
+                    ...dataComplemento,
+                    claveMaterialPeligroso: '',
+                    materialPeligrosoSAT:'',
+                }
+            })
+        }else if(catalogo == 4){
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveEmbalaje:'',
+                    embalajeSAT:'',
+                    descripcionEmbalajeSAT:''
+                }
+            })
+        }else if(catalogo == 5){
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveFraccion:'',
+                    fraccionSAT:'',
+                }
+            })
+        }else{
+            setDataComplemento({
+                id:0,
+                cantidad:0,
+                claveProducto: '',
+                claveUnidad: '',
+                claveFraccion:'',
+                comercioExterior: '',
+                esPeligroso: false,
+                claveMaterialPeligroso: '',
+                claveEmbalaje:'',
+                embalajeSAT:'',
+                descripcionEmbalajeSAT:'',
+                peso: 0,
+                UnidadSAT: '',
+                ProductoSAT: '',
+                fraccionSAT:'',
+                materialPeligrosoSAT:'',
+            })
+        }
     }
 
     function RowMenuCell(propss) {
@@ -261,16 +305,14 @@ function ComplementosSAT(props) {
         },
     ]);
 
-    const handleChangeComplementoSat = (idComplemento, data) => {
+    const handleChangeComplementoSat = (idComplemento, data,caracter) => {
         if (idComplemento === 1){
-            console.log(data.m_sClaveSAT)
-            console.log(data.m_sDescripcion)
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveProducto: data.m_sClaveSAT,
-                    esPeligroso: data.m_bMaterialPeligroso,
-                    esPeligrosoOpcional: data.m_bMaterialPeligrosoOpcional,
+                    claveProducto: (data.m_sClaveSAT).toUpperCase(),
+                    esPeligroso: data.m_bMaterialPeligroso? true:false,
+                    esPeligrosoOpcional: data.m_bMaterialPeligrosoOpcional? true:false,
                     ProductoSAT: data.m_sDescripcion,
                 }
             });
@@ -278,7 +320,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveUnidad: data.m_sClaveSAT,
+                    claveUnidad: (data.m_sClaveSAT).toUpperCase(),
                     UnidadSAT: data.m_sDescripcion,
                 }
             });
@@ -286,7 +328,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveEmbalaje: data.m_sClaveSAT,
+                    claveEmbalaje: (data.m_sClaveSAT).toUpperCase(),
                     embalajeSAT: data.m_sDescripcion
                 }
             });
@@ -294,7 +336,7 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveFraccion: data.m_sClaveSAT,
+                    claveFraccion: (data.m_sClaveSAT).toUpperCase(),
                     fraccionSAT: data.m_sDescripcion
                 }
             });
@@ -302,11 +344,20 @@ function ComplementosSAT(props) {
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveMaterialPeligroso: data.m_sClaveSAT,
+                    claveMaterialPeligroso: (data.m_sClaveSAT).toUpperCase(),
                     materialPeligrosoSAT: data.m_sDescripcion
                 }
             });
+        }else  if (idComplemento === 7){
+            setDataComplemento(dataComplemento =>{
+                return {
+                    ...dataComplemento,
+                    ProductoSAT: data.m_sDescripcion
+
+                }
+            });
         }else{
+            console.log((data.target.value).toUpperCase())
             if (data.target.name === "esPeligroso"){
                 setDataComplemento(dataComplemento =>{
                     return {
@@ -315,12 +366,23 @@ function ComplementosSAT(props) {
                     }
                 });
             }else{
-                setDataComplemento(dataComplemento =>{
-                    return {
-                        ...dataComplemento,
-                        [data.target.name]: data.target.value,
-                    }
-                });
+                if(caracter){
+                    const value = data.target.value;
+                    const sanitizedValue = value.replace(/[^\w\s]/gi, ''); 
+                    setDataComplemento(dataComplemento =>{
+                        return {
+                            ...dataComplemento,
+                            claveUnidad: (sanitizedValue).toUpperCase(),
+                        }
+                    });
+                }else{
+                    setDataComplemento(dataComplemento =>{
+                        return {
+                            ...dataComplemento,
+                            [data.target.name]: (data.target.value).toUpperCase(),
+                        }
+                    });
+                }
             }
 
         }
@@ -469,6 +531,7 @@ function ComplementosSAT(props) {
                                        consulta={props.disabled}
                                        dataComplemento={dataComplemento}
                                        onChangeData={handleChangeComplementoSat}
+                                       resetComplemento={resetDataComplemento}
                         />
                     }
                 </DialogContent>
