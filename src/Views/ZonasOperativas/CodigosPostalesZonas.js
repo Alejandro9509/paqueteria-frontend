@@ -5,17 +5,18 @@ import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerEstadosPais} from "../../Util/Contexts/EstadosContext";
 import CPTransferList from "./CPTransferList";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
-import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
+import {obtenerCodigosPostalesPorEstadoMunicipio,obtenerCodigosPostalesPorEstadoMunicipioDisponibles} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {Autocomplete} from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
 import { CheckBox } from "@material-ui/icons";
+import { showSuccess } from "../../Util/Util";
 
 function not(a, b) {
     return a.filter((value) => b.find(v => v.m_nIdCP == value.m_nIdCP) === undefined);
 }
 
-function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
+function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo}) {
     const [state, setState] = useState({
         idSucursal: '',
         idZona: '',
@@ -162,10 +163,21 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
     }
 
     const getAllCPByEstadoMunicipio = () =>{
-        obtenerCodigosPostalesPorEstadoMunicipio(state.idEstado, state.idMunicipio).then(({data}) => {
-            setAllCP(not(data,state.selectedCP))
-            // setAllCP(data)
-        })
+/*         if(nuevo){
+ */            obtenerCodigosPostalesPorEstadoMunicipioDisponibles(state.idEstado, state.idMunicipio).then(({data}) => {
+                setAllCP(not(data,state.selectedCP))
+                if (data.length==0){
+                    showSuccess("No hay codigos postales disponibles.")
+                }
+                // setAllCP(data)
+            })
+/*         }else{
+            obtenerCodigosPostalesPorEstadoMunicipio(state.idEstado, state.idMunicipio).then(({data}) => {
+                setAllCP(not(data,state.selectedCP))
+                // setAllCP(data)
+            })
+        } */
+
     }
 
     return(
