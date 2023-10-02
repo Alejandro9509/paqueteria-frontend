@@ -123,6 +123,7 @@ function ParametrosConfiguracion() {
         plantillaImportarEmbarquesNombreArchivo: '',
         modificarValorEmbarque:false,
         foliosPorSucursal: false,
+        fijarCapturaValorDeclarado: false,
         documentos:[],
         factorConversion: 0.0
     })
@@ -259,9 +260,10 @@ function ParametrosConfiguracion() {
                     tipoTimbrado: respuesta.data.TipoTimbrado,
                     plantillaImportarEmbarquesBase64: "",
                     plantillaImportarEmbarquesNombreArchivo: "",
+                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado,
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal,
                     documentos: respuesta.data.documentos || [],
-                    factorConversion: respuesta.data.FactorConversion
+                    factorConversion: respuesta.data.FactorConversion,
                 }
             })
 
@@ -693,6 +695,21 @@ function ParametrosConfiguracion() {
                                             style={{transform: "scale(2)"}}
                                             inputProps={{'aria-label': 'primary checkbox'}}
                                             name="limpiarProducto"
+                                        />
+                                    </Box>
+                                </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <h2>Fijar captura de Valor Declarado</h2>
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <Checkbox
+                                            checked={configuraciones.fijarCapturaValorDeclarado}
+                                            color="primary"
+                                            style={{transform: "scale(2)"}}
+                                            inputProps={{'aria-label': 'primary checkbox'}}
+                                            name="fijarCapturaValorDeclarado"
+                                            disabled
                                         />
                                     </Box>
                                 </Box>
