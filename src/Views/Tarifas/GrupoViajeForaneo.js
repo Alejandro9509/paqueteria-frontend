@@ -9,8 +9,10 @@ import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/AddBox";
+import DialogoNuevoPorcentaje from "./DialogoNuevoPorcentaje";
 
 export default function GrupoViajeForaneo(props){
+    const UNIDADES_MEDIDA = {KILOGRAMOS: 21, TONELADAS: 48, PIEZAS: 38, PORCIENTO: 55}
     const [state, setState] = useState({
         idGrupo: props.grupo.idGrupo || Math.floor(Math.random() * 10000),
         nombre: props.grupo.nombre || '',
@@ -117,6 +119,49 @@ export default function GrupoViajeForaneo(props){
         })
     }
 
+    const [dialogPorcentaje, setDialogPorcentaje] = useState({
+        showDialog: false,
+        selection: null,
+        isEdit: false
+    })
+    const handleShowDialogPorcentaje = (show) => {
+        if (show){
+            setDialogPorcentaje({
+                ...dialogPorcentaje,
+                showDialog: show,
+            })
+        }else {
+            setDialogPorcentaje({
+                ...dialogPorcentaje,
+                showDialog: false,
+                selection: null,
+                isEdit: false
+            })
+        }
+    }
+    const handleConfirmPorcentaje = (rango) => {
+        let newRangos = []
+        if (dialogPorcentaje.isEdit){
+            newRangos = state.rangos.filter(i => i.id !== rango.id)
+            newRangos.push(rango)
+        }else{
+            state.rangos.forEach(i => newRangos.push(i))
+            newRangos.push(rango)
+        }
+        setState({
+            ...state,
+            rangos: newRangos
+        })
+
+        setDialogPorcentaje({
+            ...dialogPorcentaje,
+            showDialog: false,
+            idViaje: null,
+            selection: null,
+            isEdit: false
+        })
+    }
+
     const [dialogProdutos, setDialogProdutos] = useState({
         showDialog: false,
         selection: [],
@@ -157,12 +202,22 @@ export default function GrupoViajeForaneo(props){
     }
 
     const handleOnEditRow = (row) => {
-        setDialogRangos({
-            ...dialogRangos,
-            showDialog: true,
-            selection: row,
-            isEdit: true
-        })
+        if (props.mode === 'PORCENTAJE') {
+            setDialogPorcentaje({
+                ...dialogPorcentaje,
+                showDialog: true,
+                selection: row,
+                isEdit: true
+            })
+        } else {
+            setDialogRangos({
+                ...dialogRangos,
+                showDialog: true,
+                selection: row,
+                isEdit: true
+            })
+        }
+
     }
 
     const handleChangeRangosViaje = (newRangos) => {
@@ -217,6 +272,18 @@ export default function GrupoViajeForaneo(props){
                 />
             }
             {
+                dialogPorcentaje.showDialog &&
+                <DialogoNuevoPorcentaje
+                    handleOnConfirmData={handleConfirmPorcentaje}
+                    rango={dialogPorcentaje.selection}
+                    tiposCalculoListado={props.tiposCalculoListado}
+                    unidadesMedidaListado={props.unidadesMedidaListado}
+                    handleShowDialog={handleShowDialogPorcentaje}
+                    openDialog={dialogPorcentaje.showDialog}
+                    rows={props.grupo.rangos}
+                />
+            }
+            {
                 dialogProdutos.showDialog &&
                 <DialogTransferList
                     handleShowDialog={handleShowDialogProductos}
@@ -247,15 +314,26 @@ export default function GrupoViajeForaneo(props){
                             onDeleteRow={handleOnDeleteRow}
                             onChangeList={handleChangeRangosViaje}
                             disabled={props.disabled}
+                            mode={props.mode}
                         />
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"}
-                                onClick={() => handleShowDialogRangos( true)} disabled={props.disabled}>
-                            <AddIcon fontSize={'large'} />
-                            &nbsp;&nbsp;Agregar Rangos
-                        </Button>
+                        { props.mode === 'PORCENTAJE' ?
+                            (<Button fullWidth variant={"contained"} color={"primary"}
+                                     onClick={() => handleShowDialogPorcentaje(true)}
+                                     disabled={props.disabled || (state.rangos.length > 0)}>
+                                <AddIcon fontSize={'large'}/>
+                                &nbsp;&nbsp;Agregar Porcentaje
+                            </Button>)
+                                :
+                            (<Button fullWidth variant={"contained"} color={"primary"}
+                                    onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
+                                <AddIcon fontSize={'large'}/>
+                                &nbsp;&nbsp;Agregar Rangos
+                            </Button>)
+                        }
                     </Grid>
+
                 </Grid>
             </SimpleAccordion>
         </div>

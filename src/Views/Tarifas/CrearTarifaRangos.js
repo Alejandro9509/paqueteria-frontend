@@ -108,7 +108,7 @@ export default function CrearTarifaRangos(props) {
             return
         }
         obtenerUnidadesMedida().then(respuesta => {
-            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38))
+            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38 || i.IdUnidadMedida === 55))
         })
     }
     const getOrigenesDestinos = () => {
@@ -472,11 +472,13 @@ export default function CrearTarifaRangos(props) {
             v.grupos.forEach(g => {
                 g.conceptos = g.rangos.map(rango => ({
                         idConceptoFacturacion: props.configuraciones.IdConceptoFlete,
-                        importe: rango.importe,
-                        minimo: rango.minimo,
-                        maximo: rango.maximo,
-                        idTipoCalculo: rango.idTipoCalculo,
-                        idUnidadMedida: rango.idUnidadMedida
+                        importe: rango.importe || 0,
+                        minimo: rango.minimo || 0,
+                        maximo: rango.maximo || 0,
+                        idTipoCalculo: rango.idTipoCalculo || 0,
+                        idUnidadMedida: rango.idUnidadMedida,
+                        porcentaje: rango.porcentaje || 0,
+
                     })
                 )
                 g.zonas.forEach(zona => {
@@ -530,7 +532,6 @@ export default function CrearTarifaRangos(props) {
         if (value !== null){
             obtenerTarifaRangosById(value.IdTarifa).then(respuesta => {
                 let selection = setDataParaConsultar(respuesta.data)
-                console.log(selection)
                 setViajesLocalesListado(selection?.viajesLocales)
                 setManiobrasTarifa(selection?.maniobras)
                 setViajesForaneosListado(selection?.viajesForaneos)
@@ -605,6 +606,7 @@ export default function CrearTarifaRangos(props) {
                     idUnidadMedida: rango.IdUnidadMedida || null,
                     tipoCalculo: rango.TipoCalculo || '',
                     unidadMedida: rango.UnidadMedida || '',
+                    porcentaje: rango.Porcentaje || 0,
                 })),
                 productos: data.Productos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
                     m_nIdProducto: j.IdProducto,

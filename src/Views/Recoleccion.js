@@ -272,6 +272,7 @@ function Recoleccion() {
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
         factorConversion: 0.0,
+        fijarCapturaValorDeclarado: false
     })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
@@ -699,6 +700,7 @@ function Recoleccion() {
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                     idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                     factorConversion: respuesta.data.FactorConversion || 0.0,
+                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
                 }
             })
         })
@@ -3942,7 +3944,7 @@ function Recoleccion() {
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
-                                                                           disabled={(state.agregar === "Consultar") || !state.aplicaSeguro || state.recoleccionConEmbarque}
+                                                                           disabled={(state.agregar === "Consultar") || configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro || state.recoleccionConEmbarque}
                                                                            label="Valor Declarado"
                                                                            onChange={(event) => {
                                                                                event.preventDefault();
