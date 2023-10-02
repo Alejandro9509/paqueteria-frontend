@@ -175,12 +175,21 @@ function obtenerGuiaReporteEtiqueta(id) {
     );
     return result
 }
-function obtenerGuiaReporteEtiquetaParcial(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasParcialesGuia`;
+function validarRangosEtiqueta(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/ValidarRangosEtiqueta`;
     let result;
     trackPromise(
         // result =  axios.get(url, { headers })
         result =  axios.post(url, params, { headers })
+    );
+    return result
+}
+function obtenerGuiaReporteEtiquetaGuiaRangos(idImpresion) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuiaRangos/${idImpresion}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        // result =  axios.post(url, params, { headers })
     );
     return result
 }
@@ -300,7 +309,16 @@ function enviarCorreoGuia(idGuia, correos, correoDefault){
     return result
 }
 
+function obtenerPaquetesGuia(idGuia) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetPaquetes/`+idGuia;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 
 export {cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaParcial,enviarCorreoGuia}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaGuiaRangos,enviarCorreoGuia,obtenerPaquetesGuia,validarRangosEtiqueta}

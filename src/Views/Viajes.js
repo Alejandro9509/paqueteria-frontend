@@ -5,7 +5,6 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import BasicTable from "./BasicTable";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
