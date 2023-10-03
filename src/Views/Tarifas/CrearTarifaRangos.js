@@ -341,6 +341,8 @@ export default function CrearTarifaRangos(props) {
     /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
     const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
 
+    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38)
+
     const filtrarUnidadesMedidaManiobras = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
     const filtrarTiposCalculoManiobras = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
 
@@ -741,7 +743,7 @@ export default function CrearTarifaRangos(props) {
                                 handleChangeViajeLocal={handleChangeViajeLocal}
                                 conceptosListado={filtrarConceptosViajeLocal}
                                 tiposCalculoListado={tiposCalculoListado}
-                                unidadesMedidaListado={unidadesMedidaListado}
+                                unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
                                 handleDeleteViajeLocal={handleDeleteViajeLocal}
                                 zonasListado={zonasListado}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
