@@ -92,6 +92,16 @@ export default function DialogoNuevoPorcentaje(props) {
             })
             valid = false
         }
+        if ((parseFloat(rango.porcentaje) > 100)) {
+            setErrores(errores => {
+                return {
+                    ...errores,
+                    porcentaje: true,
+                    descripcionError: "El valor porcentaje no puede ser superior a 100"
+                }
+            })
+            valid = false
+        }
         return valid
     }
 
@@ -158,6 +168,7 @@ export default function DialogoNuevoPorcentaje(props) {
                                    label="Porcentaje"
                                    style={{textAlign: "right"}}
                                    min="0"
+                                   max="100"
                                    value={rango.porcentaje}
                                    name="porcentaje"
                                    error={errores.porcentaje}

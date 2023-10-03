@@ -1134,7 +1134,10 @@ function Embarque(props) {
             showSuccess("El responsable de pago es un dato requerido");
             return valid;
         }
-
+        if (configuraciones.fijarCapturaValorDeclarado && parseFloat(state.valorDeclarado) === 0) {
+            showSuccess("El valor declarado no puede ser cero debido a la configuración.");
+            return valid;
+        }
         /**REMITENTE*/
         if (!esDatoValido(remitente.idRemitente)) {
             showSuccess("El remitente es un dato requerido");
