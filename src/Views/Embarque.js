@@ -3385,7 +3385,7 @@ function Embarque(props) {
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 {/*  */}
-                            <form className="j-forms row" onSubmit={e => {e.preventDefault(); e.stopPropagation()}}  onKeyDown={e => {
+                            <form className="j-forms row" onSubmit={handleAceptar}  onKeyDown={e => {
                                 if (e.code === 13) {
                                     e.preventDefault()
                                 }
