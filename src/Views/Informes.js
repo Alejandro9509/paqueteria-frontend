@@ -129,25 +129,25 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
-    const [openDialog, setOpenDialog] = useState(false)
-    const [dataReportes, setDataReportes] = useState([])
-    const [seleccion, setSeleccion] = useState(null)
+    // const [openDialog, setOpenDialog] = useState(false)
+    // const [dataReportes, setDataReportes] = useState([])
+    // const [seleccion, setSeleccion] = useState(null)
 
 
-    useEffect(()=>{
-
-        if( localStorage.getItem("RFC")==="ECC9510049KA"){
-            obtenerFormatosImpresionProceso(222).then(({data}) => {
-                setDataReportes(data)
-            })
-        }
-        else{
-            obtenerFormatosImpresionProceso(214).then(({data}) => {
-                setDataReportes(data)
-            })
-        }
-
-    }, [])
+    // useEffect(()=>{
+    //
+    //     if( localStorage.getItem("RFC")==="ECC9510049KA"){
+    //         obtenerFormatosImpresionProceso(222).then(({data}) => {
+    //             setDataReportes(data)
+    //         })
+    //     }
+    //     else{
+    //         obtenerFormatosImpresionProceso(214).then(({data}) => {
+    //             setDataReportes(data)
+    //         })
+    //     }
+    //
+    // }, [])
     const handleChange = (event) => {
         setState({
             ...state,
@@ -229,14 +229,14 @@ function Informes({history}) {
                         >
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
-                        <Tooltip title="Reporte opción 1">
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporteOpcion1(row.row)}
-                               disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
-                                                                      style={{color: "#F9A03E"}}/></a>
+                        {/*<Tooltip title="Reporte opción 1">*/}
+                        {/*    <a className="btn btn-default btn-xs"*/}
+                        {/*       onClick={() => generarReporteOpcion1(row.row)}*/}
+                        {/*       disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"*/}
+                        {/*                                              style={{color: "#F9A03E"}}/></a>*/}
 
-                        </Tooltip>
-                        <Tooltip title="Reporte opción 2">
+                        {/*</Tooltip>*/}
+                        <Tooltip title="Reporte">
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row)}
                                disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
@@ -341,28 +341,49 @@ function Informes({history}) {
         },
     ]);
 
-    function generarReporteOpcion1(row) {
-        obtenerInformeReporte(row.m_nIdInforme).then(({data}) => {
-            /*let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+    // function generarReporteOpcion1(row) {
+    //     obtenerInformeReporte(row.m_nIdInforme).then(({data}) => {
+    //         /*let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Informe " + folio;*/
+    //         try {
+    //             const link = document.createElement('a');
+    //             link.href = "data:application/pdf;base64," + data;
+    //             link.setAttribute('download', "Informe " + row.m_sFolioInforme.replace(/\./g, ' '));
+    //             document.body.appendChild(link);
+    //             link.click();
+    //         } catch (e) {
+    //             console.log(e)
+    //             showSuccess("No se pudo descargar el pdf")
+    //         }
+    //     })
+    // }
+    async function generarReporte(row) {
+        let listadoReportes = []
+        if (localStorage.getItem("RFC") === "ECC9510049KA") {
+            await obtenerFormatosImpresionProceso(222).then(({data}) => {
+                // setDataReportes(data)
+                listadoReportes = data
+            })
+        } else {
+            await obtenerFormatosImpresionProceso(214).then(({data}) => {
+                // setDataReportes(data)
+                listadoReportes = data
+            })
+        }
+        if (listadoReportes.length === 0) {
+            showError("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
+            return
+        }
+        imprimirFormatosIdIdTipoReporte(listadoReportes[listadoReportes.length - 1].m_nIdFormato, row.m_nIdInforme).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe " + folio;*/
-            try {
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Informe " + row.m_sFolioInforme.replace(/\./g, ' '));
-                document.body.appendChild(link);
-                link.click();
-            } catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
-            }
+            pdfWindow.document.title = "Informe" + row.m_sFolioInforme.replace(/\./g, ' ');
         })
-    }
-    function generarReporte(row) {
-
-        setSeleccion(row)
-        setOpenDialog(true)
+        // setSeleccion(row)
+        // setOpenDialog(true)
 
         /*obtenerInformeReporte(id).then(({data}) => {
             /!*let pdfWindow = window.open("");
@@ -381,36 +402,36 @@ function Informes({history}) {
             }
         })*/
     }
-    const handleOnChangeReporte = (data) => {
-        console.log(data)
-        setState({
-            ...state,
-            reporteSeleccionado: data
-        })
-    }
-    const handleGenerarReporte=(e)=>{
-        e.preventDefault()
-        console.log(state.reporteSeleccionado)
-        console.log(seleccion)
-
-        if (state.reporteSeleccionado.length === 0) {
-            showError("Es necesario seleccionar al menos un reporte")
-            return
-        }
-
-        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdInforme).then(({data}) => {
-            console.log(data)
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe" + seleccion.m_sFolioInforme.replace(/\./g, ' ');
-        })
-        setState({
-            ...state,
-            reporteSeleccionado: null
-        })
-        setOpenDialog(false)
-    }
+    // const handleOnChangeReporte = (data) => {
+    //     console.log(data)
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: data
+    //     })
+    // }
+    // const handleGenerarReporte=(e)=>{
+    //     e.preventDefault()
+    //     console.log(state.reporteSeleccionado)
+    //     console.log(seleccion)
+    //
+    //     if (state.reporteSeleccionado.length === 0) {
+    //         showError("Es necesario seleccionar al menos un reporte")
+    //         return
+    //     }
+    //
+    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdInforme).then(({data}) => {
+    //         console.log(data)
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Informe" + seleccion.m_sFolioInforme.replace(/\./g, ' ');
+    //     })
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: null
+    //     })
+    //     setOpenDialog(false)
+    // }
 
     function handleSelectDatos(id, cp) {
         setState({
@@ -1074,70 +1095,70 @@ function Informes({history}) {
     return (
         <div>
 
-            {
-                openDialog &&
-                <Dialog
-                    open={openDialog}
-                    onClose={() => setOpenDialog(false)}
-                    fullWidth maxWidth="md"
-                >
-                    <DialogTitle>
-                        Reporte de Informe
-                    </DialogTitle>
-                    <DialogContent>
-                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <form onSubmit={handleGenerarReporte}>
-                                <Grid container spacing={1}>
-                                    <Grid item sm={6}>
-                                        <FormControl
-                                            className="input select"
-                                            fullWidth variant="outlined"
-                                            required
-                                            margin="dense">
-                                            <InputLabel
-                                                id="idReporteLabel">Formato de Reporte</InputLabel>
-                                            <Select
-                                                fullWidth
-                                                labelId="idReporteLabel"
-                                                label="Reporte"
-                                                className="form-control"
-                                                value={state.reporteSeleccionado ?? ''}
-                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
-                                                name="reporteSeleccionado"
-                                            >
-                                                {dataReportes.map((reporte) => (
-                                                    <MenuItem
-                                                        key={reporte.m_nIdFormato}
-                                                        value={reporte.m_nIdFormato}
-                                                    >
-                                                        {reporte.m_sFormato}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <DialogActions>
+            {/*{*/}
+            {/*    openDialog &&*/}
+            {/*    <Dialog*/}
+            {/*        open={openDialog}*/}
+            {/*        onClose={() => setOpenDialog(false)}*/}
+            {/*        fullWidth maxWidth="md"*/}
+            {/*    >*/}
+            {/*        <DialogTitle>*/}
+            {/*            Reporte de Informe*/}
+            {/*        </DialogTitle>*/}
+            {/*        <DialogContent>*/}
+            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
+            {/*                <form onSubmit={handleGenerarReporte}>*/}
+            {/*                    <Grid container spacing={1}>*/}
+            {/*                        <Grid item sm={6}>*/}
+            {/*                            <FormControl*/}
+            {/*                                className="input select"*/}
+            {/*                                fullWidth variant="outlined"*/}
+            {/*                                required*/}
+            {/*                                margin="dense">*/}
+            {/*                                <InputLabel*/}
+            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
+            {/*                                <Select*/}
+            {/*                                    fullWidth*/}
+            {/*                                    labelId="idReporteLabel"*/}
+            {/*                                    label="Reporte"*/}
+            {/*                                    className="form-control"*/}
+            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
+            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
+            {/*                                    name="reporteSeleccionado"*/}
+            {/*                                >*/}
+            {/*                                    {dataReportes.map((reporte) => (*/}
+            {/*                                        <MenuItem*/}
+            {/*                                            key={reporte.m_nIdFormato}*/}
+            {/*                                            value={reporte.m_nIdFormato}*/}
+            {/*                                        >*/}
+            {/*                                            {reporte.m_sFormato}*/}
+            {/*                                        </MenuItem>*/}
+            {/*                                    ))}*/}
+            {/*                                </Select>*/}
+            {/*                            </FormControl>*/}
+            {/*                        </Grid>*/}
+            {/*                    </Grid>*/}
+            {/*                    <DialogActions>*/}
 
-                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
-                                        setOpenDialog(false)
-                                        setState({
-                                            ...state,
-                                            reporteSeleccionado: null
-                                        })
-                                    }
-                                    }>
-                                        Cancelar
-                                    </button>
-                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
-                                        Aceptar
-                                    </button>
-                                </DialogActions>
-                            </form>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            }
+            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
+            {/*                            setOpenDialog(false)*/}
+            {/*                            setState({*/}
+            {/*                                ...state,*/}
+            {/*                                reporteSeleccionado: null*/}
+            {/*                            })*/}
+            {/*                        }*/}
+            {/*                        }>*/}
+            {/*                            Cancelar*/}
+            {/*                        </button>*/}
+            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
+            {/*                            Aceptar*/}
+            {/*                        </button>*/}
+            {/*                    </DialogActions>*/}
+            {/*                </form>*/}
+            {/*            </div>*/}
+            {/*        </DialogContent>*/}
+            {/*    </Dialog>*/}
+            {/*}*/}
 
             <Dialog
                 open={state.openDialog}
