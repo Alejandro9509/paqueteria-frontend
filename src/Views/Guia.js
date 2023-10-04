@@ -180,6 +180,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
+const FORMATOS_IMPRESION = {
+    GUIA: 212,
+    ETIQUETAS: 213,
+    ETIQUETAS_RANGOS: 223
+}
+
 function Guia(props) {
     let today = new Date();
     let React = require('react');
@@ -331,13 +337,13 @@ function Guia(props) {
         paquetesGuiaEtiquetasIndividuales: []
 
     })
-    const [openDialog, setOpenDialog] = useState(false)
-    const [dataReportes, setDataReportes] = useState([])
-    const [seleccion, setSeleccion] = useState(null)
-    const [openDialogEtiqueta, setOpenDialogEtiqueta] = useState(false)
-    const [dataReportesEtiqueta, setDataReportesEtiqueta] = useState([])
-    const [seleccionEtiqueta, setSeleccionEtiqueta] = useState(null)
-    const [dataReporteEtiquetaRangos, setDataReporteEtiquetaRangos] = useState(null)
+    // const [openDialog, setOpenDialog] = useState(false)
+    // const [dataReportes, setDataReportes] = useState([])
+    // const [seleccion, setSeleccion] = useState(null)
+    // const [openDialogEtiqueta, setOpenDialogEtiqueta] = useState(false)
+    // const [dataReportesEtiqueta, setDataReportesEtiqueta] = useState([])
+    // const [seleccionEtiqueta, setSeleccionEtiqueta] = useState(null)
+    // const [dataReporteEtiquetaRangos, setDataReporteEtiquetaRangos] = useState(null)
 
     const columns = React.useMemo(() => [
         {
@@ -361,13 +367,6 @@ function Guia(props) {
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        {/*<Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101462)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporteOpcion1(row.row)}><i
-                                className="zmdi zmdi-file"
-                                style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>*/}
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row)}><i
@@ -394,7 +393,7 @@ function Guia(props) {
 
                         </Tooltip>
                         <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs" onClick={() => handleOnClickDescargarEtiqutas(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
+                            <a className="btn btn-default btn-xs" onClick={() => handleOnClickDescargarEtiquetas(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
 
@@ -1199,25 +1198,29 @@ function Guia(props) {
         currency: 'USD',
     });
 
-    function generarReporteOpcion1(row) {
-        obtenerGuiaReporte(row.m_nIdGuia).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + row.m_nFolioGuia;
-        })
-    }
     function generarReporte(row) {
         // console.log(row)
         // setSeleccion(row)
         // setOpenDialog(true)
-        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, row.m_nIdGuia).then(({data}) => {
-            console.log(data)
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then((respuesta) => {
+            // setDataReportes(data)
+            // setState(state => {
+            //     return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
+            // })
+            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+            })
         })
+        // imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, row.m_nIdGuia).then(({data}) => {
+        //     console.log(data)
+        //     let pdfWindow = window.open("");
+        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //     pdfWindow.document.body.style.margin = "0px";
+        //     pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+        // })
         /*obtenerGuiaReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
@@ -1226,45 +1229,43 @@ function Guia(props) {
         })*/
     }
 
-    const handleOnChangeReporte = (data) => {
-        console.log(data)
-        setState({
-            ...state,
-            reporteSeleccionado: data
-        })
-    }
-    const handleGenerarReporte=(e)=>{
-        e.preventDefault()
-        console.log(state.reporteSeleccionado)
-        console.log(seleccion)
+    // const handleOnChangeReporte = (data) => {
+    //     console.log(data)
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: data
+    //     })
+    // }
+    // const handleGenerarReporte=(e)=>{
+    //     e.preventDefault()
+    //     console.log(state.reporteSeleccionado)
+    //     console.log(seleccion)
+    //
+    //     if (state.reporteSeleccionado.length === 0) {
+    //         showError("Es necesario seleccionar al menos un reporte")
+    //         return
+    //     }
+    //
+    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdGuia).then(({data}) => {
+    //         console.log(data)
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Guía" + seleccion.m_nFolioGuia;
+    //     })
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: null
+    //     })
+    //     setOpenDialog(false)
+    // }
 
-        if (state.reporteSeleccionado.length === 0) {
-            showError("Es necesario seleccionar al menos un reporte")
-            return
-        }
-
-        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdGuia).then(({data}) => {
-            console.log(data)
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía" + seleccion.m_nFolioGuia;
-        })
-        setState({
-            ...state,
-            reporteSeleccionado: null
-        })
-        setOpenDialog(false)
-    }
-
-
-    function handleOnClickDescargarEtiqutas(id, folio) {
+    /**REACCIONA AL CLICK DEL BOTON PDF ETIQUETAS DEL LISTADO*/
+    function handleOnClickDescargarEtiquetas(id, folio) {
         if (state.imprimirEtiquetasIndividuales) {
             confirmarEtiquetasAdicionalesDialog()
                 .then(resultado => {
                     // El usuario hizo clic en "Sí", resultado es true
-                    console.log('Usuario hizo clic en Sí', resultado);
-                    // Aquí puedes realizar acciones relacionadas con "Sí"
                     obtenerPaquetesGuia(id).then(respuesta => {
                         let paquetesGuia = respuesta.data.map((i) => ({
                             idPaquete: i.m_nIdEmbarqueDetalle,
@@ -1284,114 +1285,174 @@ function Guia(props) {
                 })
                 .catch(resultado => {
                     // El usuario hizo clic en "No", resultado es false
-                    generarReporteEtiquetas(id, folio)
+                    descargarPdfEtiquetas(id, folio)
                 });
 
         } else {
-            generarReporteEtiquetas(id, folio)
+            descargarPdfEtiquetas(id, folio)
         }
 
     }
 
-    const generarReporteEtiquetas = (id, folio) => {
-        obtenerGuiaReporteEtiqueta(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio.replace('.','');
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Guía " + folio.replace('.',''));
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
-            }
-        })
-    }
-
-    function generarReporteEtiquetasIndividuales(params) {
-        params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
-        validarRangosEtiqueta(params).then((respuesta) => {
-            if (dataReporteEtiquetaRangos === null || !(dataReporteEtiquetaRangos.m_nIdFormato > 0)) {
-                showError("No hay formato de etiqueta adicional en el sistema. Comuniquese con la oficinas de GM.")
-                return
-            }
-            imprimirFormatosIdIdTipoReporte(dataReporteEtiquetaRangos.m_nIdFormato,respuesta.data.idImpresion).then(({data}) => {
+    /**DESCARGA PDF CON ETIQUETAS NORMALES (CON QR)*/
+    const descargarPdfEtiquetas = (id, folio) => {
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS).then((respuesta) => {
+            // setDataReportesEtiqueta(data)
+            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, id).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Guía Etiqueta" + folio;
                 try{
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
                     const link = document.createElement('a');
                     link.href = "data:application/pdf;base64," + data.m_sArchivo;
-                    link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
+                    link.setAttribute('download', "Guía " + folio.replace('.',''));
                     document.body.appendChild(link);
                     link.click();
                 }catch (e) {
                     console.log(e)
                     showSuccess("No se pudo descargar el pdf")
                 }
-                setState({
-                    ...state,
-                    paquetesGuiaEtiquetasIndividuales: []
-                })
             })
         })
+        // obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+        //     let pdfWindow = window.open("");
+        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+        //     pdfWindow.document.body.style.margin = "0px";
+        //     pdfWindow.document.title = "Guía " + folio.replace('.','');
+        //     try{
+        //         const link = document.createElement('a');
+        //         link.href = "data:application/pdf;base64," + data;
+        //         link.setAttribute('download', "Guía " + folio.replace('.',''));
+        //         document.body.appendChild(link);
+        //         link.click();
+        //     }catch (e) {
+        //         console.log(e)
+        //         showSuccess("No se pudo descargar el pdf")
+        //     }
+        // })
     }
 
-    function generarReporteEtiqueta(row) {
-        setSeleccionEtiqueta(row)
-        setOpenDialogEtiqueta(true)
-        /*obtenerGuiaReporteEtiqueta(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
-        })*/
-    }
-    const handleOnChangeReporteEtiqueta = (data) => {
-
-        setState({
-            ...state,
-            reporteSeleccionado: data
+    /**DESCARGA PDF CON ETIQUETAS INDIVIDUALES (SIN QR)*/
+    function descargarPdfEtiquetasIndividuales(params) {
+        params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
+        validarRangosEtiqueta(params).then((respuesta) => {
+            let impresionData = respuesta.data
+            // if (dataReporteEtiquetaRangos === null || !(dataReporteEtiquetaRangos.m_nIdFormato > 0)) {
+            //     showError("No hay formato de etiqueta adicional en el sistema. Comuniquese con la oficinas de GM.")
+            //     return
+            // }
+            obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS_RANGOS).then((respuesta) => {
+                if (respuesta.data.length === 0) {
+                    // setDataReporteEtiquetaRangos(data[0])
+                    showError("No hay formato de etiqueta adicional en el sistema. Comuniquese con la oficinas de GM.")
+                    return
+                }
+                imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato,impresionData.idImpresion).then(({data}) => {
+                    try{
+                        let pdfWindow = window.open("");
+                        pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                        pdfWindow.document.body.style.margin = "0px";
+                        pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
+                        const link = document.createElement('a');
+                        link.href = "data:application/pdf;base64," + data.m_sArchivo;
+                        link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
+                        document.body.appendChild(link);
+                        link.click();
+                    }catch (e) {
+                        console.log(e)
+                        showSuccess("No se pudo descargar el pdf")
+                    }
+                    setState({
+                        ...state,
+                        paquetesGuiaEtiquetasIndividuales: []
+                    })
+                })
+            })
+            // imprimirFormatosIdIdTipoReporte(dataReporteEtiquetaRangos.m_nIdFormato,respuesta.data.idImpresion).then(({data}) => {
+            //     try{
+            //         let pdfWindow = window.open("");
+            //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            //         pdfWindow.document.body.style.margin = "0px";
+            //         pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
+            //         const link = document.createElement('a');
+            //         link.href = "data:application/pdf;base64," + data.m_sArchivo;
+            //         link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
+            //         document.body.appendChild(link);
+            //         link.click();
+            //     }catch (e) {
+            //         console.log(e)
+            //         showSuccess("No se pudo descargar el pdf")
+            //     }
+            //     setState({
+            //         ...state,
+            //         paquetesGuiaEtiquetasIndividuales: []
+            //     })
+            // })
         })
     }
-    const handleGenerarReporteEtiqueta=(e)=>{
-        e.preventDefault()
-        console.log(state.reporteSeleccionado)
-        console.log(seleccion)
 
-        if (state.reporteSeleccionado.length === 0) {
-            showError("Es necesario seleccionar al menos un reporte")
-            return
-        }
+    /**ABRE DIALOGO PARA SELECCIONAR FORMATO DE ETIQUETAS*/
+    // function generarReporteEtiqueta(row) {
+    //     setSeleccionEtiqueta(row)
+    //     setOpenDialogEtiqueta(true)
+    //     /*obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Guía " + folio;
+    //     })*/
+    // }
 
-        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccionEtiqueta.m_nIdGuia).then(({data}) => {
-            console.log(data)
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía Etiqueta" + seleccionEtiqueta.m_nFolioGuia;
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data.m_sArchivo;
-                link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia.replace('.',''));
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
-            }
-        })
-        setState({
-            ...state,
-            reporteSeleccionado: null
-        })
-        setOpenDialogEtiqueta(false)
-    }
+    /**DESCARGA PDF DE ETIQUETAS NORMALES (CON QR)*/
+    // const handleGenerarReporteEtiqueta=(e)=> {
+    //     e.preventDefault()
+        // if (state.reporteSeleccionado.length === 0) {
+        //     showError("Es necesario seleccionar al menos un reporte")
+        //     return
+        // }
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS).then((respuesta) => {
+        //     // setDataReportesEtiqueta(data)
+        //     imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, seleccionEtiqueta.m_nIdGuia).then(({data}) => {
+        //         let pdfWindow = window.open("");
+        //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //         pdfWindow.document.body.style.margin = "0px";
+        //         pdfWindow.document.title = "Guía Etiqueta" + seleccionEtiqueta.m_nFolioGuia;
+        //         try{
+        //             const link = document.createElement('a');
+        //             link.href = "data:application/pdf;base64," + data.m_sArchivo;
+        //             link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia.replace('.',''));
+        //             document.body.appendChild(link);
+        //             link.click();
+        //         }catch (e) {
+        //             console.log(e)
+        //             showSuccess("No se pudo descargar el pdf")
+        //         }
+        //     })
+        // })
+        // imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccionEtiqueta.m_nIdGuia).then(({data}) => {
+        //     console.log(data)
+        //     let pdfWindow = window.open("");
+        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //     pdfWindow.document.body.style.margin = "0px";
+        //     pdfWindow.document.title = "Guía Etiqueta" + seleccionEtiqueta.m_nFolioGuia;
+        //     try{
+        //         const link = document.createElement('a');
+        //         link.href = "data:application/pdf;base64," + data.m_sArchivo;
+        //         link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia.replace('.',''));
+        //         document.body.appendChild(link);
+        //         link.click();
+        //     }catch (e) {
+        //         console.log(e)
+        //         showSuccess("No se pudo descargar el pdf")
+        //     }
+        // })
+        // setState({
+        //     ...state,
+        //     reporteSeleccionado: null
+        // })
+        // setOpenDialogEtiqueta(false)
+    // }
 
     /**Entreando a guias por primera vez*/
     useEffect(value => {
@@ -1426,20 +1487,20 @@ function Guia(props) {
 
         }
         getAllDataTipoCobro()
-        obtenerFormatosImpresionProceso(212).then(({data}) => {
-            setDataReportes(data)
-            setState(state => {
-                return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
-            })
-        })
-        obtenerFormatosImpresionProceso(213).then(({data}) => {
-            setDataReportesEtiqueta(data)
-        })
-        obtenerFormatosImpresionProceso(223).then(({data}) => {
-            if (data.length > 0) {
-                setDataReporteEtiquetaRangos(data[0])
-            }
-        })
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then(({data}) => {
+        //     setDataReportes(data)
+        //     // setState(state => {
+        //     //     return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
+        //     // })
+        // })
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS).then(({data}) => {
+        //     setDataReportesEtiqueta(data)
+        // })
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS_RANGOS).then(({data}) => {
+        //     if (data.length > 0) {
+        //         setDataReporteEtiquetaRangos(data[0])
+        //     }
+        // })
         getParametrosConfiguracion()
     }, []);
 
@@ -2475,7 +2536,7 @@ function Guia(props) {
                                      paquetesGuiaEtiquetasIndividuales: []
                                  })
                              }}
-                             handleAccept={(data) => { generarReporteEtiquetasIndividuales(data) }}
+                             handleAccept={(data) => { descargarPdfEtiquetasIndividuales(data) }}
                              paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
             <DialogImpresion open={openDialogEtiquetasIndividualesForPrint}
                              handleClose={() => {
@@ -2501,134 +2562,140 @@ function Guia(props) {
                 }}/>
             }
 
-            {
-                openDialog &&
-                <Dialog
-                    open={openDialog}
-                    onClose={() => setOpenDialog(false)}
-                    fullWidth maxWidth="md"
-                >
-                    <DialogTitle>
-                        Reporte de Guía
-                    </DialogTitle>
-                    <DialogContent>
-                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <form onSubmit={handleGenerarReporte}>
-                                <Grid container spacing={1}>
-                                    <Grid item sm={6}>
-                                        <FormControl
-                                            className="input select"
-                                            fullWidth variant="outlined"
-                                            required
-                                            margin="dense">
-                                            <InputLabel
-                                                id="idReporteLabel">Formato de Reporte</InputLabel>
-                                            <Select
-                                                fullWidth
-                                                labelId="idReporteLabel"
-                                                label="Reporte"
-                                                className="form-control"
-                                                value={state.reporteSeleccionado ?? ''}
-                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
-                                                name="reporteSeleccionado"
-                                            >
-                                                {dataReportes.map((reporte) => (
-                                                    <MenuItem
-                                                        key={reporte.m_nIdFormato}
-                                                        value={reporte.m_nIdFormato}
-                                                    >
-                                                        {reporte.m_sFormato}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <DialogActions>
+            {/*{*/}
+            {/*    openDialog &&*/}
+            {/*    <Dialog*/}
+            {/*        open={openDialog}*/}
+            {/*        onClose={() => setOpenDialog(false)}*/}
+            {/*        fullWidth maxWidth="md"*/}
+            {/*    >*/}
+            {/*        <DialogTitle>*/}
+            {/*            Reporte de Guía*/}
+            {/*        </DialogTitle>*/}
+            {/*        <DialogContent>*/}
+            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
+            {/*                <form onSubmit={handleGenerarReporte}>*/}
+            {/*                    <Grid container spacing={1}>*/}
+            {/*                        <Grid item sm={6}>*/}
+            {/*                            <FormControl*/}
+            {/*                                className="input select"*/}
+            {/*                                fullWidth variant="outlined"*/}
+            {/*                                required*/}
+            {/*                                margin="dense">*/}
+            {/*                                <InputLabel*/}
+            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
+            {/*                                <Select*/}
+            {/*                                    fullWidth*/}
+            {/*                                    labelId="idReporteLabel"*/}
+            {/*                                    label="Reporte"*/}
+            {/*                                    className="form-control"*/}
+            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
+            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
+            {/*                                    name="reporteSeleccionado"*/}
+            {/*                                >*/}
+            {/*                                    {dataReportes.map((reporte) => (*/}
+            {/*                                        <MenuItem*/}
+            {/*                                            key={reporte.m_nIdFormato}*/}
+            {/*                                            value={reporte.m_nIdFormato}*/}
+            {/*                                        >*/}
+            {/*                                            {reporte.m_sFormato}*/}
+            {/*                                        </MenuItem>*/}
+            {/*                                    ))}*/}
+            {/*                                </Select>*/}
+            {/*                            </FormControl>*/}
+            {/*                        </Grid>*/}
+            {/*                    </Grid>*/}
+            {/*                    <DialogActions>*/}
 
-                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
-                                        setOpenDialog(false)
-                                        setState({
-                                            ...state,
-                                            reporteSeleccionado: null
-                                        })
-                                    }
-                                    }>
-                                        Cancelar
-                                    </button>
-                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
-                                        Aceptar
-                                    </button>
-                                </DialogActions>
-                            </form>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            }
-            {
-                openDialogEtiqueta &&
-                <Dialog
-                    open={openDialogEtiqueta}
-                    onClose={() => setOpenDialogEtiqueta(false)}
-                    fullWidth maxWidth="md"
-                >
-                    <DialogTitle>
-                        Reporte de Guía Etiqueta
-                    </DialogTitle>
-                    <DialogContent>
-                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <form onSubmit={handleGenerarReporteEtiqueta}>
-                                <Grid container spacing={1}>
-                                    <Grid item sm={6}>
-                                        <FormControl
-                                            className="input select"
-                                            fullWidth variant="outlined"
-                                            required
-                                            margin="dense">
-                                            <InputLabel
-                                                id="idReporteLabel">Formato de Reporte</InputLabel>
-                                            <Select
-                                                fullWidth
-                                                labelId="idReporteLabel"
-                                                label="Reporte"
-                                                className="form-control"
-                                                value={state.reporteSeleccionado ?? ''}
-                                                onChange={(e) => handleOnChangeReporteEtiqueta(e.target.value)}
-                                                name="reporteSeleccionado"
-                                            >
-                                                {dataReportesEtiqueta.map((reporte) => (
-                                                    <MenuItem
-                                                        key={reporte.m_nIdFormato}
-                                                        value={reporte.m_nIdFormato}
-                                                    >
-                                                        {reporte.m_sFormato}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <DialogActions>
+            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
+            {/*                            setOpenDialog(false)*/}
+            {/*                            setState({*/}
+            {/*                                ...state,*/}
+            {/*                                reporteSeleccionado: null*/}
+            {/*                            })*/}
+            {/*                        }*/}
+            {/*                        }>*/}
+            {/*                            Cancelar*/}
+            {/*                        </button>*/}
+            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
+            {/*                            Aceptar*/}
+            {/*                        </button>*/}
+            {/*                    </DialogActions>*/}
+            {/*                </form>*/}
+            {/*            </div>*/}
+            {/*        </DialogContent>*/}
+            {/*    </Dialog>*/}
+            {/*}*/}
+            {/*{*/}
+            {/*    openDialogEtiqueta &&*/}
+            {/*    <Dialog*/}
+            {/*        open={openDialogEtiqueta}*/}
+            {/*        onClose={() => setOpenDialogEtiqueta(false)}*/}
+            {/*        fullWidth maxWidth="md"*/}
+            {/*    >*/}
+            {/*        <DialogTitle>*/}
+            {/*            Reporte de Guía Etiqueta*/}
+            {/*        </DialogTitle>*/}
+            {/*        <DialogContent>*/}
+            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
+            {/*                <form onSubmit={handleGenerarReporteEtiqueta}>*/}
+            {/*                    <Grid container spacing={1}>*/}
+            {/*                        <Grid item sm={6}>*/}
+            {/*                            <FormControl*/}
+            {/*                                className="input select"*/}
+            {/*                                fullWidth variant="outlined"*/}
+            {/*                                required*/}
+            {/*                                margin="dense">*/}
+            {/*                                <InputLabel*/}
+            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
+            {/*                                <Select*/}
+            {/*                                    fullWidth*/}
+            {/*                                    labelId="idReporteLabel"*/}
+            {/*                                    label="Reporte"*/}
+            {/*                                    className="form-control"*/}
+            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
+            {/*                                    onChange={(e) => {*/}
+            {/*                                        // handleOnChangeReporteEtiqueta(e.target.value)*/}
+            {/*                                        setState({*/}
+            {/*                                            ...state,*/}
+            {/*                                            reporteSeleccionado: e.target.value*/}
+            {/*                                        })*/}
+            {/*                                    }}*/}
+            {/*                                    name="reporteSeleccionado"*/}
+            {/*                                >*/}
+            {/*                                    {dataReportesEtiqueta.map((reporte) => (*/}
+            {/*                                        <MenuItem*/}
+            {/*                                            key={reporte.m_nIdFormato}*/}
+            {/*                                            value={reporte.m_nIdFormato}*/}
+            {/*                                        >*/}
+            {/*                                            {reporte.m_sFormato}*/}
+            {/*                                        </MenuItem>*/}
+            {/*                                    ))}*/}
+            {/*                                </Select>*/}
+            {/*                            </FormControl>*/}
+            {/*                        </Grid>*/}
+            {/*                    </Grid>*/}
+            {/*                    <DialogActions>*/}
 
-                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
-                                        setOpenDialogEtiqueta(false)
-                                        setState({
-                                            ...state,
-                                            reporteSeleccionado: null
-                                        })
-                                    }
-                                    }>
-                                        Cancelar
-                                    </button>
-                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
-                                        Aceptar
-                                    </button>
-                                </DialogActions>
-                            </form>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            }
+            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
+            {/*                            setOpenDialogEtiqueta(false)*/}
+            {/*                            setState({*/}
+            {/*                                ...state,*/}
+            {/*                                reporteSeleccionado: null*/}
+            {/*                            })*/}
+            {/*                        }*/}
+            {/*                        }>*/}
+            {/*                            Cancelar*/}
+            {/*                        </button>*/}
+            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
+            {/*                            Aceptar*/}
+            {/*                        </button>*/}
+            {/*                    </DialogActions>*/}
+            {/*                </form>*/}
+            {/*            </div>*/}
+            {/*        </DialogContent>*/}
+            {/*    </Dialog>*/}
+            {/*}*/}
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
                               open={state.openTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
