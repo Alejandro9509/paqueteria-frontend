@@ -1114,17 +1114,6 @@ function Guia(props) {
 
     }
 
-    //Muestra la pestaña de cancelar
-    function handleShowSandBox(event) {
-        event.preventDefault()
-
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(5).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Sandbox').addClass('in show');
-
-    }
-
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
@@ -2774,12 +2763,6 @@ function Guia(props) {
                             <a onClick={handleShowCancelar}
                                className={(state.idGuia === 0 || !validarDerecho(9101461) ||  state.estatusGuia == 8)? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
-                            </a>
-                        </li>
-
-                        <li>
-                            <a onClick={handleShowSandBox}>
-                                <i className="fa fa-times-circle"/> Sandbox
                             </a>
                         </li>
                     </ul>
