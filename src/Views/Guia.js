@@ -331,7 +331,8 @@ function Guia(props) {
         modificadoEl: "",
         openDialog: false,
         receptorGuia:[],
-        referencia:[],
+        referencia:'',
+        observaciones:'',
         reporteSeleccionado:{},
         imprimirEtiquetasIndividuales: false,
         paquetesGuiaEtiquetasIndividuales: []
@@ -712,7 +713,7 @@ function Guia(props) {
                 m_bActivo: true,
                 m_cDescuento: c.descuento || 0
             })),
-
+            "m_sObservaciones": state.observaciones
         }
         //  console.log(state)
         console.log(JSON.stringify(params))
@@ -1074,6 +1075,7 @@ function Guia(props) {
                 tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
                 receptorGuia: respuesta.data.m_sReceptorGuia,
                 referencia: respuesta.data.m_sReferencia,
+                observaciones: respuesta.data.m_sObservaciones,
 
             }
         })
@@ -1878,6 +1880,7 @@ function Guia(props) {
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
                 referencia: respuesta.data.m_sReferencia,
+                observaciones: respuesta.data.m_sObservaciones,
             }
         })
         // obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
@@ -1992,6 +1995,7 @@ function Guia(props) {
                 zonaTarifaDestinatario: '',
                 receptorGuia: '',
                 referencia: '',
+                observaciones: '',
             }
         })
         setConceptosAdicionales([])
@@ -3236,6 +3240,27 @@ function Guia(props) {
                                                                 disabled
                                                                 readOnly
                                                                 value={state.referencia}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Observaciones"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
+                                                                value={state.observaciones}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        observaciones: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="observaciones"
+                                                                id="observaciones"
+                                                                placeholder={"Sin observaciones"}
+                                                                InputLabelProps={{shrink: true}}
                                                             />
                                                         </Grid>
                                                     </Grid>
