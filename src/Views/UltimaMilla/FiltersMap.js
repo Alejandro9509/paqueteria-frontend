@@ -389,12 +389,10 @@ class FiltersMap extends Component {
                     <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: "center"}}>
                         <BootstrapTooltip
                             onBlur={(e) => {this.setState({openSucursales: false})}}
-                            PopperProps={{
-                                disablePortal: false,
-                            }}
-                            onClose={(e) =>{
-                            this.setState({openSucursales: false})
-                             this.props.closeResumenParada(e)}}
+                            PopperProps={{ disablePortal: false }}
+                            // onClose={(e) =>{
+                            // this.setState({openSucursales: false})
+                            //  this.props.closeResumenParada(e)}}
                             open={this.state.openSucursales}
                             disableFocusListener
                             disableHoverListener
@@ -429,7 +427,7 @@ class FiltersMap extends Component {
                                         this.state.sucursalesFiltradas.map((c, index) =>
                                             <ListItem button onClick={(e) =>{ 
                                             this.selectCiudad(c) 
-                                            this.props.closeResumenParada(e)}} key={c.m_nIdSucursal}>
+                                            this.props.closeResumenParada(false)}} key={c.m_nIdSucursal}>
                                                 <ListItemText id={c.m_nIdSucursal} primary={c.m_sSucursal}/>
                                             </ListItem>)
                                     }
@@ -450,7 +448,7 @@ class FiltersMap extends Component {
                                     openPaquetes: false, openConfiguration: false
                                 
                                 })
-                                this.props.closeResumenParada(e)
+                                this.props.closeResumenParada(false)
                             }}
                                 deleteIcon={<KeyboardArrowDownIcon color={"primary"}/>}
                                 variant="outlined"
@@ -461,7 +459,7 @@ class FiltersMap extends Component {
                             PopperProps={{
                                 disablePortal: false,
                             }}
-                            onClose={() => {this.setState({openZona: false})}}
+                            // onClose={() => {this.setState({openZona: false})}}
                             open={this.state.openZona}
                             disableFocusListener
                             disableHoverListener
@@ -487,7 +485,7 @@ class FiltersMap extends Component {
                                     openDate: false,
                                     openPaquetes: false, openConfiguration: false
                                 })
-                                this.props.closeResumenParada(e)
+                                this.props.closeResumenParada(false)
                             }
                             
                             }
@@ -499,7 +497,7 @@ class FiltersMap extends Component {
                             PopperProps={{
                                 disablePortal: false,
                             }}
-                            onClose={() => this.setState({openDate: false})}
+                            // onClose={() => this.setState({openDate: false})}
                             open={this.state.openDate}
                             disableFocusListener
                             disableHoverListener
@@ -535,7 +533,7 @@ class FiltersMap extends Component {
                                     openZona: false,
                                     openUnidades: false, openConfiguration: false, openDate: !this.state.openDate
                                 }) 
-                                this.props.closeResumenParada(e)}
+                                this.props.closeResumenParada(false)}
                                
                             }
                                 variant="outlined"
@@ -545,7 +543,7 @@ class FiltersMap extends Component {
                             PopperProps={{
                                 disablePortal: false,
                             }}
-                            onClose={() => this.setState({openConfiguration: false})}
+                            // onClose={() => this.setState({openConfiguration: false})}
                             open={this.state.openConfiguration}
                             disableFocusListener
                             disableHoverListener
@@ -570,7 +568,7 @@ class FiltersMap extends Component {
                                     openUnidades: false,
                                     openPaquetes: false,
                                 })
-                                this.props.closeResumenParada(e)
+                                this.props.closeResumenParada(false)
                             }}
                                 variant="outlined"
                             />
@@ -581,7 +579,7 @@ class FiltersMap extends Component {
                                 PopperProps={{
                                     disablePortal: false,
                                 }}
-                                onClose={() => this.setState({openPaquetes: false})}
+                                // onClose={() => this.setState({openPaquetes: false})}
                                 open={this.state.openPaquetes}
                                 disableFocusListener
                                 disableHoverListener
@@ -611,7 +609,7 @@ class FiltersMap extends Component {
                                         openDate: false,
                                         openUnidades: false, openConfiguration: false
                                     })
-                                    this.props.closeResumenParada(e)
+                                    this.props.closeResumenParada(false)
                                 }
                                 }
                                     variant="outlined"
@@ -636,7 +634,7 @@ class FiltersMap extends Component {
                                     openDate: false,
                                     openUnidades: false, openConfiguration: false
                                 })
-                                this.props.closeResumenParada(e)
+                                this.props.closeResumenParada(false)
                             }}
                                 variant="outlined"
                             />
@@ -646,7 +644,7 @@ class FiltersMap extends Component {
                             PopperProps={{
                                 disablePortal: false,
                             }}
-                            onClose={() => this.setState({openUnidades: false})}
+                            // onClose={() => this.setState({openUnidades: false})}
                             open={this.state.openUnidades}
                             disableFocusListener
                             disableHoverListener
@@ -674,7 +672,7 @@ class FiltersMap extends Component {
                                     openZona: false, openDate: false,
                                     openPaquetes: false, openConfiguration: false
                                 })
-                                this.props.closeResumenParada(e)
+                                this.props.closeResumenParada(false)
                             }}
                                 variant="outlined"
                             />
