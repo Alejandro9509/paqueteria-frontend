@@ -1134,7 +1134,7 @@ function Embarque(props) {
             showSuccess("El responsable de pago es un dato requerido");
             return valid;
         }
-        if (configuraciones.fijarCapturaValorDeclarado && parseFloat(state.valorDeclarado) === 0) {
+        if (configuraciones.fijarCapturaValorDeclarado && parseFloat(state.valorDeclarado) <= 0) {
             showSuccess("El valor declarado no puede ser cero debido a la configuración.");
             return valid;
         }
@@ -3914,7 +3914,7 @@ function Embarque(props) {
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
-                                                                           disabled={(state.agregar === "Consultar") || configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro || state.embarqueConGuia}
+                                                                           disabled={(state.agregar === "Consultar") || (configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro) || state.embarqueConGuia}
                                                                            label="Valor Declarado"
                                                                            onChange={(event) => {
                                                                                event.preventDefault();
