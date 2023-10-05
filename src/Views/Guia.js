@@ -3937,7 +3937,7 @@ function Guia(props) {
                                                     <div className="col-md-12">
                                                         <ConceptosFacturacionGuias
                                                             keys={0}
-                                                            disabled={false}
+                                                            disabled={true}
                                                             dataPaquetes={conceptosAdicionales}
                                                             onChangeList={handleChangeListConceptos}
                                                             conceptosBase={dataConceptosBase}
