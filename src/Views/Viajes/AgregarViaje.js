@@ -208,6 +208,7 @@ class AgregarViaje extends Component {
         this.handleAcceptDataRemolques = this.handleAcceptDataRemolques.bind(this);
         this.handleCloseDialogDollys = this.handleCloseDialogDollys.bind(this);
         this.handleAcceptDataDollys = this.handleAcceptDataDollys.bind(this);
+        this.cubicarViaje = this.cubicarViaje.bind(this);
 
     }
 
@@ -824,24 +825,7 @@ class AgregarViaje extends Component {
 
             arrayInformesAsignados.push(informeAsignar)
             try {
-                const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
-                const params = {
-                    idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
-                    idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
-                    paquetes: paquetes.map(p => ({
-                        alto: p.m_xAlto,
-                        ancho: p.m_xAncho,
-                        largo: p.m_xLargo,
-                        peso: p.m_xPeso,
-                        cantidad: p.ctd
-                    }))
-                }
-                cubicarGuia(params).then(({data}) => {
-                    this.setState({utilizacion: data.utilizacion.toFixed(0)})
-                }).catch(e => {
-                    this.setState({utilizacion: 0})
-                    showError(e.response?.data)
-                })
+                this.cubicarViaje(arrayInformesAsignados)
             } catch (e) {
                 showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado pero hubo un error al calcular cubicaje con el informe seleccionado.")
             }
@@ -853,9 +837,32 @@ class AgregarViaje extends Component {
 
     }
 
+    cubicarViaje(arrayInformesAsignados){
+        const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
+        const params = {
+            idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
+            paquetes: paquetes.map(p => ({
+                alto: p.m_xAlto,
+                ancho: p.m_xAncho,
+                largo: p.m_xLargo,
+                peso: p.m_xPeso,
+                cantidad: p.ctd
+            }))
+        }
+        cubicarGuia(params).then(({data}) => {
+            this.setState({utilizacion: data.utilizacion.toFixed(0)})
+        }).catch(e => {
+            this.setState({utilizacion: 0})
+            showError(e.response?.data)
+        })
+    }
+
+
     handleEliminarInforme(id) {
         var dataInformesAsignados = [...this.state.dataInformesAsignados]
         dataInformesAsignados.splice(dataInformesAsignados.findIndex(i => i.m_nIdInforme === id), 1)
+        this.cubicarViaje(dataInformesAsignados)
         this.setState({dataInformesAsignados: dataInformesAsignados})
     }
 
@@ -2020,7 +2027,7 @@ class AgregarViaje extends Component {
                                     </div>
 
                                     <br/>
-                                    <ProgressBarCubicaje value={this.state.utilizacion}>Espacio de carga usado: {this.state.utilizacion}%</ProgressBarCubicaje>
+                                    <ProgressBarCubicaje value={this.state.utilizacion}>{this.state.utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${this.state.utilizacion}%`}</ProgressBarCubicaje>
                                 </div>
 
                                 {/*<div className={"row"}>
