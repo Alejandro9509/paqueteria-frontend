@@ -388,7 +388,7 @@ class FiltersMap extends Component {
 
                     <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: "center"}}>
                         <BootstrapTooltip
-                            onBlur={(e) => {this.setState({openSucursales: false})}}
+                            // onBlur={(e) => {this.setState({openSucursales: false})}}
                             PopperProps={{ disablePortal: false }}
                             // onClose={(e) =>{
                             // this.setState({openSucursales: false})
@@ -455,7 +455,7 @@ class FiltersMap extends Component {
                             />
                         </BootstrapTooltip>
                         <BootstrapTooltip
-                            onBlur={(e) => {this.setState({openZona: false})}}
+                            // onBlur={(e) => {this.setState({openZona: false})}}
                             PopperProps={{
                                 disablePortal: false,
                             }}
