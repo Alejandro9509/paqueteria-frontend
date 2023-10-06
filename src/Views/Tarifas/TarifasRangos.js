@@ -285,6 +285,7 @@ export default function TarifasRangos(props) {
                     idUnidadMedida: rango.IdUnidadMedida || null,
                     tipoCalculo: rango.TipoCalculo || '',
                     unidadMedida: rango.UnidadMedida || '',
+                    porcentaje: rango.Porcentaje || 0,
                 })),
                 productos: data.Productos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
                     m_nIdProducto: j.IdProducto,

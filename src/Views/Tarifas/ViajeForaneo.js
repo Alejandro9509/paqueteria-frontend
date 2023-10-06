@@ -138,10 +138,12 @@ export default function ViajeForaneo(props) {
             props.tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2) :
             props.tiposCalculoListado
 
+    /**Filtra las unidades de medida por tipo de medida. 1-PESO: KILOGRAMOS, TONELADAS. 2-PIEZA: KILOGRAMOS, TONELADAS, PIEZAS. 3-PORCENTAJE: PORCIENTO*/
     const filtrarUnidadesMedidaViajeForaneo =
-        state.idTipoMedida === 1 ?
-            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48) :
-            props.unidadesMedidaListado
+        state.idTipoMedida === 1 ? props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
+            : state.idTipoMedida === 2 ? props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 38)
+                : state.idTipoMedida === 3 ? props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 55)
+                    : props.unidadesMedidaListado
 
     /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/
     const filtrarZonasViajeForaneo = (grupo) => {
@@ -206,6 +208,7 @@ export default function ViajeForaneo(props) {
                         >
                             <MenuItem key={1} value={1}>Peso</MenuItem>
                             <MenuItem key={2} value={2}>Pieza</MenuItem>
+                            <MenuItem key={3} value={3}>Porcentaje</MenuItem>
                         </TextField>
                     </Grid>
                     <Grid item xs={3}>
@@ -274,6 +277,7 @@ export default function ViajeForaneo(props) {
                                 disabled={props.disabled}
                                 showDialogZonas={props.showDialogZonas}
                                 handleShowDialogZonas={props.handleShowDialogZonas}
+                                mode={parseInt(state.idTipoMedida) === 3 ? 'PORCENTAJE' : 'OTRO'}
                             />
                         )
                     }

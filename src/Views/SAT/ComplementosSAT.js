@@ -24,7 +24,7 @@ import {
 import { confirmAlert } from "react-confirm-alert";
 import e from "cors";
 import { id } from "date-fns/locale";
-import {obeterValidacionComplementos} from "../../Util/Contexts/SATContext";
+import {validarComplementoSat} from "../../Util/Contexts/SATContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -479,103 +479,142 @@ function ComplementosSAT(props) {
     const handleCleanExcel= (e)=>{
         e.target.value=null
     }
-    const readExcel = (file) => {
+    async function readExcel(file){
         const promise = new Promise((resolve, reject) => {
             const fileReader = new FileReader();
             fileReader.readAsArrayBuffer(file);
-
             fileReader.onload = (e) => {
                 const bufferArray = e.target.result;
-
                 const wb = XLSX.read(bufferArray, { type: "buffer" });
-
                 const wsname = wb.SheetNames[0];
-                console.log(wsname)
-
                 const ws = (wb.Sheets[wsname]);
-
-                console.log(ws)
-
                 const data = XLSX.utils.sheet_to_json(ws, {range:2});
                 resolve(data);
             };
-
             fileReader.onerror = (error) => {
                 reject(error);
             };
         });
 
-        promise.then((d) => {
+        promise.then(async (d) => {
             console.log(d);
             const newArray = d.map(item => (
                 {
-                id: Math.floor(Math.random() * 10000),
-                cantidad: isNaN(parseInt(item.Cantidad)) ? 0 : parseInt(item.Cantidad),
-                peso: isNaN(parseFloat(item['Peso']))? 0 : parseFloat(item['Peso']),
-                claveProducto: item['Clave productos y servicios'] ? item['Clave productos y servicios']: '',
-                claveUnidad: item['Clave Unidades de medida y embalaje'] ? item['Clave Unidades de medida y embalaje'] : '' ,
-                esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
-                claveMaterialPeligroso: item['Es material peligroso'] === "SI"? item['Clave material peligroso'] : '',
-                claveEmbalaje:item['Es material peligroso'] === "SI"? item['Clave Embalaje'] : '',
-                descripcionEmbalajeSAT:item['Es material peligroso'] === "SI"? item['Descripción embalaje'] : '',
-                claveFraccion:item['Es material peligroso'] === "SI"? item['Clave Fraccion'] : ''
-            }))
+                    id: Math.floor(Math.random() * 10000),
+                    cantidad: isNaN(parseInt(item.Cantidad)) ? 0 : parseInt(item.Cantidad),
+                    peso: isNaN(parseFloat(item['Peso'])) ? 0 : parseFloat(item['Peso']),
+                    claveProducto: item['Clave productos y servicios'] ? item['Clave productos y servicios'] : '',
+                    claveUnidad: item['Clave Unidades de medida y embalaje'] ? item['Clave Unidades de medida y embalaje'] : '',
+                    esPeligroso: item['Es material peligroso'] ? item['Es material peligroso'] === "SI" : false,
+                    claveMaterialPeligroso: item['Es material peligroso'] === "SI" && item['Clave material peligroso'] ? item['Clave material peligroso'] : '',
+                    claveEmbalaje: item['Es material peligroso'] === "SI" && item['Clave Embalaje'] ? item['Clave Embalaje'] : '',
+                    descripcionEmbalajeSAT: item['Es material peligroso'] === "SI" && item['Descripción embalaje'] ? item['Descripción embalaje'] : '',
+                    claveFraccion: item['Es material peligroso'] === "SI" && item['Clave Fraccion'] ? item['Clave Fraccion'].toString() : ''
+                }))
             console.log(newArray)
             let hayErrores = false
-            for(let i =0;i<newArray.length;i++){
-                if(newArray[i].cantidad === 0){
-                    showError(`Cantidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+            let completeErrorMessage = ''
+            for (let i = 0; i < newArray.length; i++) {
+                if (newArray[i].cantidad === 0) {
+                    // showError(`Cantidad no válida en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Cantidad no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
                 }
-                if(newArray[i].peso === 0){
-                    showError(`Peso no válido en registro número '${i + 1}'. Favor de revisar el archivo.`)
-                    hayErrores = true
+                if (newArray[i].peso === 0) {
+                    // showError(`Peso no válido en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Peso no válido en registro número '${i + 1}'.<br />`
+                        hayErrores = true
                 }
-                if (newArray[i].claveProducto.length === 0){
-                    showError(`Clave de producto no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                if (newArray[i].claveProducto.length === 0) {
+                    // showError(`Clave de producto no válida en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Clave de producto no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
+                } else {
+                    await validarComplementoSat(CATALOGOS_SAT.PRODUCTOS_SERVICIOS, newArray[i].claveProducto).then(({data}) => {
+                        if (data.success) {
+                            newArray[i].claveProducto = data.message
+                        } else {
+                            // showError(`Clave de producto no válida en registro número '${i + 1}'. La clave no existe.`)
+                            completeErrorMessage += `Clave de producto no válida en registro número '${i + 1}'. La clave no existe.<br />`
+                            hayErrores = true
+                        }
+                    })
                 }
-                if (newArray[i].claveUnidad.length === 0){
-                    showError(`Clave de unidad no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                if (newArray[i].claveUnidad.length === 0) {
+                    // showError(`Clave de unidad no válida en registro número '${i + 1}'.`)
+                    completeErrorMessage += `Clave de unidad no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
+                } else {
+                    await validarComplementoSat(CATALOGOS_SAT.UNIDADES, newArray[i].claveUnidad).then(({data}) => {
+                        if (data.success) {
+                            newArray[i].claveUnidad = data.message
+                        } else {
+                            // showError(`Clave de unidad no válida en registro número '${i + 1}'. La clave no existe.`)
+                            completeErrorMessage += `Clave de unidad no válida en registro número '${i + 1}'. La clave no existe.<br />`
+                            hayErrores = true
+                        }
+                    })
                 }
-                if(newArray[i].esPeligroso === true){
-                    if(newArray[i].claveMaterialPeligroso.length === 0){
-                        showError(`Clave material peligroso no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                if (newArray[i].esPeligroso === true) {
+                    if (newArray[i].claveMaterialPeligroso.length === 0) {
+                        // showError(`Clave material peligroso no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Clave material peligroso no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
-                    }else if(newArray[i].claveEmbalaje.length === 0){
-                        showError(`Clave Embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    } else {
+                        await validarComplementoSat(CATALOGOS_SAT.MATERIAL_PELIGROSO, newArray[i].claveMaterialPeligroso).then(({data}) => {
+                            if (data.success) {
+                                newArray[i].claveMaterialPeligroso = data.message
+                            } else {
+                                // showError(`Clave material peligroso no válida en registro número '${i + 1}'. La clave no existe.`)
+                                completeErrorMessage += `Clave material peligroso no válida en registro número '${i + 1}'. La clave no existe.<br />`
+                                hayErrores = true
+                            }
+                        })
+                    }
+                    if (newArray[i].claveEmbalaje.length === 0) {
+                        // showError(`Clave Embalaje no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Clave Embalaje no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
-                    }else if(newArray[i].descripcionEmbalajeSAT.length === 0){
-                        showError(`Descripción embalaje no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    } else {
+                        await validarComplementoSat(CATALOGOS_SAT.EMBALAJE, newArray[i].claveEmbalaje).then(({data}) => {
+                            if (data.success) {
+                                newArray[i].claveEmbalaje = data.message
+                            } else {
+                                // showError(`Clave Embalaje no válida en registro número '${i + 1}'. La clave no existe.`)
+                                completeErrorMessage += `Clave Embalaje no válida en registro número '${i + 1}'. La clave no existe.<br />`
+                                hayErrores = true
+                            }
+                        })
+                    }
+                    if (newArray[i].descripcionEmbalajeSAT.length === 0) {
+                        // showError(`Descripción embalaje no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Descripción embalaje no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
-                    }else if(newArray[i].claveFraccion.length === 0){
-                        showError(`Clave Fraccion no válida en registro número '${i + 1}'. Favor de revisar el archivo.`)
+                    }
+                    if (newArray[i].claveFraccion.length === 0) {
+                        // showError(`Clave Fraccion no válida en registro número '${i + 1}'.`)
+                        completeErrorMessage += `Clave Fraccion no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
+                    } else {
+                        await validarComplementoSat(CATALOGOS_SAT.FRACCION_ARANCELARIA, newArray[i].claveFraccion).then(({data}) => {
+                            if (data.success) {
+                                newArray[i].claveFraccion = data.message.toString()
+                            } else {
+                                // showError(`Clave Fraccion no válida en registro número '${i + 1}'. La clave no existe.`)
+                                completeErrorMessage += `Clave Fraccion no válida en registro número '${i + 1}'. La clave no existe.<br />`
+                                hayErrores = true
+                            }
+                        })
                     }
                 }
             }
             if (hayErrores) {
+                completeErrorMessage += 'Favor de revisar el archivo.'
+                console.log(completeErrorMessage)
+                showError(completeErrorMessage)
                 return
             }
-            const claves = newArray.map(newClave=>({
-                claveProductoServicio: newClave.claveUnidad,
-                claveUnidadesMedidaEmbalaje: newClave.claveProducto
-            }))
-
-            obeterValidacionComplementos(claves).then(({data}) => {
-                console.log(data)
-                var estatus = data.filter(item => item.Estatus == false);
-                console.log(estatus)
-                let  mensaje = " ";
-                if(estatus.length>0){
-                    for(var i = 0; i< estatus.length; i++){
-                    showError(`Error con la Clave SAT: '${estatus[i].Clave}', corrija la clave en el archivo excel.`)
-                    }
-                    return
-                }
-                props.onChangeList(newArray)
-            })
+            props.onChangeList(newArray)
             // props.dataList.push(newArray)
         });
     };
@@ -656,3 +695,11 @@ function ComplementosSAT(props) {
 }
 
 export default ComplementosSAT;
+
+const CATALOGOS_SAT = {
+    PRODUCTOS_SERVICIOS: 'c_ClaveProdServCP',
+    UNIDADES: 'c_ClaveUnidad',
+    MATERIAL_PELIGROSO: 'c_MaterialPeligroso',
+    EMBALAJE: 'c_TipoEmbalaje',
+    FRACCION_ARANCELARIA: 'c_FraccionArancelaria'
+}
