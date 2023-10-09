@@ -37,7 +37,7 @@ function ComplementosSAT(props) {
     const [openDialog, setOpenDialog] = useState(false)
     const [dataComplemento, setDataComplemento] = useState({
         id:0,
-        cantidad:0,
+        cantidad:1,
         claveProducto: '',
         claveUnidad: '',
         claveFraccion:'',
@@ -58,7 +58,7 @@ function ComplementosSAT(props) {
     const resetDataComplemento = () => {
         setDataComplemento({
             id:0,
-            cantidad:0,
+            cantidad:1,
             claveProducto: '',
             claveUnidad: '',
             claveFraccion:'',
@@ -329,11 +329,11 @@ function ComplementosSAT(props) {
 
     const handleAceptar = (data)=>{
         console.log(dataComplemento)
-        if(parseFloat(dataComplemento.cantidad) < 0){
+        if(parseFloat(dataComplemento.cantidad) <=0){
             showSuccess("La cantidad debe ser mayor a cero.")
             return
         }
-        if(parseFloat(dataComplemento.peso) < 0){
+        if(parseFloat(dataComplemento.peso) <=0){
             showSuccess("El peso debe ser mayor a cero.")
             return
         }

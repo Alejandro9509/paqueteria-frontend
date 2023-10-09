@@ -52,45 +52,87 @@ function CrearConceptoSAT(props) {
     });
     const [errores, setErrores] = useState({
         errorCantidad:false,
-        errorTexto:"Ingrese un numero mayor a 0"
+        errorPeso:false,
+        errorTexto:"",
+        errorTextoPeso:""
        
     })
     
     const handleChange = (event) => {
 
         if(event.target.name == "cantidad"){
-            if(event.target.value!==""){
-                if(Number(event.target.value)<=0){
-                    setErrores(errores=>{
-                        return{ 
+            if(event.target.value!=="") {
+                if (Number(event.target.value) <= 0) {
+                    setErrores(errores => {
+                        return {
                             ...errores,
-                            errorCantidad:true,
-                         errorTexto:"Ingrese un numero mayor a 0"
-                        
+                            errorCantidad: true,
+                            errorTexto: "Ingrese un número mayor a 0"
+
                         }
-                     })
-            }else if(isNaN(Number(event.target.value))){
-                setErrores(errores=>{
-                    return{ 
-                        ...errores,
-                        errorCantidad:true,
-                     errorTexto:"Ingrese solo digitos"
-                    }
-                 })
+                    })
+                } else if (isNaN(Number(event.target.value))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorCantidad: true,
+                            errorTexto: "Ingrese solo dígitos"
+                        }
+                    })
+                }
+                else if (!Number.isInteger((Number(event.target.value)))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorCantidad: true,
+                            errorTexto: "Ingrese solo números enteros"
+                        }
+                    })
+                }
+                else {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorCantidad: false
+                        }
+                    })
+                }
             }else{
                 setErrores(errores=>{
-                    return{ 
-                        ...errores,
-                        errorCantidad:false}
-                 })
-            }
-            }else{
-                setErrores(errores=>{
-                    return{ 
+                    return{
                         ...errores,
                      errorCantidad:false}
                  })
             }
+        }
+        if (event.target.name == "peso"){
+            if(event.target.value!=="") {
+                if (Number(event.target.value) <= 0) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorPeso: true,
+                            errorTextoPeso: "Ingrese un número mayor a 0"
+
+                        }
+                    })
+                } else if (isNaN(Number(event.target.value))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorPeso: true,
+                            errorTextoPeso: "Ingrese solo dígitos"
+                        }
+                    })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{
+                        ...errores,
+                        errorPeso:false}
+                })
+            }
+
         }
         props.onChangeData(0, event)
     }
@@ -170,7 +212,9 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.cantidad}
                                     onChange={handleChange}
                                     name="cantidad"
-                                    InputProps={{ inputProps: { min: 0 } }}
+                                    error={errores.errorCantidad}
+                                    helperText={errores.errorCantidad ? errores.errorTexto : null}
+                                    InputProps={{ inputProps: { min: 1 } }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -184,9 +228,17 @@ function CrearConceptoSAT(props) {
                                     disabled={props.consulta}
                                     value={props.dataComplemento.peso}
                                     onChange={handleChange}
+                                    error={errores.errorPeso}
+                                    helperText={errores.errorPeso ? errores.errorTextoPeso : null}
                                     name="peso"
                                     InputProps={{ inputProps: { min: 0 } }}
                                 />
+                                {
+                                    errores.errorPeso &&
+                                    <div style={{ "margin":"5%"}}>
+
+                                    </div>
+                                }
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <TextField
