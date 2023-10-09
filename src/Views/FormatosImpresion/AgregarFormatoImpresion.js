@@ -15,6 +15,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import {
+    obtenerFormatosImpresionId,
+    obtenerFormatosImpresionProceso
+} from "../../Util/Contexts/FormatosImpresionContext";
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -37,9 +41,11 @@ class AgregarFormatoImpresion extends Component {
         super(props);
         this.state = {
             formato: "",
+            idTipoProcesoAgregar:"",
             dataTipoDocumento: [],
             file: [],
-            image: []
+            image: [],
+            modificadoEl:""
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -49,6 +55,23 @@ class AgregarFormatoImpresion extends Component {
 
 
     componentDidMount() {
+        console.log(this.props.id)
+        if(this.props.id>0){
+            obtenerFormatosImpresionId(this.props.id).then(respuesta => {
+                console.log(respuesta.data[0])
+                this.setState({
+                    formato:respuesta.data[0].m_sFormato,
+                    idTipoProcesoAgregar:respuesta.data[0].m_nTipoProceso,
+                    file: {
+                        length:1,
+                        [0]:{
+                            name:respuesta.data[0].m_sNombreArchivo
+                        }
+                    },
+                    modificadoEl:respuesta.data[0].m_sModificadoEl
+                })
+            })
+        }
         this.getAllTipoDocumento()
     }
 
@@ -66,11 +89,12 @@ class AgregarFormatoImpresion extends Component {
 
     onSubmit(event) {
         event.preventDefault()
-        this.props.onSubmit(this.state)
+        this.props.onSubmit(this.props.id,this.state)
     }
 
     handleChange = (event) => {
         event.preventDefault();
+        console.log(event.target.value)
         this.setState({
             [event.target.name]: event.target.value,
         });
@@ -214,7 +238,9 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input">
-                                    <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}} />
+                                    <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {
+                                        if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}
+                                    } />
                                     <TextField variant="outlined" margin="dense"
                                                    onChange={this.handleChange}
                                                    className="form-control"
@@ -227,12 +253,17 @@ class AgregarFormatoImpresion extends Component {
                                                    InputProps={{
                                                        endAdornment:
                                                     <InputAdornment position="end">
-                                                      <IconButton
-                                                      onClick={() => document.getElementById("file").click()}
-                                                        edge="end"
-                                                      >
-                                                        <CloudUploadIcon color="primary" fontSize="large" />
-                                                      </IconButton>
+
+                                                        {
+                                                            this.props.id===0 &&
+                                                            <IconButton
+                                                                onClick={() => document.getElementById("file").click()}
+                                                                edge="end"
+                                                            >
+                                                                <CloudUploadIcon color="primary" fontSize="large" />
+                                                            </IconButton>
+                                                        }
+
                                                     </InputAdornment>
                                                   
                                                 }}
@@ -253,12 +284,17 @@ class AgregarFormatoImpresion extends Component {
                                                    InputProps={{
                                                     endAdornment:
                                                  <InputAdornment position="end">
-                                                   <IconButton
-                                                   onClick={() => document.getElementById("image").click()}
-                                                     edge="end"
-                                                   >
-                                                     <CloudUploadIcon color="primary" fontSize="large" />
-                                                   </IconButton>
+                                                     {
+                                                         this.props.id===0 &&
+                                                         <IconButton
+                                                             disabled={this.props.id>0}
+                                                             onClick={() => document.getElementById("image").click()}
+                                                             edge="end"
+                                                         >
+                                                             <CloudUploadIcon color="primary" fontSize="large" />
+                                                         </IconButton>
+                                                     }
+
                                                  </InputAdornment>
                                                
                                              }}
