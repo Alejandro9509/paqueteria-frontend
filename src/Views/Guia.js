@@ -355,7 +355,7 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a
                                 onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                 className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
@@ -376,14 +376,14 @@ function Guia(props) {
 
                         </Tooltip>
                         { row.row.EntregaEnSucursal &&
-                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
+                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         }
-                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
+                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => {
                                    /*mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)*/
@@ -393,14 +393,14 @@ function Guia(props) {
                             </a>
 
                         </Tooltip>
-                        <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465)}>
+                        <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a className="btn btn-default btn-xs" onClick={() => handleOnClickDescargarEtiquetas(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
 
                         </Tooltip>
 
-                        <Tooltip title="Reenviar correo de seguimiento" /* disabled={!validarDerecho(9101458)} */>
+                        <Tooltip title="Reenviar correo de seguimiento"  disabled={!validarDerecho(9101458) || row.row.m_sEstatusGuia === "Cancelado"} >
                             <a className="btn btn-default btn-xs"
                                onClick={() => handleReenviarCorreo(row.row.m_nIdGuia)}><EmailIcon style={{paddingTop:"2px"}}/></a>
 
