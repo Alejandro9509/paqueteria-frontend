@@ -82,12 +82,12 @@ export default function DialogoNuevoPorcentaje(props) {
             })
             valid = false
         }
-        if ((parseFloat(rango.porcentaje) < 0)) {
+        if ((parseFloat(rango.porcentaje) <= 0)) {
             setErrores(errores => {
                 return {
                     ...errores,
                     porcentaje: true,
-                    descripcionError: "El valor porcentaje debe ser un número a partir de 0"
+                    descripcionError: "El valor porcentaje debe ser un número mayor de 0"
                 }
             })
             valid = false
