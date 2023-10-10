@@ -25,6 +25,23 @@ function agregarFormatosImpresion( params, file, image){
     return result
 }
 
+function modificarFormatosImpresion( id, params,image){
+    var bodyFormData = new FormData();
+
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Modificar/${id}`;
+    let result;
+    var json = JSON.stringify({...params});
+    var blob = new Blob([json] , { type: 'application/json' });
+    bodyFormData.append("request", blob);
+    if (image){
+        bodyFormData.append("image", image, image.name);
+    }
+    trackPromise(
+        result =  axios.put(url, bodyFormData, { headers})
+    );
+    return result
+}
+
 function obtenerFormatosImpresion(){
     const url = `${process.env.REACT_APP_API_URL}/Formato/GetListado`;
     let result;
@@ -36,6 +53,14 @@ function obtenerFormatosImpresion(){
 
 function obtenerFormatosImpresionProceso(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Proceso/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+function obtenerFormatosImpresionId(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -84,4 +109,4 @@ function imprimirFormatosIdCorteCajaGeneral(id,fechaRegistro,horaRegistro){
     return result
 }
 
-export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral}
+export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral,modificarFormatosImpresion,obtenerFormatosImpresionId}
