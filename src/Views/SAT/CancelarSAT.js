@@ -163,7 +163,7 @@ class CancelarSAT extends Component {
                                             name: "idCancelacionSAT"
                                         }}
                                     >
-                                        {this.state.catalogoSAT.filter(i => this.props.esInforme ? i.m_nid !== "01" : true).map((estatus) => (
+                                        {this.state.catalogoSAT.filter(i => i.m_nid !== "01").map((estatus) => (
                                             <MenuItem
                                                 key={estatus.m_nid}
                                                 value={estatus.m_nid}
