@@ -29,7 +29,7 @@ export default function TableUnidades({ data, handleSelection }) {
                        variant="outlined" margin={"dense"} inputRef={textFieldRef}/>
             <br/>
             <br/>
-            <TableContainer/* component={Paper}*/ style={{ height: '400px' }}>
+            <TableContainer style={{ height: '400px' }}>
                 <Table size="small" stickyHeader>
                     <TableHead>
                         <TableRow>
@@ -45,11 +45,14 @@ export default function TableUnidades({ data, handleSelection }) {
                                 key={item.m_nIdUnidad}
                                 onClick={() => handleRowClick(item)}
                                 selected={selectedRow?.m_nIdUnidad === item.m_nIdUnidad}
+                                style={{
+                                    pointerEvents: item.m_bDeshabilitado ? "none" : "auto"
+                                }}
                             >
-                                <TableCell align="center">{item.m_sCodigo}</TableCell>
-                                <TableCell>{item.m_sDescripcion}</TableCell>
-                                <TableCell>{item.m_sTipoUnidad}</TableCell>
-                                <TableCell>{item.EstatusUnidad}</TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }} align="center" >{item.m_sCodigo}</TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>{item.m_sDescripcion}</TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>{item.m_sTipoUnidad}</TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>{item.EstatusUnidad}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
