@@ -546,7 +546,8 @@ function Embarque(props) {
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
         modificarValorEmbarque:false,
-        factorConversion: 0.0
+        factorConversion: 0.0,
+        fijarCapturaValorDeclarado: false
     })
     const [errores, setErrores] = React.useState([])
     const [state, setState] = React.useState({
@@ -714,7 +715,8 @@ function Embarque(props) {
             idsTiposCobroSeleccionString: '',
             idConceptoFlete: 0,
             modificarValorEmbarque:false,
-            factorConversion: 0.0
+            factorConversion: 0.0,
+            fijarCapturaValorDeclarado: false
         })
     }
 
@@ -1040,7 +1042,10 @@ function Embarque(props) {
             showSuccess("El responsable de pago es un dato requerido");
             return valid;
         }
-
+        if (configuraciones.fijarCapturaValorDeclarado && parseFloat(state.valorDeclarado) <= 0) {
+            showSuccess("El valor declarado no puede ser cero debido a la configuración.");
+            return valid;
+        }
         /**REMITENTE*/
         if (!esDatoValido(remitente.idRemitente)) {
             showSuccess("El remitente es un dato requerido");
@@ -2309,7 +2314,8 @@ function Embarque(props) {
                         idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                         idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                         modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
-                        factorConversion: respuesta.data.FactorConversion
+                        factorConversion: respuesta.data.FactorConversion,
+                        fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
                     }
                 })
                 setDataTipoDocumento(data)
@@ -3753,7 +3759,7 @@ function Embarque(props) {
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
-                                                                           disabled={(state.agregar === "Consultar") || !state.aplicaSeguro || state.embarqueConGuia}
+                                                                           disabled={(state.agregar === "Consultar") || (configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro) || state.embarqueConGuia}
                                                                            label="Valor Declarado"
                                                                            onChange={(event) => {
                                                                                event.preventDefault();

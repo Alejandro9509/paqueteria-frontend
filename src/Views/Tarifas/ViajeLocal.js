@@ -218,9 +218,9 @@ export default function ViajeLocal(props) {
     }, [state])
 
     const filtrarUnidadesMedidaViajeLocal =
-        state.idTipoMedida === 1 ?
-            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48) :
-            props.unidadesMedidaListado
+        state.idTipoMedida === 1 ? props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
+                : state.idTipoMedida === 2 ? props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 38)
+                    : props.unidadesMedidaListado
 
     const filtrarTiposCalculoViajeLocal =
         state.idTipoMedida === 1 ?
