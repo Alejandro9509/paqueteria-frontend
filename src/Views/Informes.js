@@ -68,7 +68,7 @@ import {
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {
-    imprimirFormatosId, imprimirFormatosIdIdTipoReporte,
+    imprimirFormatosId, imprimirFormatosIdIdTipoReporte, imprimirFormatosIdInforme,
     obtenerFormatosImpresion,
     obtenerFormatosImpresionProceso
 } from "../Util/Contexts/FormatosImpresionContext";
@@ -367,22 +367,43 @@ function Informes({history}) {
                 // setDataReportes(data)
                 listadoReportes = data
             })
-        } else {
+        }
+        else {
             await obtenerFormatosImpresionProceso(214).then(({data}) => {
                 // setDataReportes(data)
                 listadoReportes = data
+                console.log(data)
             })
         }
         if (listadoReportes.length === 0) {
             showError("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
             return
         }
-        imprimirFormatosIdIdTipoReporte(listadoReportes[listadoReportes.length - 1].m_nIdFormato, row.m_nIdInforme).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe" + row.m_sFolioInforme.replace(/\./g, ' ');
-        })
+        let listadoReportesFiltrado=listadoReportes.filter((r)=>r.m_bActivo===true)
+
+        console.log(listadoReportesFiltrado)
+
+        if(listadoReportesFiltrado[0].m_sNombreArchivo==="RPT_ProInformeMOROLEON_EXCEL.wde"){
+            imprimirFormatosIdInforme(listadoReportesFiltrado[0].m_nIdFormato, row.m_nIdInforme,false).then(({data}) => {
+                var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
+                var a = document.createElement('a');
+                a.href = mediaType+encodeURI(data.m_sArchivo);
+                a.download = 'Informe.xlsx';
+                a.textContent = 'Descargar Archivo';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+        }
+        else{
+            imprimirFormatosIdInforme(listadoReportesFiltrado[0].m_nIdFormato, row.m_nIdInforme,true).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Informe" + row.m_sFolioInforme.replace(/\./g, ' ');
+            })
+        }
+
         // setSeleccion(row)
         // setOpenDialog(true)
 
