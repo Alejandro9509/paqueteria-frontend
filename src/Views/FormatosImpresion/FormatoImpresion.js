@@ -12,7 +12,11 @@ import $ from "jquery";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
 import { toBase64 } from '../../Util/GlobalFunctions';
-import { agregarFormatosImpresion, obtenerFormatosImpresion } from '../../Util/Contexts/FormatosImpresionContext';
+import {
+    agregarFormatosImpresion,
+    modificarFormatosImpresion,
+    obtenerFormatosImpresion
+} from '../../Util/Contexts/FormatosImpresionContext';
 window.jQuery = window.$ = $;
 const headers = {
     'Content-Type': 'application/json',
@@ -39,6 +43,7 @@ class FormatoImpresion extends Component {
             CreadoPor: localStorage.getItem("UsuarioId"),
             ModificadoPor: localStorage.getItem("UsuarioId"),
             pantalla: 1,
+            id:0,
             selected: {},
             dataSucursal: [],
             columns: [
@@ -48,7 +53,10 @@ class FormatoImpresion extends Component {
                     renderCell: (row) => {
                         return (
                             <div>
-                                <a className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdFolio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a className="btn btn-default btn-xs" onClick={()=>(this.handleModificar(row.row.m_nIdFormato))}><i  className="fa fa-pencil-square-o"
+                                    style={{color: "#F9A03E"}}
+                                /></a>
+                                <a className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdFormato))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </div>
                         )
                     }
@@ -64,7 +72,7 @@ class FormatoImpresion extends Component {
                     width: 300,
                 }, {
                     headerName: "Tipo Proceso",
-                    field: "m_nTipoProceso",
+                    field: "m_sNombreTipoProceso",
                     width: 200,
                 }, {
                     headerName: "Creado El",
@@ -97,6 +105,7 @@ class FormatoImpresion extends Component {
         this.handleEliminar = this.handleEliminar.bind(this)
         this.handleAceptar = this.handleAceptar.bind(this)
         this.handleClose = this.handleClose.bind(this)
+        this.handleModificar=this.handleModificar.bind(this)
     }
 
     componentDidMount() {
@@ -125,9 +134,22 @@ class FormatoImpresion extends Component {
         //     showSuccess(err)
         // });
     }
+    handleModificar(id){
+        console.log (id)
+        this.setState({
+            pantalla: 2,
+            edit: false,
+            agregar: "Modificar",
+            id: id});
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+    }
 
-    async handleAceptar(data) {
-        let file = await toBase64(data.file[0])
+    async handleAceptar(id,data) {
+        //let file = await toBase64(data.file[0])
+        console.log(data)
         var image = null
         if (data.image.length != 0) {
             image = data.image[0]
@@ -139,23 +161,46 @@ class FormatoImpresion extends Component {
             formato: data.formato,
             tipoProceso: data.idTipoProcesoAgregar,
             idUsuario: this.state.CreadoPor,
-            fecha: dateStartString
+            fecha: dateStartString,
+            modificadoEl:data.modificadoEl
         }
 
-        agregarFormatosImpresion(params,data.file[0],image).then(respuesta => {
+        console.log(params)
+        if(this.state.agregar==="Agregar"){
+            agregarFormatosImpresion(params,data.file[0],image).then(respuesta => {
 
-            showSuccess(respuesta.data)
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(0).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Listado').addClass('in show');
+                showSuccess(respuesta.data)
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
 
-            this.getAllData()
-            this.setState({ pantalla: 1 })
-        }).catch(err => {
-            console.log(err)
-            showSuccess(err)
-        });
+                this.getAllData()
+                this.setState({ pantalla: 1})
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+        }
+        else{
+            modificarFormatosImpresion(id,params,image).then(respuesta => {
+
+                showSuccess(respuesta.data)
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+
+                this.getAllData()
+                this.setState({ pantalla: 1,
+                    id:0})
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+        }
+
+
 
     }
 
@@ -165,7 +210,10 @@ class FormatoImpresion extends Component {
 
     getAllData() {
         obtenerFormatosImpresion().then(respuesta => {
-            this.setState({ data: respuesta.data, agregar: "Agregar" })
+            let formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='')
+
+            console.log(formatos)
+            this.setState({ data: formatos, agregar: "Agregar" })
         });
     }
 
@@ -175,7 +223,7 @@ class FormatoImpresion extends Component {
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
-        this.setState({ pantalla: 1 });
+        this.setState({ pantalla: 1,id:0 });
     }
 
     render() {
@@ -218,12 +266,12 @@ class FormatoImpresion extends Component {
 
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
-                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar",id:0 }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                     <i className="fa fa-list" /> Listado
                                 </a>
                             </li>
                             <li >
-                                <a data-toggle="tab" data_id="2" href="#Agregar" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                <a data-toggle="tab" data_id="2" href="#Agregar" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, agregar: "Agregar",id:0 }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
                                     <i className="fa fa-plus-circle" /> {this.state.agregar}
                                 </a>
                             </li>
@@ -264,7 +312,7 @@ class FormatoImpresion extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla === 2 &&
-                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose} />
+                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose } id={this.state.id}/>
                                 }
 
                             </div>

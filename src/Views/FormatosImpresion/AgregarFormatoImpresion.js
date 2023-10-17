@@ -15,6 +15,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import {
+    obtenerFormatosImpresionId,
+    obtenerFormatosImpresionProceso
+} from "../../Util/Contexts/FormatosImpresionContext";
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -37,9 +41,11 @@ class AgregarFormatoImpresion extends Component {
         super(props);
         this.state = {
             formato: "",
+            idTipoProcesoAgregar:"",
             dataTipoDocumento: [],
             file: [],
-            image: []
+            image: [],
+            modificadoEl:""
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -49,6 +55,23 @@ class AgregarFormatoImpresion extends Component {
 
 
     componentDidMount() {
+        console.log(this.props.id)
+        if(this.props.id>0){
+            obtenerFormatosImpresionId(this.props.id).then(respuesta => {
+                console.log(respuesta.data[0])
+                this.setState({
+                    formato:respuesta.data[0].m_sFormato,
+                    idTipoProcesoAgregar:respuesta.data[0].m_nTipoProceso,
+                    file: {
+                        length:1,
+                        [0]:{
+                            name:respuesta.data[0].m_sNombreArchivo
+                        }
+                    },
+                    modificadoEl:respuesta.data[0].m_sModificadoEl
+                })
+            })
+        }
         this.getAllTipoDocumento()
     }
 
@@ -66,11 +89,12 @@ class AgregarFormatoImpresion extends Component {
 
     onSubmit(event) {
         event.preventDefault()
-        this.props.onSubmit(this.state)
+        this.props.onSubmit(this.props.id,this.state)
     }
 
     handleChange = (event) => {
         event.preventDefault();
+        console.log(event.target.value)
         this.setState({
             [event.target.name]: event.target.value,
         });
@@ -131,6 +155,91 @@ class AgregarFormatoImpresion extends Component {
                                                 >
                                                     Viajes Cliente EXCEL
                                                 </option>
+                                                <option
+                                                    key={210}
+                                                    value={210}
+                                                >
+                                                   Recolección
+                                                </option>
+                                                <option
+                                                    key={211}
+                                                    value={211}
+                                                >
+                                                    Embarque
+                                                </option>
+                                                <option
+                                                    key={212}
+                                                    value={212}
+                                                >
+                                                    Guía
+                                                </option>
+                                                <option
+                                                    key={213}
+                                                    value={213}
+                                                >
+                                                    Guía Etiqueta
+                                                </option>
+                                                {
+                                                    localStorage.getItem("RFC")==="ECC9510049KA" &&
+                                                    <option
+                                                        key={222}
+                                                        value={222}
+                                                    >
+                                                        Informe
+                                                    </option>
+                                                }
+                                                {
+                                                    localStorage.getItem("RFC")!=="ECC9510049KA" &&
+                                                    <option
+                                                        key={214}
+                                                        value={214}
+                                                    >
+                                                        Informe
+                                                    </option>
+                                                }
+
+                                                <option
+                                                    key={215}
+                                                    value={215}
+                                                >
+                                                    Informe Última Milla
+                                                </option>
+                                                <option
+                                                    key={216}
+                                                    value={216}
+                                                >
+                                                    CFDI Primera Milla
+                                                </option>
+                                                <option
+                                                    key={217}
+                                                    value={217}
+                                                >
+                                                    CFDI Última Milla
+                                                </option>
+                                                <option
+                                                    key={218}
+                                                    value={218}
+                                                >
+                                                    CFDI Timbrado Viajes
+                                                </option>
+                                                <option
+                                                    key={219}
+                                                    value={219}
+                                                >
+                                                    Corte de Caja
+                                                </option>
+                                                <option
+                                                    key={220}
+                                                    value={220}
+                                                >
+                                                    Corte de Caja General
+                                                </option>
+                                                <option
+                                                    key={223}
+                                                    value={223}
+                                                >
+                                                    Guía Etiqueta Rangos
+                                                </option>
                                             </Select>
                                         </FormControl>
                                     </label>
@@ -142,7 +251,9 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input">
-                                    <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}} />
+                                    <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {
+                                        if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}
+                                    } />
                                     <TextField variant="outlined" margin="dense"
                                                    onChange={this.handleChange}
                                                    className="form-control"
@@ -155,12 +266,17 @@ class AgregarFormatoImpresion extends Component {
                                                    InputProps={{
                                                        endAdornment:
                                                     <InputAdornment position="end">
-                                                      <IconButton
-                                                      onClick={() => document.getElementById("file").click()}
-                                                        edge="end"
-                                                      >
-                                                        <CloudUploadIcon color="primary" fontSize="large" />
-                                                      </IconButton>
+
+                                                        {
+                                                            this.props.id===0 &&
+                                                            <IconButton
+                                                                onClick={() => document.getElementById("file").click()}
+                                                                edge="end"
+                                                            >
+                                                                <CloudUploadIcon color="primary" fontSize="large" />
+                                                            </IconButton>
+                                                        }
+
                                                     </InputAdornment>
                                                   
                                                 }}
@@ -181,12 +297,17 @@ class AgregarFormatoImpresion extends Component {
                                                    InputProps={{
                                                     endAdornment:
                                                  <InputAdornment position="end">
-                                                   <IconButton
-                                                   onClick={() => document.getElementById("image").click()}
-                                                     edge="end"
-                                                   >
-                                                     <CloudUploadIcon color="primary" fontSize="large" />
-                                                   </IconButton>
+                                                     {
+                                                         this.props.id===0 &&
+                                                         <IconButton
+                                                             disabled={this.props.id>0}
+                                                             onClick={() => document.getElementById("image").click()}
+                                                             edge="end"
+                                                         >
+                                                             <CloudUploadIcon color="primary" fontSize="large" />
+                                                         </IconButton>
+                                                     }
+
                                                  </InputAdornment>
                                                
                                              }}
