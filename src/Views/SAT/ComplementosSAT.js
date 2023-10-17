@@ -24,7 +24,6 @@ import {
 import { confirmAlert } from "react-confirm-alert";
 import e from "cors";
 import { id } from "date-fns/locale";
-
 import {validarComplementoSat} from "../../Util/Contexts/SATContext";
 function showSuccess(mensaje) {
     new Noty({
@@ -47,7 +46,7 @@ function ComplementosSAT(props) {
     const [openDialog, setOpenDialog] = useState(false)
     const [dataComplemento, setDataComplemento] = useState({
         id:0,
-        cantidad:0,
+        cantidad:1,
         claveProducto: '',
         claveUnidad: '',
         claveFraccion:'',
@@ -79,7 +78,7 @@ function ComplementosSAT(props) {
                 return{
                     ...dataComplemento,
                     claveUnidad: '',
-                    UnidadSAT: '',    
+                    UnidadSAT: '',
                 }
             })
         }else if(catalogo == 3){
@@ -110,7 +109,7 @@ function ComplementosSAT(props) {
         }else{
             setDataComplemento({
                 id:0,
-                cantidad:0,
+            cantidad:1,
                 claveProducto: '',
                 claveUnidad: '',
                 claveFraccion:'',
@@ -377,7 +376,7 @@ function ComplementosSAT(props) {
             }else{
                 if(caracter){
                     const value = data.target.value;
-                    const sanitizedValue = value.replace(/[^\w\s]/gi, ''); 
+                    const sanitizedValue = value.replace(/[^\w\s]/gi, '');
                     setDataComplemento(dataComplemento =>{
                         return {
                             ...dataComplemento,
@@ -398,11 +397,12 @@ function ComplementosSAT(props) {
     }
 
     const handleAceptar = (data)=>{
-        if(!parseFloat(dataComplemento.cantidad) > 0){
+        console.log(dataComplemento)
+        if(parseFloat(dataComplemento.cantidad) <=0){
             showSuccess("La cantidad debe ser mayor a cero.")
             return
         }
-        if(!parseFloat(dataComplemento.peso) > 0){
+        if(parseFloat(dataComplemento.peso) <=0){
             showSuccess("El peso debe ser mayor a cero.")
             return
         }

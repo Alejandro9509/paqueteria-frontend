@@ -54,8 +54,10 @@ function CrearConceptoSAT(props) {
     });
     const [errores, setErrores] = useState({
         errorCantidad:false,
+        errorPeso:false,
         errorTexto:"Ingrese un numero mayor a 0",
         errorCaracteres: false,
+        errorTextoPeso:""
     })
     const [disableSeleccionar, setDisableSeleccionar] = React.useState({
         disableProducto: true,
@@ -65,46 +67,86 @@ function CrearConceptoSAT(props) {
         disableFraccion: true
     });
 
-    
+
     
     const handleChange = (event) => {
 
         if(event.target.name == "cantidad"){
-            if(event.target.value!==""){
-                if(Number(event.target.value)<=0){
-                    setErrores(errores=>{
-                        return{ 
+            if(event.target.value!=="") {
+                if (Number(event.target.value) <= 0) {
+                    setErrores(errores => {
+                        return {
                             ...errores,
-                            errorCantidad:true,
-                         errorTexto:"Ingrese un numero mayor a 0"
-                        
+                            errorCantidad: true,
+                            errorTexto: "Ingrese un número mayor a 0"
+
                         }
-                     })
-            }else if(isNaN(Number(event.target.value))){
-                setErrores(errores=>{
-                    return{ 
-                        ...errores,
-                        errorCantidad:true,
-                     errorTexto:"Ingrese solo digitos"
-                    }
-                 })
+                    })
+                } else if (isNaN(Number(event.target.value))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorCantidad: true,
+                            errorTexto: "Ingrese solo dígitos"
+                        }
+                    })
+                }
+                else if (!Number.isInteger((Number(event.target.value)))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorCantidad: true,
+                            errorTexto: "Ingrese solo números enteros"
+                        }
+                    })
+                }
+                else {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorCantidad: false
+                        }
+                    })
+                }
             }else{
                 setErrores(errores=>{
-                    return{ 
-                        ...errores,
-                        errorCantidad:false}
-                 })
-            }
-            }else{
-                setErrores(errores=>{
-                    return{ 
+                    return{
                         ...errores,
                      errorCantidad:false}
                  })
             }
         }
+        if (event.target.name == "peso"){
+            if(event.target.value!=="") {
+                if (Number(event.target.value) <= 0) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorPeso: true,
+                            errorTextoPeso: "Ingrese un número mayor a 0"
+
+                        }
+                    })
+                } else if (isNaN(Number(event.target.value))) {
+                    setErrores(errores => {
+                        return {
+                            ...errores,
+                            errorPeso: true,
+                            errorTextoPeso: "Ingrese solo dígitos"
+                        }
+                    })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{
+                        ...errores,
+                        errorPeso:false}
+                })
+            }
+
+        }
         props.onChangeData(0, event)
-    }    
+    }
 
     const selectClase = (row) => {
         props.onChangeData(state.complementoSAT, row.data)
@@ -129,7 +171,7 @@ function CrearConceptoSAT(props) {
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
-              
+
             })
         }else if(catalogo == 2){
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_ClaveUnidad", state.busqueda).then((respuesta) => {
@@ -138,7 +180,7 @@ function CrearConceptoSAT(props) {
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
-              
+
             })
         }else if(catalogo == 3){
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_TipoEmbalaje", state.busqueda).then((respuesta) => {
@@ -147,7 +189,7 @@ function CrearConceptoSAT(props) {
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
-              
+
             })
         }else if (catalogo == 4){
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_FraccionArancelaria", state.busqueda).then((respuesta) => {
@@ -156,7 +198,7 @@ function CrearConceptoSAT(props) {
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
-              
+
             })
         }else if (catalogo == 5){
             return new obtenerSATPaginado(numRegistros, pagina || 0, "c_MaterialPeligroso", state.busqueda).then((respuesta) => {
@@ -165,7 +207,7 @@ function CrearConceptoSAT(props) {
                 }else{
                     showSuccess("No se encontró ningún registro")
                 }
-              
+
             })
         }else{
             if(state.busqueda != ""){
@@ -200,7 +242,7 @@ function CrearConceptoSAT(props) {
     const handleChangeSpecial = (e) => {
         /* if(e.target.name == "claveUnidad"){ */
             const value = e.target.value;
-            const sanitizedValue = value.replace(/[^\w\s]/gi, ''); 
+            const sanitizedValue = value.replace(/[^\w\s]/gi, '');
             if (value !== sanitizedValue) {
                 setErrores({
                     ...errores,
@@ -215,28 +257,28 @@ function CrearConceptoSAT(props) {
                     errorCaracteres: false});
 /*                     setDisableSeleccionar({
                         ...disableSeleccionar,
-                        disableUnidad: false});  */                   
-                    props.onChangeData(6, e)    
-            }           
+                        disableUnidad: false});  */
+                    props.onChangeData(6, e)
+            }
 /*         }else if (e.target.name == "claveProducto"){
             setDisableSeleccionar({
                 ...disableSeleccionar,
-                disableProducto: false});             
+                disableProducto: false});
             props.onChangeData(6, e)
         }else if (e.target.name == "claveMaterialPeligroso"){
             setDisableSeleccionar({
                 ...disableSeleccionar,
-                disableMaterialPeligroso: false});             
+                disableMaterialPeligroso: false});
             props.onChangeData(6, e)
         }else if(e.target.name == "claveEmbalaje"){
             setDisableSeleccionar({
                 ...disableSeleccionar,
-                disableEmbalaje: false});             
+                disableEmbalaje: false});
             props.onChangeData(6, e)
         }else if(e.target.name == "claveFraccion"){
             setDisableSeleccionar({
                 ...disableSeleccionar,
-                disableFraccion: false});             
+                disableFraccion: false});
             props.onChangeData(6, e)
         }
  */    }
@@ -246,12 +288,12 @@ function CrearConceptoSAT(props) {
             var catalogo = "c_ClaveProdServCP";
             setState({
                 ...state,
-                catalogo: "c_ClaveProdServCP", 
-                busqueda: "", 
+                catalogo: "c_ClaveProdServCP",
+                busqueda: "",
                 complementoSAT: 1,
                 titulo:"Producto o Servicio",
             })
-    
+
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveProducto).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(1, respuesta.data)
@@ -259,18 +301,18 @@ function CrearConceptoSAT(props) {
                     showSuccess(respuesta.data)
                     props.resetComplemento(1)
                 }
-            })        
+            })
         }else if(idcomplemento === 2 && props.dataComplemento.claveUnidad){
             var catalogo = "c_ClaveUnidad";
 
             setState({
-                ...state, 
-                catalogo: "c_ClaveUnidad", 
-                busqueda: "", 
+                ...state,
+                catalogo: "c_ClaveUnidad",
+                busqueda: "",
                 complementoSAT: 2,
                 titulo:"Unidad medida",
             })
-    
+
             obtenerSATBusqueda(catalogo,props.dataComplemento.claveUnidad).then(respuesta => {
                 if(respuesta.data.Estatus){
                     props.onChangeData(2, respuesta.data)
@@ -278,14 +320,14 @@ function CrearConceptoSAT(props) {
                     props.resetComplemento(2)
                     showSuccess(respuesta.data)
                 }
-            })       
+            })
         }else if(idcomplemento === 3 && props.dataComplemento.claveEmbalaje){
             var catalogo = "c_TipoEmbalaje";
 
             setState({
                 ...state,
-                catalogo: "c_TipoEmbalaje", 
-                busqueda: "", 
+                catalogo: "c_TipoEmbalaje",
+                busqueda: "",
                 complementoSAT: 3,
                 titulo:"Embalaje",
             })
@@ -296,14 +338,14 @@ function CrearConceptoSAT(props) {
                     props.resetComplemento(4)
                     showSuccess(respuesta.data)
                 }
-            })               
+            })
         }else if(idcomplemento === 4 && props.dataComplemento.claveFraccion){
             var catalogo = "c_FraccionArancelaria";
 
             setState({
                 ...state,
-                catalogo: "c_FraccionArancelaria", 
-                busqueda: "", 
+                catalogo: "c_FraccionArancelaria",
+                busqueda: "",
                 complementoSAT: 4,
                 titulo:"Fracción arancelaria",
             })
@@ -314,14 +356,14 @@ function CrearConceptoSAT(props) {
                     props.resetComplemento(5)
                     showSuccess(respuesta.data)
                 }
-            })               
+            })
         }else if(idcomplemento === 5 && props.dataComplemento.claveMaterialPeligroso){
             var catalogo = "c_MaterialPeligroso";
 
             setState({
                 ...state,
-                catalogo: "c_MaterialPeligroso", 
-                busqueda: "", 
+                catalogo: "c_MaterialPeligroso",
+                busqueda: "",
                 complementoSAT: 5,
                 titulo:"Material peligroso",
             })
@@ -332,7 +374,7 @@ function CrearConceptoSAT(props) {
                     props.resetComplemento(3)
                     showSuccess(respuesta.data)
                 }
-            })        
+            })
         }
     }
 
@@ -387,6 +429,9 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.cantidad}
                                     onChange={handleChange}
                                     name="cantidad"
+                                    error={errores.errorCantidad}
+                                    helperText={errores.errorCantidad ? errores.errorTexto : null}
+                                    InputProps={{ inputProps: { min: 1 } }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -400,8 +445,17 @@ function CrearConceptoSAT(props) {
                                     disabled={props.consulta}
                                     value={props.dataComplemento.peso}
                                     onChange={handleChange}
+                                    error={errores.errorPeso}
+                                    helperText={errores.errorPeso ? errores.errorTextoPeso : null}
                                     name="peso"
+                                    InputProps={{ inputProps: { min: 0 } }}
                                 />
+                                {
+                                    errores.errorPeso &&
+                                    <div style={{ "margin":"5%"}}>
+
+                                    </div>
+                                }
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <TextField
