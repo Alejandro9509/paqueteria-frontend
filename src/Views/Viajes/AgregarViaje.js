@@ -198,7 +198,6 @@ class AgregarViaje extends Component {
         this.handleChangeRuta = this.handleChangeRuta.bind(this);
         this.onSubmitDestinoInforme = this.onSubmitDestinoInforme.bind(this);
         this.handleChangeDataPermisionario = this.handleChangeDataPermisionario.bind(this);
-        this.imprimir = this.imprimir.bind(this);
         this.handleCloseDialogUnidades = this.handleCloseDialogUnidades.bind(this);
         this.handleAcceptDataUnidades = this.handleAcceptDataUnidades.bind(this);
         this.handleCloseDialogRemolques = this.handleCloseDialogRemolques.bind(this);
@@ -923,10 +922,6 @@ class AgregarViaje extends Component {
 
     }
 
-    imprimir(){
-        console.log(this.state);
-        console.log(this.state.operador.m_nIdOperador);
-    }
     handleCloseDialogUnidades(){
         this.setState({ openDialogUnidades: false })
         /** Para evitar que se quite la barra de navegacion */
@@ -942,9 +937,9 @@ class AgregarViaje extends Component {
             estatusUnidad: data.EstatusUnidad,
             colorUnidad: data.ColorEstatus,
             kms: data.m_nOdometro,
-            identificadorConvoyUnidad: data.IdentificadorConvoy
+            identificadorConvoyUnidad: data.IdentificadorConvoy,
             // horas: newValue.m_nHorasTrabajadasMotorNoGPS,
-            // aplicaRemolque: newValue.m_bAplicaRemolque
+            aplicaRemolque: data.m_bAplicaRemolque
         })
         this.setState({ openDialogRemolques: true })
     }
@@ -1628,11 +1623,6 @@ class AgregarViaje extends Component {
                                         EsConsulta={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
                                     />
                                     </div>
-                                </div>
-                                {/*JesusTics*/}
-                                <div>
-                                    <Button onClick={this.imprimir}>Imprimir</Button>
-
                                 </div>
                                 <div className="row">
                                     <div className="widget-header">
