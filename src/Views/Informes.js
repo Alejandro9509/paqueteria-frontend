@@ -130,8 +130,8 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
-    // const [openDialog, setOpenDialog] = useState(false)
-    // const [dataReportes, setDataReportes] = useState([])
+    const [openDialogReportes, setOpenDialogReportes] = useState(false)
+    const [dataReportes, setDataReportes] = useState([])
     // const [seleccion, setSeleccion] = useState(null)
 
 
@@ -370,42 +370,38 @@ function Informes({history}) {
         }
         else {
             await obtenerFormatosImpresionProceso(214).then(({data}) => {
-                // setDataReportes(data)
+                setDataReportes(data)
                 listadoReportes = data
-                console.log(data)
+                // console.log(data)
             })
         }
         if (listadoReportes.length === 0) {
             showError("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
             return
         }
-        let listadoReportesFiltrado=listadoReportes.filter((r)=>r.m_bActivo===true)
 
-        console.log(listadoReportesFiltrado)
-
-        if(listadoReportesFiltrado[0].m_sNombreArchivo==="RPT_ProInformeMOROLEON_EXCEL.wde"){
-            imprimirFormatosIdInforme(listadoReportesFiltrado[0].m_nIdFormato, row.m_nIdInforme,false).then(({data}) => {
-                var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
-                var a = document.createElement('a');
-                a.href = mediaType+encodeURI(data.m_sArchivo);
-                a.download = 'Informe.xlsx';
-                a.textContent = 'Descargar Archivo';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-            })
-        }
-        else{
-            imprimirFormatosIdInforme(listadoReportesFiltrado[0].m_nIdFormato, row.m_nIdInforme,true).then(({data}) => {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "Informe" + row.m_sFolioInforme.replace(/\./g, ' ');
-            })
-        }
+        // if(listadoReportes[listadoReportes.length - 1].m_sNombreArchivo.toUpperCase().includes("EXCEL")){
+        //     imprimirFormatosIdInforme(listadoReportes[listadoReportes.length - 1].m_nIdFormato, row.m_nIdInforme, false).then(({data}) => {
+        //         let a = document.createElement('a');
+        //         a.href = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64, "+ encodeURI(data.m_sArchivo);
+        //         a.download = "Informe" + row.m_sFolioInforme.replace(/\./g, ' ');
+        //         a.textContent = 'Descargar Archivo';
+        //         document.body.appendChild(a);
+        //         a.click();
+        //         a.remove();
+        //     })
+        // }
+        // else{
+        //     imprimirFormatosIdInforme(listadoReportes[listadoReportes.length - 1].m_nIdFormato, row.m_nIdInforme, true).then(({data}) => {
+        //         let pdfWindow = window.open("");
+        //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //         pdfWindow.document.body.style.margin = "0px";
+        //         pdfWindow.document.title = "Informe" + row.m_sFolioInforme.replace(/\./g, ' ');
+        //     })
+        // }
 
         // setSeleccion(row)
-        // setOpenDialog(true)
+        setOpenDialogReportes(true)
 
         /*obtenerInformeReporte(id).then(({data}) => {
             /!*let pdfWindow = window.open("");
@@ -424,36 +420,40 @@ function Informes({history}) {
             }
         })*/
     }
-    // const handleOnChangeReporte = (data) => {
-    //     console.log(data)
-    //     setState({
-    //         ...state,
-    //         reporteSeleccionado: data
-    //     })
-    // }
-    // const handleGenerarReporte=(e)=>{
-    //     e.preventDefault()
-    //     console.log(state.reporteSeleccionado)
-    //     console.log(seleccion)
-    //
-    //     if (state.reporteSeleccionado.length === 0) {
-    //         showError("Es necesario seleccionar al menos un reporte")
-    //         return
-    //     }
-    //
-    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdInforme).then(({data}) => {
-    //         console.log(data)
-    //         let pdfWindow = window.open("");
-    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-    //         pdfWindow.document.body.style.margin = "0px";
-    //         pdfWindow.document.title = "Informe" + seleccion.m_sFolioInforme.replace(/\./g, ' ');
-    //     })
-    //     setState({
-    //         ...state,
-    //         reporteSeleccionado: null
-    //     })
-    //     setOpenDialog(false)
-    // }
+    const handleGenerarReporte=(e)=>{
+        e.preventDefault()
+        // console.log(seleccion)
+        let reporte = dataReportes.find( i => i.m_nIdFormato === state.reporteSeleccionado)
+        if (reporte === undefined) {
+            showError("Es necesario seleccionar un reporte")
+            return
+        }
+        if (reporte.m_sNombreArchivo.toUpperCase().includes('EXCEL')) {
+            imprimirFormatosIdInforme(reporte.m_nIdFormato, state.IdInforme, false).then(({data}) => {
+                let a = document.createElement('a');
+                a.href = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64, "+ encodeURI(data.m_sArchivo);
+                a.download = "Informe" + state.FolioInforme.replace(/\./g, ' ');
+                a.textContent = 'Descargar Archivo';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+        } else {
+            imprimirFormatosIdInforme(reporte.m_nIdFormato, state.IdInforme, true).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Informe" + state.FolioInforme.replace(/\./g, ' ');
+            })
+        }
+
+        setState({
+            ...state,
+            reporteSeleccionado: null
+        })
+        setOpenDialogReportes(false)
+    }
 
     function handleSelectDatos(id, cp) {
         setState({
@@ -550,7 +550,7 @@ function Informes({history}) {
 
         tipoModal: 0,
         IdInforme: 0,
-        FolioInforme: 0,
+        FolioInforme: '',
         fechaHora: '',
         DerechoBorrar: 151,
         EstatusInforme: 5,
@@ -609,7 +609,7 @@ function Informes({history}) {
 
                 tipoModal: 0,
                 IdInforme: 0,
-                FolioInforme: 0,
+                FolioInforme: '',
                 DerechoBorrar: 151,
                 EstatusInforme: 5,
                 IdViaje: {},
@@ -1441,70 +1441,70 @@ function Informes({history}) {
     return (
         <div>
 
-            {/*{*/}
-            {/*    openDialog &&*/}
-            {/*    <Dialog*/}
-            {/*        open={openDialog}*/}
-            {/*        onClose={() => setOpenDialog(false)}*/}
-            {/*        fullWidth maxWidth="md"*/}
-            {/*    >*/}
-            {/*        <DialogTitle>*/}
-            {/*            Reporte de Informe*/}
-            {/*        </DialogTitle>*/}
-            {/*        <DialogContent>*/}
-            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
-            {/*                <form onSubmit={handleGenerarReporte}>*/}
-            {/*                    <Grid container spacing={1}>*/}
-            {/*                        <Grid item sm={6}>*/}
-            {/*                            <FormControl*/}
-            {/*                                className="input select"*/}
-            {/*                                fullWidth variant="outlined"*/}
-            {/*                                required*/}
-            {/*                                margin="dense">*/}
-            {/*                                <InputLabel*/}
-            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
-            {/*                                <Select*/}
-            {/*                                    fullWidth*/}
-            {/*                                    labelId="idReporteLabel"*/}
-            {/*                                    label="Reporte"*/}
-            {/*                                    className="form-control"*/}
-            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
-            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
-            {/*                                    name="reporteSeleccionado"*/}
-            {/*                                >*/}
-            {/*                                    {dataReportes.map((reporte) => (*/}
-            {/*                                        <MenuItem*/}
-            {/*                                            key={reporte.m_nIdFormato}*/}
-            {/*                                            value={reporte.m_nIdFormato}*/}
-            {/*                                        >*/}
-            {/*                                            {reporte.m_sFormato}*/}
-            {/*                                        </MenuItem>*/}
-            {/*                                    ))}*/}
-            {/*                                </Select>*/}
-            {/*                            </FormControl>*/}
-            {/*                        </Grid>*/}
-            {/*                    </Grid>*/}
-            {/*                    <DialogActions>*/}
+            {
+                openDialogReportes &&
+                <Dialog
+                    open={openDialogReportes}
+                    onClose={() => setOpenDialogReportes(false)}
+                    fullWidth maxWidth="md"
+                >
+                    <DialogTitle>
+                        Reporte de Informe
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <form onSubmit={handleGenerarReporte}>
+                                <Grid container spacing={1}>
+                                    <Grid item sm={6}>
+                                        <FormControl
+                                            className="input select"
+                                            fullWidth variant="outlined"
+                                            required
+                                            margin="dense">
+                                            <InputLabel
+                                                id="idReporteLabel">Formato de Reporte</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="idReporteLabel"
+                                                label="Reporte"
+                                                className="form-control"
+                                                value={state.reporteSeleccionado ?? ''}
+                                                onChange={(e) => { setState({ ...state, reporteSeleccionado: e.target.value }) }}
+                                                name="reporteSeleccionado"
+                                            >
+                                                {dataReportes.map((reporte) => (
+                                                    <MenuItem
+                                                        key={reporte.m_nIdFormato}
+                                                        value={reporte.m_nIdFormato}
+                                                    >
+                                                        {reporte.m_sFormato}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <DialogActions>
 
-            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
-            {/*                            setOpenDialog(false)*/}
-            {/*                            setState({*/}
-            {/*                                ...state,*/}
-            {/*                                reporteSeleccionado: null*/}
-            {/*                            })*/}
-            {/*                        }*/}
-            {/*                        }>*/}
-            {/*                            Cancelar*/}
-            {/*                        </button>*/}
-            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
-            {/*                            Aceptar*/}
-            {/*                        </button>*/}
-            {/*                    </DialogActions>*/}
-            {/*                </form>*/}
-            {/*            </div>*/}
-            {/*        </DialogContent>*/}
-            {/*    </Dialog>*/}
-            {/*}*/}
+                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                        setOpenDialogReportes(false)
+                                        setState({
+                                            ...state,
+                                            reporteSeleccionado: null
+                                        })
+                                    }
+                                    }>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                        Aceptar
+                                    </button>
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            }
 
             <Dialog
                 open={state.openDialog}
@@ -1783,6 +1783,7 @@ function Informes({history}) {
                                                 setState({
                                                     ...state,
                                                     IdInforme: row.data.m_nIdInforme,
+                                                    FolioInforme: row.data.m_sFolioInforme,
                                                 });
                                             }}
                                         />
@@ -1914,7 +1915,7 @@ function Informes({history}) {
                                                                                         id="tipoTimbrado"
                                                                                         name="tipoTimbrado"
                                                                                         read="true"
-                                                                                        disabled={state.FolioInforme !== 0}
+                                                                                        disabled={state.FolioInforme !== ''}
                                                                                         onChange={handleSelectTipoTimbrado}
                                                                                         value={state.tipoTimbrado}
                                                                                     >
