@@ -84,6 +84,14 @@ function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
     );
     return result
 }
+function imprimirFormatosIdInforme(id,idTipoReporte,esPDF){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte,EsPDF:esPDF}), { headers})
+    );
+    return result
+}
 function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -109,4 +117,4 @@ function imprimirFormatosIdCorteCajaGeneral(id,fechaRegistro,horaRegistro){
     return result
 }
 
-export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral,modificarFormatosImpresion,obtenerFormatosImpresionId}
+export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral,modificarFormatosImpresion,obtenerFormatosImpresionId,imprimirFormatosIdInforme}
