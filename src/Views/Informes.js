@@ -84,6 +84,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import {confirmAlert} from "react-confirm-alert";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
+import DialogFormatosImpresion from "./DialogFormatosImpresion";
 import {showError} from "../Util/GlobalFunctions";
 import ProgressBarCubicaje from "./Viajes/ProgressBarCubicaje";
 
@@ -129,9 +130,7 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
-    // const [openDialog, setOpenDialog] = useState(false)
-    // const [dataReportes, setDataReportes] = useState([])
-    // const [seleccion, setSeleccion] = useState(null)
+    const [openDialogReportes, setOpenDialogReportes] = useState(false)
 
 
     // useEffect(()=>{
@@ -238,7 +237,7 @@ function Informes({history}) {
                         {/*</Tooltip>*/}
                         <Tooltip title="Reporte">
                             <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row)}
+                               onClick={() => handleOnReporteClick(row.row)}
                                disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
                                                                       style={{color: "#F9A03E"}}/></a>
 
@@ -341,118 +340,28 @@ function Informes({history}) {
         },
     ]);
 
-    // function generarReporteOpcion1(row) {
-    //     obtenerInformeReporte(row.m_nIdInforme).then(({data}) => {
-    //         /*let pdfWindow = window.open("");
-    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-    //         pdfWindow.document.body.style.margin = "0px";
-    //         pdfWindow.document.title = "Informe " + folio;*/
-    //         try {
-    //             const link = document.createElement('a');
-    //             link.href = "data:application/pdf;base64," + data;
-    //             link.setAttribute('download', "Informe " + row.m_sFolioInforme.replace(/\./g, ' '));
-    //             document.body.appendChild(link);
-    //             link.click();
-    //         } catch (e) {
-    //             console.log(e)
-    //             showSuccess("No se pudo descargar el pdf")
-    //         }
-    //     })
-    // }
-    async function generarReporte(row) {
-        let listadoReportes = []
-        if (localStorage.getItem("RFC") === "ECC9510049KA") {
-            await obtenerFormatosImpresionProceso(222).then(({data}) => {
-                // setDataReportes(data)
-                listadoReportes = data
-            })
-        }
-        else {
-            await obtenerFormatosImpresionProceso(214).then(({data}) => {
-                // setDataReportes(data)
-                listadoReportes = data
-                console.log(data)
-            })
-        }
-        if (listadoReportes.length === 0) {
-            showError("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
+    async function handleOnReporteClick(row) {
+        setOpenDialogReportes(true)
+    }
+    const handleGenerarReporte=(data)=>{
+        if (data === null) {
             return
         }
-        let listadoReportesFiltrado=listadoReportes.filter((r)=>r.m_bActivo===true)
-
-        console.log(listadoReportesFiltrado)
-
-        if(listadoReportesFiltrado[0].m_sNombreArchivo==="RPT_ProInformeMOROLEON_EXCEL.wde"){
-            imprimirFormatosIdInforme(listadoReportesFiltrado[0].m_nIdFormato, row.m_nIdInforme,false).then(({data}) => {
-                var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
-                var a = document.createElement('a');
-                a.href = mediaType+encodeURI(data.m_sArchivo);
-                a.download = 'Informe.xlsx';
-                a.textContent = 'Descargar Archivo';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-            })
-        }
-        else{
-            imprimirFormatosIdInforme(listadoReportesFiltrado[0].m_nIdFormato, row.m_nIdInforme,true).then(({data}) => {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "Informe" + row.m_sFolioInforme.replace(/\./g, ' ');
-            })
-        }
-
-        // setSeleccion(row)
-        // setOpenDialog(true)
-
-        /*obtenerInformeReporte(id).then(({data}) => {
-            /!*let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+        if (data.m_sNombreArchivo.toUpperCase().includes('EXCEL')) {
+            let a = document.createElement('a');
+            a.href = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64, "+ encodeURI(data.m_sArchivo);
+            a.download = "Informe" + state.FolioInforme.replace(/\./g, ' ');
+            a.textContent = 'Descargar Archivo';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } else {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe " + folio;*!/
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Informe " + folio.replace(/\./g, ' '));
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
-            }
-        })*/
+            pdfWindow.document.title = "Informe" + state.FolioInforme.replace(/\./g, ' ');
+        }
     }
-    // const handleOnChangeReporte = (data) => {
-    //     console.log(data)
-    //     setState({
-    //         ...state,
-    //         reporteSeleccionado: data
-    //     })
-    // }
-    // const handleGenerarReporte=(e)=>{
-    //     e.preventDefault()
-    //     console.log(state.reporteSeleccionado)
-    //     console.log(seleccion)
-    //
-    //     if (state.reporteSeleccionado.length === 0) {
-    //         showError("Es necesario seleccionar al menos un reporte")
-    //         return
-    //     }
-    //
-    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdInforme).then(({data}) => {
-    //         console.log(data)
-    //         let pdfWindow = window.open("");
-    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-    //         pdfWindow.document.body.style.margin = "0px";
-    //         pdfWindow.document.title = "Informe" + seleccion.m_sFolioInforme.replace(/\./g, ' ');
-    //     })
-    //     setState({
-    //         ...state,
-    //         reporteSeleccionado: null
-    //     })
-    //     setOpenDialog(false)
-    // }
 
     function handleSelectDatos(id, cp) {
         setState({
@@ -549,7 +458,7 @@ function Informes({history}) {
 
         tipoModal: 0,
         IdInforme: 0,
-        FolioInforme: 0,
+        FolioInforme: '',
         fechaHora: '',
         DerechoBorrar: 151,
         EstatusInforme: 5,
@@ -608,7 +517,7 @@ function Informes({history}) {
 
                 tipoModal: 0,
                 IdInforme: 0,
-                FolioInforme: 0,
+                FolioInforme: '',
                 DerechoBorrar: 151,
                 EstatusInforme: 5,
                 IdViaje: {},
@@ -1123,71 +1032,15 @@ function Informes({history}) {
     return (
         <div>
 
-            {/*{*/}
-            {/*    openDialog &&*/}
-            {/*    <Dialog*/}
-            {/*        open={openDialog}*/}
-            {/*        onClose={() => setOpenDialog(false)}*/}
-            {/*        fullWidth maxWidth="md"*/}
-            {/*    >*/}
-            {/*        <DialogTitle>*/}
-            {/*            Reporte de Informe*/}
-            {/*        </DialogTitle>*/}
-            {/*        <DialogContent>*/}
-            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
-            {/*                <form onSubmit={handleGenerarReporte}>*/}
-            {/*                    <Grid container spacing={1}>*/}
-            {/*                        <Grid item sm={6}>*/}
-            {/*                            <FormControl*/}
-            {/*                                className="input select"*/}
-            {/*                                fullWidth variant="outlined"*/}
-            {/*                                required*/}
-            {/*                                margin="dense">*/}
-            {/*                                <InputLabel*/}
-            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
-            {/*                                <Select*/}
-            {/*                                    fullWidth*/}
-            {/*                                    labelId="idReporteLabel"*/}
-            {/*                                    label="Reporte"*/}
-            {/*                                    className="form-control"*/}
-            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
-            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
-            {/*                                    name="reporteSeleccionado"*/}
-            {/*                                >*/}
-            {/*                                    {dataReportes.map((reporte) => (*/}
-            {/*                                        <MenuItem*/}
-            {/*                                            key={reporte.m_nIdFormato}*/}
-            {/*                                            value={reporte.m_nIdFormato}*/}
-            {/*                                        >*/}
-            {/*                                            {reporte.m_sFormato}*/}
-            {/*                                        </MenuItem>*/}
-            {/*                                    ))}*/}
-            {/*                                </Select>*/}
-            {/*                            </FormControl>*/}
-            {/*                        </Grid>*/}
-            {/*                    </Grid>*/}
-            {/*                    <DialogActions>*/}
-
-            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
-            {/*                            setOpenDialog(false)*/}
-            {/*                            setState({*/}
-            {/*                                ...state,*/}
-            {/*                                reporteSeleccionado: null*/}
-            {/*                            })*/}
-            {/*                        }*/}
-            {/*                        }>*/}
-            {/*                            Cancelar*/}
-            {/*                        </button>*/}
-            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
-            {/*                            Aceptar*/}
-            {/*                        </button>*/}
-            {/*                    </DialogActions>*/}
-            {/*                </form>*/}
-            {/*            </div>*/}
-            {/*        </DialogContent>*/}
-            {/*    </Dialog>*/}
-            {/*}*/}
-
+            { (openDialogReportes && (state.IdInforme > 0)) &&
+                <DialogFormatosImpresion
+                    idRegistro={state.IdInforme}
+                    idProceso={214}
+                    handleOnClose={handleGenerarReporte}
+                    setOpenDialog={setOpenDialogReportes}
+                    openDialog={openDialogReportes}
+                />
+            }
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -1339,6 +1192,7 @@ function Informes({history}) {
                                                 setState({
                                                     ...state,
                                                     IdInforme: row.data.m_nIdInforme,
+                                                    FolioInforme: row.data.m_sFolioInforme,
                                                 });
                                             }}
                                         />
@@ -1470,7 +1324,7 @@ function Informes({history}) {
                                                                                         id="tipoTimbrado"
                                                                                         name="tipoTimbrado"
                                                                                         read="true"
-                                                                                        disabled={state.FolioInforme !== 0}
+                                                                                        disabled={state.FolioInforme !== ''}
                                                                                         onChange={handleSelectTipoTimbrado}
                                                                                         value={state.tipoTimbrado}
                                                                                     >
