@@ -258,7 +258,9 @@ export default function ViajeForaneo(props) {
                             disabled={props.disabled}
                         />
                     </Grid>
-
+                    <Grid item xs={3}>
+                        <Typography variant={"h5"} color={"error"}>*La validación de flete mínimo no se aplicará si se deja en 0.</Typography>
+                    </Grid>
                 </Grid>
                 <div style={{height: '200px', overflow: 'scroll'}}>
                     {
