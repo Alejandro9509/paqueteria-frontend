@@ -1369,7 +1369,6 @@ function Viajes() {
                                 m_sFolio: state.informe.m_sFolioInforme,
                                 folioCancelar: state.informe.m_sFolioFiscalUUIDSustituido || state.informe.m_sFolioFiscalUUID
                              }}
-                             esInforme={true}
                 />
             }
             {
