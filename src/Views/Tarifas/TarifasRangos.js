@@ -17,7 +17,8 @@ import {
     eliminarTarifaRangos,
     modificarTarifaRangos,
     obtenerTarifaRangosById,
-    obtenerTarifasRangos
+    obtenerTarifasRangos,
+    obtenerTarifasFiltro
 } from "../../Util/Contexts/TarifasContext";
 import Noty from "noty";
 import {getRandomId} from "../../Util/Util";
@@ -374,6 +375,30 @@ export default function TarifasRangos(props) {
             }
         })
     }
+    const handleChange = (value)=>{
+        if (state.clienteGenerico === null){
+            obtenerClientePublicoGeneral().then(respuestaCliente => {
+                obtenerTarifasFiltro(value).then(respuesta => {
+                    setState(state => {
+                        return{
+                            ...state,
+                            tarifas: respuesta.data,
+                            clienteGenerico: respuestaCliente.data
+                        }
+                    })
+                })
+            })
+        }else{
+            obtenerTarifasFiltro(value).then(respuesta => {
+                setState(state => {
+                    return{
+                        ...state,
+                        tarifas: respuesta.data
+                    }
+                })
+            })
+        }
+    }
     const handleModificarTarifa = (params) => {
         modificarTarifaRangos(params.idTarifa,params).then(respuesta => {
             console.log(respuesta.data)
@@ -397,6 +422,7 @@ export default function TarifasRangos(props) {
 
     return(
         <section className="main-container">
+
             <div className="container-fluid">
                 <ul className="nav navStatica nav-tabs">
                     <li className="active">
@@ -415,6 +441,30 @@ export default function TarifasRangos(props) {
                     <div id="Listado" className="tab-pane fade in show">
                         <div className="widget-wrap">
                             <div className="widget-content">
+                                <div className="row" style={{  width: '100%' }}>
+
+                                <Grid container spacing={2}>
+                                                        
+                                                        <Grid item xs={3} >
+                                                            <div className="input">
+                                                                <TextField variant="outlined" margin="dense"
+                                                                           onChange={(e) => handleChange(e.target.value)}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Nombre del cliente"
+                                                                           placeholder={"Ingrese el nombre del cliente"}
+                                                                          
+                                                                           id="nombreCliente"
+                                                                           name="nombreCliente"
+                                                                          
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
+                                                                />
+                                                            </div>
+                                                        </Grid>
+                                                        </Grid>
+                                </div>
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                     <DataGrid
                                         localeText={dataGridLocaleText}
