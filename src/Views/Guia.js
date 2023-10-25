@@ -136,8 +136,6 @@ import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposD
 import EmailIcon from '@material-ui/icons/Email';
 import DialogImpresion from "./Guia/DialogImpresion";
 import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
-import { getDate } from "date-fns";
-import { func } from "prop-types";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
