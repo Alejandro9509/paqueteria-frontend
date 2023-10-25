@@ -76,11 +76,11 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
         );
     return result
 }
-function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
+function imprimirFormatosIdIdTipoReporte(id,idTipoReporte,anio,dia,mes){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
     trackPromise(
-        result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte}), { headers})
+        result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte, anio: anio, dia: dia,mes: mes}), { headers})
     );
     return result
 }

@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
-import {getCurrentDateTime,getCurrentTime,getCurrentDate} from "../Util/Util"
+import {getCurrentDateTime,getCurrentTime,getCurrentDate,mesString} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
 import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
@@ -135,6 +135,8 @@ import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposD
 import EmailIcon from '@material-ui/icons/Email';
 import DialogImpresion from "./Guia/DialogImpresion";
 import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
+import { getDate } from "date-fns";
+import { func } from "prop-types";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -183,7 +185,8 @@ const useStyles = makeStyles(styles);
 const FORMATOS_IMPRESION = {
     GUIA: 212,
     ETIQUETAS: 213,
-    ETIQUETAS_RANGOS: 223
+    ETIQUETAS_RANGOS: 223,
+    GUIA_MOROLEON: 224,
 }
 
 function Guia(props) {
@@ -1199,22 +1202,70 @@ function Guia(props) {
         style: 'currency',
         currency: 'USD',
     });
+   /*  const mesString = (mes) => {
+        if(mes === 1){
+            return "enero"
+        }           
+        if(mes === 2){
+            return "febrero"
 
+        }
+        if(mes === 3){
+            return "marzo"
+
+        }
+        if(mes === 4){
+            return "abril"
+
+        }
+        if(mes === 5){
+            return "mayo"
+
+        }
+        if(mes === 6){
+            return "junio"
+
+        }
+        if(mes === 7){
+            return "julio"
+
+        }
+        if(mes === 8){
+            return "agosto"
+
+        }
+        if(mes === 9){
+            return "septiembre" 
+        }           
+
+        if(mes === 10){
+            return "octubre"
+        }
+        if(mes === 11){
+            return "noviembre"
+        }
+        if(mes === 12){
+            return "diciembre"
+        }
+    } */
     function generarReporte(row) {
         // console.log(row)
         // setSeleccion(row)
         // setOpenDialog(true)
-        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then((respuesta) => {
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA_MOROLEON).then((respuesta) => {
             // setDataReportes(data)
             // setState(state => {
             //     return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
             // })
-            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia).then(({data}) => {
+            var mes = mesString(today.getMonth()+1)
+
+            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia,today.getFullYear(),today.getDate(),mes).then(({data}) => {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
             })
+            
         })
         // imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, row.m_nIdGuia).then(({data}) => {
         //     console.log(data)
