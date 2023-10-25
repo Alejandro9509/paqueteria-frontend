@@ -105,6 +105,7 @@ import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {obtenerTipoServicio} from "../Util/Contexts/TipoServiciosContext";
 import {obtenerImpuestosTipo} from "../Util/Contexts/ImpuestosContext";
 import {
+    imprimirFormatoGuiaMoroleon,
     imprimirFormatosId, imprimirFormatosIdIdTipoReporte,
     obtenerFormatosImpresion,
     obtenerFormatosImpresionProceso
@@ -185,8 +186,7 @@ const useStyles = makeStyles(styles);
 const FORMATOS_IMPRESION = {
     GUIA: 212,
     ETIQUETAS: 213,
-    ETIQUETAS_RANGOS: 223,
-    GUIA_MOROLEON: 224,
+    ETIQUETAS_RANGOS: 223
 }
 
 function Guia(props) {
@@ -1249,55 +1249,15 @@ function Guia(props) {
         }
     } */
     function generarReporte(row) {
-        // console.log(row)
-        // setSeleccion(row)
-        // setOpenDialog(true)
-        var mes = mesString(today.getMonth()+1)
-        if(localStorage.getItem("RFC")!=="SOPO110101PQ1"){
-            console.log("No es sopo")
-            obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then((respuesta) => {
-                // setDataReportes(data)
-                // setState(state => {
-                //     return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
-                // })
-                imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia).then(({data}) => {
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
-                })
-                
-            })
-        }else{
-        console.log("Es sopo")
-        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA_MOROLEON).then((respuesta) => {
-            // setDataReportes(data)
-            // setState(state => {
-            //     return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
-            // })
-            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia,today.getFullYear(),today.getDate(),mes).then(({data}) => {
+        let mes = mesString(today.getMonth()+1)
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then((respuesta) => {
+            imprimirFormatoGuiaMoroleon(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia,today.getFullYear(),today.getDate(),mes).then(({data}) => {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
             })
-            
         })
-        }
-
-        // imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, row.m_nIdGuia).then(({data}) => {
-        //     console.log(data)
-        //     let pdfWindow = window.open("");
-        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-        //     pdfWindow.document.body.style.margin = "0px";
-        //     pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
-        // })
-        /*obtenerGuiaReporte(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
-        })*/
     }
 
     // const handleOnChangeReporte = (data) => {
