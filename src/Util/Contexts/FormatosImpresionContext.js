@@ -84,21 +84,6 @@ function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
     );
     return result
 }
-
-function imprimirFormatoGuiaMoroleon(id,idTipoReporte,anio,dia,mes){
-    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
-    let result;
-    if(anio && dia && mes){
-        trackPromise(
-            result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte, anio: anio, dia: dia,mes: mes}), { headers})
-        );
-    }else{
-        trackPromise(
-            result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte}), { headers})
-        );
-    }
-    return result
-}
 function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -121,6 +106,20 @@ function imprimirFormatosIdCorteCajaGeneral(id,fechaRegistro,horaRegistro){
     trackPromise(
         result =  axios.post(url,Object.assign({}, {fechaRegistro:fechaRegistro,horaRegistro:horaRegistro}), { headers})
     );
+    return result
+}
+function imprimirFormatoGuiaMoroleon(id,idTipoReporte,anio,dia,mes){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    if(anio && dia && mes){
+        trackPromise(
+            result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte, anio: anio, dia: dia,mes: mes}), { headers})
+        );
+    }else{
+        trackPromise(
+            result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte}), { headers})
+        );
+    }
     return result
 }
 
