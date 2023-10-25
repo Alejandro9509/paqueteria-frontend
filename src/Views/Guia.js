@@ -1189,6 +1189,8 @@ function Guia(props) {
     }
 
     const handleShowListado = () => {
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
         setState(state => {
             return {

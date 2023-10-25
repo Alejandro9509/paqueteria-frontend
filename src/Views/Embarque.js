@@ -1708,7 +1708,7 @@ function Embarque(props) {
     function monitorearCambios(){
         setTimeout(() => {
             setDetectar(true)
-          },3000);
+          },5000);
 
     }
     useEffect(() => {
@@ -2160,6 +2160,8 @@ function Embarque(props) {
         if (event) {
             event.stopPropagation();
         }
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
 
         setState(state => {
