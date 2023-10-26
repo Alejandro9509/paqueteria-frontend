@@ -8,6 +8,7 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
 import axios from "axios";
+import Filtros from "../Filtros/FiltrosConvenios"
 import CrearTarifaRangos from "./CrearTarifaRangos";
 import {validarDerecho} from "../../Util/Util"
 import {makeStyles} from "@material-ui/core/styles";
@@ -390,7 +391,13 @@ export default function TarifasRangos(props) {
             }
         })
     }
-
+    const actualizarTarifas = (nuevasTarifas) => {
+        setState(prevState => ({
+            ...prevState,
+            tarifas: nuevasTarifas
+        }));
+    }
+    
     const filtrarTarifas =
         props.convenio ?
             state.tarifas.filter(i => i.IdCliente !== state.clienteGenerico.m_nIdCliente)
@@ -416,6 +423,9 @@ export default function TarifasRangos(props) {
                     <div id="Listado" className="tab-pane fade in show">
                         <div className="widget-wrap">
                             <div className="widget-content">
+                            <div className="row" style={{  width: '100%' }}>
+                                   <Filtros actualizarTarifas={actualizarTarifas}/>
+                                </div>
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                     <DataGrid
                                         localeText={dataGridLocaleText}
