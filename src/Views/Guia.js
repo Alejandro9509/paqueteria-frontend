@@ -135,6 +135,7 @@ import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposD
 import EmailIcon from '@material-ui/icons/Email';
 import DialogImpresion from "./Guia/DialogImpresion";
 import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
+import {obtenerClienteId} from "../Util/Contexts/ClientesContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -335,7 +336,8 @@ function Guia(props) {
         observaciones:'',
         reporteSeleccionado:{},
         imprimirEtiquetasIndividuales: false,
-        paquetesGuiaEtiquetasIndividuales: []
+        paquetesGuiaEtiquetasIndividuales: [],
+        clientePaga: ''
 
     })
     // const [openDialog, setOpenDialog] = useState(false)
@@ -1076,6 +1078,7 @@ function Guia(props) {
                 receptorGuia: respuesta.data.m_sReceptorGuia,
                 referencia: respuesta.data.m_sReferencia,
                 observaciones: respuesta.data.m_sObservaciones,
+                clientePaga: respuesta.data.m_sCliente
 
             }
         })
@@ -1833,6 +1836,14 @@ function Guia(props) {
                 })
             }
           );*/
+        obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    clientePaga: data.m_sNombreFiscal
+                }
+            })
+        })
         setState(state => {
             return {
                 ...state,
@@ -1996,6 +2007,7 @@ function Guia(props) {
                 receptorGuia: '',
                 referencia: '',
                 observaciones: '',
+                clientePaga: '',
             }
         })
         setConceptosAdicionales([])
@@ -3231,6 +3243,18 @@ function Guia(props) {
                                                             </label>
                                                         </Grid>
 
+                                                        <Grid item xs={3}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Responsable de pago"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled
+                                                                readOnly
+                                                                value={state.clientePaga}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={8}/>
                                                         <Grid item xs={3}>
                                                             <TextField
                                                                 variant="outlined"
