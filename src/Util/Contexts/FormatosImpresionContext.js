@@ -84,6 +84,14 @@ function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
     );
     return result
 }
+function imprimirFormatosIdInforme(id,idTipoReporte,esPDF){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte,EsPDF:esPDF}), { headers})
+    );
+    return result
+}
 function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -123,4 +131,4 @@ function imprimirFormatoGuiaMoroleon(id,idTipoReporte,anio,dia,mes){
     return result
 }
 
-export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral,modificarFormatosImpresion,obtenerFormatosImpresionId,imprimirFormatoGuiaMoroleon}
+export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral,imprimirFormatosIdInforme,modificarFormatosImpresion,obtenerFormatosImpresionId,imprimirFormatoGuiaMoroleon}
