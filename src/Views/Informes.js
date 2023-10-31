@@ -348,13 +348,32 @@ function Informes({history}) {
             return
         }
         if (data.m_sNombreArchivo.toUpperCase().includes('EXCEL')) {
-            let a = document.createElement('a');
-            a.href = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64, "+ encodeURI(data.m_sArchivo);
-            a.download = "Informe" + state.FolioInforme.replace(/\./g, ' ');
-            a.textContent = 'Descargar Archivo';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
+            // let a = document.createElement('a');
+            // a.href = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64, "+ encodeURI(data.m_sArchivo);
+            // a.download = "Informe " + row.m_sFolioInforme.replace(/\./g, ' ');
+            // a.textContent = 'Descargar Archivo';
+            // document.body.appendChild(a);
+            // a.click();
+            // a.remove();
+
+            // Tu cadena base64 (por ejemplo, obtenida de una fuente externa)
+            const base64String = data.m_sArchivo
+
+            // Decodifica la cadena base64 a un ArrayBuffer
+            const arrayBuffer = atob(base64String);
+            const length = arrayBuffer.length;
+            const uint8Array = new Uint8Array(length);
+            for (let i = 0; i < length; i++) {
+                uint8Array[i] = arrayBuffer.charCodeAt(i);
+            }
+
+            // Crea un libro de Excel a partir de los datos decodificados
+            const wb = XLSX.read(uint8Array, { type: 'array' });
+
+            // Puedes trabajar con el libro de Excel como desees
+
+            // Por ejemplo, si deseas descargarlo
+            XLSX.writeFile(wb, 'Informe ' + state.FolioInforme.replace(/\./g, ' ')+'.xlsx');
         } else {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
