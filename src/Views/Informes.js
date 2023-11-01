@@ -125,6 +125,7 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
+    const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
 
     const handleChange = (event) => {
         setState({
@@ -657,12 +658,61 @@ function Informes({history}) {
 
     const selectGuia = (index) => {
         const newGuia = [...dataGuias];
-
+        
         newGuia[index]["select"] = newGuia[index].select ? false : true;
         var params = {
             idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia.filter(g => g.select)
+        }
+        console.log("Cubicar")
+        console.log(params.guias)
+        if(params.guias.length > 0){
+            setDataGuiasSeleccionadas(params.guias)
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
+        setDataGuias(newGuia);
+    };
+
+    const onChangeRemolque1 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia
+        }
+        console.log("Cubicar")
+        console.log(params)
+        console.log(dataGuiasSeleccionadas)
+        if(dataGuiasSeleccionadas.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+                console.log(e.response?.data)
+            })
+        }
+
+        setState({
+            ...state,
+            IdRemolque1: newValue,
+        })
+    }
+
+    const onChangeRemolque2 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia
         }
         console.log("Cubicar")
         console.log(params)
@@ -674,8 +724,12 @@ function Informes({history}) {
                 showError(e.response?.data)
             })
         }
-        setDataGuias(newGuia);
-    };
+
+        setState({
+            ...state,
+            IdRemolque2: newValue,
+        })
+    }
 
     function handleShowCancelar(event) {
         event.preventDefault()
@@ -1377,12 +1431,7 @@ function Informes({history}) {
                                                                                     freeSolo
 
                                                                                     value={state.IdRemolque1}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque1: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    onChange={(index, newValue) => onChangeRemolque1(index,newValue) }
                                                                                     id="IdRemolque1"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -1441,12 +1490,7 @@ function Informes({history}) {
                                                                                 <Autocomplete
                                                                                     freeSolo
                                                                                     value={state.IdRemolque2}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque2: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    onChange={(index, newValue) => onChangeRemolque2(index,newValue) }
                                                                                     id="IdRemolque2"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -1596,7 +1640,9 @@ function Informes({history}) {
                                                                         {/*****************************************Utilización*************************************************/}
 
                                                                         <div className="col-sm-12 col-md-12 unit">
-                                                                            <ProgressBarCubicaje value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}</ProgressBarCubicaje>
+                                                                            <ProgressBarCubicaje 
+                                                                                value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}
+                                                                            </ProgressBarCubicaje>
 
                                                                         </div>
                                                                     </div>
