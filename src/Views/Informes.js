@@ -665,8 +665,6 @@ function Informes({history}) {
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia.filter(g => g.select)
         }
-        console.log("Cubicar")
-        console.log(params.guias)
         if(params.guias.length > 0){
             setDataGuiasSeleccionadas(params.guias)
             cubicarGuiaInforme(params).then(({data}) => {
@@ -687,9 +685,6 @@ function Informes({history}) {
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia
         }
-        console.log("Cubicar")
-        console.log(params)
-        console.log(dataGuiasSeleccionadas)
         if(dataGuiasSeleccionadas.length > 0){
             cubicarGuiaInforme(params).then(({data}) => {
                 setUtilizacion( data.utilizacion.toFixed(0))
