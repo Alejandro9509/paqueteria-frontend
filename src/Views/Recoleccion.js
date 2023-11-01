@@ -4124,7 +4124,7 @@ function Recoleccion() {
                                                                                    className="form-control"
                                                                                    type="text"
                                                                                    label="Zona operativa"
-                                                                                   value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
+                                                                                   value={destinatario.zonaOperativaDestinatario?.m_sCodigoZona || "NO DETERMINDADA"}
                                                                                    disabled
                                                                         />
                                                                     </Grid>
