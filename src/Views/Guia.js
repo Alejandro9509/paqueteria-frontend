@@ -195,6 +195,8 @@ function Guia(props) {
     const classes = useStyles();
     localStorage.getItem("UsuarioId");
 
+    const [detectarModificaciones,setDetectar]=React.useState(false)
+    
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
 
@@ -930,7 +932,7 @@ function Guia(props) {
         }).catch(err => {
             console.log(err.response.data)
         })
-
+        monitorearCambios()
     }
 
     function handleShowConsultar(id) {
@@ -1166,9 +1168,33 @@ function Guia(props) {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
+        monitorearCambios()
+
+    }
+    function monitorearCambios(){
+        setTimeout(() => {
+            setDetectar(true)
+          },1000);
+
+    }
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+           
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [dataPaquetes,state,conceptosAdicionales])
+    function confirmExit()
+    {
+
+      return "show warning";
     }
 
     const handleShowListado = () => {
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
         setState(state => {
             return {

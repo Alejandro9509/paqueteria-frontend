@@ -33,7 +33,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
-import Noty from "noty";
+import Noty, { button } from "noty";
 import {
     Button,
     Chip,
@@ -260,9 +260,16 @@ const TIPOS_SEGURO = {
     SIN_ASIGNAR: 5
 }
 function Embarque(props) {
+    
+   
+
+  
+
+
     var today = new Date();
     const classes = useStyles();
     const [redirect, setRedirect] = React.useState(false);
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [dataTipoDocumento, setDataTipoDocumento] = React.useState([]);
@@ -351,7 +358,13 @@ function Embarque(props) {
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
                             <a
                                 onClick={() => {
-                                    handleShowModificar(row.row, row.row.m_nIdEmbarque)
+                                    $.ajax({
+                                        url:handleShowModificar(row.row, row.row.m_nIdEmbarque)
+                                        ,
+                                        success:function(){
+                                        monitorearCambios();
+                                     }
+                                     })
                                 }}
                                 className="btn btn-default btn-xs"
                             >
@@ -1765,19 +1778,45 @@ function Embarque(props) {
         let today = new Date();
         limpiarCamposAgregar()
         getDataParaEditar("Agregar")
-        setState(state => {
-            return {
-                ...state,
-                agregar: "Agregar",
-            }
-        });
+        
+        $.ajax({
+            url:setState(state => {
+                return {
+                    ...state,
+                    agregar: "Agregar",
+                }
+            }),
+            success:function(){
+            monitorearCambios();
+         }
+         })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
+       
     }
+    function monitorearCambios(){
+        setTimeout(() => {
+            setDetectar(true)
+          },5000);
 
+    }
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+           
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [remitente,destinatario,state,dataComplementosSAT,dataPaquetes,entregaDD,dataConceptos])
+    function confirmExit()
+    {
+
+      return "show warning";
+    }
     function handleShowModificar(filaEmbarque, id) {
         console.log(JSON.stringify(filaEmbarque))
         if (filaEmbarque.m_nIdEstatusEmbarque == 21) {
@@ -1804,6 +1843,7 @@ function Embarque(props) {
                     embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
                 }
             });
+           
             setDataParaConsultarModificar(respuesta, false, "Modificar")
         });
     }
@@ -2212,6 +2252,8 @@ function Embarque(props) {
         if (event) {
             event.stopPropagation();
         }
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
 
         setState(state => {
