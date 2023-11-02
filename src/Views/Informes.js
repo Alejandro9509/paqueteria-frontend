@@ -124,8 +124,8 @@ function Informes({history}) {
     const [dataUnidades, setDataUnidades] = React.useState([]);
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
-    const [dataGuias, setDataGuias] = React.useState([]);
     const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
+    const [dataGuias, setDataGuias] = React.useState([]);
 
     const handleChange = (event) => {
         setState({
@@ -649,6 +649,7 @@ function Informes({history}) {
             PlacasRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_sPlacas : "",
             PlacasDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_sPlacas : ""
         })
+        cubicarInforme(dataGuias);
     }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
 
     function cubicarAccion(e) {
@@ -658,8 +659,13 @@ function Informes({history}) {
 
     const selectGuia = (index) => {
         const newGuia = [...dataGuias];
-        
+
         newGuia[index]["select"] = newGuia[index].select ? false : true;
+        cubicarInforme(newGuia);
+        setDataGuias(newGuia);
+    };
+
+    function cubicarInforme(newGuia){
         var params = {
             idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
@@ -718,6 +724,8 @@ function Informes({history}) {
                 setUtilizacion(0)
                 showError(e.response?.data)
             })
+        }else {
+            setUtilizacion(0)
         }
 
         setState({
