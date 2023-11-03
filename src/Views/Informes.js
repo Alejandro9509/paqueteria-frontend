@@ -129,6 +129,7 @@ function Informes({history}) {
     const [dataUnidades, setDataUnidades] = React.useState([]);
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
+    const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
 
@@ -621,6 +622,7 @@ function Informes({history}) {
         console.log(JSON.stringify(params))
         // handleShowListado()
         if (state.IdInforme !== 0) {
+            console.log("Modificar")
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -631,10 +633,12 @@ function Informes({history}) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
+            console.log("Agregar")
             agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     if (state.cuibicar && state.indexCubicar < informes.length) {
+                        console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
                         handleShowListado()
@@ -699,7 +703,8 @@ function Informes({history}) {
             PlacasRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_sPlacas : "",
             PlacasDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_sPlacas : ""
         })
-        cubicarInforme(dataGuias);
+        console.log(state.IdTipoUnidad)
+        //cubicarInforme(dataGuias);
     }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
 
     function cubicarAccion(e) {
@@ -716,10 +721,56 @@ function Informes({history}) {
     };
 
     function cubicarInforme(newGuia){
+        console.log("Cubicar")
         var params = {
             idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia.filter(g => g.select)
+        }
+        if(params.guias.length > 0){
+            setDataGuiasSeleccionadas(params.guias)
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
+        setDataGuias(newGuia);
+    };
+
+    const onChangeRemolque1 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia
+        }
+        if(dataGuiasSeleccionadas.length > 0){
+            console.log("Cubicar")
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+                console.log(e.response?.data)
+            })
+        }
+
+        setState({
+            ...state,
+            IdRemolque1: newValue,
+        })
+    }
+
+    const onChangeRemolque2 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia
         }
         console.log("Cubicar")
         console.log(params)
@@ -733,6 +784,11 @@ function Informes({history}) {
         }else {
             setUtilizacion(0)
         }
+
+        setState({
+            ...state,
+            IdRemolque2: newValue,
+        })
     }
 
     function handleShowCancelar(event) {
@@ -1445,12 +1501,7 @@ function Informes({history}) {
                                                                                     freeSolo
 
                                                                                     value={state.IdRemolque1}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque1: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    onChange={(index, newValue) => onChangeRemolque1(index,newValue) }
                                                                                     id="IdRemolque1"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -1509,12 +1560,7 @@ function Informes({history}) {
                                                                                 <Autocomplete
                                                                                     freeSolo
                                                                                     value={state.IdRemolque2}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque2: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    onChange={(index, newValue) => onChangeRemolque2(index,newValue) }
                                                                                     id="IdRemolque2"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -1664,7 +1710,9 @@ function Informes({history}) {
                                                                         {/*****************************************Utilización*************************************************/}
 
                                                                         <div className="col-sm-12 col-md-12 unit">
-                                                                            <ProgressBarCubicaje value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}</ProgressBarCubicaje>
+                                                                            <ProgressBarCubicaje
+                                                                                value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}
+                                                                            </ProgressBarCubicaje>
 
                                                                         </div>
                                                                     </div>
