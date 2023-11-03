@@ -222,7 +222,83 @@ class AgregarViaje extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
              console.log(this.props.select)
-            this.setState(state => {
+             obtenerTrayectosByRuta(this.props.select.m_nIdRuta).then(({data}) => {
+                this.setState(state => {
+                    return {
+                        ...state,
+                        id: this.props.select.m_nIdViaje,
+                        idRuta: this.props.select.m_nIdRuta,
+                        idCiudadOrigen: {
+                            "m_sCiudad": this.props.select.m_sOrigen,
+                            "m_nIdCiudad": this.props.select.m_nIdOrigen
+                        },
+                        idCiudadDestino: {
+                            "m_sCiudad": this.props.select.m_sDestino,
+                            "m_nIdCiudad": this.props.select.m_nIdDestino
+                        },
+                        IdRemolque1: this.props.select.m_nIdRemolque1 ? {
+                            m_nIdUnidad: this.props.select.m_nIdRemolque1,
+                            m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
+                            m_sCodigo: this.props.select.m_sCodigoRemolque1,
+                            EstatusUnidad: this.props.select.m_sEstatusRemolque1,
+    
+                        } : null,
+                        placasRemolque1: this.props.select.m_sPlacasRemolque1,
+                        colorRemolque1: this.props.select.m_sColorRemolque1,
+                        estatusRemolque1: this.props.select.m_sEstatusRemolque1,
+                        IdRemolque2: this.props.select.m_nIdRemolque2 ? {
+                            m_nIdUnidad: this.props.select.m_nIdRemolque2,
+                            m_sDescripcion: this.props.select.m_sDescripcionRemolque2,
+                            m_sCodigo: this.props.select.m_sCodigoRemolque2,
+                            EstatusUnidad: this.props.select.m_sEstatusRemolque2,
+                        } : null,
+                        placasRemolque2: this.props.select.m_sPlacasRemolque2,
+                        colorRemolque2: this.props.select.m_sColorRemolque2,
+                        estatusRemolque2: this.props.select.m_sEstatusRemolque2,
+                        IdDolly: this.props.select.m_nIdDolly ? {
+                            m_nIdUnidad: this.props.select.m_nIdDolly,
+                            m_sDescripcion: this.props.select.m_sDescripcionDolly,
+                            m_sCodigo: this.props.select.m_sCodigoDolly,
+                        } : null,
+                        placasDolly: this.props.select.m_sPlacasDolly,
+                        operador: {
+                            m_nIdOperador: this.props.select.m_nIdOperador,
+                            m_sNombreCompleto: this.props.select.m_sNombreOperador,
+                        },
+                        unidad: {
+                            m_nIdUnidad: this.props.select.m_nIdUnidad,
+                            m_sCodigo: this.props.select.m_sCodigoUnidad,
+                            m_sDescripcion: this.props.select.m_sDescripcionUnidad,
+                            EstatusUnidad: this.props.select.m_sEstatusUnidad,
+    
+                        },
+                        placaIntUnidad: this.props.select.m_sPlacasUnidad,
+                        estatusUnidad: this.props.select.m_sEstatusUnidad,
+                        colorUnidad: this.props.select.m_sColorUnidad,
+                        kms: '',
+                        horas: '',
+                        fechaHoraRegistro: this.props.select.m_dFechaRegistro + "T" + this.props.select.m_tHoraRegistro.substr(0, 5),
+                        estatusListado: this.props.select.m_nIdEstatusViaje,
+                        idSucursalAgregar: this.props.select.m_nIdSucursal,
+                        candadoOficial: this.props.select.m_sCandadoOficial,
+                        folioViaje: this.props.select.m_sFolioViaje,
+                        identificadorViaje: this.props.select.m_sIdentificador,
+                        viajeCliente: this.props.select.m_sNumViajeCliente,
+                        CreadoPor: this.props.select.CreadoPor,
+                        dataInformesAsignados: this.props.select.m_arrInformes,
+                        estatusViaje:this.props.m_sEstatusViaje,
+                        esOperadorPermisionario: this.props.select.EsOperadorPermisionario,
+                        licenciaPermisionario: this.props.select.LicenciaPermisionario,
+                        nombrePermisionario: this.props.select.NombrePermisionario,
+                        fechaVigenciaPermisionario: this.props.select.FechaVigenciaPermisionario,
+                        dollySelect:this.props.select.m_nIdDolly?true:false,
+                        Remolque2Select:this.props.select.m_nIdRemolque2?true:false,
+                        trayectos: data
+    
+                    }
+                })
+            })
+            /* this.setState(state => {
                 return {
                     ...state,
                     id: this.props.select.m_nIdViaje,
@@ -299,7 +375,7 @@ class AgregarViaje extends Component {
                 this.setState( {
                     trayectos: data
                 })
-            })
+            }) */
         }
     }
 
