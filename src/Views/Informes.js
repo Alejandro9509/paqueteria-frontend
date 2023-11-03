@@ -571,6 +571,7 @@ function Informes({history}) {
         console.log(JSON.stringify(params))
         // handleShowListado()
         if (state.IdInforme !== 0) {
+            console.log("Modificar")
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -581,10 +582,12 @@ function Informes({history}) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
+            console.log("Agregar")
             agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     if (state.cuibicar && state.indexCubicar < informes.length) {
+                        console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
                         handleShowListado()
@@ -649,7 +652,8 @@ function Informes({history}) {
             PlacasRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_sPlacas : "",
             PlacasDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_sPlacas : ""
         })
-        cubicarInforme(dataGuias);
+        console.log(state.IdTipoUnidad)
+        //cubicarInforme(dataGuias);
     }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
 
     function cubicarAccion(e) {
@@ -666,6 +670,7 @@ function Informes({history}) {
     };
 
     function cubicarInforme(newGuia){
+        console.log("Cubicar")
         var params = {
             idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
@@ -692,6 +697,7 @@ function Informes({history}) {
             guias: newGuia
         }
         if(dataGuiasSeleccionadas.length > 0){
+            console.log("Cubicar")
             cubicarGuiaInforme(params).then(({data}) => {
                 setUtilizacion( data.utilizacion.toFixed(0))
             }).catch(e => {
