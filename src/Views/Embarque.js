@@ -1708,7 +1708,7 @@ function Embarque(props) {
     function monitorearCambios(){
         setTimeout(() => {
             setDetectar(true)
-          },5000);
+          },1000);
 
     }
     useEffect(() => {
