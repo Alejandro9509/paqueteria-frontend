@@ -1315,9 +1315,7 @@ function Recoleccion() {
                     }
                 })
                 setRecoleccionDataParaConsultaModificacion(respuesta,"Modificar")
-                setTimeout(() => {
-                    setDetectar(true)
-                  }, 1000);
+               
             });
         }
     }
@@ -1611,9 +1609,7 @@ function Recoleccion() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
-        setTimeout(() => {
-            setDetectar(true)
-          },1000);
+        
 
 
     }
@@ -3618,7 +3614,7 @@ function Recoleccion() {
 
                         </div>
 
-                        <div id="Agregar" className="tab-pane fade">
+                        <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
                                 <div className="form-content">
                                     {/*<div
