@@ -137,7 +137,6 @@ function useQuery() {
 
     return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -347,7 +346,7 @@ function Embarque(props) {
                                         url:handleShowModificar(row.row, row.row.m_nIdEmbarque)
                                         ,
                                         success:function(){
-                                        monitorearCambios();
+                                       // monitorearCambios();
                                      }
                                      })
                                 }}
@@ -1200,7 +1199,6 @@ function Embarque(props) {
         }
         return valid
     }
-
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
         
@@ -1687,17 +1685,16 @@ function Embarque(props) {
         limpiarCamposAgregar()
         getDataParaEditar("Agregar")
         
-        $.ajax({
-            url:setState(state => {
+        setState(state => {
                 return {
                     ...state,
                     agregar: "Agregar",
                 }
-            }),
-            success:function(){
-            monitorearCambios();
+           
+               
+                  
          }
-         })
+        )
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1706,9 +1703,7 @@ function Embarque(props) {
        
     }
     function monitorearCambios(){
-        setTimeout(() => {
-            setDetectar(true)
-          },1000);
+        setDetectar(true)
 
     }
     useEffect(() => {
@@ -3364,7 +3359,13 @@ function Embarque(props) {
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
                             <a className={validarDerecho(9101422) ? "" : classes.disabled}
-                               onClick={() => handleShowAgregar()}>
+                               onClick={() => $.ajax({
+                                url:handleShowAgregar(),
+                                success:function(){
+                                   // monitorearCambios()
+                                      }
+                             })
+                             }>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -3430,7 +3431,7 @@ function Embarque(props) {
                             </div>
                         </div>
 
-                        <div id="Agregar"
+                        <div onClick={monitorearCambios} id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 {/*  */}
                             <form className="j-forms row" onSubmit={handleAceptar}  onKeyDown={e => {

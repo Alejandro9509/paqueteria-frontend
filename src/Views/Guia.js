@@ -929,7 +929,6 @@ function Guia(props) {
         }).catch(err => {
             console.log(err.response.data)
         })
-        monitorearCambios()
     }
 
     function handleShowConsultar(id) {
@@ -1164,7 +1163,6 @@ function Guia(props) {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        monitorearCambios()
 
     }
     function monitorearCambios(){
@@ -2917,7 +2915,7 @@ function Guia(props) {
                                 </div>
                             </div>
                         </div>
-                        <div id="Agregar" className="tab-pane fade">
+                        <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                                 <div className="form-content">
 
