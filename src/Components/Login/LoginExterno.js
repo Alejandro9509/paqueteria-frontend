@@ -30,10 +30,10 @@ class MyComponent extends Component {
     };
     render() {
         const rfc = this.getUrlParameter('RFC');
-        const usuario = this.getUrlParameter('usuario');
-        const contraseña = this.getUrlParameter('pass');
+        const usuario = atob(this.getUrlParameter('usuario'));
+        const contrasena = atob(this.getUrlParameter('pass'));
         if(rfc) {
-            const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${usuario}'/'${contraseña}' `;
+            const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${usuario}'/'${contrasena}' `;
             axios.get(url, { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
                 try {
                     if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
