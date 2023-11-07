@@ -2326,7 +2326,8 @@ function Embarque(props) {
                 entregaEnSucursal: !state.entregaEnSucursal,
                 diferenteEntrega: !state.entregaEnSucursal && false,
                 entregaConCita: !state.entregaEnSucursal && false,
-                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal
+                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal,
+                zonaOperativaSucursal: !state.entregaEnSucursal?destinatario.zonaOperativaDestinatario:null
             }
         });
     };
