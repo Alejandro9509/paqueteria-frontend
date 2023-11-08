@@ -1165,12 +1165,7 @@ function Guia(props) {
         $('#Agregar').addClass('in show');
 
     }
-    function monitorearCambios(){
-        setTimeout(() => {
-            setDetectar(true)
-          },1000);
-
-    }
+    
     useEffect(() => {
         if( detectarModificaciones){
             console.log("disprosio")
