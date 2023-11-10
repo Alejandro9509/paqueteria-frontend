@@ -1266,6 +1266,8 @@ function Informes({history}) {
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
 
     const handleShowListado = () => {
+        setDetectar(false)
+        window.onbeforeunload={}
         getDataParaListado()
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
