@@ -130,6 +130,7 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     // const [openDialog, setOpenDialog] = useState(false)
     // const [dataReportes, setDataReportes] = useState([])
     // const [seleccion, setSeleccion] = useState(null)
@@ -149,6 +150,12 @@ function Informes({history}) {
     //     }
     //
     // }, [])
+    
+    function confirmExit()
+    {
+
+      return "show warning";
+    }
     const handleChange = (event) => {
         setState({
             ...state,
@@ -1276,7 +1283,15 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
 
     }
-
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+           
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [state])
     const handleShowCubicar = () => {
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
@@ -1775,7 +1790,7 @@ function Informes({history}) {
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
-                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
+                            <form onClick={()=>setDetectar(true)} className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
                                 if (e.code === 13) {
                                     e.preventDefault()
                                 }
