@@ -130,12 +130,11 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
-    const [detectarModificaciones,setDetectar]=React.useState(false)
     // const [openDialog, setOpenDialog] = useState(false)
     // const [dataReportes, setDataReportes] = useState([])
     // const [seleccion, setSeleccion] = useState(null)
 
-
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     // useEffect(()=>{
     //
     //     if( localStorage.getItem("RFC")==="ECC9510049KA"){
