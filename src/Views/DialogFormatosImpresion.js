@@ -22,18 +22,20 @@ export default function DialogFormatosImpresion({idProceso = 0, idRegistro = 0, 
     const [listadoFormatos, setListadoFormatos] = useState([])
     
     useEffect(() => {
+        let formatos = []
         if (idProceso === INFORMES && localStorage.getItem("RFC") === "ECC9510049KA"){
             obtenerFormatosImpresionProceso(INFORMES_ECC).then(({data}) => {
-                setListadoFormatos(data)
+                formatos = data
             })
         } else
             obtenerFormatosImpresionProceso(idProceso).then(({data}) => {
-            setListadoFormatos(data)
+                formatos = data
         })
-        if (listadoFormatos.length === 0) {
+        if (formatos.length === 0) {
             showSuccess("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
             return
         }
+        setListadoFormatos(formatos)
     }, [])
     const handleOnSubmit = () => {
         if (idProceso === INFORMES) {
