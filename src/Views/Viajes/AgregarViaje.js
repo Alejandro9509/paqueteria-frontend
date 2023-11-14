@@ -212,7 +212,7 @@ class AgregarViaje extends Component {
     }
 
     componentWillMount() {
-       
+
        this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
@@ -221,9 +221,17 @@ class AgregarViaje extends Component {
         this.getAllUnidades();
         this.getAllRemolques();
         this.getAllOperadores();
+        $.primerClick=false
     }
-
+    confirmExit(){
+        return "show warning"
+    }
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevState!=this.state && typeof $.primerClick!=='undefined'){
+            if($.primerClick===true)
+            {
+        $(window).bind('beforeunload',this.confirmExit);
+        console.log("disproporcionado")}}
         if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
              console.log(this.props.select)
              obtenerTrayectosByRuta(this.props.select.m_nIdRuta).then(({data}) => {
@@ -1224,7 +1232,7 @@ class AgregarViaje extends Component {
 
         return (
 
-            <div>
+            <div onClick={()=>$.primerClick=true}>
                 {/*<Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
                     <DialogContent>
                         {this.state.tipoModal === 1 &&
