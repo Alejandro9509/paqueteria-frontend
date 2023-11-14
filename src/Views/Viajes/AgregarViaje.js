@@ -208,8 +208,8 @@ class AgregarViaje extends Component {
     }
 
     componentWillMount() {
-        $.primerClick=false
-        this.getAllCiudades()
+
+       this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
         this.getAllSucursales()
@@ -217,6 +217,7 @@ class AgregarViaje extends Component {
         this.getAllUnidades();
         this.getAllRemolques();
         this.getAllOperadores();
+        $.primerClick=false
     }
     confirmExit(){
         return "show warning"
