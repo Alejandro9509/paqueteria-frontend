@@ -136,12 +136,16 @@ class UltimaMilla extends Component {
 
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             //Metes imagenes
+            data.m_arrClsParadaUltimaMilla=data.m_arrClsParadaUltimaMilla.filter(res=>
+                res.m_xlat!=0
+            )
+
             obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
                 //imagenes
                 let rutaConImagenes
                 let guiaConImagenes
                 data.m_arrClsParadaUltimaMilla.forEach(rutaSinImagenes => {
-
+                    
                     rutaConImagenes = respuesta.data.m_arrClsParadaUltimaMilla.find(r => r.m_nIdParadaUltimaMilla === rutaSinImagenes.m_nIdParadaUltimaMilla)
                     rutaSinImagenes.m_arrClsProGuia.forEach(guiaSinImagenes => {
                         guiaConImagenes = rutaConImagenes.m_arrClsProGuia.find(g => g.m_nId === guiaSinImagenes.m_nId && g.m_bEsRecoleccion === guiaSinImagenes.m_bEsRecoleccion)
