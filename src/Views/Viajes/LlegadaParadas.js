@@ -427,7 +427,18 @@ export default function LlegadaParadas(props){
                         variant={"outlined"}
                         value={data.dolly}/>
                 </Grid>
+                <Grid item xs={2}>
+                    <TextField
+                        id={"kilometros"}
+                        margin={"dense"}
+                        label={"Kilometros"}
+                        onChange={(e) => handleChangeKms(e)}
+
+                        variant={"outlined"}
+                        value={data.kms}/>
+                </Grid>
                 <Grid item xs={7}/>
+                <Grid item xs={5}/>
 
                 <Grid item xs={2}>
                     <TextField
