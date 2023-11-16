@@ -133,7 +133,7 @@ function Informes({history}) {
     const [dataGuias, setDataGuias] = React.useState([]);
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
 
-
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     // useEffect(()=>{
     //
     //     if( localStorage.getItem("RFC")==="ECC9510049KA"){
@@ -148,6 +148,12 @@ function Informes({history}) {
     //     }
     //
     // }, [])
+    
+    function confirmExit()
+    {
+
+      return "show warning";
+    }
     const handleChange = (event) => {
         setState({
             ...state,
@@ -1208,6 +1214,8 @@ function Informes({history}) {
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
 
     const handleShowListado = () => {
+        setDetectar(false)
+        window.onbeforeunload={}
         getDataParaListado()
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
@@ -1225,7 +1233,15 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
 
     }
-
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+           
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [state])
     const handleShowCubicar = () => {
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
@@ -1669,7 +1685,7 @@ function Informes({history}) {
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
-                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
+                            <form onClick={()=>setDetectar(true)} className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
                                 if (e.code === 13) {
                                     e.preventDefault()
                                 }

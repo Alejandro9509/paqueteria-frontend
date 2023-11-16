@@ -33,7 +33,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
-import Noty from "noty";
+import Noty, { button } from "noty";
 import {
     Button,
     Chip,
@@ -271,6 +271,7 @@ function Embarque(props) {
     var today = new Date();
     const classes = useStyles();
     const [redirect, setRedirect] = React.useState(false);
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [dataTipoDocumento, setDataTipoDocumento] = React.useState([]);
@@ -359,7 +360,13 @@ function Embarque(props) {
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
                             <a
                                 onClick={() => {
-                                    handleShowModificar(row.row, row.row.m_nIdEmbarque)
+                                    $.ajax({
+                                        url:handleShowModificar(row.row, row.row.m_nIdEmbarque)
+                                        ,
+                                        success:function(){
+                                       // monitorearCambios();
+                                     }
+                                     })
                                 }}
                                 className="btn btn-default btn-xs"
                             >
@@ -1754,18 +1761,40 @@ function Embarque(props) {
         getDataParaEditar("Agregar")
 
         setState(state => {
-            return {
-                ...state,
-                agregar: "Agregar",
-            }
-        });
+                return {
+                    ...state,
+                    agregar: "Agregar",
+                }
+
+
+
+         }
+        )
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
-    }
 
+    }
+    function monitorearCambios(){
+        setDetectar(true)
+
+    }
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+
+            window.onbeforeunload = confirmExit
+
+        }
+    }, [remitente,destinatario,state,dataComplementosSAT,dataPaquetes,entregaDD,dataConceptos])
+    function confirmExit()
+    {
+
+      return "show warning";
+    }
     function handleShowModificar(filaEmbarque, id) {
         console.log(JSON.stringify(filaEmbarque))
         if (filaEmbarque.m_nIdEstatusEmbarque == 21) {
@@ -2201,6 +2230,8 @@ function Embarque(props) {
         if (event) {
             event.stopPropagation();
         }
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
 
         setState(state => {
@@ -3467,7 +3498,13 @@ function Embarque(props) {
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
                             <a className={validarDerecho(9101422) ? "" : classes.disabled}
-                               onClick={() => handleShowAgregar()}>
+                               onClick={() => $.ajax({
+                                url:handleShowAgregar(),
+                                success:function(){
+                                   // monitorearCambios()
+                                      }
+                             })
+                             }>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -3533,7 +3570,7 @@ function Embarque(props) {
                             </div>
                         </div>
 
-                        <div id="Agregar"
+                        <div onClick={monitorearCambios} id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 {/*  */}
                             <form className="j-forms row" onSubmit={handleAceptar}  onKeyDown={e => {

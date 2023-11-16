@@ -43,6 +43,7 @@ function showError(mensaje) {
 }
 
 function ComplementosSAT(props) {
+    const [detectarModificaciones,setDetectar]=useState(false)
     const [openDialog, setOpenDialog] = useState(false)
     const [dataComplemento, setDataComplemento] = useState({
         id:0,
@@ -62,7 +63,20 @@ function ComplementosSAT(props) {
         fraccionSAT:'',
         materialPeligrosoSAT:'',
     })
-
+    useEffect(() => {
+         if( detectarModificaciones){
+             console.log("disprosio")
+             console.log(dataComplemento)
+            // console.log(remitente)
+             window.onbeforeunload=confirmExit
+            
+         }
+     }, [dataComplemento])
+     function confirmExit()
+     {
+ 
+       return "show warning";
+     }
 
     const resetDataComplemento = (catalogo) => {
         if(catalogo == 1){
@@ -177,7 +191,7 @@ function ComplementosSAT(props) {
          
             })
             console.log(row);
-          
+            
         };
 
         return (
@@ -314,6 +328,7 @@ function ComplementosSAT(props) {
     ]);
 
     const handleChangeComplementoSat = (idComplemento, data,caracter) => {
+       setDetectar(true)
         if (idComplemento === 1){
             setDataComplemento(dataComplemento =>{
                 return {

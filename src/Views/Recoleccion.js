@@ -158,8 +158,10 @@ const TIPOS_SEGURO = {
     SIN_ASIGNAR: 5
 }
 function Recoleccion() {
+
     const today = new Date();
     const classes = useStyles();
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     const [redirect, setRedirect] = React.useState(false);
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -613,6 +615,8 @@ function Recoleccion() {
         }
     }, [state.tipoUnidad])
 
+    
+    
     useEffect((value) => {
         if (
             localStorage.getItem("UsuarioId") === null ||
@@ -910,6 +914,7 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        setDetectar(false)
         if(errores.length>0){
             showSuccess("Errores en conceptos de facturacion")
             return;
@@ -1105,6 +1110,7 @@ function Recoleccion() {
                         showSuccess(respuesta.data);
                         handleShowListado();
                         limpiarInputsAgregar()
+                        
                     })
                     .catch((err) => {
                         console.log(err);
@@ -1126,6 +1132,7 @@ function Recoleccion() {
                                         //    showSuccess(respuesta.data);
                                         showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                         limpiarInputsAgregar()
+                                      //  setDetectar(false)
                                         confirmAlert({
                                             title: 'Confirmación',
                                             message: '¿Desea crear otra recolección?',
@@ -1136,6 +1143,7 @@ function Recoleccion() {
                                                         setLimpiarRemDes(e)
                                                         mostrarCotizadorRec(false)
                                                         limpiarInputsAgregar()
+                                                      //  setDetectar(false)
                                                     }
                                                 },
                                                 {
@@ -1285,6 +1293,7 @@ function Recoleccion() {
                     }
                 })
                 setRecoleccionDataParaConsultaModificacion(respuesta,"Modificar")
+               
             });
         }
     }
@@ -1572,15 +1581,34 @@ function Recoleccion() {
 
             }
         });
+        
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
+        
 
+
+    }
+   
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [remitente,state,destinatario,dataComplementosSAT,dataPaquetes,recoleccionDD,entregaDD,dataConceptos])
+    function confirmExit()
+    {
+
+      return "Are you sure you want to leave?"
     }
 
     const handleShowListado = (event) => {
+        setDetectar(false)
+        window.onbeforeunload={}
         setIsAgregar(false);
         if (event !== undefined){
             event.stopPropagation();
@@ -1651,6 +1679,7 @@ function Recoleccion() {
 
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
+       // setDetectar(false)
         setState(state => {
             return {
                 ...state,
@@ -1723,6 +1752,7 @@ function Recoleccion() {
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
         setRepetirConceptos(false)
+       // setDetectar(true)
     }
 
     const handleChange = (event) => {
@@ -3452,7 +3482,7 @@ function Recoleccion() {
 
                         </div>
 
-                        <div id="Agregar" className="tab-pane fade">
+                        <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
                                 <div className="form-content">
                                     {/*<div

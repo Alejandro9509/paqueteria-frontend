@@ -195,6 +195,8 @@ function Guia(props) {
     const classes = useStyles();
     localStorage.getItem("UsuarioId");
 
+    const [detectarModificaciones,setDetectar]=React.useState(false)
+    
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
 
@@ -930,7 +932,6 @@ function Guia(props) {
         }).catch(err => {
             console.log(err.response.data)
         })
-
     }
 
     function handleShowConsultar(id) {
@@ -1166,9 +1167,27 @@ function Guia(props) {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
+
+    }
+    
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+           
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [dataPaquetes,state,conceptosAdicionales])
+    function confirmExit()
+    {
+
+      return "show warning";
     }
 
     const handleShowListado = () => {
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
         setState(state => {
             return {
@@ -2930,7 +2949,7 @@ function Guia(props) {
                                 </div>
                             </div>
                         </div>
-                        <div id="Agregar" className="tab-pane fade">
+                        <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                                 <div className="form-content">
 
