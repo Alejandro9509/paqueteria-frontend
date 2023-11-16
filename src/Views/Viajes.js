@@ -281,6 +281,7 @@ function Viajes() {
         if (event){
             event.stopPropagation();
         }
+        $(window).unbind()
         getAllData()
         clearData()
         $('.nav-tabs li ').removeClass('active');
