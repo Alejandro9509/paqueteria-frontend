@@ -26,16 +26,23 @@ export default function DialogFormatosImpresion({idProceso = 0, idRegistro = 0, 
         if (idProceso === INFORMES && localStorage.getItem("RFC") === "ECC9510049KA"){
             obtenerFormatosImpresionProceso(INFORMES_ECC).then(({data}) => {
                 formatos = data
+                if (formatos.length === 0) {
+                    showSuccess("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
+                    return
+                }
+                setListadoFormatos(formatos)
             })
-        } else
+        } else {
             obtenerFormatosImpresionProceso(idProceso).then(({data}) => {
                 formatos = data
-        })
-        if (formatos.length === 0) {
-            showSuccess("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
-            return
+                if (formatos.length === 0) {
+                    showSuccess("No hay formato de informe en el sistema. Comuniquese con la oficinas de GM.")
+                    return
+                }
+                setListadoFormatos(formatos)
+            })
         }
-        setListadoFormatos(formatos)
+
     }, [])
     const handleOnSubmit = () => {
         if (idProceso === INFORMES) {
