@@ -262,10 +262,10 @@ const FORMATOS_IMPRESION = {
     EMBARQUE: 211
 }
 function Embarque(props) {
-    
-   
 
-  
+
+
+
 
 
     var today = new Date();
@@ -1759,15 +1759,15 @@ function Embarque(props) {
         let today = new Date();
         limpiarCamposAgregar()
         getDataParaEditar("Agregar")
-        
+
         setState(state => {
                 return {
                     ...state,
                     agregar: "Agregar",
                 }
-           
-               
-                  
+
+
+
          }
         )
         $('.nav-tabs li ').removeClass('active');
@@ -1775,7 +1775,7 @@ function Embarque(props) {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
-       
+
     }
     function monitorearCambios(){
         setDetectar(true)
@@ -1785,9 +1785,9 @@ function Embarque(props) {
         if( detectarModificaciones){
             console.log("disprosio")
            // console.log(remitente)
-           
+
             window.onbeforeunload = confirmExit
-           
+
         }
     }, [remitente,destinatario,state,dataComplementosSAT,dataPaquetes,entregaDD,dataConceptos])
     function confirmExit()
@@ -1821,7 +1821,7 @@ function Embarque(props) {
                     embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
                 }
             });
-           
+
             setDataParaConsultarModificar(respuesta, false, "Modificar")
         });
     }
