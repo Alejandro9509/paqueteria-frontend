@@ -3556,10 +3556,15 @@ function Recoleccion() {
                         </li>*/}
 
                         <li style={{float: "right"}}>
-                            <a data-toggle="tab" href="#" className={(state.idRecoleccion === 0 || !validarDerecho(9101417)) ? classes.disabled : ""}
-                               style={{textAlign: "right"}} onClick={() => setRedirect(true)}>
-                                Generar embarque
-                            </a>
+                            <Button
+                                fullWidth
+                                style={{textAlign: "right","color":"#fff"}}
+                                onClick={() => setRedirect(true)}
+                                className={(state.idRecoleccion === 0 || !validarDerecho(9101417))? classes.disabled + " btn btn-primary primary-btn" : "btn btn-primary primary-btn"}
+
+                            >
+                                Generar Embarque
+                            </Button>
                         </li>
 
                         {/**<button className="topbar-right pull-right">Boton</button>*/}
