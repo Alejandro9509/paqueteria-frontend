@@ -1391,8 +1391,8 @@ function Embarque(props) {
             m_sNoIntDestinatario: destinatario.numeroIntDestinatario,
             m_sNoExtDestinatario: destinatario.numeroExtDestinatario,
             m_sColoniaDestinatario: destinatario.coloniaDestinatario,
-            m_sLatitudD: coordenadas ? coordenadas.lat : destinatario.latitudD,
-            m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.longitudD,
+            m_sLatitudD: coordenadas?coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString():destinatario.latitudD,
+            m_sLongitudD: coordenadas?coordenadas.lng?coordenadas.lng.toString():coordenadas[1].toString():destinatario.longitudD,
             m_sLatitudR: remitente.latitudR,
             m_sLongitudR: remitente.longitudR,
 
@@ -1435,14 +1435,14 @@ function Embarque(props) {
                 params.datosAdicionales = entregaDD.datosAdicionales
                 params.m_nIdZonaOperativa = entregaDD.zonaOperativa.m_nIdZona
                 // params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
-                params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitud
-                params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitud
+                params.m_sLatitudD = coordenadas?coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString(): entregaDD.latitud
+                params.m_sLongitudD = coordenadas?coordenadas.lng?coordenadas.lng.toString():coordenadas[1].toString(): entregaDD.longitud
             } else {
                 /**Si es entrega en domicilio de destinatario*/
                 params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
                 params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
-                params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
-                params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
+                params.m_sLatitudD = coordenadas?coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString():destinatario.latitudD
+                params.m_sLongitudD = coordenadas?coordenadas.lng?coordenadas.lng.toString():coordenadas[1].toString():destinatario.longitudD
             }
         }
 
