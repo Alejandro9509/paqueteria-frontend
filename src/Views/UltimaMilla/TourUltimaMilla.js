@@ -44,11 +44,14 @@ class TourUltimaMilla extends Component {
 
         var polygon = []
         var guias = this.props.data.m_arrClsProGuia.sort((a, b) => a.m_nUltimaMillaOrden - b.m_nUltimaMillaOrden)
-
         guias.forEach(g => {
             g.lat = g.m_sLatitud
             g.lng = g.m_sLongitud
         })
+        /*guias=guias.filter(g=>!isNaN(parseFloat(g.lat)) && !isNaN(parseFloat(g.lng)) )
+        guias.forEach(g=>{
+            console.log(g.lat+"     "+g.lng)
+        })*/
         if (guias.length !== 0) {
             if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0) {
                 calcularRutaUltimaMilla(guias, this.props.sucursal, {lat: this.props.data.m_xlat, lng: this.props.data.m_xlng}).then((result) => {
