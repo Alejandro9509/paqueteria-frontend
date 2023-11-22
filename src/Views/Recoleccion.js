@@ -1077,13 +1077,13 @@ function Recoleccion() {
                 params.m_nIdZonaOperativa = recoleccionDD.zonaOperativa.m_nIdZona
                 params.m_nIdEstadoRecoleccion = recoleccionDD.idEstado
                 params.m_sCodigoMunicipioRecoleccion = recoleccionDD.idMunicipio
-                params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitud
-                params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitud
+                params.m_sLatitudR = coordenadas ? coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString() : recoleccionDD.latitud
+                params.m_sLongitudR = coordenadas ? coordenadas.lng?coordenadas.lng.toString(): coordenadas[1].toString() : recoleccionDD.longitud
             } else {
                 params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
                 params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente? remitente.zonaTarifaRemitente.m_nIdZona : 0
-                params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
-                params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
+                params.m_sLatitudR = coordenadas ?coordenadas.lat?coordenadas.lat.toString(): coordenadas[0].toString() : remitente.latitudR
+                params.m_sLongitudR = coordenadas ?coordenadas.lng?coordenadas.lng.toString(): coordenadas[1].toString() : remitente.longitudR
             }
             params.m_bEntregaEnSucursal = state.entregaEnSucursal;
             if (state.entregaEnSucursal){
