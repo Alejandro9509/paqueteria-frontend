@@ -3424,15 +3424,11 @@ function Recoleccion() {
                         </li>*/}
 
                         <li style={{float: "right"}}>
-                            <Button
-                                fullWidth
-                                style={{textAlign: "right","color":"#fff"}}
-                                onClick={() => setRedirect(true)}
-                                className={(state.idRecoleccion === 0 || !validarDerecho(9101417))? classes.disabled + " btn btn-primary primary-btn" : "btn btn-primary primary-btn"}
+                        <Button className={ state.idRecoleccion === 0 || (!validarDerecho(9101417) ) ? classes.disabled :""}  fullWidth color={"primary"} variant={"contained"} onClick={() => setRedirect(true)} >
+                                            Generar Embarque
+                                        </Button>
 
-                            >
-                                Generar Embarque
-                            </Button>
+                           
                         </li>
 
                         {/**<button className="topbar-right pull-right">Boton</button>*/}
