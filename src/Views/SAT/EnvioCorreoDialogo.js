@@ -16,7 +16,7 @@ class EnvioCorreoDialogo extends Component {
         super(props);
         this.state = {
             correos: "",
-            correoDefault: false,
+            correoDefault: true,
             idRegistro: 0,
         }
         this.onSubmit = this.onSubmit.bind(this)
@@ -37,12 +37,7 @@ class EnvioCorreoDialogo extends Component {
                 <DialogTitle>Envio de correos</DialogTitle>
                 <DialogContent>
                     <form onSubmit={this.onSubmit}>
-                        <FormControlLabel style={{padding:"0px !important"}}
-                                          onChange={(e) => this.setState({correoDefault: e.target.checked})}
-                                          control={<Checkbox
-                                              checked={this.state.correoDefault}
-                                              name="correoDefault"/>}
-                                          label={`Enviar correo al ${this.props.viajes ? "operador" : "cliente"}`}/>
+
                         <Typography> En caso que necesite agregar correos adicioneles ingreselos en el campo siguiente separados por una ",".</Typography>
 
                         <TextField type={"text"} onChange={(e) => this.setState({correos: e.target.value})} label={"Correos"} value={this.state.correos}/>
