@@ -45,6 +45,7 @@ class TrackingEmail extends Component {
             setOpenDialogEvidenciasRecoleccion:false,
             setOpenDialogEvidenciasEntrega:false,
             foliosAutocomplete: {},
+            didSearch:false,
         }
         this.handleChangeTab = this.handleChangeTab.bind(this)
         const url=`${process.env.REACT_APP_REPORT_URL}/api/GetLogo`
@@ -57,10 +58,13 @@ class TrackingEmail extends Component {
             //showSuccess("No se encontró el logo del proveedor")
           }
         })
-        obtenerInformeFolioTipo(this.state.folioBusqueda,this.state.tipoBusqueda).then(({data}) => {
-            console.log(data)
-            console.log(this.props)
-            console.log(this.folioBusqueda)
+        console.log(this.state)
+        //console.log(props.data.m_sFolio)
+        console.log(props)
+        obtenerInformeFolioTipo(props.data.m_sFolio,"3").then(({data}) => {
+            //console.log(data)
+            //console.log(this.props)
+            //console.log(this.folioBusqueda)
             if(data.Estatus == true){
                 
                 obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
@@ -80,7 +84,28 @@ class TrackingEmail extends Component {
         })
     }
         
-        
+    handleGetEvidencias(props){
+        if(!this.state.didSearch)
+        obtenerInformeFolioTipo(props.data.m_sFolio,"3").then(({data}) => {
+            this.setState({didSearch:true})
+            if(data.Estatus == true){
+                
+                obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
+                    obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
+                        this.setState({
+                            imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
+                            imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
+                            data: data
+                        })
+                    })
+                })
+            }else{
+                //showSuccess(data)
+                return;
+            }
+            
+        })
+    }    
     
     handleChangeTab(event, newValue){
         this.setState({activeTab: newValue})
@@ -106,7 +131,6 @@ class TrackingEmail extends Component {
         function QontoStepIcon(props) {
             const classes = useQontoStepIconStyles();
             const { active, completed } = props;
-           
             return (
                 <div
                     className={clsx(classes.root, {
@@ -166,6 +190,7 @@ class TrackingEmail extends Component {
                 borderRadius: 1,
             },
         })(StepConnector);
+        
         return (
             <Grid container spacing={2} justify="center" style={{padding:"5px",alignItems:"center"}}>
                 { (this.state.setOpenDialogEvidenciasEntrega && (this.state.imagenesEvidenciaEmbarque)) &&
@@ -218,7 +243,7 @@ class TrackingEmail extends Component {
                     <Tabs variant={"standard"} centered value={this.state.activeTab} onChange={this.handleChangeTab} >
                             <Tab label="Historial de viaje"/>
                             <Tab label="Detalle del paquete" />
-                            <Tab label="Evidencias"/>
+                            <Tab label="Evidencias" onClick={()=>this.handleGetEvidencias(this.props)}/>
                         </Tabs>
                     <TabPanel value={this.state.activeTab} index={0}>
                         <div lang={"es"} style={{
@@ -334,7 +359,6 @@ export default TrackingEmail;
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-    
     return (
         <div
             role="tabpanel"
