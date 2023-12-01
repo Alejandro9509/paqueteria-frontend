@@ -3529,14 +3529,12 @@ function Embarque(props) {
                         </li>
 
                         <li style={{float: "right"}}>
-                            <a
-                                className={state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled : ""}
-                                style={{textAlign: "right"}}
-                                onClick={() => setRedirect(true)}
-                            >
-                                Generar Guía
-                            </a>
+                        <Button className={ state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled :""}  fullWidth color={"primary"} variant={"contained"} onClick={() => setRedirect(true)} >
+                                            Generar Guia
+                                        </Button>
+
                         </li>
+                        
                     </ul>
 
                     <div className="row tab-content">
