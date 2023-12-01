@@ -36,9 +36,10 @@ class EnvioCorreoDialogo extends Component {
             <Dialog open={this.props.open} onClose={() => this.props.close()}>
                 <DialogTitle>Envio de correos</DialogTitle>
                 <DialogContent>
+                    Se enviará un correo al cliente.
                     <form onSubmit={this.onSubmit}>
 
-                        <Typography> En caso que necesite agregar correos adicioneles ingreselos en el campo siguiente separados por una ",".</Typography>
+                        <Typography style={{marginTop:"10px"}}> En caso que necesite agregar correos adicioneles ingreselos en el campo siguiente separados por una ",".</Typography>
 
                         <TextField type={"text"} onChange={(e) => this.setState({correos: e.target.value})} label={"Correos"} value={this.state.correos}/>
 
