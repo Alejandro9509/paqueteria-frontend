@@ -44,7 +44,7 @@ export default function LlegadaParadas(props){
         origen: props.viaje.m_sOringen,
         tipoDeCambioOrigen: "",
         destino: props.viaje.m_sDestino,
-        kms: "",
+        kms: props.distancia,
         millas: "",
         operador: props.viaje.m_sOperador,
         liquidacion: "",
