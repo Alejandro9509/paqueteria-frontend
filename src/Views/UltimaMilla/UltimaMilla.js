@@ -50,7 +50,6 @@ import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {getCurrentDate} from "../../Util/Util"; // Import css
-import { FilterDrama } from '@material-ui/icons';
 
 
 function showSuccess(mensaje) {
@@ -144,60 +143,22 @@ class UltimaMilla extends Component {
 
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             //Metes imagenes
-            //console.log(data)
-           // data=data.filter((res)=>
-             //   res.m_arrClsParadaUltimaMilla.m_xlat!=0
-            //)
-        /*    const filtered=Object.keys(data)
-            .filter(m_arrClsParadaUltimaMilla=>m_arrClsParadaUltimaMilla.m_xlat!=0)
-            .reduce((obj,m_arrClsParadaUltimaMilla)=>{
-                obj[m_arrClsParadaUltimaMilla]=data[m_arrClsParadaUltimaMilla];
-                return obj
-            },{})
-            console.log("final")
-            console.log(filtered)*/
-          /*  const filtered=Object.keys(data.m_arrClsParadaUltimaMilla)
-            .filter(m_arrClsProGuia=>m_arrClsProGuia.m_sLatitud="")
-            .reduce((obj,m_arrClsProGuia)=>{
-                obj[m_arrClsProGuia]=data.m_arrClsParadaUltimaMilla[m_arrClsProGuia];
-                return obj
-            },{})
-            console.log("final")
-            console.log(filtered)*/
-            /*const filtered=Object.values(data).filter(d=>{
-                return d.m_arrClsParadaUltimaMilla.m_arrClsProGuia.m_sLatitud!=""
-            })*/
-           console.log("disprosio")
-           console.log(data)
-          for(let parada of data.m_arrClsParadaUltimaMilla)
-          {
-            for(let guia of parada.m_arrClsProGuia)
-            {
-             
-                
-                    if(!guia.m_sLatitud)
-                    {
-
-                    if(guia.m_sLatitud.length<3)
-                    {
-                    var index = parada.m_arrClsProGuia.findIndex(function(encontrar) {
-                        console.log(encontrar)
-                        return encontrar.m_sLatitud.length<3
-                      });
-                      console.log(index)
-                      if(guia.m_sFolio)
-                      showGuiaSinCoordenadas("La guía "+guia.m_sFolio+" se ha ocultado de la ruta ya que no cuenta con coordenadas, comuníquese con las oficinas de GM Transport")
-                      parada.m_arrClsProGuia.splice(index,1)
-                      continue;
+            for (let parada of data.m_arrClsParadaUltimaMilla) {    //RECORRE LAS RUTAS
+                for (let guia of parada.m_arrClsProGuia) {          //RECORRE LAS PARADAS
+                    if (!guia.m_sLatitud) {
+                        if (guia.m_sLatitud.length < 3) {
+                            let index = parada.m_arrClsProGuia.findIndex(function (encontrar) {
+                                return encontrar.m_sLatitud.length < 3
+                            });
+                            if (guia.m_sFolio) {
+                                showGuiaSinCoordenadas("La guía " + guia.m_sFolio + " se ha ocultado de la ruta ya que no cuenta con coordenadas, comuníquese con las oficinas de GM Transport")
+                            }
+                            parada.m_arrClsProGuia.splice(index, 1)
+                        }
                     }
-                    }
-                
+                }
             }
-          }
           const filtered=data
-            console.log("final")
-            console.log(filtered)
-            //filtered=data
             obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
                 //imagenes
                 let rutaConImagenes
