@@ -73,6 +73,11 @@ class Seguimiento extends Component {
 
     buscarAction(e) {
         e.preventDefault()
+        this.setState({
+            imagenesEvidenciaRecoleccion:[],
+            imagenesEvidenciaEmbarque:[],
+            data: {},
+        })
         obtenerInformeFolioTipo(this.state.folioBusqueda,this.state.tipoBusqueda).then(({data}) => {
             if(data.Estatus == true){
                 obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{

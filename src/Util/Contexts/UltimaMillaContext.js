@@ -597,7 +597,7 @@ async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
 }
 
 function obtenerImagenEvidencia(idGuia,esRecoleccion){
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

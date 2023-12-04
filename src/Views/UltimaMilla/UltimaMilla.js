@@ -159,7 +159,7 @@ class UltimaMilla extends Component {
                 }
             }
           const filtered=data
-            obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
+            /*obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
                 //imagenes
                 let rutaConImagenes
                 let guiaConImagenes
@@ -172,7 +172,7 @@ class UltimaMilla extends Component {
                     })
                 })
 
-            })
+            })*/
             if (filtered.m_nIdUltimaMilla !== 0) {
                 if (actualizar && !this.state.modoPlaneacion) {
                     this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 150000);

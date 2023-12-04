@@ -12,13 +12,19 @@ import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import {obtenerRecoleccionReporte} from "../../Util/Contexts/RecoleccionContext";
 import {decodePolyline} from "../../Util/HereDecoading";
 import DialogoEvidenciasUltimaMilla from "./DialogoEvidenciasUltimaMilla";
+import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
 
 class DatosEntregaRecoleccion extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            setOpenDialogEvidencia:false,
+            imagenesEvidencia:[],
+            imagenesCargadas:false,
         }
+        this.handleClickCloseDialogoEvidencia = this.handleClickCloseDialogoEvidencia.bind(this)
+        this.cargarImagenes = this.cargarImagenes.bind(this)
+
     }
 
     componentDidMount() {
@@ -44,7 +50,24 @@ class DatosEntregaRecoleccion extends Component {
         }
 
     }
+    handleClickCloseDialogoEvidencia(openDialog){
+        this.setState({setOpenDialogEvidencia:openDialog})
 
+    }
+    cargarImagenes(guia)
+    {
+        this.setState({setOpenDialogEvidencia:true})
+        if(this.state.imagenesCargadas)
+            return
+            obtenerImagenEvidencia(this.props.data.m_nId,0).then(respuesta=>{
+                console.log(respuesta.data)
+                this.setState({
+                    imagenesEvidencia:respuesta.data?respuesta.data:[],
+
+                })
+            })
+        this.setState({imagenesCargadas:true})
+    }
     render() {
         const blackOptions = {color: this.props.data.color}
         return (
@@ -98,23 +121,18 @@ class DatosEntregaRecoleccion extends Component {
                                             }
                                             { this.props.isTour &&
                                                 <Grid item md={12}>
-                                                <Button fullWidth variant="text" color="primary" onClick={() => this.props.open(true, this.props.data)}>
+                                                     { (this.state.setOpenDialogEvidencia) &&
+                                                        <DialogoEvidenciasUltimaMilla
+                                                            open={this.state.setOpenDialogEvidencia}
+                                                            setCloseDialog={this.handleClickCloseDialogoEvidencia}
+                                                            imagenes={this.state.imagenesEvidencia}
+                                                             />
+                                                     }
+                                                <Button fullWidth variant="text" color="primary" onClick={() =>this.cargarImagenes(this.props)}>
                                                     Ver evidencias
                                                 </Button>
                                                 </Grid>
                                             }
-                                            {
-
-                                                this.props.data.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
-                                                <Grid item md={12}>
-                                                    <div align={"center"}>
-                                                        <img style={{width: "80px", height: "80px",transform:"rotate(90deg)"}}
-                                                             src={`data:image/jpeg;base64,${this.props.data.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
-                                                    </div>
-                                                </Grid>
-                                            }
-
-
                                         </Grid>
             </div>
         );
