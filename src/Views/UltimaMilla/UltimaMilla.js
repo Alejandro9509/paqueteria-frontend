@@ -60,7 +60,14 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-
+function showGuiaSinCoordenadas(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "10000"
+    }).show()
+}
 const MarkerIcon = new L.Icon({
     iconUrl: MarkerImage,
     iconRetinaUrl: MarkerImage,
@@ -136,12 +143,28 @@ class UltimaMilla extends Component {
 
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             //Metes imagenes
+            for (let parada of data.m_arrClsParadaUltimaMilla) {    //RECORRE LAS RUTAS
+                for (let guia of parada.m_arrClsProGuia) {          //RECORRE LAS PARADAS
+                    if (!guia.m_sLatitud) {
+                        if (guia.m_sLatitud.length < 3) {
+                            let index = parada.m_arrClsProGuia.findIndex(function (encontrar) {
+                                return encontrar.m_sLatitud.length < 3
+                            });
+                            if (guia.m_sFolio) {
+                                showGuiaSinCoordenadas("La guía " + guia.m_sFolio + " se ha ocultado de la ruta ya que no cuenta con coordenadas, comuníquese con las oficinas de GM Transport")
+                            }
+                            parada.m_arrClsProGuia.splice(index, 1)
+                        }
+                    }
+                }
+            }
+          const filtered=data
             obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
                 //imagenes
                 let rutaConImagenes
                 let guiaConImagenes
-                data.m_arrClsParadaUltimaMilla.forEach(rutaSinImagenes => {
-
+                filtered.m_arrClsParadaUltimaMilla.forEach(rutaSinImagenes => {
+                    
                     rutaConImagenes = respuesta.data.m_arrClsParadaUltimaMilla.find(r => r.m_nIdParadaUltimaMilla === rutaSinImagenes.m_nIdParadaUltimaMilla)
                     rutaSinImagenes.m_arrClsProGuia.forEach(guiaSinImagenes => {
                         guiaConImagenes = rutaConImagenes.m_arrClsProGuia.find(g => g.m_nId === guiaSinImagenes.m_nId && g.m_bEsRecoleccion === guiaSinImagenes.m_bEsRecoleccion)
@@ -150,24 +173,24 @@ class UltimaMilla extends Component {
                 })
 
             })
-            if (data.m_nIdUltimaMilla !== 0) {
+            if (filtered.m_nIdUltimaMilla !== 0) {
                 if (actualizar && !this.state.modoPlaneacion) {
                     this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 150000);
                 }
                 if (!this.state.ultimaMilla) {
-                    data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                    filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                 } else {
-                    if (data.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla) ? this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color : randomColor(10))
+                    if (filtered.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
+                        filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla) ? this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color : randomColor(10))
                     } else {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                        filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
-                console.log(data)
+                console.log(filtered)
                 this.setState({
                     mostrarRuta: true,
                     modoEdicion: false,
-                    ultimaMilla: data,
+                    ultimaMilla: filtered,
                     idSucursal: idSucursal,
                     fechaUltimaMilla: date,
                     zonasIds: zonas,
