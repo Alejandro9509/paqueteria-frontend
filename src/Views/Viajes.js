@@ -79,8 +79,8 @@ import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
 import { RowingSharp } from "@material-ui/icons";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import { obtenerTrayectosByRuta } from "../Util/Contexts/RutasContext";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
