@@ -32,6 +32,8 @@ const headers = API_HEADERS
 
 class TrackingEmail extends Component {
     constructor(props) {
+        let rfc=window.location.pathname.split('/')
+        if(headers.RFC==='null'){headers.RFC=rfc[rfc.length-3]}
         super(props);
         this.state = {
             activeTab: 0,
@@ -57,30 +59,6 @@ class TrackingEmail extends Component {
           catch{
             //showSuccess("No se encontró el logo del proveedor")
           }
-        })
-        console.log(this.state)
-        //console.log(props.data.m_sFolio)
-        console.log(props)
-        obtenerInformeFolioTipo(props.data.m_sFolio,"3").then(({data}) => {
-            //console.log(data)
-            //console.log(this.props)
-            //console.log(this.folioBusqueda)
-            if(data.Estatus == true){
-                
-                obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
-                    obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
-                        this.setState({
-                            imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
-                            imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
-                            data: data
-                        })
-                    })
-                })
-            }else{
-                //showSuccess(data)
-                return;
-            }
-            
         })
     }
         
