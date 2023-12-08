@@ -113,8 +113,7 @@ function ParametrosConfiguracion() {
         plantillaImportarEmbarquesBase64: '',
         plantillaImportarEmbarquesNombreArchivo: '',
         modificarValorEmbarque:false,
-        foliosPorSucursal: false,
-        HabilitarGenerarGuia: false,
+        foliosPorSucursal: false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -190,7 +189,6 @@ function ParametrosConfiguracion() {
             validarTimbradoIngreso: configuraciones.validarTimbradoIngreso,
             modificarValorEmbarque: configuraciones.modificarValorEmbarque,
             tipoTimbrado: configuraciones.tipoTimbrado,
-            habilitarGenerarGuia: configuraciones.HabilitarGenerarGuia,
             plantillaImportarEmbarquesBase64: "",
             plantillaImportarEmbarquesNombreArchivo: ''
         }
@@ -243,7 +241,6 @@ function ParametrosConfiguracion() {
                     validarTimbradoIngreso: respuesta.data.ValidarTimbradoIngreso,
                     modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
                     tipoTimbrado: respuesta.data.TipoTimbrado,
-                    HabilitarGenerarGuia: respuesta.data.HabilitarGenerarGuia,
                     plantillaImportarEmbarquesBase64: "",
                     plantillaImportarEmbarquesNombreArchivo: "",
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal
@@ -642,21 +639,6 @@ function ParametrosConfiguracion() {
                                             style={{transform: "scale(2)"}}
                                             inputProps={{'aria-label': 'primary checkbox'}}
                                             name="detectarTipoCobro"
-                                        />
-                                    </Box>
-                                </Box>
-                                <Box width="40%" p={1} my={0.5} display="flex">
-                                    <Box width="40%" p={1} my={0.5}>
-                                        <h2>Habilitar Boton Generar Guia</h2>
-                                    </Box>
-                                    <Box width="40%" p={1} my={0.5}>
-                                        <Checkbox
-                                            checked={configuraciones.HabilitarGenerarGuia}
-                                            onChange={handleChecked}
-                                            color="primary"
-                                            style={{transform: "scale(2)"}}
-                                            inputProps={{'aria-label': 'primary checkbox'}}
-                                            name="HabilitarGenerarGuia"
                                         />
                                     </Box>
                                 </Box>
