@@ -398,6 +398,7 @@ export default function PlantillasImportacionAgregar(props){
                                             value={state.hojaEmbarques}
                                             helperText={"Nombre de la hoja donde se estarán los datos del embarque."}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.IDENTIFICACION}>
@@ -409,6 +410,7 @@ export default function PlantillasImportacionAgregar(props){
                                             value={state.hojaPaquetes}
                                             helperText={"Nombre de la hoja donde se estarán los paquetes del embarque."}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.IDENTIFICACION}>
@@ -420,12 +422,13 @@ export default function PlantillasImportacionAgregar(props){
                                             value={state.hojaComplementos}
                                             helperText={"Nombre de la hoja donde se estarán los complementos SAT del embarque."}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                 </Grid>
                             </section>
                             <section id={"generales"} style={STYLES}>
-                                <h2>Datos de generales</h2>
+                                <h2>Datos generales</h2>
                                 <br/>
                                 <Grid container spacing={1}>
                                     <Grid item xs={12} sm={grid.GENERALES}>
@@ -436,6 +439,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="numeroEmbarque"
                                             value={state.numeroEmbarque}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.GENERALES}>
@@ -446,6 +450,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="moneda"
                                             value={state.moneda}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.GENERALES}>
@@ -456,6 +461,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="tipoCambio"
                                             value={state.tipoCambio}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.GENERALES}>
@@ -466,6 +472,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="tipoCobro"
                                             value={state.tipoCobro}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.GENERALES}>
@@ -476,7 +483,6 @@ export default function PlantillasImportacionAgregar(props){
                                             name="referencia"
                                             value={state.referencia}
                                             onChange={handleOnChange}
-                                            required
                                         />
                                     </Grid>
                                 </Grid>
@@ -493,6 +499,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="tipoSeguro"
                                             value={state.tipoSeguro}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.SEGURO}>
@@ -539,6 +546,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="validarTimbradoFactura"
                                             value={state.validarTimbradoFactura}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.TIMBRADO}>
@@ -549,6 +557,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="tipoServicio"
                                             value={state.tipoServicio}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                 </Grid>
@@ -565,6 +574,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="numeroRemitente"
                                             value={state.numeroRemitente}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.REMITENTE}>
@@ -575,6 +585,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="correoRemitente"
                                             value={state.correoRemitente}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.REMITENTE}>
@@ -611,6 +622,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="numeroDestinatario"
                                             value={state.numeroDestinatario}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.REMITENTE}>
@@ -621,6 +633,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="correoDestinatario"
                                             value={state.correoDestinatario}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.REMITENTE}>
@@ -815,6 +828,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="latitud"
                                             value={state.latitud}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.UBICACION}>
@@ -825,6 +839,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="longitud"
                                             value={state.longitud}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                 </Grid>
@@ -897,16 +912,18 @@ export default function PlantillasImportacionAgregar(props){
                                             name="cantidadPaquete"
                                             value={state.cantidadPaquete}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
                                         <TextField
                                             variant="outlined"
-                                            label="Número de producto"
+                                            label="Número de paquete"
                                             margin="dense"
                                             name="numeroProducto"
                                             value={state.numeroProducto}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
@@ -917,6 +934,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="descripcionPaquete"
                                             value={state.descripcionPaquete}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
@@ -927,6 +945,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="largo"
                                             value={state.largo}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
@@ -937,6 +956,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="alto"
                                             value={state.alto}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
@@ -947,6 +967,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="ancho"
                                             value={state.ancho}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
@@ -957,6 +978,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="embalajePaquete"
                                             value={state.embalajePaquete}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
@@ -967,6 +989,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="pesoPaquete"
                                             value={state.pesoPaquete}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.PAQUETES}>
@@ -993,6 +1016,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="cantidadComplemento"
                                             value={state.cantidadComplemento}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
@@ -1003,6 +1027,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="pesoComplemento"
                                             value={state.pesoComplemento}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
@@ -1013,6 +1038,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="claveProductoServicio"
                                             value={state.claveProductoServicio}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
@@ -1023,6 +1049,7 @@ export default function PlantillasImportacionAgregar(props){
                                             name="claveUnidadMedida"
                                             value={state.claveUnidadMedida}
                                             onChange={handleOnChange}
+                                            required
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
@@ -1152,7 +1179,7 @@ function PlantillaLineal(props) {
                 </Grid>
             </section>
             <section id={"generales"} style={STYLES}>
-                <h2>Datos de generales</h2>
+                <h2>Datos generales</h2>
                 <br/>
                 <Grid container spacing={1}>
                     <Grid item xs={12} sm={grid.GENERALES}>

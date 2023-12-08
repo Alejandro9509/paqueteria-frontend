@@ -16,7 +16,7 @@ import {
     ListItem,
     ListItemIcon,
     ListItemSecondaryAction,
-    ListItemText,
+    ListItemText, MenuItem,
     Select,
     Step,
     StepLabel,
@@ -71,7 +71,11 @@ import {
 } from "../Util/Contexts/InformesContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
-import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+import {
+    imprimirFormatosId, imprimirFormatosIdIdTipoReporte, imprimirFormatosIdInforme,
+    obtenerFormatosImpresion,
+    obtenerFormatosImpresionProceso
+} from "../Util/Contexts/FormatosImpresionContext";
 import Filtros from "./Filtros/Filtros";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import Button from "@material-ui/core/Button";
@@ -80,6 +84,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import {confirmAlert} from "react-confirm-alert";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
+import DialogFormatosImpresion from "./DialogFormatosImpresion";
 import {showError} from "../Util/GlobalFunctions";
 import ProgressBarCubicaje from "./Viajes/ProgressBarCubicaje";
 
@@ -91,7 +96,14 @@ function showSuccess(mensaje) {
         timeout: "8000",
     }).show();
 }
-
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
 
 const styles = {
     seleccionado: {
@@ -126,7 +138,29 @@ function Informes({history}) {
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
+    const [openDialogReportes, setOpenDialogReportes] = useState(false)
 
+    const [detectarModificaciones,setDetectar]=React.useState(false)
+    // useEffect(()=>{
+    //
+    //     if( localStorage.getItem("RFC")==="ECC9510049KA"){
+    //         obtenerFormatosImpresionProceso(222).then(({data}) => {
+    //             setDataReportes(data)
+    //         })
+    //     }
+    //     else{
+    //         obtenerFormatosImpresionProceso(214).then(({data}) => {
+    //             setDataReportes(data)
+    //         })
+    //     }
+    //
+    // }, [])
+
+    function confirmExit()
+    {
+
+      return "show warning";
+    }
     const handleChange = (event) => {
         setState({
             ...state,
@@ -208,9 +242,16 @@ function Informes({history}) {
                         >
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
+                        {/*<Tooltip title="Reporte opción 1">*/}
+                        {/*    <a className="btn btn-default btn-xs"*/}
+                        {/*       onClick={() => generarReporteOpcion1(row.row)}*/}
+                        {/*       disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"*/}
+                        {/*                                              style={{color: "#F9A03E"}}/></a>*/}
+
+                        {/*</Tooltip>*/}
                         <Tooltip title="Reporte">
                             <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}
+                               onClick={() => handleOnReporteClick(row.row)}
                                disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
                                                                       style={{color: "#F9A03E"}}/></a>
 
@@ -223,7 +264,7 @@ function Informes({history}) {
                                 message: '¿Está seguro de eliminar informe?',
                                 buttons: [
                                     {
-                                        label: 'Si',
+                                        label: 'Sí',
                                         onClick: () => handleEliminar(row.row.m_nIdInforme)
                                     },
                                     {
@@ -313,23 +354,46 @@ function Informes({history}) {
         },
     ]);
 
-    function generarReporte(id, folio) {
-        obtenerInformeReporte(id).then(({data}) => {
-            /*let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Informe " + folio;*/
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Informe " + folio.replace(/\./g, ' '));
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
+    async function handleOnReporteClick(row) {
+        setOpenDialogReportes(true)
+    }
+    const handleGenerarReporte=(data)=>{
+        if (data === null) {
+            return
+        }
+        if (data.m_sNombreArchivo.toUpperCase().includes('EXCEL')) {
+            // let a = document.createElement('a');
+            // a.href = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64, "+ encodeURI(data.m_sArchivo);
+            // a.download = "Informe " + row.m_sFolioInforme.replace(/\./g, ' ');
+            // a.textContent = 'Descargar Archivo';
+            // document.body.appendChild(a);
+            // a.click();
+            // a.remove();
+
+            // Tu cadena base64 (por ejemplo, obtenida de una fuente externa)
+            const base64String = data.m_sArchivo
+
+            // Decodifica la cadena base64 a un ArrayBuffer
+            const arrayBuffer = atob(base64String);
+            const length = arrayBuffer.length;
+            const uint8Array = new Uint8Array(length);
+            for (let i = 0; i < length; i++) {
+                uint8Array[i] = arrayBuffer.charCodeAt(i);
             }
-        })
+
+            // Crea un libro de Excel a partir de los datos decodificados
+            const wb = XLSX.read(uint8Array, { type: 'array' });
+
+            // Puedes trabajar con el libro de Excel como desees
+
+            // Por ejemplo, si deseas descargarlo
+            XLSX.writeFile(wb, 'Informe ' + state.FolioInforme.replace(/\./g, ' ')+'.xlsx');
+        } else {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Informe" + state.FolioInforme.replace(/\./g, ' ');
+        }
     }
 
     function handleSelectDatos(id, cp) {
@@ -427,7 +491,7 @@ function Informes({history}) {
 
         tipoModal: 0,
         IdInforme: 0,
-        FolioInforme: 0,
+        FolioInforme: '',
         fechaHora: '',
         DerechoBorrar: 151,
         EstatusInforme: 5,
@@ -486,7 +550,7 @@ function Informes({history}) {
 
                 tipoModal: 0,
                 IdInforme: 0,
-                FolioInforme: 0,
+                FolioInforme: '',
                 DerechoBorrar: 151,
                 EstatusInforme: 5,
                 IdViaje: {},
@@ -908,6 +972,8 @@ function Informes({history}) {
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
 
     const handleShowListado = () => {
+        setDetectar(false)
+        window.onbeforeunload={}
         getDataParaListado()
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
@@ -925,7 +991,15 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
 
     }
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
 
+            window.onbeforeunload = confirmExit
+
+        }
+    }, [state])
     const handleShowCubicar = () => {
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
@@ -1056,6 +1130,15 @@ function Informes({history}) {
     return (
         <div>
 
+            { (openDialogReportes && (state.IdInforme > 0)) &&
+                <DialogFormatosImpresion
+                    idRegistro={state.IdInforme}
+                    idProceso={214}
+                    handleOnClose={handleGenerarReporte}
+                    setOpenDialog={setOpenDialogReportes}
+                    openDialog={openDialogReportes}
+                />
+            }
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -1207,6 +1290,7 @@ function Informes({history}) {
                                                 setState({
                                                     ...state,
                                                     IdInforme: row.data.m_nIdInforme,
+                                                    FolioInforme: row.data.m_sFolioInforme,
                                                 });
                                             }}
                                         />
@@ -1220,7 +1304,7 @@ function Informes({history}) {
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
-                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
+                            <form onClick={()=>setDetectar(true)} className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
                                 if (e.code === 13) {
                                     e.preventDefault()
                                 }
@@ -1338,7 +1422,7 @@ function Informes({history}) {
                                                                                         id="tipoTimbrado"
                                                                                         name="tipoTimbrado"
                                                                                         read="true"
-                                                                                        disabled={state.FolioInforme !== 0}
+                                                                                        disabled={state.FolioInforme !== ''}
                                                                                         onChange={handleSelectTipoTimbrado}
                                                                                         value={state.tipoTimbrado}
                                                                                     >
@@ -1649,7 +1733,7 @@ function Informes({history}) {
                                                                         {/*****************************************Utilización*************************************************/}
 
                                                                         <div className="col-sm-12 col-md-12 unit">
-                                                                            <ProgressBarCubicaje 
+                                                                            <ProgressBarCubicaje
                                                                                 value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}
                                                                             </ProgressBarCubicaje>
 

@@ -163,7 +163,7 @@ class CancelarSAT extends Component {
                                             name: "idCancelacionSAT"
                                         }}
                                     >
-                                        {this.state.catalogoSAT.filter(i => this.props.esInforme ? i.m_nid !== "01" : true).map((estatus) => (
+                                        {this.state.catalogoSAT.filter(i => i.m_nid !== "01").map((estatus) => (
                                             <MenuItem
                                                 key={estatus.m_nid}
                                                 value={estatus.m_nid}
@@ -231,6 +231,8 @@ export function RecoleccionResumen(props) {
         idsTiposCobroSeleccionArray: [],
         detectarTipoCobro: false,
         limpiarProducto: false,
+        tipoTarifa: 0,
+        factorConversion: 0.0
     })
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
@@ -352,6 +354,8 @@ export function RecoleccionResumen(props) {
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
                     limpiarProducto: respuesta.data.LimpiarProducto,
+                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    factorConversion: respuesta.data.FactorConversion,
                 }
             })
         })
@@ -818,6 +822,8 @@ export function RecoleccionResumen(props) {
                     cliente={data.clientePaga}
                     seCalculaTarifa={seCalculaTarifa}
                     limpiarProducto={configuraciones.limpiarProducto}
+                    tipoTarifa={configuraciones.tipoTarifa}
+                    factorConversion={configuraciones.factorConversion}
                 />
             </section>
             <section id={"complementos"}>

@@ -23,13 +23,16 @@ import {
 } from 'react-sortable-hoc';
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
+import IconButton from "@material-ui/core/IconButton";
+import {showSuccess} from "../../Util/Util";
 
-class AgregarPaqueteUltimaMilla extends Component {
+class OrdenarParadasUltimaMilla extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: props.paquetes,
-            itemsSinModificar: props.paquetes,
+            items: [...this.props.paquetes],
+            itemsSinModificar: [...this.props.paquetes],
+            itemsDescartados: [],
             paquetes: [],
             openRemplazar: false,
             paradaSeleccionada: props.tour
@@ -39,18 +42,15 @@ class AgregarPaqueteUltimaMilla extends Component {
         this.onSubmitPaquetesSeleccionados = this.onSubmitPaquetesSeleccionados.bind(this)
         this.quitarPaquete = this.quitarPaquete.bind(this)
         this.onSubmitData = this.onSubmitData.bind(this)
-        //this.getAllPaquetes = this.getAllPaquetes.bind(this)
     }
 
     componentDidMount() {
-        console.log(this.props.paquetes)
-        this.setState({items: this.props.paquetes})
+        this.setState({items: [...this.props.paquetes]})
     }
-
 
     onSubmitData(e) {
         e.preventDefault()
-        this.props.onSubmit(this.state.items)
+        this.props.onSubmit(this.state.items, this.state.itemsDescartados)
     }
 
     onSubmitPaquetesSeleccionados(seleccionados){
@@ -58,14 +58,11 @@ class AgregarPaqueteUltimaMilla extends Component {
         const {items} = this.state
         array = array.concat(items)
         array = array.concat(seleccionados)
-        console.log(array)
-
         this.setState({items: array, openRemplazar: false})
     }
 
 
     openSeleccionarPaquetes() {
-        //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
         obtenerGuiaUltimaMilla(this.props.zonasIds, this.props.tipoServicio).then(({data}) => {
 
             this.setState({paquetes: data, openRemplazar: true})
@@ -79,9 +76,15 @@ class AgregarPaqueteUltimaMilla extends Component {
     };
 
     quitarPaquete(index){
-        const items = this.state.items
-        items.splice(index,1)
-        this.setState({items: items})
+        if (this.state.items.length === 1){
+            showSuccess("No se pueden borrar todas las paradas de la ruta.")
+        } else {
+            const items = this.state.items
+            const paquetesDescartados = this.state.itemsDescartados
+            paquetesDescartados.push(items[index])
+            items.splice(index,1)
+            this.setState({items: items, itemsDescartados: paquetesDescartados})
+        }
     }
 
     render() {
@@ -104,19 +107,20 @@ class AgregarPaqueteUltimaMilla extends Component {
                 >
                     <DialogTitle><Typography variant={"h4"}>Paquetes - {this.state.paradaSeleccionada.m_snNombreOperador} </Typography></DialogTitle>
                     <DialogContent>
-                        { false &&
-                            <div align={"right"} style={{width: "100%"}}>
-                                <Button variant={"contained"} color={"primary"}
-                                        onClick={() => this.openSeleccionarPaquetes()}>Agregar Paquetes</Button>
+                        <div align={"right"} style={{width: "100%"}}>
+                            <Button variant={"contained"} color={"primary"}
+                                    onClick={() => this.openSeleccionarPaquetes()}
+                                    disabled={this.props.deshabilidarAgregar}
+                            >Agregar Paquetes</Button>
 
-                            </div>
-                        }
+                        </div>
 
                         <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
 
                             {items.map((value, index) => {
                                 return (
                                 <SortableItem  disabled={value.m_nEstatusUlimaMilla !== 1}
+                                               apagao={value.m_nEstatusUlimaMilla !== 1 || this.props.deshabilidarAgregar}
                                                quitarPaquete={this.quitarPaquete}
                                                key={`item-${value.m_sFolio}`}
                                                index={index}
@@ -141,20 +145,22 @@ class AgregarPaqueteUltimaMilla extends Component {
     }
 }
 
-AgregarPaqueteUltimaMilla.propTypes = {};
+OrdenarParadasUltimaMilla.propTypes = {};
 
-export default AgregarPaqueteUltimaMilla;
+export default OrdenarParadasUltimaMilla;
 
 const DragHandle = sortableHandle(() => <DragHandleIcon fontSize={"large"}/>);
 
-const SortableItem = sortableElement(({primary, secundary, quitarPaquete, position}) => {
+const SortableItem = sortableElement(({primary, secundary, quitarPaquete, position, apagao}) => {
     return (
     <ListItem style={{zIndex: 3000000000}}>
         <ListItemIcon>
             <DragHandle />
         </ListItemIcon>
         <ListItemText primary={`${primary}`} secondary={secundary}/>
-        {/*<DeleteIcon onClick={() => quitarPaquete(position)}/>*/}
+        <IconButton onClick={() => quitarPaquete(position)} disabled={apagao}>
+            <DeleteIcon />
+        </IconButton>
     </ListItem>
 )});
 

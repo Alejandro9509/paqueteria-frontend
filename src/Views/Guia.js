@@ -1,12 +1,30 @@
 import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
-import {getCurrentDateTime,getCurrentTime,getCurrentDate} from "../Util/Util"
+import {getCurrentDateTime,getCurrentTime,getCurrentDate,mesString} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
 import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox, Accordion, AccordionSummary, Typography, Chip, List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
+import {
+    Tab,
+    Tabs,
+    Box,
+    InputAdornment,
+    Button,
+    Grid,
+    FormControlLabel,
+    Checkbox,
+    Accordion,
+    AccordionSummary,
+    Typography,
+    Chip,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    MenuItem
+} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
@@ -22,6 +40,7 @@ import Barra from "../Util/jquery-barcode"
 import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EnvioCorreoDialogo from "../Views/SAT/EnvioCorreoDialogo";
 
 import {
     obtenerZonaTarifaByIdCodigoPostal,
@@ -42,7 +61,11 @@ import {
     TextField,
     Tooltip
 } from "@material-ui/core";
-import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE, TICKET_ZABRA_TAMPLATE_PLATEROS} from "../Constants";
+import {
+    API_HEADERS,
+    dataGridLocaleText,
+    TICKET_ZEBRA_TEMPLATE, TICKET_ZEBRA_TEMPLATE_NOT_QR
+} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
 import {obtenerEmbarquesId, obtenerEmbarqueMoneda, obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
@@ -64,7 +87,11 @@ import {
     asignarTrayectos,
     validarEliminarGuia,
     obtenerGuiaReporteEtiqueta,
-    validarCancelarGuia, obtenerGuiaReporteEtiquetaParcial
+    validarCancelarGuia,
+    obtenerGuiaReporteEtiquetaParcial,
+    enviarCorreoGuia,
+    obtenerGuiaReporteEtiquetaGuiaRangos,
+    obtenerPaquetesGuia, validarRangosEtiqueta
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -77,7 +104,12 @@ import {
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {obtenerTipoServicio} from "../Util/Contexts/TipoServiciosContext";
 import {obtenerImpuestosTipo} from "../Util/Contexts/ImpuestosContext";
-import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+import {
+    imprimirFormatoGuiaMoroleon,
+    imprimirFormatosId, imprimirFormatosIdIdTipoReporte,
+    obtenerFormatosImpresion,
+    obtenerFormatosImpresionProceso
+} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 import {confirmAlert} from "react-confirm-alert";
@@ -89,13 +121,22 @@ import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
 import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
 import Filtros from "./Filtros/Filtros";
-import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    asignarTipoDocumento,
+    obtenerParametrosConfiguracion,
+    validarRequiereDocumentoTimbrado
+} from "../Util/Contexts/ParametrosConfiguracionContext";
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
 import ImprimirEtiquetas from "./Guia/ImprimirEtiquetas";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
-
+import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
+import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
+import EmailIcon from '@material-ui/icons/Email';
+import DialogImpresion from "./Guia/DialogImpresion";
+import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
+import {obtenerClienteId} from "../Util/Contexts/ClientesContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -104,7 +145,14 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
 
 window.jQuery = window.$ = $;
 var EB = window.EB;
@@ -134,6 +182,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
+const FORMATOS_IMPRESION = {
+    GUIA: 212,
+    ETIQUETAS: 213,
+    ETIQUETAS_RANGOS: 223
+}
+
 function Guia(props) {
     let today = new Date();
     let React = require('react');
@@ -141,6 +195,8 @@ function Guia(props) {
     const classes = useStyles();
     localStorage.getItem("UsuarioId");
 
+    const [detectarModificaciones,setDetectar]=React.useState(false)
+    
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
 
@@ -158,6 +214,9 @@ function Guia(props) {
     const [dataConceptosBase, setDataConceptosBase] = useState([])
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [guiaSeleccionada, setGuiaSeleccionada] = useState(null)
+    const [showDialogEnviarCorreo, setShowDialogEnviarCorreo] = useState(false)
+    const [openDialogEtiquetasIndividualesForPdf, setOpenDialogEtiquetasIndividualesForPdf] = useState(false);
+    const [openDialogEtiquetasIndividualesForPrint, setOpenDialogEtiquetasIndividualesForPrint] = useState(false);
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -185,6 +244,7 @@ function Guia(props) {
         idEstatusGuia: 4,
         idMoneda: 1,
         idTipoTarifa: 2,
+        factorConversion: 0.0,
         tipoCambio: 0,
         validarEmbarqueGuia:false,
         //Remitente
@@ -274,12 +334,23 @@ function Guia(props) {
         creadoEl: "",
         modificadoEl: "",
         openDialog: false,
-        openDialogEtiquetas:false,
-        detallesPaquetesEtiquetas:[],
         receptorGuia:[],
-        referencia:[],
+        referencia:'',
+        observaciones:'',
+        reporteSeleccionado:{},
+        imprimirEtiquetasIndividuales: false,
+        paquetesGuiaEtiquetasIndividuales: [],
+        clientePaga: ''
 
     })
+    // const [openDialog, setOpenDialog] = useState(false)
+    // const [dataReportes, setDataReportes] = useState([])
+    // const [seleccion, setSeleccion] = useState(null)
+    // const [openDialogEtiqueta, setOpenDialogEtiqueta] = useState(false)
+    // const [dataReportesEtiqueta, setDataReportesEtiqueta] = useState([])
+    // const [seleccionEtiqueta, setSeleccionEtiqueta] = useState(null)
+    // const [dataReporteEtiquetaRangos, setDataReporteEtiquetaRangos] = useState(null)
+
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -289,7 +360,7 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a
                                 onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                 className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
@@ -304,33 +375,39 @@ function Guia(props) {
                         </Tooltip>
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i
+                               onClick={() => generarReporte(row.row)}><i
                                 className="zmdi zmdi-file"
                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         { row.row.EntregaEnSucursal &&
-                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
+                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         }
-                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
+                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => {
                                    /*mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)*/
-                                   printTicket(row.row.m_nIdGuia)
+                                   handleOnClickImprimirEtiquetas(row.row.m_nIdGuia)
                                }}>
                                 <i className="zmdi zmdi-print" style={{color: "#F9A03E"}}/>
                             </a>
 
                         </Tooltip>
-                        <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465)}>
-                            <a className="btn btn-default btn-xs" onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
+                        <Tooltip title="Descargar PDF con etiquetas" disabled={!validarDerecho(9101465) || row.row.m_sEstatusGuia === "Cancelado"}>
+                            <a className="btn btn-default btn-xs" onClick={() => handleOnClickDescargarEtiquetas(row.row.m_nIdGuia, row.row.m_nFolioGuia)}>
                                 <i className="zmdi zmdi-inbox" style={{color: "#F9A03E"}}/>
                             </a>
+
+                        </Tooltip>
+
+                        <Tooltip title="Reenviar correo de seguimiento"  disabled={!validarDerecho(9101458) || row.row.m_sEstatusGuia === "Cancelado"} >
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => handleReenviarCorreo(row.row.m_nIdGuia)}><EmailIcon style={{paddingTop:"2px"}}/></a>
 
                         </Tooltip>
 
@@ -397,6 +474,13 @@ function Guia(props) {
         {
             headerName: "Subtotal",
             field: "m_cSubtotal",
+            width: 125,
+            valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+
+        },
+        {
+            headerName: "Total",
+            field: "m_cTotal",
             width: 125,
             valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
 
@@ -479,10 +563,25 @@ function Guia(props) {
             field: "FolioERP",
             width: 200
         },
+        {
+            headerName: "Fecha última milla",
+            field: "m_sFechaUltimaMilla",
+            width: 200
+        },
 
 
     ]);
     const [open, setOpen] = React.useState(false);
+    const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
+        open: false,
+        seleccion: {
+            idSucursal: 0,
+            sucursal: '',
+            idTipoDocumento: 0,
+            documento: 'SIN DEFINIR'
+        }
+
+    })
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -564,19 +663,16 @@ function Guia(props) {
       setChecked(newChecked);
     };
 
-    useEffect(() => {
-        console.log(conceptosAdicionales.length)
-    }, [conceptosAdicionales])
-
     async function getParametrosConfiguracion(){
         obtenerParametrosConfiguracion().then(respuesta=>{
-            console.log(respuesta)
             setState(state=>{
                 return{
                     ...state,
                     estatusGuia:respuesta.data.EstatusGuia,
                     idTipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    idMoneda: respuesta.data.MonedaEmbarque
+                    idMoneda: respuesta.data.MonedaEmbarque,
+                    factorConversion: respuesta.data.FactorConversion,
+                    imprimirEtiquetasIndividuales: respuesta.data.ImprimirEtiquetasIndividuales
                 }
             })
         })
@@ -587,8 +683,8 @@ function Guia(props) {
         $("#idBarra" + indice).barcode(valor, "code128");
     }
 
-    const handleAceptar = (e) => {
-        if (e){
+    const handleAceptar = async (e) => {
+        if (e) {
             e.preventDefault()
         }
         if (conceptosAdicionales.length === 0) {
@@ -622,28 +718,110 @@ function Guia(props) {
                 m_bActivo: true,
                 m_cDescuento: c.descuento || 0
             })),
-
+            "m_sObservaciones": state.observaciones
         }
-      //  console.log(state)
+        //  console.log(state)
         console.log(JSON.stringify(params))
-      if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
-            agregarGuia(params).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err.response?.data)
-            });
-        } else {
-            modificarGuia(state.idGuia, params).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err.response?.data)
-            });
+        // SE REVISA QUE HAYA DOCUMENTO POR DEFECTO DEFINIDO PARA LA SUCURSAL
+        /*await consultarDocumentoTimbradoSucursal(state.idSucursalAgregar).then(async ({data}) => {
+            if (data.idTipoDocumento > 0) {
+                if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+                    agregarGuia(params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
+                } else {
+                    modificarGuia(state.idGuia, params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
 
-        }
+                }
+            } else {
+                // SE OBTIENEN LOS DOCUMENTOS DE LA SUCUSAR ASIGNADOS EN EL ERP
+                await obtenerTiposDocumentoSucursal(state.idSucursalAgregar).then(respuesta => {
+                    let array = respuesta.data.map(obj => ({
+                        idSucursal: state.idSucursalAgregar,
+                        idTipoDocumento: obj.IdDocumento,
+                        documento: obj.Documento
+                    }))
+                    // CUANDO HAY SOLO UN DOCUMENTO PARA LA SUCURSAL EN EL ERP SE DEFINE POR DEFECTO EN AUTOMATICO
+                    if (array.length === 1){
+                        asignarTipoDocumento(array[0]).then((respuesta) => {
+                            showSuccess('Se definió documento de timbrado por defecto ya que solo había uno asignado a la sucursal actual')
+                            setDialogTipoDocumento({
+                                ...dialogTipoDocumento,
+                                open: false,
+                                seleccion: {
+                                    idSucursal: 0,
+                                    sucursal: '',
+                                    idTipoDocumento: 0,
+                                    documento: 'SIN DEFINIR'
+                                }
+
+                            })
+                            handleAceptar(null)
+
+                        })
+                    }else{
+                        showSuccess('No hay un documento de timbrado por defecto asignado a la sucursal actual, defina uno.')
+                        setDialogTipoDocumento({
+                            ...dialogTipoDocumento,
+                            open: true,
+                            seleccion: {
+                                idSucursal: state.idSucursalAgregar,
+                                sucursal: '',
+                                idTipoDocumento: 0,
+                                documento: 'SIN DEFINIR'
+                            },
+                        })
+                    }
+                });
+
+            }
+
+        })*/
+
+        validarRequiereDocumentoTimbrado(state.idSucursalAgregar).then(({data}) => {
+            showSuccess(data.message)
+            if (data.tieneDocumentoAsignado){
+                if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+                    agregarGuia(params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
+                } else {
+                    modificarGuia(state.idGuia, params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                    });
+
+                }
+            }else{
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: true,
+                    seleccion: {
+                        idSucursal: state.idSucursalAgregar,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    },
+                })
+            }
+        })
     }
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
@@ -754,7 +932,6 @@ function Guia(props) {
         }).catch(err => {
             console.log(err.response.data)
         })
-
     }
 
     function handleShowConsultar(id) {
@@ -902,6 +1079,8 @@ function Guia(props) {
                 tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
                 receptorGuia: respuesta.data.m_sReceptorGuia,
                 referencia: respuesta.data.m_sReferencia,
+                observaciones: respuesta.data.m_sObservaciones,
+                clientePaga: respuesta.data.m_sCliente
 
             }
         })
@@ -988,9 +1167,27 @@ function Guia(props) {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
+
+    }
+    
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+           
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [dataPaquetes,state,conceptosAdicionales])
+    function confirmExit()
+    {
+
+      return "show warning";
     }
 
     const handleShowListado = () => {
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
         setState(state => {
             return {
@@ -1025,44 +1222,288 @@ function Guia(props) {
         style: 'currency',
         currency: 'USD',
     });
+   /*  const mesString = (mes) => {
+        if(mes === 1){
+            return "enero"
+        }           
+        if(mes === 2){
+            return "febrero"
 
+        }
+        if(mes === 3){
+            return "marzo"
 
-    function generarReporte(id, folio) {
-        obtenerGuiaReporte(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
+        }
+        if(mes === 4){
+            return "abril"
+
+        }
+        if(mes === 5){
+            return "mayo"
+
+        }
+        if(mes === 6){
+            return "junio"
+
+        }
+        if(mes === 7){
+            return "julio"
+
+        }
+        if(mes === 8){
+            return "agosto"
+
+        }
+        if(mes === 9){
+            return "septiembre" 
+        }           
+
+        if(mes === 10){
+            return "octubre"
+        }
+        if(mes === 11){
+            return "noviembre"
+        }
+        if(mes === 12){
+            return "diciembre"
+        }
+    } */
+    function generarReporte(row) {
+        let mes = mesString(today.getMonth()+1)
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then((respuesta) => {
+            imprimirFormatoGuiaMoroleon(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia,today.getFullYear(),today.getDate(),mes).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+            })
         })
     }
 
-    function generarReporteEtiqueta(id, folio) {
-        obtenerGuiaReporteEtiqueta(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "Guía " + folio);
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
-            }
+    // const handleOnChangeReporte = (data) => {
+    //     console.log(data)
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: data
+    //     })
+    // }
+    // const handleGenerarReporte=(e)=>{
+    //     e.preventDefault()
+    //     console.log(state.reporteSeleccionado)
+    //     console.log(seleccion)
+    //
+    //     if (state.reporteSeleccionado.length === 0) {
+    //         showError("Es necesario seleccionar al menos un reporte")
+    //         return
+    //     }
+    //
+    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdGuia).then(({data}) => {
+    //         console.log(data)
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Guía" + seleccion.m_nFolioGuia;
+    //     })
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: null
+    //     })
+    //     setOpenDialog(false)
+    // }
+
+    /**REACCIONA AL CLICK DEL BOTON PDF ETIQUETAS DEL LISTADO*/
+    function handleOnClickDescargarEtiquetas(id, folio) {
+        if (state.imprimirEtiquetasIndividuales) {
+            confirmarEtiquetasAdicionalesDialog()
+                .then(resultado => {
+                    // El usuario hizo clic en "Sí", resultado es true
+                    obtenerPaquetesGuia(id).then(respuesta => {
+                        let paquetesGuia = respuesta.data.map((i) => ({
+                            idPaquete: i.m_nIdEmbarqueDetalle,
+                            producto: i.m_sProducto,
+                            embalaje: i.m_sEmbalaje,
+                            descripcion: i.m_sDescripcion,
+                            cantidad: i.ctd
+                        }))
+                        setState({
+                            ...state,
+                            paquetesGuiaEtiquetasIndividuales: paquetesGuia
+                        })
+                        setOpenDialogEtiquetasIndividualesForPdf(true)
+                    }).catch(resultado => {
+                        showError("Hubo un error al recuperar los paquetes de la guía.")
+                    });
+                })
+                .catch(resultado => {
+                    // El usuario hizo clic en "No", resultado es false
+                    descargarPdfEtiquetas(id, folio)
+                });
+
+        } else {
+            descargarPdfEtiquetas(id, folio)
+        }
+
+    }
+
+    /**DESCARGA PDF CON ETIQUETAS NORMALES (CON QR)*/
+    const descargarPdfEtiquetas = (id, folio) => {
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS).then((respuesta) => {
+            // setDataReportesEtiqueta(data)
+            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, id).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Guía Etiqueta" + folio;
+                try{
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + data.m_sArchivo;
+                    link.setAttribute('download', "Guía " + folio.replace('.',''));
+                    document.body.appendChild(link);
+                    link.click();
+                }catch (e) {
+                    console.log(e)
+                    showSuccess("No se pudo descargar el pdf")
+                }
+            })
+        })
+        // obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+        //     let pdfWindow = window.open("");
+        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+        //     pdfWindow.document.body.style.margin = "0px";
+        //     pdfWindow.document.title = "Guía " + folio.replace('.','');
+        //     try{
+        //         const link = document.createElement('a');
+        //         link.href = "data:application/pdf;base64," + data;
+        //         link.setAttribute('download', "Guía " + folio.replace('.',''));
+        //         document.body.appendChild(link);
+        //         link.click();
+        //     }catch (e) {
+        //         console.log(e)
+        //         showSuccess("No se pudo descargar el pdf")
+        //     }
+        // })
+    }
+
+    /**DESCARGA PDF CON ETIQUETAS INDIVIDUALES (SIN QR)*/
+    function descargarPdfEtiquetasIndividuales(params) {
+        params.forEach((i) => i.idGuia = guiaSeleccionada.m_nIdGuia)
+        validarRangosEtiqueta(params).then((respuesta) => {
+            let impresionData = respuesta.data
+            // if (dataReporteEtiquetaRangos === null || !(dataReporteEtiquetaRangos.m_nIdFormato > 0)) {
+            //     showError("No hay formato de etiqueta adicional en el sistema. Comuniquese con la oficinas de GM.")
+            //     return
+            // }
+            obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS_RANGOS).then((respuesta) => {
+                if (respuesta.data.length === 0) {
+                    // setDataReporteEtiquetaRangos(data[0])
+                    showError("No hay formato de etiqueta adicional en el sistema. Comuniquese con la oficinas de GM.")
+                    return
+                }
+                imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato,impresionData.idImpresion).then(({data}) => {
+                    try{
+                        let pdfWindow = window.open("");
+                        pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                        pdfWindow.document.body.style.margin = "0px";
+                        pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
+                        const link = document.createElement('a');
+                        link.href = "data:application/pdf;base64," + data.m_sArchivo;
+                        link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
+                        document.body.appendChild(link);
+                        link.click();
+                    }catch (e) {
+                        console.log(e)
+                        showSuccess("No se pudo descargar el pdf")
+                    }
+                    setState({
+                        ...state,
+                        paquetesGuiaEtiquetasIndividuales: []
+                    })
+                })
+            })
+            // imprimirFormatosIdIdTipoReporte(dataReporteEtiquetaRangos.m_nIdFormato,respuesta.data.idImpresion).then(({data}) => {
+            //     try{
+            //         let pdfWindow = window.open("");
+            //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            //         pdfWindow.document.body.style.margin = "0px";
+            //         pdfWindow.document.title = "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.','');
+            //         const link = document.createElement('a');
+            //         link.href = "data:application/pdf;base64," + data.m_sArchivo;
+            //         link.setAttribute('download', "Guía " + guiaSeleccionada.m_nFolioGuia.replace('.',''));
+            //         document.body.appendChild(link);
+            //         link.click();
+            //     }catch (e) {
+            //         console.log(e)
+            //         showSuccess("No se pudo descargar el pdf")
+            //     }
+            //     setState({
+            //         ...state,
+            //         paquetesGuiaEtiquetasIndividuales: []
+            //     })
+            // })
         })
     }
 
-    function generarReporteEtiquetaParcial(params, folio) {
-        obtenerGuiaReporteEtiquetaParcial(params).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
-        })
-    }
+    /**ABRE DIALOGO PARA SELECCIONAR FORMATO DE ETIQUETAS*/
+    // function generarReporteEtiqueta(row) {
+    //     setSeleccionEtiqueta(row)
+    //     setOpenDialogEtiqueta(true)
+    //     /*obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Guía " + folio;
+    //     })*/
+    // }
+
+    /**DESCARGA PDF DE ETIQUETAS NORMALES (CON QR)*/
+    // const handleGenerarReporteEtiqueta=(e)=> {
+    //     e.preventDefault()
+        // if (state.reporteSeleccionado.length === 0) {
+        //     showError("Es necesario seleccionar al menos un reporte")
+        //     return
+        // }
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS).then((respuesta) => {
+        //     // setDataReportesEtiqueta(data)
+        //     imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, seleccionEtiqueta.m_nIdGuia).then(({data}) => {
+        //         let pdfWindow = window.open("");
+        //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //         pdfWindow.document.body.style.margin = "0px";
+        //         pdfWindow.document.title = "Guía Etiqueta" + seleccionEtiqueta.m_nFolioGuia;
+        //         try{
+        //             const link = document.createElement('a');
+        //             link.href = "data:application/pdf;base64," + data.m_sArchivo;
+        //             link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia.replace('.',''));
+        //             document.body.appendChild(link);
+        //             link.click();
+        //         }catch (e) {
+        //             console.log(e)
+        //             showSuccess("No se pudo descargar el pdf")
+        //         }
+        //     })
+        // })
+        // imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccionEtiqueta.m_nIdGuia).then(({data}) => {
+        //     console.log(data)
+        //     let pdfWindow = window.open("");
+        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //     pdfWindow.document.body.style.margin = "0px";
+        //     pdfWindow.document.title = "Guía Etiqueta" + seleccionEtiqueta.m_nFolioGuia;
+        //     try{
+        //         const link = document.createElement('a');
+        //         link.href = "data:application/pdf;base64," + data.m_sArchivo;
+        //         link.setAttribute('download', "Guía " + seleccionEtiqueta.m_nFolioGuia.replace('.',''));
+        //         document.body.appendChild(link);
+        //         link.click();
+        //     }catch (e) {
+        //         console.log(e)
+        //         showSuccess("No se pudo descargar el pdf")
+        //     }
+        // })
+        // setState({
+        //     ...state,
+        //     reporteSeleccionado: null
+        // })
+        // setOpenDialogEtiqueta(false)
+    // }
 
     /**Entreando a guias por primera vez*/
     useEffect(value => {
@@ -1097,6 +1538,21 @@ function Guia(props) {
 
         }
         getAllDataTipoCobro()
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then(({data}) => {
+        //     setDataReportes(data)
+        //     // setState(state => {
+        //     //     return {...state, reporteSeleccionado: data[data.length - 1]?.m_nIdFormato}
+        //     // })
+        // })
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS).then(({data}) => {
+        //     setDataReportesEtiqueta(data)
+        // })
+        // obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.ETIQUETAS_RANGOS).then(({data}) => {
+        //     if (data.length > 0) {
+        //         setDataReporteEtiquetaRangos(data[0])
+        //     }
+        // })
+        getParametrosConfiguracion()
     }, []);
 
 
@@ -1127,6 +1583,117 @@ function Guia(props) {
         })
     }, [])
 
+    const handleOnClickImprimirEtiquetas = (idGuia) => {
+        if (state.imprimirEtiquetasIndividuales) {
+        // if (false) {
+        //     logica para etiquetas individuales
+            confirmarEtiquetasAdicionalesDialog()
+                .then((resultado) => {
+                //     SI IMPRIMIR ADICIONALES
+                    obtenerPaquetesGuia(idGuia).then(respuesta => {
+                        let paquetesGuia = respuesta.data.map((i) => ({
+                            idPaquete: i.m_nIdEmbarqueDetalle,
+                            producto: i.m_sProducto,
+                            embalaje: i.m_sEmbalaje,
+                            descripcion: i.m_sDescripcion,
+                            cantidad: i.ctd
+                        }))
+                        setState({
+                            ...state,
+                            paquetesGuiaEtiquetasIndividuales: paquetesGuia
+                        })
+                        setOpenDialogEtiquetasIndividualesForPrint(true)
+                    }).catch(resultado => {
+                        showError("Hubo un error al recuperar los paquetes de la guía.")
+                    });
+                })
+                .catch((resultado) => {/*NO IMPRIMIR ADICIONALES*/ printTicket(idGuia)})
+        } else {
+            printTicket(idGuia)
+        }
+    }
+
+    async function printTicketEtiquetasRangos(idGuia, rangosPaquetes) {
+        if (!idGuia > 0) {
+            showError("No se ha seleccionado una guía")
+            return
+        }
+        if (!rangosPaquetes.length > 0) {
+            showError("No se han definido rangos para la impresión")
+            return
+        }
+        if (selected_device === null || selected_device === undefined){
+            showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+        }
+        obtenerGuiaId(idGuia).then( async ({data}) => {
+            let guia = data;
+            const paquetesFiltrados = [];
+            for (const rango of rangosPaquetes) {
+                const { idPaquete, rangoInicio, rangoFin } = rango;
+                const embarqueDetalle = guia.m_arrClsDetalle
+                    .filter((paqueteGuia) => paqueteGuia.m_nIdEmbarqueDetalle === idPaquete)
+                    .map((paqueteGuia) => ({ ...paqueteGuia, rangoInicio, rangoFin }));
+
+                paquetesFiltrados.push(...embarqueDetalle);
+            }
+
+            const paquetesConIndex = [];
+            for (const item of paquetesFiltrados) {
+                const { rangoInicio, rangoFin } = item;
+                for (let i = rangoInicio-1; i < rangoFin; i++) {
+                    paquetesConIndex.push({ ...item, index: i });
+                }
+            }
+            console.log('paquetesFinal ',paquetesConIndex)
+            if (paquetesConIndex.length > 10) {
+                confirmAlert({
+                    title: 'Confirmación',
+                    message: '¿Está segura(o) que desea imprimir ' + paquetesConIndex.length + ' etiqueta(s)?',
+                    buttons: [
+                        {
+                            label: 'Sí',
+                            onClick: async () => {
+                                if (selected_device === null || selected_device === undefined){
+                                    showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
+                                }
+                                for (let i = 0; i < paquetesConIndex.length; i++) {
+                                    let result
+                                    try{
+                                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                                        showSuccess('Impresión en curso.')
+                                    }catch (e) {
+                                        console.log(e)
+                                        showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                                        break
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            label: 'No'
+                        }
+                    ]
+                });
+            } else {
+                for (let i = 0; i < paquetesConIndex.length; i++) {
+                    let result
+                    try {
+                        // console.log('paquete: ', paquetesConIndex[i])
+                        // console.log((paquetesConIndex[i].index+1) + ' de ' + paquetesConIndex[i].rangoFin)
+                        // console.log('index: ', paquetesConIndex[i].index)
+                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                        // showSuccess('Impresión en curso.')
+                    } catch (e) {
+                        console.log(e)
+                        showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                        break  // Salir del bucle si hay un error
+                    }
+                }
+
+            }
+        })
+    }
+
     async function printTicket(id) {
 
         obtenerGuiaId(id).then(({data}) => {
@@ -1146,31 +1713,13 @@ function Guia(props) {
                                 }
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
-                                        console.log('guia: ', guia)
-                                        console.log('paquete: ', p)
-                                        console.log('index: ', i + 1)
-                                        console.log(i + 1 + ' de ' + p.ctd)
                                         let result
-                                        if (rfcCliente === 'PTR170523BI6' || rfcCliente === 'SOPO110101PQ1'){
-                                            try{
-                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
-                                                showSuccess('Impresión en curso.')
-                                            }catch (e) {
-                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                                                console.log(e)
-                                                break
-                                            }
-
-                                        }else {
-                                            try{
-                                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                                showSuccess('Impresión en curso.')
-                                            }catch (e) {
-                                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                                                console.log(e)
-                                                break
-                                            }
-
+                                        try{
+                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                                            showSuccess('Impresión en curso.')
+                                        }catch (e) {
+                                            console.log(e)
+                                            break
                                         }
 
                                     }
@@ -1188,29 +1737,13 @@ function Guia(props) {
                 }
                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                     for (let i = 0; i < p.ctd; i++) {
-                        console.log('guia: ', guia)
-                        console.log('paquete: ', p)
-                        console.log('index: ', i + 1)
-                        console.log(i + 1 + ' de ' + p.ctd)
                         let result
-                        if (rfcCliente === 'PTR170523BI6' || rfcCliente === 'SOPO110101PQ1') {
-                            try {
-                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE_PLATEROS(guia, p, i), undefined, errorCallback);
-                                showSuccess('Impresión en curso.')
-                            } catch (e) {
-                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                                console.log(e)
-                                break
-                            }
-                        } else {
-                            try {
-                                result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                showSuccess('Impresión en curso.')
-                            } catch (e) {
-                                showSuccess('Hubo un error al imprimir. Intente de nuevo.')
-                                console.log(e)
-                                break
-                            }
+                        try {
+                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                            showSuccess('Impresión en curso.')
+                        } catch (e) {
+                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
+                            break
                         }
                     }
                 })
@@ -1222,6 +1755,7 @@ function Guia(props) {
 
 
     }
+
     var errorCallback = function (errorMessage) {
         alert("Error: " + errorMessage);
     }
@@ -1348,6 +1882,14 @@ function Guia(props) {
                 })
             }
           );*/
+        obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    clientePaga: data.m_sNombreFiscal
+                }
+            })
+        })
         setState(state => {
             return {
                 ...state,
@@ -1395,6 +1937,7 @@ function Guia(props) {
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
                 referencia: respuesta.data.m_sReferencia,
+                observaciones: respuesta.data.m_sObservaciones,
             }
         })
         // obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
@@ -1509,6 +2052,8 @@ function Guia(props) {
                 zonaTarifaDestinatario: '',
                 receptorGuia: '',
                 referencia: '',
+                observaciones: '',
+                clientePaga: '',
             }
         })
         setConceptosAdicionales([])
@@ -1524,7 +2069,6 @@ function Guia(props) {
         getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
         getAllConceptos()
-        getParametrosConfiguracion()
     }
 
     async function getTipoCambio() {
@@ -1994,8 +2538,226 @@ function Guia(props) {
         setData(listado)
     }
 
+    const handleOnCloseDialogTipoDocumento = (data) => {
+        try {
+            asignarTipoDocumento(data).then((respuesta) => {
+                showSuccess('Se guardó el documento por defecto.')
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                handleAceptar(null)
+
+            }).catch(e => {
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+            })
+        }catch (e) {
+            console.log(e)
+            showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+        }
+
+    }
+
+    function handleReenviarCorreo(idGuia) {
+        setState({ ...state, idGuia: idGuia})
+        setShowDialogEnviarCorreo(true)
+    }
+
+    function envioCorreoAction(data) {
+        enviarCorreoGuia(state.idGuia, data.correos, data.correoDefault).then(({data}) => {
+            showSuccess(data);
+            setShowDialogEnviarCorreo(false)
+        })
+    }
+
     return (
         <div>
+            <DialogImpresion open={openDialogEtiquetasIndividualesForPdf}
+                             handleClose={() => {
+                                 setOpenDialogEtiquetasIndividualesForPdf(false)
+                                 setState({
+                                     ...state,
+                                     paquetesGuiaEtiquetasIndividuales: []
+                                 })
+                             }}
+                             handleAccept={(data) => { descargarPdfEtiquetasIndividuales(data) }}
+                             paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
+            <DialogImpresion open={openDialogEtiquetasIndividualesForPrint}
+                             handleClose={() => {
+                                 setOpenDialogEtiquetasIndividualesForPrint(false)
+                                 setState({ ...state, paquetesGuiaEtiquetasIndividuales: [] })
+                             }}
+                             handleAccept={(data) => {
+                                 // data.forEach((i) => {
+                                 //     i.m_nIdEmbarqueDetalle = i.idPaquete
+                                 //     i.ctd = i.cantidad
+                                 // })
+                                 // prepararListadoImpresion(data, true)
+                                 printTicketEtiquetasRangos(guiaSeleccionada.m_nIdGuia, data)
+                             }}
+                             paquetes={state.paquetesGuiaEtiquetasIndividuales}/>
+            {
+                showDialogEnviarCorreo &&
+                <EnvioCorreoDialogo
+                    onSubmit={envioCorreoAction}
+                    open={showDialogEnviarCorreo}
+                    close={() => {
+                    setShowDialogEnviarCorreo(false);
+                }}/>
+            }
+
+            {/*{*/}
+            {/*    openDialog &&*/}
+            {/*    <Dialog*/}
+            {/*        open={openDialog}*/}
+            {/*        onClose={() => setOpenDialog(false)}*/}
+            {/*        fullWidth maxWidth="md"*/}
+            {/*    >*/}
+            {/*        <DialogTitle>*/}
+            {/*            Reporte de Guía*/}
+            {/*        </DialogTitle>*/}
+            {/*        <DialogContent>*/}
+            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
+            {/*                <form onSubmit={handleGenerarReporte}>*/}
+            {/*                    <Grid container spacing={1}>*/}
+            {/*                        <Grid item sm={6}>*/}
+            {/*                            <FormControl*/}
+            {/*                                className="input select"*/}
+            {/*                                fullWidth variant="outlined"*/}
+            {/*                                required*/}
+            {/*                                margin="dense">*/}
+            {/*                                <InputLabel*/}
+            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
+            {/*                                <Select*/}
+            {/*                                    fullWidth*/}
+            {/*                                    labelId="idReporteLabel"*/}
+            {/*                                    label="Reporte"*/}
+            {/*                                    className="form-control"*/}
+            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
+            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
+            {/*                                    name="reporteSeleccionado"*/}
+            {/*                                >*/}
+            {/*                                    {dataReportes.map((reporte) => (*/}
+            {/*                                        <MenuItem*/}
+            {/*                                            key={reporte.m_nIdFormato}*/}
+            {/*                                            value={reporte.m_nIdFormato}*/}
+            {/*                                        >*/}
+            {/*                                            {reporte.m_sFormato}*/}
+            {/*                                        </MenuItem>*/}
+            {/*                                    ))}*/}
+            {/*                                </Select>*/}
+            {/*                            </FormControl>*/}
+            {/*                        </Grid>*/}
+            {/*                    </Grid>*/}
+            {/*                    <DialogActions>*/}
+
+            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
+            {/*                            setOpenDialog(false)*/}
+            {/*                            setState({*/}
+            {/*                                ...state,*/}
+            {/*                                reporteSeleccionado: null*/}
+            {/*                            })*/}
+            {/*                        }*/}
+            {/*                        }>*/}
+            {/*                            Cancelar*/}
+            {/*                        </button>*/}
+            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
+            {/*                            Aceptar*/}
+            {/*                        </button>*/}
+            {/*                    </DialogActions>*/}
+            {/*                </form>*/}
+            {/*            </div>*/}
+            {/*        </DialogContent>*/}
+            {/*    </Dialog>*/}
+            {/*}*/}
+            {/*{*/}
+            {/*    openDialogEtiqueta &&*/}
+            {/*    <Dialog*/}
+            {/*        open={openDialogEtiqueta}*/}
+            {/*        onClose={() => setOpenDialogEtiqueta(false)}*/}
+            {/*        fullWidth maxWidth="md"*/}
+            {/*    >*/}
+            {/*        <DialogTitle>*/}
+            {/*            Reporte de Guía Etiqueta*/}
+            {/*        </DialogTitle>*/}
+            {/*        <DialogContent>*/}
+            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
+            {/*                <form onSubmit={handleGenerarReporteEtiqueta}>*/}
+            {/*                    <Grid container spacing={1}>*/}
+            {/*                        <Grid item sm={6}>*/}
+            {/*                            <FormControl*/}
+            {/*                                className="input select"*/}
+            {/*                                fullWidth variant="outlined"*/}
+            {/*                                required*/}
+            {/*                                margin="dense">*/}
+            {/*                                <InputLabel*/}
+            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
+            {/*                                <Select*/}
+            {/*                                    fullWidth*/}
+            {/*                                    labelId="idReporteLabel"*/}
+            {/*                                    label="Reporte"*/}
+            {/*                                    className="form-control"*/}
+            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
+            {/*                                    onChange={(e) => {*/}
+            {/*                                        // handleOnChangeReporteEtiqueta(e.target.value)*/}
+            {/*                                        setState({*/}
+            {/*                                            ...state,*/}
+            {/*                                            reporteSeleccionado: e.target.value*/}
+            {/*                                        })*/}
+            {/*                                    }}*/}
+            {/*                                    name="reporteSeleccionado"*/}
+            {/*                                >*/}
+            {/*                                    {dataReportesEtiqueta.map((reporte) => (*/}
+            {/*                                        <MenuItem*/}
+            {/*                                            key={reporte.m_nIdFormato}*/}
+            {/*                                            value={reporte.m_nIdFormato}*/}
+            {/*                                        >*/}
+            {/*                                            {reporte.m_sFormato}*/}
+            {/*                                        </MenuItem>*/}
+            {/*                                    ))}*/}
+            {/*                                </Select>*/}
+            {/*                            </FormControl>*/}
+            {/*                        </Grid>*/}
+            {/*                    </Grid>*/}
+            {/*                    <DialogActions>*/}
+
+            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
+            {/*                            setOpenDialogEtiqueta(false)*/}
+            {/*                            setState({*/}
+            {/*                                ...state,*/}
+            {/*                                reporteSeleccionado: null*/}
+            {/*                            })*/}
+            {/*                        }*/}
+            {/*                        }>*/}
+            {/*                            Cancelar*/}
+            {/*                        </button>*/}
+            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
+            {/*                            Aceptar*/}
+            {/*                        </button>*/}
+            {/*                    </DialogActions>*/}
+            {/*                </form>*/}
+            {/*            </div>*/}
+            {/*        </DialogContent>*/}
+            {/*    </Dialog>*/}
+            {/*}*/}
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
                               open={state.openTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
@@ -2008,41 +2770,11 @@ function Guia(props) {
                             open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
                             close={() => setState({...state, openAsignarTrayectos: false})}/>
             <Dialog
-                open={state.openDialogEtiquetas}
-                onClose={() => setState({...state, openDialogEtiquetas: false})}
-                fullWidth maxWidth="md"
-                aria-labelledby="form-dialog-title"
-            >
-                <ImprimirEtiquetas open={state.openDialogEtiquetas}
-                                   closeEtiquetas={(value) => {
-                                        if (value) {
-                                            let newArray = []
-                                            value.forEach((obj) => {
-                                                for (let i = obj.m_nRango[0]; i <= obj.m_nRango[1]; i++) {
-                                                    newArray.push({
-                                                        "idPaquete": obj.m_nIdEmbarqueDetalle,
-                                                        "idGuia": guiaSeleccionada.m_nIdGuia,
-                                                        "indice": i,
-                                                        "idImpresion": 0
-                                                    })
-                                                }
-                                            })
-                                            generarReporteEtiquetaParcial(newArray, guiaSeleccionada.m_nFolioGuia)
-                                        }else {
-                                            console.log("Impresion cancelada")
-                                        }
-                                        // setState({...state, openDialogEtiquetas: false})
-                                    }}
-                                   detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
-            </Dialog>
-
-            <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
-                fullWidth maxWidth="md"
+                fullWidth maxWidth="xs"
                 aria-labelledby="form-dialog-title"
             >
-                {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 {
                     dataOcurre &&
                     <Ocurre
@@ -2058,9 +2790,7 @@ function Guia(props) {
                 }
 
             </Dialog>
-            {/*SELECCION COLUMNAS PARA EXPORTAR EXCEL*/}
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth={"sm"}
-        maxWidth={"sm"}>
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth={"sm"} maxWidth={"sm"}>
                    <DialogTitle id="form-dialog-title">Columnas a exportar en Excel</DialogTitle>
         <DialogContent>
         <List className={classes.root}>
@@ -2089,6 +2819,7 @@ function Guia(props) {
         </DialogActions>
     </Dialog>
 
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
 
       {/*CABECERA*/}
             <header className="topbar clearfix">
@@ -2218,7 +2949,7 @@ function Guia(props) {
                                 </div>
                             </div>
                         </div>
-                        <div id="Agregar" className="tab-pane fade">
+                        <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                                 <div className="form-content">
 
@@ -2561,12 +3292,45 @@ function Guia(props) {
                                                         <Grid item xs={3}>
                                                             <TextField
                                                                 variant="outlined"
+                                                                label="Responsable de pago"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled
+                                                                readOnly
+                                                                value={state.clientePaga}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={8}/>
+                                                        <Grid item xs={3}>
+                                                            <TextField
+                                                                variant="outlined"
                                                                 label="Referencia"
                                                                 margin="dense"
                                                                 type="text"
                                                                 disabled
                                                                 readOnly
                                                                 value={state.referencia}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Observaciones"
+                                                                margin="dense"
+                                                                type="text"
+                                                                disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
+                                                                value={state.observaciones}
+                                                                onChange={(event) => {
+                                                                    event.preventDefault();
+                                                                    setState({
+                                                                        ...state,
+                                                                        observaciones: event.target.value,
+                                                                    });
+                                                                }}
+                                                                name="observaciones"
+                                                                id="observaciones"
+                                                                placeholder={"Sin observaciones"}
+                                                                InputLabelProps={{shrink: true}}
                                                             />
                                                         </Grid>
                                                     </Grid>
@@ -2988,6 +3752,9 @@ function Guia(props) {
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={true}
+                                            tipoTarifa={parseInt(state.idTipoTarifa)}
+                                            factorConversion={state.factorConversion}
+
                                         />
 
                                         {/*<div className="col-md-6">
@@ -3240,7 +4007,7 @@ function Guia(props) {
                                                     <div className="col-md-12">
                                                         <ConceptosFacturacionGuias
                                                             keys={0}
-                                                            disabled={false}
+                                                            disabled={true}
                                                             dataPaquetes={conceptosAdicionales}
                                                             onChangeList={handleChangeListConceptos}
                                                             conceptosBase={dataConceptosBase}

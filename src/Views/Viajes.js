@@ -5,7 +5,6 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import BasicTable from "./BasicTable";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
@@ -74,7 +73,7 @@ import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasC
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import CancelarSAT from "./SAT/CancelarSAT";
-import {cancelarInformeCFDI, enviarCorreoCFDIViaje} from "../Util/Contexts/SATContext";
+import {cancelarInformeCFDI, enviarCorreoCFDIViaje, obtenerClavesByInforme} from "../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
@@ -282,6 +281,7 @@ function Viajes() {
         if (event){
             event.stopPropagation();
         }
+        $(window).unbind()
         getAllData()
         clearData()
         $('.nav-tabs li ').removeClass('active');
@@ -788,6 +788,41 @@ function Viajes() {
         setEventOptions({...eventOptions, showDispEquipoDialog: false});
     }
 
+    const handleDescargarExcelComplementos = (idInforme, folioInforme) => {
+        // generarArchivoExcel(datos)
+        obtenerClavesByInforme(idInforme)
+            .then((respuesta) => {
+                exportarAExcel(respuesta.data.map((i) => ({
+                    "Folio guia": i["Folio guia"],
+                    "Clave SAT Producto o Servicio": i["Clave SAT Producto o Servicio"],
+                    "Clave SAT Unidad": i["Clave SAT Unidad"],
+                    "Cantidad": i["Cantidad"],
+                    "Peso (kg)": i["Peso (kg)"],
+                    "Material Peligroso": i["Material Peligroso"],
+                    "Clave SAT Material Peligroso": i["Clave SAT Material Peligroso"],
+                    "Clave SAT Embalaje": i["Clave SAT Embalaje"],
+                    "Clave SAT Fraccion Arancelaria": i["Clave SAT Fraccion Arancelaria"]
+                })), folioInforme)
+            })
+            .catch(e => {
+                console.log('mamó')
+            })
+
+    };
+
+    function exportarAExcel(jsonData, fileName) {
+        // Crear una hoja de cálculo nueva
+        let workbook = XLSX.utils.book_new();
+
+        // Convertir el JSON a una hoja de cálculo
+        let worksheet = XLSX.utils.json_to_sheet(jsonData);
+
+        // Agregar la hoja de cálculo al libro
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Tabla');
+        // Guardar el archivo Excel
+        XLSX.writeFile(workbook, fileName.replace('.','') + '.xlsx');
+    }
+
 
     /**DETALLE DE PARADAS*/
 
@@ -828,16 +863,15 @@ function Viajes() {
 
                             </Tooltip>
                         }
-                        {/*{
-                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
-                            <Tooltip title="Sustituir CFDI">
+                        {
+                            <Tooltip title="Descargar Excel con complementos">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, true))}><i
-                                    className="zmdi zmdi-refresh"
+                                   onClick={() => (handleDescargarExcelComplementos(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i
+                                    className="zmdi zmdi-grid"
                                     style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
-                        }*/}
+                        }
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
@@ -1194,7 +1228,6 @@ function Viajes() {
                                 m_sFolio: state.informe.m_sFolioInforme,
                                 folioCancelar: state.informe.m_sFolioFiscalUUIDSustituido || state.informe.m_sFolioFiscalUUID
                              }}
-                             esInforme={true}
                 />
             }
             {

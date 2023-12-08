@@ -60,7 +60,14 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-
+function showGuiaSinCoordenadas(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "10000"
+    }).show()
+}
 const MarkerIcon = new L.Icon({
     iconUrl: MarkerImage,
     iconRetinaUrl: MarkerImage,
@@ -136,12 +143,28 @@ class UltimaMilla extends Component {
 
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             //Metes imagenes
-            obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
+            for (let parada of data.m_arrClsParadaUltimaMilla) {    //RECORRE LAS RUTAS
+                for (let guia of parada.m_arrClsProGuia) {          //RECORRE LAS PARADAS
+                    if (!guia.m_sLatitud) {
+                        if (guia.m_sLatitud.length < 3) {
+                            let index = parada.m_arrClsProGuia.findIndex(function (encontrar) {
+                                return encontrar.m_sLatitud.length < 3
+                            });
+                            if (guia.m_sFolio) {
+                                showGuiaSinCoordenadas("La guía " + guia.m_sFolio + " se ha ocultado de la ruta ya que no cuenta con coordenadas, comuníquese con las oficinas de GM Transport")
+                            }
+                            parada.m_arrClsProGuia.splice(index, 1)
+                        }
+                    }
+                }
+            }
+          const filtered=data
+            /*obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
                 //imagenes
                 let rutaConImagenes
                 let guiaConImagenes
-                data.m_arrClsParadaUltimaMilla.forEach(rutaSinImagenes => {
-
+                filtered.m_arrClsParadaUltimaMilla.forEach(rutaSinImagenes => {
+                    
                     rutaConImagenes = respuesta.data.m_arrClsParadaUltimaMilla.find(r => r.m_nIdParadaUltimaMilla === rutaSinImagenes.m_nIdParadaUltimaMilla)
                     rutaSinImagenes.m_arrClsProGuia.forEach(guiaSinImagenes => {
                         guiaConImagenes = rutaConImagenes.m_arrClsProGuia.find(g => g.m_nId === guiaSinImagenes.m_nId && g.m_bEsRecoleccion === guiaSinImagenes.m_bEsRecoleccion)
@@ -149,25 +172,25 @@ class UltimaMilla extends Component {
                     })
                 })
 
-            })
-            if (data.m_nIdUltimaMilla !== 0) {
+            })*/
+            if (filtered.m_nIdUltimaMilla !== 0) {
                 if (actualizar && !this.state.modoPlaneacion) {
                     this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 150000);
                 }
                 if (!this.state.ultimaMilla) {
-                    data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                    filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                 } else {
-                    if (data.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla) ? this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color : randomColor(10))
+                    if (filtered.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
+                        filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla) ? this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color : randomColor(10))
                     } else {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                        filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
-                console.log(data)
+                console.log(filtered)
                 this.setState({
                     mostrarRuta: true,
                     modoEdicion: false,
-                    ultimaMilla: data,
+                    ultimaMilla: filtered,
                     idSucursal: idSucursal,
                     fechaUltimaMilla: date,
                     zonasIds: zonas,
@@ -214,6 +237,7 @@ class UltimaMilla extends Component {
     }
 
     guardarRuta() {
+        var hora = this.state.filtros.fecha.getHours() + ":" + this.state.filtros.fecha.getMinutes() 
         if (this.state.ultimaMilla) {
             if (this.state.tour) { 
                 // console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
@@ -225,7 +249,7 @@ class UltimaMilla extends Component {
                         showSuccess("No se puede seleccionar la unidad")
                     }
                 })*/
-                agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros).then((data) => {
+                agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros,hora).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
@@ -234,7 +258,7 @@ class UltimaMilla extends Component {
             }
         } else {
             if (this.state.tour) {
-                  agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
+                  agregarRuta(0, this.state.tour, this.state.filtros,hora).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
@@ -460,7 +484,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.cronogramaFullscreen) &&
                                     <Cronograma selectGuiaReasignar={this.selectGuiaReasignar}
-                                                tour={this.state.ultimaMilla}/>
+                                                tour={this.state.ultimaMilla} fecha={this.state.fechaUltimaMilla}/>
                                 }
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.chatFullscreen) &&

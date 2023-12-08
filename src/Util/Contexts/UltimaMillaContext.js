@@ -327,12 +327,13 @@ async function searchLocation(city, address) {
     }
 }
 
-function agregarRuta(idUltimaMilla, tour, data) {
+function agregarRuta(idUltimaMilla, tour, data,hora) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GuardarUltimaMilla`;
     let result;
     var ultimaMillaObject = {
         idUltimaMilla: idUltimaMilla,
         fecha: moment(data.fecha).format("YYYY-MM-DD"),
+        hora: hora,
         creadoPor: localStorage.getItem("UsuarioId"),
         idSucursal: data.sucursalSeleccionada.m_nIdSucursal,
         arrZonas: [],
@@ -401,12 +402,12 @@ function validarUnidadesSeleccionadas(unidades) {
 
 }
 
-async function ordenarParada(idParada, guias) {
+async function ordenarParada(idParada, guias, guiasDescartadas) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/OrdenarParada`;
     let result;
 
     guias = await obtenerGuiasUbicacion(guias)
-    var paquetes = guias.map((g, index) => ({
+    let paquetes = guias.map((g, index) => ({
         idGuia: g.m_nId,
         lat: g.lat.toString(),
         lng: g.lng.toString(),
@@ -414,13 +415,23 @@ async function ordenarParada(idParada, guias) {
         esRecoleccion: g.m_bEsRecoleccion,
         idParadaGuia: g.m_nIdParadaGuia
     }))
+    let paquetesDescartados = guiasDescartadas.map((g, index) => ({
+        idGuia: g.m_nId,
+        lat: g.lat.toString(),
+        lng: g.lng.toString(),
+        orden: index + 1,
+        esRecoleccion: g.m_bEsRecoleccion,
+        idParadaGuia: g.m_nIdParadaGuia
+    }))
+    console.log(JSON.stringify({ m_nIdParadaUltimaMilla: idParada, guias: paquetes,guiasDescartadasDeRuta: paquetesDescartados }))
+    console.log({ m_nIdParadaUltimaMilla: idParada, guias: paquetes,guiasDescartadasDeRuta: paquetesDescartados })
     trackPromise(
         result = axios.put(url, Object.assign({}, {
             m_nIdParadaUltimaMilla: idParada,
-            guias: paquetes
+            guias: paquetes,
+            guiasDescartadasDeRuta: paquetesDescartados
         }), {headers})
-    )
-    ;
+    );
     return result
 }
 
@@ -586,7 +597,7 @@ async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
 }
 
 function obtenerImagenEvidencia(idGuia,esRecoleccion){
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

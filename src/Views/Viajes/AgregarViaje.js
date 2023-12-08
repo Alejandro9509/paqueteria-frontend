@@ -51,6 +51,9 @@ import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from 
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
 import {cubicarGuia, validarEliminarGuia} from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
+import DialogUnidades from "./DialogUnidades";
+import DialogRemolques from "./DialogRemolques";
+import DialogDollys from "./DialogDollys";
 import ProgressBarCubicaje from "./ProgressBarCubicaje";
 import {showError} from "../../Util/GlobalFunctions";
 
@@ -163,7 +166,13 @@ class AgregarViaje extends Component {
             dataOperadores: [],
             openDialogInformes:false,
             Remolque2Select:false,
-            dollySelect:false
+            dollySelect:false,
+
+            //Cambios de la 801
+            openDialogUnidades: false,
+            openDialogRemolques: false,
+            openDialogDollys: false,
+            identificadorConvoyUnidad: ""
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -192,6 +201,13 @@ class AgregarViaje extends Component {
         this.handleChangeRuta = this.handleChangeRuta.bind(this);
         this.onSubmitDestinoInforme = this.onSubmitDestinoInforme.bind(this);
         this.handleChangeDataPermisionario = this.handleChangeDataPermisionario.bind(this);
+        this.handleCloseDialogUnidades = this.handleCloseDialogUnidades.bind(this);
+        this.handleAcceptDataUnidades = this.handleAcceptDataUnidades.bind(this);
+        this.handleCloseDialogRemolques = this.handleCloseDialogRemolques.bind(this);
+        this.handleAcceptDataRemolques = this.handleAcceptDataRemolques.bind(this);
+        this.handleCloseDialogDollys = this.handleCloseDialogDollys.bind(this);
+        this.handleAcceptDataDollys = this.handleAcceptDataDollys.bind(this);
+        this.cubicarViaje = this.cubicarViaje.bind(this);
 
     }
 
@@ -205,12 +221,96 @@ class AgregarViaje extends Component {
         this.getAllUnidades();
         this.getAllRemolques();
         this.getAllOperadores();
+        $.primerClick=false
     }
-
+    confirmExit(){
+        return "show warning"
+    }
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevState!=this.state && typeof $.primerClick!=='undefined'){
+            if($.primerClick===true)
+            {
+        $(window).bind('beforeunload',this.confirmExit);
+        console.log("disproporcionado")}}
         if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
              console.log(this.props.select)
-            this.setState(state => {
+             obtenerTrayectosByRuta(this.props.select.m_nIdRuta).then(({data}) => {
+                this.setState(state => {
+                    return {
+                        ...state,
+                        id: this.props.select.m_nIdViaje,
+                        idRuta: this.props.select.m_nIdRuta,
+                        idCiudadOrigen: {
+                            "m_sCiudad": this.props.select.m_sOrigen,
+                            "m_nIdCiudad": this.props.select.m_nIdOrigen
+                        },
+                        idCiudadDestino: {
+                            "m_sCiudad": this.props.select.m_sDestino,
+                            "m_nIdCiudad": this.props.select.m_nIdDestino
+                        },
+                        IdRemolque1: this.props.select.m_nIdRemolque1 ? {
+                            m_nIdUnidad: this.props.select.m_nIdRemolque1,
+                            m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
+                            m_sCodigo: this.props.select.m_sCodigoRemolque1,
+                            EstatusUnidad: this.props.select.m_sEstatusRemolque1,
+
+                        } : null,
+                        placasRemolque1: this.props.select.m_sPlacasRemolque1,
+                        colorRemolque1: this.props.select.m_sColorRemolque1,
+                        estatusRemolque1: this.props.select.m_sEstatusRemolque1,
+                        IdRemolque2: this.props.select.m_nIdRemolque2 ? {
+                            m_nIdUnidad: this.props.select.m_nIdRemolque2,
+                            m_sDescripcion: this.props.select.m_sDescripcionRemolque2,
+                            m_sCodigo: this.props.select.m_sCodigoRemolque2,
+                            EstatusUnidad: this.props.select.m_sEstatusRemolque2,
+                        } : null,
+                        placasRemolque2: this.props.select.m_sPlacasRemolque2,
+                        colorRemolque2: this.props.select.m_sColorRemolque2,
+                        estatusRemolque2: this.props.select.m_sEstatusRemolque2,
+                        IdDolly: this.props.select.m_nIdDolly ? {
+                            m_nIdUnidad: this.props.select.m_nIdDolly,
+                            m_sDescripcion: this.props.select.m_sDescripcionDolly,
+                            m_sCodigo: this.props.select.m_sCodigoDolly,
+                        } : null,
+                        placasDolly: this.props.select.m_sPlacasDolly,
+                        operador: {
+                            m_nIdOperador: this.props.select.m_nIdOperador,
+                            m_sNombreCompleto: this.props.select.m_sNombreOperador,
+                        },
+                        unidad: {
+                            m_nIdUnidad: this.props.select.m_nIdUnidad,
+                            m_sCodigo: this.props.select.m_sCodigoUnidad,
+                            m_sDescripcion: this.props.select.m_sDescripcionUnidad,
+                            EstatusUnidad: this.props.select.m_sEstatusUnidad,
+
+                        },
+                        placaIntUnidad: this.props.select.m_sPlacasUnidad,
+                        estatusUnidad: this.props.select.m_sEstatusUnidad,
+                        colorUnidad: this.props.select.m_sColorUnidad,
+                        kms: '',
+                        horas: '',
+                        fechaHoraRegistro: this.props.select.m_dFechaRegistro + "T" + this.props.select.m_tHoraRegistro.substr(0, 5),
+                        estatusListado: this.props.select.m_nIdEstatusViaje,
+                        idSucursalAgregar: this.props.select.m_nIdSucursal,
+                        candadoOficial: this.props.select.m_sCandadoOficial,
+                        folioViaje: this.props.select.m_sFolioViaje,
+                        identificadorViaje: this.props.select.m_sIdentificador,
+                        viajeCliente: this.props.select.m_sNumViajeCliente,
+                        CreadoPor: this.props.select.CreadoPor,
+                        dataInformesAsignados: this.props.select.m_arrInformes,
+                        estatusViaje:this.props.m_sEstatusViaje,
+                        esOperadorPermisionario: this.props.select.EsOperadorPermisionario,
+                        licenciaPermisionario: this.props.select.LicenciaPermisionario,
+                        nombrePermisionario: this.props.select.NombrePermisionario,
+                        fechaVigenciaPermisionario: this.props.select.FechaVigenciaPermisionario,
+                        dollySelect:this.props.select.m_nIdDolly?true:false,
+                        Remolque2Select:this.props.select.m_nIdRemolque2?true:false,
+                        trayectos: data
+
+                    }
+                })
+            })
+            /* this.setState(state => {
                 return {
                     ...state,
                     id: this.props.select.m_nIdViaje,
@@ -287,7 +387,7 @@ class AgregarViaje extends Component {
                 this.setState( {
                     trayectos: data
                 })
-            })
+            }) */
         }
     }
 
@@ -776,16 +876,16 @@ class AgregarViaje extends Component {
     handleDollyFiltro(event, newValue) {
         event.preventDefault();
         if (newValue){
-        if (!this.isUnidadAvailable(newValue, "DOLLY")){
-            showSuccess("La unidad elegida ya se encuentra seleccionada.");
-            return
-        }
-        this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
-        /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
+            if (!this.isUnidadAvailable(newValue, "DOLLY")){
+                showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                return
+            }
+            this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
+            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
 
-            this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
-        }*/
+                this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+                    this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
+            }*/
         }
         else{
             this.setState({IdDolly: null, placasDolly: "",dollySelect:false})
@@ -808,24 +908,7 @@ class AgregarViaje extends Component {
 
             arrayInformesAsignados.push(informeAsignar)
             try {
-                const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
-                const params = {
-                    idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
-                    idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
-                    paquetes: paquetes.map(p => ({
-                        alto: p.m_xAlto,
-                        ancho: p.m_xAncho,
-                        largo: p.m_xLargo,
-                        peso: p.m_xPeso,
-                        cantidad: p.ctd
-                    }))
-                }
-                cubicarGuia(params).then(({data}) => {
-                    this.setState({utilizacion: data.utilizacion.toFixed(0)})
-                }).catch(e => {
-                    this.setState({utilizacion: 0})
-                    showError(e.response?.data)
-                })
+                this.cubicarViaje(arrayInformesAsignados)
             } catch (e) {
                 showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado pero hubo un error al calcular cubicaje con el informe seleccionado.")
             }
@@ -837,15 +920,38 @@ class AgregarViaje extends Component {
 
     }
 
+    cubicarViaje(arrayInformesAsignados){
+        const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
+        const params = {
+            idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
+            paquetes: paquetes.map(p => ({
+                alto: p.m_xAlto,
+                ancho: p.m_xAncho,
+                largo: p.m_xLargo,
+                peso: p.m_xPeso,
+                cantidad: p.ctd
+            }))
+        }
+        cubicarGuia(params).then(({data}) => {
+            this.setState({utilizacion: data.utilizacion.toFixed(0)})
+        }).catch(e => {
+            this.setState({utilizacion: 0})
+            showError(e.response?.data)
+        })
+    }
+
+
     handleEliminarInforme(id) {
         var dataInformesAsignados = [...this.state.dataInformesAsignados]
         dataInformesAsignados.splice(dataInformesAsignados.findIndex(i => i.m_nIdInforme === id), 1)
+        this.cubicarViaje(dataInformesAsignados)
         this.setState({dataInformesAsignados: dataInformesAsignados})
     }
 
     handleChangeAutocomplete = (input, value) => {
         console.log(JSON.stringify(value))
-           if(value.m_bEsPermisionario){
+        if(value.m_bEsPermisionario){
             console.log("entra a validar")
             this.setState(state => {
                 return {
@@ -858,7 +964,8 @@ class AgregarViaje extends Component {
         }
         this.setState({
             [input]: value,
-            esOperadorPermisionario: value.m_bEsPermisionario
+            esOperadorPermisionario: value.m_bEsPermisionario,
+            openDialogUnidades: true
         });
 
     }
@@ -930,6 +1037,77 @@ class AgregarViaje extends Component {
             })
         }
 
+    }
+
+    handleCloseDialogUnidades(){
+        this.setState({ openDialogUnidades: false })
+        /** Para evitar que se quite la barra de navegacion */
+        document.body.style.overflow = 'auto';
+    }
+
+    handleAcceptDataUnidades = (data) => {
+        console.log(data);
+        this.handleCloseDialogUnidades();
+        this.setState({
+            unidad: data,
+            placaIntUnidad: data.m_sPlacas,
+            estatusUnidad: data.EstatusUnidad,
+            colorUnidad: data.ColorEstatus,
+            kms: data.m_nOdometro,
+            identificadorConvoyUnidad: data.IdentificadorConvoy,
+            // horas: newValue.m_nHorasTrabajadasMotorNoGPS,
+            aplicaRemolque: data.m_bAplicaRemolque
+        })
+        this.setState({ openDialogRemolques: true })
+    }
+
+    handleCloseDialogRemolques(){
+        this.setState({ openDialogRemolques: false })
+        document.body.style.overflow = 'auto';
+    }
+
+    handleAcceptDataRemolques = (data) => {
+        if(data.length <= 0){
+            this.handleCloseDialogUnidades();
+            return;
+        }
+
+        const [firstData, secondData] = data;
+
+        const newState = {
+            IdRemolque1: firstData,
+            placasRemolque1: firstData.m_sPlacas,
+            colorRemolque1: firstData.ColorEstatus,
+            estatusRemolque1: firstData.EstatusUnidad
+        };
+
+        if(secondData){
+            newState.IdRemolque2 = secondData;
+            newState.placasRemolque2 = secondData.m_sPlacas;
+            newState.colorRemolque2 = secondData.ColorEstatus;
+            newState.estatusRemolque2 = secondData.EstatusUnidad;
+            newState.Remolque2Select = true;
+        }
+
+        this.setState(newState);
+        this.handleCloseDialogUnidades();
+        this.setState({ openDialogDollys: true })
+    }
+
+    handleCloseDialogDollys(){
+        this.setState({ openDialogDollys: false })
+        document.body.style.overflow = 'auto';
+    }
+
+    handleAcceptDataDollys = (data) => {
+        console.log(data);
+        this.handleCloseDialogDollys();
+        this.setState({
+            IdDolly: data,
+            placasDolly: data.m_sPlacas,
+            dollySelect:true
+        })
+        this.handleCloseDialogUnidades();
     }
 
     render() {
@@ -1032,14 +1210,14 @@ class AgregarViaje extends Component {
                         <div>
                             {
                                 row.row.m_bSePuedeBorrar || this.state.estatusListado === 8?
-                                <Tooltip title={"Desasignar"}>
-                                    <a
-                                        onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
-                                        className="btn btn-default btn-xs">
-                                        <i className={"fa fa-trash"}
-                                           style={{color: "#F9A03E"}}/>
-                                    </a>
-                                </Tooltip> : ""
+                                    <Tooltip title={"Desasignar"}>
+                                        <a
+                                            onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
+                                            className="btn btn-default btn-xs">
+                                            <i className={"fa fa-trash"}
+                                               style={{color: "#F9A03E"}}/>
+                                        </a>
+                                    </Tooltip> : ""
                             }
 
                         </div>
@@ -1054,7 +1232,7 @@ class AgregarViaje extends Component {
 
         return (
 
-            <div>
+            <div onClick={()=>$.primerClick=true}>
                 {/*<Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
                     <DialogContent>
                         {this.state.tipoModal === 1 &&
@@ -1167,6 +1345,10 @@ class AgregarViaje extends Component {
                         </DialogContent>
                     </Dialog>
                 }*/}
+                <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador.m_nIdOperador} />
+                {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />*/}
+                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} />
+                <DialogDollys open={this.state.openDialogDollys} handleClose={this.handleCloseDialogDollys} handleAccept={this.handleAcceptDataDollys} idConvoy={this.state.identificadorConvoyUnidad} />
                 <Dialog
                     fullWidth={true}
                     maxWidth={'xl'}
@@ -1177,37 +1359,37 @@ class AgregarViaje extends Component {
                     <DialogTitle>Seleccione el destino al cual llegara el informe</DialogTitle>
                     <DialogContent>
                         <form onSubmit={this.onSubmitDestinoInforme}>
-                        <div className="input">
-                            <Autocomplete
-                                freeSolo
-                                onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
-                                value={this.state.destinoSeleccionado}
-                                //disabled={state.agregar == "Consultar"}
-                                id="origenRemitente"
-                                disableClearable
-                                forcePopupIcon={false}
-                                options={this.state.trayectos}
-                                getOptionLabel={(option) =>
-                                    option.Destino
-                                }
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important"
-                                }}
-                                renderInput={(params) => (
-                                    <div>
-                                        <TextField
-                                            label="Destino"
-                                            margin="dense"
-                                            variant="outlined"
-                                            {...params}
-                                        />
-                                    </div>
-                                )}
-                            />
-                        </div>
-                        <DialogActions>
-                            <Button type={"submit"}>Aceptar</Button>
-                        </DialogActions>
+                            <div className="input">
+                                <Autocomplete
+                                    freeSolo
+                                    onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
+                                    value={this.state.destinoSeleccionado}
+                                    //disabled={state.agregar == "Consultar"}
+                                    id="origenRemitente"
+                                    disableClearable
+                                    forcePopupIcon={false}
+                                    options={this.state.trayectos}
+                                    getOptionLabel={(option) =>
+                                        option.Destino
+                                    }
+                                    style={{
+                                        transform: "translate(14px, 10px) scale(1) !important"
+                                    }}
+                                    renderInput={(params) => (
+                                        <div>
+                                            <TextField
+                                                label="Destino"
+                                                margin="dense"
+                                                variant="outlined"
+                                                {...params}
+                                            />
+                                        </div>
+                                    )}
+                                />
+                            </div>
+                            <DialogActions>
+                                <Button type={"submit"}>Aceptar</Button>
+                            </DialogActions>
                         </form>
                     </DialogContent>
 
@@ -1307,7 +1489,7 @@ class AgregarViaje extends Component {
                                 />
                             </div>
                         </div>
-                            {/*<DataGrid
+                        {/*<DataGrid
                                 localeText={dataGridLocaleText}
                                 rows={this.state.dataInformesPorAsignar}
                                 columns={columnspRorAsignar}
@@ -1559,7 +1741,6 @@ class AgregarViaje extends Component {
                                     />
                                     </div>
                                 </div>
-
                                 <div className="row">
                                     <div className="widget-header">
                                         <h2>Operador</h2>
@@ -1678,19 +1859,19 @@ class AgregarViaje extends Component {
                                                 />
                                             </Grid>
                                         } {
-                                            this.state.esOperadorPermisionario &&
-                                            <Grid item xs={2}>
-                                                <TextField
-                                                    margin={"dense"}
-                                                    variant={"outlined"}
-                                                    label={"No. de licencia"}
-                                                    name={"licenciaPermisionario"}
-                                                    required={this.state.esOperadorPermisionario}
-                                                    value={this.state.licenciaPermisionario}
-                                                    onChange={this.handleChangeDataPermisionario}
-                                                />
-                                            </Grid>
-                                        }
+                                        this.state.esOperadorPermisionario &&
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"No. de licencia"}
+                                                name={"licenciaPermisionario"}
+                                                required={this.state.esOperadorPermisionario}
+                                                value={this.state.licenciaPermisionario}
+                                                onChange={this.handleChangeDataPermisionario}
+                                            />
+                                        </Grid>
+                                    }
                                         {
                                             this.state.esOperadorPermisionario &&
                                             <Grid item xs={2}>
