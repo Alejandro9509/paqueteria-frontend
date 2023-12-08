@@ -687,7 +687,8 @@ function Informes({history}) {
         }
         setDataGuias(newGuia);
     };
-    useEffect(() => {
+
+    const onChangeRemolque1 = (index,newValue) =>{
         const newGuia = [...dataGuiasSeleccionadas];
         console.log(newGuia)
         var params = {
@@ -705,9 +706,6 @@ function Informes({history}) {
                 console.log(e.response?.data)
             })
         }
-    }, [ state.IdRemolque1, state.IdRemolque2]);
-    const onChangeRemolque1 = (index,newValue) =>{
-      
 
         setState({
             ...state,
@@ -716,7 +714,26 @@ function Informes({history}) {
     }
 
     const onChangeRemolque2 = (index,newValue) =>{
-       
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia
+        }
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }else {
+            setUtilizacion(0)
+        }
+
         setState({
             ...state,
             IdRemolque2: newValue,
