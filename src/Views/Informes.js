@@ -96,15 +96,6 @@ function showSuccess(mensaje) {
         timeout: "8000",
     }).show();
 }
-function showError(mensaje) {
-    new Noty({
-        type: "error",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000",
-    }).show();
-}
-
 const styles = {
     seleccionado: {
         backgroundColor: "#FCC88F",
