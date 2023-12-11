@@ -109,7 +109,7 @@ function CorteCajaListado({onRowClick, value}){
     };
 
     const handleReportGeneralClickOpcion1 = () => {
-        let fecha = filtros.fecha
+        let fecha = filtros.fecha + " " + getCurrentTime()
         obtenerCortesGeneralReporte(fecha)
             .then(({data}) => {
                 let pdfWindow = window.open("");
