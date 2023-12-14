@@ -169,6 +169,9 @@ const TIPOS_SEGURO = {
     OBLIGATORIO: 4,
     SIN_ASIGNAR: 5
 }
+const FORMATOS_IMPRESION = {
+    RECOLECCION: 210
+}
 function Recoleccion() {
 
     const today = new Date();
@@ -622,12 +625,12 @@ function Recoleccion() {
             </GridOverlay>
         );
     }
-    useEffect(()=>{
-
-        obtenerFormatosImpresionProceso(210).then(({data}) => {
-            setDataReportes(data)
-        })
-    }, [])
+    // useEffect(()=>{
+    //
+    //     obtenerFormatosImpresionProceso(210).then(({data}) => {
+    //         setDataReportes(data)
+    //     })
+    // }, [])
 
     useEffect(value => {
 
@@ -1902,13 +1905,7 @@ function Recoleccion() {
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101418)}>
-                            <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporteOpcion1(row.row)}><i className="zmdi zmdi-file"
-                                                                           style={{color: "#F9A03E"}}/></a>
-
-                        </Tooltip>
-                        <Tooltip title="Reporte opcion 2" disabled={!validarDerecho(9101418)}>
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101418)}>
                             <a  className="btn btn-default btn-xs"
                                 onClick={() => generarReporte(row.row)}><i className="zmdi zmdi-file"
                                                                                                                          style={{color: "#F9A03E"}}/></a>
@@ -2101,55 +2098,65 @@ function Recoleccion() {
             accessor: "m_nIdTipoUnidad",
         }
     ]);
-    function generarReporteOpcion1(row){
-        obtenerRecoleccionReporte(row.m_nIdRecoleccion).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Recolección " + row.m_sFolioRecoleccion;
-        })
-    }
+    // function generarReporteOpcion1(row){
+    //     obtenerRecoleccionReporte(row.m_nIdRecoleccion).then(({data}) => {
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Recolección " + row.m_sFolioRecoleccion;
+    //     })
+    // }
     function generarReporte(row){
-        setSeleccion(row)
-        console.log(row)
-        setOpenDialog(true)
+        // setSeleccion(row)
+        // console.log(row)
+        // setOpenDialog(true)
        /* obtenerRecoleccionReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Recolección " + folio;
         })*/
-    }
-    const handleOnChangeReporte = (data) => {
-        console.log(data)
-        setState({
-            ...state,
-            reporteSeleccionado: data
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.RECOLECCION).then((respuesta) => {
+            // setDataReportes(data)
+            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Recolección " + row.m_sFolioRecoleccion;
+            })
         })
     }
-    const handleGenerarReporte=(e)=>{
-        e.preventDefault()
-        console.log(state.reporteSeleccionado)
-        console.log(seleccion)
-
-        if (state.reporteSeleccionado.length === 0) {
-            showError("Es necesario seleccionar al menos un reporte")
-            return
-        }
-
-        imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
-            console.log(data)
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Recolección" + seleccion.m_sFolioRecoleccion;
-        })
-        setState({
-            ...state,
-            reporteSeleccionado: null
-        })
-        setOpenDialog(false)
-    }
+    // const handleOnChangeReporte = (data) => {
+    //     console.log(data)
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: data
+    //     })
+    // }
+    // const handleGenerarReporte=(e)=>{
+    //     e.preventDefault()
+    //     console.log(state.reporteSeleccionado)
+    //     console.log(seleccion)
+    //
+    //     if (state.reporteSeleccionado.length === 0) {
+    //         showError("Es necesario seleccionar al menos un reporte")
+    //         return
+    //     }
+    //
+    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
+    //         console.log(data)
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Recolección" + seleccion.m_sFolioRecoleccion;
+    //     })
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: null
+    //     })
+    //     setOpenDialog(false)
+    // }
     const columnsUnidades = React.useMemo(() => [
         {
             Name: "Descripcion",
@@ -3140,70 +3147,70 @@ function Recoleccion() {
     }
     return (
         <div>
-            {
-                openDialog &&
-                <Dialog
-                    open={openDialog}
-                    onClose={() => setOpenDialog(false)}
-                    fullWidth maxWidth="md"
-                >
-                    <DialogTitle>
-                        Reporte de Recolección
-                    </DialogTitle>
-                    <DialogContent>
-                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <form onSubmit={handleGenerarReporte}>
-                                <Grid container spacing={1}>
-                                    <Grid item sm={6}>
-                                        <FormControl
-                                            className="input select"
-                                            fullWidth variant="outlined"
-                                            required
-                                            margin="dense">
-                                            <InputLabel
-                                                id="idReporteLabel">Formato de Reporte</InputLabel>
-                                            <Select
-                                                fullWidth
-                                                labelId="idReporteLabel"
-                                                label="Reporte"
-                                                className="form-control"
-                                                value={state.reporteSeleccionado ?? ''}
-                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
-                                                name="reporteSeleccionado"
-                                            >
-                                                {dataReportes.map((reporte) => (
-                                                    <MenuItem
-                                                        key={reporte.m_nIdFormato}
-                                                        value={reporte.m_nIdFormato}
-                                                    >
-                                                        {reporte.m_sFormato}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <DialogActions>
+            {/*{*/}
+            {/*    openDialog &&*/}
+            {/*    <Dialog*/}
+            {/*        open={openDialog}*/}
+            {/*        onClose={() => setOpenDialog(false)}*/}
+            {/*        fullWidth maxWidth="md"*/}
+            {/*    >*/}
+            {/*        <DialogTitle>*/}
+            {/*            Reporte de Recolección*/}
+            {/*        </DialogTitle>*/}
+            {/*        <DialogContent>*/}
+            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
+            {/*                <form onSubmit={handleGenerarReporte}>*/}
+            {/*                    <Grid container spacing={1}>*/}
+            {/*                        <Grid item sm={6}>*/}
+            {/*                            <FormControl*/}
+            {/*                                className="input select"*/}
+            {/*                                fullWidth variant="outlined"*/}
+            {/*                                required*/}
+            {/*                                margin="dense">*/}
+            {/*                                <InputLabel*/}
+            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
+            {/*                                <Select*/}
+            {/*                                    fullWidth*/}
+            {/*                                    labelId="idReporteLabel"*/}
+            {/*                                    label="Reporte"*/}
+            {/*                                    className="form-control"*/}
+            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
+            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
+            {/*                                    name="reporteSeleccionado"*/}
+            {/*                                >*/}
+            {/*                                    {dataReportes.map((reporte) => (*/}
+            {/*                                        <MenuItem*/}
+            {/*                                            key={reporte.m_nIdFormato}*/}
+            {/*                                            value={reporte.m_nIdFormato}*/}
+            {/*                                        >*/}
+            {/*                                            {reporte.m_sFormato}*/}
+            {/*                                        </MenuItem>*/}
+            {/*                                    ))}*/}
+            {/*                                </Select>*/}
+            {/*                            </FormControl>*/}
+            {/*                        </Grid>*/}
+            {/*                    </Grid>*/}
+            {/*                    <DialogActions>*/}
 
-                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
-                                        setOpenDialog(false)
-                                        setState({
-                                            ...state,
-                                            reporteSeleccionado: null
-                                        })
-                                    }
-                                    }>
-                                        Cancelar
-                                    </button>
-                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
-                                        Aceptar
-                                    </button>
-                                </DialogActions>
-                            </form>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            }{/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
+            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
+            {/*                            setOpenDialog(false)*/}
+            {/*                            setState({*/}
+            {/*                                ...state,*/}
+            {/*                                reporteSeleccionado: null*/}
+            {/*                            })*/}
+            {/*                        }*/}
+            {/*                        }>*/}
+            {/*                            Cancelar*/}
+            {/*                        </button>*/}
+            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
+            {/*                            Aceptar*/}
+            {/*                        </button>*/}
+            {/*                    </DialogActions>*/}
+            {/*                </form>*/}
+            {/*            </div>*/}
+            {/*        </DialogContent>*/}
+            {/*    </Dialog>*/}
+            {/*}/!*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*!/*/}
 
             {state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
