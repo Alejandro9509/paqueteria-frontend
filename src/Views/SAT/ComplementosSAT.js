@@ -646,6 +646,7 @@ function ComplementosSAT(props) {
                                        dialogVisible={dialogVisible}
                                        consulta={props.disabled}
                                        dataComplemento={dataComplemento}
+                                       setDataComplemento={setDataComplemento}
                                        onChangeData={handleChangeComplementoSat}
                                        resetComplemento={resetDataComplemento}
                         />

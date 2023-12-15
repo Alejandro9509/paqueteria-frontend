@@ -2,10 +2,10 @@ import React, {Component, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import {
-    Checkbox, CircularProgress,
+    Checkbox, CircularProgress, FormControl,
     FormControlLabel, Grid,
     List,
-    ListItem,
+    ListItem, MenuItem, Select,
     TextField,
 } from "@material-ui/core";
 import {
@@ -29,6 +29,7 @@ import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import {API_HEADERS} from "../../Constants";
 import {obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import { ContactSupportOutlined } from "@material-ui/icons";
+import InputLabel from "@material-ui/core/InputLabel";
 var numRegistros = 20
 
 
@@ -580,7 +581,6 @@ function CrearConceptoSAT(props) {
                                 />
                             </Grid>
                         </Grid>
-
                         {props.dataComplemento.esPeligroso &&
                         <Grid container spacing={1}>
                             <Grid item xs={12} sm={2}>
@@ -745,7 +745,144 @@ function CrearConceptoSAT(props) {
                             </Grid>
                         </Grid>
                         }
+                        {!props.dataComplemento.esFarmaco &&
+                        <Button
+                            onClick={()=>{props.setDataComplemento(dataComplemento =>{
+                                return {
+                                    ...props.dataComplemento,
+                                    esFarmaco:true
+                                }
+                            });}}                            type="button"
+                            fullWidth
+                            className="btn"
+                            style={{margin: "0px",backgroundColor:"red",color:"white",marginTop:"4px"}}
+                            //disabled= {disableSeleccionar.disableUnidad}
+                        >
+                            ¿Es el material un fármaco?
+                        </Button>
+                        }
+                        {props.dataComplemento.esFarmaco &&
+                        <Grid container spacing={1} style={{marginTop:"10px"}}>
+                            <Grid item xs={12} sm={3} >
+                                <FormControl className="input select" fullWidth variant="outlined">
+                                <InputLabel style={{fontSize:"20px"}} id="idSucusalLabel">Sector COFEPRIS</InputLabel>
+                                <Select
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="Sector COFEPRIS"
+                                    defaultValue={20}
+                                    required
+                                    onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                        return {
+                                            ...props.dataComplemento,
+                                            sectorCOFEPRIS:e.target.value,
+                                        }
+                                    });}}
+                                    name="sectorCofepris">
+                                    <MenuItem value={1}>01</MenuItem>
+                                    <MenuItem value={2}>02</MenuItem>
+                                    <MenuItem value={3}>03</MenuItem>
+                                    <MenuItem value={4}>04</MenuItem>
+                                    <MenuItem value={5}>05</MenuItem>
 
+                                </Select>
+                                </FormControl>
+                            </Grid>
+                            {(props.dataComplemento.sectorCOFEPRIS===2 || props.dataComplemento.sectorCOFEPRIS===5) &&
+
+                                    <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        label={"Nombre del Ingrediente Activo"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                nombreIngredienteActivo:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS===2 || props.dataComplemento.sectorCOFEPRIS===4) &&
+
+                                <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        inputProps={{maxLength:150}}
+                                        label={"Nombre Químico"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                nomQuimico:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS===1 || props.dataComplemento.sectorCOFEPRIS===3) &&
+                                <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        inputProps={{maxLength:50}}
+                                        label={"Denominación Genérica"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                denominacionGenerica:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS===1 || props.dataComplemento.sectorCOFEPRIS===3) &&
+                                <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        inputProps={{maxLength:50}}
+                                        label={"Denominación Distintiva (marca)"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                denominacionDistintiva:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
+                                <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        inputProps={{maxLength:240}}
+                                        label={"Fabricante"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                fabricante:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                        </Grid>
+                        }
                     </div>
                 </div>
                 {props.children}
