@@ -984,6 +984,10 @@ function Recoleccion() {
                 // item.m_sTipoEmbalaje = item.embalajeSAT
                 item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
                 item.m_xPeso = item.peso
+                item.nombreQuimico=item.nomQuimico
+                item.numeroCAS=item.numCAS
+                item.claveCondicionEspecial=item.claveCondicionesEspeciales
+                item.registroSanitario_folioAutorizacion=item.regSanitario_folioAut
             })
 
             //Informacion general

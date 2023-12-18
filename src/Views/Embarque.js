@@ -1331,8 +1331,11 @@ function Embarque(props) {
             item.m_sClaveEmbalaje = item.claveEmbalaje
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
             item.m_xPeso = item.peso
+            item.nombreQuimico=item.nomQuimico
+            item.numeroCAS=item.numCAS
+            item.claveCondicionEspecial=item.claveCondicionesEspeciales
+            item.registroSanitario_folioAutorizacion=item.regSanitario_folioAut
         })
-
         const params = {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: state.idRecoleccion,

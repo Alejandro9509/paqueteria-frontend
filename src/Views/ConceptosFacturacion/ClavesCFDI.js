@@ -197,6 +197,12 @@ class ClavesCFDI extends Component {
         }else if(this.props.catalogo == "c_FraccionArancelaria"){
             this.props.cancel(5)
         }
+        else if(this.props.catalogo == "c_FormaFarmaceutica"){
+            this.props.cancel(6)
+        }
+        else if(this.props.catalogo == "c_CondicionesEspeciales"){
+            this.props.cancel(8)
+        }
         this.props.closeDialog()
     }
 

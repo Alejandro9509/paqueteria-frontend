@@ -62,14 +62,15 @@ function ComplementosSAT(props) {
         ProductoSAT: '',
         fraccionSAT:'',
         materialPeligrosoSAT:'',
+        sectorCOFEPRIS:'',
+        formaFarmaceutica:'',
+        claveFormaFarmaceutica:'',
+        claveCondicionesEspeciales:'',
+        condicionEspecial:'',
     })
     useEffect(() => {
          if( detectarModificaciones){
-             console.log("disprosio")
-             console.log(dataComplemento)
-            // console.log(remitente)
              window.onbeforeunload=confirmExit
-            
          }
      }, [dataComplemento])
      function confirmExit()
@@ -120,24 +121,50 @@ function ComplementosSAT(props) {
                     fraccionSAT:'',
                 }
             })
-        }else{
-            setDataComplemento({
-                id:0,
-            cantidad:1,
-                claveProducto: '',
-                claveUnidad: '',
-                claveFraccion:'',
-                comercioExterior: '',
-                esPeligroso: false,
-                claveMaterialPeligroso: '',
-                claveEmbalaje:'',
-                embalajeSAT:'',
-                descripcionEmbalajeSAT:'',
-                peso: 0,
-                UnidadSAT: '',
-                ProductoSAT: '',
-                fraccionSAT:'',
-                materialPeligrosoSAT:'',
+        }else if(catalogo == 6){
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveFormaFarmaceutica:'',
+                    formaFarmaceutica:'',
+                }
+            })
+        }
+        else if(catalogo == 8){
+            setDataComplemento(dataComplemento =>{
+                return{
+                    ...dataComplemento,
+                    claveCondicionesEspeciales:'',
+                    condicionEspecial:'',
+                }
+            })
+        }
+        else{
+            setDataComplemento(dataComplemento => {
+                return {
+                    ...dataComplemento,
+                    id:0,
+                    cantidad:1,
+                    claveProducto: '',
+                    claveUnidad: '',
+                    claveFraccion:'',
+                    comercioExterior: '',
+                    esPeligroso: false,
+                    claveMaterialPeligroso: '',
+                    claveEmbalaje:'',
+                    embalajeSAT:'',
+                    descripcionEmbalajeSAT:'',
+                    peso: 0,
+                    UnidadSAT: '',
+                    ProductoSAT: '',
+                    fraccionSAT:'',
+                    materialPeligrosoSAT:'',
+                    sectorCOFEPRIS:'',
+                    formaFarmaceutica:'',
+                    claveFormaFarmaceutica:'',
+                    claveCondicionesEspeciales:'',
+                    condicionEspecial:'',
+                }
             })
         }
     }
@@ -379,8 +406,25 @@ function ComplementosSAT(props) {
 
                 }
             });
-        }else{
-            console.log((data.target.value).toUpperCase())
+        } else if(idComplemento===6){
+            setDataComplemento(dataComplemento=>{
+                return{
+                    ...dataComplemento,
+                    claveFormaFarmaceutica:data.m_sClaveSAT.toUpperCase(),
+                    formaFarmaceutica:data.m_sDescripcion
+                }
+            })
+        }
+        else if(idComplemento===8){
+            setDataComplemento(dataComplemento=>{
+                return{
+                    ...dataComplemento,
+                    claveCondicionesEspeciales:data.m_sClaveSAT.toUpperCase(),
+                    condicionEspecial:data.m_sDescripcion
+                }
+            })
+        }
+        else{
             if (data.target.name === "esPeligroso"){
                 setDataComplemento(dataComplemento =>{
                     return {
@@ -388,7 +432,42 @@ function ComplementosSAT(props) {
                         [data.target.name]: data.target.checked,
                     }
                 });
-            }else{
+            }else if(data.target.name==="esFarmaco"){
+                setDataComplemento(dataComplemento=>{
+                    return{
+                        ...dataComplemento,
+                        [data.target.name]:data.target.checked,
+                    }
+                })
+                if(!dataComplemento.esFarmaco)
+                {
+                    setDataComplemento(dataComplemento=>{
+                        return{
+                            ...dataComplemento,
+                            sectorCOFEPRIS: '',
+                            denominacionGenerica:'',
+                            denominacionDistintiva:'',
+                            fabricante:'',
+                            fechaCaducidad:'',
+                            loteMedicamento:'',
+                            claveFormaFarmaceutica: '',
+                            formaFarmaceutica: '',
+                            claveCondicionesEspeciales: '',
+                            condicionEspecial: '',
+                            regSanitario_folioAut:'',
+                            nombreIngredienteActivo:'',
+                            nomQuimico:'',
+                            numCAS:'',
+                            numRegSanPlagCOFEPRIS:'',
+                            datosFabricante:'',
+                            datosFormulador:'',
+                            datosMaquilador:'',
+                            usoAutorizado:'',
+                        }
+                    })
+                }
+            }
+            else{
                 if(caracter){
                     const value = data.target.value;
                     const sanitizedValue = value.replace(/[^\w\s]/gi, '');
@@ -438,6 +517,73 @@ function ComplementosSAT(props) {
             showSuccess("Se requiere seleccionar Embalaje")
             return
         }
+        if(dataComplemento.esFarmaco){
+            if(dataComplemento.sectorCOFEPRIS===1){
+                if((!dataComplemento.denominacionGenerica || !dataComplemento.denominacionDistintiva || !dataComplemento.fabricante
+                || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
+                || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial
+                || !dataComplemento.regSanitario_folioAut)
+                ||
+                    (!dataComplemento.denominacionGenerica.length>0 || !dataComplemento.denominacionDistintiva.length>0 || !dataComplemento.fabricante.length>0
+                        || !dataComplemento.fechaCaducidad.length>0 || !dataComplemento.loteMedicamento.length>0 || !dataComplemento.claveFormaFarmaceutica.length>0
+                        || !dataComplemento.formaFarmaceutica.length>0 || !dataComplemento.claveCondicionesEspeciales.length>0 || !dataComplemento.condicionEspecial.length>0
+                        || !dataComplemento.regSanitario_folioAut.length>0)
+                )
+                {
+                    showSuccess("Se requiere rellenar los campos")
+                    return
+                }
+            }
+            if(dataComplemento.sectorCOFEPRIS===2){
+                if((!dataComplemento.nombreIngredienteActivo || !dataComplemento.nomQuimico || !dataComplemento.fabricante
+                    || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
+                    || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial)
+                ||
+                    (!dataComplemento.nombreIngredienteActivo.length>0 || !dataComplemento.nomQuimico.length>0 || !dataComplemento.fabricante.length>0
+                        || !dataComplemento.fechaCaducidad.length>0 || !dataComplemento.loteMedicamento.length>0 || !dataComplemento.claveFormaFarmaceutica.length>0
+                        || !dataComplemento.formaFarmaceutica.length>0 || !dataComplemento.claveCondicionesEspeciales.length>0 || !dataComplemento.condicionEspecial.length>0)
+                )
+                {
+                    showSuccess("Se requiere rellenar los campos")
+                    return
+                }
+            }
+            if(dataComplemento.sectorCOFEPRIS===3){
+                if((!dataComplemento.denominacionGenerica || !dataComplemento.denominacionDistintiva || !dataComplemento.fabricante
+                    || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
+                    || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial
+                    || !dataComplemento.regSanitario_folioAut)
+
+                    || (!dataComplemento.denominacionGenerica.length>0 || !dataComplemento.denominacionDistintiva.length>0 || !dataComplemento.fabricante.length>0
+                    || !dataComplemento.fechaCaducidad.length>0 || !dataComplemento.loteMedicamento.length>0 || !dataComplemento.claveFormaFarmaceutica.length>0
+                    || !dataComplemento.formaFarmaceutica.length>0 || !dataComplemento.claveCondicionesEspeciales.length>0 || !dataComplemento.condicionEspecial.length>0
+                    || !dataComplemento.regSanitario_folioAut.length>0))
+                {
+                    showSuccess("Se requiere rellenar los campos")
+                    return
+                }
+            }
+            if(dataComplemento.sectorCOFEPRIS===4){
+                if((!dataComplemento.nomQuimico || !dataComplemento.numCAS)
+                    || (!dataComplemento.nomQuimico.length>0 || !dataComplemento.numCAS.length>0))
+                {
+                    showSuccess("Se requiere rellenar los campos")
+                    return
+                }
+            }
+            if(dataComplemento.sectorCOFEPRIS===5){
+                if((!dataComplemento.nombreIngredienteActivo || !dataComplemento.numRegSanPlagCOFEPRIS || !dataComplemento.datosFabricante
+                    || !dataComplemento.datosFormulador || !dataComplemento.datosMaquilador || !dataComplemento.usoAutorizado)
+                    ||
+                    (!dataComplemento.nombreIngredienteActivo.length>0 || !dataComplemento.numRegSanPlagCOFEPRIS.length>0 || !dataComplemento.datosFabricante.length>0
+                        || !dataComplemento.datosFormulador.length>0 || !dataComplemento.datosMaquilador.length>0 || !dataComplemento.usoAutorizado.length>0)
+                )
+                {
+                    showSuccess("Se requiere rellenar los campos")
+                    return
+                }
+            }
+        }
         if (dataComplemento.id === 0){
             const item = dataComplemento
             item.id = Math.floor(Math.random() * 10000)
@@ -446,7 +592,8 @@ function ComplementosSAT(props) {
         }else{
             props.dataList.forEach(item => {
                 if (item.id === dataComplemento.id){
-                    item.id = dataComplemento.id
+                    item=dataComplemento
+                  /*  item.id = dataComplemento.id
                     item.cantidad = dataComplemento.cantidad
                     item.claveProducto = dataComplemento.claveProducto
                     item.claveUnidad = dataComplemento.claveUnidad
@@ -462,6 +609,12 @@ function ComplementosSAT(props) {
                     item.peso = dataComplemento.peso
                     item.fraccionSAT = dataComplemento.fraccionSAT
                     item.materialPeligroso = dataComplemento.materialPeligroso
+                    item.denominacionGenerica=dataComplemento.denominacionGenerica
+                    item.denominacionDistintiva=dataComplemento.denominacionDistintiva
+                    item.fabricante=dataComplemento.fabricante
+                    item.fechaCaducidad=dataComplemento.fechaCaducidad
+                    item.loteMedicamento=dataComplemento.loteMedicamento
+                    */
                 }
             })
             props.onChangeList(props.dataList)

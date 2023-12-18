@@ -5,8 +5,8 @@ import {
     Checkbox, CircularProgress, FormControl,
     FormControlLabel, Grid,
     List,
-    ListItem, MenuItem, Select,
-    TextField,
+    ListItem, MenuItem, OutlinedInput, Select,
+    TextField, ThemeProvider,
 } from "@material-ui/core";
 import {
     Button,
@@ -68,10 +68,7 @@ function CrearConceptoSAT(props) {
         disableFraccion: true
     });
 
-
-    
     const handleChange = (event) => {
-
         if(event.target.name == "cantidad"){
             if(event.target.value!=="") {
                 if (Number(event.target.value) <= 0) {
@@ -148,7 +145,6 @@ function CrearConceptoSAT(props) {
         }
         props.onChangeData(0, event)
     }
-
     const selectClase = (row) => {
         props.onChangeData(state.complementoSAT, row.data)
     }
@@ -210,7 +206,27 @@ function CrearConceptoSAT(props) {
                 }
 
             })
-        }else{
+        }else if (catalogo == 6){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_FormaFarmaceutica", state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                    setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_FormaFarmaceutica", busqueda: "", complementoSAT: 6,titulo:"Forma Farmaceutica"})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+
+            })
+        }
+        else if (catalogo == 8){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_CondicionesEspeciales", state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                    setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_CondicionesEspeciales", busqueda: "", complementoSAT: 8,titulo:"Condiciones Especiales"})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+
+            })
+        }
+        else{
             if(state.busqueda != ""){
                 return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
                     if(respuesta.data.length>0){
@@ -547,7 +563,6 @@ function CrearConceptoSAT(props) {
                                     label="Unidad Medida"
                                     disabled={props.consulta}
                                     required
-                                    onChange={(e)=>{ props.onChangeData(6, e)}}
                                     value={props.dataComplemento.UnidadSAT}
                                     name="UnidadSAT"
                                     aria-readonly={true}
@@ -578,6 +593,19 @@ function CrearConceptoSAT(props) {
                                         />
                                     }
                                     label="Es material peligroso"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={3}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={props.dataComplemento.esFarmaco}
+                                            onChange={handleChange}
+                                            name="esFarmaco"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Es Fármaco"
                                 />
                             </Grid>
                         </Grid>
@@ -745,27 +773,11 @@ function CrearConceptoSAT(props) {
                             </Grid>
                         </Grid>
                         }
-                        {!props.dataComplemento.esFarmaco &&
-                        <Button
-                            onClick={()=>{props.setDataComplemento(dataComplemento =>{
-                                return {
-                                    ...props.dataComplemento,
-                                    esFarmaco:true
-                                }
-                            });}}                            type="button"
-                            fullWidth
-                            className="btn"
-                            style={{margin: "0px",backgroundColor:"red",color:"white",marginTop:"4px"}}
-                            //disabled= {disableSeleccionar.disableUnidad}
-                        >
-                            ¿Es el material un fármaco?
-                        </Button>
-                        }
                         {props.dataComplemento.esFarmaco &&
-                        <Grid container spacing={1} style={{marginTop:"10px"}}>
-                            <Grid item xs={12} sm={3} >
+                        <Grid container  spacing={2} style={{marginTop:"10px"}}>
+                            <Grid item xs={12} sm={4} >
                                 <FormControl className="input select" fullWidth variant="outlined">
-                                <InputLabel style={{fontSize:"20px"}} id="idSucusalLabel">Sector COFEPRIS</InputLabel>
+                                <InputLabel style={{fontSize:"20px"}}>Sector COFEPRIS</InputLabel>
                                 <Select
                                     variant="outlined"
                                     margin="dense"
@@ -796,6 +808,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        margin={"dense"}
                                         label={"Nombre del Ingrediente Activo"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -814,6 +827,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        margin={"dense"}
                                         inputProps={{maxLength:150}}
                                         label={"Nombre Químico"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
@@ -832,6 +846,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        margin={"dense"}
                                         inputProps={{maxLength:50}}
                                         label={"Denominación Genérica"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
@@ -850,6 +865,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        margin={"dense"}
                                         inputProps={{maxLength:50}}
                                         label={"Denominación Distintiva (marca)"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
@@ -868,6 +884,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        margin={"dense"}
                                         inputProps={{maxLength:240}}
                                         label={"Fabricante"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
@@ -881,6 +898,264 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
+                            {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
+                                <Grid item sm={4}>
+                                    <FormControl className="input select" fullWidth variant="outlined">
+                                    <TextField
+                                        variant="outlined"
+                                        type="date"
+                                        label={"Fecha de Caducidad"}
+                                        InputLabelProps={{shrink: true,}}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                fechaCaducidad:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField></FormControl>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
+                                <Grid item sm={4}>
+                                    <FormControl className="input select" fullWidth variant="outlined">
+                                        <TextField
+                                            variant="outlined"
+                                            type="text"
+                                            margin={"dense"}
+                                            label={"Lote Medicamento"}
+                                            inputProps={{maxLength:10}}
+                                            onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                                return {
+                                                    ...props.dataComplemento,
+                                                    loteMedicamento:e.target.value,
+                                                }
+                                            });}}
+                                        >
+
+                                        </TextField></FormControl>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
+                                <Grid container sm={12} spacing={1} style={{paddingLeft:"1%"}}>
+                                    <Grid item xs={12} sm={2} >
+                                        <TextField
+                                            variant="outlined"
+                                            type="text"
+                                            margin={"dense"}
+                                            disabled={props.consulta}
+                                            className="form-control"
+                                            label="Clave SAT"
+                                            value={props.dataComplemento.claveFormaFarmaceutica}
+                                            aria-readonly={true}
+                                            required
+                                        />
+                                    </Grid>
+                                    <Grid item sm={8}>
+                                        <TextField
+                                            variant="outlined"
+                                            className="form-control"
+                                            type="text"
+                                            margin={"dense"}
+                                            label="Forma Farmacéutica"
+                                            aria-readonly={true}
+                                            value={props.dataComplemento.formaFarmaceutica}
+                                            disabled
+                                        />
+                                    </Grid>
+                                    <Grid item sm={2}>
+                                        <Button
+                                            type="button"
+                                            fullWidth
+                                            className="btn"
+                                            name={"esPeligroso"}
+                                            style={{margin: "0px", backgroundColor:"darkgray"}}
+                                            //disabled= {disableSeleccionar.disableFraccion}
+                                            onClick={() => cargarDesdeServidor(pagina.page,20,6) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
+                                            >
+                                            Seleccionar
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
+                                <Grid container sm={12} spacing={1} style={{paddingLeft:"1%", paddingTop:"1%"}}>
+                                    <Grid item sm={2} >
+                                        <TextField
+                                            variant="outlined"
+                                            type="text"
+                                            margin={"dense"}
+                                            className="form-control"
+                                            label="Clave SAT"
+                                            aria-readonly={true}
+                                            value={props.dataComplemento.claveCondicionesEspeciales}
+                                        />
+                                    </Grid>
+                                    <Grid item sm={8}>
+                                        <TextField
+                                            variant="outlined"
+                                            className="form-control"
+                                            type="text"
+                                            margin={"dense"}
+                                            label="Condición Especial de Transporte"
+                                            aria-readonly={true}
+                                            value={props.dataComplemento.condicionEspecial}
+                                            disabled
+                                        />
+                                    </Grid>
+                                    <Grid item sm={2}>
+                                        <Button
+                                            type="button"
+                                            fullWidth
+                                            className="btn"
+                                            style={{margin: "0px", backgroundColor:"darkgray"}}
+                                            //disabled= {disableSeleccionar.disableFraccion}
+                                            onClick={() => cargarDesdeServidor(pagina.page,20,8) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
+                                        >
+                                            Seleccionar
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            }
+                            {(props.dataComplemento.sectorCOFEPRIS===1 || props.dataComplemento.sectorCOFEPRIS===3) &&
+                                <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        inputProps={{maxLength:15}}
+                                        label={"Registro Sanitario/Folio de Autorización"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                regSanitario_folioAut:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {props.dataComplemento.sectorCOFEPRIS===4 &&
+                                <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        inputProps={{maxLength:15}}
+                                        label={"Número CAS"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                numCAS:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                                <Grid item sm={4}>
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        inputProps={{maxLength:60}}
+                                        label={"Núm. Registro CICLOPLAFEST"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                numRegSanPlagCOFEPRIS:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                                <Grid item sm={12} >
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        multiline
+                                        style={{overflowY:"auto"}}
+                                        label={"Datos del Fabricante"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                datosFabricante:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                                <Grid item sm={12} >
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        multiline
+                                        style={{overflowY:"auto"}}
+                                        label={"Datos del Formulador"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                datosFormulador:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                                <Grid item sm={12} >
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        multiline
+                                        style={{overflowY:"auto"}}
+                                        label={"Datos del Maquilador"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                datosMaquilador:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                                <Grid item sm={12} >
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        multiline
+                                        style={{overflowY:"auto"}}
+                                        label={"Uso Autorizado"}
+                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                            return {
+                                                ...props.dataComplemento,
+                                                usoAutorizado:e.target.value,
+                                            }
+                                        });}}
+                                    >
+
+                                    </TextField>
+                                </Grid>
+                            }
+
                         </Grid>
                         }
                     </div>
