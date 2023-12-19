@@ -784,7 +784,7 @@ function CrearConceptoSAT(props) {
                                     type="text"
                                     className="form-control"
                                     label="Sector COFEPRIS"
-                                    defaultValue={20}
+                                    value={props.dataComplemento.sectorCOFEPRIS}
                                     required
                                     onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                         return {
@@ -809,6 +809,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         margin={"dense"}
+                                        value={props.dataComplemento.nombreIngredienteActivo}
                                         label={"Nombre del Ingrediente Activo"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -829,6 +830,7 @@ function CrearConceptoSAT(props) {
                                         type="text"
                                         margin={"dense"}
                                         inputProps={{maxLength:150}}
+                                        value={props.dataComplemento.nomQuimico}
                                         label={"Nombre Químico"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -848,6 +850,7 @@ function CrearConceptoSAT(props) {
                                         type="text"
                                         margin={"dense"}
                                         inputProps={{maxLength:50}}
+                                        value={props.dataComplemento.denominacionGenerica}
                                         label={"Denominación Genérica"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -867,6 +870,7 @@ function CrearConceptoSAT(props) {
                                         type="text"
                                         margin={"dense"}
                                         inputProps={{maxLength:50}}
+                                        value={props.dataComplemento.denominacionDistintiva}
                                         label={"Denominación Distintiva (marca)"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -885,6 +889,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         margin={"dense"}
+                                        value={props.dataComplemento.fabricante}
                                         inputProps={{maxLength:240}}
                                         label={"Fabricante"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
@@ -905,6 +910,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="date"
                                         label={"Fecha de Caducidad"}
+                                        value={props.dataComplemento.fechaCaducidad}
                                         InputLabelProps={{shrink: true,}}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -925,6 +931,7 @@ function CrearConceptoSAT(props) {
                                             type="text"
                                             margin={"dense"}
                                             label={"Lote Medicamento"}
+                                            value={props.dataComplemento.loteMedicamento}
                                             inputProps={{maxLength:10}}
                                             onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                                 return {
@@ -1025,6 +1032,7 @@ function CrearConceptoSAT(props) {
                                         type="text"
                                         margin={"dense"}
                                         inputProps={{maxLength:15}}
+                                        value={props.dataComplemento.regSanitario_folioAut}
                                         label={"Registro Sanitario/Folio de Autorización"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -1044,6 +1052,7 @@ function CrearConceptoSAT(props) {
                                         type="text"
                                         margin={"dense"}
                                         inputProps={{maxLength:15}}
+                                        value={props.dataComplemento.numCAS}
                                         label={"Número CAS"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -1064,6 +1073,7 @@ function CrearConceptoSAT(props) {
                                         margin={"dense"}
                                         inputProps={{maxLength:60}}
                                         label={"Núm. Registro CICLOPLAFEST"}
+                                        value={props.dataComplemento.numRegSanPlagCOFEPRIS}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
                                                 ...props.dataComplemento,
@@ -1084,6 +1094,7 @@ function CrearConceptoSAT(props) {
                                         multiline
                                         style={{overflowY:"auto"}}
                                         label={"Datos del Fabricante"}
+                                        value={props.dataComplemento.datosFabricante}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
                                                 ...props.dataComplemento,
@@ -1104,6 +1115,7 @@ function CrearConceptoSAT(props) {
                                         multiline
                                         style={{overflowY:"auto"}}
                                         label={"Datos del Formulador"}
+                                        value={props.dataComplemento.datosFormulador}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
                                                 ...props.dataComplemento,
@@ -1124,6 +1136,7 @@ function CrearConceptoSAT(props) {
                                         multiline
                                         style={{overflowY:"auto"}}
                                         label={"Datos del Maquilador"}
+                                        value={props.dataComplemento.datosMaquilador}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
                                                 ...props.dataComplemento,
@@ -1143,6 +1156,7 @@ function CrearConceptoSAT(props) {
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
+                                        value={props.dataComplemento.usoAutorizado}
                                         label={"Uso Autorizado"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {

@@ -210,7 +210,27 @@ function ComplementosSAT(props) {
                             })
                           }) 
                       }) 
-                    }else{
+                    }
+                    if(row.sectorCOFEPRIS && row.sectorCOFEPRIS>0){
+                        row.esFarmaco=true
+                        if(row.sectorCOFEPRIS>=1 && row.sectorCOFEPRIS<=3){
+                        obtenerSATPaginado(1, 0,"c_FormaFarmaceutica", row.claveFormaFarmaceutica).then((respuesta) => {
+                            row.formaFarmaceutica = respuesta.data[0].m_sDescripcion
+                            obtenerSATPaginado(1, 0,"c_CondicionesEspeciales", row.claveCondicionesEspeciales).then((respuesta) => {
+                                row.condicionEspecial = respuesta.data[0].m_sDescripcion
+                                setDataComplemento(row)
+                                setOpenDialog(true)
+                            })
+                        })}
+                        else{
+                            setDataComplemento(row)
+                            setOpenDialog(true)
+                        }
+
+
+                    }
+                   if(!row.esFarmaco && !row.esPeligroso)
+                    {
                         setDataComplemento(row);
                         setOpenDialog(true);
                     }
@@ -592,8 +612,8 @@ function ComplementosSAT(props) {
         }else{
             props.dataList.forEach(item => {
                 if (item.id === dataComplemento.id){
-                    item=dataComplemento
-                  /*  item.id = dataComplemento.id
+                   // item=dataComplemento
+                    item.id = dataComplemento.id
                     item.cantidad = dataComplemento.cantidad
                     item.claveProducto = dataComplemento.claveProducto
                     item.claveUnidad = dataComplemento.claveUnidad
@@ -609,12 +629,24 @@ function ComplementosSAT(props) {
                     item.peso = dataComplemento.peso
                     item.fraccionSAT = dataComplemento.fraccionSAT
                     item.materialPeligroso = dataComplemento.materialPeligroso
+                    item.sectorCOFEPRIS=dataComplemento.sectorCOFEPRIS
                     item.denominacionGenerica=dataComplemento.denominacionGenerica
                     item.denominacionDistintiva=dataComplemento.denominacionDistintiva
                     item.fabricante=dataComplemento.fabricante
                     item.fechaCaducidad=dataComplemento.fechaCaducidad
                     item.loteMedicamento=dataComplemento.loteMedicamento
-                    */
+                    item.claveFormaFarmaceutica=dataComplemento.claveFormaFarmaceutica
+                    item.formaFarmaceutica=dataComplemento.formaFarmaceutica
+                    item.claveCondicionesEspeciales=dataComplemento.claveCondicionesEspeciales
+                    item.regSanitario_folioAut=dataComplemento.regSanitario_folioAut
+                    item.nombreIngredienteActivo=dataComplemento.nombreIngredienteActivo
+                    item.nomQuimico=dataComplemento.nomQuimico
+                    item.numCAS=dataComplemento.numCAS
+                    item.numRegSanPlagCOFEPRIS=dataComplemento.numRegSanPlagCOFEPRIS
+                    item.datosFabricante=dataComplemento.datosFabricante
+                    item.datosFormulador=dataComplemento.datosFormulador
+                    item.datosMaquilador=dataComplemento.datosMaquilador
+                    item.usoAutorizado=dataComplemento.usoAutorizado
                 }
             })
             props.onChangeList(props.dataList)
