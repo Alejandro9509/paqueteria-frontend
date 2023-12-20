@@ -238,7 +238,6 @@ function ComplementosSAT(props) {
          
             })
             console.log(row);
-            
         };
 
         return (
