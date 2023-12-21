@@ -747,7 +747,7 @@ function Informes({history}) {
         const newGuia = [...dataGuiasSeleccionadas];
         console.log(newGuia)
         var params = {
-            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque1: newValue?.m_nIdUnidad ?? null,
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia
         }
@@ -773,7 +773,7 @@ function Informes({history}) {
         console.log(newGuia)
         var params = {
             idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
-            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            idRemolque2: newValue?.m_nIdUnidad ?? null,
             guias: newGuia
         }
         console.log("Cubicar")
