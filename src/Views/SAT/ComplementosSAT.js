@@ -551,7 +551,7 @@ function ComplementosSAT(props) {
             return
         }
         if(dataComplemento.esFarmaco){
-            if(dataComplemento.sectorCOFEPRIS===1){
+            if(dataComplemento.sectorCOFEPRIS==1){
                 if((!dataComplemento.denominacionGenerica || !dataComplemento.denominacionDistintiva || !dataComplemento.fabricante
                 || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
                 || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial
@@ -567,7 +567,7 @@ function ComplementosSAT(props) {
                     return
                 }
             }
-            if(dataComplemento.sectorCOFEPRIS===2){
+            if(dataComplemento.sectorCOFEPRIS==2){
                 if((!dataComplemento.nombreIngredienteActivo || !dataComplemento.nomQuimico || !dataComplemento.fabricante
                     || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
                     || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial)
@@ -581,7 +581,7 @@ function ComplementosSAT(props) {
                     return
                 }
             }
-            if(dataComplemento.sectorCOFEPRIS===3){
+            if(dataComplemento.sectorCOFEPRIS==3){
                 if((!dataComplemento.denominacionGenerica || !dataComplemento.denominacionDistintiva || !dataComplemento.fabricante
                     || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
                     || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial
@@ -596,7 +596,7 @@ function ComplementosSAT(props) {
                     return
                 }
             }
-            if(dataComplemento.sectorCOFEPRIS===4){
+            if(dataComplemento.sectorCOFEPRIS==4){
                 if((!dataComplemento.nomQuimico || !dataComplemento.numCAS)
                     || (!dataComplemento.nomQuimico.length>0 || !dataComplemento.numCAS.length>0))
                 {
@@ -604,7 +604,7 @@ function ComplementosSAT(props) {
                     return
                 }
             }
-            if(dataComplemento.sectorCOFEPRIS===5){
+            if(dataComplemento.sectorCOFEPRIS==5){
                 if((!dataComplemento.nombreIngredienteActivo || !dataComplemento.numRegSanPlagCOFEPRIS || !dataComplemento.datosFabricante
                     || !dataComplemento.datosFormulador || !dataComplemento.datosMaquilador || !dataComplemento.usoAutorizado)
                     ||

@@ -793,16 +793,16 @@ function CrearConceptoSAT(props) {
                                         }
                                     });}}
                                     name="sectorCofepris">
-                                    <MenuItem value={1}>01</MenuItem>
-                                    <MenuItem value={2}>02</MenuItem>
-                                    <MenuItem value={3}>03</MenuItem>
-                                    <MenuItem value={4}>04</MenuItem>
-                                    <MenuItem value={5}>05</MenuItem>
+                                    <MenuItem value={"01"}>01</MenuItem>
+                                    <MenuItem value={"02"}>02</MenuItem>
+                                    <MenuItem value={"03"}>03</MenuItem>
+                                    <MenuItem value={"04"}>04</MenuItem>
+                                    <MenuItem value={"05"}>05</MenuItem>
 
                                 </Select>
                                 </FormControl>
                             </Grid>
-                            {(props.dataComplemento.sectorCOFEPRIS===2 || props.dataComplemento.sectorCOFEPRIS===5) &&
+                            {(props.dataComplemento.sectorCOFEPRIS==2 || props.dataComplemento.sectorCOFEPRIS==5) &&
 
                                     <Grid item sm={4}>
                                     <TextField
@@ -822,7 +822,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {(props.dataComplemento.sectorCOFEPRIS===2 || props.dataComplemento.sectorCOFEPRIS===4) &&
+                            {(props.dataComplemento.sectorCOFEPRIS==2 || props.dataComplemento.sectorCOFEPRIS==4) &&
 
                                 <Grid item sm={4}>
                                     <TextField
@@ -843,7 +843,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {(props.dataComplemento.sectorCOFEPRIS===1 || props.dataComplemento.sectorCOFEPRIS===3) &&
+                            {(props.dataComplemento.sectorCOFEPRIS==1 || props.dataComplemento.sectorCOFEPRIS==3) &&
                                 <Grid item sm={4}>
                                     <TextField
                                         variant="outlined"
@@ -863,7 +863,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {(props.dataComplemento.sectorCOFEPRIS===1 || props.dataComplemento.sectorCOFEPRIS===3) &&
+                            {(props.dataComplemento.sectorCOFEPRIS==1 || props.dataComplemento.sectorCOFEPRIS==3) &&
                                 <Grid item sm={4}>
                                     <TextField
                                         variant="outlined"
@@ -1025,7 +1025,7 @@ function CrearConceptoSAT(props) {
                                     </Grid>
                                 </Grid>
                             }
-                            {(props.dataComplemento.sectorCOFEPRIS===1 || props.dataComplemento.sectorCOFEPRIS===3) &&
+                            {(props.dataComplemento.sectorCOFEPRIS==1 || props.dataComplemento.sectorCOFEPRIS==3) &&
                                 <Grid item sm={4}>
                                     <TextField
                                         variant="outlined"
@@ -1045,7 +1045,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {props.dataComplemento.sectorCOFEPRIS===4 &&
+                            {props.dataComplemento.sectorCOFEPRIS==4 &&
                                 <Grid item sm={4}>
                                     <TextField
                                         variant="outlined"
@@ -1065,7 +1065,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                            {props.dataComplemento.sectorCOFEPRIS==5 &&
                                 <Grid item sm={4}>
                                     <TextField
                                         variant="outlined"
@@ -1085,7 +1085,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                            {props.dataComplemento.sectorCOFEPRIS==5 &&
                                 <Grid item sm={12} >
                                     <TextField
                                         variant="outlined"
@@ -1106,7 +1106,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                            {props.dataComplemento.sectorCOFEPRIS==5 &&
                                 <Grid item sm={12} >
                                     <TextField
                                         variant="outlined"
@@ -1127,7 +1127,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                            {props.dataComplemento.sectorCOFEPRIS==5 &&
                                 <Grid item sm={12} >
                                     <TextField
                                         variant="outlined"
@@ -1148,7 +1148,7 @@ function CrearConceptoSAT(props) {
                                     </TextField>
                                 </Grid>
                             }
-                            {props.dataComplemento.sectorCOFEPRIS===5 &&
+                            {props.dataComplemento.sectorCOFEPRIS==5 &&
                                 <Grid item sm={12} >
                                     <TextField
                                         variant="outlined"

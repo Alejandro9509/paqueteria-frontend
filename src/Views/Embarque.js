@@ -1877,7 +1877,7 @@ function Embarque(props) {
             item.peso = item.m_xPeso
         })*/
         respuesta.data.m_arrClsComplementoSAT.forEach((item)=>{
-            item.sectorCOFEPRIS=Number(item.ClaveSectorCofepris)
+            item.sectorCOFEPRIS=item.ClaveSectorCofepris
             item.claveCondicionesEspeciales=item.CondicionesEspTransp
             item.datosFabricante=item.DatosFabricante
             item.datosFormulador=item.DatosFormulador
@@ -2167,7 +2167,7 @@ function Embarque(props) {
             item.embalajeSAT = item.m_sTipoEmbalaje
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
-            item.sectorCOFEPRIS=Number(item.ClaveSectorCofepris)
+            item.sectorCOFEPRIS=item.ClaveSectorCofepris
             item.claveCondicionesEspeciales=item.CondicionesEspTransp
             item.datosFabricante=item.DatosFabricante
             item.datosFormulador=item.DatosFormulador

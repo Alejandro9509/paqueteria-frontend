@@ -1456,7 +1456,7 @@ function Recoleccion() {
             item.peso = item.m_xPeso
         })*/
         respuesta.data.m_arrClsComplementoSAT.forEach(item => {
-            item.sectorCOFEPRIS=Number(item.ClaveSectorCofepris)
+            item.sectorCOFEPRIS=item.ClaveSectorCofepris
             item.claveCondicionesEspeciales=item.CondicionesEspTransp
             item.datosFabricante=item.DatosFabricante
             item.datosFormulador=item.DatosFormulador
