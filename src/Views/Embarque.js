@@ -2167,7 +2167,7 @@ function Embarque(props) {
             item.embalajeSAT = item.m_sTipoEmbalaje
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
-            item.sectorCOFEPRIS=item.ClaveSectorCofepris
+            item.sectorCOFEPRIS=Number(item.ClaveSectorCofepris)
             item.claveCondicionesEspeciales=item.CondicionesEspTransp
             item.datosFabricante=item.DatosFabricante
             item.datosFormulador=item.DatosFormulador
