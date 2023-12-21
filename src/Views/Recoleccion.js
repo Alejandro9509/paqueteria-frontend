@@ -984,6 +984,10 @@ function Recoleccion() {
                 // item.m_sTipoEmbalaje = item.embalajeSAT
                 item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
                 item.m_xPeso = item.peso
+                item.nombreQuimico=item.nomQuimico
+                item.numeroCAS=item.numCAS
+                item.claveCondicionEspecial=item.claveCondicionesEspeciales
+                item.registroSanitario_folioAutorizacion=item.regSanitario_folioAut
             })
 
             //Informacion general
@@ -1451,6 +1455,27 @@ function Recoleccion() {
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
         })*/
+        respuesta.data.m_arrClsComplementoSAT.forEach(item => {
+            item.sectorCOFEPRIS=item.ClaveSectorCofepris
+            item.claveCondicionesEspeciales=item.CondicionesEspTransp
+            item.datosFabricante=item.DatosFabricante
+            item.datosFormulador=item.DatosFormulador
+            item.datosMaquilador=item.DatosMaquilador
+            item.denominacionGenerica=item.DenominacionGenericaProd
+            item.denominacionDistintiva=item.DenominacionDistintivaProd
+            item.fabricante=item.Fabricante
+            item.fechaCaducidad=item.FechaCaducidad
+            item.claveFormaFarmaceutica=item.FormaFarmaceutica
+            item.formaFarmaceutica=''
+            item.nomQuimico=item.NombreQuimico
+            item.loteMedicamento=item.LoteMedicamento
+            item.numRegSanPlagCOFEPRIS=item.NumRegSanPlagCOFEPRIS
+            item.numCAS=item.NumeroCAS
+            item.regSanitario_folioAut=item.RegistroSanitarioFolioAutorizacion
+            item.usoAutorizado=item.UsoAutorizado
+            item.esFarmaco=item.esFarmaco
+
+        })
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
         if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
             mostrarDatosRecoleccionDD(respuesta)
