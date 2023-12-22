@@ -582,6 +582,7 @@ function Informes({history}) {
             }
         })
         setDataGuias([])
+        setUtilizacion(0)
     }
 
     /* const getCurrentDateTime = () => {
