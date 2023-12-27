@@ -21,6 +21,8 @@ import Select from "@material-ui/core/Select";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {confirmAlert} from "react-confirm-alert";
 import AgregarRemolques from "./AgregarRemolques";
+import Tooltip from "@material-ui/core/Tooltip";
+import {showSuccess} from "../../Util/Util";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -227,8 +229,8 @@ class UnidadesList extends Component {
                                             <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
 
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
-                                            <TableCell align="left">{
-                                                <Link style={{cursor:"pointer"}} onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
+                                            <Tooltip title={u.Ocupado===1?"En Ruta":""}><TableCell align="left">{
+                                                <Link style={{cursor:"pointer",color:u.Ocupado===1?"gray":''}} onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell></Tooltip>
                                             <TableCell align="left">{u.m_sPlacas}</TableCell>
                                         </TableRow>
                                     )
