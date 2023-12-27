@@ -793,11 +793,11 @@ function CrearConceptoSAT(props) {
                                         }
                                     });}}
                                     name="sectorCofepris">
-                                    <MenuItem value={"01"}>01</MenuItem>
-                                    <MenuItem value={"02"}>02</MenuItem>
-                                    <MenuItem value={"03"}>03</MenuItem>
-                                    <MenuItem value={"04"}>04</MenuItem>
-                                    <MenuItem value={"05"}>05</MenuItem>
+                                    <MenuItem value={"01"}>01 - MEDICAMENTO</MenuItem>
+                                    <MenuItem value={"02"}>02 - PRECURSORES Y QU?MICOS DE USO DUAL</MenuItem>
+                                    <MenuItem value={"03"}>03 - PSICOTR?PICOS Y ESTUPEFACIENTES</MenuItem>
+                                    <MenuItem value={"04"}>04 - SUSTANCIAS T?XICAS</MenuItem>
+                                    <MenuItem value={"05"}>05 - PLAGUICIDAS Y FERTILIZANTES</MenuItem>
 
                                 </Select>
                                 </FormControl>
