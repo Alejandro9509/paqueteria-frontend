@@ -203,6 +203,9 @@ class ClavesCFDI extends Component {
         else if(this.props.catalogo == "c_CondicionesEspeciales"){
             this.props.cancel(8)
         }
+        else if(this.props.catalogo == "c_SectorCOFEPRIS"){
+            this.props.cancel(9)
+        }
         this.props.closeDialog()
     }
 

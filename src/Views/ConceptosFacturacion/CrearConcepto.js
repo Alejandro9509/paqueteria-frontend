@@ -226,6 +226,16 @@ function CrearConceptoSAT(props) {
 
             })
         }
+        else if (catalogo == 9){
+            return new obtenerSATPaginado(numRegistros, pagina || 0, "c_SectorCOFEPRIS", state.busqueda).then((respuesta) => {
+                if(respuesta.data.length>0){
+                    setState({...state, dataSat: respuesta.data, openDialog: true,catalogo: "c_SectorCOFEPRIS", busqueda: "", complementoSAT: 9,titulo:"Categoría"})
+                }else{
+                    showSuccess("No se encontró ningún registro")
+                }
+
+            })
+        }
         else{
             if(state.busqueda != ""){
                 return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
@@ -775,32 +785,45 @@ function CrearConceptoSAT(props) {
                         }
                         {props.dataComplemento.esFarmaco &&
                         <Grid container  spacing={2} style={{marginTop:"10px"}}>
-                            <Grid item xs={12} sm={4} >
-                                <FormControl className="input select" fullWidth variant="outlined">
-                                <InputLabel style={{fontSize:"20px"}}>Sector COFEPRIS</InputLabel>
-                                <Select
-                                    variant="outlined"
-                                    margin="dense"
-                                    type="text"
-                                    className="form-control"
-                                    label="Sector COFEPRIS"
-                                    value={props.dataComplemento.sectorCOFEPRIS}
-                                    required
-                                    onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
-                                        return {
-                                            ...props.dataComplemento,
-                                            sectorCOFEPRIS:e.target.value,
-                                        }
-                                    });}}
-                                    name="sectorCofepris">
-                                    <MenuItem value={"01"}>01</MenuItem>
-                                    <MenuItem value={"02"}>02</MenuItem>
-                                    <MenuItem value={"03"}>03</MenuItem>
-                                    <MenuItem value={"04"}>04</MenuItem>
-                                    <MenuItem value={"05"}>05</MenuItem>
-
-                                </Select>
-                                </FormControl>
+                            <Grid container sm={12} spacing={1} style={{paddingLeft:"1%"}}>
+                                <Grid item xs={12} sm={2} >
+                                    <TextField
+                                        variant="outlined"
+                                        type="text"
+                                        margin={"dense"}
+                                        disabled={props.consulta}
+                                        className="form-control"
+                                        label="Clave SAT"
+                                        value={props.dataComplemento.sectorCOFEPRIS}
+                                        aria-readonly={true}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item sm={8}>
+                                    <TextField
+                                        variant="outlined"
+                                        className="form-control"
+                                        type="text"
+                                        margin={"dense"}
+                                        label="Categoría"
+                                        aria-readonly={true}
+                                        value={props.dataComplemento.descripcionSectorCOFEPRIS}
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid item sm={2}>
+                                    <Button
+                                        type="button"
+                                        fullWidth
+                                        className="btn"
+                                        name={"sectorCOFEPRIS"}
+                                        style={{margin: "0px", backgroundColor:"darkgray"}}
+                                        //disabled= {disableSeleccionar.disableFraccion}
+                                        onClick={() => cargarDesdeServidor(pagina.page,20,9) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
+                                    >
+                                        Seleccionar
+                                    </Button>
+                                </Grid>
                             </Grid>
                             {(props.dataComplemento.sectorCOFEPRIS==2 || props.dataComplemento.sectorCOFEPRIS==5) &&
 
@@ -808,6 +831,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c2c5q"}
+                                        name={"Nombre del Ingrediente Activo"}
                                         margin={"dense"}
                                         value={props.dataComplemento.nombreIngredienteActivo}
                                         label={"Nombre del Ingrediente Activo"}
@@ -828,6 +853,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c2c4p"}
+                                        name={"Nombre Químico"}
                                         margin={"dense"}
                                         inputProps={{maxLength:150}}
                                         value={props.dataComplemento.nomQuimico}
@@ -852,6 +879,9 @@ function CrearConceptoSAT(props) {
                                         inputProps={{maxLength:50}}
                                         value={props.dataComplemento.denominacionGenerica}
                                         label={"Denominación Genérica"}
+                                        className="clave1"
+                                        name={"Denominación Genérica"}
+                                        id={"c1c3a"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
                                                 ...props.dataComplemento,
@@ -867,11 +897,13 @@ function CrearConceptoSAT(props) {
                                 <Grid item sm={4}>
                                     <TextField
                                         variant="outlined"
+                                        id={"c1c3b"}
                                         type="text"
                                         margin={"dense"}
                                         inputProps={{maxLength:50}}
                                         value={props.dataComplemento.denominacionDistintiva}
                                         label={"Denominación Distintiva (marca)"}
+                                        name={"Denominación Distintiva"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
                                                 ...props.dataComplemento,
@@ -890,6 +922,8 @@ function CrearConceptoSAT(props) {
                                         type="text"
                                         margin={"dense"}
                                         value={props.dataComplemento.fabricante}
+                                        name={"Fabricante"}
+                                        id={"c1c2c3d"}
                                         inputProps={{maxLength:240}}
                                         label={"Fabricante"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
@@ -909,6 +943,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="date"
+                                        id={"c1c2c3e"}
+                                        name={"Fecha de Caducidad"}
                                         label={"Fecha de Caducidad"}
                                         value={props.dataComplemento.fechaCaducidad}
                                         InputLabelProps={{shrink: true,}}
@@ -928,6 +964,8 @@ function CrearConceptoSAT(props) {
                                     <FormControl className="input select" fullWidth variant="outlined">
                                         <TextField
                                             variant="outlined"
+                                            id={"c1c2c3f"}
+                                            name={"Lote Medicamento"}
                                             type="text"
                                             margin={"dense"}
                                             label={"Lote Medicamento"}
@@ -963,6 +1001,8 @@ function CrearConceptoSAT(props) {
                                         <TextField
                                             variant="outlined"
                                             className="form-control"
+                                            id={"c1c2c3g"}
+                                            name={"Forma Farmacéutica"}
                                             type="text"
                                             margin={"dense"}
                                             label="Forma Farmacéutica"
@@ -1005,6 +1045,8 @@ function CrearConceptoSAT(props) {
                                             className="form-control"
                                             type="text"
                                             margin={"dense"}
+                                            id={"c1c2c3h"}
+                                            name={"Condición Especial de Transporte"}
                                             label="Condición Especial de Transporte"
                                             aria-readonly={true}
                                             value={props.dataComplemento.condicionEspecial}
@@ -1030,6 +1072,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c1c3i"}
+                                        name={"Registro Sanitario/Folio de Autorización"}
                                         margin={"dense"}
                                         inputProps={{maxLength:15}}
                                         value={props.dataComplemento.regSanitario_folioAut}
@@ -1050,6 +1094,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c4j"}
+                                        name={"Número CAS"}
                                         margin={"dense"}
                                         inputProps={{maxLength:15}}
                                         value={props.dataComplemento.numCAS}
@@ -1070,6 +1116,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c5k"}
+                                        name={"Núm. Registro CICLOPLAFEST"}
                                         margin={"dense"}
                                         inputProps={{maxLength:60}}
                                         label={"Núm. Registro CICLOPLAFEST"}
@@ -1090,6 +1138,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c5l"}
+                                        name={"Datos de Fabricante"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1111,6 +1161,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c5m"}
+                                        name={"Datos del Formulador"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1132,6 +1184,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c5n"}
+                                        name={"Datos del Maquilador"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1153,6 +1207,8 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        id={"c5o"}
+                                        name={"Uso Autorizado"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
