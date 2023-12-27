@@ -231,8 +231,6 @@ function ComplementosSAT(props) {
                         row.esFarmaco=true
                         obtenerSATPaginado(1, 0,"c_SectorCOFEPRIS", row.sectorCOFEPRIS).then((respuesta) => {
                             row.descripcionSectorCOFEPRIS = respuesta.data[0].m_sDescripcion
-                            setDataComplemento(row)
-                            setOpenDialog(true)
                             if(row.sectorCOFEPRIS>=1 && row.sectorCOFEPRIS<=3){
                                 obtenerSATPaginado(1, 0,"c_FormaFarmaceutica", row.claveFormaFarmaceutica).then((respuesta) => {
                                     row.formaFarmaceutica = respuesta.data[0].m_sDescripcion

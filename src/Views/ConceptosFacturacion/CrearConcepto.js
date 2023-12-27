@@ -832,7 +832,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c2c5q"}
-                                        name={"Nombre del Ingrediente Activo"}
                                         margin={"dense"}
                                         value={props.dataComplemento.nombreIngredienteActivo}
                                         label={"Nombre del Ingrediente Activo"}
@@ -854,7 +853,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c2c4p"}
-                                        name={"Nombre Químico"}
                                         margin={"dense"}
                                         inputProps={{maxLength:150}}
                                         value={props.dataComplemento.nomQuimico}
@@ -880,7 +878,6 @@ function CrearConceptoSAT(props) {
                                         value={props.dataComplemento.denominacionGenerica}
                                         label={"Denominación Genérica"}
                                         className="clave1"
-                                        name={"Denominación Genérica"}
                                         id={"c1c3a"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
@@ -903,7 +900,6 @@ function CrearConceptoSAT(props) {
                                         inputProps={{maxLength:50}}
                                         value={props.dataComplemento.denominacionDistintiva}
                                         label={"Denominación Distintiva (marca)"}
-                                        name={"Denominación Distintiva"}
                                         onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
                                             return {
                                                 ...props.dataComplemento,
@@ -922,7 +918,6 @@ function CrearConceptoSAT(props) {
                                         type="text"
                                         margin={"dense"}
                                         value={props.dataComplemento.fabricante}
-                                        name={"Fabricante"}
                                         id={"c1c2c3d"}
                                         inputProps={{maxLength:240}}
                                         label={"Fabricante"}
@@ -944,7 +939,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="date"
                                         id={"c1c2c3e"}
-                                        name={"Fecha de Caducidad"}
                                         label={"Fecha de Caducidad"}
                                         value={props.dataComplemento.fechaCaducidad}
                                         InputLabelProps={{shrink: true,}}
@@ -965,7 +959,6 @@ function CrearConceptoSAT(props) {
                                         <TextField
                                             variant="outlined"
                                             id={"c1c2c3f"}
-                                            name={"Lote Medicamento"}
                                             type="text"
                                             margin={"dense"}
                                             label={"Lote Medicamento"}
@@ -1002,7 +995,6 @@ function CrearConceptoSAT(props) {
                                             variant="outlined"
                                             className="form-control"
                                             id={"c1c2c3g"}
-                                            name={"Forma Farmacéutica"}
                                             type="text"
                                             margin={"dense"}
                                             label="Forma Farmacéutica"
@@ -1016,7 +1008,6 @@ function CrearConceptoSAT(props) {
                                             type="button"
                                             fullWidth
                                             className="btn"
-                                            name={"esPeligroso"}
                                             style={{margin: "0px", backgroundColor:"darkgray"}}
                                             //disabled= {disableSeleccionar.disableFraccion}
                                             onClick={() => cargarDesdeServidor(pagina.page,20,6) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
@@ -1046,7 +1037,6 @@ function CrearConceptoSAT(props) {
                                             type="text"
                                             margin={"dense"}
                                             id={"c1c2c3h"}
-                                            name={"Condición Especial de Transporte"}
                                             label="Condición Especial de Transporte"
                                             aria-readonly={true}
                                             value={props.dataComplemento.condicionEspecial}
@@ -1073,7 +1063,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c1c3i"}
-                                        name={"Registro Sanitario/Folio de Autorización"}
                                         margin={"dense"}
                                         inputProps={{maxLength:15}}
                                         value={props.dataComplemento.regSanitario_folioAut}
@@ -1095,7 +1084,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c4j"}
-                                        name={"Número CAS"}
                                         margin={"dense"}
                                         inputProps={{maxLength:15}}
                                         value={props.dataComplemento.numCAS}
@@ -1117,7 +1105,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5k"}
-                                        name={"Núm. Registro CICLOPLAFEST"}
                                         margin={"dense"}
                                         inputProps={{maxLength:60}}
                                         label={"Núm. Registro CICLOPLAFEST"}
@@ -1139,7 +1126,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5l"}
-                                        name={"Datos de Fabricante"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1162,7 +1148,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5m"}
-                                        name={"Datos del Formulador"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1185,7 +1170,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5n"}
-                                        name={"Datos del Maquilador"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1208,7 +1192,6 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5o"}
-                                        name={"Uso Autorizado"}
                                         margin={"dense"}
                                         multiline
                                         style={{overflowY:"auto"}}
