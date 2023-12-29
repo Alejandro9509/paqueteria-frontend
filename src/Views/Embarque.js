@@ -1331,8 +1331,11 @@ function Embarque(props) {
             item.m_sClaveEmbalaje = item.claveEmbalaje
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
             item.m_xPeso = item.peso
+            item.nombreQuimico=item.nomQuimico
+            item.numeroCAS=item.numCAS
+            item.claveCondicionEspecial=item.claveCondicionesEspeciales
+            item.registroSanitario_folioAutorizacion=item.regSanitario_folioAut
         })
-
         const params = {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: state.idRecoleccion,
@@ -1821,7 +1824,6 @@ function Embarque(props) {
                     embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
                 }
             });
-
             setDataParaConsultarModificar(respuesta, false, "Modificar")
         });
     }
@@ -1874,6 +1876,27 @@ function Embarque(props) {
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
         })*/
+        respuesta.data.m_arrClsComplementoSAT.forEach((item)=>{
+            item.sectorCOFEPRIS=item.ClaveSectorCofepris
+            item.claveCondicionesEspeciales=item.CondicionesEspTransp
+            item.datosFabricante=item.DatosFabricante
+            item.datosFormulador=item.DatosFormulador
+            item.datosMaquilador=item.DatosMaquilador
+            item.denominacionGenerica=item.DenominacionGenericaProd
+            item.denominacionDistintiva=item.DenominacionDistintivaProd
+            item.fabricante=item.Fabricante
+            item.fechaCaducidad=item.FechaCaducidad
+            item.claveFormaFarmaceutica=item.FormaFarmaceutica
+            item.nombreIngredienteActivo=item.NombreIngredienteActivo
+            item.formaFarmaceutica=''
+            item.nomQuimico=item.NombreQuimico
+            item.loteMedicamento=item.LoteMedicamento
+            item.numRegSanPlagCOFEPRIS=item.NumRegSanPlagCOFEPRIS
+            item.numCAS=item.NumeroCAS
+            item.regSanitario_folioAut=item.RegistroSanitarioFolioAutorizacion
+            item.usoAutorizado=item.UsoAutorizado
+            item.esFarmaco=item.esFarmaco
+        })
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
 
         //CLIENTE
@@ -2145,6 +2168,26 @@ function Embarque(props) {
             item.embalajeSAT = item.m_sTipoEmbalaje
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
+            item.sectorCOFEPRIS=item.ClaveSectorCofepris
+            item.claveCondicionesEspeciales=item.CondicionesEspTransp
+            item.datosFabricante=item.DatosFabricante
+            item.datosFormulador=item.DatosFormulador
+            item.datosMaquilador=item.DatosMaquilador
+            item.denominacionGenerica=item.DenominacionGenericaProd
+            item.denominacionDistintiva=item.DenominacionDistintivaProd
+            item.fabricante=item.Fabricante
+            item.fechaCaducidad=item.FechaCaducidad
+            item.claveFormaFarmaceutica=item.FormaFarmaceutica
+            item.nombreIngredienteActivo=item.NombreIngredienteActivo
+            item.formaFarmaceutica=''
+            item.nomQuimico=item.NombreQuimico
+            item.loteMedicamento=item.LoteMedicamento
+            item.numRegSanPlagCOFEPRIS=item.NumRegSanPlagCOFEPRIS
+            item.numCAS=item.NumeroCAS
+            item.regSanitario_folioAut=item.RegistroSanitarioFolioAutorizacion
+            item.usoAutorizado=item.UsoAutorizado
+            item.esFarmaco=item.esFarmaco
+
         })
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
 
