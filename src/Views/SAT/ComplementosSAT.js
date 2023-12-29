@@ -63,6 +63,7 @@ function ComplementosSAT(props) {
         fraccionSAT:'',
         materialPeligrosoSAT:'',
         sectorCOFEPRIS:'',
+        descripcionSectorCOFEPRIS:'',
         formaFarmaceutica:'',
         claveFormaFarmaceutica:'',
         claveCondicionesEspeciales:'',
@@ -160,6 +161,7 @@ function ComplementosSAT(props) {
                     fraccionSAT:'',
                     materialPeligrosoSAT:'',
                     sectorCOFEPRIS: '',
+                    descripcionSectorCOFEPRIS:'',
                     denominacionGenerica:'',
                     denominacionDistintiva:'',
                     fabricante:'',
@@ -227,21 +229,22 @@ function ComplementosSAT(props) {
                     }
                     if(row.sectorCOFEPRIS && row.sectorCOFEPRIS>0){
                         row.esFarmaco=true
-                        if(row.sectorCOFEPRIS>=1 && row.sectorCOFEPRIS<=3){
-                        obtenerSATPaginado(1, 0,"c_FormaFarmaceutica", row.claveFormaFarmaceutica).then((respuesta) => {
-                            row.formaFarmaceutica = respuesta.data[0].m_sDescripcion
-                            obtenerSATPaginado(1, 0,"c_CondicionesEspeciales", row.claveCondicionesEspeciales).then((respuesta) => {
-                                row.condicionEspecial = respuesta.data[0].m_sDescripcion
-                                setDataComplemento(row)
+                        obtenerSATPaginado(1, 0,"c_SectorCOFEPRIS", row.sectorCOFEPRIS).then((respuesta) => {
+                            row.descripcionSectorCOFEPRIS = respuesta.data[0].m_sDescripcion
+                            if(row.sectorCOFEPRIS>=1 && row.sectorCOFEPRIS<=3){
+                                obtenerSATPaginado(1, 0,"c_FormaFarmaceutica", row.claveFormaFarmaceutica).then((respuesta) => {
+                                    row.formaFarmaceutica = respuesta.data[0].m_sDescripcion
+                                    obtenerSATPaginado(1, 0,"c_CondicionesEspeciales", row.claveCondicionesEspeciales).then((respuesta) => {
+                                        row.condicionEspecial = respuesta.data[0].m_sDescripcion
+                                        setDataComplemento(row)
+                                        setOpenDialog(true)
+                                    })
+                                })}
+                            else{
+                                 setDataComplemento(row)
                                 setOpenDialog(true)
-                            })
-                        })}
-                        else{
-                            setDataComplemento(row)
-                            setOpenDialog(true)
-                        }
-
-
+                            }
+                        })
                     }
                    if(!row.esFarmaco && !row.esPeligroso)
                     {
@@ -457,6 +460,15 @@ function ComplementosSAT(props) {
                 }
             })
         }
+        else if(idComplemento===9){
+            setDataComplemento(dataComplemento=>{
+                return{
+                    ...dataComplemento,
+                    sectorCOFEPRIS:data.m_sClaveSAT.toUpperCase(),
+                    descripcionSectorCOFEPRIS:data.m_sDescripcion
+                }
+            })
+        }
         else{
             if (data.target.name === "esPeligroso"){
                 setDataComplemento(dataComplemento =>{
@@ -551,70 +563,13 @@ function ComplementosSAT(props) {
             return
         }
         if(dataComplemento.esFarmaco){
-            if(dataComplemento.sectorCOFEPRIS==1){
-                if((!dataComplemento.denominacionGenerica || !dataComplemento.denominacionDistintiva || !dataComplemento.fabricante
-                || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
-                || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial
-                || !dataComplemento.regSanitario_folioAut)
-                ||
-                    (!dataComplemento.denominacionGenerica.length>0 || !dataComplemento.denominacionDistintiva.length>0 || !dataComplemento.fabricante.length>0
-                        || !dataComplemento.fechaCaducidad.length>0 || !dataComplemento.loteMedicamento.length>0 || !dataComplemento.claveFormaFarmaceutica.length>0
-                        || !dataComplemento.formaFarmaceutica.length>0 || !dataComplemento.claveCondicionesEspeciales.length>0 || !dataComplemento.condicionEspecial.length>0
-                        || !dataComplemento.regSanitario_folioAut.length>0)
-                )
-                {
-                    showSuccess("Se requiere rellenar los campos")
-                    return
-                }
+            if(!dataComplemento.sectorCOFEPRIS || !dataComplemento.sectorCOFEPRIS.length>0){
+                showSuccess("Se requiere seleccionar Categoría de Fármaco")
+                return;
             }
-            if(dataComplemento.sectorCOFEPRIS==2){
-                if((!dataComplemento.nombreIngredienteActivo || !dataComplemento.nomQuimico || !dataComplemento.fabricante
-                    || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
-                    || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial)
-                ||
-                    (!dataComplemento.nombreIngredienteActivo.length>0 || !dataComplemento.nomQuimico.length>0 || !dataComplemento.fabricante.length>0
-                        || !dataComplemento.fechaCaducidad.length>0 || !dataComplemento.loteMedicamento.length>0 || !dataComplemento.claveFormaFarmaceutica.length>0
-                        || !dataComplemento.formaFarmaceutica.length>0 || !dataComplemento.claveCondicionesEspeciales.length>0 || !dataComplemento.condicionEspecial.length>0)
-                )
-                {
-                    showSuccess("Se requiere rellenar los campos")
-                    return
-                }
-            }
-            if(dataComplemento.sectorCOFEPRIS==3){
-                if((!dataComplemento.denominacionGenerica || !dataComplemento.denominacionDistintiva || !dataComplemento.fabricante
-                    || !dataComplemento.fechaCaducidad || !dataComplemento.loteMedicamento || !dataComplemento.claveFormaFarmaceutica
-                    || !dataComplemento.formaFarmaceutica || !dataComplemento.claveCondicionesEspeciales || !dataComplemento.condicionEspecial
-                    || !dataComplemento.regSanitario_folioAut)
-
-                    || (!dataComplemento.denominacionGenerica.length>0 || !dataComplemento.denominacionDistintiva.length>0 || !dataComplemento.fabricante.length>0
-                    || !dataComplemento.fechaCaducidad.length>0 || !dataComplemento.loteMedicamento.length>0 || !dataComplemento.claveFormaFarmaceutica.length>0
-                    || !dataComplemento.formaFarmaceutica.length>0 || !dataComplemento.claveCondicionesEspeciales.length>0 || !dataComplemento.condicionEspecial.length>0
-                    || !dataComplemento.regSanitario_folioAut.length>0))
-                {
-                    showSuccess("Se requiere rellenar los campos")
-                    return
-                }
-            }
-            if(dataComplemento.sectorCOFEPRIS==4){
-                if((!dataComplemento.nomQuimico || !dataComplemento.numCAS)
-                    || (!dataComplemento.nomQuimico.length>0 || !dataComplemento.numCAS.length>0))
-                {
-                    showSuccess("Se requiere rellenar los campos")
-                    return
-                }
-            }
-            if(dataComplemento.sectorCOFEPRIS==5){
-                if((!dataComplemento.nombreIngredienteActivo || !dataComplemento.numRegSanPlagCOFEPRIS || !dataComplemento.datosFabricante
-                    || !dataComplemento.datosFormulador || !dataComplemento.datosMaquilador || !dataComplemento.usoAutorizado)
-                    ||
-                    (!dataComplemento.nombreIngredienteActivo.length>0 || !dataComplemento.numRegSanPlagCOFEPRIS.length>0 || !dataComplemento.datosFabricante.length>0
-                        || !dataComplemento.datosFormulador.length>0 || !dataComplemento.datosMaquilador.length>0 || !dataComplemento.usoAutorizado.length>0)
-                )
-                {
-                    showSuccess("Se requiere rellenar los campos")
-                    return
-                }
+            else{
+                if(!validarLlenadoTextBoxes(Number(dataComplemento.sectorCOFEPRIS)))
+                    return;
             }
         }
         if (dataComplemento.id === 0){
@@ -671,7 +626,28 @@ function ComplementosSAT(props) {
         dialogVisible(false)
 
     }
-
+    function validarLlenadoTextBoxes(numSector){
+        let flag=false
+        let lista=document.querySelectorAll("[id*=c" + numSector + "]");
+        let array=[...lista]
+        let index=0
+        let currentLabel=''
+        array.forEach(elemento=>{
+            index++
+            if(elemento.id.includes('label')){
+                currentLabel=elemento.innerHTML
+                return;
+            }
+            if(!elemento.id.includes('label') && elemento.value==''){
+                //showSuccess("Se requiere rellenar el campo de "+clave1.name.toLowerCase())
+                showSuccess("Se requiere rellenar el campo de "+currentLabel.toLowerCase())
+                flag=true
+                array.length=index+1;
+            }
+        })
+        if(flag){return false}
+        else{return true}
+    }
     function dialogVisible(isVisible){
         setOpenDialog(isVisible)
 

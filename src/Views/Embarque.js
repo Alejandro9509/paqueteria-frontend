@@ -1887,6 +1887,7 @@ function Embarque(props) {
             item.fabricante=item.Fabricante
             item.fechaCaducidad=item.FechaCaducidad
             item.claveFormaFarmaceutica=item.FormaFarmaceutica
+            item.nombreIngredienteActivo=item.NombreIngredienteActivo
             item.formaFarmaceutica=''
             item.nomQuimico=item.NombreQuimico
             item.loteMedicamento=item.LoteMedicamento
@@ -2177,6 +2178,7 @@ function Embarque(props) {
             item.fabricante=item.Fabricante
             item.fechaCaducidad=item.FechaCaducidad
             item.claveFormaFarmaceutica=item.FormaFarmaceutica
+            item.nombreIngredienteActivo=item.NombreIngredienteActivo
             item.formaFarmaceutica=''
             item.nomQuimico=item.NombreQuimico
             item.loteMedicamento=item.LoteMedicamento
