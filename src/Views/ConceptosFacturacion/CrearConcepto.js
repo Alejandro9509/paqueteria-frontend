@@ -815,9 +815,9 @@ function CrearConceptoSAT(props) {
                                     <Button
                                         type="button"
                                         fullWidth
-                                        className="btn"
+                                        className="btn btn-primary primary-btn"
                                         name={"sectorCOFEPRIS"}
-                                        style={{margin: "0px", backgroundColor:"darkgray"}}
+                                        style={{margin: "0px"}}
                                         //disabled= {disableSeleccionar.disableFraccion}
                                         onClick={() => cargarDesdeServidor(pagina.page,20,9) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                     >
@@ -1007,8 +1007,8 @@ function CrearConceptoSAT(props) {
                                         <Button
                                             type="button"
                                             fullWidth
-                                            className="btn"
-                                            style={{margin: "0px", backgroundColor:"darkgray"}}
+                                            className="btn btn-primary primary-btn"
+                                            style={{margin: "0px"}}
                                             //disabled= {disableSeleccionar.disableFraccion}
                                             onClick={() => cargarDesdeServidor(pagina.page,20,6) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                             >
@@ -1047,8 +1047,8 @@ function CrearConceptoSAT(props) {
                                         <Button
                                             type="button"
                                             fullWidth
-                                            className="btn"
-                                            style={{margin: "0px", backgroundColor:"darkgray"}}
+                                            className="btn btn-primary primary-btn"
+                                            style={{margin: "0px"}}
                                             //disabled= {disableSeleccionar.disableFraccion}
                                             onClick={() => cargarDesdeServidor(pagina.page,20,8) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                         >
