@@ -107,7 +107,25 @@ export default function PlantillasImportacionAgregar(props){
         "claveFraccionArancelaria": "",
         "usarNumeroEquivalenciaDestinatario": false,
         "usarNumeroEquivalenciaResponsablePago": false,
-        "referencia": ''
+        "referencia": '',
+        "EsFarmaco":'',
+        "ClaveSectorCofepris":'',
+        "NombreIngredienteActivo":'',
+        "NombreQuimico":'',
+        "DenominacionGenericaProd":'',
+        "DenominacionDistintivaProd":'',
+        "Fabricante":'',
+        "FechaCaducidad":'',
+        "LoteMedicamento":'',
+        "FormaFarmaceutica":'',
+        "CondicionesEspTransp":'',
+        "RegistroSanitarioFolioAutorizacion":'',
+        "NumeroCAS":'',
+        "NumRegSanPlagCOFEPRIS":'',
+        "DatosFabricante":'',
+        "DatosFormulador":'',
+        "DatosMaquilador":'',
+        "UsoAutorizado":'',
     })
     const restartState = () => {
         setState({
@@ -180,7 +198,25 @@ export default function PlantillasImportacionAgregar(props){
             "claveFraccionArancelaria": "",
             "usarNumeroEquivalenciaDestinatario": false,
             "usarNumeroEquivalenciaResponsablePago": false,
-            "referencia": ''
+            "referencia": '',
+            "EsFarmaco":'',
+            "ClaveSectorCofepris":'',
+            "NombreIngredienteActivo":'',
+            "NombreQuimico":'',
+            "DenominacionGenericaProd":'',
+            "DenominacionDistintivaProd":'',
+            "Fabricante":'',
+            "FechaCaducidad":'',
+            "LoteMedicamento":'',
+            "FormaFarmaceutica":'',
+            "CondicionesEspTransp":'',
+            "RegistroSanitarioFolioAutorizacion":'',
+            "NumeroCAS":'',
+            "NumRegSanPlagCOFEPRIS":'',
+            "DatosFabricante":'',
+            "DatosFormulador":'',
+            "DatosMaquilador":'',
+            "UsoAutorizado":'',
         })
         setFiles([])
     }
@@ -281,6 +317,24 @@ export default function PlantillasImportacionAgregar(props){
                 "responsablePago": state.responsablePago,
                 "usarNumeroEquivalenciaResponsablePago": state.usarNumeroEquivalenciaResponsablePago,
                 "referencia": state.referencia,
+                "esFarmaco":state.EsFarmaco,
+                "claveSectorCofepris":state.ClaveSectorCofepris,
+                "nombreIngredienteActivo":state.NombreIngredienteActivo,
+                "nombreQuimico":state.NombreQuimico,
+                "denominacionGenericaProd":state.DenominacionGenericaProd,
+                "denominacionDistintivaProd":state.DenominacionDistintivaProd,
+                "fabricante":state.Fabricante,
+                "fechaCaducidad":state.FechaCaducidad,
+                "loteMedicamento":state.LoteMedicamento,
+                "formaFarmaceutica":state.FormaFarmaceutica,
+                "condicionesEspTransp":state.CondicionesEspTransp,
+                "registroSanitarioFolioAutorizacion":state.RegistroSanitarioFolioAutorizacion,
+                "numeroCAS":state.NumeroCAS,
+                "numRegSanPlagCOFEPRIS":state.NumRegSanPlagCOFEPRIS,
+                "datosFabricante":state.DatosFabricante,
+                "datosFormulador":state.DatosFormulador,
+                "datosMaquilador":state.DatosMaquilador,
+                "usoAutorizado":state.UsoAutorizado,
             }
             if (state.idPlantilla > 0){
                 if (files.length === 0){
@@ -1099,6 +1153,186 @@ export default function PlantillasImportacionAgregar(props){
                                             margin="dense"
                                             name="claveFraccionArancelaria"
                                             value={state.claveFraccionArancelaria}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Es fármaco"
+                                            margin="dense"
+                                            name="EsFarmaco"
+                                            value={state.EsFarmaco}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Clave de Sector COFEPRIS"
+                                                   margin="dense"
+                                                   name="ClaveSectorCofepris"
+                                                   value={state.ClaveSectorCofepris}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Nombre de Ingrediente Activo"
+                                                   margin="dense"
+                                                   name="NombreIngredienteActivo"
+                                                   value={state.NombreIngredienteActivo}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Nombre Químico"
+                                                   margin="dense"
+                                                   name="NombreQuimico"
+                                                   value={state.NombreQuimico}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Denominación Genérica"
+                                                   margin="dense"
+                                                   name="DenominacionGenericaProd"
+                                                   value={state.DenominacionGenericaProd}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Denominación Distintiva"
+                                                   margin="dense"
+                                                   name="DenominacionDistintivaProd"
+                                                   value={state.DenominacionDistintivaProd}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Fabricante"
+                                                   margin="dense"
+                                                   name="Fabricante"
+                                                   value={state.Fabricante}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Fecha de Caducidad (dd/MM/AAAA o AAAA-MM-dd)"
+                                                   margin="dense"
+                                                   name="FechaCaducidad"
+                                                   value={state.FechaCaducidad}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Lote de Medicamento"
+                                                   margin="dense"
+                                                   name="LoteMedicamento"
+                                                   value={state.LoteMedicamento}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Clave de Forma Farmacéutica"
+                                                   margin="dense"
+                                                   name="FormaFarmaceutica"
+                                                   value={state.FormaFarmaceutica}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                                   variant="outlined"
+                                                   label="Clave de Condición Especial de Transporte"
+                                                   margin="dense"
+                                                   name="CondicionesEspTransp"
+                                                   value={state.CondicionesEspTransp}
+                                                   onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Registro Sanitario/Folio de Autorización"
+                                            margin="dense"
+                                            name="RegistroSanitarioFolioAutorizacion"
+                                            value={state.RegistroSanitarioFolioAutorizacion}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Número CAS"
+                                            margin="dense"
+                                            name="NumeroCAS"
+                                            value={state.NumeroCAS}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Núm. Registro CICLOPLAFEST"
+                                            margin="dense"
+                                            name="NumRegSanPlagCOFEPRIS"
+                                            value={state.NumRegSanPlagCOFEPRIS}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Datos del Fabricante"
+                                            margin="dense"
+                                            name="DatosFabricante"
+                                            value={state.DatosFabricante}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Datos del Formulador"
+                                            margin="dense"
+                                            name="DatosFormulador"
+                                            value={state.DatosFormulador}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Datos del Maquilador"
+                                            margin="dense"
+                                            name="DatosMaquilador"
+                                            value={state.DatosMaquilador}
+                                            onChange={handleOnChange}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={grid.COMPLEMENTOS}>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Uso Autorizado"
+                                            margin="dense"
+                                            name="UsoAutorizado"
+                                            value={state.UsoAutorizado}
                                             onChange={handleOnChange}
                                         />
                                     </Grid>
