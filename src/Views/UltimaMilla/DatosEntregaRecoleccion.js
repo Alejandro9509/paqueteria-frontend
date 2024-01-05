@@ -54,12 +54,12 @@ class DatosEntregaRecoleccion extends Component {
         this.setState({setOpenDialogEvidencia:openDialog})
 
     }
-    cargarImagenes(guia)
+    cargarImagenes()
     {
         this.setState({setOpenDialogEvidencia:true})
         if(this.state.imagenesCargadas)
             return
-            obtenerImagenEvidencia(this.props.data.m_nId,0).then(respuesta=>{
+            obtenerImagenEvidencia(this.props.data.m_nId,this.props.data.m_bEsRecoleccion).then(respuesta=>{
                 console.log(respuesta.data)
                 this.setState({
                     imagenesEvidencia:respuesta.data?respuesta.data:[],
@@ -128,7 +128,7 @@ class DatosEntregaRecoleccion extends Component {
                                                             imagenes={this.state.imagenesEvidencia}
                                                              />
                                                      }
-                                                <Button fullWidth variant="text" color="primary" onClick={() =>this.cargarImagenes(this.props)}>
+                                                <Button fullWidth variant="text" color="primary" onClick={() =>this.cargarImagenes()}>
                                                     Ver evidencias
                                                 </Button>
                                                 </Grid>
