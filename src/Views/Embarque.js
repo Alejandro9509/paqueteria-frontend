@@ -1888,7 +1888,6 @@ function Embarque(props) {
             item.fechaCaducidad=item.FechaCaducidad
             item.claveFormaFarmaceutica=item.FormaFarmaceutica
             item.nombreIngredienteActivo=item.NombreIngredienteActivo
-            item.formaFarmaceutica=''
             item.nomQuimico=item.NombreQuimico
             item.loteMedicamento=item.LoteMedicamento
             item.numRegSanPlagCOFEPRIS=item.NumRegSanPlagCOFEPRIS

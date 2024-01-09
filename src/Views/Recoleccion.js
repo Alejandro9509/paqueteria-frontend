@@ -986,7 +986,7 @@ function Recoleccion() {
                 item.m_xPeso = item.peso
                 item.nombreQuimico=item.nomQuimico
                 item.numeroCAS=item.numCAS
-                item.claveCondicionEspecial=item.CondicionesEspTransp
+                item.claveCondicionEspecial=item.claveCondicionesEspeciales
                 item.registroSanitario_folioAutorizacion=item.regSanitario_folioAut
             })
 
@@ -1467,7 +1467,6 @@ function Recoleccion() {
             item.fechaCaducidad=item.FechaCaducidad
             item.claveFormaFarmaceutica=item.FormaFarmaceutica
             item.nombreIngredienteActivo=item.NombreIngredienteActivo
-            item.formaFarmaceutica=''
             item.nomQuimico=item.NombreQuimico
             item.loteMedicamento=item.LoteMedicamento
             item.numRegSanPlagCOFEPRIS=item.NumRegSanPlagCOFEPRIS
