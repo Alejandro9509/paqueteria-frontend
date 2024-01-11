@@ -108,10 +108,15 @@ function ImportarEmbarques(props) {
                     console.log(params)
                     validarEmbarquesImportados(params).then(respuesta => {
                         console.log(respuesta.data)
-                        setState({
-                            ...state,
-                            embarques: respuesta.data
-                        })
+                        if(typeof respuesta.data==="string"){
+                            showSuccess(respuesta.data)
+                        }
+                        else {
+                            setState({
+                                ...state,
+                                embarques: respuesta.data
+                            })
+                        }
                     }).catch((error)=>{
                         // showMessage(err,2000,"warning")
                         console.log('error al validar: ' + error)
