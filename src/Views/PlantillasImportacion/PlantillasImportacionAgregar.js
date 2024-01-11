@@ -321,8 +321,8 @@ export default function PlantillasImportacionAgregar(props){
                 "claveSectorCofepris":state.claveSectorCofepris,
                 "nombreIngredienteActivo":state.nombreIngredienteActivo,
                 "nombreQuimico":state.nombreQuimico,
-                "denominacionGenericaProd":state.nenominacionGenericaProd,
-                "denominacionDistintivaProd":state.DenominacionDistintivaProd,
+                "denominacionGenericaProd":state.denominacionGenericaProd,
+                "denominacionDistintivaProd":state.denominacionDistintivaProd,
                 "fabricante":state.fabricante,
                 "fechaCaducidad":state.fechaCaducidad,
                 "loteMedicamento":state.loteMedicamento,
@@ -349,6 +349,7 @@ export default function PlantillasImportacionAgregar(props){
                 params.archivoNombre = files[0].filenameWithoutExtension
             }
             console.log(params)
+            return
             if (props.value === null){
                 agregarPlantillaImportacion(params).then(respuesta => {
                     showSuccess(respuesta.data.message)
