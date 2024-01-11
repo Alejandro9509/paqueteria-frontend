@@ -253,7 +253,7 @@ class AgregarViaje extends Component {
                             m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
                             m_sCodigo: this.props.select.m_sCodigoRemolque1,
                             EstatusUnidad: this.props.select.m_sEstatusRemolque1,
-    
+
                         } : null,
                         placasRemolque1: this.props.select.m_sPlacasRemolque1,
                         colorRemolque1: this.props.select.m_sColorRemolque1,
@@ -282,7 +282,7 @@ class AgregarViaje extends Component {
                             m_sCodigo: this.props.select.m_sCodigoUnidad,
                             m_sDescripcion: this.props.select.m_sDescripcionUnidad,
                             EstatusUnidad: this.props.select.m_sEstatusUnidad,
-    
+
                         },
                         placaIntUnidad: this.props.select.m_sPlacasUnidad,
                         estatusUnidad: this.props.select.m_sEstatusUnidad,
@@ -306,7 +306,7 @@ class AgregarViaje extends Component {
                         dollySelect:this.props.select.m_nIdDolly?true:false,
                         Remolque2Select:this.props.select.m_nIdRemolque2?true:false,
                         trayectos: data
-    
+
                     }
                 })
             })
@@ -2101,7 +2101,7 @@ class AgregarViaje extends Component {
                                     </div>
 
                                     <br/>
-                                    <ProgressBarCubicaje value={this.state.utilizacion}>{this.state.utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${this.state.utilizacion}%`}</ProgressBarCubicaje>
+                                    <ProgressBarCubicaje value={this.state.utilizacion}>Espacio de carga usado: {this.state.utilizacion}%</ProgressBarCubicaje>
                                 </div>
 
                                 {/*<div className={"row"}>

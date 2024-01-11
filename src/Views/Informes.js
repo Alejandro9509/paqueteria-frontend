@@ -96,8 +96,6 @@ function showSuccess(mensaje) {
         timeout: "8000",
     }).show();
 }
-
-
 const styles = {
     seleccionado: {
         backgroundColor: "#FCC88F",
@@ -148,7 +146,7 @@ function Informes({history}) {
     //     }
     //
     // }, [])
-    
+
     function confirmExit()
     {
 
@@ -584,6 +582,7 @@ function Informes({history}) {
             }
         })
         setDataGuias([])
+        setUtilizacion(0)
     }
 
     /* const getCurrentDateTime = () => {
@@ -749,7 +748,7 @@ function Informes({history}) {
         const newGuia = [...dataGuiasSeleccionadas];
         console.log(newGuia)
         var params = {
-            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque1: newValue?.m_nIdUnidad ?? null,
             idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
             guias: newGuia
         }
@@ -775,7 +774,7 @@ function Informes({history}) {
         console.log(newGuia)
         var params = {
             idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
-            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            idRemolque2: newValue?.m_nIdUnidad ?? null,
             guias: newGuia
         }
         console.log("Cubicar")
@@ -988,9 +987,9 @@ function Informes({history}) {
         if( detectarModificaciones){
             console.log("disprosio")
            // console.log(remitente)
-           
+
             window.onbeforeunload = confirmExit
-           
+
         }
     }, [state])
     const handleShowCubicar = () => {
