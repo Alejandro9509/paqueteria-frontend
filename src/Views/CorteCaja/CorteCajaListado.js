@@ -91,6 +91,7 @@ function CorteCajaListado({onRowClick, value}){
             let hora = getCurrentTime()
             if (data.length === 0) {
                 showError("No se encontró un formato para el reporte solicitado. Comuniquese con las oficinas de GM.")
+                return
             }
             imprimirFormatosIdCorteCajaGeneral(data[data.length -1].m_nIdFormato, fecha,hora).then((respuesta) => { //poner aqui el id de Embarque
                 let pdfWindow = window.open("");
