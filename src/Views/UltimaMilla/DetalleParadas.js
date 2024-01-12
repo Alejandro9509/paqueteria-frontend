@@ -66,6 +66,10 @@ import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 import {getAddressFormated, validarDerecho} from "../../Util/Util";
 import moment from "moment/moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    imprimirFormatosIdIdTipoReporte,
+    obtenerFormatosImpresionProceso
+} from "../../Util/Contexts/FormatosImpresionContext";
 
 
 function showError(mensaje) {
@@ -517,17 +521,39 @@ class DetalleParadas extends Component {
 
 
     }
-    generarReporte(e, id) {
+    generarReporte(e, dataParada) {
         e.preventDefault()
-        console.log(' id: ' + id)
-        obtenerUltimaMillaReporte(id).then(({data}) => {
+        // console.log('data: ' + dataParada.m_nIdParadaUltimaMilla)
+        // this.setState({
+        //     seleccion:dataParada.m_nIdParadaUltimaMilla,
+        //     openDialog:true,
+        //     tipoReporte:REPORTE_INFORME_ULTIMAMILLA,
+        //     mensajeTitulo:"Última Milla"
+        // })
+        obtenerFormatosImpresionProceso(215).then(({data}) => {
+            // this.setState({
+            //     dataReportes:data
+            // })
+            if (data.length === 0) {
+                showError("No se encontró un formato para el reporte solicitado. Comuniquese con las oficinas de GM.")
+                return
+            }
+            imprimirFormatosIdIdTipoReporte(data[data.length-1].m_nIdFormato, dataParada.m_nIdParadaUltimaMilla).then((respuesta) => {
+                console.log(respuesta.data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Última Milla " + dataParada.m_nIdUltimaMilla;
+            })
+        })
+        /*obtenerUltimaMillaReporte(id).then(({data}) => {
             // console.log(data)
             // debugger
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Última Milla";
-        })
+        })*/
     }
     validarRutasCompletadas(tour){
         return tour.m_arrClsProGuia.some(g=> g.m_sEstatusUltimaMilla == "Completado")
@@ -831,9 +857,11 @@ class DetalleParadas extends Component {
                                                             </Grid>
                                                             <Grid item sm={1}
                                                             >
-                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
-                                                                    <InsertDriveFile fontSize={"large"}/>
-                                                                </IconButton>
+                                                                <Tooltip title="Reporte">
+                                                                    <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour)}>
+                                                                        <InsertDriveFile fontSize={"large"}/>
+                                                                    </IconButton>
+                                                                </Tooltip>
                                                             </Grid>
 
                                                                 <Grid item sm={2}>
