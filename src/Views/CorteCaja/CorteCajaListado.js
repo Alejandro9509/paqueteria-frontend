@@ -9,6 +9,22 @@ import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import * as XLSX from "xlsx";
+import {
+    imprimirFormatosIdCorteCajaGeneral,
+    imprimirFormatosIdIdTipoReporte,
+    obtenerFormatosImpresionProceso
+} from "../../Util/Contexts/FormatosImpresionContext";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select
+} from "@material-ui/core";
 
 window.jQuery = window.$ = $;
 
@@ -21,6 +37,14 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
 
 function CorteCajaListado({onRowClick, value}){
     const [listaCortes, setListaCortes] = useState([])
@@ -30,11 +54,23 @@ function CorteCajaListado({onRowClick, value}){
         usuario: null,
         busquedaPorUsuario: false
     })
+    const [openDialog, setOpenDialog] = useState(false)
+    const [dataReportes, setDataReportes] = useState([])
+    const [state, setState] = useState({
+        reporteSeleccionado: null
+
+    })
 
     useEffect(value => {
         getAllCortes()
     }, [])
 
+    // useEffect(() => {
+    //
+    //     // obtenerFormatosImpresionProceso(220).then(({data}) => {
+    //     //     setDataReportes(data)
+    //     // })
+    // }, [])
     useEffect(() => {
         if (value.listadoCortes) {
             setListaCortes(value.listadoCortes)
@@ -72,12 +108,9 @@ function CorteCajaListado({onRowClick, value}){
         onRowClick(selectedItem, action)
     };
 
-
-    const handleReportGeneralClick = () => {
-        let fecha = filtros.fecha
-        let hora = getCurrentTime()
-        let dateTime = fecha + ' ' + hora
-        obtenerCortesGeneralReporte(dateTime)
+    const handleReportGeneralClickOpcion1 = () => {
+        let fecha = filtros.fecha + " " + getCurrentTime()
+        obtenerCortesGeneralReporte(fecha)
             .then(({data}) => {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
@@ -94,6 +127,102 @@ function CorteCajaListado({onRowClick, value}){
                 showSuccess(err.toString())
             })
     };
+    const handleReportGeneralClick = () => {
+        // setOpenDialog(true)
+        /*let fecha = filtros.fecha
+        obtenerCortesGeneralReporte(fecha)
+            .then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "REPORTE " + fecha;
+
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "REPORTE " + fecha);
+                document.body.appendChild(link);
+                link.click();
+            })
+            .catch((err) => {
+                showSuccess(err.toString())
+            })*/
+        obtenerFormatosImpresionProceso(220).then(({data}) => {
+            // setDataReportes(data)
+            // setState({
+            //     ...state,
+            //     reporteSeleccionado: data[data.length -1].m_nIdFormato
+            // })
+            let fecha = filtros.fecha
+            let hora = getCurrentTime()
+            if (data.length === 0) {
+                showError("No se encontró un formato para el reporte solicitado. Comuniquese con las oficinas de GM.")
+            }
+            imprimirFormatosIdCorteCajaGeneral(data[data.length -1].m_nIdFormato, fecha,hora).then((respuesta) => { //poner aqui el id de Embarque
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "REPORTE " + fecha;
+
+                try{
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + respuesta.data.m_sArchivo;
+                    link.setAttribute('download', "REPORTE " + fecha);
+                    document.body.appendChild(link);
+                    link.click();
+                }catch (e) {
+                    console.log(e)
+                    showSuccess("No se pudo descargar el pdf")
+                }
+            }).catch((err) => {
+                showError(err.toString())
+            })
+        })
+    };
+
+    const handleOnChangeReporte = (data) => {
+        console.log(data)
+        setState({
+            ...state,
+            reporteSeleccionado: data
+        })
+    }
+    const handleGenerarReporte = (e) => {
+        e.preventDefault()
+        // console.log(state.reporteSeleccionado)
+        // let fecha = filtros.fecha
+        // let hora = getCurrentTime()
+        // if (state.reporteSeleccionado.length === 0) {
+        //     showError("Es necesario seleccionar al menos un reporte")
+        //     return
+        // }
+
+        // imprimirFormatosIdCorteCajaGeneral(state.reporteSeleccionado, fecha,hora).then(({data}) => { //poner aqui el id de Embarque
+        //     console.log(data)
+        //     let pdfWindow = window.open("");
+        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //     pdfWindow.document.body.style.margin = "0px";
+        //     pdfWindow.document.title = "REPORTE " + fecha;
+        //
+        //     try{
+        //         const link = document.createElement('a');
+        //         link.href = "data:application/pdf;base64," + data.m_sArchivo;
+        //         link.setAttribute('download', "REPORTE " + fecha);
+        //         document.body.appendChild(link);
+        //         link.click();
+        //     }catch (e) {
+        //         console.log(e)
+        //         showSuccess("No se pudo descargar el pdf")
+        //     }
+        // }).catch((err) => {
+        //     showError(err.toString())
+        // })
+        // setState({
+        //     ...state,
+        //     reporteSeleccionado: null
+        // })
+        // setOpenDialog(false)
+    }
+
 
     function totalSum(items) {
         return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
@@ -203,7 +332,71 @@ function CorteCajaListado({onRowClick, value}){
 
         return(
         <div>
-            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick} onExcelClick={handleExcelClick}/>
+            {
+                openDialog &&
+                <Dialog
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                    fullWidth maxWidth="md"
+                >
+                    <DialogTitle>
+                        Reporte de Corte de Caja General
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <form onSubmit={handleGenerarReporte}>
+                                <Grid container spacing={1}>
+                                    <Grid item sm={6}>
+                                        <FormControl
+                                            className="input select"
+                                            fullWidth variant="outlined"
+                                            required
+                                            margin="dense">
+                                            <InputLabel
+                                                id="idReporteLabel">Formato de Reporte</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="idReporteLabel"
+                                                label="Reporte"
+                                                className="form-control"
+                                                value={state.reporteSeleccionado ?? ''}
+                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
+                                                name="reporteSeleccionado"
+                                            >
+                                                {dataReportes.map((reporte) => (
+                                                    <MenuItem
+                                                        key={reporte.m_nIdFormato}
+                                                        value={reporte.m_nIdFormato}
+                                                    >
+                                                        {reporte.m_sFormato}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <DialogActions>
+
+                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                        setOpenDialog(false)
+                                        setState({
+                                            ...state,
+                                            reporteSeleccionado: null
+                                        })
+                                    }
+                                    }>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                        Aceptar
+                                    </button>
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            }
+            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick} onExcelClick={handleExcelClick} onReportClickOpcion1={handleReportGeneralClickOpcion1}/>
             <TableCortesCaja data={listaCortes} onRowClick={handleRowClick}/>
         </div>
     )
