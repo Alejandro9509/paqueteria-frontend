@@ -1658,12 +1658,12 @@ function Informes({history}) {
                             </a>
                         </li>
 
-                        <li>
-                            <a onClick={handleShowCubicar}
+                        {/*<li>
+                            <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}
                                className={validarDerecho(9101437) ? "" : classes.disabled}>
-                                <i className="fa fa-list"/> Cubicar / Optimizar Rutas
+                                <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
                             </a>
-                        </li>
+                        </li>*/}
                     </ul>
 
                     <div className="tab-content">
