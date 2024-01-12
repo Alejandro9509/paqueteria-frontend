@@ -607,28 +607,29 @@ class DetalleParadas extends Component {
 
 
     }
-    generarReporteOpcion1(e, dataTour) {
-        obtenerUltimaMillaReporte(dataTour.m_nIdParadaUltimaMilla).then(({data}) => {
-            // console.log(data)
-            // debugger
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Última Milla";
-        })
-    }
-    generarReporte(e, data) {
+    generarReporte(e, dataParada) {
         e.preventDefault()
-        console.log('data: ' + data)
-        this.setState({
-            seleccion:data,
-            openDialog:true,
-            tipoReporte:REPORTE_INFORME_ULTIMAMILLA,
-            mensajeTitulo:"Última Milla"
-        })
+        // console.log('data: ' + dataParada.m_nIdParadaUltimaMilla)
+        // this.setState({
+        //     seleccion:dataParada.m_nIdParadaUltimaMilla,
+        //     openDialog:true,
+        //     tipoReporte:REPORTE_INFORME_ULTIMAMILLA,
+        //     mensajeTitulo:"Última Milla"
+        // })
         obtenerFormatosImpresionProceso(215).then(({data}) => {
-            this.setState({
-                dataReportes:data
+            // this.setState({
+            //     dataReportes:data
+            // })
+            if (data.length === 0) {
+                showError("No se encontró un formato para el reporte solicitado. Comuniquese con las oficinas de GM.")
+                return
+            }
+            imprimirFormatosIdIdTipoReporte(data[data.length-1].m_nIdFormato, dataParada.m_nIdParadaUltimaMilla).then((respuesta) => {
+                console.log(respuesta.data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Última Milla" + this.state.seleccion.m_nIdUltimaMilla;
             })
         })
         /*obtenerUltimaMillaReporte(id).then(({data}) => {
@@ -1056,12 +1057,7 @@ class DetalleParadas extends Component {
                                                             </Grid>
                                                             <Grid item sm={1}
                                                             >
-                                                                <Tooltip title="Reporte opción 1">
-                                                                    <IconButton aria-label="file" onClick={(e) => this.generarReporteOpcion1(e,tour)}>
-                                                                        <InsertDriveFile fontSize={"large"}/>
-                                                                    </IconButton>
-                                                                </Tooltip>
-                                                                <Tooltip title="Reporte opción 2">
+                                                                <Tooltip title="Reporte">
                                                                     <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour)}>
                                                                         <InsertDriveFile fontSize={"large"}/>
                                                                     </IconButton>
