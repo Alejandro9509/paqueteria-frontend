@@ -543,7 +543,7 @@ class DetalleParadas extends Component {
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "Última Milla" + this.state.seleccion.m_nIdUltimaMilla;
+                pdfWindow.document.title = "Última Milla " + dataParada.m_nIdUltimaMilla;
             })
         })
         /*obtenerUltimaMillaReporte(id).then(({data}) => {
