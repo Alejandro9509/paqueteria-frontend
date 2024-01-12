@@ -26,6 +26,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {confirmAlert} from "react-confirm-alert";
+import Tooltip from "@material-ui/core/Tooltip";
+import {showSuccess} from "../../Util/Util";
 import AgregarRemolques from "./AgregarRemolques";
 import ProgressBarCubicaje from "../Viajes/ProgressBarCubicaje";
 
@@ -223,8 +225,9 @@ class UnidadesList extends Component {
                                         <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
                                         <TableCell align="left"><ProgressBarCubicaje
                                             value={u.utilizacion || 0}>{u.utilizacion?.toFixed(0) || 0}%</ProgressBarCubicaje></TableCell>
-                                        <TableCell align="left">{<Link style={{cursor: "pointer"}}
-                                                                       onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
+                                        <Tooltip title={u.ocupado?"En Ruta":""}>
+                                        <TableCell align="left">{<Link style={{cursor: "pointer",color:u.ocupado?"gray":''}}
+                                                                       onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell></Tooltip>
                                         <TableCell align="left">{u.m_sPlacas}</TableCell>
                                     </TableRow>)
                             })}
