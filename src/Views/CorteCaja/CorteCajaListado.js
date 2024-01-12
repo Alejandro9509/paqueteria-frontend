@@ -65,12 +65,12 @@ function CorteCajaListado({onRowClick, value}){
         getAllCortes()
     }, [])
 
-    useEffect(() => {
-
-        obtenerFormatosImpresionProceso(220).then(({data}) => {
-            setDataReportes(data)
-        })
-    }, [])
+    // useEffect(() => {
+    //
+    //     // obtenerFormatosImpresionProceso(220).then(({data}) => {
+    //     //     setDataReportes(data)
+    //     // })
+    // }, [])
     useEffect(() => {
         if (value.listadoCortes) {
             setListaCortes(value.listadoCortes)
@@ -128,7 +128,7 @@ function CorteCajaListado({onRowClick, value}){
             })
     };
     const handleReportGeneralClick = () => {
-        setOpenDialog(true)
+        // setOpenDialog(true)
         /*let fecha = filtros.fecha
         obtenerCortesGeneralReporte(fecha)
             .then(({data}) => {
@@ -146,7 +146,39 @@ function CorteCajaListado({onRowClick, value}){
             .catch((err) => {
                 showSuccess(err.toString())
             })*/
+        obtenerFormatosImpresionProceso(220).then(({data}) => {
+            // setDataReportes(data)
+            // setState({
+            //     ...state,
+            //     reporteSeleccionado: data[data.length -1].m_nIdFormato
+            // })
+            let fecha = filtros.fecha
+            let hora = getCurrentTime()
+            if (data.length === 0) {
+                showError("No se encontró un formato para el reporte solicitado. Comuniquese con las oficinas de GM.")
+            }
+            imprimirFormatosIdCorteCajaGeneral(data[data.length -1].m_nIdFormato, fecha,hora).then((respuesta) => { //poner aqui el id de Embarque
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "REPORTE " + fecha;
+
+                try{
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + respuesta.data.m_sArchivo;
+                    link.setAttribute('download', "REPORTE " + fecha);
+                    document.body.appendChild(link);
+                    link.click();
+                }catch (e) {
+                    console.log(e)
+                    showSuccess("No se pudo descargar el pdf")
+                }
+            }).catch((err) => {
+                showError(err.toString())
+            })
+        })
     };
+
     const handleOnChangeReporte = (data) => {
         console.log(data)
         setState({
@@ -156,39 +188,39 @@ function CorteCajaListado({onRowClick, value}){
     }
     const handleGenerarReporte = (e) => {
         e.preventDefault()
-        console.log(state.reporteSeleccionado)
-        let fecha = filtros.fecha
-        let hora = getCurrentTime()
-        if (state.reporteSeleccionado.length === 0) {
-            showError("Es necesario seleccionar al menos un reporte")
-            return
-        }
+        // console.log(state.reporteSeleccionado)
+        // let fecha = filtros.fecha
+        // let hora = getCurrentTime()
+        // if (state.reporteSeleccionado.length === 0) {
+        //     showError("Es necesario seleccionar al menos un reporte")
+        //     return
+        // }
 
-        imprimirFormatosIdCorteCajaGeneral(state.reporteSeleccionado, fecha,hora).then(({data}) => { //poner aqui el id de Embarque
-            console.log(data)
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "REPORTE " + fecha;
-
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data.m_sArchivo;
-                link.setAttribute('download', "REPORTE " + fecha);
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo descargar el pdf")
-            }
-        }).catch((err) => {
-            showError(err.toString())
-        })
-        setState({
-            ...state,
-            reporteSeleccionado: null
-        })
-        setOpenDialog(false)
+        // imprimirFormatosIdCorteCajaGeneral(state.reporteSeleccionado, fecha,hora).then(({data}) => { //poner aqui el id de Embarque
+        //     console.log(data)
+        //     let pdfWindow = window.open("");
+        //     pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+        //     pdfWindow.document.body.style.margin = "0px";
+        //     pdfWindow.document.title = "REPORTE " + fecha;
+        //
+        //     try{
+        //         const link = document.createElement('a');
+        //         link.href = "data:application/pdf;base64," + data.m_sArchivo;
+        //         link.setAttribute('download', "REPORTE " + fecha);
+        //         document.body.appendChild(link);
+        //         link.click();
+        //     }catch (e) {
+        //         console.log(e)
+        //         showSuccess("No se pudo descargar el pdf")
+        //     }
+        // }).catch((err) => {
+        //     showError(err.toString())
+        // })
+        // setState({
+        //     ...state,
+        //     reporteSeleccionado: null
+        // })
+        // setOpenDialog(false)
     }
 
 
