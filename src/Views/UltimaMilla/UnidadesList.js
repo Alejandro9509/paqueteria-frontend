@@ -229,8 +229,8 @@ class UnidadesList extends Component {
                                             <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
 
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
-                                            <Tooltip title={u.Ocupado===1?"En Ruta":""}><TableCell align="left">{
-                                                <Link style={{cursor:"pointer",color:u.Ocupado===1?"gray":''}} onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell></Tooltip>
+                                            <Tooltip title={u.ocupado?"En Ruta":""}><TableCell align="left">{
+                                                <Link style={{cursor:"pointer",color:u.ocupado?"gray":''}} onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell></Tooltip>
                                             <TableCell align="left">{u.m_sPlacas}</TableCell>
                                         </TableRow>
                                     )

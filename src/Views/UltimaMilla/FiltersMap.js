@@ -694,7 +694,7 @@ class FiltersMap extends Component {
                                 }}
                                 disabled={(this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))) && !validarDerecho(9101447)}
                                 onClick={() => {
-                                    if(this.state.unidadesSeleccionadas.length>0 && this.state.unidadesSeleccionadas.at(0).Ocupado===1) {
+                                    if(this.state.unidadesSeleccionadas.length>0 && this.state.unidadesSeleccionadas.at(0).ocupado) {
                                         showSuccess(" La unidad seleccionada cuenta con un chofer en ruta, favor de cambiar operador")
                                         return;
                                     }
