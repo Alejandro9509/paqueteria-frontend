@@ -631,6 +631,7 @@ function Informes({history}) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    $.mostrarMensaje=false
                     handleShowListado()
                 })
                 .catch((err) => {
@@ -646,6 +647,7 @@ function Informes({history}) {
                         console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
+                        $.mostrarMensaje=false
                         handleShowListado()
                     }
 
@@ -834,6 +836,8 @@ function Informes({history}) {
         cancelarInformes(state.IdInforme, params).then((respuesta) => {
             console.log(respuesta.data);
             showSuccess(respuesta.data)
+            setDetectar(false)
+            $.mostrarMensaje=false
             handleShowListado()
         });
     };
@@ -962,8 +966,19 @@ function Informes({history}) {
 
         }
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
-
+    const clickCancelar=()=>{
+        $.mostrarMensaje=false
+        handleShowListado()
+    }
     const handleShowListado = () => {
+        if($.mostrarMensaje===true) {
+            if (window.onbeforeunload) {
+                let confirmarSalida = window.confirm("¿Desea regresar al listado? Hay cambios sin guardar")
+                if (!confirmarSalida) {
+                    return
+                }
+            }
+        }
         setDetectar(false)
         window.onbeforeunload={}
         getDataParaListado()
@@ -987,12 +1002,23 @@ function Informes({history}) {
         if( detectarModificaciones){
             console.log("disprosio")
            // console.log(remitente)
-
+           $.mostrarMensaje=true
             window.onbeforeunload = confirmExit
+
 
         }
     }, [state])
     const handleShowCubicar = () => {
+        if($.mostrarMensaje===true){
+            if (window.onbeforeunload) {
+                let confirmarSalida = window.confirm("¿Desea salir de la pestaña actual? Hay cambios sin guardar")
+                if (!confirmarSalida) {
+                    return
+                }
+            }
+        }
+        $.mostrarMensaje=false
+        setDetectar(false)
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(4).addClass('active');
@@ -2143,7 +2169,7 @@ function Informes({history}) {
                                             <Button
                                                 fullWidth
                                                 type="button"
-                                                onClick={handleShowListado}
+                                                onClick={clickCancelar}
                                                 className="btn btn-secondary secondary-btn"
                                                 disabled={!validarDerecho(9101436)}
                                             >
