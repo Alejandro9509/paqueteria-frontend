@@ -73,12 +73,12 @@ function CorteCaja() {
         getAllCortes()
     }, [])
 
-    useEffect(() => {
-
-        obtenerFormatosImpresionProceso(219).then(({data}) => {
-            setDataReportes(data)
-        })
-    }, [])
+    // useEffect(() => {
+    //
+    //     obtenerFormatosImpresionProceso(219).then(({data}) => {
+    //         setDataReportes(data)
+    //     })
+    // }, [])
 
     const getAllCortes = () => {
         obtenerCortes().then(({data}) => {
@@ -202,9 +202,9 @@ function CorteCaja() {
         if (action === 'REPORTE_CORTE') {
 
 
-            setSeleccion(selectedItem)
-            console.log(selectedItem)
-            setOpenDialog(true)
+            // setSeleccion(selectedItem)
+            // console.log(selectedItem)
+            // setOpenDialog(true)
 
             /* obtenerCorteReporte(selectedItem.idCorte)
                 .then(({data}) => {
@@ -223,6 +223,33 @@ function CorteCaja() {
                     showSuccess(err.toString())
                 })
         }*/
+            obtenerFormatosImpresionProceso(219).then(({data}) => {
+                // setDataReportes(data)
+                if (data.length === 0) {
+                    showError("No se encontró un formato para el reporte solicitado. Comuniquese con las oficinas de GM.")
+                    return
+                }
+                imprimirFormatosIdIdTipoReporte(data[data.length-1].m_nIdFormato, selectedItem.idCorte).then((respuesta) => { //poner aqui el id de Embarque
+                    console.log(respuesta.data)
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "CORTE " + selectedItem.idCorte;
+
+                    try{
+                        const link = document.createElement('a');
+                        link.href = "data:application/pdf;base64," + respuesta.data.m_sArchivo;
+                        link.setAttribute('download', "CORTE " + selectedItem.idCorte);
+                        document.body.appendChild(link);
+                        link.click();
+                    }catch (e) {
+                        console.log(e)
+                        showSuccess("No se pudo descargar el pdf")
+                    }
+                }).catch((err) => {
+                    showError(err.toString())
+                })
+            })
         }
     }
 
@@ -238,10 +265,10 @@ function CorteCaja() {
             console.log(state.reporteSeleccionado)
             console.log(seleccion)
 
-            if (state.reporteSeleccionado.length === 0) {
-                showError("Es necesario seleccionar al menos un reporte")
-                return
-            }
+            // if (state.reporteSeleccionado.length === 0) {
+            //     showError("Es necesario seleccionar al menos un reporte")
+            //     return
+            // }
 
             imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.idCorte).then(({data}) => { //poner aqui el id de Embarque
                 console.log(data)
