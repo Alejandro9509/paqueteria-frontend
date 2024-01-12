@@ -52,6 +52,7 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
         }
     });
 
+
     const handleReportClick = () => {
         onReportClick()
     };

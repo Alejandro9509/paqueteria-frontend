@@ -31,7 +31,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
     const ACTIONS = {
         MODIFICAR: 'MODIFICAR',
         CONSULTAR: 'CONSULTAR',
-        REPORTE_CORTE: 'REPORTE_CORTE',
+        REPORTE_CORTE: 'REPORTE_CORTE'
     }
 
     const handleRowClick = (selectedItem, action) => {
@@ -91,7 +91,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                                 <EditIcon />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Descargar reporte">
+                        <Tooltip title="Descargar reporte opción 2">
                             <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.REPORTE_CORTE)}>
                                 <InsertDriveFileIcon />
                             </IconButton>

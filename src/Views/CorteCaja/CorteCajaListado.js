@@ -2,13 +2,16 @@ import React, {Component, useEffect, useMemo, useState} from 'react'
 import $ from "jquery";
 import Noty from "noty";
 import {
-    eliminarCorte,
     obtenerCortesByFiltros, obtenerCortesGeneralReporte
 } from "../../Util/Contexts/CorteCajaContext";
 import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import * as XLSX from "xlsx";
+import {
+    imprimirFormatosIdCorteCajaGeneral,
+    obtenerFormatosImpresionProceso
+} from "../../Util/Contexts/FormatosImpresionContext";
 
 window.jQuery = window.$ = $;
 
@@ -21,7 +24,17 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
+const FORMATOS_IMPRESION = {
+    CORTE_CAJA_GENERAL: 220
+}
 function CorteCajaListado({onRowClick, value}){
     const [listaCortes, setListaCortes] = useState([])
     const [filtros, setFiltros] = useState({
@@ -72,30 +85,37 @@ function CorteCajaListado({onRowClick, value}){
         onRowClick(selectedItem, action)
     };
 
-
     const handleReportGeneralClick = () => {
-        let fecha = filtros.fecha
-        let hora = getCurrentTime()
-        let dateTime = fecha + ' ' + hora
-        obtenerCortesGeneralReporte(dateTime)
-            .then(({data}) => {
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.CORTE_CAJA_GENERAL).then(({data}) => {
+            let fecha = filtros.fecha
+            let hora = getCurrentTime()
+            if (data.length === 0) {
+                showError("No se encontró un formato para el reporte solicitado. Comuniquese con las oficinas de GM.")
+                return
+            }
+            imprimirFormatosIdCorteCajaGeneral(data[data.length -1].m_nIdFormato, fecha,hora).then((respuesta) => { //poner aqui el id de Embarque
                 let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "REPORTE " + fecha;
 
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "REPORTE " + fecha);
-                document.body.appendChild(link);
-                link.click();
+                try{
+                    const link = document.createElement('a');
+                    link.href = "data:application/pdf;base64," + respuesta.data.m_sArchivo;
+                    link.setAttribute('download', "REPORTE " + fecha);
+                    document.body.appendChild(link);
+                    link.click();
+                }catch (e) {
+                    console.log(e)
+                    showSuccess("No se pudo descargar el pdf")
+                }
+            }).catch((err) => {
+                showError(err.toString())
             })
-            .catch((err) => {
-                showSuccess(err.toString())
-            })
+        })
     };
 
-    function totalSum(items) {
+   function totalSum(items) {
         return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
     }
     function sumarTotalPorPersona(items) {
