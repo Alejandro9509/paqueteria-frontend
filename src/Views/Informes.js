@@ -1242,6 +1242,9 @@ function Informes({history}) {
     function handleShowAgregar() {
         setDataParaAgregar()
         getEmptyState()
+        setDetectar(false)
+        $.mostrarMensaje=false
+        window.onbeforeunload={}
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
