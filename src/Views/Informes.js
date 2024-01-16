@@ -802,7 +802,6 @@ function Informes({history}) {
     }
 
     function handleShowCancelar(event) {
-        event.preventDefault()
         obtenerInformesId(state.IdInforme).then((respuesta) => {
             setState({
                 ...state,
@@ -995,6 +994,9 @@ function Informes({history}) {
     function handleShowAgregar() {
         setDataParaAgregar()
         getEmptyState()
+        setDetectar(false)
+        $.mostrarMensaje=false
+        window.onbeforeunload={}
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1241,7 +1243,7 @@ function Informes({history}) {
                             </a>
                         </li>
                         <li>
-                            <a className={validarDerecho(9101431) ? "" : classes.disabled} onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101431) ? "" : classes.disabled} onClick={()=>document.getElementById('Agregar').classList.contains('show')?null:handleShowAgregar()}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -1262,12 +1264,9 @@ function Informes({history}) {
                         </li>
 
                         <li>
-                            <a
-                                data-toggle="tab"
-                                href="#Cancelar"
-                                onClick={handleShowCancelar}
-                                className={state.IdInforme == 0 && !validarDerecho(9101436) ? classes.disabled : ""}
-                            >
+                            <a className={state.IdInforme == 0 && !validarDerecho(9101436) ? classes.disabled : ""}
+                               href={()=>document.getElementById('Agregar').classList.contains('show')?null:'#Cancelar'}
+                               onClick={()=>document.getElementById('Agregar').classList.contains('show') && state.agregar=='Agregar'?null:handleShowCancelar()}>
                                 <i className="fa fa-ban"/> Cancelar
                             </a>
                         </li>
