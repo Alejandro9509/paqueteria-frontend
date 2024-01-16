@@ -743,6 +743,9 @@ function Informes({history}) {
                 showError(e.response?.data)
             })
         }
+        else{
+            setUtilizacion(0)
+        }
         setDataGuias(newGuia);
     };
 
@@ -1603,7 +1606,15 @@ function Informes({history}) {
                                                                                     value={state.IdRemolque2}
                                                                                     onChange={(index, newValue) => onChangeRemolque2(index,newValue) }
                                                                                     id="IdRemolque2"
-                                                                                    disableClearable
+                                                                                    onInputChange={(event, newInputValue, reason) => {
+                                                                                        if (reason === 'reset') {
+                                                                                            setState({
+                                                                                                ...state,
+                                                                                                IdRemolque2: null
+                                                                                            })
+
+                                                                                        }
+                                                                                    }}
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
