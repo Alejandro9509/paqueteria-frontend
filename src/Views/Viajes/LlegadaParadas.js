@@ -44,7 +44,6 @@ export default function LlegadaParadas(props){
         origen: props.viaje.m_sOringen,
         tipoDeCambioOrigen: "",
         destino: props.viaje.m_sDestino,
-        kms: props.distancia,
         millas: "",
         operador: props.viaje.m_sOperador,
         liquidacion: "",
@@ -102,12 +101,6 @@ export default function LlegadaParadas(props){
         });
     }
 
-    const handleChangeKms = (e) => {
-        setData({
-            ...data,
-            kms: e.target.value
-        });
-    }
 
     const handleChangeMillas = (e) => {
         setData({
@@ -432,10 +425,10 @@ export default function LlegadaParadas(props){
                         id={"kilometros"}
                         margin={"dense"}
                         label={"Kilometros"}
-                        onChange={(e) => handleChangeKms(e)}
+                        onChange={(e) => props.handleChangeKms(e)}
 
                         variant={"outlined"}
-                        value={data.kms}/>
+                        value={props.distancia}/>
                 </Grid>
                 <Grid item xs={7}/>
                 <Grid item xs={5}/>
