@@ -766,6 +766,7 @@ export default function DialogoNuevoPaquete(props) {
                                                label="Embalaje"
                                                labelId="m_nIdTipoEmbalajeLabel"
                                                value={paquete.m_nIdTipoEmbalaje}
+                                               required
                                                disabled={props.disabled || errores.nameInput === 'producto'}
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                id="m_nIdTipoEmbalaje"
