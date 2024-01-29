@@ -517,6 +517,8 @@ function ImportarEmbarques(props) {
                                                                                             Tipo de seguro: {e.data.tipoSeguro}<br/>
                                                                                             % de seguro: {e.data.porcentajeSeguro}<br/>
                                                                                             Valor declarado: {e.data.valorDeclarado}<br/>
+                                                                                            Moneda: {e.data.moneda}<br/>
+                                                                                            Tipo de Cobro: {e.data.tipoCobro}<br/>
                                                                                             Validar timbrado de factura: {e.data.validarTimbradoFactura?"Sí":"No"}<br/>
                                                                                             Observaciones: {e.data.observaciones}<br/>
                                                                                             Tipo de servicio: {e.data.idTipoServicio === 1 ? 'CONSOLIDADO' : 'PAQUETERIA'}<br/>
