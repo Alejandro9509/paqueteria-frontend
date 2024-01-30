@@ -20,6 +20,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {confirmAlert} from "react-confirm-alert";
+import Tooltip from "@material-ui/core/Tooltip";
+import {showSuccess} from "../../Util/Util";
 import AgregarRemolques from "./AgregarRemolques";
 
 const useStyles = theme => ({
@@ -210,35 +212,31 @@ class UnidadesList extends Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {
-                                this.stableSort(this.state.unidades, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
-                                    const isItemSelected = isSelected(u.m_nIdUnidad);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-                                    return (
-                                        <TableRow>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    onClick={(event) => this.solicitarRemolques( u)}
-                                                    checked={isItemSelected}
-                                                    disabled={!u.m_nIdOperador}
-                                                    inputProps={{'aria-labelledby': labelId}}
-                                                />
-                                            </TableCell>
-                                            <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
+                            {this.stableSort(this.state.unidades, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
+                                const isItemSelected = isSelected(u.m_nIdUnidad);
+                                const labelId = `enhanced-table-checkbox-${index}`;
+                                return (<TableRow>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                onClick={(event) => this.solicitarRemolques(u)}
+                                                checked={isItemSelected}
+                                                disabled={!u.m_nIdOperador}
+                                                inputProps={{'aria-labelledby': labelId}}
+                                            />
+                                        </TableCell>
+                                        <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
 
-                                            <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
-                                            <TableCell align="left">{
-                                                <Link style={{cursor:"pointer"}} onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
-                                            <TableCell align="left">{u.m_sPlacas}</TableCell>
-                                        </TableRow>
-                                    )
-                                })
-                            }
+                                        <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
+                                        <Tooltip title={u.ocupado?"En Ruta":""}>
+                                        <TableCell align="left">{<Link style={{cursor: "pointer",color:u.ocupado?"gray":''}}
+                                                                       onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell></Tooltip>
+                                        <TableCell align="left">{u.m_sPlacas}</TableCell>
+                                    </TableRow>)
+                            })}
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </div>
-        );
+            </div>);
     }
 }
 

@@ -42,7 +42,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
 import {Autocomplete} from "@material-ui/lab";
 import AgregarRemolques from "./AgregarRemolques";
-import {validarDerecho} from "../../Util/Util";
+import {showSuccess, validarDerecho} from "../../Util/Util";
 
 const useStyles = theme => ({
     search: {
@@ -694,6 +694,10 @@ class FiltersMap extends Component {
                                 }}
                                 disabled={(this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))) && !validarDerecho(9101447)}
                                 onClick={() => {
+                                    if(this.state.unidadesSeleccionadas.length>0 && this.state.unidadesSeleccionadas.at(0).ocupado) {
+                                        showSuccess(" La unidad seleccionada cuenta con un chofer en ruta, favor de cambiar operador")
+                                        return;
+                                    }
                                     this.props.generarRuta(this.state)
                                     this.setState({ openUnidades: false, openPaquetes: false, openConfiguration: false, openDate: false })
                                 }}
