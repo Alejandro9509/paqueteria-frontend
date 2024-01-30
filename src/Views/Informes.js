@@ -631,6 +631,7 @@ function Informes({history}) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    $.mostrarMensaje=false
                     handleShowListado()
                 })
                 .catch((err) => {
@@ -644,6 +645,7 @@ function Informes({history}) {
                     if (state.cuibicar && state.indexCubicar < informes.length) {
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
+                        $.mostrarMensaje=false
                         handleShowListado()
                     }
 
@@ -1047,7 +1049,6 @@ function Informes({history}) {
     };
 
     function handleShowCancelar(event) {
-        event.preventDefault()
         obtenerInformesId(state.IdInforme).then((respuesta) => {
             setState({
                 ...state,
@@ -1084,6 +1085,8 @@ function Informes({history}) {
         cancelarInformes(state.IdInforme, params).then((respuesta) => {
             console.log(respuesta.data);
             showSuccess(respuesta.data)
+            setDetectar(false)
+            $.mostrarMensaje=false
             handleShowListado()
         });
     };
@@ -1212,8 +1215,19 @@ function Informes({history}) {
 
         }
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
-
+    const clickCancelar=()=>{
+        $.mostrarMensaje=false
+        handleShowListado()
+    }
     const handleShowListado = () => {
+        if($.mostrarMensaje===true) {
+            if (window.onbeforeunload) {
+                let confirmarSalida = window.confirm("¿Desea regresar al listado? Hay cambios sin guardar")
+                if (!confirmarSalida) {
+                    return
+                }
+            }
+        }
         setDetectar(false)
         window.onbeforeunload={}
         getDataParaListado()
@@ -1227,6 +1241,9 @@ function Informes({history}) {
     function handleShowAgregar() {
         setDataParaAgregar()
         getEmptyState()
+        setDetectar(false)
+        $.mostrarMensaje=false
+        window.onbeforeunload={}
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1237,12 +1254,23 @@ function Informes({history}) {
         if( detectarModificaciones){
             console.log("disprosio")
            // console.log(remitente)
-           
+           $.mostrarMensaje=true
             window.onbeforeunload = confirmExit
+
            
         }
     }, [state])
     const handleShowCubicar = () => {
+        if($.mostrarMensaje===true){
+            if (window.onbeforeunload) {
+                let confirmarSalida = window.confirm("¿Desea salir de la pestaña actual? Hay cambios sin guardar")
+                if (!confirmarSalida) {
+                    return
+                }
+            }
+        }
+        $.mostrarMensaje=false
+        setDetectar(false)
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(4).addClass('active');
@@ -1601,7 +1629,7 @@ function Informes({history}) {
                             </a>
                         </li>
                         <li>
-                            <a className={validarDerecho(9101431) ? "" : classes.disabled} onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101431) ? "" : classes.disabled} onClick={()=>document.getElementById('Agregar').classList.contains('show')?null:handleShowAgregar()}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -1622,22 +1650,19 @@ function Informes({history}) {
                         </li>
 
                         <li>
-                            <a
-                                data-toggle="tab"
-                                href="#Cancelar"
-                                onClick={handleShowCancelar}
-                                className={state.IdInforme == 0 && !validarDerecho(9101436) ? classes.disabled : ""}
-                            >
+                            <a className={state.IdInforme == 0 && !validarDerecho(9101436) ? classes.disabled : ""}
+                               href={()=>document.getElementById('Agregar').classList.contains('show')?null:'#Cancelar'}
+                               onClick={()=>document.getElementById('Agregar').classList.contains('show') && state.agregar=='Agregar'?null:handleShowCancelar()}>
                                 <i className="fa fa-ban"/> Cancelar
                             </a>
                         </li>
 
-                        <li>
+                        {/*<li>
                             <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}
                                className={validarDerecho(9101437) ? "" : classes.disabled}>
                                 <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
                             </a>
-                        </li>
+                        </li>*/}
                     </ul>
 
                     <div className="tab-content">
@@ -2534,7 +2559,7 @@ function Informes({history}) {
                                             <Button
                                                 fullWidth
                                                 type="button"
-                                                onClick={handleShowListado}
+                                                onClick={clickCancelar}
                                                 className="btn btn-secondary secondary-btn"
                                                 disabled={!validarDerecho(9101436)}
                                             >
