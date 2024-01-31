@@ -42,7 +42,7 @@ function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
-                <DialogTitle>Seleccoine una Unidad</DialogTitle>
+                <DialogTitle>Seleccione una Unidad</DialogTitle>
                 <DialogContent>
                     <TableUnidades data={listadoUnidades} handleSelection={handleRowSelection} />
                 </DialogContent>
