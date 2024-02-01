@@ -130,6 +130,7 @@ function Informes({history}) {
     const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
+    const [mensajesUtilizacion,setMensajeUtilizacion]=useState('')
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
     // useEffect(()=>{
@@ -581,6 +582,7 @@ function Informes({history}) {
                 indexCubicar: 0,
             }
         })
+        setMensajeUtilizacion('')
         setDataGuiasSeleccionadas([])
         setDataGuias([])
         setUtilizacion(0)
@@ -737,6 +739,10 @@ function Informes({history}) {
             setDataGuiasSeleccionadas(params.guias)
             cubicarGuiaInforme(params).then(({data}) => {
                 setUtilizacion( data.utilizacion.toFixed(0))
+                if(data.mensaje!=null)
+                {
+                    setMensajeUtilizacion(data.mensaje)
+                }
             }).catch(e => {
                 setUtilizacion(0)
                 showError(e.response?.data)
@@ -1738,7 +1744,7 @@ function Informes({history}) {
 
                                                                         <div className="col-sm-12 col-md-12 unit">
                                                                             <ProgressBarCubicaje
-                                                                                value={utilizacion}>{utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${utilizacion}%`}
+                                                                                value={utilizacion}>{utilizacion > 100 ? mensajesUtilizacion : `Espacio de carga usado: ${utilizacion}%`}
                                                                             </ProgressBarCubicaje>
 
                                                                         </div>
