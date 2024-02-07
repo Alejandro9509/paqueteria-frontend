@@ -126,7 +126,8 @@ function ParametrosConfiguracion() {
         fijarCapturaValorDeclarado: false,
         documentos:[],
         factorConversion: 0.0,
-        imprimirEtiquetasIndividuales:false
+        imprimirEtiquetasIndividuales:false,
+        porcentualSeguroDefecto:0,
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -142,6 +143,13 @@ function ParametrosConfiguracion() {
                         cobrarCargaDescargaDisabled: false
                     }
                 })
+            }
+        }
+        if (event.target.name==='porcentualSeguroDefecto')
+        {
+            if(event.target.value>100 || event.target.value<0){
+                showSuccess('El porcentual no puede tener valor menor a 0 o mayor a 100')
+                return
             }
         }
         setConfiguraciones((config) => {
@@ -208,7 +216,8 @@ function ParametrosConfiguracion() {
             plantillaImportarEmbarquesBase64: "",
             plantillaImportarEmbarquesNombreArchivo: '',
             documentos: configuraciones.documentos,
-            imprimirEtiquetasIndividuales:configuraciones.imprimirEtiquetasIndividuales
+            imprimirEtiquetasIndividuales:configuraciones.imprimirEtiquetasIndividuales,
+            porcentualSeguroDefecto:configuraciones.porcentualSeguroDefecto
         }
         modificarParametrosConfiguracion(params)
             .then((respuesta) => {
@@ -265,7 +274,8 @@ function ParametrosConfiguracion() {
                     foliosPorSucursal: respuesta.data.FoliosPorSucursal,
                     documentos: respuesta.data.documentos || [],
                     factorConversion: respuesta.data.FactorConversion,
-                    imprimirEtiquetasIndividuales:respuesta.data.ImprimirEtiquetasIndividuales
+                    imprimirEtiquetasIndividuales:respuesta.data.ImprimirEtiquetasIndividuales,
+                    porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto,
                 }
             })
 
@@ -905,6 +915,28 @@ function ParametrosConfiguracion() {
                                                         <option value="2">Por rango</option>
                                                         <option value="3">Por región</option>
                                                     </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Porcentual de Seguro por Defecto</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined"
+                                                             margin="dense" required>
+                                                    <TextField
+                                                        variant={'outlined'}
+                                                        type={'number'}
+                                                        native
+                                                        label='Porcentual de Seguro por Defecto'
+                                                        className="form-control"
+                                                        name="porcentualSeguroDefecto"
+                                                        read="true"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.porcentualSeguroDefecto}
+                                                    >
+                                                    </TextField>
                                                 </FormControl>
                                             </Box>
                                         </Box>

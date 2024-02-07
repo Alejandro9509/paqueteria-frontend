@@ -584,7 +584,8 @@ function Embarque(props) {
         idConceptoFlete: 0,
         modificarValorEmbarque:false,
         factorConversion: 0.0,
-        fijarCapturaValorDeclarado: false
+        fijarCapturaValorDeclarado: false,
+        porcentualSeguroDefecto:0
     })
     const [errores, setErrores] = React.useState([])
     const [state, setState] = React.useState({
@@ -2440,7 +2441,8 @@ function Embarque(props) {
                             tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio : respuesta.data.TipoCambioEmbarque,
                             tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
                             tipoTimbrado: respuesta.data.TipoTimbrado,
-                            validarTimbrado: respuesta.data.ValidarTimbradoIngreso
+                            validarTimbrado: respuesta.data.ValidarTimbradoIngreso,
+                            porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                         }
                     })
                 }
@@ -2470,7 +2472,8 @@ function Embarque(props) {
                         idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                         modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
                         factorConversion: respuesta.data.FactorConversion,
-                        fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
+                        fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado,
+                        porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                     }
                 })
                 setDataTipoDocumento(data)
@@ -2965,7 +2968,7 @@ function Embarque(props) {
             return {
                 ...state,
                 idTipoSeguro: event.target.value,
-                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                porcentajeSeguro: (state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO) && (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?state.porcentajeSeguro:(event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?configuraciones.porcentualSeguroDefecto:0,
                 aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
                 valorDeclarado: 0
             }
