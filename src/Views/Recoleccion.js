@@ -2021,6 +2021,16 @@ function Recoleccion() {
             width: 150,
         },
         {
+            headerName: "Usuario Documento",
+            field: "m_sUsuarioDocumento",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                </div>
+            }
+        },
+        {
             headerName: "Cliente",
             field: "m_sNombreCliente",
             width: 300,
