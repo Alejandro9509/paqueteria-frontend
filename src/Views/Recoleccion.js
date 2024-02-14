@@ -1835,7 +1835,7 @@ function Recoleccion() {
                 [event.target.name]: event.target.value
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal)
     };
 
     const getZonaOperativaByCodigoPostal = (codigoPostal) => {

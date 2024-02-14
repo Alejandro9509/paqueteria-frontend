@@ -227,7 +227,7 @@ function CambiarEstatus(props){
                 [event.target.name]: event.target.value,
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursales.find(c => parseInt(c.m_nIdSucursal) === parseInt(event.target.value)).m_sCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursales.find(c => parseInt(c.m_nIdSucursal) === parseInt(event.target.value)).m_nIdCodigoPostal)
     };
 
     const getZonaOperativaByCodigoPostal = (codigoPostal) => {
@@ -284,9 +284,7 @@ function CambiarEstatus(props){
                                     shrink: true,
                                 }}
                             >
-                                {props.dataEstatusGuia
-                                    .filter(i => parseInt(i.m_nIdEstatusGuia) === 14 || parseInt(i.m_nIdEstatusGuia) === 7)
-                                    .filter(i => parseInt(i.m_nIdEstatusGuia) !== parseInt(props.guia?.m_nIdEstatusGuia)).map(
+                                {props.dataEstatusGuia.map(
                                     (estatusGuia) => (
                                         <MenuItem key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia}>
                                             {estatusGuia.m_sEstatus}
