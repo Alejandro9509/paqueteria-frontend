@@ -284,7 +284,9 @@ function CambiarEstatus(props){
                                     shrink: true,
                                 }}
                             >
-                                {props.dataEstatusGuia.map(
+                                {props.dataEstatusGuia
+                                    .filter(i => parseInt(i.m_nIdEstatusGuia) === 14 || parseInt(i.m_nIdEstatusGuia) === 7)
+                                    .filter(i => parseInt(i.m_nIdEstatusGuia) !== parseInt(props.guia?.m_nIdEstatusGuia)).map(
                                     (estatusGuia) => (
                                         <MenuItem key={estatusGuia.m_nIdEstatusGuia} value={estatusGuia.m_nIdEstatusGuia}>
                                             {estatusGuia.m_sEstatus}
