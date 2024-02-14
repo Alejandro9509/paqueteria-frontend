@@ -74,5 +74,13 @@ function obtenerZonaOperativaByIdCodigoPostal(id) {
     );
     return result
 }
+function obtenerParametrosDestino(idGuia) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetDatosUbicacionDestinatario/` + idGuia;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
-export {obtenerZonaOperativaByIdCodigoPostal, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal, obtenerListadoZonaOperativaByOrigenDestino}
+export {obtenerZonaOperativaByIdCodigoPostal, obtenerParametrosDestino, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal, obtenerListadoZonaOperativaByOrigenDestino}

@@ -307,6 +307,7 @@ function CambiarEstatus(props){
                                 disabled={false}
                                 requiered={false}
                                 listadoEstadosLocal={true}
+                                guia={props.guia}
                             />
                             <p>
                                 <span>Latitud: {entregaDD.latitud || "Indefinida"}</span>
