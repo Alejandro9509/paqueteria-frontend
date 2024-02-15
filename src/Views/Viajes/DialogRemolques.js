@@ -26,8 +26,9 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy }) {
                         showSuccess('No hay remolques que pertenezcan al mismo Convoy')
                         handleClose()
                     }
+                    const remolques = respuesta.data.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28);
                     console.log(respuesta.data);
-                    setListadoRemolques(respuesta.data)
+                    setListadoRemolques(remolques)
                 }).catch((e) => {
                     console.log(e.toString())
                     showSuccess('Hubo un problema al cargar el listado de remolques. Intente de nuevo.')
@@ -48,7 +49,7 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy }) {
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
-                <DialogTitle>Seleccoine una Unidad</DialogTitle>
+                <DialogTitle>Seleccione uno o dos Remolques</DialogTitle>
                 <DialogContent>
                     <TableRemolques data={listadoRemolques} handleSelection={handleRowSelection} />
                 </DialogContent>

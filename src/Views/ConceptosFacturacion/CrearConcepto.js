@@ -277,7 +277,7 @@ function CrearConceptoSAT(props) {
                     /* setDisableSeleccionar({
                         ...disableSeleccionar,
                         disableUnidad: false}); */
-                    props.onChangeData(6, e,true)
+                    props.onChangeData(99, e,true)
             } else {
                 setErrores({
                     ...errores,
@@ -285,7 +285,7 @@ function CrearConceptoSAT(props) {
 /*                     setDisableSeleccionar({
                         ...disableSeleccionar,
                         disableUnidad: false});  */
-                    props.onChangeData(6, e)
+                    props.onChangeData(99, e)
             }
 /*         }else if (e.target.name == "claveProducto"){
             setDisableSeleccionar({
@@ -494,7 +494,7 @@ function CrearConceptoSAT(props) {
                                     value={props.dataComplemento.claveProducto}
                                     name="claveProducto"
                                     required
-                                    onChange={(e)=>{ props.onChangeData(6, e)}}
+                                    onChange={(e)=>{handleChangeSpecial(e)}}
                                     aria-readonly={true}
                                     disabled={props.consulta}
                                     InputProps={{
@@ -631,7 +631,7 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     required
                                     value={props.dataComplemento.claveMaterialPeligroso}
-                                    onChange={(e)=>{ props.onChangeData(6, e)}/* props.onChangeData(6, e) */}
+                                    onChange={(e)=>{ handleChangeSpecial(e)}/* props.onChangeData(6, e) */}
                                     name="claveMaterialPeligroso"
                                     onBlur={(e) => {
                                         handleClickBuscarClaveSat(5)
@@ -682,7 +682,7 @@ function CrearConceptoSAT(props) {
                                     required
                                     value={props.dataComplemento.claveEmbalaje}
                                     name="claveEmbalaje"
-                                    onChange={(e)=>  { props.onChangeData(6, e)}}
+                                    onChange={(e)=>  { handleChangeSpecial(e)}}
                                     onBlur={(e) => {
                                         handleClickBuscarClaveSat(3)
                                     }}
@@ -744,7 +744,7 @@ function CrearConceptoSAT(props) {
                                     aria-readonly={true}
                                     value={props.dataComplemento.claveFraccion}
                                     name="claveFraccion"
-                                    onChange={(e)=> { props.onChangeData(6, e)}}
+                                    onChange={(e)=> { handleChangeSpecial(e)}}
                                     onBlur={(e) => {
                                         handleClickBuscarClaveSat(4)
                                     }}

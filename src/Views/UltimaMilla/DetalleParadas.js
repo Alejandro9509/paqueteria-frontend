@@ -691,7 +691,7 @@ class DetalleParadas extends Component {
         })
     }
     validarRutasCompletadas(tour){
-        return tour.m_arrClsProGuia.some(g=> g.m_sEstatusUltimaMilla == "Completado")
+        return tour.m_arrClsProGuia.some(g=> g.m_nEstatusUlimaMilla === 3)
     }
     cancelarRutaAccion(e, id) {
         e.preventDefault()
