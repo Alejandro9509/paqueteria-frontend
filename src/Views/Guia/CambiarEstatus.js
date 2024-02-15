@@ -227,7 +227,7 @@ function CambiarEstatus(props){
                 [event.target.name]: event.target.value,
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursales.find(c => parseInt(c.m_nIdSucursal) === parseInt(event.target.value)).m_sCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursales.find(c => parseInt(c.m_nIdSucursal) === parseInt(event.target.value)).m_nIdCodigoPostal)
     };
 
     const getZonaOperativaByCodigoPostal = (codigoPostal) => {
