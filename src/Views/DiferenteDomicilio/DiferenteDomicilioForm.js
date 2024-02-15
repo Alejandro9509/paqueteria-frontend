@@ -7,7 +7,7 @@ import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext
 import TextField from "@material-ui/core/TextField";
 import Noty from "noty";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
+import {obtenerZonaOperativaByIdCodigoPostal,obtenerParametrosDestino} from "../../Util/Contexts/ZonaOperativaContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerPaises} from "../../Util/Contexts/PaisesContext";
 import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
@@ -189,7 +189,14 @@ export default function DiferenteDomicilioForm(props){
         }
 
     }, [props.value.idEstado])
-
+    useEffect(()=>{
+        obtenerParametrosDestino(props.guia.id).then(({data})=>{
+            if(data[0].IdPais==1)
+            setState({...state,idPais:data[0].IdPais, idEstado: data[0].IdEstado,idMunicipio:data[0].CodigoMunicipio,
+            codigoPostal: {m_sCP:data[0].CodigoPostal,codigoFueradeZonaOperativa:data[0].codigoFueraDeZonaOperativa,m_bNoAplicaEntrega:data[0].m_bNoAplicaEntrega,
+                m_sColonia:data[0].Colonia,m_nIdCP:data[0].IdCodigoPostal},estado:data[0].Estado,municipio:data[0].Municipio,domicilio:data[0].domicilio,zonaOperativa:{m_sCodigoZona:data[0].CodigoZona,m_nIdZona:data[0].IdZona}})
+        })
+    },props)
     return(
         <Grid container spacing={2}>
             <Grid item xs={3}>
