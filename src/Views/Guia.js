@@ -335,6 +335,7 @@ function Guia(props) {
         modificadoEl: "",
         openDialog: false,
         receptorGuia:[],
+        operadorEntrega:'',
         referencia:'',
         observaciones:'',
         reporteSeleccionado:{},
@@ -1078,6 +1079,7 @@ function Guia(props) {
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
                 tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
                 receptorGuia: respuesta.data.m_sReceptorGuia,
+                operadorEntrega: respuesta.data.operadorEntrega,
                 referencia: respuesta.data.m_sReferencia,
                 observaciones: respuesta.data.m_sObservaciones,
                 clientePaga: respuesta.data.m_sCliente
@@ -2051,6 +2053,7 @@ function Guia(props) {
                 zonaTarifaRemitente: '',
                 zonaTarifaDestinatario: '',
                 receptorGuia: '',
+                operadorEntrega: '',
                 referencia: '',
                 observaciones: '',
                 clientePaga: '',
