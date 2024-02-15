@@ -581,6 +581,7 @@ function Informes({history}) {
                 indexCubicar: 0,
             }
         })
+        setDataGuiasSeleccionadas([])
         setDataGuias([])
         setUtilizacion(0)
     }

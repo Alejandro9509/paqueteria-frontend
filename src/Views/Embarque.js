@@ -534,6 +534,16 @@ function Embarque(props) {
             width: 150,
         },
         {
+            headerName: "Usuario Documento",
+            field: "m_sUsuarioDocumento",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                </div>
+            }
+        },
+        {
             headerName: "Cancelado",
             field: "m_dtFechaCancelacion",
             width: 150,
@@ -2324,7 +2334,7 @@ function Embarque(props) {
                 [event.target.name]: event.target.value,
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal)
     };
 
     const handleEntregaCheckboxChange = (event) => {
@@ -2340,14 +2350,14 @@ function Embarque(props) {
 
     const handleEntregaEnSucursalCheckbox = (event) => {
         setRepetirConceptos(true)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == destinatario.zonaOperativaDestinatario.m_nIdSucursal).m_nIdCodigoPostal)
         setState(state => {
             return {
                 ...state,
                 entregaEnSucursal: !state.entregaEnSucursal,
                 diferenteEntrega: !state.entregaEnSucursal && false,
                 entregaConCita: !state.entregaEnSucursal && false,
-                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal,
-                zonaOperativaSucursal: !state.entregaEnSucursal?destinatario.zonaOperativaDestinatario:null
+                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal
             }
         });
     };
@@ -2484,9 +2494,11 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
+        //console.log(">>>>>>> getAllEmbarque");
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0, 0).then((respuesta) => {
+                    //console.log(respuesta.data);
                     setData(respuesta.data);
                 })
             })

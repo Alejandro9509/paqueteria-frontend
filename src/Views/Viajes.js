@@ -1117,9 +1117,7 @@ function Viajes() {
         //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
         //     }else{
             obtenerTrayectosByRuta(data.m_nIdRuta).then((resp) => {
-                console.log(resp)
                 var a=resp.data.find((element)=>element.IdOrigen===data.m_nIdOrigen)
-                console.log(a.Kilometros)
                 setKms(a.Kilometros)
             })
                 setParadaData(data);
@@ -1130,7 +1128,6 @@ function Viajes() {
        // })
 
     }
-
     const closeLlegadaDialog = () => {
         setEventOptions({...eventOptions, showLlegadaParadasDialog: false});
     }
@@ -1198,7 +1195,7 @@ function Viajes() {
             m_nCV2Millas: data.millasRemolqueDos,
             m_bCV1Estatus: data.idEstatusRemolqueUno,
             m_bCV2Estatus: data.idEstatusRemolqueDos,
-            m_nKmViaje: data.kms,
+            m_nKmViaje: kms,
             m_nIdEstatusLlegada: data.idEstatus,
             m_nMillasViaje: data.millas,
             m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
@@ -1464,7 +1461,7 @@ function Viajes() {
                         maxWidth={'xl'}>
                     <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                     <DialogContent>
-                        <LlegadaParadas onSubmit={updateLlegada} viaje={viajeSeleccionado} parada={paradaData} distancia={kms}>
+                        <LlegadaParadas onSubmit={updateLlegada} viaje={viajeSeleccionado} parada={paradaData} distancia={kms} handleChangeKms={(e)=>setKms(e.target.value)}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}

@@ -6,8 +6,7 @@ import {
 } from "../Util/Contexts/CodigoPostalContext";
 import Noty from "noty";
 import {
-  obtenerByIdZonaOperativa,
-  obtenerZonaOperativaByIdCodigoPostal,
+  obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal
 } from "../Util/Contexts/ZonaOperativaContext";
 import {
   obtenerZonaTarifaByIdCodigoPostal,
@@ -247,7 +246,7 @@ function RemitenteDestinatario(props) {
         paisTexto: respuesta.data.m_sPaisDestinatario
       };
     });
-    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sIdCodigoPostalDestinatario).then(
       ( zonaOperativa ) => {
         if(props.destinatario){
           props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
@@ -360,7 +359,7 @@ function RemitenteDestinatario(props) {
     /*obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
       setDataMunicipios(data);
     });*/
-    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+    obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_nIdCodigoPostalDestinatario).then(
         ( zonaOperativa ) => {
           if(props.destinatario){
             props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
@@ -482,7 +481,7 @@ function RemitenteDestinatario(props) {
   const handleChangeAutocomplete = (input, newValue) => {
     props.seCalculaTarifa()
 if(input=="codigoPostal"){
-  obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(
+  obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
     ( zonaOperativa ) => {
       obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
           ( zonaTarifa ) => {
@@ -520,7 +519,7 @@ if(input=="codigoPostal"){
 
   const handleClickZona = () => {
     if (state.codigoPostal) {
-      obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_sCP).then(
+      obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_nIdCP).then(
         ({ data }) => {
           setDataZonasOperativas(data);
         }
@@ -546,7 +545,7 @@ if(input=="codigoPostal"){
         props.seCalculaTarifa()
       }
 
-      obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
+      obtenerZonaOperativaByIdCodigoPostal(row.data.m_nIdCP).then(
           ( zonaOperativa ) => {
             console.log(JSON.stringify(zonaOperativa))
             if(props.destinatario){
@@ -605,8 +604,8 @@ if(input=="codigoPostal"){
   }, [props.entregaDomicilioDestinatario])
 
   const handleEntregaEnDomicilioDestinatario = () =>{
-    if (props.entregaDomicilioDestinatario && !state.zonaOperativa && state.codigoPostal?.m_sCP){
-      obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_sCP).then(( zonaOperativa ) => {
+    if (props.entregaDomicilioDestinatario && !state.zonaOperativa && state.codigoPostal?.m_nIdCP){
+      obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_nIdCP).then(( zonaOperativa ) => {
             setState((state) => ({
               ...state,
               zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
