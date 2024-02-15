@@ -108,7 +108,7 @@ export default function CrearTarifaRangos(props) {
             return
         }
         obtenerUnidadesMedida().then(respuesta => {
-            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38))
+            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38 || i.IdUnidadMedida === 55))
         })
     }
     const getOrigenesDestinos = () => {
@@ -221,6 +221,7 @@ export default function CrearTarifaRangos(props) {
             if (i.idViaje === viaje.idViaje ){
                 i.idOrigen = viaje.idOrigen
                 i.idTipoMedida = viaje.idTipoMedida
+                i.fleteMinimo = viaje.fleteMinimo
                 i.idDestino = viaje.idDestino
                 i.grupos = viaje.grupos
             }
@@ -340,6 +341,8 @@ export default function CrearTarifaRangos(props) {
     /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
     const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
 
+    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38)
+
     const filtrarUnidadesMedidaManiobras = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
     const filtrarTiposCalculoManiobras = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
 
@@ -414,9 +417,15 @@ export default function CrearTarifaRangos(props) {
             showSuccess("No puede guardar una primera o última milla sin productos")
             return
         }
-        if (props.configuraciones.CobroCargaDescargaTarifa){
-            if (maniobrasTarifa.length === 0){
-                showSuccess("La configuración actual no permite guardar una tarifa sin maniobras.")
+        if (props.configuraciones.CobrarConceptoCarga){
+            if (maniobrasTarifa.filter(i => i.idConcepto === props.configuraciones.IdConceptoCarga).length === 0){
+                showSuccess("La configuración actual no permite guardar una tarifa sin maniobra de carga.")
+                return
+            }
+        }
+        if (props.configuraciones.CobrarConceptoDescarga){
+            if (maniobrasTarifa.filter(i => i.idConcepto === props.configuraciones.IdConceptoDescarga).length === 0){
+                showSuccess("La configuración actual no permite guardar una tarifa sin maniobra de descarga.")
                 return
             }
         }
@@ -465,11 +474,13 @@ export default function CrearTarifaRangos(props) {
             v.grupos.forEach(g => {
                 g.conceptos = g.rangos.map(rango => ({
                         idConceptoFacturacion: props.configuraciones.IdConceptoFlete,
-                        importe: rango.importe,
-                        minimo: rango.minimo,
-                        maximo: rango.maximo,
-                        idTipoCalculo: rango.idTipoCalculo,
-                        idUnidadMedida: rango.idUnidadMedida
+                        importe: rango.importe || 0,
+                        minimo: rango.minimo || 0,
+                        maximo: rango.maximo || 0,
+                        idTipoCalculo: rango.idTipoCalculo || 0,
+                        idUnidadMedida: rango.idUnidadMedida,
+                        porcentaje: rango.porcentaje || 0,
+
                     })
                 )
                 g.zonas.forEach(zona => {
@@ -523,7 +534,6 @@ export default function CrearTarifaRangos(props) {
         if (value !== null){
             obtenerTarifaRangosById(value.IdTarifa).then(respuesta => {
                 let selection = setDataParaConsultar(respuesta.data)
-                console.log(selection)
                 setViajesLocalesListado(selection?.viajesLocales)
                 setManiobrasTarifa(selection?.maniobras)
                 setViajesForaneosListado(selection?.viajesForaneos)
@@ -598,6 +608,7 @@ export default function CrearTarifaRangos(props) {
                     idUnidadMedida: rango.IdUnidadMedida || null,
                     tipoCalculo: rango.TipoCalculo || '',
                     unidadMedida: rango.UnidadMedida || '',
+                    porcentaje: rango.Porcentaje || 0,
                 })),
                 productos: data.Productos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
                     m_nIdProducto: j.IdProducto,
@@ -732,7 +743,7 @@ export default function CrearTarifaRangos(props) {
                                 handleChangeViajeLocal={handleChangeViajeLocal}
                                 conceptosListado={filtrarConceptosViajeLocal}
                                 tiposCalculoListado={tiposCalculoListado}
-                                unidadesMedidaListado={unidadesMedidaListado}
+                                unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
                                 handleDeleteViajeLocal={handleDeleteViajeLocal}
                                 zonasListado={zonasListado}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}

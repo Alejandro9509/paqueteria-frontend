@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import {
     Box,
     Button,
@@ -14,37 +15,107 @@ import {
     withStyles
 } from "@material-ui/core";
 import Timeline from "react-time-line";
+import LogoPaqueteria from "../../iconos/LogoPaqueteria.png"
+import $ from "jquery";
 import StepConnector  from '@material-ui/core/StepConnector';
 import clsx from "clsx";
 import {Check} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/core/styles";
 import PaquetesList from "./PaquetesList";
 import RemitenteDestinatario from "./RemitenteDestinatario";
+import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
+import {obtenerInformeFolioTipo} from "../../Util/Contexts/SeguimientoContext";
+import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
+import DialogoEvidenciasUltimaMilla from "../UltimaMilla/DialogoEvidenciasUltimaMilla";
+const headers = API_HEADERS
 
 
 class TrackingEmail extends Component {
     constructor(props) {
+        let rfc=window.location.pathname.split('/')
+        if(headers.RFC==='null'){headers.RFC=rfc[rfc.length-3]}
         super(props);
         this.state = {
             activeTab: 0,
+            logo:"",
+            folioBusqueda: this.props.data.m_sFolio,
+            tipoBusqueda: "3",
+            data:{},
+            imagenesEvidenciaRecoleccion:[],
+            imagenesEvidenciaEmbarque:[],
+            esRecoleccion:this.props.data.m_bAplicaRecoleccion,
+            setOpenDialogEvidenciasRecoleccion:false,
+            setOpenDialogEvidenciasEntrega:false,
+            foliosAutocomplete: {},
+            didSearch:false,
         }
         this.handleChangeTab = this.handleChangeTab.bind(this)
+        const url=`${process.env.REACT_APP_REPORT_URL}/api/GetLogo`
+        axios.get(url,{headers}).then((respuesta)=>{
+          //console.log(respuesta)
+          try{
+            this.setState({logo: respuesta.data.Logo})
+          }
+          catch{
+            //showSuccess("No se encontró el logo del proveedor")
+          }
+        })
     }
-
+        
+    handleGetEvidencias(props){
+        if(!this.state.didSearch)
+        obtenerInformeFolioTipo(props.data.m_sFolio,"3").then(({data}) => {
+            this.setState({didSearch:true})
+            if(data.Estatus == true){
+                
+                obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
+                    obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
+                        this.setState({
+                            imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
+                            imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
+                            data: data
+                        })
+                    })
+                })
+            }else{
+                //showSuccess(data)
+                return;
+            }
+            
+        })
+    }    
+    
     handleChangeTab(event, newValue){
         this.setState({activeTab: newValue})
     }
+    handleClickOpenDialogoEvidencia(openDialog, esRecoleccion){
+        if (esRecoleccion){
+            this.setState({
+                setOpenDialogEvidenciasRecoleccion: openDialog
+            })
+        }else{
+            this.setState({
+                setOpenDialogEvidenciasEntrega: openDialog
+            })
+        }
+
+    }
+    handleClickCloseDialogoEvidenciaEntrega(openDialog){
+        this.setState({setOpenDialogEvidenciasEntrega:openDialog})
+
+    }
     render() {
+        
         function QontoStepIcon(props) {
             const classes = useQontoStepIconStyles();
             const { active, completed } = props;
-
             return (
                 <div
                     className={clsx(classes.root, {
                         [classes.active]: active,
                     })}
                 >
+                     
                     {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
                 </div>
             );
@@ -97,10 +168,25 @@ class TrackingEmail extends Component {
                 borderRadius: 1,
             },
         })(StepConnector);
-
+        
         return (
-            <Grid container spacing={2} justify="center" style={{padding:"5px"}}>
-                <Grid item sx={12} md={12}>
+            <Grid container spacing={2} justify="center" style={{padding:"5px",alignItems:"center"}}>
+                { (this.state.setOpenDialogEvidenciasEntrega && (this.state.imagenesEvidenciaEmbarque)) &&
+                <DialogoEvidenciasUltimaMilla
+                    open={this.state.setOpenDialogEvidenciasEntrega}
+                    setCloseDialog={()=>this.setState({setOpenDialogEvidenciasEntrega:false})}
+                    imagenes={this.state.imagenesEvidenciaEmbarque}
+                />
+            }
+            { (this.state.setOpenDialogEvidenciasRecoleccion && (this.state.imagenesEvidenciaRecoleccion)) &&
+                <DialogoEvidenciasUltimaMilla
+                    open={this.state.setOpenDialogEvidenciasRecoleccion}
+                    setCloseDialog={()=>this.setState({setOpenDialogEvidenciasRecoleccion:false})}
+                    imagenes={this.state.imagenesEvidenciaRecoleccion}
+                />
+            }
+                <Grid item sx={12} md={12} style={{display:"flex",flexFlow:"column",alignItems:"center"}} >
+                    <img src={"data:image/png;base64,"+this.state.logo} width="10%" ></img>
                     <Typography variant={"h4"}>{this.props.data.m_sNombreResponsablePago}</Typography>
                 </Grid>
                 <Grid item sx={12} md={12}>
@@ -135,6 +221,7 @@ class TrackingEmail extends Component {
                     <Tabs variant={"standard"} centered value={this.state.activeTab} onChange={this.handleChangeTab} >
                             <Tab label="Historial de viaje"/>
                             <Tab label="Detalle del paquete" />
+                            <Tab label="Evidencias" onClick={()=>this.handleGetEvidencias(this.props)}/>
                         </Tabs>
                     <TabPanel value={this.state.activeTab} index={0}>
                         <div lang={"es"} style={{
@@ -152,8 +239,93 @@ class TrackingEmail extends Component {
                     <TabPanel value={this.state.activeTab} index={1}>
                         <PaquetesList paquetes={this.props.data.paquetes}/>
                     </TabPanel>
+                    <TabPanel value={this.state.activeTab} index={2}>
+                    <div>
+                                    <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
+                                     <Grid container spacing={3}>
+                                     <Grid item md={12}>
+                                        <Typography variant={"h4"} align={"center"}>Evidencias</Typography>
+                                     </Grid>
+                                     
+                                     <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
+                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" alignItems="center">
+                                    <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography>
+                                         <Grid item md={12}>
+                                             Entregó: {this.state.data.m_sReceptorRecoleccion}
+                                             <Button fullWidth variant="text" color="primary" onClick={() => this.handleClickOpenDialogoEvidencia(true, true)}>
+                                                 Ver evidencias de recolección
+                                             </Button>
+                                         </Grid>
+                                    {/*{
+                                    this.state.imagenesEvidenciaRecoleccion.length == 0?
+                                     <Typography variant={"h5"} style={{margin:"20%"}}>No hay evidencias</Typography>:
+                                    this.state.imagenesEvidenciaRecoleccion.length != 0 &&
+                                    <Grid item md={6}>
+                                       <div id="divRecoleccion">
+                                        
+                                        {this.state.imagenesEvidenciaRecoleccion.reverse().map( (img,index)=>(
+                                                    <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
+                                                     src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
+                                        }
+                                           Entregó: {this.state.data.m_sReceptorRecoleccion}
+                                          </div>   
+                                                                      
+                                    </Grid>
+                                       }*/}
+                                    
+                                     </Box>
+                                        
+                                     </Grid>
+                                     <Grid item md={12}>
+                                         <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"
+                                              alignItems="center">
+                                             <Typography variant={"h4"}
+                                                         style={{marginBottom: "10px"}}>Entrega</Typography>
+                                             <Grid item md={6}>
+                                                 Recibió: {this.state.data.m_sReceptorGuia}
+                                                 <Button fullWidth variant="text" color="primary"
+                                                         onClick={() => this.handleClickOpenDialogoEvidencia(true, false)}>
+                                                     Ver evidencias de entrega
+                                                 </Button>
+                                             </Grid>
+                                             {/*{
+                                                 this.state.imagenesEvidenciaEmbarque.length == 0 ?
+                                                     <Typography variant={"h5"}>No hay evidencias</Typography> :
+
+                                                     <Grid item md={6}>
+
+                                                         <div id="divEmbarque">
+                                                             {this.state.imagenesEvidenciaEmbarque.reverse().map((img, index) => (
+                                                                 <img style={{
+                                                                     width: "180px",
+                                                                     height: "180px",
+                                                                     margin: "0 0 0 -10px",
+                                                                     marginBottom: "10px",
+                                                                     outline: "solid 1px black"
+                                                                 }}
+                                                                      src={`data:image/jpeg;base64,${img.m_sImagen}`}
+                                                                      key={index}/>))
+                                                             }
+                                                             Recibió: {this.state.data.m_sReceptorGuia}
+                                                         </div>
+
+                                                     </Grid>
+
+                                             }*/}
+                                         </Box>
+                                     </Grid>
+                                   
+                                     
+                                        </Grid>
+                                    </div>
+                                    </div>
+                    </TabPanel>
                 </Grid>
+                <Grid style={{display:"flex"}}>
+                <img style={{position:"relative",marginLeft:"70%",marginTop:"100px"}} src={LogoPaqueteria} width="25%"></img>
             </Grid>
+            </Grid>
+            
             </Grid>
         );
     }
@@ -165,7 +337,6 @@ export default TrackingEmail;
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-
     return (
         <div
             role="tabpanel"

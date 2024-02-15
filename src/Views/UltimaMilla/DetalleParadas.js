@@ -29,7 +29,7 @@ import {PieChart} from 'react-minimal-pie-chart';
 import BlockIcon from '@material-ui/icons/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import PaquetesParcialesGuia from './PaquetesParcialesGuia';
-import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
+import OrdenarParadasUltimaMilla from "./OrdenarParadasUltimaMilla";
 import PaquetesList from "./PaquetesList";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
@@ -64,7 +64,9 @@ import {
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 import {getAddressFormated, validarDerecho} from "../../Util/Util";
+import moment from "moment/moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+
 
 function showError(mensaje) {
     new Noty({
@@ -428,8 +430,10 @@ class DetalleParadas extends Component {
         })
     }
 
-    onSubmitOrdenarPaquetes(paquetes) {
-        ordenarParada(this.state.tour.m_nIdParadaUltimaMilla, paquetes).then(({data}) => {
+    onSubmitOrdenarPaquetes(paquetes, paquetesDescartados) {
+        // console.log(paquetes)
+        // console.log(paquetesDescartados)
+        ordenarParada(this.state.tour.m_nIdParadaUltimaMilla, paquetes, paquetesDescartados).then(({data}) => {
             showSuccess("Parada Actualizada")
             this.setState({openOrdenarParadas: false})
             this.props.refresh()
@@ -610,12 +614,14 @@ class DetalleParadas extends Component {
                 }
                 {
                     this.state.openOrdenarParadas &&
-                    <AgregarPaqueteUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
+                    <OrdenarParadasUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
                                                tour={this.state.tour}
                                                onSubmit={this.onSubmitOrdenarPaquetes}
                                                tipoServicio={parseInt(this.props.filtros.tipoBusqueda)}
                                                close={() => this.setState({openOrdenarParadas: false})}
-                                               open={this.state.openOrdenarParadas} paquetes={this.state.paquetes}/>
+                                               open={this.state.openOrdenarParadas} paquetes={this.state.paquetes}
+                                               deshabilidarAgregar={(moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
+                    />
                 }
 
                 {(this.state.openRemplazar && this.state.paqueteSeleccionado) &&
@@ -866,9 +872,8 @@ class DetalleParadas extends Component {
 
 
                                                         {
-                                                            // Desactivado si alguna guia tiene estatus diferente a pendiente
                                                             <Button
-                                                                disabled={!validarDerecho(9101447)/* || tour.m_arrClsProGuia.some(g => g.m_nEstatusUlimaMilla !== 1)*/}
+                                                                disabled={!validarDerecho(9101447)}
                                                                 variant={"contained"}
                                                                 color={"primary"}
                                                                 onClick={() => this.setState({
@@ -1002,7 +1007,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
-                                                                                                                disabled={!validarDerecho(9101450)}
+                                                                                                                disabled={!validarDerecho(9101450) || (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                                                                                                 onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
@@ -1099,7 +1104,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
-                                                                                                                disabled={!validarDerecho(9101453)}
+                                                                                                                disabled={!validarDerecho(9101453) || (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                                                                                                 onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip

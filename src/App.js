@@ -17,6 +17,7 @@ import Indicadores from './Views/Indicadores';
 import Tracking from './Views/Seguimiento/Tracking';
 import LoginExterno from "./Components/Login/LoginExterno";
 import {IdleTimeOutModal} from "./Components/Login/IdleTimeOutModal";
+import Tutoriales from "./Components/Template/Tutoriales";
 
 
 class App extends Component {
@@ -46,6 +47,7 @@ render(){
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
             <Route exact path="/app/applications/:rfc/:id/tracking" component={Tracking} />
+            <Route path="/Tutoriales" component={Tutoriales} />
             {dashboardRoutes.map((r, key) => {
                   return r.visible ? (<Route exact key={key} path={r.path}  component={r.component} />): ""
               })}

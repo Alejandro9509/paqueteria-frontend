@@ -174,7 +174,7 @@ function Productos() {
 
   function handleEliminar(row) {
     eliminarProducto(row.m_nIdProducto).then((respuesta) => {
-      showSuccess("Producto Eliminado");
+      showSuccess(respuesta.data);
       handleShowListado();
     })
     .catch((err) => {
@@ -230,8 +230,12 @@ function Productos() {
       m_nNoProducto: form.IdProducto,
       m_bPredeterminado: form.predeterminado
     };
-console.log(params)
+    console.log(params)
      if (form.IdProducto != 0) {
+      if(params.m_nIdEmbalaje == ""){
+        showSuccess("Seleccionar Embalaje")
+        return
+      }
       modificarProducto(form.IdProducto, params)
         .then((respuesta) => {
           showSuccess("Modificado Exitosamente");
@@ -507,6 +511,7 @@ console.log(params)
                                   fullWidth
                                   variant="outlined"
                                   margin="dense"
+                                  required
                                 >
                                   <InputLabel id="m_nIdTipoEmbalajeLabel">
                                     Embalaje
@@ -519,6 +524,7 @@ console.log(params)
                                     name="IdTipoEmbalaje"
                                     onChange={handleChange}
                                     readOnly={state.agregar == "Consultar"}
+                                    required
                                   >
                                     {dataEmbalaje.map((embalaje) => (
                                       <option

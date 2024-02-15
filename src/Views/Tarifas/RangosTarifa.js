@@ -40,51 +40,80 @@ export default function RangosTarifa(props) {
         );
     }
 
-    const columns = React.useMemo(() => [
-        props.seccionPadre === 'MANIOBRAS' &&
-        {
-            headerName: "Maniobra",
-            field: "concepto",
-            width: 150,
-        },{
-            headerName: "Medida",
-            field: "unidadMedida",
-            width: 150,
-        },{
-            headerName: "Mínimo",
-            field: "minimo",
-            type:'number',
-            width: 150,
-        },{
-            headerName: "Máximo",
-            field: "maximo",
-            type:'number',
-            width: 150,
-        },{
-            headerName: "Importe",
-            field: "importe",
-            type:'number',
-            width: 150,
-            valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
-        },{
-            headerName: "Cálculo",
-            field: "tipoCalculo",
-            width: 150,
-        },
-        !props.disabled &&
-        {
-            field: 'complementos',
-            headerName: 'Acciones',
-            renderCell: RowMenuCell,
-            sortable: false,
-            width: 90,
-            headerAlign: 'center',
-            filterable: false,
-            align: 'center',
-            disableColumnMenu: true,
-            disableReorder: true,
+    const columns = React.useMemo(() => {
+        if (props.mode === 'PORCENTAJE') {
+            return (
+                [{
+                    headerName: "Porcentaje",
+                    field: "porcentaje",
+                    width: 150,
+                },
+                    !props.disabled &&
+                    {
+                        field: 'complementos',
+                        headerName: 'Acciones',
+                        renderCell: RowMenuCell,
+                        sortable: false,
+                        width: 90,
+                        headerAlign: 'center',
+                        filterable: false,
+                        align: 'center',
+                        disableColumnMenu: true,
+                        disableReorder: true,
+                    }])
+        } else {
+            return ([
+                props.seccionPadre === 'MANIOBRAS' &&
+                {
+                    headerName: "Maniobra",
+                    field: "concepto",
+                    width: 150,
+                }, props.rows[0]?.unidadMedida === 'PORCIENTO' &&
+                {
+                    headerName: "Porcentaje",
+                    field: "porcentaje",
+                    width: 150,
+                }, {
+                    headerName: "Medida",
+                    field: "unidadMedida",
+                    width: 150,
+                }, {
+                    headerName: "Mínimo",
+                    field: "minimo",
+                    type: 'number',
+                    width: 150,
+                }, {
+                    headerName: "Máximo",
+                    field: "maximo",
+                    type: 'number',
+                    width: 150,
+                }, {
+                    headerName: "Importe",
+                    field: "importe",
+                    type: 'number',
+                    width: 150,
+                    valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+                }, {
+                    headerName: "Cálculo",
+                    field: "tipoCalculo",
+                    width: 150,
+                },
+                !props.disabled &&
+                {
+                    field: 'complementos',
+                    headerName: 'Acciones',
+                    renderCell: RowMenuCell,
+                    sortable: false,
+                    width: 90,
+                    headerAlign: 'center',
+                    filterable: false,
+                    align: 'center',
+                    disableColumnMenu: true,
+                    disableReorder: true,
+                }
+            ])
         }
-    ]);
+    });
 
     const currencyFormatter = new Intl.NumberFormat('en-US', {
         style: 'currency',

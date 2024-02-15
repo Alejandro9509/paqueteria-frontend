@@ -19,17 +19,50 @@ class RemplazarPaqueteUltimaMilla extends Component {
                     headerName: "Tipo",
                     field: "m_bEsRecoleccion",
                     valueFormatter: (params) => `${params.value ? "Recolección" : "Entrega"}`,
-                    width: 250,
+                }, {
+                    headerName: "Tipo de cobro",
+                    field: "m_sTipoCobro",
+                    width: 150,
+                }, {
+                    headerName: "Zona",
+                    field: "m_sZona",
+                    width: 150,
                 }, {
                     headerName: "Cliente",
                     field: "m_sNombreRemitente",
                     valueFormatter: (params) => `${params.row.m_bEsRecoleccion ? params.row.m_sNombreRemitente : params.row.m_sNombreDestinatario}`,
                     width: 300,
-                }, {
-                    headerName: "Dirección",
+                }, /*{
+                    headerName: "Estatus cliente",
+                    field: "m_bClienteBloqueado",
+                    valueFormatter: (params) => `${params.row.m_bClienteBloqueado ? "Bloqueado" : "Activo"}`,
+                    width: 150,
+                },*/ {
+                    headerName: "Domicilio",
                     field: "m_sDomicilioRemitente",
                     valueFormatter: (params) => `${params.row.m_bEsRecoleccion? params.row.m_sDomicilioRemitente : params.row.m_sDomicilioDestinatario}`,
                     width: 300,
+                }, {
+                    headerName: "Ventana de entrega",
+                    field: "m_sFechaRecoleccionCita",
+                    width: 150,
+                    valueFormatter: (params) =>
+                        `${params.row.m_bCitaPendiente ? "Cita pendiente" : 
+                            (params.row.m_bEsRecoleccion ? 
+                                (!params.row.m_bRecoleccionConCita ? "Sin cita" : 
+                                        (params.row.m_sFechaRecoleccionCita + " " + params.row.m_sHoraCitarRecoleccionMinima + " a " + params.row.m_sHoraCitaRecoleccionMaxima)
+                                ) : 
+                                (!params.row.m_bEmbarqueConCita ? "Sin Cita" : 
+                                    (params.row.m_sFechaEmbarqueCita + " " + params.row.m_sHoraEmbarqueCitaMinima + " a " + params.row.m_sHoraEmbarqueCitaMaxima)
+                                )
+                            )}`,
+
+                }, {
+                    headerName: "Fecha",
+                    field: "m_dFechaRegistro",
+                }, {
+                    headerName: "Estatus",
+                    field: "m_sEstatusUltimaMilla",
                 }
             ]
         }
@@ -39,6 +72,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
 
 
     handlePaquetesSeleccionadas = (e) => {
+        console.log(e)
         this.setState({
             idsPaquetesSeleccionadas: e.selectionModel,
         })
@@ -64,18 +98,20 @@ class RemplazarPaqueteUltimaMilla extends Component {
                 onClose={this.props.close}
                 aria-labelledby="max-width-dialog-title"
             >
-                <DialogTitle><Typography variant={"h4"}>Seleccionar Paquete</Typography> </DialogTitle>
+                <DialogTitle><Typography variant={"h4"}>Seleccionar Paquete</Typography></DialogTitle>
                 <DialogContent>
+                    <Typography variant={"h4"}>*No se muestran los registros que tienen cliente bloqueado.</Typography>
                     <div style={{ display: 'flex', height: '400px' }}>
                         <DataGrid
                             localeText={dataGridLocaleText}
-                            rows={this.props.data}
+                            rows={this.props.data.filter((i) => !i.m_bClienteBloqueado)}
                             columns={this.state.columns}
                             density="compact"
-                            isRowSelectable={(params) => params.row.isItemSelected}
+                            isRowSelectable={(params) => false}
                             pageSize={Math.floor((this.state.height - 310) / 30)}
                             getRowId={(row) => row.m_sFolio}
-                            checkboxSelection={this.props.multiples}
+                            checkboxSelection
+                            disableSelectionOnClick={true}
                             onSelectionModelChange={(e) => this.handlePaquetesSeleccionadas(e)}
                         />
                     </div>

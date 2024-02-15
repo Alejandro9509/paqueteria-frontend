@@ -26,6 +26,53 @@ export function showSuccess(mensaje) {
     }).show();
 }
 
+export const mesString = (mes) => {
+    if(mes === 1){
+        return "enero"
+    }           
+    if(mes === 2){
+        return "febrero"
+
+    }
+    if(mes === 3){
+        return "marzo"
+
+    }
+    if(mes === 4){
+        return "abril"
+
+    }
+    if(mes === 5){
+        return "mayo"
+
+    }
+    if(mes === 6){
+        return "junio"
+
+    }
+    if(mes === 7){
+        return "julio"
+
+    }
+    if(mes === 8){
+        return "agosto"
+
+    }
+    if(mes === 9){
+        return "septiembre" 
+    }           
+
+    if(mes === 10){
+        return "octubre"
+    }
+    if(mes === 11){
+        return "noviembre"
+    }
+    if(mes === 12){
+        return "diciembre"
+    }
+}
+
 export function useInterval(callback, delay) {
     const savedCallback = useRef();
 
@@ -602,4 +649,8 @@ export const DEFAULT_FORMAT = {
         descripcionEmbalaje: 'Descripcion embalaje',
         claveFraccionArancelaria: 'Clave fracción arancelaria',
     }
+}
+
+export function numberToMoneyFormatt(number) {
+    return number.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
 }

@@ -38,7 +38,10 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false,seCalculaTarifa}) {
+const TARIFA_POR_RANGOS = 2
+const TARIFA_POR_REGION = 3
+
+function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false,seCalculaTarifa, tipoTarifa=0, factorConversion=0.0, mostrarPesoFinal= true}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
@@ -299,9 +302,13 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
     }
 
     const pesoTotalKgPaquete = (paquete) => parseFloat(paquete.m_rPeso) * parseFloat(paquete.m_nCantidad)
-    const pesoTotalVolPaquete = (paquete) => parseFloat(paquete.m_nCantidad) * parseFloat(paquete.m_rLargo) * parseFloat(paquete.m_rAncho) * parseFloat(paquete.m_rAlto) * 0.0005
+    const pesoTotalVolPaquete = (paquete) => parseFloat(paquete.m_nCantidad) * parseFloat(paquete.m_rLargo) * parseFloat(paquete.m_rAncho) * parseFloat(paquete.m_rAlto) * factorConversion
 
-    const pesoFinalPorProducto = (paquetes) => paquetes.reduce((previousValue, currentValue) => previousValue + (pesoTotalKgPaquete(currentValue) > pesoTotalVolPaquete(currentValue) ? pesoTotalKgPaquete(currentValue) : pesoTotalVolPaquete(currentValue)),0)
+    const pesoFinalPorProducto = (paquetes) =>
+        tipoTarifa === TARIFA_POR_RANGOS ?
+            paquetes.reduce((previousValue, currentValue) => previousValue + (pesoTotalKgPaquete(currentValue) > pesoTotalVolPaquete(currentValue) ? pesoTotalKgPaquete(currentValue) : pesoTotalVolPaquete(currentValue)),0)
+            :
+            paquetes.reduce((previousValue, currentValue) => previousValue + pesoTotalKgPaquete(currentValue),0)
     return(
         <div>
             <div className="row">
@@ -335,7 +342,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
 
                     }
                     {
-                        dataPaquetes.length > 0 &&
+                        (dataPaquetes.length > 0 && mostrarPesoFinal) &&
                         groupByArray(dataPaquetes, 'm_nIdProducto').map(i => (
                             <div>
                                 Peso final de {i.values[0].m_sProducto}: {pesoFinalPorProducto(i.values).toFixed(2)}

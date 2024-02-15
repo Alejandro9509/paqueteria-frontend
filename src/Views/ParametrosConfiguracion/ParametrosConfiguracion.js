@@ -5,14 +5,14 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import {
     Box,
     Button,
-    Checkbox,
+    Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
     FormControl, Grid,
     InputLabel, MenuItem,
     Paper,
     Select,
     Tab,
     Tabs,
-    TextField,
+    TextField, Tooltip,
     Typography
 } from "@material-ui/core";
 import {
@@ -42,7 +42,7 @@ import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturac
 import {FilePond} from "react-filepond";
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
-import {toBase64} from "../../Util/GlobalFunctions";
+import DialogTiposDocumentoSucursal from "./DialogTiposDocumentoSucursal";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -81,8 +81,16 @@ function ParametrosConfiguracion() {
         }
     ]
     const [dataConceptos, setDataConceptos] = useState([]);
+    const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
+        open: false,
+        seleccion: {
+            idSucursal: 0,
+            sucursal: '',
+            idTipoDocumento: 0,
+            documento: 'SIN DEFINIR'
+        }
 
-    const [files, setFiles] = useState([])
+    })
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -91,8 +99,9 @@ function ParametrosConfiguracion() {
         tipoCambioEmbarque: 0,
         estatusGuia: 0,
         tipoTarifa: 0,
-        cobroCargaDescarga: false,
-        cobroCargaDescargaDisabled: false,
+        cobrarConceptoCarga: false,
+        cobrarConceptoDescarga: false,
+        cobrarCargaDescargaDisabled: false,
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
@@ -113,7 +122,11 @@ function ParametrosConfiguracion() {
         plantillaImportarEmbarquesBase64: '',
         plantillaImportarEmbarquesNombreArchivo: '',
         modificarValorEmbarque:false,
-        foliosPorSucursal: false
+        foliosPorSucursal: false,
+        fijarCapturaValorDeclarado: false,
+        documentos:[],
+        factorConversion: 0.0,
+        imprimirEtiquetasIndividuales:false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -124,8 +137,9 @@ function ParametrosConfiguracion() {
                 setConfiguraciones((config) => {
                     return {
                         ...config,
-                        cobroCargaDescarga: false,
-                        cobroCargaDescargaDisabled: false
+                        cobrarConceptoCarga: false,
+                        cobrarConceptoDescarga: false,
+                        cobrarCargaDescargaDisabled: false
                     }
                 })
             }
@@ -142,8 +156,9 @@ function ParametrosConfiguracion() {
         setConfiguraciones((config) => {
             return {
                 ...config,
-                cobroCargaDescarga: false,
-                cobroCargaDescargaDisabled: true
+                cobrarConceptoCarga: false,
+                cobrarConceptoDescarga: false,
+                cobrarCargaDescargaDisabled: true
             }
         })
     }
@@ -167,7 +182,8 @@ function ParametrosConfiguracion() {
             estatusGuia: configuraciones.estatusGuia,
             tipoTarifaTarifas: configuraciones.tipoTarifa,
             costoCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
-            cobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
+            cobrarConceptoCarga: configuraciones.cobrarConceptoCarga,
+            cobrarConceptoDescarga: configuraciones.cobrarConceptoDescarga,
             cobrarCita: configuraciones.cobrarCita,
             detectarTipoCobro: configuraciones.detectarTipoCobro,
             limpiarProducto: configuraciones.limpiarProducto,
@@ -190,9 +206,10 @@ function ParametrosConfiguracion() {
             modificarValorEmbarque: configuraciones.modificarValorEmbarque,
             tipoTimbrado: configuraciones.tipoTimbrado,
             plantillaImportarEmbarquesBase64: "",
-            plantillaImportarEmbarquesNombreArchivo: ''
+            plantillaImportarEmbarquesNombreArchivo: '',
+            documentos: configuraciones.documentos,
+            imprimirEtiquetasIndividuales:configuraciones.imprimirEtiquetasIndividuales
         }
-        console.log(params)
         modificarParametrosConfiguracion(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
@@ -215,7 +232,8 @@ function ParametrosConfiguracion() {
                     tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
                     estatusGuia: respuesta.data.EstatusGuia,
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
+                    cobrarConceptoCarga: respuesta.data.CobrarConceptoCarga,
+                    cobrarConceptoDescargaa: respuesta.data.CobrarConceptoDescarga,
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
@@ -243,7 +261,11 @@ function ParametrosConfiguracion() {
                     tipoTimbrado: respuesta.data.TipoTimbrado,
                     plantillaImportarEmbarquesBase64: "",
                     plantillaImportarEmbarquesNombreArchivo: "",
-                    foliosPorSucursal: respuesta.data.FoliosPorSucursal
+                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado,
+                    foliosPorSucursal: respuesta.data.FoliosPorSucursal,
+                    documentos: respuesta.data.documentos || [],
+                    factorConversion: respuesta.data.FactorConversion,
+                    imprimirEtiquetasIndividuales:respuesta.data.ImprimirEtiquetasIndividuales
                 }
             })
 
@@ -379,41 +401,39 @@ function ParametrosConfiguracion() {
 
     }
 
-    /*const descargarPlantillaImportar = () => {
-        if (configuraciones.plantillaImportarEmbarquesBase64 === ''){
-            return
-        }
-        let mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
-        let a = document.createElement('a');
-        a.href = mediaType+encodeURI(configuraciones.plantillaImportarEmbarquesBase64);
-        a.download = configuraciones.plantillaImportarEmbarquesNombreArchivo;
-        a.textContent = 'Descargar Archivo';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-    }*/
-
-    /*const handleOnupdatefiles = (newFiles) => {
-        // convertirABase64(newFiles[0].file)
-        setFiles(newFiles)
-    }*/
-
-    /*const convertirABase64 = (file) => {
-        /!*if(files.length === 0){
-            return
-        }*!/
-        let fileName = file.name
-        let fileBase64 = toBase64(file)
-        console.log(fileBase64)
-        setConfiguraciones(configuraciones => {
-            return{
-                ...configuraciones,
-                plantillaImportarEmbarquesBase64: fileBase64,
-                plantillaImportarEmbarquesNombreArchivo: fileName
-            }
+    const handleShowEditTipoDocumento = (row) => {
+        setDialogTipoDocumento({
+            ...dialogTipoDocumento,
+            open: true,
+            seleccion: row,
         })
-    }*/
+    }
 
+    const handleOnCloseDialogTipoDocumento = (data) => {
+        try {
+            let array = [...configuraciones.documentos]
+            let index = array.findIndex((obj => obj.idSucursal === data.idSucursal))
+            array[index] = data
+            setConfiguraciones({
+                ...configuraciones,
+                documentos: array
+            })
+            setDialogTipoDocumento({
+                ...dialogTipoDocumento,
+                open: false,
+                seleccion: {
+                    idSucursal: 0,
+                    sucursal: '',
+                    idTipoDocumento: 0,
+                    documento: 'SIN DEFINIR'
+                }
+
+            })
+        }catch (e) {
+            console.log(e)
+        }
+
+    }
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
     useEffect(value => {
@@ -429,6 +449,8 @@ function ParametrosConfiguracion() {
     return (
 
         <div>
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
+
             <header className="topbar clearfix">
                 <Cabecera titulo="Parametros Configuración">
                     <div className="page-header">
@@ -678,6 +700,21 @@ function ParametrosConfiguracion() {
                                         />
                                     </Box>
                                 </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <h2>Fijar captura de Valor Declarado</h2>
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <Checkbox
+                                            checked={configuraciones.fijarCapturaValorDeclarado}
+                                            color="primary"
+                                            style={{transform: "scale(2)"}}
+                                            inputProps={{'aria-label': 'primary checkbox'}}
+                                            name="fijarCapturaValorDeclarado"
+                                            disabled
+                                        />
+                                    </Box>
+                                </Box>
                                 {/*<Box width="100%" p={1} my={0.5} display="flex">
                                     <Box width="40%" p={1} my={0.5}>
                                         <h2>Plantilla importar embarques</h2>
@@ -758,7 +795,7 @@ function ParametrosConfiguracion() {
                             <Box p={1}>
                                 <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                      flexDirection="column">
-                                    <h2 className={classes.subtitulo}>Guias</h2>
+                                    <h2 className={classes.subtitulo}>Guías</h2>
                                     <Box width="40%" p={1} my={0.5} display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Estatus por defecto</div>
@@ -816,6 +853,21 @@ function ParametrosConfiguracion() {
                                             />
                                         </Box>
                                     </Box>
+                                    <Box width="40%" p={1} my={0.5} display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <h2>¿Requiere etiquetas adicionales?</h2>
+                                        </Box>
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.imprimirEtiquetasIndividuales}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="imprimirEtiquetasIndividuales"
+                                            />
+                                        </Box>
+                                    </Box>
                                 </Box>
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101410)} variant="contained" color="primary"
@@ -856,6 +908,18 @@ function ParametrosConfiguracion() {
                                                 </FormControl>
                                             </Box>
                                         </Box>
+                                        { configuraciones.tipoTarifa == 2 &&
+                                            <Box width="40%" display="flex">
+                                                <Box width="40%" p={1} my={0.5}>
+                                                    <div className={classes.subtitulo}>Factor de conversión</div>
+                                                </Box>
+                                                <Box width="60%" p={1} my={0.5}>
+                                                    <Typography variant={'h4'}>
+                                                        {configuraciones.factorConversion}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        }
                                         <Box width="40%" display="flex">
                                             <Box width="40%" p={1} my={0.5}>
                                                 <div className={classes.subtitulo}>Cobro de cita</div>
@@ -885,17 +949,33 @@ function ParametrosConfiguracion() {
                                         </Box>
                                         <Box width="40%" display="flex">
                                             <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Cobro carga y descarga</div>
+                                                <div className={classes.subtitulo}>Cobrar concepto Carga</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <Checkbox
-                                                    checked={configuraciones.cobroCargaDescarga}
+                                                    checked={configuraciones.cobrarConceptoCarga}
                                                     onChange={handleChecked}
                                                     color="primary"
                                                     style={{transform: "scale(2)"}}
                                                     inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="cobroCargaDescarga"
-                                                    disabled={configuraciones.cobroCargaDescargaDisabled}
+                                                    name="cobrarConceptoCarga"
+                                                    disabled={configuraciones.cobrarCargaDescargaDisabled}
+                                                />
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Cobrar concepto Descarga</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.cobrarConceptoDescarga}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="cobrarConceptoDescarga"
+                                                    disabled={configuraciones.cobrarCargaDescargaDisabled}
                                                 />
                                             </Box>
                                         </Box>
@@ -932,7 +1012,7 @@ function ParametrosConfiguracion() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense"
-                                                             required={configuraciones.cobroCargaDescarga}>
+                                                             required={configuraciones.cobrarConceptoCarga}>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
@@ -959,7 +1039,7 @@ function ParametrosConfiguracion() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined" margin="dense"
-                                                             required={configuraciones.cobroCargaDescarga}>
+                                                             required={configuraciones.cobrarConceptoDescarga}>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
@@ -1191,6 +1271,10 @@ function ParametrosConfiguracion() {
                                             </Box>
                                         </Box>
                                     </Grid>
+                                    <Grid item xs={12}>
+                                        <div className={classes.subtitulo}>Documento por sucursal</div>
+                                        <DataGridTiposDocumentoSucursal rows={configuraciones.documentos} handleEditRow={handleShowEditTipoDocumento}/>
+                                    </Grid>
                                     <Grid container item xs={12} justifyContent="center" >
                                         <Box margin={"0 auto"}>
                                             <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
@@ -1212,5 +1296,53 @@ function ParametrosConfiguracion() {
 
     );
 }
+
+function DataGridTiposDocumentoSucursal(props) {
+    const columns = [
+        {
+            field: 'sucursal',
+            headerName: 'Sucursal',
+            width: 200,
+        },
+        {
+            field: 'documento',
+            headerName: 'Documento',
+            width: 250,
+        },
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false, width: 120,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar" >
+                            <a onClick={() => { props.handleEditRow(row.row) }}
+                                className="btn btn-default btn-xs">
+                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
+                            </a>
+                        </Tooltip>
+
+                    </div>
+                );
+            },
+        },
+    ];
+    return (
+        <div style={{height: 400,width: '50%'}}>
+            <DataGrid
+                rows={props.rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                getRowId={(row) => row.idSucursal}
+                autoHeight {...{dataSet: 'Commodity', rowLength: 4, maxColumns: 6}}
+                density={"compact"}
+            />
+        </div>
+    );
+}
+
+
 
 export default ParametrosConfiguracion;

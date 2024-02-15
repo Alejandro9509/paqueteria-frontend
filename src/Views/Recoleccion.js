@@ -158,8 +158,10 @@ const TIPOS_SEGURO = {
     SIN_ASIGNAR: 5
 }
 function Recoleccion() {
+
     const today = new Date();
     const classes = useStyles();
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     const [redirect, setRedirect] = React.useState(false);
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -248,7 +250,6 @@ function Recoleccion() {
         tipoCambioEmbarque: 0,
         estatusGuia: 0,
         tipoTarifa: 0,
-        cobroCargaDescarga: false,
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
@@ -257,6 +258,8 @@ function Recoleccion() {
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
+        factorConversion: 0.0,
+        fijarCapturaValorDeclarado: false
     })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
@@ -612,6 +615,8 @@ function Recoleccion() {
         }
     }, [state.tipoUnidad])
 
+    
+    
     useEffect((value) => {
         if (
             localStorage.getItem("UsuarioId") === null ||
@@ -668,7 +673,6 @@ function Recoleccion() {
                     tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
                     estatusGuia: respuesta.data.EstatusGuia,
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
@@ -677,6 +681,8 @@ function Recoleccion() {
                     idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                     idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                    factorConversion: respuesta.data.FactorConversion || 0.0,
+                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
                 }
             })
         })
@@ -777,7 +783,10 @@ function Recoleccion() {
             showSuccess("El responsable de pago es un dato requerido");
             return valid;
         }
-
+        if (configuraciones.fijarCapturaValorDeclarado && parseFloat(state.valorDeclarado) <= 0) {
+            showSuccess("El valor declarado no puede ser cero debido a la configuración.");
+            return valid;
+        }
         /**REMITENTE*/
         if (!esDatoValido(remitente.idRemitente)){
             showSuccess("El remitente es un dato requerido");
@@ -905,6 +914,7 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        setDetectar(false)
         if(errores.length>0){
             showSuccess("Errores en conceptos de facturacion")
             return;
@@ -1045,13 +1055,13 @@ function Recoleccion() {
                 params.m_nIdZonaOperativa = recoleccionDD.zonaOperativa.m_nIdZona
                 params.m_nIdEstadoRecoleccion = recoleccionDD.idEstado
                 params.m_sCodigoMunicipioRecoleccion = recoleccionDD.idMunicipio
-                params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitud
-                params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitud
+                params.m_sLatitudR = coordenadas ? coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString() : recoleccionDD.latitud
+                params.m_sLongitudR = coordenadas ? coordenadas.lng?coordenadas.lng.toString(): coordenadas[1].toString() : recoleccionDD.longitud
             } else {
                 params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
                 params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente? remitente.zonaTarifaRemitente.m_nIdZona : 0
-                params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
-                params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
+                params.m_sLatitudR = coordenadas ?coordenadas.lat?coordenadas.lat.toString(): coordenadas[0].toString() : remitente.latitudR
+                params.m_sLongitudR = coordenadas ?coordenadas.lng?coordenadas.lng.toString(): coordenadas[1].toString() : remitente.longitudR
             }
             params.m_bEntregaEnSucursal = state.entregaEnSucursal;
             if (state.entregaEnSucursal){
@@ -1100,6 +1110,7 @@ function Recoleccion() {
                         showSuccess(respuesta.data);
                         handleShowListado();
                         limpiarInputsAgregar()
+                        
                     })
                     .catch((err) => {
                         console.log(err);
@@ -1121,6 +1132,7 @@ function Recoleccion() {
                                         //    showSuccess(respuesta.data);
                                         showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                         limpiarInputsAgregar()
+                                      //  setDetectar(false)
                                         confirmAlert({
                                             title: 'Confirmación',
                                             message: '¿Desea crear otra recolección?',
@@ -1131,6 +1143,7 @@ function Recoleccion() {
                                                         setLimpiarRemDes(e)
                                                         mostrarCotizadorRec(false)
                                                         limpiarInputsAgregar()
+                                                      //  setDetectar(false)
                                                     }
                                                 },
                                                 {
@@ -1280,6 +1293,7 @@ function Recoleccion() {
                     }
                 })
                 setRecoleccionDataParaConsultaModificacion(respuesta,"Modificar")
+               
             });
         }
     }
@@ -1567,15 +1581,34 @@ function Recoleccion() {
 
             }
         });
+        
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
+        
 
+
+    }
+   
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+            window.onbeforeunload = confirmExit
+           
+        }
+    }, [remitente,state,destinatario,dataComplementosSAT,dataPaquetes,recoleccionDD,entregaDD,dataConceptos])
+    function confirmExit()
+    {
+
+      return "Are you sure you want to leave?"
     }
 
     const handleShowListado = (event) => {
+        setDetectar(false)
+        window.onbeforeunload={}
         setIsAgregar(false);
         if (event !== undefined){
             event.stopPropagation();
@@ -1646,6 +1679,7 @@ function Recoleccion() {
 
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
+       // setDetectar(false)
         setState(state => {
             return {
                 ...state,
@@ -1718,6 +1752,7 @@ function Recoleccion() {
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
         setRepetirConceptos(false)
+       // setDetectar(true)
     }
 
     const handleChange = (event) => {
@@ -1798,12 +1833,13 @@ function Recoleccion() {
             showSuccess("Se requiere seleccionar Destinatario")
             return
         }
-       
         setState({
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
             diferenteEntrega: !state.entregaEnSucursal && false,
             entregaConCita: !state.entregaEnSucursal && false,
+            idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal,
+            zonaOperativaSucursal: !state.entregaEnSucursal?destinatario.zonaOperativaDestinatario:null
         });
     };
     const handleListComplementosSATChange = (newList) => {
@@ -3388,10 +3424,11 @@ function Recoleccion() {
                         </li>*/}
 
                         <li style={{float: "right"}}>
-                            <a data-toggle="tab" href="#" className={(state.idRecoleccion === 0 || !validarDerecho(9101417)) ? classes.disabled : ""}
-                               style={{textAlign: "right"}} onClick={() => setRedirect(true)}>
-                                Generar embarque
-                            </a>
+                        <Button className={ state.idRecoleccion === 0 || (!validarDerecho(9101417) ) ? classes.disabled :""}  fullWidth color={"primary"} variant={"contained"} onClick={() => setRedirect(true)} >
+                                            Generar Embarque
+                                        </Button>
+
+                           
                         </li>
 
                         {/**<button className="topbar-right pull-right">Boton</button>*/}
@@ -3446,7 +3483,7 @@ function Recoleccion() {
 
                         </div>
 
-                        <div id="Agregar" className="tab-pane fade">
+                        <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
                                 <div className="form-content">
                                     {/*<div
@@ -3810,7 +3847,7 @@ function Recoleccion() {
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
-                                                                           disabled={(state.agregar === "Consultar") || !state.aplicaSeguro || state.recoleccionConEmbarque}
+                                                                           disabled={(state.agregar === "Consultar") || configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro || state.recoleccionConEmbarque}
                                                                            label="Valor Declarado"
                                                                            onChange={(event) => {
                                                                                event.preventDefault();
@@ -3890,6 +3927,8 @@ function Recoleccion() {
                                             cliente={state.clientePaga}
                                             seCalculaTarifa={seCalculaTarifa}
                                             limpiarProducto={configuraciones.limpiarProducto}
+                                            tipoTarifa={parseInt(configuraciones.tipoTarifa)}
+                                            factorConversion={configuraciones.factorConversion}
                                         />
                                     </div>
                                     <div className="widget-wrap" id="complementosSat">

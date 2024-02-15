@@ -33,7 +33,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
-import Noty from "noty";
+import Noty, { button } from "noty";
 import {
     Button,
     Chip,
@@ -87,7 +87,11 @@ import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {obtenerEstatusEmbarque} from "../Util/Contexts/EstatusContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
-import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+import {
+    imprimirFormatosIdIdTipoReporte,
+    obtenerFormatosImpresion,
+    obtenerFormatosImpresionProceso
+} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
@@ -116,7 +120,11 @@ import {agregarGuia, modificarGuia, obtenerGuiasFiltro} from "../Util/Contexts/G
 import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
-import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    asignarTipoDocumento,
+    obtenerParametrosConfiguracion,
+    validarRequiereDocumentoTimbrado
+} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerRutasId} from "../Util/Contexts/RutasContext";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 
@@ -126,19 +134,27 @@ import {
 } from "react-router-dom";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import ImportarEmbarques from "./Embarque/ImportarEmbarques";
+import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
 
 function useQuery() {
     const {search} = useLocation();
 
     return React.useMemo(() => new URLSearchParams(search), [search]);
 }
-
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
         layout: "topCenter",
         text: mensaje,
         timeout: "8000",
+    }).show();
+}
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
     }).show();
 }
 
@@ -242,10 +258,20 @@ const TIPOS_SEGURO = {
     OBLIGATORIO: 4,
     SIN_ASIGNAR: 5
 }
+const FORMATOS_IMPRESION = {
+    EMBARQUE: 211
+}
 function Embarque(props) {
+
+
+
+
+
+
     var today = new Date();
     const classes = useStyles();
     const [redirect, setRedirect] = React.useState(false);
+    const [detectarModificaciones,setDetectar]=React.useState(false)
     const [data, setData] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [dataTipoDocumento, setDataTipoDocumento] = React.useState([]);
@@ -261,6 +287,9 @@ function Embarque(props) {
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
     const [dataClientes, setDataClientes] = useState([])
     const [stepActive, setStepActive] = React.useState(1);
+    // const [openDialog, setOpenDialog] = useState(false)
+    // const [dataReportes, setDataReportes] = useState([])
+    // const [seleccion, setSeleccion] = useState(null)
     const [Modal, open, close, isOpen] = useModal("root", {
         preventScroll: true,
     });
@@ -331,7 +360,13 @@ function Embarque(props) {
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
                             <a
                                 onClick={() => {
-                                    handleShowModificar(row.row, row.row.m_nIdEmbarque)
+                                    $.ajax({
+                                        url:handleShowModificar(row.row, row.row.m_nIdEmbarque)
+                                        ,
+                                        success:function(){
+                                       // monitorearCambios();
+                                     }
+                                     })
                                 }}
                                 className="btn btn-default btn-xs"
                             >
@@ -349,9 +384,16 @@ function Embarque(props) {
                                 <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
                         </Tooltip>
+                        {/*<Tooltip title="Reporte opcion 1" disabled={!validarDerecho(9101425)}>*/}
+                        {/*    <a className="btn btn-default btn-xs"*/}
+                        {/*       onClick={() => generarReporteOpcion1(row.row)}><i*/}
+                        {/*        className="zmdi zmdi-file"*/}
+                        {/*        style={{color: "#F9A03E"}}/></a>*/}
+
+                        {/*</Tooltip>*/}
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101425)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i
+                               onClick={() => generarReporte(row.row)}><i
                                 className="zmdi zmdi-file"
                                 style={{color: "#F9A03E"}}/></a>
 
@@ -512,8 +554,17 @@ function Embarque(props) {
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
-    const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
-    const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+
+    const [dialogTipoDocumento, setDialogTipoDocumento] = useState({
+        open: false,
+        seleccion: {
+            idSucursal: 0,
+            sucursal: '',
+            idTipoDocumento: 0,
+            documento: 'SIN DEFINIR'
+        }
+
+    })
     const [dataConceptos, setDataConceptos] = useState([])
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -523,7 +574,6 @@ function Embarque(props) {
         tipoCambioEmbarque: 0,
         estatusGuia: 0,
         tipoTarifa: 0,
-        cobroCargaDescarga: false,
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
@@ -532,7 +582,9 @@ function Embarque(props) {
         idsTiposCobroSeleccionArray: [],
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
-        modificarValorEmbarque:false
+        modificarValorEmbarque:false,
+        factorConversion: 0.0,
+        fijarCapturaValorDeclarado: false
     })
     const [errores, setErrores] = React.useState([])
     const [state, setState] = React.useState({
@@ -615,6 +667,13 @@ function Embarque(props) {
     });
     let query = useQuery();
 
+    // useEffect(()=>{
+    //
+    //     obtenerFormatosImpresionProceso(211).then(({data}) => {
+    //         setDataReportes(data)
+    //     })
+    // }, [])
+
     //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
     function limpiarCamposAgregar() {
         setState(state => {
@@ -691,7 +750,6 @@ function Embarque(props) {
             tipoCambioEmbarque: 0,
             estatusGuia: 0,
             tipoTarifa: 0,
-            cobroCargaDescarga: false,
             cobrarCita: false,
             costoCita: "0",
             detectarTipoCobro: false,
@@ -700,7 +758,9 @@ function Embarque(props) {
             idsTiposCobroSeleccionArray: [],
             idsTiposCobroSeleccionString: '',
             idConceptoFlete: 0,
-            modificarValorEmbarque:false
+            modificarValorEmbarque:false,
+            factorConversion: 0.0,
+            fijarCapturaValorDeclarado: false
         })
     }
 
@@ -883,14 +943,57 @@ function Embarque(props) {
         })
     }
 
-    function generarReporte(id, folio) {
-        obtenerEmbarqueReporte(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Embarque " + folio;
+    // function generarReporteOpcion1(row) {
+    //     obtenerEmbarqueReporte(row.m_nIdEmbarque).then(({data}) => {
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Embarque " + row.m_sFolioEmbarque;
+    //     })
+    // }
+
+    function generarReporte(row) {
+        // setSeleccion(row)
+        // console.log(row)
+        // setOpenDialog(true)
+        obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.EMBARQUE).then((respuesta) => {
+            imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdEmbarque).then(({data}) => { //poner aqui el id de Embarque
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Embarque" + row.m_sFolioEmbarque;
+            })
         })
+
     }
+    // const handleOnChangeReporte = (data) => {
+    //     console.log(data)
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: data
+    //     })
+    // }
+    // const handleGenerarReporte=(e)=>{
+    //     e.preventDefault()
+    //
+    //     if (state.reporteSeleccionado.length === 0) {
+    //         showError("Es necesario seleccionar al menos un reporte")
+    //         return
+    //     }
+    //
+    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdEmbarque).then(({data}) => { //poner aqui el id de Embarque
+    //         console.log(data)
+    //         let pdfWindow = window.open("");
+    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+    //         pdfWindow.document.body.style.margin = "0px";
+    //         pdfWindow.document.title = "Embarque" + seleccion.m_sFolioEmbarque;
+    //     })
+    //     setState({
+    //         ...state,
+    //         reporteSeleccionado: null
+    //     })
+    //     setOpenDialog(false)
+    // }
 
     const handleOnChangeEntregaDD = (newValue) => {
         setRepetirConceptos(true)
@@ -1026,7 +1129,10 @@ function Embarque(props) {
             showSuccess("El responsable de pago es un dato requerido");
             return valid;
         }
-
+        if (configuraciones.fijarCapturaValorDeclarado && parseFloat(state.valorDeclarado) <= 0) {
+            showSuccess("El valor declarado no puede ser cero debido a la configuración.");
+            return valid;
+        }
         /**REMITENTE*/
         if (!esDatoValido(remitente.idRemitente)) {
             showSuccess("El remitente es un dato requerido");
@@ -1141,6 +1247,7 @@ function Embarque(props) {
     }
 
     const esComplementoValido = (item) => {
+        console.log('error complememto ', item)
         let valid = true
         if (!parseFloat(item.cantidad) > 0) {
             return false
@@ -1148,9 +1255,9 @@ function Embarque(props) {
         if (!parseFloat(item.peso) > 0) {
             return false
         }
-        if (!item.claveProducto?.length > 0) {
+        if (!(item.claveProducto.toString())?.length > 0) {
             return false
-        }
+        }        
         if (!item.claveUnidad?.length > 0) {
             return false
         }
@@ -1158,13 +1265,7 @@ function Embarque(props) {
             if (!item.claveFraccion?.length > 0) {
                 return false
             }
-            /*if (!item.comercioExterior?.length > 0){
-                return false
-            }*/
             if (!item.claveMaterialPeligroso?.length > 0) {
-                return false
-            }
-            if (!item.materialPeligrosoSAT?.length > 0) {
                 return false
             }
             if (!item.claveEmbalaje?.length > 0) {
@@ -1173,10 +1274,9 @@ function Embarque(props) {
         }
         return valid
     }
-
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-
+        
         if (errores.length > 0) {
             showSuccess("Errores en conceptos de facturacion")
             return;
@@ -1227,7 +1327,6 @@ function Embarque(props) {
             item.m_sClaveFraccionArancelaria = item.claveFraccion
             item.m_sUUIDComercioExterior = item.comercioExterior
             item.m_sClaveMaterialPeligroso = item.claveMaterialPeligroso
-            item.m_sMaterialPeligroso = item.materialPeligrosoSAT
             item.m_bEsMaterialPeligroso = item.esPeligroso
             item.m_sClaveEmbalaje = item.claveEmbalaje
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
@@ -1292,8 +1391,8 @@ function Embarque(props) {
             m_sNoIntDestinatario: destinatario.numeroIntDestinatario,
             m_sNoExtDestinatario: destinatario.numeroExtDestinatario,
             m_sColoniaDestinatario: destinatario.coloniaDestinatario,
-            m_sLatitudD: coordenadas ? coordenadas.lat : destinatario.latitudD,
-            m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.longitudD,
+            m_sLatitudD: coordenadas?coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString():destinatario.latitudD,
+            m_sLongitudD: coordenadas?coordenadas.lng?coordenadas.lng.toString():coordenadas[1].toString():destinatario.longitudD,
             m_sLatitudR: remitente.latitudR,
             m_sLongitudR: remitente.longitudR,
 
@@ -1336,14 +1435,14 @@ function Embarque(props) {
                 params.datosAdicionales = entregaDD.datosAdicionales
                 params.m_nIdZonaOperativa = entregaDD.zonaOperativa.m_nIdZona
                 // params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
-                params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitud
-                params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitud
+                params.m_sLatitudD = coordenadas?coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString(): entregaDD.latitud
+                params.m_sLongitudD = coordenadas?coordenadas.lng?coordenadas.lng.toString():coordenadas[1].toString(): entregaDD.longitud
             } else {
                 /**Si es entrega en domicilio de destinatario*/
                 params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
                 params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
-                params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
-                params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
+                params.m_sLatitudD = coordenadas?coordenadas.lat?coordenadas.lat.toString():coordenadas[0].toString():destinatario.latitudD
+                params.m_sLongitudD = coordenadas?coordenadas.lng?coordenadas.lng.toString():coordenadas[1].toString():destinatario.longitudD
             }
         }
 
@@ -1660,19 +1759,42 @@ function Embarque(props) {
         let today = new Date();
         limpiarCamposAgregar()
         getDataParaEditar("Agregar")
+
         setState(state => {
-            return {
-                ...state,
-                agregar: "Agregar",
-            }
-        });
+                return {
+                    ...state,
+                    agregar: "Agregar",
+                }
+
+
+
+         }
+        )
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
-    }
 
+    }
+    function monitorearCambios(){
+        setDetectar(true)
+
+    }
+    useEffect(() => {
+        if( detectarModificaciones){
+            console.log("disprosio")
+           // console.log(remitente)
+
+            window.onbeforeunload = confirmExit
+
+        }
+    }, [remitente,destinatario,state,dataComplementosSAT,dataPaquetes,entregaDD,dataConceptos])
+    function confirmExit()
+    {
+
+      return "show warning";
+    }
     function handleShowModificar(filaEmbarque, id) {
         console.log(JSON.stringify(filaEmbarque))
         if (filaEmbarque.m_nIdEstatusEmbarque == 21) {
@@ -1699,6 +1821,7 @@ function Embarque(props) {
                     embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
                 }
             });
+
             setDataParaConsultarModificar(respuesta, false, "Modificar")
         });
     }
@@ -2107,6 +2230,8 @@ function Embarque(props) {
         if (event) {
             event.stopPropagation();
         }
+        setDetectar(false)
+        window.onbeforeunload={}
         limpiarCamposAgregar()
 
         setState(state => {
@@ -2179,6 +2304,8 @@ function Embarque(props) {
                 entregaEnSucursal: !state.entregaEnSucursal,
                 diferenteEntrega: !state.entregaEnSucursal && false,
                 entregaConCita: !state.entregaEnSucursal && false,
+                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal,
+                zonaOperativaSucursal: !state.entregaEnSucursal?destinatario.zonaOperativaDestinatario:null
             }
         });
     };
@@ -2291,7 +2418,6 @@ function Embarque(props) {
                         tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
                         estatusGuia: respuesta.data.EstatusGuia,
                         tipoTarifa: respuesta.data.TipoTarifaTarifas,
-                        cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
                         cobrarCita: respuesta.data.esCobro,
                         costoCita: respuesta.data.CobroCitaTarifas || 0,
                         detectarTipoCobro: respuesta.data.DetectarTipoCobro,
@@ -2300,7 +2426,9 @@ function Embarque(props) {
                         idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                         idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                         idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
-                        modificarValorEmbarque: respuesta.data.ModificarValorEmbarque
+                        modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
+                        factorConversion: respuesta.data.FactorConversion,
+                        fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
                     }
                 })
                 setDataTipoDocumento(data)
@@ -2801,7 +2929,6 @@ function Embarque(props) {
             }
         });
     }
-
     const generarGuia = (idEmbarque) => {
 
         if (dataConceptos.length === 0) {
@@ -2840,14 +2967,30 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
         if (idEmbarque > 0) {
-            agregarGuia(params).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err.response?.data)
-                handleShowListado()
-            });
+
+            validarRequiereDocumentoTimbrado(state.idSucursalAgregar).then(({data}) => {
+                if (data.tieneDocumentoAsignado){
+                    agregarGuia(params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        handleShowListado()
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err.response?.data)
+                        handleShowListado()
+                    });
+                }else{
+                    setDialogTipoDocumento({
+                        ...dialogTipoDocumento,
+                        open: true,
+                        seleccion: {
+                            idSucursal: state.idSucursalAgregar,
+                            sucursal: '',
+                            idTipoDocumento: 0,
+                            documento: 'SIN DEFINIR'
+                        },
+                    })
+                }
+            })
         } else {
             showSuccess("Hubo un problema al tratar de generar la guia.")
         }
@@ -2928,9 +3071,111 @@ function Embarque(props) {
         }
     }
 
+    const handleOnCloseDialogTipoDocumento = (data) => {
+        try {
+            asignarTipoDocumento(data).then((respuesta) => {
+                showSuccess('Se guardó el documento por defecto.')
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                generarGuia(state.idEmbarque)
+
+            }).catch(e => {
+                setDialogTipoDocumento({
+                    ...dialogTipoDocumento,
+                    open: false,
+                    seleccion: {
+                        idSucursal: 0,
+                        sucursal: '',
+                        idTipoDocumento: 0,
+                        documento: 'SIN DEFINIR'
+                    }
+
+                })
+                handleShowListado()
+                showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+            })
+        }catch (e) {
+            console.log(e)
+            handleShowListado()
+            showSuccess('Hubo un error al asignar el documento a la sucursal, intente de nuevo.')
+        }
+
+    }
     return (
         <div>
+            {/*{*/}
+            {/*    openDialog &&*/}
+            {/*    <Dialog*/}
+            {/*        open={openDialog}*/}
+            {/*        onClose={() => setOpenDialog(false)}*/}
+            {/*        fullWidth maxWidth="md"*/}
+            {/*    >*/}
+            {/*        <DialogTitle>*/}
+            {/*            Reporte de Embarque*/}
+            {/*        </DialogTitle>*/}
+            {/*        <DialogContent>*/}
+            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
+            {/*                <form onSubmit={handleGenerarReporte}>*/}
+            {/*                    <Grid container spacing={1}>*/}
+            {/*                        <Grid item sm={6}>*/}
+            {/*                            <FormControl*/}
+            {/*                                className="input select"*/}
+            {/*                                fullWidth variant="outlined"*/}
+            {/*                                required*/}
+            {/*                                margin="dense">*/}
+            {/*                                <InputLabel*/}
+            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
+            {/*                                <Select*/}
+            {/*                                    fullWidth*/}
+            {/*                                    labelId="idReporteLabel"*/}
+            {/*                                    label="Reporte"*/}
+            {/*                                    className="form-control"*/}
+            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
+            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
+            {/*                                    name="reporteSeleccionado"*/}
+            {/*                                >*/}
+            {/*                                    {dataReportes.map((reporte) => (*/}
+            {/*                                        <MenuItem*/}
+            {/*                                            key={reporte.m_nIdFormato}*/}
+            {/*                                            value={reporte.m_nIdFormato}*/}
+            {/*                                        >*/}
+            {/*                                            {reporte.m_sFormato}*/}
+            {/*                                        </MenuItem>*/}
+            {/*                                    ))}*/}
+            {/*                                </Select>*/}
+            {/*                            </FormControl>*/}
+            {/*                        </Grid>*/}
+            {/*                    </Grid>*/}
+            {/*                    <DialogActions>*/}
 
+            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
+            {/*                            setOpenDialog(false)*/}
+            {/*                            setState({*/}
+            {/*                                ...state,*/}
+            {/*                                reporteSeleccionado: null*/}
+            {/*                            })*/}
+            {/*                        }*/}
+            {/*                        }>*/}
+            {/*                            Cancelar*/}
+            {/*                        </button>*/}
+            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
+            {/*                            Aceptar*/}
+            {/*                        </button>*/}
+            {/*                    </DialogActions>*/}
+            {/*                </form>*/}
+            {/*            </div>*/}
+            {/*        </DialogContent>*/}
+            {/*    </Dialog>*/}
+            {/*}*/}
             {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
@@ -3220,7 +3465,7 @@ function Embarque(props) {
                     }
                 </DialogContent>
             </Dialog>
-
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
             <header className="topbar clearfix">
                 <Cabecera titulo="Embarque">
                     <div className="page-header">
@@ -3253,7 +3498,13 @@ function Embarque(props) {
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
                             <a className={validarDerecho(9101422) ? "" : classes.disabled}
-                               onClick={() => handleShowAgregar()}>
+                               onClick={() => $.ajax({
+                                url:handleShowAgregar(),
+                                success:function(){
+                                   // monitorearCambios()
+                                      }
+                             })
+                             }>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -3278,14 +3529,12 @@ function Embarque(props) {
                         </li>
 
                         <li style={{float: "right"}}>
-                            <a
-                                className={state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled : ""}
-                                style={{textAlign: "right"}}
-                                onClick={() => setRedirect(true)}
-                            >
-                                Generar Guía
-                            </a>
+                        <Button className={ state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled :""}  fullWidth color={"primary"} variant={"contained"} onClick={() => setRedirect(true)} >
+                                            Generar Guia
+                                        </Button>
+
                         </li>
+                        
                     </ul>
 
                     <div className="row tab-content">
@@ -3319,10 +3568,10 @@ function Embarque(props) {
                             </div>
                         </div>
 
-                        <div id="Agregar"
+                        <div onClick={monitorearCambios} id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
-
-                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {
+{/*  */}
+                            <form className="j-forms row" onSubmit={handleAceptar}  onKeyDown={e => {
                                 if (e.code === 13) {
                                     e.preventDefault()
                                 }
@@ -3690,7 +3939,7 @@ function Embarque(props) {
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
-                                                                           disabled={(state.agregar === "Consultar") || !state.aplicaSeguro || state.embarqueConGuia}
+                                                                           disabled={(state.agregar === "Consultar") || (configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro) || state.embarqueConGuia}
                                                                            label="Valor Declarado"
                                                                            onChange={(event) => {
                                                                                event.preventDefault();
@@ -3847,6 +4096,8 @@ function Embarque(props) {
                                             cliente={state.clientePaga}
                                             seCalculaTarifa={seCalculaTarifa}
                                             limpiarProducto={configuraciones.limpiarProducto}
+                                            tipoTarifa={parseInt(configuraciones.tipoTarifa)}
+                                            factorConversion={configuraciones.factorConversion}
                                         />
 
                                     </div>
@@ -4445,11 +4696,11 @@ function Embarque(props) {
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
-                                        <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {
+                                        <form className="j-forms"  onSubmit={handleCancelar} onKeyDown={e => {
                                             if (e.code === 13) {
                                                 e.preventDefault()
                                             }
-                                        }}>
+                                        }} >
                                             <div className="form-content">
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
