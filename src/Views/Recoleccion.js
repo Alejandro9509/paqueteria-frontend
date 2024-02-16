@@ -4211,11 +4211,11 @@ function Recoleccion() {
                                                             <div className="row">
                                                                 <div style={{width:'70%'}}>
                                                                     <div className="col-sm-7 col-md-7 unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'#ccc'}:{color:"black"}}>
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
                                                                                 className="form-control"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.aplicaEntrega/*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 // value={state.diferenteEntrega}
                                                                                 checked={state.diferenteEntrega}
                                                                                 type="checkbox"
@@ -4231,7 +4231,7 @@ function Recoleccion() {
                                                             <div className="row">
                                                                 <div style={{width:'70%'}}>
                                                                     <div className="col-sm-7 col-md-7 unit" >
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'orange'}:{color:"black"}}>
                                                                             Entrega en Sucursal
                                                                             <input
                                                                                 onChange={handleEntregaEnSucursalCheckbox}
@@ -4239,7 +4239,7 @@ function Recoleccion() {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{ height: "20px" }}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.aplicaEntrega/*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i />

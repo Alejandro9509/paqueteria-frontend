@@ -4216,7 +4216,7 @@ function Embarque(props) {
                                                             <div className="row">
                                                                 <div style={{width: '70%'}}>
                                                                     <div className="col-sm-6 col-md-6  unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'orange'}:{color:"black"}}>
                                                                             Entrega en Sucursal
                                                                             <input
                                                                                 onChange={handleEntregaEnSucursalCheckbox}
@@ -4224,7 +4224,7 @@ function Embarque(props) {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{height: "20px"}}
-                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.aplicaEntrega /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i/>{state.aplicaEntrega && <>
@@ -4246,7 +4246,7 @@ function Embarque(props) {
                                                             <div className="row">
                                                                 <div style={{width: '70%'}}>
                                                                     <div className="col-sm-6 col-md-6  unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'#ccc'}:{color:"black"}}>
                                                                             Entrega en Diferente Domicilio
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
@@ -4255,7 +4255,7 @@ function Embarque(props) {
                                                                                 checked={state.diferenteEntrega}
                                                                                 value={state.diferenteEntrega}
                                                                                 style={{height: "20px"}}
-                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.aplicaEntrega/*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="diferenteEntrega"
                                                                             />
                                                                             <i/>
@@ -4266,7 +4266,7 @@ function Embarque(props) {
                                                             <div className="row">
                                                                 <div style={{width: '70%'}}>
                                                                     <div className="col-sm-6 col-md-6  unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'#ccc'}:{color:"black"}}>
                                                                             Entrega con cita
                                                                             <input
                                                                                 onChange={handleEntregaConCitaCheckbox}
@@ -4275,7 +4275,7 @@ function Embarque(props) {
                                                                                 checked={state.entregaConCita}
                                                                                 value={state.entregaConCita}
                                                                                 style={{height: "20px"}}
-                                                                                disabled={state.agregar === "Consultar" /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.aplicaEntrega /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaConCita"
                                                                             />
                                                                             <i/>
