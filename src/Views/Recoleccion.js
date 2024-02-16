@@ -1835,7 +1835,7 @@ function Recoleccion() {
                 [event.target.name]: event.target.value
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal)
     };
 
     const getZonaOperativaByCodigoPostal = (codigoPostal) => {
@@ -1883,14 +1883,16 @@ function Recoleccion() {
             showSuccess("Se requiere seleccionar Destinatario")
             return
         }
-        setState({
-            ...state,
-            entregaEnSucursal: !state.entregaEnSucursal,
-            diferenteEntrega: !state.entregaEnSucursal && false,
-            entregaConCita: !state.entregaEnSucursal && false,
-            idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal,
-            zonaOperativaSucursal: !state.entregaEnSucursal?destinatario.zonaOperativaDestinatario:null
-        });
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == destinatario.zonaOperativaDestinatario.m_nIdSucursal).m_nIdCodigoPostal)
+        setState(state => {
+            return{
+                ...state,
+                entregaEnSucursal: !state.entregaEnSucursal,
+                diferenteEntrega: !state.entregaEnSucursal && false,
+                entregaConCita: !state.entregaEnSucursal && false,
+                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal
+            }
+        })
     };
     const handleListComplementosSATChange = (newList) => {
         setDataComplementosSAT(newList)
@@ -4303,7 +4305,7 @@ function Recoleccion() {
                                                                                         name: "idSucursalEntrega",
                                                                                     }}
                                                                                 >
-                                                                                    {dataSucursal.filter(suc=>suc.m_nIdEstado == destinatario.estadoDestinatario).map((sucursal) => (
+                                                                                    {dataSucursal.map((sucursal) => (
                                                                                         <MenuItem
                                                                                             key={sucursal.m_nIdSucursal}
                                                                                             value={sucursal.m_nIdSucursal}
