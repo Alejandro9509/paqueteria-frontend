@@ -507,6 +507,16 @@ function Guia(props) {
             width: 200,
         },
         {
+            headerName: "Usuario Documento",
+            field: "m_sUsuarioDocumento",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                </div>
+            }
+        },
+        {
             headerName: 'Fecha de Cancelación',
             field: 'Fecha de Cancelación',
             width: 200,
