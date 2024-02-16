@@ -30,7 +30,7 @@ function doThis(event){
     $.array.push(imageBytes)
     //  this.state.dataImagenesEvidencia.push(picFile.result)
     var div = document.createElement("div");
-    div.innerHTML = "<img title='Evidencia' width='50%' height='50%' margin='10px' src='" + picFile.result + "'" +
+    div.innerHTML = "<img style={{text-align: 'center'}} title='Evidencia' width='50%' height='50%' margin='10px' src='" + picFile.result + "'" +
         "title='" + picFile.name + "'/>";
     output.insertBefore(div, null);
 }
@@ -210,11 +210,11 @@ class MyComponent extends Component {
                                 </TextField>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} >
                             <FormControl fullWidth variant={'outlined'} margin={'dense'}>
-                                <label htmlFor="files">Seleccione evidencia para adjuntarla</label>
-                                <input id="files" name="file" type="file" multiple />
-                                <output id={"result"} ></output>
+                                <label style={{alignSelf:"center"}} htmlFor="files">Seleccione evidencia para adjuntarla</label>
+                                <input style={{alignSelf:"center"}} id="files" name="file" type="file" multiple />
+                                <output style={{textAlign:"center"}} id={"result"} ></output>
                             </FormControl>
                         </Grid>
                         {/*<Grid item xs={2}/>*/}
