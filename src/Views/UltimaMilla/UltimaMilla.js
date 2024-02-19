@@ -320,7 +320,7 @@ class UltimaMilla extends Component {
     }
 
     ultimaMillaCompletada(ultimaMilla){
-        return !ultimaMilla.m_arrClsProGuia.find(i => i.m_nEstatusUlimaMilla !== 3)
+        return !ultimaMilla.m_arrClsProGuia.find(i => i.m_nEstatusUlimaMilla !== 3 && i.m_nEstatusUlimaMilla !== 4)
     }
 
 
