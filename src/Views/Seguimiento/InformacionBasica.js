@@ -48,10 +48,10 @@ class InformacionBasica extends Component {
                     <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Valor declarado: <Typography>${data.m_xValorDeclarado}</Typography></Typography>
                 </Grid>
                 <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Operador que entregó: <Typography>{data.operadorEntrega?data.operadorEntrega:'No Aplica'}</Typography> </Typography>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Recibió: <Typography>{data.m_sReceptor}</Typography> </Typography>
                 </Grid>
                 <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Recibió: <Typography>{data.m_sReceptor}</Typography> </Typography>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Entregó Guía: <Typography>{data.operadorEntrega?data.operadorEntrega:'No Aplica'}</Typography> </Typography>
                 </Grid>
                 <Grid item xs={3}>
                 </Grid>
