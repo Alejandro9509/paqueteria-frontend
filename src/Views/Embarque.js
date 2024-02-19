@@ -1786,11 +1786,7 @@ function Embarque(props) {
     }
     useEffect(() => {
         if( detectarModificaciones){
-            console.log("disprosio")
-           // console.log(remitente)
-
             window.onbeforeunload = confirmExit
-
         }
     }, [remitente,destinatario,state,dataComplementosSAT,dataPaquetes,entregaDD,dataConceptos])
     function confirmExit()
@@ -3038,8 +3034,9 @@ function Embarque(props) {
         }
     }
 
-    function esEntregaSucursal(aplicaEntrega) {
+    function esEntregaSucursal(aplicaEntrega,idSucursalDestinatario) {
         if (aplicaEntrega) {
+            setRepetirConceptos(true)
             setState(state => {
                 return {
                     ...state,
@@ -3049,6 +3046,18 @@ function Embarque(props) {
                     diferenteEntrega: false
                 }
             })
+            try{
+                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == idSucursalDestinatario).m_nIdCodigoPostal)
+                setState(state => {
+                    return {
+                        ...state,
+                        idSucursalEntrega: idSucursalDestinatario
+                    }
+                });
+            }
+            catch{
+                showError("No se encontró la sucursal asociada a este destinatario")
+            }
         } else {
             setState(state => {
                 return {

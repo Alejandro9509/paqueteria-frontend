@@ -3086,17 +3086,31 @@ function Recoleccion() {
             }
         });
     }
-    function esEntregaSucursal(aplicaEntrega){
+    function esEntregaSucursal(aplicaEntrega,idSucursalDestinatario){
         if(aplicaEntrega){
-        setState(state => {
-            return {
-            ...state,
-                aplicaEntrega:aplicaEntrega,
-                entregaEnSucursal:true,
-                // deshabilitarDiferenteDomicilio:true,
-                diferenteEntrega:false
+            setRepetirConceptos(true)
+            setState(state => {
+                return {
+                    ...state,
+                    aplicaEntrega: aplicaEntrega,
+                    entregaEnSucursal: true,
+                    // deshabilitarDiferenteDomicilio:true,
+                    diferenteEntrega: false
+                }
+            })
+            try{
+                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == idSucursalDestinatario).m_nIdCodigoPostal)
+                setState(state => {
+                    return {
+                        ...state,
+                        idSucursalEntrega: idSucursalDestinatario
+                    }
+                });
             }
-        })}
+            catch{
+                showError("No se encontró la sucursal asociada a este destinatario")
+            }
+        }
         else{
             setState(state => {
                 return {
