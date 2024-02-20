@@ -556,7 +556,7 @@ class DetalleParadas extends Component {
         })*/
     }
     validarRutasCompletadas(tour){
-        return tour.m_arrClsProGuia.some(g=> g.m_sEstatusUltimaMilla == "Completado")
+        return tour.m_arrClsProGuia.some(g=> g.m_nEstatusUlimaMilla === 3)
     }
     cancelarRutaAccion(e, id) {
         e.preventDefault()
@@ -1035,7 +1035,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
-                                                                                                                disabled={!validarDerecho(9101450) || (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
+                                                                                                                disabled={!validarDerecho(9101450)}
                                                                                                                 onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
@@ -1132,7 +1132,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
-                                                                                                                disabled={!validarDerecho(9101453) || (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
+                                                                                                                disabled={!validarDerecho(9101453)}
                                                                                                                 onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip

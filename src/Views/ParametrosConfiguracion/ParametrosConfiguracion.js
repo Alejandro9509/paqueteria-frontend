@@ -127,6 +127,7 @@ function ParametrosConfiguracion() {
         documentos:[],
         factorConversion: 0.0,
         imprimirEtiquetasIndividuales:false,
+        horasLimiteEntregasUltimaMilla: 23,
         porcentualSeguroDefecto:0,
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
@@ -181,7 +182,6 @@ function ParametrosConfiguracion() {
     };
 
     function onSubmit() {
-        console.log(configuraciones.plantillaImportarEmbarquesBase64)
         let params = {
             estatusRecoleccion: configuraciones.estatusRecoleccion,
             estatusEmbarque: configuraciones.estatusEmbarque,
@@ -217,6 +217,7 @@ function ParametrosConfiguracion() {
             plantillaImportarEmbarquesNombreArchivo: '',
             documentos: configuraciones.documentos,
             imprimirEtiquetasIndividuales:configuraciones.imprimirEtiquetasIndividuales,
+            horasLimiteEntregasUltimaMilla:configuraciones.horasLimiteEntregasUltimaMilla,
             porcentualSeguroDefecto:configuraciones.porcentualSeguroDefecto
         }
         modificarParametrosConfiguracion(params)
@@ -275,6 +276,7 @@ function ParametrosConfiguracion() {
                     documentos: respuesta.data.documentos || [],
                     factorConversion: respuesta.data.FactorConversion,
                     imprimirEtiquetasIndividuales:respuesta.data.ImprimirEtiquetasIndividuales,
+                    horasLimiteEntregasUltimaMilla:respuesta.data.HorasLimiteEntregasUltimaMilla,
                     porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto,
                 }
             })
@@ -519,6 +521,26 @@ function ParametrosConfiguracion() {
                                         </Box>
                                     </Box>
                                 </Box>
+                                <Box display="flex" p={1} my={0.5} flexDirection="column">
+                                    <Box width="50%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Limitar tiempo entregas</div>
+                                        </Box>
+                                        <Box width="50" p={1} my={0.5}>
+                                            <TextField
+                                                type={"number"}
+                                                value={configuraciones.horasLimiteEntregasUltimaMilla}
+                                                variant="outlined"
+                                                margin="dense"
+                                                InputProps={{ inputProps: { min: 1,step: 1 } }}
+                                                label="Horas"
+                                                onChange={handleChange}
+                                                name="horasLimiteEntregasUltimaMilla"
+                                            />
+                                        </Box>
+                                    </Box>
+                                </Box>
+
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
                                             style={{width: "100px"}}

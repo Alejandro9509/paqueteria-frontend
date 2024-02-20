@@ -4,7 +4,10 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from "@material-ui/icons/Refresh";
 import SearchIcon from '@material-ui/icons/Search';
-import { obtenerListadoZonaOperativa, obtenerZonaOperativaByIdCodigoPostal } from "../../Util/Contexts/ZonaOperativaContext";
+import {
+    obtenerListadoZonaOperativa,
+    obtenerZonaOperativaByCodigoPostal
+} from "../../Util/Contexts/ZonaOperativaContext";
 
 
 
@@ -34,7 +37,7 @@ function Filtros(props) {
 
     const filtrar = () => {
             if (filtros.cp.length > 0){
-                obtenerZonaOperativaByIdCodigoPostal(filtros.cp).then(respuesta => {
+                obtenerZonaOperativaByCodigoPostal(filtros.cp).then(respuesta => {
                     console.log(respuesta)
                     props.listaResultados(respuesta.data)
                 })

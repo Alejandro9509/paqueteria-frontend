@@ -104,8 +104,8 @@ export default function DiferenteDomicilioForm(props){
     }
     const handleChangeAutocomplete = (input, newValue) => {
 
-        if (input === "codigoPostal" && newValue.m_sCP){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+        if (input === "codigoPostal" && newValue.m_nIdCP){
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
                 if (data.length > 0){
                     if (data.length === 1){
                         if(data[0].m_bAplicaEntrega){

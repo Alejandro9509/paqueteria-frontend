@@ -2325,7 +2325,7 @@ function Embarque(props) {
                 [event.target.name]: event.target.value,
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal)
     };
 
     const handleEntregaCheckboxChange = (event) => {
@@ -2341,14 +2341,14 @@ function Embarque(props) {
 
     const handleEntregaEnSucursalCheckbox = (event) => {
         setRepetirConceptos(true)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == destinatario.zonaOperativaDestinatario.m_nIdSucursal).m_nIdCodigoPostal)
         setState(state => {
             return {
                 ...state,
                 entregaEnSucursal: !state.entregaEnSucursal,
                 diferenteEntrega: !state.entregaEnSucursal && false,
                 entregaConCita: !state.entregaEnSucursal && false,
-                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal,
-                zonaOperativaSucursal: !state.entregaEnSucursal?destinatario.zonaOperativaDestinatario:null
+                idSucursalEntrega: destinatario.zonaOperativaDestinatario.m_nIdSucursal
             }
         });
     };

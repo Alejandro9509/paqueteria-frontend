@@ -15,7 +15,10 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Paquetes from "../Paquetes/Paquetes";
 import ComplementosSAT from "./ComplementosSAT";
 import DialogTableRemDes from "../RemitenteDestinatario/DialogTableRemDes";
-import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
+import {
+    obtenerByIdZonaOperativa,
+    obtenerZonaOperativaByCodigoPostal
+} from "../../Util/Contexts/ZonaOperativaContext";
 import Noty from "noty";
 import RemitentesDestinatarios from "../RemitentesDestinatarios";
 import {da} from "date-fns/locale";
@@ -410,7 +413,7 @@ export function RecoleccionResumen(props) {
             showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
             return
         }
-        obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
+        obtenerZonaOperativaByCodigoPostal(row.data.m_sCodigoPostal).then(
             ( zonaOperativa ) => {
                 console.log(JSON.stringify(zonaOperativa))
                 if(props.destinatario){
