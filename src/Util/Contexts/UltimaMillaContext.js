@@ -411,6 +411,7 @@ async function ordenarParada(idParada, guias, guiasDescartadas) {
         idGuia: g.m_nId,
         lat: g.lat.toString(),
         lng: g.lng.toString(),
+        idEstatus: g.m_nEstatusUlimaMilla,
         orden: index + 1,
         esRecoleccion: g.m_bEsRecoleccion,
         idParadaGuia: g.m_nIdParadaGuia
