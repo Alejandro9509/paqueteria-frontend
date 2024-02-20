@@ -136,14 +136,14 @@ async function obtenerRutas(truck, guias, data) {
                         "shifts": [
                             {
                                 "start": {
-                                    "time": data.startDate + "T" + "00:00" + ":00+00:00",
+                                    "time": data.startDate + ":00+00:00",
                                     "location": {
                                         "lat": location.y,
                                         "lng": location.x
                                     }
                                 },
                                 "end": {
-                                    "time": data.finishDate + "T" + "23:00" + ":00+00:00",
+                                    "time": data.finishDate+ ":00+00:00",
                                     "location": {
                                         "lat": location.y,
                                         "lng": location.x
