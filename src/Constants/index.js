@@ -336,10 +336,11 @@ export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => {
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
 ^MMT
+^CI28
 ^PW812
 ^LL0812
 ^LS0
-^FO32,0^GFA,05120,05120,00040,:Z64:
+^FO0,0^GFA,03840,03840,00024,:Z64:
 ${guia.m_sLogoEtiqueta}
 ^FT193,78^A0N,39,38^FH\\^FD${guia.m_nFolioGuia}^FS
 ^FT410,141^A0N,28,28^FH\\^FD${guia.m_sSucursalorigen}^FS
@@ -350,15 +351,15 @@ ${guia.m_sLogoEtiqueta}
 ^FT53,225^A0N,28,28^FH\\^FDTEL:^FS
 ^FT116,225^A0N,28,28^FH\\^FD${guia.m_sTelefonoRemitente}^FS
 ^FT53,265^A0N,28,28^FH\\^FDDIRECCIÓN:^FS
-${guia.m_sDomicilioRemitente.length > 30 ?
+${guia.m_sDomicilioRemitente.length > 45 ?
             (
-                guia.m_sDomicilioRemitente.length > 70 ? (
-                    `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
-                ^FT202,299^A0N,28,24\\^FD${guia.m_sDomicilioRemitente.substring(25, 73)}^FS
-                ^FT202,337^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(73)}^FS`
+                guia.m_sDomicilioRemitente.length > 90 ? (
+                    `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 45)}^FS
+                ^FT202,299^A0N,28,24\\^FD${guia.m_sDomicilioRemitente.substring(45, 90)}^FS
+                ^FT202,337^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(90)}^FS`
                 ) : (
-                    `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
-               ^FT202,299^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(25)}^FS`
+                    `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 45)}^FS
+               ^FT202,299^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(45)}^FS`
                 )
             ) : `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente}^FS`}
 ^FO46,408^GB697,238,4^FS
@@ -366,23 +367,20 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT53,447^A0N,28,28^FH\\^FD${guia.m_sNombreDestinatario}^FS
 ^FT53,487^A0N,28,28^FH\\^FDTEL:^FS
 ^FT116,487^A0N,28,28^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
-^FT53,521^A0N,28,28^FH\\^FDDIRECCI\\E3N:^FS
+^FT53,521^A0N,28,28^FH\\^FDDIRECCIÓN:^FS
 ^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
 ^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
-^FT595,219^BQN,2,5
+^FT628,159^BQN,2,4
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario}^FS
-^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario2}^FS
-^FT202,596^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario3}^FS
-${guia.m_sDomicilioDestinatario.length > 30 ?
+${guia.m_sDomicilioDestinatario.length > 45 ?
             (
-                guia.m_sDomicilioDestinatario.length > 70 ? (
-                    `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
-                 ^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 73)}^FS
-                 ^FT202,596^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(73)}^FS`
+                guia.m_sDomicilioDestinatario.length > 90 ? (
+                    `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 45)}^FS
+                 ^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(45, 90)}^FS
+                 ^FT202,596^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(90)}^FS`
                 ) : (
-                    `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
-                 ^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 70)}^FS`
+                    `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 45)}^FS
+                 ^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(45, 90)}^FS`
                 )
             ) : `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario}^FS`}
 ^FT53,717^A0N,28,28^FH\\^FDTIPO DE REPARTO^FS
