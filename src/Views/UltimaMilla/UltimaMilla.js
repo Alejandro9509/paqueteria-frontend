@@ -297,7 +297,7 @@ class UltimaMilla extends Component {
             }else{
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
                 await obtenerParametrosConfiguracion().then((respuesta) => {
-                    data.finishDate = moment(new Date()).add(respuesta.data.HorasLimiteEntregasUltimaMilla, 'hours').format('YYYY-MM-DDThh:mm')
+                    data.finishDate = moment(new Date()).add(respuesta.data.HorasLimiteEntregasUltimaMilla, 'hours').format('YYYY-MM-DDTHH:mm')
                 })
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
                     if (results) {
