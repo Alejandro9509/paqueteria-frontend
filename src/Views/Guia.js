@@ -336,6 +336,9 @@ function Guia(props) {
         modificadoEl: "",
         openDialog: false,
         receptorGuia:[],
+        operadorEntrega:'',
+        tipoEntrega:'',
+        m_sComentariosOcurre:'',
         referencia:'',
         observaciones:'',
         reporteSeleccionado:{},
@@ -824,12 +827,7 @@ function Guia(props) {
             }
         })
     }
-    const handleEntregaOcurre = (dataOcurre,imagenes) => {
-        if(dataOcurre.recibe==null || dataOcurre.recibe=='')
-        {
-            showError("Favor de llenar el campo de Recibe")
-            return;
-        }
+    const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
             m_nIdUsuarioEntregaOcurre: parseInt(localStorage.getItem("UsuarioId")),
@@ -840,58 +838,21 @@ function Guia(props) {
             m_nIdTipoPago: dataOcurre.tipoPago,
             m_nIdBanco:dataOcurre.aplicaDetalle?dataOcurre.idBancoproveniente:0,
             m_dFechaPago:dataOcurre.fechaPago,
-            recibe:dataOcurre.recibe,
             m_nAplicaDetalle:dataOcurre.aplicaDetalle?1:0
 
         }
-        let huboError=false
+        console.log(params)
+        entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
+            showSuccess(respuesta.data)
+            getAllData()
+            setDataOcurre({})
+            setState({...state, openDialog: false})
+            setGuiaSeleccionada(null)
+        }).catch(err => {
+            console.log(err)
+            showSuccess(err)
+        });
 
-        if(imagenes.length>0) {
-            try {
-                const myPromise=new Promise((resolve,reject)=>{
-                    for (let i = 0; i < imagenes.length; i++) {
-                        subirImagenEvidencia(imagenes[i], dataOcurre.idGuia, '' + dataOcurre.idGuia + ' ' + i, '', 0, 1)
-                            .then(()=>{
-                                resolve()
-                            })
-                            .catch(err => {
-                                console.log(err)
-                                if(huboError)
-                                    showError("Proceso abortado: no se lograron subir las imágenes de evidencia")
-                                huboError=true
-                                reject()
-                            });
-                    }
-                })
-                myPromise.then((value)=> {
-                    entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
-                        showSuccess(respuesta.data)
-                        getAllData()
-                        setDataOcurre({})
-                        setState({...state, openDialog: false})
-                        setGuiaSeleccionada(null)
-                    }).catch(err => {
-                        console.log(err)
-                        showSuccess(err)
-                    });
-                },null)
-            } catch {
-                showError("Proceso abortado: no se lograron subir las imágenes de evidencia")
-            }
-
-        }
-        else {
-            entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
-                showSuccess(respuesta.data)
-                getAllData()
-                setDataOcurre({})
-                setState({...state, openDialog: false})
-                setGuiaSeleccionada(null)
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
-        }
     }
 
     function handleEliminar(id) {
@@ -1121,6 +1082,9 @@ function Guia(props) {
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
                 tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
                 receptorGuia: respuesta.data.m_sReceptorGuia,
+                operadorEntrega: respuesta.data.operadorEntrega,
+                tipoEntrega:respuesta.data.tipoEntrega,
+                m_sComentariosOcurre:respuesta.data.m_sComentariosOcurre,
                 referencia: respuesta.data.m_sReferencia,
                 observaciones: respuesta.data.m_sObservaciones,
                 clientePaga: respuesta.data.m_sCliente
@@ -2094,6 +2058,9 @@ function Guia(props) {
                 zonaTarifaRemitente: '',
                 zonaTarifaDestinatario: '',
                 receptorGuia: '',
+                operadorEntrega: '',
+                tipoEntrega:'',
+                m_sComentariosOcurre:'',
                 referencia: '',
                 observaciones: '',
                 clientePaga: '',

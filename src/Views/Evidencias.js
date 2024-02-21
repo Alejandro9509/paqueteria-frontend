@@ -58,7 +58,9 @@ function Evidencias(props) {
                         :
                         <Grid item md={12}>
                             <div id="divEmbarque">
-                                Recibió: {props.data.receptorGuia}
+                                Entregó Guía: {props.data.operadorEntrega} <br/>
+                                Recibió: {props.data.receptorGuia}<br/>
+                                {props.data.tipoEntrega=='OCURRE'?('Comentarios: '+ props.data.m_sComentariosOcurre):null}
                                 <Button fullWidth variant="text" color="primary"
                                         onClick={() => handleClickOpenDialogoEvidencia(true)}>
                                     Ver evidencias de entrega
