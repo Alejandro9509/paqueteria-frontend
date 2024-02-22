@@ -31,18 +31,7 @@ function agregarGuia(params) {
         );
     return result
 }
-function subirImagenEvidencia(imagen,IdGuia,ImagenNombreArchivo,Descripcion,esRec,TipoArchivo) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/SubirImagen`;
-    let result;
-    let config={
-        headers:   {'Content-Type':headers["Content-Type"],'RFC':headers['RFC'],'EsRecoleccion':esRec,'IdGuia':IdGuia,'Descripcion':Descripcion,'ImagenNombreArchivo':ImagenNombreArchivo,'TipoArchivo':TipoArchivo}
-                    }
-    trackPromise(
 
-        result =  axios.post(url, imagen, config)
-    );
-    return result
-}
 function eliminarGuia(id, idEliminadoPor) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Eliminar/${id}/${idEliminadoPor}`;
     let result;
@@ -328,7 +317,18 @@ function obtenerPaquetesGuia(idGuia) {
     );
     return result
 }
+function subirImagenEvidencia(imagen,IdGuia,ImagenNombreArchivo,Descripcion,esRec,TipoArchivo) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/SubirImagen`;
+    let result;
+    let config={
+        headers:   {'Content-Type':headers["Content-Type"],'RFC':headers['RFC'],'EsRecoleccion':esRec,'IdGuia':IdGuia,'Descripcion':Descripcion,'ImagenNombreArchivo':ImagenNombreArchivo,'TipoArchivo':TipoArchivo}
+    }
+    trackPromise(
 
+        result =  axios.post(url, imagen, config)
+    );
+    return result
+}
 
 export {cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
