@@ -376,6 +376,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                 <DialogoNuevoConcepto
                     agregarConcepto={addPaquetev2}
                     concepto={concepto}
+                    dataPaquetes={dataPaquetes}
                     conceptosBase={conceptosBase}
                     keys={keys}
                     disabled={disabled}
