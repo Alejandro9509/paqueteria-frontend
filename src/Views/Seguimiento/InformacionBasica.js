@@ -50,7 +50,10 @@ class InformacionBasica extends Component {
                 <Grid item xs={3}>
                     <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Recibió: <Typography>{data.m_sReceptor}</Typography> </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={3}>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Entregó Guía: <Typography>{data.operadorEntrega?data.operadorEntrega:'No Aplica'}</Typography> </Typography>
+                </Grid>
+                <Grid item xs={3}>
                 </Grid>
                 <Grid item xs={3}>
                     <FormControlLabel disabled style={{padding:"0px !important"}}

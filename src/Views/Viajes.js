@@ -79,6 +79,7 @@ import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
 import { RowingSharp } from "@material-ui/icons";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { obtenerTrayectosByRuta } from "../Util/Contexts/RutasContext";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 function showSuccess(mensaje) {
     new Noty({
@@ -977,6 +978,7 @@ function Viajes() {
     const [paradasListado, setParadasListado] = React.useState([]);
 
     const [paradaData, setParadaData] = React.useState();
+    const [kms, setKms] = React.useState(0);
 
     function getParadasListado(row) {
         setState(state => {
@@ -1036,6 +1038,10 @@ function Viajes() {
         //     if(encontrado){//si encontro valor falso en timbrado
         //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
         //     }else{
+            obtenerTrayectosByRuta(data.m_nIdRuta).then((resp) => {
+                var a=resp.data.find((element)=>element.IdOrigen===data.m_nIdOrigen)
+                setKms(a.Kilometros)
+            })
                 setParadaData(data);
                 setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
         //    }
@@ -1044,7 +1050,6 @@ function Viajes() {
        // })
 
     }
-
     const closeLlegadaDialog = () => {
         setEventOptions({...eventOptions, showLlegadaParadasDialog: false});
     }
@@ -1112,7 +1117,7 @@ function Viajes() {
             m_nCV2Millas: data.millasRemolqueDos,
             m_bCV1Estatus: data.idEstatusRemolqueUno,
             m_bCV2Estatus: data.idEstatusRemolqueDos,
-            m_nKmViaje: data.kms,
+            m_nKmViaje: kms,
             m_nIdEstatusLlegada: data.idEstatus,
             m_nMillasViaje: data.millas,
             m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
@@ -1314,7 +1319,7 @@ function Viajes() {
                         maxWidth={'xl'}>
                     <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                     <DialogContent>
-                        <LlegadaParadas onSubmit={updateLlegada} viaje={viajeSeleccionado} parada={paradaData}>
+                        <LlegadaParadas onSubmit={updateLlegada} viaje={viajeSeleccionado} parada={paradaData} distancia={kms} handleChangeKms={(e)=>setKms(e.target.value)}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}
