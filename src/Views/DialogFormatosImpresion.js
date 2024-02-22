@@ -114,10 +114,10 @@ export default function DialogFormatosImpresion({idProceso = 0, idRegistro = 0, 
                       </Grid>
                       <DialogActions>
 
-                          <Button className="btn btn-secondary secondary-btn" onClick={() => { handleOnCancelClick() }}>
+                          <Button onClick={() => { handleOnCancelClick() }}>
                               Cancelar
                           </Button>
-                          <Button className="btn btn-primary primary-btn" color={"primary"} onClick={() => { handleOnSubmit() }}>
+                          <Button onClick={() => { handleOnSubmit() }}>
                               Aceptar
                           </Button>
                       </DialogActions>
