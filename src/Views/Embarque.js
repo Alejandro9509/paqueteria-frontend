@@ -575,6 +575,11 @@ function Embarque(props) {
         }
 
     })
+    const [seguroClienteActual,setDataSeguroClienteActual]=useState({
+        idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
+        porcentajeSeguro: 0,
+        aplicaSeguro: false,
+    })
     const [dataConceptos, setDataConceptos] = useState([])
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -2410,6 +2415,14 @@ function Embarque(props) {
 
     const handlePatrocinadorSelected = (row) => {
         console.log(row)
+        setDataSeguroClienteActual(seguroClienteActual=>{
+            return {
+                ...seguroClienteActual,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+            }
+        })
         setState(state => {
             return {
                 ...state,
@@ -2980,7 +2993,8 @@ function Embarque(props) {
             return {
                 ...state,
                 idTipoSeguro: event.target.value,
-                porcentajeSeguro: (state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO) && (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?state.porcentajeSeguro:(event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?configuraciones.porcentualSeguroDefecto:0,
+                //porcentajeSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?configuraciones.porcentualSeguroDefecto:0,
+                porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value)?(event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO)?((state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO)  && (event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO))?state.porcentajeSeguro:configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
                 aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
                 valorDeclarado: 0
             }
