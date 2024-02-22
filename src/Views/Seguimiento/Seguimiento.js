@@ -80,7 +80,7 @@ class Seguimiento extends Component {
         })
         obtenerInformeFolioTipo(this.state.folioBusqueda,this.state.tipoBusqueda).then(({data}) => {
             if(data.Estatus == true){
-                obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
+                obtenerImagenEvidencia(data.m_nIdRecoleccion?data.m_nIdRecoleccion:-1,1).then(respuestaRec=>{
                     obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
                         this.setState({
                             imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
@@ -298,7 +298,7 @@ class Seguimiento extends Component {
                                      </Grid>
                                      
                                      <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
-                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" alignItems="center">
+                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" textAlign="center" alignItems="center">
                                     <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography>
                                          <Grid item md={12}>
                                              Entregó: {this.state.data.m_sReceptorRecoleccion}
@@ -328,10 +328,12 @@ class Seguimiento extends Component {
                                      </Grid>
                                      <Grid item md={12}>
                                          <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"
-                                              alignItems="center">
+                                              alignItems="center" textAlign="center">
                                              <Typography variant={"h4"}
                                                          style={{marginBottom: "10px"}}>Entrega</Typography>
                                              <Grid item md={6}>
+                                                 Entregó: {this.state.data.operadorEntrega}
+                                                 <br/>
                                                  Recibió: {this.state.data.m_sReceptorGuia}
                                                  <Button fullWidth variant="text" color="primary"
                                                          onClick={() => this.handleClickOpenDialogoEvidencia(true, false)}>
