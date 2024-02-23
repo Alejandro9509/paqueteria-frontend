@@ -189,6 +189,11 @@ function Recoleccion() {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataCiudadF, setDataCiudadF] = React.useState([]);
+    const [seguroClienteActual,setDataSeguroClienteActual]=useState({
+        idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
+        porcentajeSeguro: 0,
+        aplicaSeguro: false,
+    })
     const [dataConceptos, setDataConceptos] = useState([])
     const [dataZona, setDataZona] = React.useState([]);
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
@@ -277,7 +282,8 @@ function Recoleccion() {
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
         factorConversion: 0.0,
-        fijarCapturaValorDeclarado: false
+        fijarCapturaValorDeclarado: false,
+        porcentualSeguroDefecto:0
     })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
@@ -684,7 +690,8 @@ function Recoleccion() {
                         estatusRecoleccion: respuesta.data.EstatusRecoleccion,
                         moneda: respuesta.data.MonedaEmbarque,
                         tipoCambio: respuesta.data.TipoCambioEmbarque,
-                        tipoCobro: respuesta.data.TipoCobro
+                        tipoCobro: respuesta.data.TipoCobro,
+                        porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                     }
                 })
 
@@ -707,7 +714,8 @@ function Recoleccion() {
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                     idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                     factorConversion: respuesta.data.FactorConversion || 0.0,
-                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
+                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado,
+                    porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                 }
             })
         })
@@ -1713,6 +1721,14 @@ function Recoleccion() {
     }
 
     const handlePatrocinadorSelected = (row) => {
+        setDataSeguroClienteActual(seguroClienteActual=>{
+            return {
+                ...seguroClienteActual,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+            }
+        })
         setState(state => {
             return {
                 ...state,
@@ -3040,7 +3056,8 @@ function Recoleccion() {
             return {
                 ...state,
                 idTipoSeguro: event.target.value,
-                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value)?(event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO)?((state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO)  && (event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO))?state.porcentajeSeguro:configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
+                //porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value && ((event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)))? (state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO) && (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?state.porcentajeSeguro:(event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
                 aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
                 valorDeclarado: 0
             }
