@@ -92,4 +92,4 @@ function obtenerZonaOperativaByCodigoPostal(cp) {
     return result
 }
 
-export {obtenerZonaOperativaByCodigoPostal,obtenerZonaOperativaByIdCodigoPostal, obtenerParametrosDestino, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal, obtenerListadoZonaOperativaByOrigenDestino}
+export {obtenerZonaOperativaByCodigoPostal, obtenerParametrosDestino,obtenerZonaOperativaByIdCodigoPostal, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal, obtenerListadoZonaOperativaByOrigenDestino}
