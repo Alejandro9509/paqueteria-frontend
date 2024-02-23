@@ -167,6 +167,8 @@ async function obtenerRutas(truck, guias, data) {
         result = new Promise((resolve, reject) => {
             axios.post("https://tourplanning.hereapi.com/v3/problems?apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, object, {headers: {'Content-Type': 'application/json'}}).then(({data}) => {
                 resolve(data)
+            }).catch((err) => {
+                reject(err)
             })
 
         })
