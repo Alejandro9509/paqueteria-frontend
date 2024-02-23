@@ -534,6 +534,16 @@ function Embarque(props) {
             width: 150,
         },
         {
+            headerName: "Usuario Documento",
+            field: "m_sUsuarioDocumento",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                </div>
+            }
+        },
+        {
             headerName: "Cancelado",
             field: "m_dtFechaCancelacion",
             width: 150,
@@ -2500,9 +2510,11 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
+        //console.log(">>>>>>> getAllEmbarque");
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0, 0).then((respuesta) => {
+                    //console.log(respuesta.data);
                     setData(respuesta.data);
                 })
             })
