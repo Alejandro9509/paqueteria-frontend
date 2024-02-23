@@ -249,7 +249,7 @@ function RemitenteDestinatario(props) {
     obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sIdCodigoPostalDestinatario).then(
       ( zonaOperativa ) => {
         if(props.destinatario){
-          props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+          props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false,zonaOperativa.data[0].m_nIdSucursal)
         }
       }
   );
@@ -362,7 +362,7 @@ function RemitenteDestinatario(props) {
     obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_nIdCodigoPostalDestinatario).then(
         ( zonaOperativa ) => {
           if(props.destinatario){
-            props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+            props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false,zonaOperativa.data[0].m_nIdSucursal)
           }
         }
     );
@@ -544,56 +544,68 @@ if(input=="codigoPostal"){
       if (props.componentePadre !== 'CANCELAR_SAT'){
         props.seCalculaTarifa()
       }
+    const promise = new Promise((resolve, reject) => {
+          obtenerZonaOperativaByIdCodigoPostal(row.data.m_nIdCP).then(
+              ( zonaOperativa ) => {
+                setState((state) => ({
+                  ...state,
+                  id: row.data.m_nIdRemitenteDestinatario,
+                  alias: row.data.m_sAlias,
+                  nombre: row.data.m_sNombre,
+                  RFC: row.data.m_sRFC,
+                  domicilio: row.data.m_sDomicilio || "No especificado",
+                  codigoPostal:
+                      {
+                        m_nIdCP: row.data.m_nIdCP,
+                        m_sCP: row.data.m_sCodigoPostal,
+                        m_sColonia: row.data.m_sColonia || "No especificado",
+                      },
+                  estado: row.data.m_nIdEstado || "",
+                  estadoTexto: row.data.m_sEstado || "No especificado",
+                  municipio: row.data.m_nIdMunicipio || "",
+                  correo: row.data.m_sCorreoElectronico || "",
+                  telefono: row.data.m_sTelefono || 0,
+                  contacto: row.data.m_sContacto || row.data.m_sNombre,
+                  calle: row.data.m_sCalle || "No especificado",
+                  municipioTexto: row.data.m_sMunicipio || "No especificado",
+                  numeroExt: row.data.m_sNoExterior || 0,
+                  numeroInt: row.data.m_sNoInterior || 0,
+                  colonia: row.data.m_sColonia || row.data.m_sLocalidad || "No especificado",
+                  latitud: row.data.m_sLatitud,
+                  longitud: row.data.m_sLongitud,
+                  origen: zonaOperativa.data.length !== 0 ? {
+                    m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino,
+                    m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
+                  } : null,
+                  destino: zonaOperativa.data.length !== 0 ? {
+                    m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino,
+                    m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
+                  } : null,
+                  openDialog: false,
+                  zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                  paisTexto: row.data.m_sPais
+                }));
+                if (zonaOperativa.data.length === 0) {
+                  if (props.remitente) {
+                    showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
+                  } else if (props.destinatario) {
+                    showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
+                  }
+                }
+                resolve(zonaOperativa)
+              })
+    });
+      promise.then((zonaOperativa)=> {
 
-      obtenerZonaOperativaByIdCodigoPostal(row.data.m_nIdCP).then(
-          ( zonaOperativa ) => {
-            console.log(JSON.stringify(zonaOperativa))
-            if(props.destinatario){
-              props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
-            }
-            setState((state) => ({
-              ...state,
-              id: row.data.m_nIdRemitenteDestinatario,
-              alias: row.data.m_sAlias,
-              nombre: row.data.m_sNombre,
-              RFC: row.data.m_sRFC,
-              domicilio: row.data.m_sDomicilio || "No especificado",
-              codigoPostal:
-                  {
-                    m_nIdCP: row.data.m_nIdCP,
-                    m_sCP: row.data.m_sCodigoPostal,
-                    m_sColonia: row.data.m_sColonia || "No especificado",
-                  },
-              estado: row.data.m_nIdEstado || "",
-              estadoTexto: row.data.m_sEstado || "No especificado",
-              municipio: row.data.m_nIdMunicipio || "",
-              correo: row.data.m_sCorreoElectronico || "",
-              telefono: row.data.m_sTelefono || 0,
-              contacto: row.data.m_sContacto || row.data.m_sNombre,
-              calle: row.data.m_sCalle || "No especificado",
-              municipioTexto: row.data.m_sMunicipio || "No especificado",
-              numeroExt: row.data.m_sNoExterior || 0,
-              numeroInt: row.data.m_sNoInterior || 0,
-              colonia: row.data.m_sColonia || row.data.m_sLocalidad || "No especificado",
-              latitud: row.data.m_sLatitud,
-              longitud: row.data.m_sLongitud,
-              origen: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
-              destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
-              openDialog: false,
-              zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-              paisTexto: row.data.m_sPais
-            }));
+        if(props.destinatario){
+          props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false,zonaOperativa.data[0].m_nIdSucursal)
+        }
+      })
 
-            if (zonaOperativa.data.length === 0){
-              if (props.remitente){
-                showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
-              }else if (props.destinatario){
-                showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
-              }
-            }
 
-          }
-      );
+    /*if(props.destinatario){
+      props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
+    }*/
 
 
     
