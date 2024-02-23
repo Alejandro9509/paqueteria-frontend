@@ -24,6 +24,7 @@ export default function DialogoNuevoConcepto(props) {
         columns: [],
         aplicaDescuento: false,
         aplicarDescuentoA: 'Concepto',
+        options: [],
     })
     const [concepto, setConcepto] = useState({
         id:Math.floor(Math.random() * 10000),
@@ -79,6 +80,17 @@ export default function DialogoNuevoConcepto(props) {
             setConcepto(props.concepto)
             setOpen(true);
         }
+        let filtered = props.conceptosBase.filter(function (item){
+                return props.dataPaquetes.every((f) => {
+                    return f.nombreConcepto !== item.m_sConcepto;
+                })
+            }
+        );
+        setState(state =>{
+            return { ...state, options: filtered }
+        })
+        // console.log('Todos los conceptos: ' + props.conceptosBase.length);
+        // console.log('Todos los conceptos filtrados: ' + filtered.length);
     }, [props.concepto])
 
     const handleClickOpen = () => {
@@ -308,7 +320,7 @@ export default function DialogoNuevoConcepto(props) {
                                         id="concepto"
                                         disableClearable
                                         forcePopupIcon={false}
-                                        options={props.conceptosBase}
+                                        options={state.options}
                                         getOptionLabel={(option) => option.m_sConcepto}
                                         variant="outlined"
                                         fullWidth

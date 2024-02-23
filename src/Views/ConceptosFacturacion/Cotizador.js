@@ -30,7 +30,7 @@ class Cotizador extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            conceptos: [],
+            conceptos: this.props.conceptos,
             mostarConceptos: false,
             conceptosBase: [],
             ivaRetiene: [],

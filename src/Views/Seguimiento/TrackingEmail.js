@@ -248,7 +248,7 @@ class TrackingEmail extends Component {
                                      </Grid>
                                      
                                      <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
-                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" alignItems="center">
+                                     <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" textAlign="center" alignItems="center">
                                     <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography>
                                          <Grid item md={12}>
                                              Entregó: {this.state.data.m_sReceptorRecoleccion}
@@ -278,10 +278,12 @@ class TrackingEmail extends Component {
                                      </Grid>
                                      <Grid item md={12}>
                                          <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"
-                                              alignItems="center">
+                                              alignItems="center" textAlign="center">
                                              <Typography variant={"h4"}
                                                          style={{marginBottom: "10px"}}>Entrega</Typography>
                                              <Grid item md={6}>
+                                                 Entregó: {this.state.data.operadorEntrega}
+                                                 <br/>
                                                  Recibió: {this.state.data.m_sReceptorGuia}
                                                  <Button fullWidth variant="text" color="primary"
                                                          onClick={() => this.handleClickOpenDialogoEvidencia(true, false)}>

@@ -136,14 +136,14 @@ async function obtenerRutas(truck, guias, data) {
                         "shifts": [
                             {
                                 "start": {
-                                    "time": data.startDate + "T" + "00:00" + ":00+00:00",
+                                    "time": data.startDate + ":00+00:00",
                                     "location": {
                                         "lat": location.y,
                                         "lng": location.x
                                     }
                                 },
                                 "end": {
-                                    "time": data.finishDate + "T" + "23:00" + ":00+00:00",
+                                    "time": data.finishDate+ ":00+00:00",
                                     "location": {
                                         "lat": location.y,
                                         "lng": location.x
@@ -167,6 +167,8 @@ async function obtenerRutas(truck, guias, data) {
         result = new Promise((resolve, reject) => {
             axios.post("https://tourplanning.hereapi.com/v3/problems?apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, object, {headers: {'Content-Type': 'application/json'}}).then(({data}) => {
                 resolve(data)
+            }).catch((err) => {
+                reject(err)
             })
 
         })
@@ -411,6 +413,7 @@ async function ordenarParada(idParada, guias, guiasDescartadas) {
         idGuia: g.m_nId,
         lat: g.lat.toString(),
         lng: g.lng.toString(),
+        idEstatus: g.m_nEstatusUlimaMilla,
         orden: index + 1,
         esRecoleccion: g.m_bEsRecoleccion,
         idParadaGuia: g.m_nIdParadaGuia

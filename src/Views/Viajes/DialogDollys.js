@@ -49,7 +49,7 @@ function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
-                <DialogTitle>Seleccoine un Dolly</DialogTitle>
+                <DialogTitle>Seleccione un Dolly</DialogTitle>
                 <DialogContent>
                     <TableDollys data={listadoDollys} handleSelection={handleRowSelection} />
                 </DialogContent>

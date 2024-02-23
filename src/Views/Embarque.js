@@ -534,6 +534,16 @@ function Embarque(props) {
             width: 150,
         },
         {
+            headerName: "Usuario Documento",
+            field: "m_sUsuarioDocumento",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                </div>
+            }
+        },
+        {
             headerName: "Cancelado",
             field: "m_dtFechaCancelacion",
             width: 150,
@@ -565,6 +575,11 @@ function Embarque(props) {
         }
 
     })
+    const [seguroClienteActual,setDataSeguroClienteActual]=useState({
+        idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
+        porcentajeSeguro: 0,
+        aplicaSeguro: false,
+    })
     const [dataConceptos, setDataConceptos] = useState([])
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -584,7 +599,8 @@ function Embarque(props) {
         idConceptoFlete: 0,
         modificarValorEmbarque:false,
         factorConversion: 0.0,
-        fijarCapturaValorDeclarado: false
+        fijarCapturaValorDeclarado: false,
+        porcentualSeguroDefecto:0
     })
     const [errores, setErrores] = React.useState([])
     const [state, setState] = React.useState({
@@ -1786,11 +1802,7 @@ function Embarque(props) {
     }
     useEffect(() => {
         if( detectarModificaciones){
-            console.log("disprosio")
-           // console.log(remitente)
-
             window.onbeforeunload = confirmExit
-
         }
     }, [remitente,destinatario,state,dataComplementosSAT,dataPaquetes,entregaDD,dataConceptos])
     function confirmExit()
@@ -2399,6 +2411,14 @@ function Embarque(props) {
 
     const handlePatrocinadorSelected = (row) => {
         console.log(row)
+        setDataSeguroClienteActual(seguroClienteActual=>{
+            return {
+                ...seguroClienteActual,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+            }
+        })
         setState(state => {
             return {
                 ...state,
@@ -2440,7 +2460,8 @@ function Embarque(props) {
                             tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio : respuesta.data.TipoCambioEmbarque,
                             tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
                             tipoTimbrado: respuesta.data.TipoTimbrado,
-                            validarTimbrado: respuesta.data.ValidarTimbradoIngreso
+                            validarTimbrado: respuesta.data.ValidarTimbradoIngreso,
+                            porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                         }
                     })
                 }
@@ -2470,7 +2491,8 @@ function Embarque(props) {
                         idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                         modificarValorEmbarque: respuesta.data.ModificarValorEmbarque,
                         factorConversion: respuesta.data.FactorConversion,
-                        fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
+                        fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado,
+                        porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                     }
                 })
                 setDataTipoDocumento(data)
@@ -2484,9 +2506,11 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
+        //console.log(">>>>>>> getAllEmbarque");
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0, 0).then((respuesta) => {
+                    //console.log(respuesta.data);
                     setData(respuesta.data);
                 })
             })
@@ -2965,7 +2989,8 @@ function Embarque(props) {
             return {
                 ...state,
                 idTipoSeguro: event.target.value,
-                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                //porcentajeSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?configuraciones.porcentualSeguroDefecto:0,
+                porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value)?(event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO)?((state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO)  && (event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO))?state.porcentajeSeguro:configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
                 aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
                 valorDeclarado: 0
             }
@@ -3038,8 +3063,9 @@ function Embarque(props) {
         }
     }
 
-    function esEntregaSucursal(aplicaEntrega) {
+    function esEntregaSucursal(aplicaEntrega,idSucursalDestinatario) {
         if (aplicaEntrega) {
+            setRepetirConceptos(true)
             setState(state => {
                 return {
                     ...state,
@@ -3049,6 +3075,18 @@ function Embarque(props) {
                     diferenteEntrega: false
                 }
             })
+            try{
+                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == idSucursalDestinatario).m_nIdCodigoPostal)
+                setState(state => {
+                    return {
+                        ...state,
+                        idSucursalEntrega: idSucursalDestinatario
+                    }
+                });
+            }
+            catch{
+                showError("No se encontró la sucursal asociada a este destinatario")
+            }
         } else {
             setState(state => {
                 return {
@@ -4216,7 +4254,7 @@ function Embarque(props) {
                                                             <div className="row">
                                                                 <div style={{width: '70%'}}>
                                                                     <div className="col-sm-6 col-md-6  unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'orange'}:{color:"black"}}>
                                                                             Entrega en Sucursal
                                                                             <input
                                                                                 onChange={handleEntregaEnSucursalCheckbox}
@@ -4224,7 +4262,7 @@ function Embarque(props) {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{height: "20px"}}
-                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.aplicaEntrega /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i/>{state.aplicaEntrega && <>
@@ -4246,7 +4284,7 @@ function Embarque(props) {
                                                             <div className="row">
                                                                 <div style={{width: '70%'}}>
                                                                     <div className="col-sm-6 col-md-6  unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'#ccc'}:{color:"black"}}>
                                                                             Entrega en Diferente Domicilio
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
@@ -4255,7 +4293,7 @@ function Embarque(props) {
                                                                                 checked={state.diferenteEntrega}
                                                                                 value={state.diferenteEntrega}
                                                                                 style={{height: "20px"}}
-                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia || state.aplicaEntrega/*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="diferenteEntrega"
                                                                             />
                                                                             <i/>
@@ -4266,7 +4304,7 @@ function Embarque(props) {
                                                             <div className="row">
                                                                 <div style={{width: '70%'}}>
                                                                     <div className="col-sm-6 col-md-6  unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'#ccc'}:{color:"black"}}>
                                                                             Entrega con cita
                                                                             <input
                                                                                 onChange={handleEntregaConCitaCheckbox}
@@ -4275,7 +4313,7 @@ function Embarque(props) {
                                                                                 checked={state.entregaConCita}
                                                                                 value={state.entregaConCita}
                                                                                 style={{height: "20px"}}
-                                                                                disabled={state.agregar === "Consultar" /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.aplicaEntrega /*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaConCita"
                                                                             />
                                                                             <i/>

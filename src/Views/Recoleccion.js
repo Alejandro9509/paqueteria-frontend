@@ -189,6 +189,11 @@ function Recoleccion() {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataCiudadF, setDataCiudadF] = React.useState([]);
+    const [seguroClienteActual,setDataSeguroClienteActual]=useState({
+        idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
+        porcentajeSeguro: 0,
+        aplicaSeguro: false,
+    })
     const [dataConceptos, setDataConceptos] = useState([])
     const [dataZona, setDataZona] = React.useState([]);
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
@@ -277,7 +282,8 @@ function Recoleccion() {
         idsTiposCobroSeleccionString: '',
         idConceptoFlete: 0,
         factorConversion: 0.0,
-        fijarCapturaValorDeclarado: false
+        fijarCapturaValorDeclarado: false,
+        porcentualSeguroDefecto:0
     })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
@@ -684,7 +690,8 @@ function Recoleccion() {
                         estatusRecoleccion: respuesta.data.EstatusRecoleccion,
                         moneda: respuesta.data.MonedaEmbarque,
                         tipoCambio: respuesta.data.TipoCambioEmbarque,
-                        tipoCobro: respuesta.data.TipoCobro
+                        tipoCobro: respuesta.data.TipoCobro,
+                        porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                     }
                 })
 
@@ -707,7 +714,8 @@ function Recoleccion() {
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                     idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                     factorConversion: respuesta.data.FactorConversion || 0.0,
-                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado
+                    fijarCapturaValorDeclarado: respuesta.data.FijarCapturaValorDeclarado,
+                    porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                 }
             })
         })
@@ -1713,6 +1721,14 @@ function Recoleccion() {
     }
 
     const handlePatrocinadorSelected = (row) => {
+        setDataSeguroClienteActual(seguroClienteActual=>{
+            return {
+                ...seguroClienteActual,
+                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
+                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+            }
+        })
         setState(state => {
             return {
                 ...state,
@@ -2021,6 +2037,16 @@ function Recoleccion() {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
             width: 150,
+        },
+        {
+            headerName: "Usuario Documento",
+            field: "m_sUsuarioDocumento",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                </div>
+            }
         },
         {
             headerName: "Cliente",
@@ -3040,7 +3066,8 @@ function Recoleccion() {
             return {
                 ...state,
                 idTipoSeguro: event.target.value,
-                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value)?(event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO)?((state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO)  && (event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO))?state.porcentajeSeguro:configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
+                //porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value && ((event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)))? (state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO) && (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?state.porcentajeSeguro:(event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
                 aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
                 valorDeclarado: 0
             }
@@ -3086,17 +3113,31 @@ function Recoleccion() {
             }
         });
     }
-    function esEntregaSucursal(aplicaEntrega){
+    function esEntregaSucursal(aplicaEntrega,idSucursalDestinatario){
         if(aplicaEntrega){
-        setState(state => {
-            return {
-            ...state,
-                aplicaEntrega:aplicaEntrega,
-                entregaEnSucursal:true,
-                // deshabilitarDiferenteDomicilio:true,
-                diferenteEntrega:false
+            setRepetirConceptos(true)
+            setState(state => {
+                return {
+                    ...state,
+                    aplicaEntrega: aplicaEntrega,
+                    entregaEnSucursal: true,
+                    // deshabilitarDiferenteDomicilio:true,
+                    diferenteEntrega: false
+                }
+            })
+            try{
+                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == idSucursalDestinatario).m_nIdCodigoPostal)
+                setState(state => {
+                    return {
+                        ...state,
+                        idSucursalEntrega: idSucursalDestinatario
+                    }
+                });
             }
-        })}
+            catch{
+                showError("No se encontró la sucursal asociada a este destinatario")
+            }
+        }
         else{
             setState(state => {
                 return {
@@ -4211,11 +4252,11 @@ function Recoleccion() {
                                                             <div className="row">
                                                                 <div style={{width:'70%'}}>
                                                                     <div className="col-sm-7 col-md-7 unit">
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'#ccc'}:{color:"black"}}>
                                                                             <input
                                                                                 onChange={handleEntregaCheckboxChange}
                                                                                 className="form-control"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.aplicaEntrega/*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 // value={state.diferenteEntrega}
                                                                                 checked={state.diferenteEntrega}
                                                                                 type="checkbox"
@@ -4231,7 +4272,7 @@ function Recoleccion() {
                                                             <div className="row">
                                                                 <div style={{width:'70%'}}>
                                                                     <div className="col-sm-7 col-md-7 unit" >
-                                                                        <label className="checkbox">
+                                                                        <label className="checkbox" style={state.aplicaEntrega?{color:'orange'}:{color:"black"}}>
                                                                             Entrega en Sucursal
                                                                             <input
                                                                                 onChange={handleEntregaEnSucursalCheckbox}
@@ -4239,7 +4280,7 @@ function Recoleccion() {
                                                                                 type="checkbox"
                                                                                 checked={state.entregaEnSucursal}
                                                                                 style={{ height: "20px" }}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque /*|| state.deshabilitarDiferenteDomicilio*/}
+                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque || state.aplicaEntrega/*|| state.deshabilitarDiferenteDomicilio*/}
                                                                                 id="entregaEnSucursal"
                                                                             />
                                                                             <i />
