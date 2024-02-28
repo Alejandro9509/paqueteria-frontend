@@ -570,6 +570,19 @@ function Guia(props) {
             width: 225
         },
         {
+            headerName: "Factura Timbrada",
+            field: "isFacturaTimbrada",
+            width: 150,
+            renderCell: (row) => {
+                return (
+                    <>
+                        {row.row.m_sFactura!=''? row.row.isFacturaTimbrada?'SÍ':'NO':''}
+
+                    </>
+                )
+            }
+        },
+        {
             headerName: "Folio ERP",
             field: "FolioERP",
             width: 200
