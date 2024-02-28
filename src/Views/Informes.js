@@ -1172,6 +1172,7 @@ function Informes({history}) {
                 setState((config) => {
                     return {
                         ...config,
+                        validarTimbrado:respuesta.data.ValidarTimbrado,
                         tipoTimbrado: respuesta.data.TipoTimbrado,
                     }
                 })
@@ -2231,7 +2232,7 @@ function Informes({history}) {
                                                                                                         justifyContent: "center",
                                                                                                         alignItems: "center",
                                                                                                         textAlign: "center",
-                                                                                                        backgroundColor: value.select
+                                                                                                        backgroundColor: state.validarTimbrado? value.isTimbrada? value.select? "#F9A03E" : "gray" : value.select? "#FF6600": "#EF0307" :value.select
                                                                                                             ? "#F9A03E"
                                                                                                             : "gray",
                                                                                                     }}
