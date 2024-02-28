@@ -49,7 +49,9 @@ import {reasignarGuia} from "../../Util/Contexts/GuiaContext";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {forEach} from "react-bootstrap/ElementChildren";
-import {getCurrentDate} from "../../Util/Util"; // Import css
+import {getCurrentDate} from "../../Util/Util";
+import moment from "moment";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext"; // Import css
 
 
 function showSuccess(mensaje) {
@@ -294,13 +296,17 @@ class UltimaMilla extends Component {
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
             }else{
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                await obtenerParametrosConfiguracion().then((respuesta) => {
+                    data.finishDate = moment(new Date()).add(respuesta.data.HorasLimiteEntregasUltimaMilla, 'hours').format('YYYY-MM-DDTHH:mm')
+                })
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
+                    console.log('results', results)
                     if (results) {
                         if (results.unassigned?.length > 0){
                             results.unassigned?.forEach(i => {
                                 let index = i.jobId.substring(4);
                                 if (i.reasons[0]?.code === 'TIME_WINDOW_CONSTRAINT'){
-                                    i.reasons[0].descripcion = `El registro ${guias[index].m_sFolio} no puede ser agregado a la ruta porque no alcanzaría a ser completado en un día`
+                                    i.reasons[0].descripcion = `El registro ${guias[index].m_sFolio} no puede ser agregado a la ruta porque no alcanzaría a ser completado en límite de horas configurado.`
                                 }else if (i.reasons[0]?.code === 'REACHABLE_CONSTRAINT'){
                                     i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
                                 }else{
@@ -313,6 +319,8 @@ class UltimaMilla extends Component {
                         }
                         this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
                     }
+                }).catch((err) => {
+                    showSuccess("Hubo un error al generar la ruta. Intente más tarde.")
                 })
             }
 

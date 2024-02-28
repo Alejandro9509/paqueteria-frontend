@@ -335,6 +335,7 @@ function Guia(props) {
         modificadoEl: "",
         openDialog: false,
         receptorGuia:[],
+        operadorEntrega:'',
         referencia:'',
         observaciones:'',
         reporteSeleccionado:{},
@@ -504,6 +505,16 @@ function Guia(props) {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
             width: 200,
+        },
+        {
+            headerName: "Usuario Documento",
+            field: "m_sUsuarioDocumento",
+            width: 200,
+            renderCell: (row) => {
+                <div>
+                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                </div>
+            }
         },
         {
             headerName: 'Fecha de Cancelación',
@@ -1078,6 +1089,7 @@ function Guia(props) {
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
                 tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita,
                 receptorGuia: respuesta.data.m_sReceptorGuia,
+                operadorEntrega: respuesta.data.operadorEntrega,
                 referencia: respuesta.data.m_sReferencia,
                 observaciones: respuesta.data.m_sObservaciones,
                 clientePaga: respuesta.data.m_sCliente
@@ -2051,6 +2063,7 @@ function Guia(props) {
                 zonaTarifaRemitente: '',
                 zonaTarifaDestinatario: '',
                 receptorGuia: '',
+                operadorEntrega: '',
                 referencia: '',
                 observaciones: '',
                 clientePaga: '',
