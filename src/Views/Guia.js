@@ -1325,6 +1325,8 @@ function Guia(props) {
 
     /**REACCIONA AL CLICK DEL BOTON PDF ETIQUETAS DEL LISTADO*/
     function handleOnClickDescargarEtiquetas(id, folio) {
+        console.log(state.imprimirEtiquetasIndividuales)
+        console.log("asx")
         if (state.imprimirEtiquetasIndividuales) {
             confirmarEtiquetasAdicionalesDialog()
                 .then(resultado => {
@@ -1596,6 +1598,8 @@ function Guia(props) {
     }, [])
 
     const handleOnClickImprimirEtiquetas = (idGuia) => {
+        console.log("aaaa")
+        console.log(state.imprimirEtiquetasIndividuales)
         if (state.imprimirEtiquetasIndividuales) {
         // if (false) {
         //     logica para etiquetas individuales
@@ -1723,11 +1727,15 @@ function Guia(props) {
                                 if (selected_device === null || selected_device === undefined){
                                     showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
                                 }
+                                let ctdTotal=0
+                                let currentIndex=0
+                                guia.m_arrClsDetalle.forEach((g)=>ctdTotal+=g.ctd)
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
                                         let result
                                         try{
-                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal), undefined, errorCallback);
+                                            currentIndex+=1
                                             showSuccess('Impresión en curso.')
                                         }catch (e) {
                                             console.log(e)
@@ -1747,12 +1755,16 @@ function Guia(props) {
                 if (selected_device === null || selected_device === undefined){
                     showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
                 }
+                let ctdTotal=0
+                let currentIndex=0
+                guia.m_arrClsDetalle.forEach((g)=>ctdTotal+=g.ctd)
                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                     for (let i = 0; i < p.ctd; i++) {
                         let result
                         try {
-                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal), undefined, errorCallback);
                             showSuccess('Impresión en curso.')
+                            currentIndex+=1
                         } catch (e) {
                             showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                             break

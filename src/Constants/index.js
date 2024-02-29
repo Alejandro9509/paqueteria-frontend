@@ -161,7 +161,7 @@ export const dataGridLocaleText = {
     nextIconButtonText: 'Siguiente página',
 }
 
-export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => (
+export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index,paquetesTotales) => (
     `CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
@@ -202,7 +202,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquetesTotales}^FS
 ^FT39,1180^BQN,2,6
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
