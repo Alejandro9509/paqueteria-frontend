@@ -837,7 +837,12 @@ function Guia(props) {
             }
         })
     }
-    const handleEntregaOcurre = (dataOcurre) => {
+    const handleEntregaOcurre = (dataOcurre,imagenes) => {
+        if(dataOcurre.recibe==null || dataOcurre.recibe=='')
+        {
+            showError("Favor de llenar el campo de Recibe")
+            return;
+        }
         let params = {
             nIdGuia: dataOcurre.idGuia,
             m_nIdUsuarioEntregaOcurre: parseInt(localStorage.getItem("UsuarioId")),
@@ -848,20 +853,58 @@ function Guia(props) {
             m_nIdTipoPago: dataOcurre.tipoPago,
             m_nIdBanco:dataOcurre.aplicaDetalle?dataOcurre.idBancoproveniente:0,
             m_dFechaPago:dataOcurre.fechaPago,
+            recibe:dataOcurre.recibe,
             m_nAplicaDetalle:dataOcurre.aplicaDetalle?1:0
 
         }
-        console.log(params)
-        entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
-            showSuccess(respuesta.data)
-            getAllData()
-            setDataOcurre({})
-            setState({...state, openDialog: false})
-            setGuiaSeleccionada(null)
-        }).catch(err => {
-            console.log(err)
-            showSuccess(err)
-        });
+        let huboError=false
+
+        if(imagenes.length>0) {
+            try {
+                const myPromise=new Promise((resolve,reject)=>{
+                    for (let i = 0; i < imagenes.length; i++) {
+                        subirImagenEvidencia(imagenes[i], dataOcurre.idGuia, '' + dataOcurre.idGuia + ' ' + i, '', 0, 1)
+                            .then(()=>{
+                                resolve()
+                            })
+                            .catch(err => {
+                                console.log(err)
+                                if(huboError)
+                                    showError("Proceso abortado: no se lograron subir las imágenes de evidencia")
+                                huboError=true
+                                reject()
+                            });
+                    }
+                })
+                myPromise.then((value)=> {
+                    entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
+                        showSuccess(respuesta.data)
+                        getAllData()
+                        setDataOcurre({})
+                        setState({...state, openDialog: false})
+                        setGuiaSeleccionada(null)
+                    }).catch(err => {
+                        console.log(err)
+                        showSuccess(err)
+                    });
+                },null)
+            } catch {
+                showError("Proceso abortado: no se lograron subir las imágenes de evidencia")
+            }
+
+        }
+        else {
+            entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
+                showSuccess(respuesta.data)
+                getAllData()
+                setDataOcurre({})
+                setState({...state, openDialog: false})
+                setGuiaSeleccionada(null)
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+        }
 
     }
 
