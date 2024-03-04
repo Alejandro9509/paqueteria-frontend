@@ -330,7 +330,7 @@ ${guia.m_sLogoEtiqueta}
 ^PQ1,0,1,Y^XZ
 `)
 
-export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index,paquetesTotales) => {
+export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => {
     return localStorage.getItem("RFC") === 'PLG090716IA7' ?
         (`CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
@@ -371,7 +371,7 @@ ${guia.m_sDomicilioRemitente.length > 40 ?
 ^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
 ^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
 ^FT601,170^BQN,2,6
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${paquetesTotales}^FS
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioDestinatario.length > 40 ?
             (
                 guia.m_sDomicilioDestinatario.length > 80 ? (
@@ -431,7 +431,7 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquetesTotales}^FS
+^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
 ^FT39,1180^BQN,2,6
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
