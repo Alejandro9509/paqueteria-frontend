@@ -1675,7 +1675,9 @@ function Guia(props) {
                                 for (let i = 0; i < paquetesConIndex.length; i++) {
                                     let result
                                     try{
-                                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+
+                                        //result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                                        await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                                         showSuccess('Impresión en curso.')
                                     }catch (e) {
                                         console.log(e)
@@ -1697,7 +1699,9 @@ function Guia(props) {
                         // console.log('paquete: ', paquetesConIndex[i])
                         // console.log((paquetesConIndex[i].index+1) + ' de ' + paquetesConIndex[i].rangoFin)
                         // console.log('index: ', paquetesConIndex[i].index)
-                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                        //result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                        await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
+
                         // showSuccess('Impresión en curso.')
                     } catch (e) {
                         console.log(e)
@@ -1712,7 +1716,7 @@ function Guia(props) {
 
     async function printTicket(id) {
 
-        obtenerGuiaId(id).then(({data}) => {
+        obtenerGuiaId(id).then(async ({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
             let rfcCliente = localStorage.getItem("RFC")
@@ -1730,20 +1734,22 @@ function Guia(props) {
                                 let ctdTotal=0
                                 let currentIndex=0
                                 guia.m_arrClsDetalle.forEach((g)=>ctdTotal+=g.ctd)
-                                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                                for (let j = 0; j < guia.m_arrClsDetalle.length; j++) {
+                                    let p = guia.m_arrClsDetalle[j]
                                     for (let i = 0; i < p.ctd; i++) {
                                         let result
-                                        try{
-                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal), undefined, errorCallback);
-                                            currentIndex+=1
+                                        try {
+                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal,i), undefined, errorCallback);
+                                            console.log(currentIndex)
                                             showSuccess('Impresión en curso.')
-                                        }catch (e) {
-                                            console.log(e)
+                                            await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
+                                            currentIndex+=1
+                                        } catch (e) {
+                                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                                             break
                                         }
-
                                     }
-                                })
+                                }
                             }
                         },
                         {
@@ -1758,19 +1764,22 @@ function Guia(props) {
                 let ctdTotal=0
                 let currentIndex=0
                 guia.m_arrClsDetalle.forEach((g)=>ctdTotal+=g.ctd)
-                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                for (let j = 0; j < guia.m_arrClsDetalle.length; j++) {
+                    let p = guia.m_arrClsDetalle[j]
                     for (let i = 0; i < p.ctd; i++) {
                         let result
                         try {
-                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal), undefined, errorCallback);
+                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal, i), undefined, errorCallback);
+                            console.log(currentIndex)
                             showSuccess('Impresión en curso.')
+                            await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                             currentIndex+=1
                         } catch (e) {
                             showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                             break
                         }
                     }
-                })
+                }
 
             }
 
