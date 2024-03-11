@@ -239,7 +239,7 @@ class UltimaMilla extends Component {
     }
 
     guardarRuta() {
-        var hora = this.state.filtros.fecha.getHours() + ":" + this.state.filtros.fecha.getMinutes() 
+        var hora = new Date().getHours() + ":" + new Date().getMinutes()
         if (this.state.ultimaMilla) {
             if (this.state.tour) { 
                 // console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))

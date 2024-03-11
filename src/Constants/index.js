@@ -161,7 +161,7 @@ export const dataGridLocaleText = {
     nextIconButtonText: 'Siguiente página',
 }
 
-export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => (
+export const TICKET_ZEBRA_TEMPLATE_deprecated = (guia, paquete, index) => (
     `CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
@@ -286,6 +286,174 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 ^PQ1,0,1,Y^XZ
 `)
 
+export const TICKET_ZEBRA_TEMPLATE_PSG = (guia, paquete, index) => (`
+CT~~CD,~CC^~CT~
+^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
+^XA
+^MMT
+^PW812
+^LL0812
+^LS0
+^FO32,0^GFA,05120,05120,00040,:Z64:
+${guia.m_sLogoEtiqueta}
+^FT193,78^A0N,39,38^FH\\^FD${guia.m_nFolioGuia}^FS
+^FT410,141^A0N,28,28^FH\\^FD${guia.m_sCiudadOrigen}^FS
+^FO46,158^GB697,197,4^FS
+^FT303,141^A0N,28,28^FH\\^FDORIGEN:^FS
+^FT53,141^A0N,28,28^FH\\^FDREMITENTE^FS
+^FT53,191^A0N,28,28^FH\\^FD${guia.m_sNombreRemitente}^FS
+^FT53,225^A0N,28,28^FH\\^FDTEL:^FS
+^FT116,225^A0N,28,28^FH\\^FD${guia.m_sTelefonoRemitente}^FS
+^FT53,265^A0N,28,28^FH\\^FDDIRECCI\\E3N:^FS
+^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente}^FS
+^FO46,408^GB697,238,4^FS
+^FT303,390^A0N,28,28^FH\\^FDDESTINO:^FS
+^FT53,447^A0N,28,28^FH\\^FD${guia.m_sNombreDestinatario}^FS
+^FT53,487^A0N,28,28^FH\\^FDTEL:^FS
+^FT116,487^A0N,28,28^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
+^FT53,521^A0N,28,28^FH\\^FDDIRECCI\\E3N:^FS
+^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
+^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT595,219^BQN,2,5
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario}^FS
+^FT202,299^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente2}^FS
+^FT202,337^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente3}^FS
+^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario2}^FS
+^FT202,596^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario3}^FS
+^FT53,717^A0N,28,28^FH\\^FDTIPO DE REPARTO^FS
+^FT286,717^A0N,28,28^FH\\^FD${guia.tipoEntrega}^FS
+^FT53,635^A0N,28,28^FH\\^FD${guia.zonaEntrega}^FS
+^FT215,775^A0N,28,28^FH\\^FDPARTIDA:^FS
+^FT427,390^A0N,28,28^FH\\^FD${guia.m_sSucursalDestino}^FS
+^FT53,390^A0N,28,28^FH\\^FDDESTINATARIO^FS
+^PQ1,0,1,Y^XZ
+`)
+
+export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index) => {
+    return localStorage.getItem("RFC") === 'PLG090716IA7' ?
+        (`CT~~CD,~CC^~CT~
+^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
+^XA
+^MMT
+^CI28
+^PW812
+^LL0812
+^LS0
+^FO0,0^GFA,03840,03840,00024,:Z64:
+${guia.m_sLogoEtiqueta}
+^FT193,97^A0N,56,55^FH\\^FD${guia.m_nFolioGuia}^FS
+^FT410,141^A0N,28,28^FH\\^FD${guia.m_sSucursalorigen}^FS
+^FO46,158^GB697,197,4^FS
+^FT303,141^A0N,28,28^FH\\^FDORIGEN:^FS
+^FT53,141^A0N,28,28^FH\\^FDREMITENTE^FS
+^FT53,191^A0N,28,28^FH\\^FD${guia.m_sNOmbreRemitente}^FS
+^FT53,225^A0N,28,28^FH\\^FDTEL:^FS
+^FT116,225^A0N,28,28^FH\\^FD${guia.m_sTelefonoRemitente}^FS
+^FT53,265^A0N,28,28^FH\\^FDDIRECCIÓN:^FS
+${guia.m_sDomicilioRemitente.length > 40 ?
+            (
+                guia.m_sDomicilioRemitente.length > 80 ? (
+                    `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 40)}^FS
+                ^FT202,299^A0N,28,24\\^FD${guia.m_sDomicilioRemitente.substring(40, 80)}^FS
+                ^FT202,337^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(80)}^FS`
+                ) : (
+                    `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 40)}^FS
+               ^FT202,299^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente.substring(40)}^FS`
+                )
+            ) : `^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente}^FS`}
+^FO46,408^GB697,238,4^FS
+^FT303,390^A0N,28,28^FH\\^FDDESTINO:^FS
+^FT53,447^A0N,28,28^FH\\^FD${guia.m_sNombreDestinatario}^FS
+^FT53,487^A0N,28,28^FH\\^FDTEL:^FS
+^FT116,487^A0N,28,28^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
+^FT53,521^A0N,28,28^FH\\^FDDIRECCIÓN:^FS
+^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
+^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT601,170^BQN,2,6
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+${guia.m_sDomicilioDestinatario.length > 40 ?
+            (
+                guia.m_sDomicilioDestinatario.length > 80 ? (
+                    `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 40)}^FS
+                 ^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(40, 80)}^FS
+                 ^FT202,596^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(80)}^FS`
+                ) : (
+                    `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 40)}^FS
+                 ^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario.substring(40, 80)}^FS`
+                )
+            ) : `^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario}^FS`}
+^FT53,717^A0N,28,28^FH\\^FDTIPO DE REPARTO^FS
+^FT286,717^A0N,28,28^FH\\^FD${guia.tipoEntrega}^FS
+^FT53,635^A0N,28,28^FH\\^FD${guia.zonaEntrega}^FS
+^FT215,775^A0N,28,28^FH\\^FDPARTIDA:^FS
+^FT427,390^A0N,28,28^FH\\^FD${guia.m_sSucursalDestino}^FS
+^FT53,390^A0N,28,28^FH\\^FDDESTINATARIO^FS
+^PQ1,0,1,Y^XZ`)
+        :
+        (`CT~~CD,~CC^~CT~
+^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
+^XA
+^MMT
+^CI28
+^PW799
+^LL1199
+^LS0
+^FO32,640^GFA,29440,29440,00092,:Z64:
+eJzt3TFqwzAYxXEJDRp9g/giob5WhtDqaDqKjpAxQ6ibRpbjUBqK+V6D4f8Go8H8MJ9lj0/OEUIIIf+e0TZLOhrbZWEPxvZFN5LlUMKYTN+eH/O87i6/37cqw+m+LMZ2vD/sRzK2/efPlVnmpw1nc7vP0yKent22Kl1pi/zkrnUJ7XH7ZG77NubBnHaubcJ3gd1M66/yO9MsvP0WnN+ht9+C171X7VAEdszVzgJ7QqPELtVOAttXu5PYdYP0Atq5s9zeSezD7fomsY+3615i7+X2UWLXSR8k9k5uK37f7atR/L6vfxJs7BfbUWknbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbOzX2J3SdtjYf7WV3Vhb7QtTdqhttVdO2bWn7Ajcam+isksySuxS7Sywp+5OZeeositV2fGq7KZVdupKu4CVHcbK7mVlZ7Sy61rZ0a3sFld2oku73JUd9MrufDea4uHhIITB+DiB5YyVZywoz4awnYr9p0gIIYQQQlT5Atxl+DY=:A35E
+^FO32,224^GFA,32384,32384,00092,:Z64:
+eJzt3TGugkAURuGZTEHJDh47eWzJ0sIEljZLmSVYWhhHAzPCy0soyP1jiOc2UJBPnQHtPM4xDPN902bTua7twdZ+rOhgS+ccZUvyZ1H6m+32dfflfP0ZLCbk5fSxcd2uGWI9a4yX5LUo6f+Z1Szvth+tbf/ezMGadu69g/etq/ZNX47efCtfWzjOx3DdvGzXtHE+NsnermZ9Dcupa9GO9rYvdmdPO1fuj1+FfdHbF4Vd3vBZYf/MB8FjWW8QL3gs640ttZPCbiY7aOw42VFhB7ndaOw02aPC9nJb8fVdn5pWQTuHjf1p+yS0z9jY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2Nhfb9+E9lH/Jx77E/aooOemxVE7H8r2yVF7MMpGjrLtc9TekbIBNf+yWU9pVymbW0ftkCnbbMqmnLKF1yR7u5rK9qCymahsPUoblcq2Zpes7aUJqmyZKhusynastHnbZlO8X7d6lY1hZRtZ2nS2XZVU0CepxG5C:5941
+^FO352,1024^GFA,09984,09984,00052,:Z64:
+${guia.m_sLogoEtiqueta}
+^FT649,1020^A0I,39,48^FH\\^FD${guia.m_nFolioGuia}^FS
+^FT581,985^A0I,35,33^FH\\^FD${guia.m_sSucursalorigen}^FS
+^FT745,985^A0I,35,43^FH\\^FDORIGEN:^FS
+^FT749,943^A0I,35,45^FH\\^FDREMITENTE^FS
+^FT738,885^A0I,31,28^FH\\^FD${guia.m_sNOmbreRemitente}^FS
+^FT738,828^A0I,35,45^FH\\^FDTEL:^FS
+^FT649,828^A0I,35,40^FH\\^FD${guia.m_sTelefonoRemitente}^FS
+^FT738,772^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
+${guia.m_sDomicilioRemitente.length > 30 ?
+            (
+                guia.m_sDomicilioRemitente.length > 70 ? (
+                    `^FT496,772^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
+                ^FT734,728^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(25, 73)}^FS
+                ^FT734,674^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(73)}^FS`
+                ) : (
+                    `^FT496,772^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(0, 25)}^FS
+               ^FT734,728^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente.substring(25)}^FS`
+                )
+            ) : `^FT496,772^A0I,35,28^FH\\^FD${guia.m_sDomicilioRemitente}^FS`}
+^FT738,622^A0I,35,45^FH\\^FD${guia.m_sCiudadOrigen}^FS
+^FT746,588^A0I,35,45^FH\\^FDDESTINO:^FS
+^FT734,530^A0I,31,31^FH\\^FD${guia.m_sNombreDestinatario}^FS
+^FT734,474^A0I,35,45^FH\\^FDTEL:^FS
+^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
+^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
+^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
+^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+^FT39,1180^BQN,2,6
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+${guia.m_sDomicilioDestinatario.length > 30 ?
+            (
+                guia.m_sDomicilioDestinatario.length > 70 ? (
+                    `^FT496,417^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
+                 ^FT738,367^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 73)}^FS
+                 ^FT738,311^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(73)}^FS`
+                ) : (
+                    `^FT496,417^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(0, 25)}^FS
+                 ^FT738,367^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario.substring(25, 70)}^FS`
+                )
+            ) : `^FT496,417^A0I,35,28^FH\\^FD${guia.m_sDomicilioDestinatario}^FS`}
+^FT411,130^A0I,28,40^FH\\^FDTIPO DE REPARTO^FS
+^FT404,79^A0I,45,38^FB315,1,0,C^FH\\^FD${guia.tipoEntrega}^FS
+^FT738,259^A0I,35,45^FH\\^FDZO.:${guia.zonaEntrega}^FS
+^FT497,206^BQN,2,8
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+^FT411,30^A0I,28,40^FH\\^FDPARTIDA:^FS
+^FT553,588^A0I,35,33^FH\\^FD${guia.m_sSucursalDestino}^FS
+^PQ1,0,1,Y^XZ`)
+}
 
 export const TOOLBAR_OPTIONS = {
     options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'remove', 'history'],
