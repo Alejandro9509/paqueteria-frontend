@@ -17,7 +17,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function ZonaAgregar({idZona, consult,nuevo}) {
+function ZonaAgregar({idZona, consult,nuevo,showListado}) {
     const [state, setState] = useState({})
     const [selec, setSelec] = useState({})
     useEffect(value => {
@@ -53,6 +53,7 @@ function ZonaAgregar({idZona, consult,nuevo}) {
                 if (data.Estatus === true){
                     showSuccess("Modificado con éxito")
                     setSelec({})
+                    showListado(e);
                 }
             }).catch((err) => {
                 console.log(err);
@@ -63,6 +64,7 @@ function ZonaAgregar({idZona, consult,nuevo}) {
                 if (data.Estatus === true){
                     showSuccess("Agregado con éxito")
                     setSelec({})
+                    showListado(e);
                 }
             }).catch((err) => {
                 console.log(err);
