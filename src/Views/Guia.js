@@ -1122,7 +1122,10 @@ function Guia(props) {
         })
         }
         else{
-        showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
+            if(respuesta.data.folioViajeERP)
+                showSuccess("La guía no puede ser cancelada ya que pertenece al viaje: "+ respuesta.data.folioViajeERP)
+            else
+                showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
         return
         }
         }).catch((err)=>{
