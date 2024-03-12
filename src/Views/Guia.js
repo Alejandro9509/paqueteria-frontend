@@ -1123,7 +1123,7 @@ function Guia(props) {
         }
         else{
             if(respuesta.data.folioViajeERP)
-                showSuccess("La guía no puede ser cancelada ya que pertenece al viaje: "+ respuesta.data.folioViajeERP)
+                showSuccess("La guía no puede ser cancelada ya que pertenece al viaje activo "+ respuesta.data.folioViajeERP +". Cancelar viaje en ERP ")
             else
                 showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
         return
