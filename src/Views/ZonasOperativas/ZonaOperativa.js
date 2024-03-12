@@ -273,6 +273,7 @@ function ZonaOperativa() {
                                         idZona={seleccion}
                                         onSubmit={onSubmit}
                                         nuevo={state.nuevo}
+                                        showListado={handleShowListado}
                                     />
                             }
 
