@@ -101,7 +101,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                         {row.folioCorte}
                     </TableCell>
                     <TableCell>{row.fechaCorte}</TableCell>
-                    <TableCell/>
+                    <TableCell>{row.nombrePersona}</TableCell>
                     <TableCell align="right">{row.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -154,7 +154,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                         <TableCell/>
                         <TableCell>Id Corte</TableCell>
                         <TableCell >FECHA DE CORTE</TableCell>
-                        <TableCell/>
+                        <TableCell>Operador/Usuario</TableCell>
                         <TableCell align="right">TOTAL CORTE</TableCell>
                     </TableRow>
                 </TableHead>
