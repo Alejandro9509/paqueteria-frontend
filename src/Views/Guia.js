@@ -573,15 +573,14 @@ function Guia(props) {
             width: 225
         },
         {
-            headerName: "Factura Timbrada",
+            headerName: "Timbrado SAT",
             field: "isFacturaTimbrada",
             width: 150,
             renderCell: (row) => {
                 return (
-                    <>
+                    <Typography style={{fontSize:'.8vw', backgroundColor:row.row.isFacturaTimbrada?'#cefad0':'#ffc9bb'}}>
                         {row.row.m_sFactura!=''? row.row.isFacturaTimbrada?'SÍ':'NO':''}
-
-                    </>
+                    </Typography>
                 )
             }
         },
