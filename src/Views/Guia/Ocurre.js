@@ -15,12 +15,32 @@ import {
 import { obtenerBancos } from '../../Util/Contexts/GuiaContext';
 import MenuItem from "@material-ui/core/MenuItem";
 import {numberToMoneyFormatt} from "../../Util/Util";
+import $ from 'jquery';
+window.jQuery = window.$ = $;
+$.array=[]
+function doThis(event){
+    var picFile = event.target;
+    var output = document.getElementById("result");
 
+    let imageData=atob(picFile.result.replace(/^[^,]+,/, ''))
+    let imageBytes = new Uint8Array(imageData.length);
+    for (let j = 0; j < imageData.length; j++) {imageBytes[j] = imageData.charCodeAt(j);
+    }
+
+    $.array.push(imageBytes)
+    //  this.state.dataImagenesEvidencia.push(picFile.result)
+    var div = document.createElement("div");
+    div.innerHTML = "<img style={{text-align: 'center'}} title='Evidencia' width='50%' height='50%' margin='10px' src='" + picFile.result + "'" +
+        "title='" + picFile.name + "'/>";
+    output.insertBefore(div, null);
+}
 class MyComponent extends Component {
     constructor(props) {
         super(props);
         this.state ={
             ...this.props.dataOcurre,
+            dataImagenesEvidencia:[],
+            recibe:'',
             dataBancos:[],
             aplicaDetalle:false,
             idBancoproveniente:0
@@ -42,12 +62,33 @@ class MyComponent extends Component {
         }).catch(function (err){
             console.log("Error al ejecutar el query"+err.data)
         })
+        $.array=[]
+            //Check File API support
+            if (window.File && window.FileList && window.FileReader) {
+                var filesInput = document.getElementById("files");
+                filesInput.addEventListener("change", function(event) {
+                    var files = event.target.files; //FileList object
+                    var output = document.getElementById("result");
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        //Only pics
+                        if (!file.type.match('image'))
+                            continue;
+                        var picReader = new FileReader();
+                        picReader.addEventListener("load", doThis);
+                        //Read the image
+                        picReader.readAsDataURL(file);
+
+                    }
+                });
+            } else {
+                console.log("Su navegador no soporta File API");
+            }
     }
 
     componentDidUpdate(){
         console.log("Se refresca el componente Ocurre")
     }
-
     handleFechaOcurre(event) {
         event.preventDefault()
         this.setState({
@@ -84,7 +125,14 @@ class MyComponent extends Component {
     render() {
         return (
             <form onSubmit={(e) => {e.preventDefault();
-            this.props.handleEntregaOcurre(this.state)}}>
+                this.setState(state => {
+                    return {
+                        ...state,
+                        dataImagenesEvidencia:$.array
+                    }
+                })
+            this.props.handleEntregaOcurre(this.state,$.array)
+            }}>
                 <DialogTitle>Registrar entrega ocurre</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2}>
@@ -150,6 +198,23 @@ class MyComponent extends Component {
                                         </option>
                                     ))}
                                 </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FormControl fullWidth variant={'outlined'} margin={'dense'}>
+                                <TextField label={"Recibe"} name={"recibe"} className={"form-control"} variant={"outlined"} margin={"dense"}
+                                value={this.state.recibe} onChange={(event) => this.handleChangeDataOcurre(event)}
+                                           key={"recibe"}
+                                           disabled={this.props.agregar === "Consultar"}>
+
+                                </TextField>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} >
+                            <FormControl fullWidth variant={'outlined'} margin={'dense'}>
+                                <label style={{alignSelf:"center"}} htmlFor="files">Seleccione evidencia para adjuntarla</label>
+                                <input style={{alignSelf:"center"}} id="files" name="file" type="file" multiple />
+                                <output style={{textAlign:"center"}} id={"result"} ></output>
                             </FormControl>
                         </Grid>
                         {/*<Grid item xs={2}/>*/}
