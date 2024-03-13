@@ -286,51 +286,51 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 ^PQ1,0,1,Y^XZ
 `)
 
-export const TICKET_ZEBRA_TEMPLATE_PSG = (guia, paquete, index) => (`
-CT~~CD,~CC^~CT~
-^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
-^XA
-^MMT
-^PW812
-^LL0812
-^LS0
-^FO32,0^GFA,05120,05120,00040,:Z64:
-${guia.m_sLogoEtiqueta}
-^FT193,78^A0N,39,38^FH\\^FD${guia.m_nFolioGuia}^FS
-^FT410,141^A0N,28,28^FH\\^FD${guia.m_sCiudadOrigen}^FS
-^FO46,158^GB697,197,4^FS
-^FT303,141^A0N,28,28^FH\\^FDORIGEN:^FS
-^FT53,141^A0N,28,28^FH\\^FDREMITENTE^FS
-^FT53,191^A0N,28,28^FH\\^FD${guia.m_sNombreRemitente}^FS
-^FT53,225^A0N,28,28^FH\\^FDTEL:^FS
-^FT116,225^A0N,28,28^FH\\^FD${guia.m_sTelefonoRemitente}^FS
-^FT53,265^A0N,28,28^FH\\^FDDIRECCI\\E3N:^FS
-^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente}^FS
-^FO46,408^GB697,238,4^FS
-^FT303,390^A0N,28,28^FH\\^FDDESTINO:^FS
-^FT53,447^A0N,28,28^FH\\^FD${guia.m_sNombreDestinatario}^FS
-^FT53,487^A0N,28,28^FH\\^FDTEL:^FS
-^FT116,487^A0N,28,28^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
-^FT53,521^A0N,28,28^FH\\^FDDIRECCI\\E3N:^FS
-^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
-^FT595,219^BQN,2,5
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario}^FS
-^FT202,299^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente2}^FS
-^FT202,337^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente3}^FS
-^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario2}^FS
-^FT202,596^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario3}^FS
-^FT53,717^A0N,28,28^FH\\^FDTIPO DE REPARTO^FS
-^FT286,717^A0N,28,28^FH\\^FD${guia.tipoEntrega}^FS
-^FT53,635^A0N,28,28^FH\\^FD${guia.zonaEntrega}^FS
-^FT215,775^A0N,28,28^FH\\^FDPARTIDA:^FS
-^FT427,390^A0N,28,28^FH\\^FD${guia.m_sSucursalDestino}^FS
-^FT53,390^A0N,28,28^FH\\^FDDESTINATARIO^FS
-^PQ1,0,1,Y^XZ
-`)
+// export const TICKET_ZEBRA_TEMPLATE_PSG = (guia, paquete, index) => (`
+// CT~~CD,~CC^~CT~
+// ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
+// ^XA
+// ^MMT
+// ^PW812
+// ^LL0812
+// ^LS0
+// ^FO32,0^GFA,05120,05120,00040,:Z64:
+// ${guia.m_sLogoEtiqueta}
+// ^FT193,78^A0N,39,38^FH\\^FD${guia.m_nFolioGuia}^FS
+// ^FT410,141^A0N,28,28^FH\\^FD${guia.m_sCiudadOrigen}^FS
+// ^FO46,158^GB697,197,4^FS
+// ^FT303,141^A0N,28,28^FH\\^FDORIGEN:^FS
+// ^FT53,141^A0N,28,28^FH\\^FDREMITENTE^FS
+// ^FT53,191^A0N,28,28^FH\\^FD${guia.m_sNombreRemitente}^FS
+// ^FT53,225^A0N,28,28^FH\\^FDTEL:^FS
+// ^FT116,225^A0N,28,28^FH\\^FD${guia.m_sTelefonoRemitente}^FS
+// ^FT53,265^A0N,28,28^FH\\^FDDIRECCI\\E3N:^FS
+// ^FT202,265^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente}^FS
+// ^FO46,408^GB697,238,4^FS
+// ^FT303,390^A0N,28,28^FH\\^FDDESTINO:^FS
+// ^FT53,447^A0N,28,28^FH\\^FD${guia.m_sNombreDestinatario}^FS
+// ^FT53,487^A0N,28,28^FH\\^FDTEL:^FS
+// ^FT116,487^A0N,28,28^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
+// ^FT53,521^A0N,28,28^FH\\^FDDIRECCI\\E3N:^FS
+// ^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
+// ^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquete.ctd}^FS
+// ^FT595,219^BQN,2,5
+// ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+// ^FT202,521^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario}^FS
+// ^FT202,299^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente2}^FS
+// ^FT202,337^A0N,28,24^FH\\^FD${guia.m_sDomicilioRemitente3}^FS
+// ^FT202,558^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario2}^FS
+// ^FT202,596^A0N,28,24^FH\\^FD${guia.m_sDomicilioDestinatario3}^FS
+// ^FT53,717^A0N,28,28^FH\\^FDTIPO DE REPARTO^FS
+// ^FT286,717^A0N,28,28^FH\\^FD${guia.tipoEntrega}^FS
+// ^FT53,635^A0N,28,28^FH\\^FD${guia.zonaEntrega}^FS
+// ^FT215,775^A0N,28,28^FH\\^FDPARTIDA:^FS
+// ^FT427,390^A0N,28,28^FH\\^FD${guia.m_sSucursalDestino}^FS
+// ^FT53,390^A0N,28,28^FH\\^FDDESTINATARIO^FS
+// ^PQ1,0,1,Y^XZ
+// `)
 
-export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index,paquetesTotales, i) => {
+export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, indexPartida,paquetesTotales, indexQR) => {
     return localStorage.getItem("RFC") === 'PLG090716IA7' ?
         (`CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
@@ -343,7 +343,7 @@ export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index,paquetesTotales, i) =
 ^FO0,0^GFA,03840,03840,00024,:Z64:
 ${guia.m_sLogoEtiqueta}
 ^FT41,239^A0N,79,79^FB730,1,0,C^FH\\^FD${guia.m_nFolioGuia}^FS
-^FT410,286^A0N,28,28^FH\^FD${guia.m_sCiudadOrigen}^FS
+^FT410,286^A0N,28,28^FH\^FD${guia.m_sSucursalorigen}^FS
 ^FO46,302^GB697,53,4^FS
 ^FT303,286^A0N,28,28^FH\^FDORIGEN:^FS
 ^FT53,286^A0N,28,28^FH\^FDREMITENTE^FS
@@ -355,9 +355,9 @@ ${guia.m_sLogoEtiqueta}
 ^FT116,487^A0N,28,28^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT53,521^A0N,28,28^FH\\^FDDIRECCIÓN:^FS
 ^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquetesTotales}^FS
+^FT359,774^A0N,28,28^FH\\^FD${indexPartida + 1} DE ${paquetesTotales}^FS
 ^FT601,170^BQN,2,6
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${i}^FS
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${indexQR}^FS
 ${guia.m_sDomicilioDestinatario.length > 40 ?
             (
                 guia.m_sDomicilioDestinatario.length > 80 ? (
@@ -417,9 +417,9 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquetesTotales}^FS
+^FT243,27^A0I,36,24^FH\\^FD${indexPartida + 1} DE ${paquetesTotales}^FS
 ^FT39,1180^BQN,2,6
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${i}^FS
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${indexQR}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
             (
                 guia.m_sDomicilioDestinatario.length > 70 ? (
@@ -435,7 +435,7 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 ^FT404,79^A0I,45,38^FB315,1,0,C^FH\\^FD${guia.tipoEntrega}^FS
 ^FT738,259^A0I,35,45^FH\\^FDZO.:${guia.zonaEntrega}^FS
 ^FT497,206^BQN,2,8
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${i}^FS
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${indexQR}^FS
 ^FT411,30^A0I,28,40^FH\\^FDPARTIDA:^FS
 ^FT553,588^A0I,35,33^FH\\^FD${guia.m_sSucursalDestino}^FS
 ^PQ1,0,1,Y^XZ`)
