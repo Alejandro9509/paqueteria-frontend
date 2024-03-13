@@ -44,6 +44,8 @@ function showError(mensaje) {
 
 function ComplementosSAT(props) {
     const [detectarModificaciones,setDetectar]=useState(false)
+    const [seleccionable, setSeleccionable] = useState(false)
+    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
     const [openDialog, setOpenDialog] = useState(false)
     const [dataComplemento, setDataComplemento] = useState({
         id:0,
@@ -808,6 +810,15 @@ function ComplementosSAT(props) {
             // props.dataList.push(newArray)
         });
     };
+    const removerSeleccion=()=>{
+        let complementosFiltrados=props.dataList
+        rowSelectionModel.forEach(id=>{
+            complementosFiltrados=complementosFiltrados.filter((comp)=>comp.id!=id)
+        })
+        props.setDataList(complementosFiltrados)
+        setRowSelectionModel([])
+        setSeleccionable(false)
+    }
 
     return(
         <div>
@@ -866,10 +877,31 @@ function ComplementosSAT(props) {
                 props.dataList.length !== 0 &&
                 <div className="widget-container">
                     <div className="widget-content">
+                        <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
+                            setRowSelectionModel([])}
+                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+                        <Button onClick={()=>confirmAlert({
+                            title: 'Confirmación',
+                            message: '¿Desea eliminar los complementos seleccionados?',
+                            buttons: [
+                                {
+                                    label: 'Sí',
+                                    onClick: async () => removerSeleccion()
+                                },
+                                {
+                                    label: 'No',
+                                }
+                            ]
+                        })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%"}}>Borrar Selección</Button>
                         <div className="row" style={{ height: 200}}>
                             <DataGrid
                                 localeText={dataGridLocaleText}
                                 density="compact"
+                                onSelectionModelChange={(e) => {
+                                    setRowSelectionModel(e.selectionModel);
+                                }}
+                                selectionModel={rowSelectionModel}
+                                checkboxSelection={seleccionable}
                                 pageSize={10}
                                 columns={columnsPaquetes}
                                 rows={props.dataList}

@@ -4171,6 +4171,7 @@ function Embarque(props) {
                                         </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
+                                            setDataPaquetes={(arrayNuevo)=>setDataPaquetes(arrayNuevo)}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                             cliente={state.clientePaga}
@@ -4185,6 +4186,7 @@ function Embarque(props) {
                                     <div className="widget-wrap" id="complementosSat">
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
+                                            setDataList={(arrayNuevo)=>setDataComplementosSAT(arrayNuevo)}
                                             onChangeList={handleListComplementosSATChange}
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                         />
