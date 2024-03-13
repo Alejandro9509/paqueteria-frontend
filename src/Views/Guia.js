@@ -1708,7 +1708,7 @@ function Guia(props) {
 
     async function printTicket(id) {
 
-        obtenerGuiaId(id).then(({data}) => {
+        obtenerGuiaId(id).then(async ({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
             let rfcCliente = localStorage.getItem("RFC")
@@ -1723,19 +1723,25 @@ function Guia(props) {
                                 if (selected_device === null || selected_device === undefined){
                                     showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
                                 }
-                                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                                let ctdTotal=0
+                                let currentIndex=0
+                                guia.m_arrClsDetalle.forEach((g)=>ctdTotal+=g.ctd)
+                                for (let j = 0; j < guia.m_arrClsDetalle.length; j++) {
+                                    let p = guia.m_arrClsDetalle[j]
                                     for (let i = 0; i < p.ctd; i++) {
                                         let result
-                                        try{
-                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                                        try {
+                                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal,i), undefined, errorCallback);
                                             showSuccess('Impresión en curso.')
-                                        }catch (e) {
-                                            console.log(e)
+                                            await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
+                                            currentIndex+=1
+                                        } catch (e) {
+                                            showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                                             break
                                         }
 
                                     }
-                                })
+                                }
                             }
                         },
                         {
@@ -1747,18 +1753,24 @@ function Guia(props) {
                 if (selected_device === null || selected_device === undefined){
                     showSuccess('No se pudo establecer conexión con la impresora. Recargue la página e intente de nuevo.')
                 }
-                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                let ctdTotal=0
+                let currentIndex=0
+                guia.m_arrClsDetalle.forEach((g)=>ctdTotal+=g.ctd)
+                for (let j = 0; j < guia.m_arrClsDetalle.length; j++) {
+                    let p = guia.m_arrClsDetalle[j]
                     for (let i = 0; i < p.ctd; i++) {
                         let result
                         try {
-                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, i), undefined, errorCallback);
+                            result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal, i), undefined, errorCallback);
                             showSuccess('Impresión en curso.')
+                            await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
+                            currentIndex+=1
                         } catch (e) {
                             showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                             break
                         }
                     }
-                })
+                }
 
             }
 
