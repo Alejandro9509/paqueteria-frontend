@@ -1736,7 +1736,7 @@ function Guia(props) {
                                     let result
                                     try{
 
-                                        //result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
                                         await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                                         showSuccess('Impresión en curso.')
                                     }catch (e) {
@@ -1759,7 +1759,7 @@ function Guia(props) {
                         // console.log('paquete: ', paquetesConIndex[i])
                         // console.log((paquetesConIndex[i].index+1) + ' de ' + paquetesConIndex[i].rangoFin)
                         // console.log('index: ', paquetesConIndex[i].index)
-                        //result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
+                        result = await selected_device.send(TICKET_ZEBRA_TEMPLATE_NOT_QR(guia, paquetesConIndex[i], paquetesConIndex[i].index), undefined, errorCallback)
                         await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
 
                         // showSuccess('Impresión en curso.')
