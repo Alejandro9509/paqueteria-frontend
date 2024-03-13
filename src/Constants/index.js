@@ -330,7 +330,7 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 // ^PQ1,0,1,Y^XZ
 // `)
 
-export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, index,paquetesTotales, i) => {
+export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, indexPartida,paquetesTotales, indexQR) => {
     return localStorage.getItem("RFC") === 'PLG090716IA7' ?
         (`CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
@@ -369,9 +369,9 @@ ${guia.m_sDomicilioRemitente.length > 40 ?
 ^FT116,487^A0N,28,28^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT53,521^A0N,28,28^FH\\^FDDIRECCIÓN:^FS
 ^FT53,678^A0N,28,28^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT359,774^A0N,28,28^FH\\^FD${index + 1} DE ${paquetesTotales}^FS
+^FT359,774^A0N,28,28^FH\\^FD${indexPartida + 1} DE ${paquetesTotales}^FS
 ^FT601,170^BQN,2,6
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${i}^FS
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${indexQR}^FS
 ${guia.m_sDomicilioDestinatario.length > 40 ?
             (
                 guia.m_sDomicilioDestinatario.length > 80 ? (
@@ -431,9 +431,9 @@ ${guia.m_sDomicilioRemitente.length > 30 ?
 ^FT645,474^A0I,35,38^FH\\^FD${guia.m_sTelefonoDestinatario}^FS
 ^FT734,417^A0I,35,45^FH\\^FDDIRECCIÓN:^FS
 ^FT749,190^A0I,35,45^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT243,27^A0I,36,24^FH\\^FD${index + 1} DE ${paquetesTotales}^FS
+^FT243,27^A0I,36,24^FH\\^FD${indexPartida + 1} DE ${paquetesTotales}^FS
 ^FT39,1180^BQN,2,6
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${i}^FS
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${indexQR}^FS
 ${guia.m_sDomicilioDestinatario.length > 30 ?
             (
                 guia.m_sDomicilioDestinatario.length > 70 ? (
@@ -449,7 +449,7 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 ^FT404,79^A0I,45,38^FB315,1,0,C^FH\\^FD${guia.tipoEntrega}^FS
 ^FT738,259^A0I,35,45^FH\\^FDZO.:${guia.zonaEntrega}^FS
 ^FT497,206^BQN,2,8
-^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${i}^FS
+^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${indexQR}^FS
 ^FT411,30^A0I,28,40^FH\\^FDPARTIDA:^FS
 ^FT553,588^A0I,35,33^FH\\^FD${guia.m_sSucursalDestino}^FS
 ^PQ1,0,1,Y^XZ`)
