@@ -131,6 +131,8 @@ function Informes({history}) {
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
+    const [filtroFolio, setFiltroFolio] = React.useState(false);
+    const [dataGuiasFiltradas,setDataGuiasFiltradas]=React.useState([]);
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
@@ -189,7 +191,20 @@ function Informes({history}) {
 
         setOrdenAscendente(!ordenAscendente)
     };
+    const handleFiltroFolio = () => {
 
+        let filtro=document.getElementById('filtroFolio').value
+        if(filtro=='')
+        {
+            setDataGuiasFiltradas([])
+            setFiltroFolio(false)
+        }
+        else
+        {
+            setDataGuiasFiltradas(dataGuias.filter((g)=>g.m_nFolioGuia.includes(filtro)))
+            setFiltroFolio(true)
+        }
+    };
     function handleSelectCP(id, dobleClick, e) {
         clearTimeout(timer);
         if (e.detail === 1) {
@@ -1212,7 +1227,7 @@ function Informes({history}) {
         console.log(state.IdCiudadDestino)
         if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
-
+            setFiltroFolio(false)
         }
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
     const clickCancelar=()=>{
@@ -2203,12 +2218,31 @@ function Informes({history}) {
                                                                             }
 
                                                                         </IconButton>
+
+
+                                                                        <TextField style={{width:'40%'}}
+                                                                                   /*onChange={(e)=>{
+                                                                                       const waitTime=1000
+                                                                                       let timer
+                                                                                       clearTimeout(timer)
+                                                                                       timer=setTimeout(()=>{
+                                                                                           setFiltro(e.target.value)
+                                                                                       },waitTime)
+                                                                                   }}*/
+                                                                                   id='filtroFolio' variant={'outlined'} margin='dense' label='Filtro por Folio' type='text'></TextField>
+                                                                        <IconButton aria-label="search"
+                                                                                    className={classes.margin}
+                                                                                    onClick={()=>handleFiltroFolio()}>
+                                                                            <SearchIcon fontSize={'default'}></SearchIcon>
+                                                                            BUSCAR
+
+                                                                        </IconButton>
                                                                         <div style={{
                                                                             padding: "10px",
                                                                             maxHeight: "500px",
                                                                             overflow: "scroll"
                                                                         }}>
-                                                                            {dataGuias.map((value, index) => {
+                                                                            {(filtroFolio?dataGuiasFiltradas:dataGuias).map((value, index) => {
                                                                                 return (
                                                                                     <div>
                                                                                         <br/>
