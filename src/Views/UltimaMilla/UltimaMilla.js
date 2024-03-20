@@ -456,7 +456,7 @@ class UltimaMilla extends Component {
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
                                 <TileLayer style={{width: "100%", height: "100%"}}
-                                           url="https://maps.hereapi.com/v3/base/mc/{z}/{x}/{y}/png8?style=lite.day&apiKey={token}"
+                                           url="https://maps.hereapi.com/v3/base/mc/{z}/{x}/{y}/png8?style=logistics.day&apiKey={token}"
                                            token={process.env.REACT_APP_HERE_API_TOEKN}
                                 />
                                 {
