@@ -3,10 +3,10 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Button, Dialog, DialogActions, DialogContent, DialogTitle,
-    Grid, List, ListItem, ListItemText, makeStyles,
+    Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
+    Grid, InputLabel, List, ListItem, ListItemText, makeStyles,
     MenuItem,
-    Paper,
+    Paper, Select,
     TextField
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -49,6 +49,10 @@ import {
     obtenerClienteTieneConvenio
 } from "../../Util/Contexts/ClientesContext";
 import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
+import {Clear, ExpandLess} from "@material-ui/icons";
+import SearchIcon from "@material-ui/icons/Search";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import Tooltip from "@material-ui/core/Tooltip";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -78,6 +82,11 @@ export default function CrearTarifaRangos(props) {
     const [origenesDestinosListado, setOrigenesDestinosListado] = useState([])
     const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([])
     const [productosListado, setProductosListado] = useState([])
+    const [showPMUM,setShowPMUM]=useState(false)
+    const [filtroPMUM,setFiltroPMUM]=useState({activo:false,sucursal:-1,concepto:-1,producto:null})
+    const [filtroMM,setFiltroMM]=useState({activo:false,origen:-1,destino:-1,producto:null})
+    const [showMM,setShowMM]=useState(false)
+    const [showManiobras,setShowManiobras]=useState(false)
 
     const getAllSucursales = () => {
         if (sucursalesListado.length > 0){
@@ -721,11 +730,86 @@ export default function CrearTarifaRangos(props) {
                     </Grid>
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={10}>
+                    <Grid container spacing={1}>
+                        <Grid item xs={2}>
                             <Typography variant="h3" component="h2">
                                 Primera Milla y Última Milla
                             </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton onClick={()=> {setShowPMUM(showPMUM?false:true); document.querySelector('.PMUM').classList.toggle('hide')}} className='btn-secondary'>
+                                {showPMUM?
+                                    <ExpandLess fontSize='default'/>
+                                :
+                                    <ExpandMoreIcon fontSize='default'/>
+                                }
+
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <FormControl fullWidth variant='outlined' margin='dense'>
+                                <InputLabel
+                                    id="sucLabel">Sucursal</InputLabel>
+                            <Select value={filtroPMUM.sucursal} onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})} labelId='sucLabel' label=''>
+                                <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
+                                {sucursalesListado.map(suc=>{
+                                    return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
+                                })}
+                            </Select>
+                            </FormControl>
+                            </Grid>
+                        <Grid item xs={2}>
+                            <FormControl fullWidth variant='outlined' margin='dense'>
+                                <InputLabel
+                                    id="conceptoLabel">Concepto</InputLabel>
+                                <Select value={filtroPMUM.concepto} onChange={(e)=>setFiltroPMUM({...filtroPMUM,concepto: e.target.value})} labelId='conceptoLabel' label=''>
+                                    <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
+                                    {filtrarConceptosViajeLocal.map(item=>{
+                                        return <MenuItem value={item.m_nIdConceptosFacturacion}>{item.m_sConcepto}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Autocomplete
+                                freeSolo
+                                value={filtroPMUM.producto}
+                                onChange={(e,newValue)=>setFiltroPMUM({...filtroPMUM,producto: newValue})}
+                                id="PMUM_Productos"
+                                forcePopupIcon={false}
+                                options={productosListado}
+                                getOptionLabel={(option) =>
+                                    option.numeroDescripcion
+                                }
+                                variant="outlined"
+                                renderInput={(params) => (
+                                    <div>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Producto"
+                                            margin="dense"
+                                            className="form-control"
+                                            {...params}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                type: "search",
+                                                disableUnderline: true,
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:true})} >
+                                <SearchIcon margin='dense' fontSize='large'/>
+                            </IconButton>
+                            /
+                            <Tooltip title='Quitar Filtro'>
+                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:false})}>
+                                <Clear margin='dense' fontSize='large'/>
+                            </IconButton>
+                            </Tooltip>
                         </Grid>
                         <Grid item xs={2}>
                             <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal} disabled={props.disabled}>
@@ -734,8 +818,9 @@ export default function CrearTarifaRangos(props) {
                             </Button>
                         </Grid>
                     </Grid>
+                    <div className='PMUM hide'>
                     {
-                        viajesLocalesListado.map((viaje) =>
+                        (filtroPMUM.activo?viajesLocalesListado.filter(v=>(filtroPMUM.sucursal!=-1?v.idSucursal==filtroPMUM.sucursal:true) && (filtroPMUM.concepto!=-1?v.idConcepto==filtroPMUM.concepto:true) && v.productos.filter(prod=>(filtroPMUM.producto!=null?prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto:true)).length>0) :viajesLocalesListado).map((viaje) =>
                             <ViajeLocal
                                 key={viaje.idViaje}
                                 viaje={viaje}
@@ -754,11 +839,21 @@ export default function CrearTarifaRangos(props) {
                             />
                         )
                     }
+                    </div>
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
                     <Typography variant="h3" component="h2">
                         Maniobras
+                        <IconButton style={{marginLeft:'10.5%'}} onClick={()=> {setShowManiobras(showManiobras?false:true); document.querySelector('.MAN').classList.toggle('hide')}} className='btn-secondary'>
+                            {showManiobras?
+                                <ExpandLess fontSize='default'/>
+                                :
+                                <ExpandMoreIcon fontSize='default'/>
+                            }
+
+                        </IconButton>
                     </Typography>
+                    <div className='MAN hide'>
                     <Maniobras
                         handleChangeManiobras={handleChangeManiobras}
                         conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
@@ -767,13 +862,89 @@ export default function CrearTarifaRangos(props) {
                         rangos={maniobrasTarifa}
                         disabled={props.disabled}
                     />
+                    </div>
                 </Paper>
                 <Paper style={{padding: '20px'}}>
                     <Grid container spacing={2}>
-                        <Grid item xs={10}>
+                        <Grid item xs={2}>
                             <Typography variant="h3" component="h2">
                                 Milla Intermedia
                             </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton onClick={()=> {setShowMM(showMM?false:true); document.querySelector('.MM').classList.toggle('hide')}} className='btn-secondary'>
+                                {showMM?
+                                    <ExpandLess fontSize='default'/>
+                                    :
+                                    <ExpandMoreIcon fontSize='default'/>
+                                }
+
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <FormControl fullWidth variant='outlined' margin='dense'>
+                                <InputLabel
+                                    id="origenLbl">Origen</InputLabel>
+                                <Select value={filtroMM.origen} onChange={(e)=>setFiltroMM({...filtroMM,origen: e.target.value})} labelId='origenLbl' label=''>
+                                    <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
+                                    {origenesDestinosListado.map(item=>{
+                                        return <MenuItem value={item.m_nIdCiudad}>{item.m_sCiudad}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <FormControl fullWidth variant='outlined' margin='dense'>
+                                <InputLabel
+                                    id="destLabel">Destino</InputLabel>
+                                <Select value={filtroMM.destino} onChange={(e)=>setFiltroMM({...filtroMM,destino: e.target.value})} labelId='destLabel' label=''>
+                                    <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
+                                    {origenesDestinosListado.map(item=>{
+                                        return <MenuItem value={item.m_nIdCiudad}>{item.m_sCiudad}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Autocomplete
+                                freeSolo
+                                value={filtroMM.producto}
+                                onChange={(e,newValue)=>setFiltroMM({...filtroMM,producto: newValue})}
+                                id="MM_Prod"
+                                forcePopupIcon={false}
+                                options={productosListado}
+                                getOptionLabel={(option) =>
+                                    option.numeroDescripcion
+                                }
+                                variant="outlined"
+                                renderInput={(params) => (
+                                    <div>
+                                        <TextField
+                                            variant="outlined"
+                                            label="Producto"
+                                            margin="dense"
+                                            className="form-control"
+                                            {...params}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                type: "search",
+                                                disableUnderline: true,
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                            />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:true})} >
+                                <SearchIcon margin='dense' fontSize='large'/>
+                            </IconButton>
+                            /
+                            <Tooltip title='Quitar Filtro'>
+                                <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:false})}>
+                                    <Clear margin='dense' fontSize='large'/>
+                                </IconButton>
+                            </Tooltip>
                         </Grid>
                         <Grid item xs={2}>
                             <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo} disabled={props.disabled}>
@@ -782,8 +953,9 @@ export default function CrearTarifaRangos(props) {
                             </Button>
                         </Grid>
                     </Grid>
+                    <div className='MM hide'>
                     {
-                        viajesForaneosListado.map((viaje) =>
+                        (filtroMM.activo? viajesForaneosListado.filter(v=>(filtroMM.origen!=-1?v.idOrigen==filtroMM.origen:true) && (filtroMM.destino!=-1?v.idDestino==filtroMM.destino:true) && (filtroMM.producto!=null? (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto  ).length>0 ).length>0 ) :true) ) :viajesForaneosListado).map((viaje) =>
                             <ViajeForaneo
                                 key={viaje.idViaje}
                                 viaje={viaje}
@@ -801,6 +973,7 @@ export default function CrearTarifaRangos(props) {
                             />
                         )
                     }
+                    </div>
                 </Paper>
                 <br/>
                 <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"} disabled={props.disabled}>
