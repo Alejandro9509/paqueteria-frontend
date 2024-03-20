@@ -208,12 +208,54 @@ class UltimaMilla extends Component {
         }
 
         let paquete = this.state.paquetesSinCoord.pop();
-        await actualizarCoordenadasRemitentesDestinatarios(paquete.m_sRFCDestinatario, paquete.m_sNombreDestinatario, coordenadas.lat, coordenadas.lng).then((respuesta)=>{
+        await actualizarCoordenadasRemitentesDestinatarios(
+            paquete.m_sRFCDestinatario, paquete.m_sNombreDestinatario,
+            coordenadas.lat, coordenadas.lng, paquete.m_nId).then((respuesta)=>{
             showSuccess(respuesta.data);
           });
         console.log(this.state.paquetesSinCoord.length);
         if(this.state.paquetesSinCoord.length < 1){
             this.mostrarDialogoMapa(false);
+        }else{
+            this.setState({
+                entregaDD: {
+                    idPais: '',
+                    pais: '',
+                    idEstado: '',
+                    estado: '',
+                    idMunicipio: '',
+                    municipio: '',
+                    codigoPostal: '',
+                    zonaOperativa: this.state.paquetesSinCoord[0].m_sZona,
+                    domicilio: this.state.paquetesSinCoord[0].m_sDomicilioDestinatario,
+                    detalles: "",
+                    datosAdicionales: this.state.paquetesSinCoord[0].m_sDatosAdicionalesDetalleRecoleccion,
+                    latitud: '0',
+                    longitud: '0'
+                },
+                destinatario:{
+                    idDestinatario: '',
+                    aliasDestinatario: '',
+                    nombreDestinatario: this.state.paquetesSinCoord[0].m_sNombreDestinatario,
+                    RFCDestinatario: this.state.paquetesSinCoord[0].m_sRFCDestinatario,
+                    domicilioDestinatario: this.state.paquetesSinCoord[0].m_sDomicilioDestinatario,
+                    calleDestinatario: this.state.paquetesSinCoord[0].m_sCalleDestinatario,
+                    numeroIntDestinatario: '0',
+                    numeroExtDestinatario: this.state.paquetesSinCoord[0].m_sNoExtDestinatario,
+                    coloniaDestinatario: this.state.paquetesSinCoord[0].m_sColoniaDestinatario,
+                    estadoDestinatario: '',
+                    municipioDestinatario: '',
+                    codigoPostalDestinatario: '',
+                    correoDestinatario: this.state.paquetesSinCoord[0].m_sCorreoDestinatario,
+                    telefonoDestinatario: this.state.paquetesSinCoord[0].m_sTelefonoDestinatario,
+                    contactoDestinatario: this.state.paquetesSinCoord[0].m_sContactoDestinatario,
+                    destinoDestinatario: null,
+                    zonaOperativaDestinatario: '',
+                    zonaTarifaDestinatario: this.state.paquetesSinCoord[0].m_sZona,
+                    latitudD: '0',
+                    longitudD: '0'
+                }
+            });
         }
     }
     componentDidMount() {
