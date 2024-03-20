@@ -8,9 +8,7 @@ import {getAddressFormated} from "../Util";
 
 const headers = API_HEADERS
 
-const XTourClient = window.XTourClient;
-var xtour = new XTourClient();
-xtour.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
+
 
 const Depot = (id, x, y, startDate, finishDate) => ({
     "$type": "DepotSite",
