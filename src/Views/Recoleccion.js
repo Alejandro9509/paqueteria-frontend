@@ -1890,7 +1890,7 @@ function Recoleccion() {
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
-            entregaEnSucursal: !state.entregaEnSucursal && false
+            entregaEnSucursal: false
         });
     };
     const handleEntregaEnSucursalCheckbox = (event) => {

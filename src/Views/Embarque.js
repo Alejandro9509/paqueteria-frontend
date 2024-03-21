@@ -2345,7 +2345,7 @@ function Embarque(props) {
             return {
                 ...state,
                 diferenteEntrega: !state.diferenteEntrega,
-                entregaEnSucursal: !state.diferenteEntrega && false
+                entregaEnSucursal: false
             }
         });
     };
