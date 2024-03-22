@@ -226,6 +226,7 @@ class Cotizador extends Component {
                                 this.props.embarque.mostrarCotizador &&
                                 <ConceptosFacturacionGuias
                                     keys={0}
+                                    esRec={this.props.recoleccion}
                                     disabled={this.props.disabled}
                                     dataPaquetes={this.props.conceptos}
                                     onChangeList={this.handleChangeListConceptos}

@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import {validarDerecho} from "../../Util/Util";
 
 export default function DialogoNuevoConcepto(props) {
     const [open, setOpen] = React.useState(false);
@@ -298,7 +299,7 @@ export default function DialogoNuevoConcepto(props) {
         <div>
             {
                 !props.disabled &&
-                <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
+                <Button disabled={props.esRec?!validarDerecho(9101505):!validarDerecho(9101500)} variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
                     Agregar concepto
                 </Button>
             }
