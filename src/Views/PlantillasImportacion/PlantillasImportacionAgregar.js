@@ -348,8 +348,6 @@ export default function PlantillasImportacionAgregar(props){
                 params.archivoBase64 = await toBase64(files[0].file)
                 params.archivoNombre = files[0].filenameWithoutExtension
             }
-            console.log(params)
-            return
             if (props.value === null){
                 agregarPlantillaImportacion(params).then(respuesta => {
                     showSuccess(respuesta.data.message)
