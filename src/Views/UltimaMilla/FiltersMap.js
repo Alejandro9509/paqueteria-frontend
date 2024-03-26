@@ -43,6 +43,7 @@ import PaquetesPlaneacion from "./PaquetesPlaneacion";
 import {Autocomplete} from "@material-ui/lab";
 import AgregarRemolques from "./AgregarRemolques";
 import {showSuccess, validarDerecho} from "../../Util/Util";
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 
 const useStyles = theme => ({
     search: {
