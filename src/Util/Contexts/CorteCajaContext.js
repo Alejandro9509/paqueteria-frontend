@@ -15,7 +15,7 @@ function modificarCorte(id, params) {
 }
 
 function agregarCorte(params) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/CorteCaja/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
