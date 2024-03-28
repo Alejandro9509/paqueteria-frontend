@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Button, Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, TextField, Select} from "@material-ui/core";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +10,10 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
+import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
+import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
+import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
+import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
 
 const useStyles = makeStyles({
     root: {
@@ -35,6 +39,17 @@ function showSuccess(mensaje) {
     }).show();
 }
 let rowSelect
+
+/*function FormControl(props: {
+    fullWidth: boolean,
+    margin: string,
+    variant: string,
+    required: boolean,
+    children: ReactNode
+}) {
+    return null;
+}*/
+
 function DialogCreateRemDes(props) {
     const classes = useStyles();
     let {createVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
@@ -57,8 +72,9 @@ function DialogCreateRemDes(props) {
             width: 500,
         },
     ]
-    let registros=10
+
     const [dataMunicipios, setDataMunicipios] = React.useState([]);
+    const [dataEstados, setDataEstados] = React.useState([]);
     const [state, setState] = React.useState({
         id: "",
         alias: "",
@@ -89,22 +105,20 @@ function DialogCreateRemDes(props) {
     const [rows, setRow] = React.useState([])
     const [pagina, setPagina] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState("");
+    const [dataCodigosPostales, setDataCodigosPostales] = React.useState([]);
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
     useEffect(() => {
-        //cargarDesdeServidor(pagina,registros)
+        getAllEstados();
     }, [pagina])
 
 //--------------------------->Funciones<----------------------------------------------------------------------
-    function cargarDesdeServidor(pagina,registros){
-        return new obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda).then((respuesta)=>{
-            setRow(respuesta.data)
-        })
+    const getAllEstados = () => {
+        obtenerAllEstados().then((respuesta) => {
+            setDataEstados(respuesta.data);
+        });
     }
 
     const handleChange = (event) => {
-        // if(!event.target.name === "telefono" || !event.target.name === "correo" || !event.target.name === "contacto"){
-        //     props.seCalculaTarifa()
-        // }
         event.preventDefault();
         setState((state) => {
             return {
@@ -112,11 +126,46 @@ function DialogCreateRemDes(props) {
                 [event.target.name]: event.target.value,
             };
         });
-        // if (event.target.name === "estado") {
-        //     obtenerMunicipiosByIdEstado(event.target.value).then(({ data }) => {
-        //         setDataMunicipios(data);
-        //     });
-        // }
+        if (event.target.name === "estado") {
+            obtenerMunicipiosByIdEstado(event.target.value).then(({ data }) => {
+                setDataMunicipios(data);
+            });
+        }
+    };
+
+    const handleChangeAutocomplete = (input, newValue) => {
+        if(input=="codigoPostal"){
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
+                ( zonaOperativa ) => {
+                    obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
+                        ( zonaTarifa ) => {
+                            // if(zonaOperativa.data.length == 0){
+                            //     showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
+                            // }
+                            setState((state) => ({
+                                ...state,
+                                zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                                zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
+                            }));
+                        }
+                    );
+                }
+            );
+        }
+
+        setState(() => ({
+            ...state,
+            [input]: newValue,
+        }));
+    };
+
+    const handleClickCodigosPostalesInput = (input) => {
+        obtenerCodigosPostalesPorEstadoMunicipio(
+            state.estado,
+            state.municipio
+        ).then(({ data }) => {
+            setDataCodigosPostales(data);
+        });
     };
 
 //----------------------------------------------Renderizado-------------------------------------------------
@@ -236,41 +285,89 @@ function DialogCreateRemDes(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-12 col-md-12  unit">
-                    <TextField
+                <div className="col-sm-12 col-md-12 unit">
+
+                        <FormControl fullWidth variant="outlined" margin="dense" required>
+                            <InputLabel id="idEstadoLabel">Estado</InputLabel>
+                            <Select
+                                fullWidth
+                                labelId="idEstadoLabel"
+                                label="Estado"
+                                className="form-control"
+                                value={state.estado}
+                                onChange={handleChange}
+                                name="estado"
+                            >
+                                {dataEstados.map((estado) => (
+                                    <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
+                                        {estado.m_sEstado}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                    {/*<TextField
                         variant="outlined"
                         margin="dense"
                         className="form-control"
                         label="Estado"
                         value={state.estadoTexto}
                         name="estado"
-                    />
+                    />*/}
                 </div>
             </div>
             <div className="col-md-6">
                 <div className="col-sm-12 col-md-12 unit">
-                    <TextField
+                    <FormControl
+                        className="input select"
+                        fullWidth
+                        variant="outlined"
+                        margin="dense"
+                        required
+                      >
+                        <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                        <Select
+                          fullWidth
+                          labelId={"idMunicipioLabel"}
+                          label={"Municipio"}
+                          className="form-control"
+                          value={state.municipio}
+                          onChange={handleChange}
+                          name="municipio"
+                          InputProps={{ name: "municipio" }}
+                        >
+                          {dataMunicipios.map((municipio) => (
+                            <option
+                              key={municipio.m_sCodigoMunicipio}
+                              value={municipio.m_sCodigoMunicipio}
+                            >
+                              {municipio.m_sMunicipio}
+                            </option>
+                          ))}
+                        </Select>
+                    </FormControl>
+                    {/*<TextField
                         variant="outlined"
                         margin="dense"
                         className="form-control"
                         label="Municipio"
                         value={state.municipioTexto}
                         name="municipio"
-                    />
+                    />*/}
                 </div>
 
                 <div className="col-sm-12 col-md-12 unit">
                     <div className="input">
                         <Autocomplete
                             freeSolo
-                            // onChange={(event, newValue) =>
-                            //     handleChangeAutocomplete("codigoPostal", newValue)
-                            // }
+                            onChange={(event, newValue) =>
+                                handleChangeAutocomplete("codigoPostal", newValue)
+                            }
                             value={state.codigoPostal}
                             name="codigoPostal"
                             disableClearable
                             forcePopupIcon={false}
-                            // options={dataCodigosPostales}
+                            options={dataCodigosPostales}
                             getOptionLabel={(option) =>
                                 option ? `${option.m_sCP} - ${option.m_sColonia}` : ""
                             }
@@ -283,9 +380,9 @@ function DialogCreateRemDes(props) {
                                         label="Código Postal"
                                         margin="dense"
                                         variant="outlined"
-                                        // onClick={(e) =>
-                                        //     handleClickCodigosPostalesInput("codigoPostal")
-                                        // }
+                                        onClick={(e) =>
+                                            handleClickCodigosPostalesInput("codigoPostal")
+                                        }
                                         required
                                         {...params}
                                     />
@@ -301,7 +398,7 @@ function DialogCreateRemDes(props) {
                             variant="outlined"
                             margin="dense"
                             label="Correo Electrónico"
-                            // onChange={handleChange}
+                            onChange={handleChange}
                             className="form-control"
                             type="email"
                             required
