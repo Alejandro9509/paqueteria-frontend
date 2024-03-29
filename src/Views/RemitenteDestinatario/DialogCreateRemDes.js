@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
-import { DataGrid } from "@material-ui/data-grid";
-import { dataGridLocaleText } from "../../Constants";
 import {Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, TextField, Select} from "@material-ui/core";
-import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
-import SearchIcon from "@material-ui/icons/Search";
+import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
@@ -55,24 +50,6 @@ function DialogCreateRemDes(props) {
     let {createVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
-    const columns = [
-        {
-            headerName: "No. Remitente / Destinatario",
-            field: "m_nNumero",
-            width: 150,
-        },
-        {
-            headerName: "Nombre",
-            field: "m_sNombre",
-            width: 500,
-        },
-        {
-            headerName: "Domicilio",
-            field: "m_sDomicilio",
-            width: 500,
-        },
-    ]
-
     const [dataMunicipios, setDataMunicipios] = React.useState([]);
     const [dataEstados, setDataEstados] = React.useState([]);
     const [state, setState] = React.useState({
@@ -102,7 +79,6 @@ function DialogCreateRemDes(props) {
         longitud: ""
     });
 //----------------------------->Hooks useState <----------------------------------------------------------------------
-    const [rows, setRow] = React.useState([])
     const [pagina, setPagina] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState("");
     const [dataCodigosPostales, setDataCodigosPostales] = React.useState([]);
@@ -168,6 +144,38 @@ function DialogCreateRemDes(props) {
         });
     };
 
+    const handleAgregar = () => {
+        const params = {
+            idCliente: 0,
+            nombre: state.nombre,
+            rfc: state.RFC,
+            activo: true,
+            calle: state.calle,
+            noExterior: state.numeroExt,
+            noInterior: state.numeroInt,
+            colonia: state.colonia,
+            localidad: state.colonia,
+            municipio: state.municipio,
+            idEstado: state.estado,
+            creadoPor: localStorage.getItem("UsuarioId"),
+            idCP: state.codigoPostal.m_nIdCP,
+            codigoPostal: state.codigoPostal.m_sCP,
+            idSucursal: localStorage.getItem("Sucursal") || 0,
+            contacto: state.contacto,
+            correoElectronico: state.correo,
+            telefono: state.telefono,
+            noRegistroIdentidadFiscal: state.RFC,
+            alias: state.nombre
+        };
+        agregarRemitenteDestinatario(params).then((respuesta) => {
+            console.log(respuesta.data);
+            createVisible(false);
+        }).catch((err) => {
+            console.log(err);
+            showSuccess(err.response.data);
+        });
+    }
+
 //----------------------------------------------Renderizado-------------------------------------------------
     return (
         <div>
@@ -197,7 +205,7 @@ function DialogCreateRemDes(props) {
                             className="form-control"
                             type="text"
                             label="RFC"
-                            pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                            // pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                             title="Favor de introducir un RFC válido."
                             required
                             fullWidth
@@ -207,7 +215,7 @@ function DialogCreateRemDes(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-12 col-md-12 unit">
+{/*                <div className="col-sm-12 col-md-12 unit">
                     <div className="input">
                         <TextField
                             variant="outlined"
@@ -221,7 +229,7 @@ function DialogCreateRemDes(props) {
                             name="domicilio"
                         />
                     </div>
-                </div>
+                </div>*/}
 
                 <div className="col-sm-12 col-md-12 unit">
                     <div className="input">
@@ -286,7 +294,6 @@ function DialogCreateRemDes(props) {
                 </div>
 
                 <div className="col-sm-12 col-md-12 unit">
-
                         <FormControl fullWidth variant="outlined" margin="dense" required>
                             <InputLabel id="idEstadoLabel">Estado</InputLabel>
                             <Select
@@ -437,7 +444,6 @@ function DialogCreateRemDes(props) {
                             required
                             label="Contacto"
                             value={state.contacto}
-                            disabled={props.consulta}
                             name="contacto"
                         />
                     </div>
@@ -534,8 +540,7 @@ function DialogCreateRemDes(props) {
                 </button>
                 <button
                     onClick={() => {
-                        console.log("Creando contacto");
-                        createVisible(false);
+                        handleAgregar();
                     }}
                     className="btn btn-primary primary-btn"
                 >
