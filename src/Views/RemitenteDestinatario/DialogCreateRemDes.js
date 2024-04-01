@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import {Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, TextField, Select} from "@material-ui/core";
+import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
+import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -76,7 +78,9 @@ function DialogCreateRemDes(props) {
         zonaOperativa: "",
         zonaTarifa: "",
         latitud: "",
-        longitud: ""
+        longitud: "",
+        clientePaga: {},
+        openDialog: false
     });
 //----------------------------->Hooks useState <----------------------------------------------------------------------
     const [pagina, setPagina] = React.useState(0);
@@ -93,6 +97,26 @@ function DialogCreateRemDes(props) {
             setDataEstados(respuesta.data);
         });
     }
+
+    const handleClienteSelected = (row) => {
+        setState(state => {
+            return {
+                ...state,
+                clientePaga: row.data,
+                openDialog: false
+            }
+        });
+        console.log(state.clientePaga);
+    }
+
+    const dialogVisible = (isVisible) => {
+        setState(state => {
+            return {
+                ...state,
+                openDialog: isVisible,
+            }
+        });
+    };
 
     const handleChange = (event) => {
         event.preventDefault();
@@ -146,7 +170,7 @@ function DialogCreateRemDes(props) {
 
     const handleAgregar = () => {
         const params = {
-            idCliente: 0,
+            idCliente: state.clientePaga.id,
             nombre: state.nombre,
             rfc: state.RFC,
             activo: true,
@@ -168,7 +192,7 @@ function DialogCreateRemDes(props) {
             alias: state.nombre
         };
         agregarRemitenteDestinatario(params).then((respuesta) => {
-            console.log(respuesta.data);
+            showSuccess(respuesta.data);
             createVisible(false);
         }).catch((err) => {
             console.log(err);
@@ -179,7 +203,35 @@ function DialogCreateRemDes(props) {
 //----------------------------------------------Renderizado-------------------------------------------------
     return (
         <div>
+            <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}>
+                <DialogContent>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={dialogVisible} handlePatrocinadorSelected={handleClienteSelected}/>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <div className="widget-header">
+                <h2>Nuevo Remitente/Destinatario</h2>
+            </div>
             <div className="col-md-6">
+                <div className="input">
+                    <TextField
+                        variant="outlined"
+                        label="Cliente"
+                        margin="dense"
+                        value={state.clientePaga.m_sNombreFiscal}
+                        placeholder={"Cliente: Nombre fiscal"}
+                        InputLabelProps={{shrink: true}}
+                        onClick={() => {
+                                setState({
+                                    ...state,
+                                    openDialog: true
+                                })
+                            }
+                        }
+                    />
+                </div>
+
                 <div className="col-sm-12 col-md-12    unit">
                     <div className="input">
                         <TextField
