@@ -4171,7 +4171,10 @@ function Embarque(props) {
                                         </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
-                                            setDataPaquetes={(arrayNuevo)=>setDataPaquetes(arrayNuevo)}
+                                            setDataPaquetes={(arrayNuevo)=>{
+                                                setDataPaquetes(arrayNuevo)
+                                                setRepetirConceptos(true)
+                                            }}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                             cliente={state.clientePaga}

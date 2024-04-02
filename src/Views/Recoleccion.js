@@ -4129,7 +4129,10 @@ function Recoleccion() {
                                         </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
-                                            setDataPaquetes={(arrayNuevo)=>setDataPaquetes(arrayNuevo)}
+                                            setDataPaquetes={(arrayNuevo)=>{
+                                                setDataPaquetes(arrayNuevo)
+                                                setRepetirConceptos(true)
+                                            }}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                             cliente={state.clientePaga}
