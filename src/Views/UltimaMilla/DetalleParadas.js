@@ -197,7 +197,11 @@ class DetalleParadas extends Component {
         pom.click();
     }
     descargarXMLCFDI(id,esRecoleccion, folio) {
-        obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then(({data}) => {
+        let fechaHoraActual=new Date()
+        let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+fechaHoraActual.getMonth().toString().padStart(2,'0')+'-'+fechaHoraActual.getDay().toString().padStart(2,'0'))
+        let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
+        obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then(({data}) => {
+
             var filename = folio+".xml";
             var pom = document.createElement('a');
             var bb = new Blob([data], {type: 'text/plain'});
@@ -270,8 +274,11 @@ class DetalleParadas extends Component {
                     {
                         label: 'Sí',
                         onClick: () => {
+                            let fechaHoraActual=new Date()
+                            let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+fechaHoraActual.getMonth().toString().padStart(2,'0')+'-'+fechaHoraActual.getDay().toString().padStart(2,'0'))
+                            let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
 
-                            obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                            obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then((result) => {
                                 this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
                             }).catch((error) => {
                                 if (error.response){
