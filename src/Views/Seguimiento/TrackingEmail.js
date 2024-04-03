@@ -68,8 +68,8 @@ class TrackingEmail extends Component {
             this.setState({didSearch:true})
             if(data.Estatus == true){
                 
-                obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
-                    obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
+                obtenerImagenEvidencia(data.m_nIdRecoleccion?data.m_nIdRecoleccion:-1,1).then(respuestaRec=>{
+                    obtenerImagenEvidencia(data.m_nIdGuia?data.m_nIdGuia:-1,0).then(respuestaEmb=>{
                         this.setState({
                             imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
                             imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
