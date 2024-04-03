@@ -132,7 +132,7 @@ function Informes({history}) {
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [filtroFolio, setFiltroFolio] = React.useState(false);
-    const [dataGuiasFiltradas,setDataGuiasFiltradas]=React.useState([]);
+    const [textoFiltro,setTextoFiltro]=React.useState('');
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
@@ -196,12 +196,12 @@ function Informes({history}) {
         let filtro=document.getElementById('filtroFolio').value
         if(filtro=='')
         {
-            setDataGuiasFiltradas([])
+            setTextoFiltro('')
             setFiltroFolio(false)
         }
         else
         {
-            setDataGuiasFiltradas(dataGuias.filter((g)=>g.m_nFolioGuia.includes(filtro)))
+            setTextoFiltro(filtro)
             setFiltroFolio(true)
         }
     };
@@ -1056,9 +1056,9 @@ function Informes({history}) {
         getAllGuiasFrom(true);
     }
 
-    const selectGuia = (index) => {
+    const selectGuia = (guia) => {
         const newGuia = [...dataGuias];
-
+        let index=dataGuias.findIndex(g=>g==guia)
         newGuia[index]["select"] = newGuia[index].select ? false : true;
         setDataGuias(newGuia);
     };
@@ -2242,7 +2242,7 @@ function Informes({history}) {
                                                                             maxHeight: "500px",
                                                                             overflow: "scroll"
                                                                         }}>
-                                                                            {(filtroFolio?dataGuiasFiltradas:dataGuias).map((value, index) => {
+                                                                            {(filtroFolio?dataGuias.filter((g)=>g.m_nFolioGuia.includes(textoFiltro)):dataGuias).map((value, index) => {
                                                                                 return (
                                                                                     <div>
                                                                                         <br/>
@@ -2252,7 +2252,7 @@ function Informes({history}) {
                                                                                                 borderRadius: "10px",
                                                                                             }}
                                                                                             disabled={state.agregar === "Consultar"}
-                                                                                            onClick={() => selectGuia(index)}
+                                                                                            onClick={() => selectGuia(value)}
                                                                                         >
                                                                                             <Grid container spacing={2}>
                                                                                                 <Grid
