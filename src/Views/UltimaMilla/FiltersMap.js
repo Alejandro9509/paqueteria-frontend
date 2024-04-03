@@ -332,7 +332,7 @@ class FiltersMap extends Component {
         const {classes} = this.props;
         return (
             <div className="leaflet-top leaflet-left" style={{paddingLeft: "40px"}}>
-                <AgregarRemolques asignarRemolquesUnidad={this.asignarRemolquesUnidad} open={this.state.openRemolques} close={() => this.setState({openRemolques: false})} />
+                <AgregarRemolques paquetes={this.state.paquetesSeleccionadas} asignarRemolquesUnidad={this.asignarRemolquesUnidad} open={this.state.openRemolques} close={() => this.setState({openRemolques: false})} />
 
                 <PaquetesPlaneacion open={this.props.data.modoPlaneacion && this.state.openPaquetes}
                                     close={() => this.setState({openPaquetes: false})}
@@ -651,6 +651,7 @@ class FiltersMap extends Component {
                             disableTouchListener
                             title={
                                 <UnidadesList reasignarOperador={this.reasignarOperador}
+                                              paquetes={this.state.paquetesSeleccionadas}
                                               sucursalId={this.state.sucursalSeleccionada ? this.state.sucursalSeleccionada.m_nIdSucursal : 0 }
                                               unidadesSeleccionadas={this.state.unidadesSeleccionadas}
                                               selectUnidades={this.selectUnidades} cerrarDialogos={this.cerrarDialogos} asignarRemolques={this.asignarRemolques}>

@@ -49,11 +49,13 @@ import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/Operad
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
-import { validarEliminarGuia } from "../../Util/Contexts/GuiaContext";
+import {cubicarGuia, validarEliminarGuia} from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 import DialogUnidades from "./DialogUnidades";
 import DialogRemolques from "./DialogRemolques";
 import DialogDollys from "./DialogDollys";
+import ProgressBarCubicaje from "./ProgressBarCubicaje";
+import {showError} from "../../Util/GlobalFunctions";
 
 const headers = API_HEADERS
 
@@ -108,6 +110,7 @@ class AgregarViaje extends Component {
             showDialog: false,
             identificadorModal: "",
             tipoModal: 0,
+            utilizacion: 0,
             dataRutas: [],
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
@@ -204,11 +207,12 @@ class AgregarViaje extends Component {
         this.handleAcceptDataRemolques = this.handleAcceptDataRemolques.bind(this);
         this.handleCloseDialogDollys = this.handleCloseDialogDollys.bind(this);
         this.handleAcceptDataDollys = this.handleAcceptDataDollys.bind(this);
+        this.cubicarViaje = this.cubicarViaje.bind(this);
 
     }
 
     componentWillMount() {
-
+       
        this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
@@ -249,7 +253,7 @@ class AgregarViaje extends Component {
                             m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
                             m_sCodigo: this.props.select.m_sCodigoRemolque1,
                             EstatusUnidad: this.props.select.m_sEstatusRemolque1,
-    
+
                         } : null,
                         placasRemolque1: this.props.select.m_sPlacasRemolque1,
                         colorRemolque1: this.props.select.m_sColorRemolque1,
@@ -278,7 +282,7 @@ class AgregarViaje extends Component {
                             m_sCodigo: this.props.select.m_sCodigoUnidad,
                             m_sDescripcion: this.props.select.m_sDescripcionUnidad,
                             EstatusUnidad: this.props.select.m_sEstatusUnidad,
-    
+
                         },
                         placaIntUnidad: this.props.select.m_sPlacasUnidad,
                         estatusUnidad: this.props.select.m_sEstatusUnidad,
@@ -302,7 +306,7 @@ class AgregarViaje extends Component {
                         dollySelect:this.props.select.m_nIdDolly?true:false,
                         Remolque2Select:this.props.select.m_nIdRemolque2?true:false,
                         trayectos: data
-    
+
                     }
                 })
             })
@@ -890,7 +894,7 @@ class AgregarViaje extends Component {
 
 
     handleAgregarInforme(id) {
-        if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
+        if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined) {
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
             informeAsignar.m_bSePuedeBorrar = true
             if (this.state.trayectos.map(t => t.IdDestino).includes(informeAsignar.m_nIdDestino) === false) {
@@ -901,7 +905,13 @@ class AgregarViaje extends Component {
             informeAsignar.m_nDestinoSeleccionado = informeAsignar.m_nIdDestino
             informeAsignar.m_sDestinoSeleccionado = informeAsignar.m_sCiudadDestino
 
+
             arrayInformesAsignados.push(informeAsignar)
+            try {
+                this.cubicarViaje(arrayInformesAsignados)
+            } catch (e) {
+                showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado pero hubo un error al calcular cubicaje con el informe seleccionado.")
+            }
             this.setState({dataInformesAsignados: arrayInformesAsignados})
             showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
         }else{
@@ -910,9 +920,32 @@ class AgregarViaje extends Component {
 
     }
 
+    cubicarViaje(arrayInformesAsignados){
+        const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
+        const params = {
+            idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
+            paquetes: paquetes.map(p => ({
+                alto: p.m_xAlto,
+                ancho: p.m_xAncho,
+                largo: p.m_xLargo,
+                peso: p.m_xPeso,
+                cantidad: p.ctd
+            }))
+        }
+        cubicarGuia(params).then(({data}) => {
+            this.setState({utilizacion: data.utilizacion.toFixed(0)})
+        }).catch(e => {
+            this.setState({utilizacion: 0})
+            showError(e.response?.data)
+        })
+    }
+
+
     handleEliminarInforme(id) {
         var dataInformesAsignados = [...this.state.dataInformesAsignados]
         dataInformesAsignados.splice(dataInformesAsignados.findIndex(i => i.m_nIdInforme === id), 1)
+        this.cubicarViaje(dataInformesAsignados)
         this.setState({dataInformesAsignados: dataInformesAsignados})
     }
 
@@ -2066,6 +2099,9 @@ class AgregarViaje extends Component {
                                                             dataInformesAsignados={this.state.dataInformesAsignados}
                                         />
                                     </div>
+
+                                    <br/>
+                                    <ProgressBarCubicaje value={this.state.utilizacion}>{this.state.utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${this.state.utilizacion}%`}</ProgressBarCubicaje>
                                 </div>
 
                                 {/*<div className={"row"}>

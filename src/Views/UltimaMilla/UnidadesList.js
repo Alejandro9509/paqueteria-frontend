@@ -10,8 +10,14 @@ import {
     TableRow,
     Checkbox,
     withStyles,
-    TableSortLabel, Grid,
-    Link, Dialog, DialogActions, DialogContent, DialogTitle, Button
+    TableSortLabel,
+    Grid,
+    Link,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button
 } from "@material-ui/core";
 import {obtenerUnidades, obtenerUnidadesUltimaMilla} from "../../Util/Contexts/UnidadesContext";
 import {fade} from "@material-ui/core/styles";
@@ -23,6 +29,7 @@ import {confirmAlert} from "react-confirm-alert";
 import Tooltip from "@material-ui/core/Tooltip";
 import {showSuccess} from "../../Util/Util";
 import AgregarRemolques from "./AgregarRemolques";
+import ProgressBarCubicaje from "../Viajes/ProgressBarCubicaje";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -42,9 +49,7 @@ class UnidadesList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            unidades: [],
-            order: "asc",
-            orderBy: "m_sDescripcion",
+            unidades: [], order: "asc", orderBy: "m_sDescripcion",
 
         }
         this.getAllUnidades = this.getAllUnidades.bind(this)
@@ -59,7 +64,11 @@ class UnidadesList extends Component {
     }
 
     getAllUnidades() {
-        obtenerUnidadesUltimaMilla(this.props.sucursalId).then(({data}) => {
+        console.log(this.props.paquetes)
+        const params = {
+            guias: this.props.paquetes.filter(p => !p.m_bEsRecoleccion).map(p => ({m_nIdGuia: p.m_nId}))
+        }
+        obtenerUnidadesUltimaMilla(this.props.sucursalId, params).then(({data}) => {
             this.setState({unidades: data})
         })
     }
@@ -75,9 +84,7 @@ class UnidadesList extends Component {
     }
 
     getComparator(order, orderBy) {
-        return order === 'desc'
-            ? (a, b) => this.descendingComparator(a, b, orderBy)
-            : (a, b) => -this.descendingComparator(a, b, orderBy);
+        return order === 'desc' ? (a, b) => this.descendingComparator(a, b, orderBy) : (a, b) => -this.descendingComparator(a, b, orderBy);
     }
 
     stableSort(array, comparator) {
@@ -103,7 +110,7 @@ class UnidadesList extends Component {
     };
 
     handleSelectAllClickevent(event) {
-        if (event.target.checked && this.state.unidades.filter(f => f.m_nIdOperador).length !== this.props.unidadesSeleccionadas.filter(f => f.m_nIdOperador).length ) {
+        if (event.target.checked && this.state.unidades.filter(f => f.m_nIdOperador).length !== this.props.unidadesSeleccionadas.filter(f => f.m_nIdOperador).length) {
             const newSelecteds = this.state.unidades.filter(f => f.m_nIdOperador);
             this.props.selectUnidades(newSelecteds)
             return;
@@ -112,31 +119,23 @@ class UnidadesList extends Component {
     };
 
 
-
-    solicitarRemolques(row){
+    solicitarRemolques(row) {
         const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
         if (selectedIndex === -1) {
             this.props.cerrarDialogos()
             console.log(row)
             if (row.m_bAplicaRemolques) {
-                if(row.m_sTipoUnidad == "TRACTOCAMION"){//Si la unidad es tractocamion el remolque es obligatorio
+                if (row.m_sTipoUnidad == "TRACTOCAMION") {//Si la unidad es tractocamion el remolque es obligatorio
                     this.props.asignarRemolques(row)
-                }else{  
-                confirmAlert({
-                    title: 'Confirmar',
-                    message: '¿Desea agregar remolques?',
-                    buttons: [
-                        {
-                            label: 'Sí',
-                            onClick: () => this.props.asignarRemolques(row)
-                        },
-                        {
-                            label: 'No',
-                            onClick: () => this.handleClick(row)
-                        }
-                    ]
-                }) 
-            }
+                } else {
+                    confirmAlert({
+                        title: 'Confirmar', message: '¿Desea agregar remolques?', buttons: [{
+                            label: 'Sí', onClick: () => this.props.asignarRemolques(row)
+                        }, {
+                            label: 'No', onClick: () => this.handleClick(row)
+                        }]
+                    })
+                }
             } else {
                 this.handleClick(row)
             }
@@ -145,7 +144,7 @@ class UnidadesList extends Component {
         }
     }
 
-    handleClick( row) {
+    handleClick(row) {
         const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
         let newSelected = [];
 
@@ -156,10 +155,7 @@ class UnidadesList extends Component {
         } else if (selectedIndex === this.props.unidadesSeleccionadas.length - 1) {
             newSelected = newSelected.concat(this.props.unidadesSeleccionadas.slice(0, -1));
         } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                this.props.unidadesSeleccionadas.slice(0, selectedIndex),
-                this.props.unidadesSeleccionadas.slice(selectedIndex + 1),
-            );
+            newSelected = newSelected.concat(this.props.unidadesSeleccionadas.slice(0, selectedIndex), this.props.unidadesSeleccionadas.slice(selectedIndex + 1),);
         }
         this.props.selectUnidades(newSelected)
     };
@@ -169,8 +165,7 @@ class UnidadesList extends Component {
         const isSelected = (row) => this.props.unidadesSeleccionadas.find(u => u.m_nIdUnidad === row) != null;
 
 
-        return (
-            <div style={{height:"400px", overflow:"auto"}}>
+        return (<div style={{height: "400px", overflow: "auto"}}>
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -196,14 +191,15 @@ class UnidadesList extends Component {
                                         {this.state.orderBy === "m_sDescripcion" ? (
                                             <span className={classes.visuallyHidden}>
                                             {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                        </span>
-                                        ) : null}
+                                        </span>) : null}
                                     </TableSortLabel>
 
                                 </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sTipoUnidad" ? this.state.order : false}
                                     align="left">Tipo Unidad</TableCell>
+                                <TableCell
+                                    align="left">Ocupación</TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
                                     align="left">Repartidor</TableCell>
@@ -227,6 +223,8 @@ class UnidadesList extends Component {
                                         <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
 
                                         <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
+                                    <TableCell align="left"><ProgressBarCubicaje
+                                        value={u.utilizacion || 0}>{u.utilizacion?.toFixed(0) || 0}%</ProgressBarCubicaje></TableCell>
                                         <Tooltip title={u.ocupado?"En Ruta":""}>
                                         <TableCell align="left">{<Link style={{cursor: "pointer",color:u.ocupado?"gray":''}}
                                                                        onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell></Tooltip>

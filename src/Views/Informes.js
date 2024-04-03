@@ -1,5 +1,4 @@
 import React, {useEffect, useState, setData, useMemo, Component} from "react";
-import {cubicarGuias, remove_array_element} from "../Util/Util";
 import {validarDerecho} from "../Util/Util"
 import {
     ButtonBase,
@@ -27,7 +26,6 @@ import RestartAltIcon from '@material-ui/icons/Refresh';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import {getCurrentDateTime} from "../Util/Util"
 
-import DataTable from "react-data-table-component";
 import $ from "jquery";
 import {useTable, useFilters, useSortBy} from "react-table";
 import TextField from "@material-ui/core/TextField";
@@ -53,7 +51,13 @@ import Noty from "noty";
 import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
-import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {
+    cubicarGuiaInforme,
+    obtenerGuia,
+    obtenerGuiaPendientes,
+    obtenerGuiaReporte,
+    obtenerGuiasFiltro
+} from "../Util/Contexts/GuiaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
 import {obtenerUnidades, obtenerUnidadesInforme, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {obtenerRutas} from "../Util/Contexts/RutasContext";
@@ -81,6 +85,8 @@ import {confirmAlert} from "react-confirm-alert";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogFormatosImpresion from "./DialogFormatosImpresion";
+import {showError} from "../Util/GlobalFunctions";
+import ProgressBarCubicaje from "./Viajes/ProgressBarCubicaje";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -90,15 +96,6 @@ function showSuccess(mensaje) {
         timeout: "8000",
     }).show();
 }
-function showError(mensaje) {
-    new Noty({
-        type: "error",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000",
-    }).show();
-}
-
 const styles = {
     seleccionado: {
         backgroundColor: "#FCC88F",
@@ -119,7 +116,7 @@ let timer;
 
 function Informes({history}) {
     const classes = useStyles();
-    const [stepActive, setStepActive] = React.useState(1);
+    const [utilizacion, setUtilizacion] = React.useState(0);
     const [data, setData] = React.useState([]);
     const [guias, setGuias] = React.useState([]);
     const [informes, setInformes] = React.useState([]);
@@ -130,8 +127,10 @@ function Informes({history}) {
     const [dataUnidades, setDataUnidades] = React.useState([]);
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
+    const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
+    const [mensajesUtilizacion,setMensajeUtilizacion]=useState('')
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
     // useEffect(()=>{
@@ -148,7 +147,7 @@ function Informes({history}) {
     //     }
     //
     // }, [])
-    
+
     function confirmExit()
     {
 
@@ -583,7 +582,10 @@ function Informes({history}) {
                 indexCubicar: 0,
             }
         })
+        setMensajeUtilizacion('')
+        setDataGuiasSeleccionadas([])
         setDataGuias([])
+        setUtilizacion(0)
     }
 
     /* const getCurrentDateTime = () => {
@@ -628,6 +630,7 @@ function Informes({history}) {
         console.log(JSON.stringify(params))
         // handleShowListado()
         if (state.IdInforme !== 0) {
+            console.log("Modificar")
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -639,10 +642,12 @@ function Informes({history}) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
+            console.log("Agregar")
             agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     if (state.cuibicar && state.indexCubicar < informes.length) {
+                        console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
                         $.mostrarMensaje=false
@@ -701,92 +706,6 @@ function Informes({history}) {
 
     }
 
-    function TableCiudades({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdCiudad === select ? "orange" : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
     useEffect(value => {
         setState({
             ...state,
@@ -794,247 +713,9 @@ function Informes({history}) {
             PlacasRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_sPlacas : "",
             PlacasDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_sPlacas : ""
         })
+        console.log(state.IdTipoUnidad)
+        //cubicarInforme(dataGuias);
     }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
-
-    function TableOperadores({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            <th>Acciones</th>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdOperador === select
-                                            ? "#FCC88F"
-                                            : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectCP.bind(this, row.original, false)}
-                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                            >
-                                <td>
-                                    <div>
-                                        <a
-                                            href="#Agregar"
-                                            role="tab"
-                                            data-toggle="tab"
-                                            onClick={() =>
-                                                handleShowModificar(row.original.m_nIdRecoleccion)
-                                            }
-                                            className="btn btn-default"
-                                        >
-                                            <i
-                                                className="fa fa-pencil-square-o"
-                                                style={{color: "#F9A03E"}}
-                                            />
-                                        </a>
-                                        <a
-                                            href="#"
-                                            className="btn btn-default btn-sm m-user-delete"
-                                            onClick={() =>
-                                                confirmAlert({
-                                                    title: 'Confirmar Eliminar',
-                                                    message: '¿Está seguro de eliminar Embarque?',
-                                                    buttons: [
-                                                        {
-                                                            label: 'Sí',
-                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
-                                                        },
-                                                        {
-                                                            label: 'No',
-                                                        }
-                                                    ]
-                                                })
-                                            }
-                                        >
-                                            <i
-                                                className="zmdi zmdi-delete"
-                                                style={{color: "#F30B0B"}}
-                                            />
-                                        </a>
-                                        <a
-                                            href="#"
-                                            className="btn btn-default btn-sm m-user-delete"
-                                            onClick={() =>
-                                                confirmAlert({
-                                                    title: 'Confirmar Eliminar',
-                                                    message: '¿Está seguro de eliminar Embarque?',
-                                                    buttons: [
-                                                        {
-                                                            label: 'Sí',
-                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
-                                                        },
-                                                        {
-                                                            label: 'No',
-                                                        }
-                                                    ]
-                                                })
-                                            }
-                                        >
-                                            <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
-                                        </a>
-                                    </div>
-                                </td>
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
-    function TableUnidad({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdUnidad === select ? "orange" : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectCP.bind(this, row.original, false)}
-                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
 
     function cubicarAccion(e) {
         e.preventDefault();
@@ -1045,8 +726,87 @@ function Informes({history}) {
         const newGuia = [...dataGuias];
 
         newGuia[index]["select"] = newGuia[index].select ? false : true;
+        cubicarInforme(newGuia);
         setDataGuias(newGuia);
     };
+
+    function cubicarInforme(newGuia){
+        console.log("Cubicar")
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia.filter(g => g.select)
+        }
+        if(params.guias.length > 0){
+            setDataGuiasSeleccionadas(params.guias)
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+                if(data.mensaje!=null)
+                {
+                    setMensajeUtilizacion(data.mensaje)
+                }
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
+        else{
+            setUtilizacion(0)
+        }
+        setDataGuias(newGuia);
+    };
+
+    const onChangeRemolque1 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: newValue?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia
+        }
+        if(dataGuiasSeleccionadas.length > 0){
+            console.log("Cubicar")
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+                console.log(e.response?.data)
+            })
+        }
+
+        setState({
+            ...state,
+            IdRemolque1: newValue,
+        })
+    }
+
+    const onChangeRemolque2 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: newValue?.m_nIdUnidad ?? null,
+            guias: newGuia
+        }
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }else {
+            setUtilizacion(0)
+        }
+
+        setState({
+            ...state,
+            IdRemolque2: newValue,
+        })
+    }
 
     function handleShowCancelar(event) {
         obtenerInformesId(state.IdInforme).then((respuesta) => {
@@ -1092,7 +852,7 @@ function Informes({history}) {
     };
 
     function getAllGuiasFrom(cubicar) {
-        if (!cubicar) {
+        // if (!cubicar) {
             obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad, state.tipoTimbrado).then((respuesta) => {
                 if (respuesta.data !== "Vacio") {
                     if (state.agregar === "Modificar") {
@@ -1106,23 +866,23 @@ function Informes({history}) {
                     }
                 }
             })
-        } else {
-            obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
-                setDataGuias(respuesta.data);
-                if (cubicar) {
-                    cubicarGuias(
-                        respuesta.data,
-                        state.IdCiudadOrigen,
-                        state.IdCiudadDestino,
-                        state.IdRemolque1,
-                        state.IdRemolque2
-                    ).then(result => {
-                        setInformes(result);
-                    })
-
-                }
-            })
-        }
+        // } else {
+        //     obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
+        //         setDataGuias(respuesta.data);
+        //         if (cubicar) {
+        //             cubicarGuias(
+        //                 respuesta.data,
+        //                 state.IdCiudadOrigen,
+        //                 state.IdCiudadDestino,
+        //                 state.IdRemolque1,
+        //                 state.IdRemolque2
+        //             ).then(result => {
+        //                 setInformes(result);
+        //             })
+        //
+        //         }
+        //     })
+        // }
 
 
     }
@@ -1257,7 +1017,7 @@ function Informes({history}) {
            $.mostrarMensaje=true
             window.onbeforeunload = confirmExit
 
-           
+
         }
     }, [state])
     const handleShowCubicar = () => {
@@ -1327,6 +1087,21 @@ function Informes({history}) {
                 tipoTimbrado:data.m_nTipoTimbrado
             }
         });
+        var params = {
+            idRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1)?.m_nIdUnidad ?? null,
+            idRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2)?.m_nIdUnidad ?? null,
+            guias: data.m_arrClsProGuia
+        }
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
     }
 
     const setDataParaAgregar = () => {
@@ -1373,34 +1148,6 @@ function Informes({history}) {
         })
     }
 
-    function openSection(index) {
-        // closeSeccions();
-        var $section;
-        switch (index) {
-            case 1:
-                setStepActive(1);
-                $section = $("#infogral");
-                break;
-            case 2:
-                setStepActive(2);
-                $section = $("#caracteristicas");
-
-                break;
-
-            case 3:
-                setStepActive(3);
-                $section = $("#seguros");
-                break;
-
-            default:
-        }
-        $("html, body").animate(
-            {
-                scrollTop: parseInt($section.offset().top - 150),
-            },
-            200
-        );
-    }
 
     const setDataListado = (listado) => {
         setData(listado)
@@ -1428,133 +1175,7 @@ function Informes({history}) {
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
-                    {state.tipoModal == 1 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Ciudades");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
 
-                            {dataOrigenes.length != 0 ? (
-                                <TableCiudades
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdCiudad
-                                    }
-                                    columns={columnsCiudades}
-                                    data={dataOrigenes}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
-                    {state.tipoModal == 2 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Operadores");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataOperadores.length != 0 ? (
-                                <TableOperadores
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdOperador
-                                    }
-                                    columns={columnsOperadores}
-                                    data={dataOperadores}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
-
-                    {state.tipoModal == 4 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Unidades");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataUnidades.length != 0 ? (
-                                <TableUnidad
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdUnidad
-                                    }
-                                    columns={columnsUnidades}
-                                    data={dataUnidades}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
                     {state.tipoModal === 6 &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                             <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
@@ -1930,12 +1551,7 @@ function Informes({history}) {
                                                                                     freeSolo
 
                                                                                     value={state.IdRemolque1}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque1: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    onChange={(index, newValue) => onChangeRemolque1(index,newValue) }
                                                                                     id="IdRemolque1"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -1994,14 +1610,17 @@ function Informes({history}) {
                                                                                 <Autocomplete
                                                                                     freeSolo
                                                                                     value={state.IdRemolque2}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque2: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    onChange={(index, newValue) => onChangeRemolque2(index,newValue) }
                                                                                     id="IdRemolque2"
-                                                                                    disableClearable
+                                                                                    onInputChange={(event, newInputValue, reason) => {
+                                                                                        if (reason === 'reset') {
+                                                                                            setState({
+                                                                                                ...state,
+                                                                                                IdRemolque2: null
+                                                                                            })
+
+                                                                                        }
+                                                                                    }}
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
@@ -2145,6 +1764,14 @@ function Informes({history}) {
                                                                                     )}
                                                                                 />
                                                                             </div>
+                                                                        </div>
+                                                                        {/*****************************************Utilización*************************************************/}
+
+                                                                        <div className="col-sm-12 col-md-12 unit">
+                                                                            <ProgressBarCubicaje
+                                                                                value={utilizacion}>{utilizacion > 100 ? mensajesUtilizacion : `Espacio de carga usado: ${utilizacion}%`}
+                                                                            </ProgressBarCubicaje>
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -2696,7 +2323,7 @@ function Informes({history}) {
                                 </div>
                             </div>
                         </div>
-                        <div id="Cubicar" className="tab-pane fade">
+                       {/* <div id="Cubicar" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
@@ -3252,7 +2879,7 @@ function Informes({history}) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
                     </div>
                 </div>
             </section>
