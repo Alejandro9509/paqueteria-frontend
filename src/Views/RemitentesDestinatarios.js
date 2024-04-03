@@ -538,7 +538,7 @@ if(input=="codigoPostal"){
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
       if(!row.data.m_nIdCP){
-        showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
+        showSuccess("La dirección seleccionada contiene datos que no coinciden con los catálogos del SAT, favor de validar la dirección en Tráfico - Catálogos - Remitentes/ Destinatarios.")
         return
       }
       if (props.componentePadre !== 'CANCELAR_SAT'){
