@@ -12,7 +12,14 @@ function obtenerOperadores() {
         );
     return result
 }
-
+function reasignarOperador(idParadaFuente, idOperador) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ReasignarOperador/${idParadaFuente}/${idOperador}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
 function obtenerOperadoresId(id) {
     const url =
             `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
@@ -33,4 +40,4 @@ function obtenerOperadoresPorSucursal(idSucursal) {
     return result
 }
 
-export { obtenerOperadoresId, obtenerOperadores, obtenerOperadoresPorSucursal }
+export { obtenerOperadoresId, reasignarOperador,obtenerOperadores, obtenerOperadoresPorSucursal }
