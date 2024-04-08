@@ -335,8 +335,9 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                 <div className="widget-content">
                     <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
                     setRowSelectionModel([])}
-                    } className="btn btn-secondary" style={{visibility:dataPaquetes.length>0?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
-                    <Button onClick={()=>confirmAlert({
+                    } className="btn btn-secondary" style={{visibility:dataPaquetes.length>0 && !disabled?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+
+                        <Button onClick={()=>confirmAlert({
                         title: 'Confirmación',
                         message: '¿Desea eliminar los paquetes seleccionados?',
                         buttons: [

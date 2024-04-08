@@ -879,7 +879,7 @@ function ComplementosSAT(props) {
                     <div className="widget-content">
                         <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
                             setRowSelectionModel([])}
-                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
                         <Button onClick={()=>confirmAlert({
                             title: 'Confirmación',
                             message: '¿Desea eliminar los complementos seleccionados?',
