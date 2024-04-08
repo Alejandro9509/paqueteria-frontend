@@ -22,6 +22,7 @@ import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendar
 import Paradas from "./Paradas";
 import Noty from "noty";
 import Tooltip from "@material-ui/core/Tooltip";
+import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import { fil } from 'date-fns/locale';
 
 function showSuccess(mensaje) {
@@ -181,7 +182,7 @@ class Cronograma extends Component {
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">{u.m_snNombreOperador}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
-                                                                               align="left">
+                                                                               align="center">
                                                                                 <Tooltip title="Remplazar Operador">                                           
                                                                                     <AutorenewIcon color={"primary"} align="center" fontSize={"large"} onClick={()=> {
                                                                                         if (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) {
@@ -190,7 +191,10 @@ class Cronograma extends Component {
                                                                                         }
                                                                                         if (filterEstatus.length > 0 ){
                                                                                             if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
-                                                                                                this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, u.m_nId)
+                                                                                                obtenerOperadores().then((operadoresListado)=>{
+                                                                                                    this.props.selectGuiaReasignar(u.m_nIdParadaUltimaMilla, u.m_nIdOperador,operadoresListado.data.filter(op=>op.idSucursal==this.props.tour.m_nIdSucursalReceptora))
+                                                                                                })
+
                                                                                             }else{
                                                                                                 showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
                                                                                             }

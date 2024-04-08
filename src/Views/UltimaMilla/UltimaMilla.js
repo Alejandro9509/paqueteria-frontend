@@ -46,7 +46,6 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Buttons from "../../Util/CarruselButtons";
-import {reasignarGuia} from "../../Util/Contexts/GuiaContext";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {forEach} from "react-bootstrap/ElementChildren";
@@ -54,7 +53,7 @@ import {getAddressFormated, getCurrentDate} from "../../Util/Util";
 import moment from "moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion"; // Import css
-
+import {reasignarOperador} from "../../Util/Contexts/OperadoresContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -112,6 +111,8 @@ class UltimaMilla extends Component {
             showConfirmarUbicacion: false,
             paquetesSinCoord: [],
             titulo: "",
+            listadoOperadores:{},
+            idOperador:0,
             entregaEnSucursal: false,
             entregaDD: {
                 idPais: '',
@@ -548,14 +549,14 @@ class UltimaMilla extends Component {
         this.setState({fullScreen: false})
     }
 
-    selectGuiaReasignar(idParadaFuente, idGuia) {
-        this.setState({openDialog: true, paradaFuente: idParadaFuente, idGuia: idGuia})
+    selectGuiaReasignar(idParadaFuente, idOperador,listadoOperadores) {
+        this.setState({openDialog: true, paradaFuente: idParadaFuente, idOperador: idOperador,listadoOperadores:listadoOperadores})
     }
 
 
     reasignarParada(event) {
         event.preventDefault()
-        reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
+        reasignarOperador(this.state.paradaFuente, this.state.idOperador).then((data) => {
             showSuccess(data.data)
             this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
             this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
@@ -649,19 +650,28 @@ class UltimaMilla extends Component {
                                             className="form-control"
                                             required
                                             fullWidth
-                                            value={this.state.unidadSeleccionada}
-                                            onChange={(event) => this.setState({
-                                                unidadSeleccionada: event.target.value
-                                            })}
+                                            value={this.state.idOperador}
+                                            onChange={(event) => {
+
+                                                let valorUM=this.state.ultimaMilla
+
+                                                let valorParada=this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(i=>i.m_nIdParadaUltimaMilla==this.state.paradaFuente)
+                                                valorParada.m_nIdOperador=event.target.value
+                                                let indexParada=valorUM.m_arrClsParadaUltimaMilla.findIndex(i=>i==valorParada)
+                                                valorUM.m_arrClsParadaUltimaMilla[indexParada]=valorParada
+                                                this.setState({
+                                                    ...this.state,ultimaMilla:valorUM,idOperador:valorParada.m_nIdOperador
+                                                })
+                                            }
+                                            }
                                             id="formatoSeleccionado"
                                             name="formatoSeleccionado"
                                         >
-                                            {this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map((ultimaMilla) => (
-                                                <MenuItem
-                                                    key={ultimaMilla.m_nIdParadaUltimaMilla}
-                                                    value={ultimaMilla.m_nIdParadaUltimaMilla}
+                                            {this.state.listadoOperadores.map((op) => (
+                                                <MenuItem disabled={!op.operadorDisponible}
+                                                          value={op.m_nIdOperador}
                                                 >
-                                                    {ultimaMilla.m_snNombreOperador}
+                                                    {op.m_sNombreCompleto}
                                                 </MenuItem>
                                             ))}
                                         </Select>
