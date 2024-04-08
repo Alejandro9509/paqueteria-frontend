@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,7 +33,7 @@ function showSuccess(mensaje) {
 let rowSelect
 function DialogTableRemDes(props) {
     const classes = useStyles();
-    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
+    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
@@ -74,31 +74,43 @@ function cargarDesdeServidor(pagina,registros){
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
     <div>
-        <TextField
-            variant="standard"
-            value={busqueda}
-            onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
-            placeholder
-            InputProps={{
-                endAdornment: <SearchIcon style={{
-                    color: "#F9A03E",
-                    fontSize: 32,
-                    paddingInlineEnd: 0,
-                    paddingRight: 0,
-                    paddingBlockEnd: 0,
-                    paddingLeft: 0,
-                    paddingBlock: 0,
-                }} onClick={() => {
+        <DialogActions style={{justifyContent: "left"}}>
+            <TextField
+                variant="standard"
+                value={busqueda}
+                onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
+                placeholder
+                InputProps={{
+                    endAdornment: <SearchIcon style={{
+                        color: "#F9A03E",
+                        fontSize: 32,
+                        paddingInlineEnd: 0,
+                        paddingRight: 0,
+                        paddingBlockEnd: 0,
+                        paddingLeft: 0,
+                        paddingBlock: 0,
+                    }} onClick={() => {
+                        cargarDesdeServidor(0, registros)
+                        setPagina(0)
+                    }}/>,
+                }}
+                onKeyDown={e => {if (e.code === "Enter" ) {
                     cargarDesdeServidor(0, registros)
                     setPagina(0)
-                }}/>,
-            }}
-            onKeyDown={e => {if (e.code === "Enter" ) {
-                cargarDesdeServidor(0, registros)
-                setPagina(0)
-            }}}
-            style={{width:'60ch'}}
-        />
+                }}}
+                style={{width:'60ch'}}
+            />
+            <Button fullWidth
+                    color={"primary"}
+                    variant={"contained"}
+                    style={{width:'70ch'}}
+                    type="submit"
+                    onClick={() => {
+                        handleCrearRemitente();
+                    }}>
+                Nuevo Remitente / Destinatario
+            </Button>
+        </DialogActions>
         <div className={classes.root} style={{height: "400px", padding: "5px"}}>
             <DataGrid
                 localeText={dataGridLocaleText}
