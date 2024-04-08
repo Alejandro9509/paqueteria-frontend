@@ -256,7 +256,7 @@ class FiltersMap extends Component {
         obtenerOperadoresPorSucursal(this.state.sucursalSeleccionada?.m_nIdSucursal).then(({data}) => {
 
             this.setState({
-                operadores: data,
+                operadores: data.filter((operador) => !operador.ocupado),
                 unidadSeleccionada: unidad.m_nIdUnidad,
                 openOperadorDialog: true,
                 openUnidades: false
@@ -295,7 +295,7 @@ class FiltersMap extends Component {
     }
 
     asignarRemolquesUnidad(remolques) {
-        console.log(remolques)
+        //console.log(remolques)
         const {unidad} = this.state
         unidad.idRemolque1 = remolques.IdRemolque1.m_nIdUnidad
         unidad.idRemolque2 =  remolques.IdRemolque2 ? remolques.IdRemolque2.m_nIdUnidad : 0
