@@ -140,7 +140,7 @@ export  function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
             var destinos = getUniqueListBy(bins, "destino")
             resolve(destinos.map(d => bins.filter(b => b.destino === d.destino)))
         })
-    )*/
+    )
     return result
 
 }*/

@@ -190,7 +190,7 @@ class Cronograma extends Component {
                                                                                         }
                                                                                         if (filterEstatus.length > 0 ){
                                                                                             if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
-                                                                                                this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, u.m_nId)
+                                                                                                this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, tour.m_nIdUnidad)
                                                                                             }else{
                                                                                                 showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
                                                                                             }
