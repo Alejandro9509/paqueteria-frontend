@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 import axios from "axios";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import PageviewIcon from "@mui/icons-material/Pageview";
 import {
     Button,
     Checkbox,
@@ -14,13 +14,13 @@ import {
     FormControlLabel,
     Grid,
     Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import {getCurrentDateTime} from "../../Util/Util"
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@material-ui/data-grid";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
@@ -40,7 +40,7 @@ import {
     obtenerEmbarques, modificarViaje
 } from "../../Util/Contexts/ViajesContext";
 import $ from "jquery";
-import {ContactsOutlined} from "@material-ui/icons";
+import {ContactsOutlined} from "@mui/icons-material";
 import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesContext";
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";

@@ -2,8 +2,8 @@ import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
 import {getCurrentDateTime,getCurrentTime,getCurrentDate,mesString} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
-import IconButton from "@material-ui/core/IconButton";
-import RestartAltIcon from '@material-ui/icons/Refresh';
+import IconButton from "@mui/material/IconButton";
+import RestartAltIcon from '@mui/icons-material/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import {
@@ -24,14 +24,15 @@ import {
     ListItemIcon,
     ListItemText,
     MenuItem
-} from '@material-ui/core';
+} from '@mui/material';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
 import Carousel, {propTypes} from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import {makeStyles} from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import * as XLSX from 'xlsx';
 import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
@@ -39,7 +40,7 @@ import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Uti
 import Barra from "../Util/jquery-barcode"
 import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EnvioCorreoDialogo from "../Views/SAT/EnvioCorreoDialogo";
 
 import {
@@ -60,7 +61,7 @@ import {
     Stepper,
     TextField,
     Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import {
     API_HEADERS,
     dataGridLocaleText,
@@ -134,10 +135,41 @@ import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
-import EmailIcon from '@material-ui/icons/Email';
+import EmailIcon from '@mui/icons-material/Email';
 import DialogImpresion from "./Guia/DialogImpresion";
 import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
 import {obtenerClienteId} from "../Util/Contexts/ClientesContext";
+const PREFIX = 'Guia';
+
+const classes = {
+    paqueteCarrusel: `${PREFIX}-paqueteCarrusel`,
+    conceptoCarrusel: `${PREFIX}-conceptoCarrusel`,
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.paqueteCarrusel}`]: {
+        height: "190px !important",
+        // position: "initial !important"
+    },
+    [`& .${classes.conceptoCarrusel}`]: {
+        height: "70px !important",
+        position: "initial !important"
+    },
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+});
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -160,28 +192,6 @@ var EB = window.EB;
 var BrowserPrint = window.BrowserPrint;
 var selected_device;
 var devices = [];
-const styles = {
-    paqueteCarrusel: {
-        height: "190px !important",
-        // position: "initial !important"
-    },
-    conceptoCarrusel: {
-        height: "70px !important",
-        position: "initial !important"
-    },
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    }
-};
-
-const useStyles = makeStyles(styles);
 
 const FORMATOS_IMPRESION = {
     GUIA: 212,
@@ -193,7 +203,7 @@ function Guia(props) {
     let today = new Date();
     let React = require('react');
     let QRCode = require('qrcode.react');
-    const classes = useStyles();
+
     localStorage.getItem("UsuarioId");
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
@@ -363,7 +373,7 @@ function Guia(props) {
             field: "",
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a
                                 onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
@@ -421,8 +431,8 @@ function Guia(props) {
                                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {

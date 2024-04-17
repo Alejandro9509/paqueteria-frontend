@@ -1,7 +1,7 @@
 import defaultTheme from './default'
 
-import { createMuiTheme } from '@material-ui/core'
-import lightBlue from "@material-ui/core/colors/lightBlue";
+import { createTheme, adaptV4Theme } from '@mui/material';
+import { lightBlue } from '@mui/material/colors';
 
 
 const overrides = {
@@ -37,5 +37,5 @@ const overrides = {
 
 
 export default {
-  default: createMuiTheme({ ...defaultTheme, ...overrides })
+  default: createTheme(adaptV4Theme({ ...defaultTheme, ...overrides }))
 }

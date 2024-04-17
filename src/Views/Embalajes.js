@@ -5,16 +5,38 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
-import { makeStyles } from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@mui/material";
 import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes,validarEliminarEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { confirmAlert } from "react-confirm-alert";
 import {validarDerecho} from "../Util/Util"
+
+const PREFIX = 'Embalaje';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
 
 function showSuccess(mensaje) {
     new Noty({
@@ -25,23 +47,10 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
 window.jQuery = window.$ = $;
 function Embalaje() {
 
-    const classes = useStyles();
+
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -220,7 +229,7 @@ function Embalaje() {
             field: "",
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar">
                             <a  onClick={() => (handleShowModificar(row.row.m_nIdEmbalaje))} className="btn btn-default btn-xs"
                             disabled={!validarDerecho(9101319)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
@@ -235,8 +244,8 @@ function Embalaje() {
                             disabled={!validarDerecho(9101320)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {

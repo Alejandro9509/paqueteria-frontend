@@ -1,14 +1,33 @@
 import React from 'react';
+import { styled } from '@mui/material/styles';
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
-import {Checkbox, makeStyles} from '@material-ui/core';
+import { Checkbox } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import {validarDerecho} from "../Util/Util"
 
-const useStyle = makeStyles({
-    title:{
+const PREFIX = 'PlantillaCorreo';
+
+const classes = {
+    title: `${PREFIX}-title`,
+    item: `${PREFIX}-item`
+};
+
+const Root = styled('div')({
+    [`& .${classes.title}`]: {
       marginBottom: 15
     },
-    item: {
+    [`& .${classes.item}`]: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '30%'}
+});
+
+const useStyle = makeStyles({
+    [`& .${classes.title}`]: {
+      marginBottom: 15
+    },
+    [`& .${classes.item}`]: {
         display: 'flex',
         justifyContent: 'space-between',
         width: '30%'}
@@ -31,7 +50,7 @@ export default function PlantillaCorreo() {
     };
 
     return (
-        <div>
+        <Root>
             <header className="topbar clearfix">
                 <Cabecera titulo="Plantilla de Correo">
                     <div className="page-header">
@@ -81,6 +100,6 @@ export default function PlantillaCorreo() {
                 </div>
             </section>
 
-        </div>
-    )
+        </Root>
+    );
 }

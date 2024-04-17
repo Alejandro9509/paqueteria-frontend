@@ -14,7 +14,7 @@ import {
     Tabs,
     TextField, Tooltip,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {
     obtenerEstatusRecoleccion,
     obtenerEstatusEmbarque,
@@ -29,8 +29,9 @@ import {
     obtenerParametrosConfiguracion,
     modificarParametrosConfiguracion
 } from "../../Util/Contexts/ParametrosConfiguracionContext";
-import {makeStyles} from '@material-ui/core/styles';
-import {TabContext, TabPanel} from "@material-ui/lab";
+import { styled } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import {TabContext, TabPanel} from "@mui/lab";
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
@@ -43,15 +44,20 @@ import {FilePond} from "react-filepond";
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
 import DialogTiposDocumentoSucursal from "./DialogTiposDocumentoSucursal";
-//-------------------------------------------STYLES---------------------------------------------------------------------
-const useStyles = makeStyles({
-    subtitulo: {
+const PREFIX = 'ParametrosConfiguracion';
+
+const classes = {
+    subtitulo: `${PREFIX}-subtitulo`
+};
+
+const Root = styled('div')({
+    [`& .${classes.subtitulo}`]: {
         font: "normal normal normal 16px/17px Calibri",
         color: "black",
         letterSpacing: "0.21px",
         padding: "5px",
     },
-})
+});
 
 function showSuccess(mensaje) {
     new Noty({
@@ -63,7 +69,7 @@ function showSuccess(mensaje) {
 }
 
 function ParametrosConfiguracion() {
-    const classes = useStyles();
+
 
     //--------------------------------------------------VARIABLES--------------------------------------------------------
     const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
@@ -459,8 +465,7 @@ function ParametrosConfiguracion() {
         getConceptosFacturacion()
     }, [])
     return (
-
-        <div>
+        <Root>
             <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
 
             <header className="topbar clearfix">
@@ -1346,8 +1351,7 @@ function ParametrosConfiguracion() {
                 </section>
 
             </TabContext>
-        </div>
-
+        </Root>
     );
 }
 

@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Select} from "@material-ui/core";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@material-ui/core';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from "@material-ui/icons/Save";
-import PublishIcon from '@material-ui/icons/Publish';
+import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Select} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from "@mui/icons-material/Save";
+import PublishIcon from '@mui/icons-material/Publish';
 import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import ExcelFile from '../../Files/ImportarMateriales_Consolidado.xlsx'
 import * as XLSX from "xlsx";
 import {
@@ -809,7 +809,7 @@ function ComplementosSAT(props) {
         });
     };
 
-    return(
+    return (
         <div>
             <Dialog open={openDialog} fullWidth maxWidth="md" >
                 <DialogTitle>Complemento Carta Porte</DialogTitle>
@@ -836,7 +836,11 @@ function ComplementosSAT(props) {
                 <Grid item xs={3}/>
                 <Grid item xs={1}>
                 <Tooltip title="Agregar Complemento" >
-                    <IconButton onClick={handleOpenClick} style={{ padding: "0px" }} disabled={props.disabled}>
+                    <IconButton
+                        onClick={handleOpenClick}
+                        style={{ padding: "0px" }}
+                        disabled={props.disabled}
+                        size="large">
                         <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                     </IconButton>
                 </Tooltip>
@@ -845,7 +849,13 @@ function ComplementosSAT(props) {
                     <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} onClick={handleCleanExcel} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
                     <Tooltip title="Cargar Plantilla" >
-                        <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }} disabled={props.disabled}>
+                        <IconButton
+                            color="primary"
+                            aria-label="upload file"
+                            component="span"
+                            style={{ padding: "0px" }}
+                            disabled={props.disabled}
+                            size="large">
                             <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }}/>
                         </IconButton>
                     </Tooltip>
@@ -882,7 +892,7 @@ function ComplementosSAT(props) {
             }
 
         </div>
-    )
+    );
 }
 
 export default ComplementosSAT;

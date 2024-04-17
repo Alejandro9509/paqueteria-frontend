@@ -21,17 +21,17 @@ import {
     Step,
     StepLabel,
     Stepper, Tooltip,
-} from "@material-ui/core";
-import RestartAltIcon from '@material-ui/icons/Refresh';
+} from "@mui/material";
+import RestartAltIcon from '@mui/icons-material/Refresh';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import {getCurrentDateTime} from "../Util/Util"
 
 import $ from "jquery";
 import {useTable, useFilters, useSortBy} from "react-table";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import TextField from "@mui/material/TextField";
+import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from "@mui/material/InputAdornment";
+import PageviewIcon from "@mui/icons-material/Pageview";
 import useModal from "react-hooks-use-modal";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
@@ -42,10 +42,11 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import {makeStyles} from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import * as XLSX from "xlsx";
 import {render} from "react-dom";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 import {DataGrid} from "@material-ui/data-grid";
 import Noty from "noty";
 import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
@@ -78,15 +79,36 @@ import {
 } from "../Util/Contexts/FormatosImpresionContext";
 import Filtros from "./Filtros/Filtros";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
-import Button from "@material-ui/core/Button";
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import Button from "@mui/material/Button";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import {confirmAlert} from "react-confirm-alert";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogFormatosImpresion from "./DialogFormatosImpresion";
 import {showError} from "../Util/GlobalFunctions";
 import ProgressBarCubicaje from "./Viajes/ProgressBarCubicaje";
+
+const PREFIX = 'Informes';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
 
 function showSuccess(mensaje) {
     new Noty({
@@ -96,26 +118,13 @@ function showSuccess(mensaje) {
         timeout: "8000",
     }).show();
 }
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
 
 let timer;
 
 function Informes({history}) {
-    const classes = useStyles();
+
     const [utilizacion, setUtilizacion] = React.useState(0);
     const [data, setData] = React.useState([]);
     const [guias, setGuias] = React.useState([]);
@@ -216,7 +225,7 @@ function Informes({history}) {
             width: 200,
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <a
                             onClick={() => handleShowModificar(row.row.m_nIdInforme, row.row)}
                             className="btn btn-default btn-xs"
@@ -268,7 +277,7 @@ function Informes({history}) {
                         >
                             <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                         </a>
-                    </div>
+                    </Root>
                 );
             },
         },
@@ -1812,9 +1821,11 @@ function Informes({history}) {
                                                                             }
                                                                             label="Seleccionar todas"
                                                                         />
-                                                                        <IconButton aria-label="delete"
-                                                                                    className={classes.margin}
-                                                                                    onClick={handleChangeOrden}>
+                                                                        <IconButton
+                                                                            aria-label="delete"
+                                                                            className={classes.margin}
+                                                                            onClick={handleChangeOrden}
+                                                                            size="large">
                                                                             {
                                                                                 ordenAscendente ?
                                                                                     <ArrowUpwardIcon
@@ -1852,7 +1863,7 @@ function Informes({history}) {
                                                                                                 <Grid
                                                                                                     item
                                                                                                     sm={1}
-                                                                                                    justify="center"
+                                                                                                    justifyContent="center"
                                                                                                     alignItems="center"
                                                                                                     style={{
                                                                                                         display: "flex",
@@ -2012,7 +2023,7 @@ function Informes({history}) {
                                                                             <Grid
                                                                                 item
                                                                                 sm={4}
-                                                                                justify="center"
+                                                                                justifyContent="center"
                                                                                 alignItems="center"
                                                                                 style={{
                                                                                     display: "flex",
@@ -2155,7 +2166,7 @@ function Informes({history}) {
                                                                             <Grid
                                                                                 item
                                                                                 sm={4}
-                                                                                justify="center"
+                                                                                justifyContent="center"
                                                                                 alignItems="center"
                                                                                 style={{
                                                                                     display: "flex",

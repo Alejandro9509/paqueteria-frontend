@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {Grid} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import RestartAltIcon from "@material-ui/icons/Refresh";
-import SearchIcon from '@material-ui/icons/Search';
+import {Grid} from "@mui/material";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import RestartAltIcon from "@mui/icons-material/Refresh";
+import SearchIcon from '@mui/icons-material/Search';
 import {
     obtenerListadoZonaOperativa,
     obtenerZonaOperativaByCodigoPostal
@@ -48,7 +48,7 @@ function Filtros(props) {
             }
     }
 
-    return(
+    return (
         <div>
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container item={6}>
@@ -65,14 +65,17 @@ function Filtros(props) {
                         />
                     </Grid>  
                     <Grid item xs={3}>
-                        <IconButton aria-label="delete" onClick={() => {
-                            resetFiltros()
-                        }}>
+                        <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                                resetFiltros()
+                            }}
+                            size="large">
                             <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Limpiar filtro
                         </IconButton>
          
-                        <IconButton aria-label="delete" onClick={() => filtrar()}>
+                        <IconButton aria-label="delete" onClick={() => filtrar()} size="large">
                             <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Buscar
                         </IconButton>

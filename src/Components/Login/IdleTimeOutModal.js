@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Modal} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Modal} from "@mui/material";
 
 export const IdleTimeOutModal = ({showModal, handleClose, handleLogout, remainingTime}) => {
 

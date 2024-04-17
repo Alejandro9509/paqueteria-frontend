@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
 import Noty from 'noty';
-import { List, ListItem, Popover, TextField } from '@material-ui/core';
-import { TrafficOutlined } from '@material-ui/icons';
+import { List, ListItem, Popover, TextField } from '@mui/material';
+import { TrafficOutlined } from '@mui/icons-material';
 import { agregarTipoServicio, obtenerTipoServicio } from '../../Util/Contexts/TipoServiciosContext';
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 function showSuccess(mensaje) {
     new Noty({

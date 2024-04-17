@@ -11,12 +11,12 @@ import {
 import {
   obtenerZonaTarifaByIdCodigoPostal,
 } from "../Util/Contexts/ZonaTarifaContext";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import { Dialog, DialogContent, Grid } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import { Dialog, DialogContent, Grid } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { obtenerCiudadId } from "../Util/Contexts/CiudadesContext";
 import DialogTableRemDes from "./RemitenteDestinatario/DialogTableRemDes";
 import {tr} from "date-fns/locale";
@@ -677,12 +677,12 @@ if(input=="codigoPostal"){
                         endAdornment: (
                             <InputAdornment position="end">
                               <IconButton
-                                  disabled
-                                  padding="0px"
-                                  style={{
-                                    paddingRight: "0px",
-                                  }}
-                              >
+                                disabled
+                                padding="0px"
+                                style={{
+                                  paddingRight: "0px",
+                                }}
+                                size="large">
                                 <SearchIcon
                                     style={{
                                       color: "#F9A03E",
@@ -1150,13 +1150,13 @@ if(input=="codigoPostal"){
                       endAdornment: (
                           <InputAdornment position="end">
                             <IconButton
-                                disabled={props.consulta}
-                                padding="0px"
-                                style={{
-                                  paddingRight: "0px",
-                                }}
-                                onClick={handleClickModal}
-                            >
+                              disabled={props.consulta}
+                              padding="0px"
+                              style={{
+                                paddingRight: "0px",
+                              }}
+                              onClick={handleClickModal}
+                              size="large">
                               <SearchIcon
                                   style={{
                                     color: "#F9A03E",

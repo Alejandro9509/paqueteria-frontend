@@ -5,13 +5,13 @@ import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquier
 import CrearTarifa from './CrearTarifa';
 import Noty from 'noty';
 import axios from "axios";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import {API_HEADERS, dataGridLocaleText} from '../../Constants';
-import {FormControl, InputLabel, MenuItem, Select, Tooltip} from '@material-ui/core';
+import {FormControl, InputLabel, MenuItem, Select, Tooltip} from '@mui/material';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 import {
     agregarTarifa,
@@ -25,8 +25,8 @@ import {ContentState, EditorState} from "draft-js";
 import htmlToDraft from "html-to-draftjs";
 import TarifasRangos from "./TarifasRangos";
 import {getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../../Util/Util"
-import {makeStyles} from "@material-ui/core/styles";
-import { withStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
 import CrearTarifaRegion from "./CrearTarifaRegion";
 import TarifasRegion from "./TarifasRegion";
 import { confirmAlert } from 'react-confirm-alert';

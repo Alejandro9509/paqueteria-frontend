@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import {DataGrid} from "@material-ui/data-grid";
 import axios from "axios";
 import {API_HEADERS} from "../../Constants";

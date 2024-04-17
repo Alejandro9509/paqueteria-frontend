@@ -11,8 +11,7 @@ import axios from "axios";
 import Filtros from "../Filtros/FiltrosConvenios"
 import CrearTarifaRangos from "./CrearTarifaRangos";
 import {validarDerecho} from "../../Util/Util"
-import {makeStyles} from "@material-ui/core/styles";
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles, styled } from "@material-ui/core/styles";
 import {
     agregarTarifaRangos,
     eliminarTarifaRangos,
@@ -24,6 +23,27 @@ import Noty from "noty";
 import {getRandomId} from "../../Util/Util";
 import {obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
 import { confirmAlert } from 'react-confirm-alert';
+const PREFIX = 'TarifasRangos';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('section')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
+
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -35,23 +55,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
-
 
 export default function TarifasRangos(props) {
-    const classes = useStyles();
+
     const [state, setState] = useState({
         tarifas: [],
         agregar: "Agregar",
@@ -403,8 +409,8 @@ export default function TarifasRangos(props) {
             state.tarifas.filter(i => i.IdCliente !== state.clienteGenerico.m_nIdCliente)
             : state.tarifas.filter(i => i.IdCliente === state.clienteGenerico.m_nIdCliente)
 
-    return(
-        <section className="main-container">
+    return (
+        <Root className="main-container">
             <div className="container-fluid">
                 <ul className="nav navStatica nav-tabs">
                     <li className="active">
@@ -464,6 +470,6 @@ export default function TarifasRangos(props) {
 
                 </div>
             </div>
-        </section>
-    )
+        </Root>
+    );
 }

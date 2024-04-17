@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useMemo} from "react";
-import {Dialog, DialogActions, DialogContent, Grid} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import IconButton from "@material-ui/core/IconButton";
-import RestartAltIcon from "@material-ui/icons/Refresh";
-import SearchIcon from '@material-ui/icons/Search';
+import {Dialog, DialogActions, DialogContent, Grid,MenuItem} from "@mui/material";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import IconButton from "@mui/material/IconButton";
+import RestartAltIcon from "@mui/icons-material/Refresh";
+import SearchIcon from '@mui/icons-material/Search';
 import {obtenerEmbarquesFiltro} from "../../Util/Contexts/EmbarquesContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
@@ -20,7 +20,7 @@ import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 import {obtenerInformeFiltro} from "../../Util/Contexts/InformesContext";
 import {obtenerViajesByFiltro} from "../../Util/Contexts/ViajesContext";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import InputAdornment from "@mui/material/InputAdornment";
 import DialogTableRemDes from "../RemitenteDestinatario/DialogTableRemDes";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
@@ -263,7 +263,7 @@ function Filtros(props) {
         setOpenDialog(false);
     }
 
-    return(
+    return (
         <div>
             <Dialog
                 open={openDialog}
@@ -336,14 +336,14 @@ function Filtros(props) {
                                 id="sucursalListado"
                                 name="sucursalListado"
                             >
-                                <option value="0">Todas</option>
+                                <MenuItem value="0">Todas</MenuItem>
                                 {dataSucursal.map((sucursal) => (
-                                    <option
+                                    <MenuItem
                                         key={sucursal.m_nIdSucursal}
                                         value={sucursal.m_nIdSucursal}
                                     >
                                         {sucursal.m_sSucursal}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -534,16 +534,19 @@ function Filtros(props) {
                     </Grid>
                     }*/}
                     <Grid item container xs>
-                        <IconButton aria-label="delete" onClick={() => {
-                            resetFiltros()
-                            getAllListado()
-                        }}>
+                        <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                                resetFiltros()
+                                getAllListado()
+                            }}
+                            size="large">
                             <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Limpiar filtros
                         </IconButton>
                     </Grid>
                     <Grid item container xs>
-                        <IconButton aria-label="delete" onClick={() => filtrar()}>
+                        <IconButton aria-label="delete" onClick={() => filtrar()} size="large">
                             <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Buscar
                         </IconButton>

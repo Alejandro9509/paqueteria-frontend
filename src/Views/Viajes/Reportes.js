@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {ButtonBase, Grid, Paper, Typography} from "@material-ui/core";
+import {ButtonBase, Grid, Paper, Typography} from "@mui/material";
 import {obtenerFormatosImpresion, obtenerFormatosImpresionProceso} from "../../Util/Contexts/FormatosImpresionContext";
 import FiltroReporteViajes from "./FiltroReporteViajes";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";

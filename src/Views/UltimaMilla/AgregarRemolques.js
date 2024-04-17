@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
 import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {cubicarGuiaInforme} from "../../Util/Contexts/GuiaContext";
 import {showError} from "../../Util/GlobalFunctions";

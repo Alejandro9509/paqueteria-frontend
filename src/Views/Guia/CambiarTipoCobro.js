@@ -9,7 +9,7 @@ import {
     FormControl,
     InputLabel, Select,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 
 class MyComponent extends Component {

@@ -10,10 +10,10 @@ import {
     Select,
     Button,
     IconButton,
-} from "@material-ui/core";
+} from "@mui/material";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 
 class ClavesCFDI extends Component {
     constructor(props) {

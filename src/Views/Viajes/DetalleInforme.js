@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {ButtonBase, Grid, Divider} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import {ButtonBase, Grid, Divider} from "@mui/material";
+import TextField from "@mui/material/TextField";
 
 class DetalleInforme extends Component {
     constructor(props) {

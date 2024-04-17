@@ -9,7 +9,7 @@ import {
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
 import axios from "axios";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
-import {Tooltip} from "@material-ui/core";
+import {Tooltip} from "@mui/material";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import TarifasRangos from "./TarifasRangos";

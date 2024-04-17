@@ -9,7 +9,7 @@ import {
     InputBase,
     ListItemText, InputAdornment, TextField, DialogTitle, DialogContent, DialogActions, Button, Dialog, Typography
 } from "@material-ui/core";
-import {fade, makeStyles} from '@material-ui/core/styles';
+import { fade, makeStyles, styled } from '@material-ui/core/styles';
 
 import Tooltip from "@material-ui/core/Tooltip";
 import DateRangeIcon from '@material-ui/icons/DateRange';
@@ -44,47 +44,32 @@ import {Autocomplete} from "@material-ui/lab";
 import AgregarRemolques from "./AgregarRemolques";
 import {showSuccess, validarDerecho} from "../../Util/Util";
 
-const useStyles = theme => ({
-    search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
-            width: 'auto',
-        },
+const PREFIX = 'FiltersMap';
+
+const classes = {
+    search: `${PREFIX}-search`,
+    searchIcon: `${PREFIX}-searchIcon`,
+    inputRoot: `${PREFIX}-inputRoot`,
+    inputInput: `${PREFIX}-inputInput`,
+    arrow: `${PREFIX}-arrow`,
+    tooltip: `${PREFIX}-tooltip`
+};
+
+const StyledTooltip = styled(Tooltip)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.arrow}`]: {
+        color: "#F9A03E",
     },
-    searchIcon: {
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    inputRoot: {
-        color: 'inherit',
-    },
-    inputInput: {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            width: '12ch',
-            '&:focus': {
-                width: '20ch',
-            },
-        },
-    },
-});
+
+    [`& .${classes.tooltip}`]: {
+        heigth: "400px",
+        width: "1000px",
+        backgroundColor: "white",
+    }
+}));
 
 class FiltersMap extends Component {
     constructor(props) {
@@ -682,7 +667,7 @@ class FiltersMap extends Component {
 
                         
 
-                        <Tooltip title={"Generar Rutas"} onClose={() => {console.log('onCloseGEn')}}>
+                        <StyledTooltip title={"Generar Rutas"} onClose={() => {console.log('onCloseGEn')}}>
                             <Chip
                                 icon={<UltimaMillaIcono
                                     style={{fill: "white", paddingTop: "10px", paddingBottom: "10px"}}/>}
@@ -704,7 +689,7 @@ class FiltersMap extends Component {
                                 }}
             
                             />
-                        </Tooltip>
+                        </StyledTooltip>
 
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
@@ -774,22 +759,14 @@ class FiltersMap extends Component {
 
 FiltersMap.propTypes = {};
 
-export default withStyles(useStyles)(FiltersMap);
+export default (FiltersMap);
 
 
-const useStylesBootstrap = makeStyles((theme) => ({
-    arrow: {
-        color: "#F9A03E",
-    },
-    tooltip: {
-        heigth: "400px",
-        width: "1000px",
-        backgroundColor: "white",
-    },
-}));
+
+
 
 function BootstrapTooltip(props) {
-    const classes = useStylesBootstrap();
+
 
     return <Tooltip classes={classes} {...props} />;
 }

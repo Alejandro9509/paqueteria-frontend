@@ -11,9 +11,9 @@ import {
     InputLabel,
     Select,
     TextField, Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import { obtenerBancos } from '../../Util/Contexts/GuiaContext';
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import {numberToMoneyFormatt} from "../../Util/Util";
 import $ from 'jquery';
 window.jQuery = window.$ = $;

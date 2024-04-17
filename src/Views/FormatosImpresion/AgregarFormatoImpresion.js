@@ -4,17 +4,17 @@ import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
 import axios from "axios";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {DataGrid} from '@material-ui/data-grid';
 import $ from "jquery";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment} from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
     obtenerFormatosImpresionId,
     obtenerFormatosImpresionProceso
@@ -272,7 +272,7 @@ class AgregarFormatoImpresion extends Component {
                                                             <IconButton
                                                                 onClick={() => document.getElementById("file").click()}
                                                                 edge="end"
-                                                            >
+                                                                size="large">
                                                                 <CloudUploadIcon color="primary" fontSize="large" />
                                                             </IconButton>
                                                         }
@@ -303,7 +303,7 @@ class AgregarFormatoImpresion extends Component {
                                                              disabled={this.props.id>0}
                                                              onClick={() => document.getElementById("image").click()}
                                                              edge="end"
-                                                         >
+                                                             size="large">
                                                              <CloudUploadIcon color="primary" fontSize="large" />
                                                          </IconButton>
                                                      }

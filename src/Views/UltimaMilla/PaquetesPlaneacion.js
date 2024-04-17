@@ -12,7 +12,7 @@ import {
     TableRow, TableSortLabel,
     TextField,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {obtenerInformes, obtenerInformesEstatus, obtenerInformesId} from "../../Util/Contexts/InformesContext";
 import {obtenerViajes, obtenerViajesEstatus} from "../../Util/Contexts/ViajesContext";
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";

@@ -4,12 +4,12 @@ import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
 import axios from "axios";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
 import { toBase64 } from '../../Util/GlobalFunctions';
 import {

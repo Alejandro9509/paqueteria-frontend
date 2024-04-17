@@ -9,13 +9,13 @@ import {
     RadioGroup,
     TextField,
     Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import {showSuccess, validarDerecho} from "../../Util/Util";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {FilePond} from "react-filepond";
 import {agregarPlantillaImportacion, modificarPlantillaImportacion} from "../../Util/Contexts/PlantillasContext";
 import {toBase64} from "../../Util/GlobalFunctions";
-import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 
 export default function PlantillasImportacionAgregar(props){
     const grid = {

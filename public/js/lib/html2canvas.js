@@ -1249,7 +1249,7 @@ _html2canvas.Parse = function (images, options, cb) {
   }
 
   function noLetterSpacing(letter_spacing) {
-    return (/^(normal|none|0px)$/.test(letter_spacing));
+    return /^(normal|none|0px)$/.test(letter_spacing);
   }
 
   function drawText(currentText, x, y, ctx){

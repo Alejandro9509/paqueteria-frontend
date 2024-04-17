@@ -9,14 +9,15 @@ import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
 import {useTable, useFilters, useSortBy} from 'react-table'
-import {makeStyles} from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {DataGrid} from '@material-ui/data-grid';
 import Noty from 'noty';
 import AgregarViaje from "./Viajes/AgregarViaje";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
@@ -32,7 +33,7 @@ import {
     ListItem,
     Collapse,
     ListItemText, Link, Chip, Grid, MenuItem
-} from "@material-ui/core";
+} from "@mui/material";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
 import {confirmAlert} from "react-confirm-alert";
@@ -56,8 +57,8 @@ import {
     eliminarViaje,
     validarCFDI
 } from "../Util/Contexts/ViajesContext";
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
     cancelarInformes,
     obtenerInformeFiltro, obtenerInformesId,
@@ -70,14 +71,14 @@ import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import Filtros from "./Filtros/Filtros";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasContext";
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import CancelarSAT from "./SAT/CancelarSAT";
 import {cancelarInformeCFDI, enviarCorreoCFDIViaje, obtenerClavesByInforme} from "../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
-import { RowingSharp } from "@material-ui/icons";
+import { RowingSharp } from "@mui/icons-material";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { obtenerTrayectosByRuta } from "../Util/Contexts/RutasContext";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
@@ -85,6 +86,27 @@ import {
     imprimirFormatosIdIdTipoReporte, imprimirFormatosIdTimbradoViajes,
     obtenerFormatosImpresionProceso
 } from "../Util/Contexts/FormatosImpresionContext";
+const PREFIX = 'Viajes';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -101,23 +123,10 @@ function showError(mensaje) {
         timeout: "8000"
     }).show()
 }
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
 window.jQuery = window.$ = $;
 
 function Viajes() {
-    const classes = useStyles();
+
     const [data, setData] = React.useState([])
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [indexOpen, setIndexOpen] = React.useState(-1);
@@ -360,7 +369,7 @@ function Viajes() {
             width: 150,
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar">
                             <a
                                 onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
@@ -384,8 +393,8 @@ function Viajes() {
                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {

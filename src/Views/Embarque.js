@@ -8,10 +8,11 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles";
-import SearchIcon from "@material-ui/icons/Search";
-import RestartAltIcon from '@material-ui/icons/Refresh';
-import InputAdornment from "@material-ui/core/InputAdornment";
+import { createTheme, ThemeProvider, StyledEngineProvider, styled, adaptV4Theme } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import SearchIcon from "@mui/icons-material/Search";
+import RestartAltIcon from '@mui/icons-material/Refresh';
+import InputAdornment from "@mui/material/InputAdornment";
 import {DEFAULT_FORMAT, getAddressFormated, getCurrentDateTime, readExcel, validarDerecho} from "../Util/Util"
 import {
     ReactTable,
@@ -23,14 +24,14 @@ import {
 } from "react-table";
 import $ from "jquery";
 import {getUniqueListBy, remove_array_element} from "../Util/Util";
-import IconButton from "@material-ui/core/IconButton";
-import PageviewIcon from "@material-ui/icons/Pageview";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import IconButton from "@mui/material/IconButton";
+import PageviewIcon from "@mui/icons-material/Pageview";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
 import useModal from "react-hooks-use-modal";
 import {useHistory, Redirect} from "react-router-dom";
 import {DataGrid} from "@material-ui/data-grid";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import Noty, { button } from "noty";
@@ -46,11 +47,11 @@ import {
     StepLabel,
     Stepper, Switch,
     Tooltip
-} from "@material-ui/core";
-import {ToggleButtonGroup} from "@material-ui/lab";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+} from "@mui/material";
+import { ToggleButtonGroup } from '@mui/material';
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -95,8 +96,8 @@ import {
 import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
@@ -108,7 +109,7 @@ import {
     obtenerFechaFinal,
     descargarPlantillaImportarEmbarque
 } from "../Util/Contexts/UtileriasContext";
-import ReplayIcon from "@material-ui/icons/Replay";
+import ReplayIcon from "@mui/icons-material/Replay";
 import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
@@ -135,6 +136,50 @@ import {
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import ImportarEmbarques from "./Embarque/ImportarEmbarques";
 import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
+
+const PREFIX = 'Embarque';
+
+const classes = {
+    paqueteCarrusel: `${PREFIX}-paqueteCarrusel`,
+    sobreCarrusel: `${PREFIX}-sobreCarrusel`,
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`,
+    root: `${PREFIX}-root`
+};
+
+const Root = styled('div')({
+    [`& .${classes.paqueteCarrusel}`]: {
+        height: "280px !important",
+    },
+    [`& .${classes.sobreCarrusel}`]: {
+        height: "100px !important",
+    },
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+
+    [`& .${classes.root}`]: {
+        "& .super-app-theme--cell": {
+            backgroundColor: "rgba(224, 183, 60, 0.55)",
+            color: "#1a3e72",
+            fontWeight: "600",
+        },
+        "& .super-app.esRecolecta": {
+            backgroundColor: "green",
+        },
+        "& .super-app.noRecolecta": {
+            backgroundColor: "red",
+        },
+    },
+});
 
 function useQuery() {
     const {search} = useLocation();
@@ -171,7 +216,7 @@ const options = {
             onClick: () => alert('Click No')
         }
     ],
-    childrenElement: () => <div/>,
+    childrenElement: () => <Root/>,
     customUI: ({onClose}) => <div>Custom UI</div>,
     closeOnEscape: true,
     closeOnClickOutside: true,
@@ -187,7 +232,7 @@ const options = {
 };
 
 window.jQuery = window.$ = $;
-const theme = createMuiTheme({
+const theme = createTheme(adaptV4Theme({
     overrides: {
         MuiSwitch: {
             switchBase: {
@@ -217,40 +262,7 @@ const theme = createMuiTheme({
             }
         }
     }
-});
-const styles = {
-    paqueteCarrusel: {
-        height: "280px !important",
-    },
-    sobreCarrusel: {
-        height: "100px !important",
-    },
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-
-    root: {
-        "& .super-app-theme--cell": {
-            backgroundColor: "rgba(224, 183, 60, 0.55)",
-            color: "#1a3e72",
-            fontWeight: "600",
-        },
-        "& .super-app.esRecolecta": {
-            backgroundColor: "green",
-        },
-        "& .super-app.noRecolecta": {
-            backgroundColor: "red",
-        },
-    },
-};
-const useStyles = makeStyles(styles);
+}));
 const TIPOS_SEGURO = {
     CON_POLIZA: 1,
     NO_ASEGURA: 2,
@@ -269,7 +281,7 @@ function Embarque(props) {
 
 
     var today = new Date();
-    const classes = useStyles();
+
     const [redirect, setRedirect] = React.useState(false);
     const [detectarModificaciones,setDetectar]=React.useState(false)
     const [data, setData] = React.useState([]);
@@ -4064,27 +4076,29 @@ function Embarque(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="input select">
-                                                                <ThemeProvider theme={theme}>
-                                                                    <FormControlLabel
+                                                                <StyledEngineProvider injectFirst>
+                                                                    <ThemeProvider theme={theme}>
+                                                                        <FormControlLabel
 
-                                                                        control={
-                                                                            <Switch
-                                                                                checked={state.validarTimbrado ?? false}
-                                                                                onChange={(e) => setState((v) => {
-                                                                                    return ({
-                                                                                        ...v,
-                                                                                        validarTimbrado: e.target.checked
-                                                                                    })
-                                                                                })}
+                                                                            control={
+                                                                                <Switch
+                                                                                    checked={state.validarTimbrado ?? false}
+                                                                                    onChange={(e) => setState((v) => {
+                                                                                        return ({
+                                                                                            ...v,
+                                                                                            validarTimbrado: e.target.checked
+                                                                                        })
+                                                                                    })}
 
-                                                                                disabled={!configuraciones.modificarValorEmbarque}
-                                                                                name="validarTimbrado"
-                                                                                color="primary"
-                                                                            />
-                                                                        }
-                                                                        label="Validar timbrado de factura"
-                                                                    />
-                                                                </ThemeProvider>
+                                                                                    disabled={!configuraciones.modificarValorEmbarque}
+                                                                                    name="validarTimbrado"
+                                                                                    color="primary"
+                                                                                />
+                                                                            }
+                                                                            label="Validar timbrado de factura"
+                                                                        />
+                                                                    </ThemeProvider>
+                                                                </StyledEngineProvider>
                                                             </label>
                                                         </Grid>
                                                         <Grid item xs>
