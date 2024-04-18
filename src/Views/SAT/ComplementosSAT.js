@@ -9,7 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from "@mui/icons-material/Save";
 import PublishIcon from '@mui/icons-material/Publish';
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";

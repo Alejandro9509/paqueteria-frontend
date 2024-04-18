@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {dataGridLocaleText} from "../../Constants";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 
 class InformesPorAsignar extends Component {
     constructor(props) {

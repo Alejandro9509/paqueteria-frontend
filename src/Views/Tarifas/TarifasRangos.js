@@ -1,9 +1,9 @@
 import React, {Component, useEffect, useState} from 'react';
 import $ from "jquery";
-import {DataGrid, GridToolbar} from "@material-ui/data-grid";
+import DataGrid from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import {Button, Grid, TextField, Tooltip} from "@material-ui/core";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import Tooltip from '@mui/material/Tooltip';
+import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
@@ -11,7 +11,7 @@ import axios from "axios";
 import Filtros from "../Filtros/FiltrosConvenios"
 import CrearTarifaRangos from "./CrearTarifaRangos";
 import {validarDerecho} from "../../Util/Util"
-import { makeStyles, styled } from "@material-ui/core/styles";
+import styled from "@mui/styles/styled";
 import {
     agregarTarifaRangos,
     eliminarTarifaRangos,

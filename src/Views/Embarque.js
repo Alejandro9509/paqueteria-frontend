@@ -30,7 +30,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from "@mui/material/TextField";
 import useModal from "react-hooks-use-modal";
 import {useHistory, Redirect} from "react-router-dom";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";

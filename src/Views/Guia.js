@@ -38,7 +38,7 @@ import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
 import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
-import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EnvioCorreoDialogo from "../Views/SAT/EnvioCorreoDialogo";

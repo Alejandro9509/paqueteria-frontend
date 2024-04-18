@@ -25,7 +25,6 @@ import 'filepond/dist/filepond.min.css';
 import {descargarPlantillaImportarEmbarque} from "../../Util/Contexts/UtileriasContext";
 import {ExpandLess} from "@mui/icons-material";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';

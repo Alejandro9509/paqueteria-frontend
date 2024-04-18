@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent} from "@mui/material";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 
 

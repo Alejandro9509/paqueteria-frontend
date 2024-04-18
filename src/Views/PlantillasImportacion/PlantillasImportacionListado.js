@@ -1,5 +1,5 @@
 import {dataGridLocaleText} from "../../Constants";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from '@mui/x-data-grid';
 import React, {useState} from "react";
 import {Tooltip} from "@mui/material";
 import {validarDerecho} from "../../Util/Util";

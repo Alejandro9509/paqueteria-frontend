@@ -18,7 +18,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";

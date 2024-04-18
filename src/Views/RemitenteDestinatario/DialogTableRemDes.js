@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
 import {Dialog, DialogActions, DialogContent, TextField} from "@mui/material";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";

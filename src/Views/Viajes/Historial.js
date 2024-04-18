@@ -3,7 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import { GridOverlay, DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid' ;
 import { styled } from "@mui/material/styles";
 import makeStyles from '@mui/styles/makeStyles';
 import Card from '@mui/material/Card';

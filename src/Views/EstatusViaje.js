@@ -6,7 +6,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { styled } from "@mui/material/styles";
 import makeStyles from '@mui/styles/makeStyles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";

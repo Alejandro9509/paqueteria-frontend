@@ -13,7 +13,7 @@ import {Tooltip} from "@mui/material";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import TarifasRangos from "./TarifasRangos";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import CrearTarifaRegion from "./CrearTarifaRegion";
 import $ from "jquery";

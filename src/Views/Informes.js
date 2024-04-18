@@ -47,7 +47,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import * as XLSX from "xlsx";
 import {render} from "react-dom";
 import SearchIcon from "@mui/icons-material/Search";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import Noty from "noty";
 import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";

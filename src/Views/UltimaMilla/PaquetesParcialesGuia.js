@@ -19,13 +19,8 @@ import {
     TableRow,
     Typography,
 } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
-import {DataGrid} from "@material-ui/data-grid";
-import {dataGridLocaleText} from "../../Constants";
 import { Table } from 'react-bootstrap';
 import Noty from 'noty';
-import Paper from '@mui/material/Paper';
-import { confirmAlert } from 'react-confirm-alert';
 import {
     agregarPaquetesParciales,
     obtenerPaquetesParciales,

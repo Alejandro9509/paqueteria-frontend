@@ -30,7 +30,7 @@ import {
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import {getUniqueListBy} from "../../Util/Util";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";

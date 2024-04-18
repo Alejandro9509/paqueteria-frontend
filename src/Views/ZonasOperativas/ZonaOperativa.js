@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {DataGrid, GridToolbar} from "@material-ui/data-grid";
+import {DataGrid, GridToolbar} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import CorteCajaAgregar from "../CorteCaja/CorteCajaAgregar";
 import $ from "jquery";

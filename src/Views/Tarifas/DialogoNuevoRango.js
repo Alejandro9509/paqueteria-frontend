@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField} from "@mui/material";
-import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Grid from "@mui/material/Grid";
 import Noty from "noty";

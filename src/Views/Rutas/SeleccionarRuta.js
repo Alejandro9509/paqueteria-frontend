@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {MenuItem, TextField, Tooltip} from "@mui/material";
 import {

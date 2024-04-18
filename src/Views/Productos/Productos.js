@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import Noty from "noty";
 import {
   Button,
@@ -20,7 +20,6 @@ import $ from "jquery";
 import {validarDerecho} from "../../Util/Util"
 import { styled } from "@mui/material/styles";
 
-import makeStyles from '@mui/styles/makeStyles';
 
 import {
   obtenerProductos,

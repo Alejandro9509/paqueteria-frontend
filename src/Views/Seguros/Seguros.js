@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, IconButton, TextField, Tooltip } from '@mui/material';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect, useState, useMemo } from "react";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import Cabecera from "../../Components/Template/Cabecera";

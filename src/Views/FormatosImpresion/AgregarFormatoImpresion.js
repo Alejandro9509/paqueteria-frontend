@@ -7,7 +7,6 @@ import axios from "axios";
 import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
-import {DataGrid} from '@material-ui/data-grid';
 import $ from "jquery";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment} from "@mui/material";
 import FormControl from "@mui/material/FormControl";

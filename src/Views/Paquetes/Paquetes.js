@@ -8,8 +8,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from "@mui/icons-material/Save";
-import {DataGrid} from "@material-ui/data-grid";
-import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
 import {

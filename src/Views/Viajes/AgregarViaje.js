@@ -22,7 +22,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import Historial from "./Historial";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";

@@ -32,7 +32,7 @@ import {
 import { styled } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import {TabContext, TabPanel} from "@mui/lab";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import Correos from "./Correos";

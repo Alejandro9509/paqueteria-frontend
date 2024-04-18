@@ -1,21 +1,15 @@
 import React, {Component, useEffect, useMemo, useState} from 'react'
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {DataGrid, GridToolbar } from "@material-ui/data-grid";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
-import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
-import CrearTarifa from "../Tarifas/CrearTarifa";
-import {Tooltip} from "@material-ui/core";
-import {confirmAlert} from "react-confirm-alert";
-import axios from "axios";
 import Noty from "noty";
 import TarifasRangos from "../Tarifas/TarifasRangos";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {validarDerecho} from "../../Util/Util"
-import { makeStyles, styled } from "@material-ui/core/styles";
+import styled from "@mui/styles/styled";
 import Tarifas from "../Tarifas/Tarifas";
 import TarifasRegion from "../Tarifas/TarifasRegion";
 const PREFIX = 'Convenios';

@@ -28,7 +28,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import IconButton from "@mui/material/IconButton";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import InputAdornment from "@mui/material/InputAdornment";
 import PageviewIcon from "@mui/icons-material/Pageview";

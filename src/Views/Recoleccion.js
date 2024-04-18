@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ReplayIcon from '@mui/icons-material/Replay';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from "@mui/material/TextField";
-import {GridOverlay, DataGrid} from '@material-ui/data-grid';
+import { DataGrid} from '@mui/x-data-grid';
 import InputAdornment from "@mui/material/InputAdornment";
 import LinearProgress from '@mui/material/LinearProgress';
 import SvgIcon from "@mui/material/SvgIcon";
@@ -635,15 +635,6 @@ function Recoleccion() {
 
     const history = useHistory()
 
-    function CustomLoadingOverlay() {
-        return (
-            <GridOverlay>
-                <Root style={{position: 'absolute', top: 0, width: '100%'}}>
-                    <LinearProgress/>
-                </Root>
-            </GridOverlay>
-        );
-    }
     // useEffect(()=>{
     //
     //     obtenerFormatosImpresionProceso(210).then(({data}) => {
@@ -3677,9 +3668,6 @@ function Recoleccion() {
                                     <DataGrid
                                         localeText={dataGridLocaleText}
                                         className={classes.root}
-                                        components={{
-                                            LoadingOverlay: CustomLoadingOverlay,
-                                        }}
                                         onSortModelChange={(model) => setSortModel(model)}
                                         rows={data}
                                         pagination

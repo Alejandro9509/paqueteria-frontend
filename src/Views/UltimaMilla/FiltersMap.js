@@ -8,15 +8,14 @@ import {
     withStyles,
     InputBase,
     ListItemText, InputAdornment, TextField, DialogTitle, DialogContent, DialogActions, Button, Dialog, Typography
-} from "@material-ui/core";
-import { fade, makeStyles, styled } from '@material-ui/core/styles';
+} from "@mui/material";
+import styled from '@mui/styles/styled';
 
-import Tooltip from "@material-ui/core/Tooltip";
-import DateRangeIcon from '@material-ui/icons/DateRange';
-import SendIcon from '@material-ui/icons/Send';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import SettingsIcon from '@material-ui/icons/Settings';
-import SearchIcon from '@material-ui/icons/Search';
+import Tooltip from "@mui/material/Tooltip";
+import SendIcon from '@mui/icons-material/Send';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SearchIcon from '@mui/icons-material/Search';
 import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import moment from "moment";
@@ -31,16 +30,12 @@ import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/ic
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import {ReactComponent as UltimaMillaIcono} from "../../iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
-import {Calendar, DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
+import { DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import MomentUtils from "@date-io/moment";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import FormControl from "@mui/material/FormControl";
 import {obtenerOperadores, obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
-import MessageIcon from "@material-ui/icons/Message";
-import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
-import {Autocomplete} from "@material-ui/lab";
+import Autocomplete from '@mui/material/Autocomplete';
 import AgregarRemolques from "./AgregarRemolques";
 import {showSuccess, validarDerecho} from "../../Util/Util";
 
@@ -488,7 +483,7 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <MuiPickersUtilsProvider utils={MomentUtils}>
+                                <LocalizationProvider utils={MomentUtils}>
                                     <DatePicker
                                         autoOk
                                         orientation="landscape"
@@ -500,7 +495,7 @@ class FiltersMap extends Component {
                                         disablePast={this.props.data.modoPlaneacion}
                                         onChange={this.changeDateConsult}
                                     />
-                                </MuiPickersUtilsProvider>
+                                </LocalizationProvider>
                             }>
                             <Chip
                                 icon={<CalendarioIcono

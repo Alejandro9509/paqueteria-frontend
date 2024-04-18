@@ -11,7 +11,7 @@ import * as XLSX from 'xlsx';
 import {useTable, useFilters, useSortBy} from 'react-table'
 import { styled } from "@mui/material/styles";
 import makeStyles from '@mui/styles/makeStyles';
-import {DataGrid} from '@material-ui/data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 import Noty from 'noty';
 import AgregarViaje from "./Viajes/AgregarViaje";
 import FormControl from "@mui/material/FormControl";

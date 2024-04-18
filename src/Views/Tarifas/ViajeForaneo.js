@@ -24,7 +24,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import RangosTarifa from "./RangosTarifa";
 import DialogCheckbox from "./DialogCheckbox";
-import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";

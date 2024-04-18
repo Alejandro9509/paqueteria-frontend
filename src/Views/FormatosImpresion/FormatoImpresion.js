@@ -7,7 +7,7 @@ import axios from "axios";
 import SvgIcon from "@mui/material/SvgIcon";
 import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import $ from "jquery";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";

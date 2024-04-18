@@ -11,7 +11,7 @@ import {
     Button,
     IconButton,
 } from "@mui/material";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
 import SearchIcon from "@mui/icons-material/Search";
 
