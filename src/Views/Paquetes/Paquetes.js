@@ -41,7 +41,7 @@ function showSuccess(mensaje) {
 const TARIFA_POR_RANGOS = 2
 const TARIFA_POR_REGION = 3
 
-function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limpiarProducto = false,seCalculaTarifa, tipoTarifa=0, factorConversion=0.0, mostrarPesoFinal= true}) {
+function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cliente = null,limpiarProducto = false,seCalculaTarifa, tipoTarifa=0, factorConversion=0.0, mostrarPesoFinal= true}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
@@ -204,7 +204,8 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
         m_sClaveSATProducto:'',
         m_sClaveSATUnidad:'',
     })
-
+    const [seleccionable, setSeleccionable] = useState(false)
+    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
     let groupBy = function(xs, key) {
         return xs.reduce(function(rv, x) {
             (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -300,7 +301,15 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
             }
         })
     }
-
+    const removerSeleccion=()=>{
+        let paquetesFiltrados=dataPaquetes
+        rowSelectionModel.forEach(id=>{
+            paquetesFiltrados=paquetesFiltrados.filter((paq)=>paq.m_nIdPaquete!=id)
+        })
+        setDataPaquetes(paquetesFiltrados)
+        setRowSelectionModel([])
+        setSeleccionable(false)
+    }
     const pesoTotalKgPaquete = (paquete) => parseFloat(paquete.m_rPeso) * parseFloat(paquete.m_nCantidad)
     const pesoTotalVolPaquete = (paquete) => parseFloat(paquete.m_nCantidad) * parseFloat(paquete.m_rLargo) * parseFloat(paquete.m_rAncho) * parseFloat(paquete.m_rAlto) * factorConversion
 
@@ -324,13 +333,35 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
 
             <div className="widget-container">
                 <div className="widget-content">
+                    <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
+                    setRowSelectionModel([])}
+                    } className="btn btn-secondary" style={{visibility:dataPaquetes.length>0 && !disabled?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+
+                        <Button onClick={()=>confirmAlert({
+                        title: 'Confirmación',
+                        message: '¿Desea eliminar los paquetes seleccionados?',
+                        buttons: [
+                            {
+                                label: 'Sí',
+                                onClick: async () => removerSeleccion()
+                            },
+                            {
+                                label: 'No',
+                            }
+                        ]
+                    })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%"}}>Borrar Selección</Button>
 
                     {
                         dataPaquetes.length !== 0 &&
                         (
                             <div className="row" style={{height: `${(dataPaquetes.length * 20)+80}px` , width: "100%"}}>
                                 <DataGrid
+                                    onSelectionModelChange={(e) => {
+                                        setRowSelectionModel(e.selectionModel);
+                                    }}
+                                    selectionModel={rowSelectionModel}
                                     localeText={dataGridLocaleText}
+                                    checkboxSelection={seleccionable}
                                     density="compact"
                                     pageSize={10}
                                     columns={columnsPaquetes}

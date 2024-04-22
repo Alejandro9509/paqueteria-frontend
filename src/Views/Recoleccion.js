@@ -4129,6 +4129,10 @@ function Recoleccion() {
                                         </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
+                                            setDataPaquetes={(arrayNuevo)=>{
+                                                setDataPaquetes(arrayNuevo)
+                                                setRepetirConceptos(true)
+                                            }}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                             cliente={state.clientePaga}
@@ -4141,6 +4145,7 @@ function Recoleccion() {
                                     <div className="widget-wrap" id="complementosSat">
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
+                                            setDataList={(arrayNuevo)=>setDataComplementosSAT(arrayNuevo)}
                                             onChangeList={handleListComplementosSATChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                         />
