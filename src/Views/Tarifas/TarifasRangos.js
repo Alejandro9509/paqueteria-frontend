@@ -1,6 +1,6 @@
 import React, {Component, useEffect, useState} from 'react';
 import $ from "jquery";
-import DataGrid from "@mui/x-data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Tooltip from '@mui/material/Tooltip';
 import SvgIcon from "@mui/material/SvgIcon";

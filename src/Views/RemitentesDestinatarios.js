@@ -537,7 +537,7 @@ if(input=="codigoPostal"){
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
-      if(!row.data.m_nIdCP){
+      if(!row.m_nIdCP){
         showSuccess("La dirección seleccionada contiene datos que no coinciden con los catálogos del SAT, favor de validar la dirección en Tráfico - Catálogos - Remitentes/ Destinatarios.")
         return
       }
@@ -545,34 +545,34 @@ if(input=="codigoPostal"){
         props.seCalculaTarifa()
       }
     const promise = new Promise((resolve, reject) => {
-          obtenerZonaOperativaByIdCodigoPostal(row.data.m_nIdCP).then(
+          obtenerZonaOperativaByIdCodigoPostal(row.m_nIdCP).then(
               ( zonaOperativa ) => {
                 setState((state) => ({
                   ...state,
-                  id: row.data.m_nIdRemitenteDestinatario,
-                  alias: row.data.m_sAlias,
-                  nombre: row.data.m_sNombre,
-                  RFC: row.data.m_sRFC,
-                  domicilio: row.data.m_sDomicilio || "No especificado",
+                  id: row.m_nIdRemitenteDestinatario,
+                  alias: row.m_sAlias,
+                  nombre: row.m_sNombre,
+                  RFC: row.m_sRFC,
+                  domicilio: row.m_sDomicilio || "No especificado",
                   codigoPostal:
                       {
-                        m_nIdCP: row.data.m_nIdCP,
-                        m_sCP: row.data.m_sCodigoPostal,
-                        m_sColonia: row.data.m_sColonia || "No especificado",
+                        m_nIdCP: row.m_nIdCP,
+                        m_sCP: row.m_sCodigoPostal,
+                        m_sColonia: row.m_sColonia || "No especificado",
                       },
-                  estado: row.data.m_nIdEstado || "",
-                  estadoTexto: row.data.m_sEstado || "No especificado",
-                  municipio: row.data.m_nIdMunicipio || "",
-                  correo: row.data.m_sCorreoElectronico || "",
-                  telefono: row.data.m_sTelefono || 0,
-                  contacto: row.data.m_sContacto || row.data.m_sNombre,
-                  calle: row.data.m_sCalle || "No especificado",
-                  municipioTexto: row.data.m_sMunicipio || "No especificado",
-                  numeroExt: row.data.m_sNoExterior || 0,
-                  numeroInt: row.data.m_sNoInterior || 0,
-                  colonia: row.data.m_sColonia || row.data.m_sLocalidad || "No especificado",
-                  latitud: row.data.m_sLatitud,
-                  longitud: row.data.m_sLongitud,
+                  estado: row.m_nIdEstado || "",
+                  estadoTexto: row.m_sEstado || "No especificado",
+                  municipio: row.m_nIdMunicipio || "",
+                  correo: row.m_sCorreoElectronico || "",
+                  telefono: row.m_sTelefono || 0,
+                  contacto: row.m_sContacto || row.data.m_sNombre,
+                  calle: row.m_sCalle || "No especificado",
+                  municipioTexto: row.m_sMunicipio || "No especificado",
+                  numeroExt: row.m_sNoExterior || 0,
+                  numeroInt: row.m_sNoInterior || 0,
+                  colonia: row.m_sColonia || row.data.m_sLocalidad || "No especificado",
+                  latitud: row.m_sLatitud,
+                  longitud: row.m_sLongitud,
                   origen: zonaOperativa.data.length !== 0 ? {
                     m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino,
                     m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
@@ -583,7 +583,7 @@ if(input=="codigoPostal"){
                   } : null,
                   openDialog: false,
                   zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-                  paisTexto: row.data.m_sPais
+                  paisTexto: row.m_sPais
                 }));
                 if (zonaOperativa.data.length === 0) {
                   if (props.remitente) {
@@ -659,7 +659,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       label={"Alias (Nombre)"}
-                      margin="dense"
+                      size="small"
                       variant="outlined"
                       required
                       disabled={props.consulta}
@@ -707,7 +707,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -727,7 +727,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -744,7 +744,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -761,7 +761,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -777,7 +777,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -793,7 +793,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -808,7 +808,7 @@ if(input=="codigoPostal"){
 
               <div className="col-sm-12 col-md-12  unit">
                 {/*<label className="input select">
-            <FormControl fullWidth variant="outlined" margin="dense" required>
+            <FormControl fullWidth variant="outlined" size="small" required>
               <InputLabel id="idEstadoLabel">Estado</InputLabel>
               <Select
                 fullWidth
@@ -830,7 +830,7 @@ if(input=="codigoPostal"){
           </label>*/}
                 <TextField
                     variant="outlined"
-                    margin="dense"
+                    size="small"
                     className="form-control"
                     label="Estado"
                     value={state.estadoTexto}
@@ -845,7 +845,7 @@ if(input=="codigoPostal"){
             className="input select"
             fullWidth
             variant="outlined"
-            margin="dense"
+            size="small"
             required
           >
             <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
@@ -872,7 +872,7 @@ if(input=="codigoPostal"){
           </FormControl>*/}
                 <TextField
                     variant="outlined"
-                    margin="dense"
+                    size="small"
                     className="form-control"
                     label="Municipio"
                     value={state.municipioTexto}
@@ -892,6 +892,7 @@ if(input=="codigoPostal"){
                       disabled={props.consulta || props.modificar || props.agregar}
                       name="codigoPostal"
                       disableClearable
+                      size="small"
                       forcePopupIcon={false}
                       options={dataCodigosPostales}
                       getOptionLabel={(option) =>
@@ -904,7 +905,7 @@ if(input=="codigoPostal"){
                           <div>
                             <TextField
                                 label="Código Postal"
-                                margin="dense"
+                                size="small"
                                 variant="outlined"
                                 onClick={(e) =>
                                     handleClickCodigosPostalesInput("codigoPostal")
@@ -922,7 +923,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       label="Correo Electrónico"
                       onChange={handleChange}
                       className="form-control"
@@ -939,7 +940,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -956,7 +957,7 @@ if(input=="codigoPostal"){
                 <div className="input">
                   <TextField
                       variant="outlined"
-                      margin="dense"
+                      size="small"
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -992,7 +993,7 @@ if(input=="codigoPostal"){
                               <div>
                                 <TextField
                                     label="Origen"
-                                    margin="dense"
+                                    size="small"
                                     variant="outlined"
                                     required
                                     onClick={props.handleClickCiudad}
@@ -1031,7 +1032,7 @@ if(input=="codigoPostal"){
                                     variant="outlined"
                                     className="form-control"
                                     label="Destino"
-                                    margin="dense"
+                                    size="small"
                                     {...params}
                                     onClick={props.handleClickCiudad}
                                 />
@@ -1070,7 +1071,7 @@ if(input=="codigoPostal"){
                               <TextField
                                   variant="outlined"
                                   label="Zona Operativa"
-                                  margin="dense"
+                                  size="small"
                                   required={
                                       !state.diferenteEntrega && !state.entregaEnSucursal
                                   }
@@ -1110,7 +1111,7 @@ if(input=="codigoPostal"){
                               <TextField
                                   variant="outlined"
                                   label="Zona Tarifa"
-                                  margin="dense"
+                                  size="small"
                                   required={
                                       !state.diferenteEntrega && !state.entregaEnSucursal
                                   }
@@ -1133,7 +1134,7 @@ if(input=="codigoPostal"){
               <Grid item xs>
                 <TextField
                     label={"Alias (Nombre)"}
-                    margin="dense"
+                    size="small"
                     variant="outlined"
                     required
                     disabled={props.consulta}
@@ -1197,7 +1198,7 @@ if(input=="codigoPostal"){
                         <TextField
                             variant="outlined"
                             label="Zona Operativa"
-                            margin="dense"
+                            size="small"
                             {...params}
                         />
                     )}
@@ -1223,7 +1224,7 @@ if(input=="codigoPostal"){
                         <div>
                           <TextField
                               label="Origen"
-                              margin="dense"
+                              size="small"
                               variant="outlined"
                               required
                               {...params}

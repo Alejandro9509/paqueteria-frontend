@@ -114,22 +114,22 @@ function cargarDesdeServidor(pagina,registros){
                   columns={columns}
                   rows={rows}
                   getRowId={((row) => row.m_nNumero)}
-                  onRowSelected={(row) => {
-                      rowSelect = row;
+                  onRowSelectionModelChange={(newRowSelectionModel,e) => {
+                      rowSelect=rows.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0])
                   }}
+                  autoPageSize
                   pagination
                   page={pagina}
-                  rowsPerPageOptions={[registros]}
+                  rowsPerPageOptions={[]}
                   pageSize={registros}
                   rowCount={13600}
                   paginationMode="server"
-                  onPageChange={(newPage) => {
-                      setPagina(newPage.page)
-                      console.log(newPage)
+                  onPaginationModelChange={(newPaginationModel)=>{
+                      setPagina(newPaginationModel.page)
                   }}
               />
           </div>
-          <DialogActions style={{justifyContent: "rigth"}}>
+          <DialogActions style={{justifyContent: "right"}}>
                      <button
                       onClick={() => {
                           dialogVisible(false)}}

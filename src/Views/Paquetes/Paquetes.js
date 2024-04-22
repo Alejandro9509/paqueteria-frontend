@@ -265,10 +265,18 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
                 seCalculaTarifa()
             }
         }else{//aqui solo agrega el paquete
-            dataPaquetes.push(paq);
-            dataPaquetes.forEach(item => {
+            console.log(dataPaquetes)
+            let array=dataPaquetes;
+            array.push(paq)
+            array.forEach(item=>{
                 arraynew.push(item)
             })
+            /*dataPaquetes.push(paq)
+            console.log(paq)
+            dataPaquetes.forEach(item => {
+                arraynew.push(item)
+                console.log(item)
+            })*/
             seCalculaTarifa()
         }
         /*dataPaquetes.push(paq);
@@ -320,21 +328,25 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
                     limpiarProducto={limpiarProducto}
                 />
             </div>
-
+            <Button variant="contained" size="x-large" color="primary" onClick={()=>console.log(dataPaquetes)} style={{float: 'left'}}>
+                Agregar paquete
+            </Button>
             <div className="widget-container">
                 <div className="widget-content">
 
                     {
                         dataPaquetes.length !== 0 &&
                         (
-                            <div className="row" style={{height: `${(dataPaquetes.length * 20)+80}px` , width: "100%"}}>
+                            <div  style={{height: `${(dataPaquetes.length * 20)+80}px` , width: "100%"}}>
                                 <DataGrid
                                     localeText={dataGridLocaleText}
                                     density="compact"
-                                    pageSize={10}
+                                    //pageSize={10}
                                     columns={columnsPaquetes}
                                     rows={dataPaquetes}
-                                    getRowId={(row) => row.m_nIdPaquete}
+                                    rowCount={dataPaquetes.length}
+                                    //autoPageSize
+                                    getRowId={(row) => row.m_nIdProducto}
                                 />
                             </div>
                         )

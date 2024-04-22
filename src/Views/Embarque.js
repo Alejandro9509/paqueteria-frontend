@@ -2426,20 +2426,20 @@ function Embarque(props) {
         setDataSeguroClienteActual(seguroClienteActual=>{
             return {
                 ...seguroClienteActual,
-                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
-                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
-                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+                idTipoSeguro: row.m_nIdTipoSeguro !== 0 ? row.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.m_cPorcentajeSeguro,
+                aplicaSeguro: row.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
             }
         })
         setState(state => {
             return {
                 ...state,
-                clientePaga: row.data,
-                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
-                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
-                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
-                tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-                observaciones: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.CON_POLIZA ? ("Aseguradora: " + row.data.m_sAseguradora + ", Póliza: " + row.data.m_sPoliza) : "",
+                clientePaga: row,
+                idTipoSeguro: row.m_nIdTipoSeguro !== 0 ? row.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.m_cPorcentajeSeguro,
+                aplicaSeguro: row.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+                tipoCobro: configuraciones.detectarTipoCobro ? row.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.m_nIdTipoSeguro === TIPOS_SEGURO.CON_POLIZA ? ("Aseguradora: " + row.m_sAseguradora + ", Póliza: " + row.m_sPoliza) : "",
                 openDialog: false,
             }
         })
@@ -3223,7 +3223,7 @@ function Embarque(props) {
             {/*                                className="input select"*/}
             {/*                                fullWidth variant="outlined"*/}
             {/*                                required*/}
-            {/*                                margin="dense">*/}
+            {/*                                size="small">*/}
             {/*                                <InputLabel*/}
             {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
             {/*                                <Select*/}
@@ -3508,7 +3508,7 @@ function Embarque(props) {
                         <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
                         <div>
                             <label className="input select" style={{width: "100%"}}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
+                                <FormControl fullWidth variant="outlined" size="small">
                                     <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
                                     <Select
                                         labelId="sucursalListadoLabel"
@@ -3524,12 +3524,12 @@ function Embarque(props) {
                                         name="formatoSeleccionado"
                                     >
                                         {dataFormatos.map((formato) => (
-                                            <option
+                                            <MenuItem
                                                 key={formato.m_nIdFormato}
                                                 value={formato.m_nIdFormato}
                                             >
                                                 {formato.m_sFormato}
-                                            </option>
+                                            </MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
@@ -3705,7 +3705,7 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined"
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel
                                                                     id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                                 <Select
@@ -3722,14 +3722,14 @@ function Embarque(props) {
                                                                         id: "idSucursalAgregar"
                                                                     }}
                                                                 >
-                                                                    <option value="0">Todas</option>
+                                                                    <MenuItem value="0">Todas</MenuItem>
                                                                     {dataSucursal.map((sucursal) => (
-                                                                        <option
+                                                                        <MenuItem
                                                                             key={sucursal.m_nIdSucursal}
                                                                             value={sucursal.m_nIdSucursal}
                                                                         >
                                                                             {sucursal.m_sSucursal}
-                                                                        </option>
+                                                                        </MenuItem>
                                                                     ))}
                                                                 </Select>
                                                             </FormControl>
@@ -3738,8 +3738,10 @@ function Embarque(props) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined"
                                                                        label="Folio Recolección"
+                                                                       fullWidth
+                                                                       size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -3753,9 +3755,10 @@ function Embarque(props) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label={state.duplicar ? "Folio Relacionado" : "Folio Embarque"}
                                                                        onChange={handleChange}
+                                                                       fullWidth
                                                                        className="form-control"
                                                                        type="text"
                                                                        value={state.folioEmbarque}
@@ -3771,7 +3774,8 @@ function Embarque(props) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
+                                                                       fullWidth
                                                                        label="Folio Guía"
                                                                        onChange={handleChange}
                                                                        className="form-control"
@@ -3786,7 +3790,8 @@ function Embarque(props) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
+                                                                       fullWidth
                                                                        label="Folio Informe"
                                                                        onChange={handleChange}
                                                                        className="form-control"
@@ -3801,7 +3806,8 @@ function Embarque(props) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
+                                                                       fullWidth
                                                                        label="Fecha / Hora"
                                                                        onChange={handleChange}
                                                                        required
@@ -3821,7 +3827,7 @@ function Embarque(props) {
 
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined"
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="idEstatusEmbarque">Estatus del
                                                                     Embarque</InputLabel>
                                                                 <Select
@@ -3838,12 +3844,12 @@ function Embarque(props) {
                                                                     }}
                                                                 >
                                                                     {dataEstatusEmbarque.map((estatus) => (
-                                                                        <option
+                                                                        <MenuItem
                                                                             key={estatus.m_nIdEstatusEmbarque}
                                                                             value={estatus.m_nIdEstatusEmbarque}
                                                                         >
                                                                             {estatus.m_sEstatus}
-                                                                        </option>
+                                                                        </MenuItem>
                                                                     ))}
                                                                 </Select>
                                                             </FormControl>
@@ -3853,7 +3859,7 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined"
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="idMonedaLabel">Moneda</InputLabel>
                                                                 <Select
                                                                     labelId={"idMonedaLabel"}
@@ -3870,12 +3876,12 @@ function Embarque(props) {
                                                                     }}
                                                                 >
                                                                     {dataTipoMoneda.map((moneda) => (
-                                                                        <option
+                                                                        <MenuItem
                                                                             key={moneda.m_nIdMoneda}
                                                                             value={moneda.m_nIdMoneda}
                                                                         >
                                                                             {moneda.m_sMoneda}
-                                                                        </option>
+                                                                        </MenuItem>
                                                                     ))}
                                                                 </Select>
                                                             </FormControl>
@@ -3886,7 +3892,7 @@ function Embarque(props) {
                                                         <div className="input">
                                                             <FormControl fullWidth variant="outlined" required
 
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="tipoCambioLabel">Tipo de
                                                                     Cambio</InputLabel>
                                                                 <Select
@@ -3904,14 +3910,14 @@ function Embarque(props) {
                                                                     disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                     id="tipoCambio"
                                                                 >
-                                                                    <option value="0">Seleccionar</option>
+                                                                    <MenuItem value="0">Seleccionar</MenuItem>
                                                                     {dataTipoCambio.map((cambio) => (
-                                                                        <option
+                                                                        <MenuItem
                                                                             key={cambio.m_nIdTipoCambio}
                                                                             value={cambio.m_nIdTipoCambio}
                                                                         >
                                                                             {cambio.m_cTipoCambio.toFixed(4)}
-                                                                        </option>
+                                                                        </MenuItem>
                                                                     ))}
                                                                 </Select>
                                                             </FormControl>
@@ -3921,7 +3927,7 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined" required
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="idTipoCobroLabel">Tipo
                                                                     Cobro</InputLabel>
                                                                 <Select
@@ -3944,12 +3950,12 @@ function Embarque(props) {
                                                                     }}
                                                                 >
                                                                     {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
-                                                                        <option
+                                                                        <MenuItem
                                                                             key={tipoCobro.m_nIdTipoCobro}
                                                                             value={tipoCobro.m_nIdTipoCobro}
                                                                         >
                                                                             {tipoCobro.m_sDescripcion}
-                                                                        </option>
+                                                                        </MenuItem>
                                                                     ))}
                                                                 </Select>
                                                             </FormControl>
@@ -3963,7 +3969,7 @@ function Embarque(props) {
                                                                 <TextField
                                                                     variant="outlined"
                                                                     label="Responsable de pago"
-                                                                    margin="dense"
+                                                                    size="small"
                                                                     required
                                                                     disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                     value={state.clientePaga.m_sNombreFiscal}
@@ -3997,17 +4003,17 @@ function Embarque(props) {
                                                                     disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                 >
                                                                     {dataTiposSeguro.map((option) => (
-                                                                        <option key={option.m_nIdTipoSeguro}
+                                                                        <MenuItem key={option.m_nIdTipoSeguro}
                                                                                 value={option.m_nIdTipoSeguro}>
                                                                             {option.m_sDescripcion}
-                                                                        </option>
+                                                                        </MenuItem>
                                                                     ))}
                                                                 </TextField>
                                                             </div>
                                                         </Grid>
                                                         <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
@@ -4027,7 +4033,7 @@ function Embarque(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
@@ -4054,10 +4060,9 @@ function Embarque(props) {
                                                         <Grid item xs>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense" required>
+                                                                             size="small" required>
                                                                     <InputLabel> Tipo de Tarifa</InputLabel>
                                                                     <Select
-                                                                        native
                                                                         label="Tipo de Tarifa"
                                                                         className="form-control"
                                                                         onChange={handleChange}
@@ -4066,10 +4071,10 @@ function Embarque(props) {
                                                                         value={state.idTipoTarifa}
                                                                         disabled
                                                                     >
-                                                                        <option value="0">Sin definir</option>
-                                                                        <option value="1">Por peso o volumen</option>
-                                                                        <option value="2">Por rango</option>
-                                                                        <option value="3">Por región</option>
+                                                                        <MenuItem value="0">Sin definir</MenuItem>
+                                                                        <MenuItem value="1">Por peso o volumen</MenuItem>
+                                                                        <MenuItem value="2">Por rango</MenuItem>
+                                                                        <MenuItem value="3">Por región</MenuItem>
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
@@ -4104,7 +4109,7 @@ function Embarque(props) {
                                                         <Grid item xs>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense" required>
+                                                                             size="small" required>
                                                                     <InputLabel>Tipo de servicio</InputLabel>
                                                                     <Select
                                                                         label="Tipo de servicio"
@@ -4115,16 +4120,16 @@ function Embarque(props) {
                                                                         value={state.tipoTimbrado || ""}
                                                                         disabled={state.agregar === "Consultar"}
                                                                     >
-                                                                        <option key={"1"}
+                                                                        <MenuItem key={"1"}
                                                                                 value={1}
                                                                         >
                                                                             Consolidado
-                                                                        </option>
-                                                                        <option key={"2"}
+                                                                        </MenuItem>
+                                                                        <MenuItem key={"2"}
                                                                                 value={2}
                                                                         >
                                                                             Paquetería
-                                                                        </option>
+                                                                        </MenuItem>
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
@@ -4137,7 +4142,7 @@ function Embarque(props) {
                                                             <TextField
                                                                 variant="outlined"
                                                                 label="Observaciones"
-                                                                margin="dense"
+                                                                size="small"
                                                                 type="text"
                                                                 disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                 value={state.observaciones}
@@ -4158,7 +4163,7 @@ function Embarque(props) {
                                                             <TextField
                                                                 variant="outlined"
                                                                 label="Referencia"
-                                                                margin="dense"
+                                                                size="small"
                                                                 type="text"
                                                                 disabled={state.agregar === "Consultar"}
                                                                 value={state.referencia}
@@ -4346,7 +4351,7 @@ function Embarque(props) {
                                                         <Grid item xs={12} sm={6}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
+                                                                             size="small">
                                                                     <InputLabel id="idSucursalEntrega">Sucursal de
                                                                         Entrega</InputLabel>
                                                                     <Select
@@ -4378,7 +4383,7 @@ function Embarque(props) {
                                                         </Grid>
                                                         <Grid item xs={12} sm={6}>
                                                             <TextField variant="outlined"
-                                                                       margin="dense"
+                                                                       size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Zona operativa"
@@ -4433,7 +4438,7 @@ function Embarque(props) {
                                                                         <FormControl
                                                                             className="input select"
                                                                             fullWidth variant="outlined"
-                                                                            margin="dense"
+                                                                            size="small"
                                                                             required={state.diferenteEntrega}>
                                                                             <InputLabel
                                                                                 id="idEstadoLabel">Estado</InputLabel>
@@ -4464,7 +4469,7 @@ function Embarque(props) {
                                                                             className="input select"
                                                                             fullWidth
                                                                             variant="outlined"
-                                                                            margin="dense"
+                                                                            size="small"
                                                                             required={state.diferenteEntrega}>
                                                                             <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
                                                                             <Select
@@ -4515,7 +4520,7 @@ function Embarque(props) {
                                                                                     <div>
                                                                                         <TextField
                                                                                             label="Código Postal"
-                                                                                            margin="dense"
+                                                                                            size="small"
                                                                                             variant="outlined"
                                                                                             onClick={(e) => handleClickCodigosPostalesInput("codigoPostalEnt")}
                                                                                             required={state.diferenteEntrega}
@@ -4550,7 +4555,7 @@ function Embarque(props) {
                                                                                     <TextField
                                                                                         variant="outlined"
                                                                                         label="Zona Operativa"
-                                                                                        margin="dense"
+                                                                                        size="small"
                                                                                         required
                                                                                         // onClick={handleClickZona}
                                                                                         {...params}
@@ -4583,7 +4588,7 @@ function Embarque(props) {
                                                                                     <TextField
                                                                                         variant="outlined"
                                                                                         label="Zona Tarifa"
-                                                                                        margin="dense"
+                                                                                        size="small"
                                                                                         required
                                                                                         // onClick={handleClickZona}
                                                                                         {...params}
@@ -4597,7 +4602,7 @@ function Embarque(props) {
 
                                                                         <div className="input">
                                                                             <TextField variant="outlined"
-                                                                                       margin="dense"
+                                                                                       size="small"
                                                                                        onChange={handleChangeEntregaDD}
                                                                                        className="form-control"
                                                                                        type="text"
@@ -4613,7 +4618,7 @@ function Embarque(props) {
                                                                     <div className="col-sm-6 col-md-4  unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined"
-                                                                                       margin="dense"
+                                                                                       size="small"
                                                                                        onChange={handleChangeEntregaDD}
                                                                                        className="form-control"
                                                                                        type="text"
@@ -4629,7 +4634,7 @@ function Embarque(props) {
                                                                     <div className="col-sm-6 col-md-4  unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined"
-                                                                                       margin="dense"
+                                                                                       size="small"
                                                                                        onChange={handleChangeEntregaDD}
                                                                                        className="form-control"
                                                                                        type="text"
@@ -4798,7 +4803,7 @@ function Embarque(props) {
                                             <div className="form-content">
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    label="Folio Embarque"
                                                                    onChange={handleChange}
                                                                    className="form-control"
@@ -4812,7 +4817,7 @@ function Embarque(props) {
 
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    label="Sucursal"
                                                                    onChange={handleChange}
                                                                    className="form-control"
@@ -4826,7 +4831,7 @@ function Embarque(props) {
 
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense" label="Fecha"
+                                                        <TextField variant="outlined" size="small" label="Fecha"
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="datetime-local"
@@ -4839,7 +4844,7 @@ function Embarque(props) {
 
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense" label="Usuario"
+                                                        <TextField variant="outlined" size="small" label="Usuario"
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="text"
@@ -4852,7 +4857,7 @@ function Embarque(props) {
 
                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense" label="Estatus"
+                                                        <TextField variant="outlined" size="small" label="Estatus"
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="text"
@@ -4865,7 +4870,7 @@ function Embarque(props) {
 
                                                 <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense" label="Motivo"
+                                                        <TextField variant="outlined" size="small" label="Motivo"
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="text"

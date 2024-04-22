@@ -277,7 +277,8 @@ function Filtros(props) {
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container spacing={2} item={12}>
                     <Grid item xs>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
+                                   fullWidth
                                    onChange={handleChangeFiltros}
                                    onKeyDown={handleChangeFiltros}
                                    className="form-control"
@@ -292,6 +293,7 @@ function Filtros(props) {
                         <FormControl className="input select" fullWidth variant="outlined">
                             <TextField
                                 autoFocus
+                                fullWidth
                                 type="date"
                                 margin="dense"
                                 label="Fecha Inicial"
@@ -309,6 +311,7 @@ function Filtros(props) {
                         <FormControl className="input select" fullWidth variant="outlined">
                             <TextField variant="outlined" margin="dense"
                                        type="date"
+                                       fullWidth
                                        className="form-control"
                                        label="Fecha Final"
                                        InputLabelProps={{
@@ -325,7 +328,7 @@ function Filtros(props) {
                     </Grid>
                     {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
                             <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
                             <Select
                                 labelId="sucursalListadoLabel"
@@ -351,7 +354,7 @@ function Filtros(props) {
                     }
                     {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth size="small" variant="outlined">
                             <InputLabel id="idEstatusLabel">Estatus</InputLabel>
                             <Select
                                 labelId="estatusListadoLabel"
@@ -397,7 +400,7 @@ function Filtros(props) {
                     }
                     {(props.informe) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
                             <InputLabel id="idSucusalLabel">Sucursal Emisora</InputLabel>
                             <Select
                                 labelId="sucursalListadoLabel"
@@ -423,7 +426,7 @@ function Filtros(props) {
                     }
                     {(props.informe) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" size="small" fullWidth variant="outlined">
                             <InputLabel id="idSucusalLabel">Sucursal Receptora</InputLabel>
                             <Select
                                 labelId="sucursalListadoLabel"
@@ -451,7 +454,7 @@ function Filtros(props) {
                 <Grid container spacing={2} item={12}>
                     {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
                             <InputLabel id="OrigenListado">Origen</InputLabel>
                             <Select
                                 labelId="OrigenListado"
@@ -478,7 +481,7 @@ function Filtros(props) {
                     }
                     {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" size="small" fullWidth variant="outlined">
                             <InputLabel id="DestinoListado">Destino</InputLabel>
                             <Select
                                 labelId="DestinoListado"
@@ -509,7 +512,7 @@ function Filtros(props) {
                             <TextField
                                 variant="outlined"
                                 label="Cliente"
-                                margin="dense"
+                                size="small"
                                 value={filtros.clientePaga.m_sNombreFiscal||''}
                                 placeholder={"No. Cliente: Nombre fiscal"}
                                 // InputLabelProps={{shrink: true}}
