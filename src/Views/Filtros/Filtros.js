@@ -257,7 +257,7 @@ function Filtros(props) {
         setFiltros(filtros => {
             return{
                 ...filtros,
-                clientePaga: row.data,
+                clientePaga: row,
             }
         });
         setOpenDialog(false);

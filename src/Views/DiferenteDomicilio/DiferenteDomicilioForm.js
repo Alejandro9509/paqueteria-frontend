@@ -204,7 +204,7 @@ export default function DiferenteDomicilioForm(props){
                 <FormControl
                     className="input select"
                     fullWidth variant="outlined"
-                    margin="dense"
+                    size="small"
                     required={props.required}>
                     <InputLabel
                         id="idEstadoLabel">País</InputLabel>
@@ -233,7 +233,7 @@ export default function DiferenteDomicilioForm(props){
                 <FormControl
                     className="input select"
                     fullWidth variant="outlined"
-                    margin="dense"
+                    size="small"
                     required={props.required}>
                     <InputLabel
                         id="idEstadoLabel">Estado</InputLabel>
@@ -271,7 +271,7 @@ export default function DiferenteDomicilioForm(props){
                     className="input select"
                     fullWidth
                     variant="outlined"
-                    margin="dense"
+                    size="small"
                     required={props.required}>
                     <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
                     <Select
@@ -303,6 +303,7 @@ export default function DiferenteDomicilioForm(props){
                     value={props.value.codigoPostal}
                     disabled={props.disabled}
                     name="codigoPostal"
+                    size="small"
                     disableClearable
                     forcePopupIcon={false}
                     options={dataCodigosPostales}
@@ -325,7 +326,7 @@ export default function DiferenteDomicilioForm(props){
                         <div>
                             <TextField
                                 label="Código Postal"
-                                margin="dense"
+                                size="small"
                                 variant="outlined"
                                 onClick={(e) => handleClickCodigosPostalesInput("codigoPostal")}
                                 required={props.required}
@@ -350,6 +351,7 @@ export default function DiferenteDomicilioForm(props){
                     freeSolo
                     onChange={(event, newValue) => handleChangeAutocomplete("zonaOperativa",newValue)}
                     disableClearable
+                    size="small"
                     forcePopupIcon={false}
                     options={dataZonasOperativas}
                     disabled={true}
@@ -365,7 +367,7 @@ export default function DiferenteDomicilioForm(props){
                         <TextField
                             variant="outlined"
                             label="Zona Operativa"
-                            margin="dense"
+                            size="small"
                             required
                             {...params}
                         />
@@ -374,11 +376,12 @@ export default function DiferenteDomicilioForm(props){
             </Grid>
             <Grid item xs={4}>
                 <TextField variant="outlined"
-                           margin="dense"
+                           size="small"
                            onChange={handleOnChange}
                            className="form-control"
                            type="text"
                            label="Calle y número"
+                           fullWidth
                            value={props.value.domicilio}
                            disabled={props.disabled}
                            name="domicilio"
@@ -387,10 +390,11 @@ export default function DiferenteDomicilioForm(props){
             </Grid>
             <Grid item xs={4}>
                 <TextField variant="outlined"
-                           margin="dense"
+                           size="small"
                            onChange={handleOnChange}
                            className="form-control"
                            type="text"
+                           fullWidth
                            label="Entregar En"
                            value={props.value.detalles}
                            disabled={props.disabled}
@@ -400,10 +404,11 @@ export default function DiferenteDomicilioForm(props){
             </Grid>
             <Grid item xs={4}>
                 <TextField variant="outlined"
-                           margin="dense"
+                           size="small"
                            onChange={handleOnChange}
                            className="form-control"
                            type="text"
+                           fullWidth
                            label="Datos Adicionales para la Entrega"
                            value={props.value.datosAdicionales}
                            disabled={props.disabled}

@@ -728,6 +728,7 @@ if(input=="codigoPostal"){
                   <TextField
                       variant="outlined"
                       size="small"
+                      fullWidth
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -745,6 +746,7 @@ if(input=="codigoPostal"){
                   <TextField
                       variant="outlined"
                       size="small"
+                      fullWidth
                       onChange={handleChange}
                       className="form-control"
                       type="text"
@@ -764,6 +766,7 @@ if(input=="codigoPostal"){
                       size="small"
                       onChange={handleChange}
                       className="form-control"
+                      fullWidth
                       type="text"
                       label="Número interior"
                       value={state.numeroInt}
@@ -780,6 +783,7 @@ if(input=="codigoPostal"){
                       size="small"
                       onChange={handleChange}
                       className="form-control"
+                      fullWidth
                       type="text"
                       label="Número exterior"
                       value={state.numeroExt}
@@ -797,6 +801,7 @@ if(input=="codigoPostal"){
                       onChange={handleChange}
                       className="form-control"
                       type="text"
+                      fullWidth
                       required
                       label="Colonia / Localidad"
                       value={state.colonia}
@@ -833,6 +838,7 @@ if(input=="codigoPostal"){
                     size="small"
                     className="form-control"
                     label="Estado"
+                    fullWidth
                     value={state.estadoTexto}
                     disabled
                     name="estado"
@@ -875,6 +881,7 @@ if(input=="codigoPostal"){
                     size="small"
                     className="form-control"
                     label="Municipio"
+                    fullWidth
                     value={state.municipioTexto}
                     disabled
                     name="municipio"
@@ -926,6 +933,7 @@ if(input=="codigoPostal"){
                       size="small"
                       label="Correo Electrónico"
                       onChange={handleChange}
+                      fullWidth
                       className="form-control"
                       type="email"
                       required
@@ -946,6 +954,7 @@ if(input=="codigoPostal"){
                       type="text"
                       label="Teléfono"
                       required
+                      fullWidth
                       value={state.telefono}
                       disabled={props.consulta }
                       name="telefono"
@@ -961,6 +970,7 @@ if(input=="codigoPostal"){
                       onChange={handleChange}
                       className="form-control"
                       type="text"
+                      fullWidth
                       required
                       label="Contacto"
                       value={state.contacto}
@@ -981,6 +991,7 @@ if(input=="codigoPostal"){
                           value={state.origen}
                           disabled={props.consulta || props.modificar || props.agregar}
                           id="origenRemitente"
+                          size="small"
                           name="origenRemitente"
                           disableClearable
                           forcePopupIcon={false}
@@ -1017,6 +1028,7 @@ if(input=="codigoPostal"){
                           value={state.destino}
                           disabled={props.consulta || props.modificar || props.agregar}
                           destino="destino"
+                          size="small"
                           disableClearable
                           forcePopupIcon={false}
                           options={props.dataCiudad}
@@ -1052,6 +1064,7 @@ if(input=="codigoPostal"){
                           onChange={(event, newValue) =>
                               handleChangeAutocomplete("zonaOperativa", newValue)
                           }
+                          size="small"
                           id="zonaOperativa"
                           disableClearable
                           forcePopupIcon={false}

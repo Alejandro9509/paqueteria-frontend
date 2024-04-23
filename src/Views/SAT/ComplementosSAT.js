@@ -575,10 +575,12 @@ function ComplementosSAT(props) {
         if (dataComplemento.id === 0){
             const item = dataComplemento
             item.id = Math.floor(Math.random() * 10000)
-            props.dataList.push(item);
-            props.onChangeList(props.dataList)
+            let arrayNew=props.dataList
+            arrayNew=[...arrayNew,item]
+            props.onChangeList(arrayNew)
         }else{
-            props.dataList.forEach(item => {
+            let arrayNew=props.dataList
+            arrayNew.forEach(item => {
                 if (item.id === dataComplemento.id){
                    // item=dataComplemento
                     item.id = dataComplemento.id
@@ -617,7 +619,7 @@ function ComplementosSAT(props) {
                     item.usoAutorizado=dataComplemento.usoAutorizado
                 }
             })
-            props.onChangeList(props.dataList)
+            props.onChangeList(arrayNew)
         }
 
 

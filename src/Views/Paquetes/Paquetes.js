@@ -227,8 +227,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
     const addPaquetev2 = (data) => {
 
         console.log(data)
-        console.log(groupBy(dataPaquetes, 'm_nIdProducto'));
-        console.log(groupByArray(dataPaquetes, 'm_nIdProducto'));
         let paq = data
         /*if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
@@ -239,7 +237,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
             }*!/
 
         }*/
-        const arraynew = []
+        let arraynew = []
         let entra = false
         if (dataPaquetes.find(item => item.m_nIdPaquete === data.m_nIdPaquete)){//aqui entra en la modificacion
             dataPaquetes.forEach(item => {
@@ -259,28 +257,23 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
                     item = data
 
                 }
-                arraynew.push(item)
+                arraynew=[...arraynew,item]
             })
             if(entra){
                 seCalculaTarifa()
             }
         }else{//aqui solo agrega el paquete
+            arraynew=dataPaquetes
             console.log(dataPaquetes)
-            let array=dataPaquetes;
-            array.push(paq)
-            array.forEach(item=>{
-                arraynew.push(item)
-            })
-            /*dataPaquetes.push(paq)
+            //dataPaquetes.push(paq)
             console.log(paq)
-            dataPaquetes.forEach(item => {
-                arraynew.push(item)
+            arraynew=[...arraynew,paq]
+            /*dataPaquetes.forEach(item => {
                 console.log(item)
+                arraynew.push(item)
             })*/
             seCalculaTarifa()
         }
-        /*dataPaquetes.push(paq);
-        resetPaquete()*/
         onChangeList(arraynew)
     }
 
@@ -328,25 +321,23 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,limp
                     limpiarProducto={limpiarProducto}
                 />
             </div>
-            <Button variant="contained" size="x-large" color="primary" onClick={()=>console.log(dataPaquetes)} style={{float: 'left'}}>
-                Agregar paquete
-            </Button>
             <div className="widget-container">
                 <div className="widget-content">
 
                     {
                         dataPaquetes.length !== 0 &&
                         (
-                            <div  style={{height: `${(dataPaquetes.length * 20)+80}px` , width: "100%"}}>
+                            <div className="row" >
                                 <DataGrid
                                     localeText={dataGridLocaleText}
                                     density="compact"
                                     //pageSize={10}
+                                    pageSizeOptions={[]}
                                     columns={columnsPaquetes}
                                     rows={dataPaquetes}
                                     rowCount={dataPaquetes.length}
                                     //autoPageSize
-                                    getRowId={(row) => row.m_nIdProducto}
+                                    getRowId={(row) => row.m_nIdPaquete}
                                 />
                             </div>
                         )

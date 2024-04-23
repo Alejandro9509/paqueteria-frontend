@@ -188,13 +188,13 @@ export default function DialogoNuevoPaquete(props) {
                     resetPaquete()
                     resetErrores()
                 } else {
-                    //handleClose()
-                    /*setPaquete(paquete=>{
+                    handleClose()
+                    setPaquete(paquete=>{
                         return{
                             ...paquete,
                             m_rLargo:Number(paquete.m_xLargo)
                         }
-                    })*/
+                    })
                     props.agregar(paquete)
                     resetPaquete()
                     resetErrores()
