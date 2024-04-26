@@ -86,6 +86,8 @@ import {
     imprimirFormatosIdIdTipoReporte, imprimirFormatosIdTimbradoViajes,
     obtenerFormatosImpresionProceso
 } from "../Util/Contexts/FormatosImpresionContext";
+import {GridColDef} from "@mui/x-data-grid";
+import {GridRenderCellParams} from "@mui/x-data-grid";
 const PREFIX = 'Viajes';
 
 const classes = {
@@ -905,13 +907,13 @@ function Viajes() {
 
     /**DETALLE DE PARADAS*/
 
-    const columnsParadas = [
+    const columnsParadas:GridColDef=[
         {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
             width: 150,
-            renderCell: (row) => {
+            renderCell: (row: GridRenderCellParams<any, any>) => {
                 return (
                     <div>
                         {
@@ -975,7 +977,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Cancelar Timbrado SAT">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off"
+                                   onClick={() => (showCancelarCFDI(row))}><i className="zmdi zmdi-card-off"
                                                                                   style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -996,9 +998,11 @@ function Viajes() {
             headerName: "Origen - Destino",
             field: "origenDestino",
             width: 200,
-            valueFormatter: row => {
-                return (`${row.row.m_sCiudadOrigen} - ${row.row.m_sCiudadDestino}`)
-            }
+            renderCell: (params: GridRenderCellParams<any, any>) => (
+                <strong>
+                    {params.row.m_sCiudadOrigen+"-"+params.row.m_sCiudadDestino}
+                </strong>
+            )
         },
         {
             headerName: "Salida",
@@ -1015,7 +1019,7 @@ function Viajes() {
         {
             headerName: "Guías",
             field: "m_nIdViaje",
-            renderCell: (row) => {
+            renderCell: (row:GridRenderCellParams<any,any>) => {
                 return (
                     <Link style={{cursor: "pointer"}} onClick={() => {
                         setInformeSeleccionado(row.row);
@@ -1045,7 +1049,7 @@ function Viajes() {
             headerName: "Folio Fiscal sustituido",
             field: "m_nIdOrigen",
             width: 300,
-            valueFormatter: row => row.row.m_sFolioFiscalUUIDSustituido || row.row.m_sUltimoFolioFiscalUUIDSustituido || " "
+            valueFormatter: row => row.m_sFolioFiscalUUIDSustituido || row.m_sUltimoFolioFiscalUUIDSustituido || " "
         },
         // {
         //     headerName: "Liq",
@@ -1313,7 +1317,7 @@ function Viajes() {
                                             className="input select"
                                             fullWidth variant="outlined"
                                             required
-                                            margin="dense">
+                                            size="small">
                                             <InputLabel
                                                 id="idReporteLabel">Formato de Reporte</InputLabel>
                                             <Select
@@ -1570,14 +1574,22 @@ function Viajes() {
                                             columns={columns}
                                             density="compact"
                                             getRowId={(row) => row.m_nIdViaje}
-                                            onRowSelected={(row) => {
+                                            rowsPerPageOptions={[]}
+                                            onRowSelectionModelChange={(newModel)=>{
+                                                if(newModel.length<1)
+                                                    return
+                                                let row=data.find(i=>i.m_nIdViaje==newModel[0])
+                                                setViajeSeleccionado(row)
+                                                getParadasListado(row)
+                                            }}
+                                            /*onRowSelected={(row) => {
                                                 /*  setState({
                                                      ...state,
                                                      idViaje: row.data.m_nIdViaje
-                                                 }) */
+                                                 })
                                                 setViajeSeleccionado(row.data)
                                                 getParadasListado(row.data)
-                                            }}
+                                            }}*/
                                         />
 
                                     </div>
@@ -1757,6 +1769,7 @@ function Viajes() {
                                                                        label="Folio Viaje"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.FolioViaje}
                                                                        id="FolioViaje"
@@ -1771,6 +1784,7 @@ function Viajes() {
                                                                        label="Sucursal Emisora"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.sucursalCancelacion}
                                                                        id="sucursalCancelacion"
@@ -1783,6 +1797,7 @@ function Viajes() {
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                        label="Fecha de cancelación"
+                                                                       fullWidth
                                                                        className="form-control"
                                                                        type="datetime-local"
                                                                        InputLabelProps={{shrink: true,}}
@@ -1798,6 +1813,7 @@ function Viajes() {
                                                             <TextField variant="outlined" margin="dense" label="Usuario"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.usuarioCancelacion}
                                                                        id="usuarioCancelacion"
@@ -1811,6 +1827,7 @@ function Viajes() {
                                                             <TextField variant="outlined" margin="dense" label="Estatus"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.estatusCancelacion}
                                                                        id="estatusCancelacion"
@@ -1824,6 +1841,7 @@ function Viajes() {
                                                             <TextField variant="outlined" margin="dense" label="Motivo"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        onChange={handleChange}
                                                                        value={state.motivoCancelacion}

@@ -266,13 +266,13 @@ function CambiarEstatus(props){
                     <br/>
                     <br/>
                     <label className="input select" style={{width: "100%"}}>
-                        <FormControl fullWidth variant="outlined"
-                                     margin="dense">
+                        <FormControl fullWidth variant="outlined">
                             <InputLabel id="idEstatusGuiaLabel"> Estatus de la
                                 Guia</InputLabel>
                             <Select
                                 labelId="idEstatusGuiaLabel"
                                 label="Estatus de la Guia"
+                                size="small"
                                 className="form-control"
                                 required
                                 onChange={(e) =>  setState({idEstatusGuia: e.target.value})}
@@ -324,7 +324,7 @@ function CambiarEstatus(props){
                                 <Grid container spacing={1}>
                                     <Grid item xs={12} sm={6}>
                                         <label className="input select" style={{width: "100%"}}>
-                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                            <FormControl fullWidth variant="outlined" >
                                                 <InputLabel id="idSucursalEntrega">Sucursal de Entrega</InputLabel>
                                                 <Select
                                                     labelId={"idSucursalEntrega"}
@@ -348,7 +348,7 @@ function CambiarEstatus(props){
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <TextField variant="outlined"
-                                                   margin="dense"
+                                                   size="small"
                                                    className="form-control"
                                                    type="text"
                                                    label="Zona operativa"

@@ -3648,13 +3648,24 @@ function Embarque(props) {
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
                                         getRowId={(row) => row.m_nIdEmbarque}
-                                        onRowSelected={(row) => {
+                                        rowsPerPageOptions={[]}
+                                        onRowSelectionModelChange={(newModel)=>{
+                                            if(newModel.length<1)
+                                                return
+                                            let rowSelect=data.find(i=>i.m_nIdEmbarque==newModel[0])
+                                            setState({
+                                                ...state,
+                                                idEmbarque: rowSelect.m_nIdEmbarque,
+                                                estatusEmbarque: rowSelect.m_nIdEstatusEmbarque
+                                            })
+                                        }}
+                                        /*onRowSelected={(row) => {
                                             setState({
                                                 ...state,
                                                 idEmbarque: row.data.m_nIdEmbarque,
                                                 estatusEmbarque: row.data.m_nIdEstatusEmbarque
                                             });
-                                        }}
+                                        }}*/
                                     />
                                 </div>
                             </div>
@@ -4808,6 +4819,7 @@ function Embarque(props) {
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="text"
+                                                                   fullWidth
                                                                    value={state.folioEmbarque}
                                                                    name="folioEmbarque"
                                                                    disabled
@@ -4822,6 +4834,7 @@ function Embarque(props) {
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="text"
+                                                                   fullWidth
                                                                    value={state.sucursalCancelacion}
                                                                    name="sucursalCancelacion"
                                                                    disabled
@@ -4835,6 +4848,7 @@ function Embarque(props) {
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="datetime-local"
+                                                                   fullWidth
                                                                    value={state.fechaCancelacion}
                                                                    name="fechaCancelacion"
                                                                    disabled
@@ -4848,6 +4862,7 @@ function Embarque(props) {
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="text"
+                                                                   fullWidth
                                                                    value={state.usuario}
                                                                    name="usuario"
                                                                    disabled
@@ -4861,6 +4876,7 @@ function Embarque(props) {
                                                                    onChange={handleChange}
                                                                    className="form-control"
                                                                    type="text"
+                                                                   fullWidth
                                                                    value={state.estatusEmbarque}
                                                                    name="estatusEmbarque"
                                                                    disabled
@@ -4872,6 +4888,7 @@ function Embarque(props) {
                                                     <div className="input">
                                                         <TextField variant="outlined" size="small" label="Motivo"
                                                                    onChange={handleChange}
+                                                                   fullWidth
                                                                    className="form-control"
                                                                    type="text"
                                                                    value={state.motivoCancelacion}

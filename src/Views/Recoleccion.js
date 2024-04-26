@@ -1728,20 +1728,20 @@ function Recoleccion() {
         setDataSeguroClienteActual(seguroClienteActual=>{
             return {
                 ...seguroClienteActual,
-                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
-                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
-                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+                idTipoSeguro: row.m_nIdTipoSeguro !== 0 ? row.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.m_cPorcentajeSeguro,
+                aplicaSeguro: row.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
             }
         })
         setState(state => {
             return {
                 ...state,
-                clientePaga: row.data,
-                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
-                porcentajeSeguro: row.data.m_cPorcentajeSeguro,
-                aplicaSeguro: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.data.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
-                tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-                observaciones: row.data.m_nIdTipoSeguro === TIPOS_SEGURO.CON_POLIZA ? ("Aseguradora: " + row.data.m_sAseguradora + ", Póliza: " + row.data.m_sPoliza) : "",
+                clientePaga: row,
+                idTipoSeguro: row.m_nIdTipoSeguro !== 0 ? row.m_nIdTipoSeguro : TIPOS_SEGURO.SIN_ASIGNAR,
+                porcentajeSeguro: row.m_cPorcentajeSeguro,
+                aplicaSeguro: row.m_nIdTipoSeguro === TIPOS_SEGURO.SEGUN_SOLICITA || row.m_nIdTipoSeguro === TIPOS_SEGURO.OBLIGATORIO,
+                tipoCobro: configuraciones.detectarTipoCobro ? row.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.m_nIdTipoSeguro === TIPOS_SEGURO.CON_POLIZA ? ("Aseguradora: " + row.m_sAseguradora + ", Póliza: " + row.m_sPoliza) : "",
                 openDialog: false,
             }
         })
@@ -3238,7 +3238,7 @@ function Recoleccion() {
             {/*                                className="input select"*/}
             {/*                                fullWidth variant="outlined"*/}
             {/*                                required*/}
-            {/*                                margin="dense">*/}
+            {/*                                size="small">*/}
             {/*                                <InputLabel*/}
             {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
             {/*                                <Select*/}
@@ -3670,7 +3670,9 @@ function Recoleccion() {
                                         className={classes.root}
                                         onSortModelChange={(model) => setSortModel(model)}
                                         rows={data}
+                                        autoPageSize
                                         pagination
+                                        rowsPerPageOptions={[]}
                                         page={pagina}
                                         onPageChange={(newPage) => {
                                             setPagina(newPage.page)
@@ -3679,10 +3681,13 @@ function Recoleccion() {
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
                                         getRowId={(row) => row.m_nIdRecoleccion}
-                                        onRowSelected={(row) => {
+                                        onRowSelectionModelChange={(newModel)=>{
+                                            if(newModel.length<1)
+                                                return
+                                            let rowSelect=data.find(i=>i.m_nIdRecoleccion==newModel[0])
                                             setState({
                                                 ...state,
-                                                idRecoleccion: row.data.m_nIdRecoleccion
+                                                idRecoleccion: rowSelect.m_nIdRecoleccion,
                                             })
                                         }}
                                     />
@@ -3730,7 +3735,7 @@ function Recoleccion() {
                                                         {" "}
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined"
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel
                                                                     id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                                 <Select
@@ -3759,10 +3764,11 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        label="Folio Recolección"
                                                                        value={state.folioRecoleccion}
                                                                        id="folioRecoleccion"
@@ -3774,10 +3780,11 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        label="Folio Embarque"
                                                                        value={state.folioEmbarque}
                                                                        id="folioEmbarque"
@@ -3789,10 +3796,11 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        label="Folio Guía"
                                                                        value={state.folioGuia}
                                                                        id="folioGuia"
@@ -3804,10 +3812,11 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        label="Folio Informe"
                                                                        value={state.folioInforme}
                                                                        id="folioInforme"
@@ -3819,9 +3828,10 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        required
+                                                                       fullWidth
                                                                        label="Fecha / Hora de Registro"
                                                                        InputLabelProps={{
                                                                            shrink: true,
@@ -3840,7 +3850,7 @@ function Recoleccion() {
 
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined"
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="estatusRecoleccionLabel">Estatus de
                                                                     la Recolección</InputLabel>
                                                                 <Select
@@ -3876,7 +3886,7 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined"
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="monedaLabel">Moneda</InputLabel>
                                                                 <Select
                                                                     labelId="monedaLabel"
@@ -3911,7 +3921,7 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined"
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="tipoCambioLabel">Tipo de
                                                                     Cambio</InputLabel>
                                                                 <Select
@@ -3946,7 +3956,7 @@ function Recoleccion() {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="input select">
                                                             <FormControl fullWidth variant="outlined" required
-                                                                         margin="dense">
+                                                                         size="small">
                                                                 <InputLabel id="idTipoCobroLabel">Tipo
                                                                     Cobro</InputLabel>
                                                                 <Select
@@ -3986,7 +3996,7 @@ function Recoleccion() {
                                                                 <TextField
                                                                     variant="outlined"
                                                                     label="Responsable de pago"
-                                                                    margin="dense"
+                                                                    size="small"
                                                                     required
                                                                     disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                     value={state.clientePaga.m_sNombreFiscal}
@@ -4032,10 +4042,11 @@ function Recoleccion() {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            className="form-control"
                                                                            type="number"
                                                                            required
+                                                                           fullWidth
                                                                            disabled={state.agregar === "Consultar" || !state.aplicaSeguro || state.recoleccionConEmbarque}
                                                                            label="Porcentaje de seguro"
                                                                            onChange={handleChange}
@@ -4051,9 +4062,10 @@ function Recoleccion() {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            className="form-control"
                                                                            type="number"
+                                                                           fullWidth
                                                                            required
                                                                            disabled={(state.agregar === "Consultar") || configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro || state.recoleccionConEmbarque}
                                                                            label="Valor Declarado"
@@ -4080,11 +4092,12 @@ function Recoleccion() {
                                                         <Grid item xs={6}>
                                                             <TextField
                                                                 variant="outlined"
-                                                                margin="dense"
+                                                                size="small"
                                                                 className="form-control"
                                                                 type= "text"
                                                                 label="Observaciones"
                                                                 value={state.observaciones}
+                                                                fullWidth
                                                                 onChange={(event) => {
                                                                     event.preventDefault();
                                                                     setState({
@@ -4103,8 +4116,9 @@ function Recoleccion() {
                                                             <TextField
                                                                 variant="outlined"
                                                                 label="Referencia"
-                                                                margin="dense"
+                                                                size="small"
                                                                 type="text"
+                                                                fullWidth
                                                                 disabled={state.agregar === "Consultar"}
                                                                 value={state.referencia}
                                                                 onChange={(event) => {
@@ -4327,7 +4341,7 @@ function Recoleccion() {
                                                                             <FormControl
                                                                                 fullWidth
                                                                                 variant="outlined"
-                                                                                margin="dense"
+                                                                                size="small"
                                                                                 required={state.entregaEnSucursal}
                                                                             >
                                                                                 <InputLabel id="idSucursalEntrega">
@@ -4363,7 +4377,7 @@ function Recoleccion() {
                                                                     </Grid>
                                                                     <Grid item xs={12} sm={6}>
                                                                         <TextField variant="outlined"
-                                                                                   margin="dense"
+                                                                                   size="small"
                                                                                    className="form-control"
                                                                                    type="text"
                                                                                    label="Zona operativa"
@@ -4477,7 +4491,7 @@ function Recoleccion() {
                                     <div className="form-footer ol-md-12">
                                     <Grid container spacing={1}>
                                         <Grid item xs>
-                                            <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
+                                            <Button fullWidth className="btn btn-secondary secondary-btn" color={"secondary"} variant={"contained"} onClick={(event) => {
                                                 event.stopPropagation();
                                                 setState({...state, agregar: "Agregar"});
                                                 setErrores([])
@@ -4549,7 +4563,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4557,15 +4571,17 @@ function Recoleccion() {
                                                                        value={state.folioRecoleccion}
                                                                        id="folioRecoleccion"
                                                                        readOnly
+                                                                       fullWidth
                                                             />
                                                         </div>
                                                     </div>
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="datetime-local"
+                                                                       fullWidth
                                                                        label="Fecha cancelación"
                                                                        value={state.fechaCancelacion}
                                                                        id="fechaCancelacion"
@@ -4579,10 +4595,11 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        label="Motivo"
                                                                        value={state.motivoCancelacion}
                                                                        id="motivoCancelacion"
@@ -4630,7 +4647,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Sucursal"
@@ -4644,7 +4661,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Folio Recolección"
@@ -4658,7 +4675,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Fecha Elaboracion"
@@ -4672,7 +4689,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-3 col-lg-3 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Fecha Recoleccion"
@@ -4686,7 +4703,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Zona"
@@ -4700,7 +4717,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Recoger En"
@@ -4714,7 +4731,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Operador"
@@ -4728,7 +4745,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Estatus"
@@ -4742,7 +4759,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Unidad"
@@ -4756,7 +4773,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Estatus"
@@ -4770,7 +4787,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-6 col-lg-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Remolque"
@@ -4784,7 +4801,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Estatus"
@@ -4798,7 +4815,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-3 col-lg-3 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Cargado"
@@ -4811,7 +4828,7 @@ function Recoleccion() {
 
                                                     <div className="col-sm-12 col-md-4 col-lg-4 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        className="form-control"
                                                                        type="text"
                                                                        label="Fecha Salida"

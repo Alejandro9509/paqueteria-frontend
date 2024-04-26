@@ -531,6 +531,7 @@ function Informes({history}) {
         sePuedeCancelar: false,
         Informes: [],
         indexCubicar: 0,
+        tipoTimbrado:1,
     });
 
     const getEmptyState = () => {
@@ -1191,7 +1192,7 @@ function Informes({history}) {
                             <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
                             <div>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                    <FormControl fullWidth variant="outlined" size="small">
                                         <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
                                         <Select
                                             labelId="sucursalListadoLabel"
@@ -1207,12 +1208,12 @@ function Informes({history}) {
                                             name="formatoSeleccionado"
                                         >
                                             {dataFormatos.map((formato) => (
-                                                <option
+                                                <MenuItem
                                                     key={formato.m_nIdFormato}
                                                     value={formato.m_nIdFormato}
                                                 >
                                                     {formato.m_sFormato}
-                                                </option>
+                                                </MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -1323,11 +1324,15 @@ function Informes({history}) {
                                             density="compact"
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdInforme}
-                                            onRowSelected={(row) => {
+                                            rowsPerPageOptions={[]}
+                                            onRowSelectionModelChange={(newModel,e) => {
+                                                if(newModel.length<1)
+                                                    return
+                                                let row=data.find(i=>i.m_nIdInforme==newModel[0])
                                                 setState({
                                                     ...state,
-                                                    IdInforme: row.data.m_nIdInforme,
-                                                    FolioInforme: row.data.m_sFolioInforme,
+                                                    IdInforme: row.m_nIdInforme,
+                                                    FolioInforme: row.m_sFolioInforme,
                                                 });
                                             }}
                                         />
@@ -1356,7 +1361,7 @@ function Informes({history}) {
                                                     <div
                                                         className="widget-header">
                                                         <div className="pull-left">
-                                                            <h3>Información De Envío</h3>
+                                                            <h3 style={{marginBottom:"3%"}}>Información De Envío</h3>
                                                         </div>
                                                     </div>
 
@@ -1369,8 +1374,9 @@ function Informes({history}) {
                                                                             className="col-sm-6 col-md-6 col-xs-12 unit">
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Folio"
+                                                                                           fullWidth
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -1389,7 +1395,8 @@ function Informes({history}) {
                                                                     <div className="col-sm-6 col-md-6 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined"
-                                                                                       margin="dense"
+                                                                                       size="small"
+                                                                                       fullWidth
                                                                                        label="Fecha y Hora"
                                                                                        onChange={handleChange}
                                                                                        className="form-control"
@@ -1411,12 +1418,13 @@ function Informes({history}) {
                                                                         <label className="input select">
                                                                             <FormControl required fullWidth
                                                                                          variant="outlined"
-                                                                                         margin="dense">
+                                                                                         size="small">
                                                                                 <InputLabel
                                                                                     id="EstatusInformeLabel">Estatus</InputLabel>
                                                                                 <Select
                                                                                     labelId="EstatusInformeLabel"
                                                                                     label="Estatus"
+                                                                                    fullWidth
                                                                                     className="form-control"
                                                                                     required
                                                                                     onChange={handleSelectEstatus}
@@ -1424,16 +1432,16 @@ function Informes({history}) {
                                                                                     id="EstatusInforme"
                                                                                     disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
                                                                                 >
-                                                                                    <option
+                                                                                    <MenuItem
                                                                                         value="">Seleccionar
-                                                                                    </option>
+                                                                                    </MenuItem>
                                                                                     {dataEstatusInformes.map(
                                                                                         (EstatusInforme) => (
-                                                                                            <option
+                                                                                            <MenuItem
                                                                                                 key={EstatusInforme.m_nIdEstatusInforme}
                                                                                                 value={EstatusInforme.m_nIdEstatusInforme}
                                                                                             >{EstatusInforme.m_sEstatus}
-                                                                                            </option>
+                                                                                            </MenuItem>
                                                                                         )
                                                                                     )
                                                                                     }
@@ -1443,15 +1451,15 @@ function Informes({history}) {
                                                                     </div>
                                                                     <div className="row">
                                                                         <div className="col-sm-12 col-md-6 unit">
+                                                                            <Button onClick={()=>console.log(state)}>sssss</Button>
 
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense" required>
+                                                                                             size="small" required>
                                                                                     <InputLabel
                                                                                         id="tipoTimbradoLabel">Tipo de servicio</InputLabel>
                                                                                     <Select
-                                                                                        native
                                                                                         labelId="tipoTimbradoLabel"
                                                                                         label="Tipo de timbrado"
                                                                                         className="form-control"
@@ -1463,16 +1471,16 @@ function Informes({history}) {
                                                                                         onChange={handleSelectTipoTimbrado}
                                                                                         value={state.tipoTimbrado}
                                                                                     >
-                                                                                        <option key={"1"}
+                                                                                        <MenuItem key={"1"}
                                                                                                 value={1}
                                                                                         >
                                                                                             Consolidado
-                                                                                        </option>
-                                                                                        <option key={"2"}
+                                                                                        </MenuItem>
+                                                                                        <MenuItem key={"2"}
                                                                                                 value={2}
                                                                                         >
                                                                                             Paquetería
-                                                                                        </option>
+                                                                                        </MenuItem>
                                                                                     </Select>
                                                                                 </FormControl>
                                                                             </label>
@@ -1486,7 +1494,7 @@ function Informes({history}) {
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense" required>
+                                                                                             size="small" required>
                                                                                     <InputLabel
                                                                                         id="sucursalEmisoraLabel">Oficina
                                                                                         Emisora</InputLabel>
@@ -1501,11 +1509,11 @@ function Informes({history}) {
                                                                                         disabled
                                                                                     >
                                                                                         {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
-                                                                                                <option
+                                                                                                <MenuItem
                                                                                                     key={sucursalEmisora.m_nIdSucursal}
                                                                                                     value={sucursalEmisora.m_nIdSucursal}>
                                                                                                     {sucursalEmisora.m_sSucursal}
-                                                                                                </option>
+                                                                                                </MenuItem>
                                                                                             )
                                                                                         )}
                                                                                     </Select>
@@ -1521,7 +1529,7 @@ function Informes({history}) {
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense" required>
+                                                                                             size="small" required>
                                                                                     <InputLabel
                                                                                         id="sucursalReceptoraLabel">Oficina
                                                                                         Receptora</InputLabel>
@@ -1536,11 +1544,11 @@ function Informes({history}) {
                                                                                     >
                                                                                         {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalEmisora)).map(
                                                                                             (sucursalReceptora) => (
-                                                                                                <option
+                                                                                                <MenuItem
                                                                                                     key={sucursalReceptora.m_nIdSucursal}
                                                                                                     value={sucursalReceptora.m_nIdSucursal}>
                                                                                                     {sucursalReceptora.m_sSucursal}
-                                                                                                </option>
+                                                                                                </MenuItem>
                                                                                             )
                                                                                         )}
                                                                                     </Select>
@@ -1559,7 +1567,7 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
-
+                                                                                    size="small"
                                                                                     value={state.IdRemolque1}
                                                                                     onChange={(index, newValue) => onChangeRemolque1(index,newValue) }
                                                                                     id="IdRemolque1"
@@ -1578,7 +1586,7 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Remolque 1"
-                                                                                                margin="dense"
+                                                                                                size="small"
                                                                                                 required
                                                                                                 className="form-control"
                                                                                                 {...params}
@@ -1601,8 +1609,9 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Placa Int"
+                                                                                           fullWidth
                                                                                            disabled
                                                                                            value={state.PlacasRemolque1}
                                                                                            className="form-control"
@@ -1619,6 +1628,7 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
+                                                                                    size="small"
                                                                                     value={state.IdRemolque2}
                                                                                     onChange={(index, newValue) => onChangeRemolque2(index,newValue) }
                                                                                     id="IdRemolque2"
@@ -1645,7 +1655,7 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Remolque 2"
-                                                                                                margin="dense"
+                                                                                                size="small"
                                                                                                 className="form-control"
                                                                                                 {...params}
                                                                                                 InputProps={{
@@ -1667,7 +1677,8 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            label="Placa Int"
                                                                                            value={state.PlacasRemolque2}
                                                                                            disabled
@@ -1686,6 +1697,7 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
+                                                                                    size="small"
                                                                                     onChange={(event, newValue) =>
                                                                                         setState({
                                                                                             ...state,
@@ -1709,7 +1721,7 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Origen"
-                                                                                                margin="dense"
+                                                                                                size="small"
                                                                                                 required
                                                                                                 className="form-control"
                                                                                                 {...params}
@@ -1733,6 +1745,8 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
+                                                                                    required
+                                                                                    size="small"
                                                                                     onChange={(event, newValue) =>
                                                                                         setState({
                                                                                             ...state,
@@ -1749,6 +1763,7 @@ function Informes({history}) {
                                                                                         option.m_sCiudad
                                                                                     }
                                                                                     variant="outlined"
+                                                                                    className="form-control"
                                                                                     style={{
                                                                                         transform: "translate(14px, 10px) scale(1) !important"
                                                                                     }}
@@ -1757,9 +1772,7 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Destino"
-                                                                                                margin="dense"
-                                                                                                required
-                                                                                                className="form-control"
+                                                                                                size="small"
                                                                                                 {...params}
                                                                                                 InputProps={{
                                                                                                     ...params.InputProps,
@@ -1863,21 +1876,22 @@ function Informes({history}) {
                                                                                                 <Grid
                                                                                                     item
                                                                                                     sm={1}
-                                                                                                    justifyContent="center"
-                                                                                                    alignItems="center"
                                                                                                     style={{
-                                                                                                        display: "flex",
+                                                                                                        display:"flex",
                                                                                                         justifyContent: "center",
                                                                                                         alignItems: "center",
                                                                                                         textAlign: "center",
+                                                                                                        padding:"0% 0% 0% 1%",
                                                                                                         backgroundColor: state.validarTimbrado? value.isTimbrada? value.select? "#F9A03E" : "gray" : value.select? "#FF6600": "#ffc9bb" :value.select
                                                                                                             ? "#F9A03E"
                                                                                                             : "gray",
                                                                                                     }}
+
                                                                                                 >
                                                                                                     {index + 1}
                                                                                                 </Grid>
                                                                                                 <Grid
+                                                                                                    container
                                                                                                     item
                                                                                                     sm={11}
                                                                                                     style={{
@@ -1895,7 +1909,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
+                                                                                                                    fullWidth
                                                                                                                     label="Folio Guía"
                                                                                                                     onChange={handleChange}
                                                                                                                     value={value.m_nFolioGuia}
@@ -1914,7 +1929,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    fullWidth
+                                                                                                                    size="small"
                                                                                                                     label="Estatus Guía"
                                                                                                                     className="form-control"
                                                                                                                     type="text"
@@ -1934,8 +1950,9 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
                                                                                                                     label="Total"
+                                                                                                                    fullWidth
                                                                                                                     value={`$${value.m_xTotal.toFixed(2)}`}
                                                                                                                     disabled="true"
                                                                                                                     className="form-control"
@@ -1952,7 +1969,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
+                                                                                                                    fullWidth
                                                                                                                     label="Destino"
                                                                                                                     value={value.m_sCiudadDestino}
                                                                                                                     className="form-control"
@@ -1970,7 +1988,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    fullWidth
+                                                                                                                    size="small"
                                                                                                                     label="Tipo de Servicio"
                                                                                                                     disabled="true"
                                                                                                                     value={parseInt(state.tipoTimbrado) === 1? 'Consolidado' : parseInt(state.tipoTimbrado) === 2?'Paqueteria':'Indefinido'}
@@ -1988,7 +2007,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
+                                                                                                                    fullWidth
                                                                                                                     label="Observaciones"
                                                                                                                     disabled="true"
                                                                                                                     value={
@@ -2240,10 +2260,11 @@ function Informes({history}) {
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label="Folio Informe"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.FolioInforme}
                                                                        id="FolioInforme"
                                                                        disabled
@@ -2253,10 +2274,11 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label="Sucursal Emisora"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.sucursalCancelacion}
                                                                        id="sucursalCancelacion"
                                                                        disabled
@@ -2266,10 +2288,11 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label="Fecha de cancelación"
                                                                        className="form-control"
                                                                        type="datetime-local"
+                                                                       fullWidth
                                                                        value={state.fechaCancelacion}
                                                                        id="fechaCancelacion"
                                                                        disabled
@@ -2279,9 +2302,10 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Usuario"
+                                                            <TextField variant="outlined" size="small" label="Usuario"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.usuarioCancelacion}
                                                                        id="usuarioCancelacion"
                                                                        disabled
@@ -2291,9 +2315,10 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Estatus"
+                                                            <TextField variant="outlined" size="small" label="Estatus"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.estatusCancelacion}
                                                                        id="estatusCancelacion"
                                                                        disabled
@@ -2303,9 +2328,10 @@ function Informes({history}) {
 
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Motivo"
+                                                            <TextField variant="outlined" size="small" label="Motivo"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        onChange={handleChange}
                                                                        value={state.motivoCancelacion}
                                                                        id="motivoCancelacion"
@@ -2370,7 +2396,7 @@ function Informes({history}) {
                                                                                 required
                                                                                 variant="outlined"
                                                                                 label="Origen"
-                                                                                margin="dense"
+                                                                                size="small"
                                                                                 className="form-control"
                                                                                 {...params}
                                                                                 InputProps={{
@@ -2418,7 +2444,7 @@ function Informes({history}) {
                                                                                 required
                                                                                 variant="outlined"
                                                                                 label="Destino"
-                                                                                margin="dense"
+                                                                                size="small"
                                                                                 className="form-control"
                                                                                 {...params}
                                                                                 InputProps={{
@@ -2468,7 +2494,7 @@ function Informes({history}) {
                                                                                 required
                                                                                 variant="outlined"
                                                                                 label="Remolque 1"
-                                                                                margin="dense"
+                                                                                size="small"
                                                                                 className="form-control"
                                                                                 {...params}
                                                                                 InputProps={{
@@ -2547,7 +2573,7 @@ function Informes({history}) {
                                                                                 {...params}
                                                                                 variant="outlined"
                                                                                 label="Remolque 2"
-                                                                                margin="dense"
+                                                                                size="small"
                                                                                 className="form-control"
                                                                                 InputProps={{
                                                                                     ...params.InputProps,
@@ -2693,7 +2719,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense" label="Peso"
+                                                                                           size="small" label="Peso"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -2708,7 +2734,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense" label="Largo"
+                                                                                           size="small" label="Largo"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -2723,7 +2749,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense" label="Ancho"
+                                                                                           size="small" label="Ancho"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -2738,7 +2764,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense" label="Alto"
+                                                                                           size="small" label="Alto"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -2753,7 +2779,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Volumen"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
@@ -2771,7 +2797,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Tipo embalaje"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
@@ -2787,7 +2813,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Valor Declarado"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
@@ -2803,7 +2829,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Descripción"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
@@ -2819,7 +2845,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense" label="Ctd"
+                                                                                           size="small" label="Ctd"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -2833,7 +2859,7 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Observaciones"
                                                                                            style={{backgroundColor: "#FFFFFF"}}
                                                                                            className="form-control"

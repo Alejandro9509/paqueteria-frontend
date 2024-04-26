@@ -366,33 +366,33 @@ function Filtros(props) {
                                 id="estatusListado"
                                 name="estatusListado"
                             >
-                                <option value="0">Todos</option>
+                                <MenuItem value="0">Todos</MenuItem>
                                 {props.embarque && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
+                                    <MenuItem key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.recoleccion && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusRecoleccion}
+                                    <MenuItem key={estatus.m_nIdEstatusRecoleccion}
                                             value={estatus.m_nIdEstatusRecoleccion}
                                     >
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.guia && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusGuia} value={estatus.m_nIdEstatusGuia}>
+                                    <MenuItem key={estatus.m_nIdEstatusGuia} value={estatus.m_nIdEstatusGuia}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.informe && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusInforme} value={estatus.m_nIdEstatusInforme}>
+                                    <MenuItem key={estatus.m_nIdEstatusInforme} value={estatus.m_nIdEstatusInforme}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.viajes && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusViaje} value={estatus.m_nIdEstatusViaje}>
+                                    <MenuItem key={estatus.m_nIdEstatusViaje} value={estatus.m_nIdEstatusViaje}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -411,14 +411,14 @@ function Filtros(props) {
                                 id="sucursalEmisora"
                                 name="sucursalEmisora"
                             >
-                                <option value="0">Todas</option>
+                                <MenuItem value="0">Todas</MenuItem>
                                 {dataSucursal.map((sucursal) => (
-                                    <option
+                                    <MenuItem
                                         key={sucursal.m_nIdSucursal}
                                         value={sucursal.m_nIdSucursal}
                                     >
                                         {sucursal.m_sSucursal}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -437,14 +437,14 @@ function Filtros(props) {
                                 id="sucursalReceptora"
                                 name="sucursalReceptora"
                             >
-                                <option value="0">Todas</option>
+                                <MenuItem value="0">Todas</MenuItem>
                                 {dataSucursal.map((sucursal) => (
-                                    <option
+                                    <MenuItem
                                         key={sucursal.m_nIdSucursal}
                                         value={sucursal.m_nIdSucursal}
                                     >
                                         {sucursal.m_sSucursal}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -466,14 +466,14 @@ function Filtros(props) {
                                 id="OrigenListado"
                                 name="OrigenListado"
                             >
-                                <option value="0">Todos</option>
+                                <MenuItem value="0">Todos</MenuItem>
                                 {dataCiudad.map((ciudad) => (
-                                    <option
+                                    <MenuItem
                                         key={ciudad.m_nIdCiudad}
                                         value={ciudad.m_nIdCiudad}
                                     >
                                         {ciudad.m_sCiudad}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -493,14 +493,14 @@ function Filtros(props) {
                                 id="DestinoListado"
                                 name="DestinoListado"
                             >
-                                <option value="0">Todos</option>
+                                <MenuItem value="0">Todos</MenuItem>
                                 {dataCiudad.map((ciudad) => (
-                                    <option
+                                    <MenuItem
                                         key={ciudad.m_nIdCiudad}
                                         value={ciudad.m_nIdCiudad}
                                     >
                                         {ciudad.m_sCiudad}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>

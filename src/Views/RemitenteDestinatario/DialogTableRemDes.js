@@ -115,6 +115,8 @@ function cargarDesdeServidor(pagina,registros){
                   rows={rows}
                   getRowId={((row) => row.m_nNumero)}
                   onRowSelectionModelChange={(newRowSelectionModel,e) => {
+                      if(newRowSelectionModel.length<1)
+                          return
                       rowSelect=rows.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0])
                   }}
                   autoPageSize

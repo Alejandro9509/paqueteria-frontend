@@ -131,7 +131,7 @@ class FiltroReporteViajes extends Component {
     handlePatrocinadorSelected (row){
         this.setState( ({
             showDialogClientes: false,
-            cliente: row.data
+            cliente: row
         }))
 
     }

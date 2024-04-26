@@ -11,7 +11,7 @@ class DetalleInforme extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{marginTop:"1%"}}>
                 {
                     this.props.guias.map((value, index) => {
                         return (
@@ -36,6 +36,7 @@ class DetalleInforme extends Component {
                                                                value={value.m_nFolioGuia}
                                                                className="form-control"
                                                                type="text"
+                                                               fullWidth
                                                                disabled="true"
                                                                id={"folio-" + index}
                                                     />
@@ -47,6 +48,7 @@ class DetalleInforme extends Component {
                                                     <TextField variant="outlined" margin="dense" label="Estatus Guía"
                                                                className="form-control"
                                                                type="text"
+                                                               fullWidth
                                                                disabled="true"
                                                                value={
                                                                    value.m_sEstatusGuia
@@ -61,6 +63,7 @@ class DetalleInforme extends Component {
                                                     <TextField variant="outlined" margin="dense" label="Total"
                                                                value={value.m_xTotal}
                                                                disabled="true"
+                                                               fullWidth
                                                                className="form-control"
                                                                type="text"
                                                                id={"total-" + index}
@@ -75,6 +78,7 @@ class DetalleInforme extends Component {
                                                                className="form-control"
                                                                type="text"
                                                                disabled="true"
+                                                               fullWidth
                                                                id={"destino-" + index}
                                                     />
                                                 </div>
@@ -88,6 +92,7 @@ class DetalleInforme extends Component {
                                                                value={value.m_sTipoServicio}
                                                                className="form-control"
                                                                type="text"
+                                                               fullWidth
                                                                id={"servicio-" + index}
                                                     />
                                                 </div>
@@ -102,6 +107,7 @@ class DetalleInforme extends Component {
                                                                }
                                                                className="form-control"
                                                                type="text"
+                                                               fullWidth
                                                                id={
                                                                    "observacion-" + index
                                                                }

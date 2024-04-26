@@ -906,7 +906,7 @@ class AgregarViaje extends Component {
             informeAsignar.m_sDestinoSeleccionado = informeAsignar.m_sCiudadDestino
 
 
-            arrayInformesAsignados.push(informeAsignar)
+            arrayInformesAsignados=[...arrayInformesAsignados,informeAsignar]
             try {
                 this.cubicarViaje(arrayInformesAsignados)
             } catch (e) {
@@ -1362,6 +1362,7 @@ class AgregarViaje extends Component {
                             <div className="input">
                                 <Autocomplete
                                     freeSolo
+                                    size={"small"}
                                     onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
                                     value={this.state.destinoSeleccionado}
                                     //disabled={state.agregar == "Consultar"}
@@ -1379,7 +1380,7 @@ class AgregarViaje extends Component {
                                         <div>
                                             <TextField
                                                 label="Destino"
-                                                margin="dense"
+                                                size="small"
                                                 variant="outlined"
                                                 {...params}
                                             />
@@ -1411,6 +1412,7 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <Autocomplete
                                                 freeSolo
+                                                size={"small"}
                                                 onChange={this.handleOrigenFiltro}
                                                 value={this.state.origen}
                                                 //disabled={state.agregar == "Consultar"}
@@ -1428,7 +1430,7 @@ class AgregarViaje extends Component {
                                                     <div>
                                                         <TextField
                                                             label="Origen"
-                                                            margin="dense"
+                                                            size="small"
                                                             variant="outlined"
                                                             {...params}
                                                         />
@@ -1442,7 +1444,7 @@ class AgregarViaje extends Component {
                                             <Autocomplete
                                                 freeSolo
                                                 onChange={this.handleDestinoFiltro}
-
+                                                size={"small"}
                                                 value={this.state.destino}
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="destino"
@@ -1459,7 +1461,7 @@ class AgregarViaje extends Component {
                                                     <div>
                                                         <TextField
                                                             label="Destino"
-                                                            margin="dense"
+                                                            size="small"
                                                             variant="outlined"
                                                             {...params}
                                                         />
@@ -1478,10 +1480,12 @@ class AgregarViaje extends Component {
                                     density="compact"
                                     pageSize={Math.floor((this.state.height - 310) / 30)}
                                     getRowId={(row) => row.m_nIdInforme}
-                                    onRowSelected={(row) => {
+                                    onRowSelectionModelChange={(newModel)=>{
+                                        if(newModel.length<1)
+                                            return
+                                        let row=this.state.dataInformesPorAsignar.find(i=>i.m_nIdInforme==newModel[0])
                                         this.setState({
-                                            idInforme: row.data.m_nIdInforme
-
+                                            idInforme: row.m_nIdInforme
                                         })
                                     }}
                                     hideFooterRowCount
@@ -1522,7 +1526,7 @@ class AgregarViaje extends Component {
                                     {/* Sucursal */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <label className="input select">
-                                            <FormControl fullWidth variant="outlined" margin="dense" required>
+                                            <FormControl fullWidth variant="outlined" size="small" required>
                                                 <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                 <Select
                                                     labelId="idSucursalAgregarLabel"
@@ -1549,7 +1553,7 @@ class AgregarViaje extends Component {
                                     {/* Folio viaje */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
-                                            <TextField variant="outlined" margin="dense"
+                                            <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
@@ -1564,7 +1568,7 @@ class AgregarViaje extends Component {
                                     {/* Num Viaje */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
-                                            <TextField variant="outlined" margin="dense"
+                                            <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
@@ -1582,7 +1586,7 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
 
                                         <div className="input">
-                                            <TextField variant="outlined" margin="dense"
+                                            <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
                                                        required
                                                        label="Fecha / Hora de Registro"
@@ -1600,7 +1604,7 @@ class AgregarViaje extends Component {
                                     {/* Estatus viaje */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <label className="input select">
-                                            <FormControl fullWidth variant="outlined" margin="dense" required>
+                                            <FormControl fullWidth variant="outlined" size="small" required>
                                                 <InputLabel id="idEstatusAgregarLabel">Estatus Viaje</InputLabel>
                                                 <Select
                                                     labelId="idEstatusAgregarLabel"
@@ -1631,7 +1635,7 @@ class AgregarViaje extends Component {
                                     {/* Candado oficial */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
-                                            <TextField variant="outlined" margin="dense"
+                                            <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
@@ -1646,7 +1650,7 @@ class AgregarViaje extends Component {
                                     {/* Identificador */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <div className="input">
-                                            <TextField variant="outlined" margin="dense"
+                                            <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
@@ -1671,6 +1675,7 @@ class AgregarViaje extends Component {
                                                 value={this.state.idCiudadOrigen}
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="idCiudadOrigen"
+                                                size={"small"}
                                                 disableClearable
                                                 forcePopupIcon={false}
                                                 disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
@@ -1686,7 +1691,7 @@ class AgregarViaje extends Component {
                                                         <TextField
                                                             label="Origen"
                                                             required
-                                                            margin="dense"
+                                                            size="small"
                                                             variant="outlined"
                                                             {...params}
                                                         />
@@ -1700,6 +1705,7 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <Autocomplete
                                                 freeSolo
+                                                size={"small"}
                                                 onChange={(e, newValue) => this.setState({idCiudadDestino: newValue})}
                                                 value={this.state.idCiudadDestino}
                                                 //disabled={state.agregar == "Consultar"}
@@ -1718,7 +1724,7 @@ class AgregarViaje extends Component {
                                                     <div>
                                                         <TextField
                                                             label="Destino"
-                                                            margin="dense"
+                                                            size="small"
                                                             required
                                                             variant="outlined"
                                                             {...params}
@@ -1749,6 +1755,7 @@ class AgregarViaje extends Component {
                                         <Grid item xs={6}>
                                             <Autocomplete
                                                 freeSolo
+                                                size={"small"}
                                                 onChange={(e, value) => this.handleChangeAutocomplete("operador", value)}
                                                 value={this.state.operador}
                                                 //disabled={state.agregar == "Consultar"}
@@ -1767,7 +1774,7 @@ class AgregarViaje extends Component {
                                                     <div>
                                                         <TextField
                                                             label="Operador"
-                                                            margin="dense"
+                                                            size="small"
                                                             variant="outlined"
                                                             required
                                                             {...params}
@@ -1782,6 +1789,7 @@ class AgregarViaje extends Component {
                                         <Grid item xs={6}>
                                             <Autocomplete
                                                 freeSolo
+                                                size={"small"}
                                                 onChange={(e, value) => this.handleUnidadFiltro(e, value)}
                                                 value={this.state.unidad}
                                                 // inputValue={this.state.unidad ? this.state.unidad.m_sDescripcion : ""}
@@ -1799,7 +1807,7 @@ class AgregarViaje extends Component {
                                                     <div>
                                                         <TextField
                                                             label="Unidad"
-                                                            margin="dense"
+                                                            size="small"
                                                             variant="outlined"
                                                             required
                                                             {...params}
@@ -1811,7 +1819,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={2}>
                                             <TextField
-                                                margin={"dense"}
+                                                size={"small"}
                                                 variant={"outlined"}
                                                 label={"Placa int"}
                                                 disabled
@@ -1819,7 +1827,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={3}>
                                             <TextField
-                                                margin={"dense"}
+                                                size={"small"}
                                                 variant={"outlined"}
                                                 label={"Estatus"}
                                                 disabled
@@ -1848,7 +1856,7 @@ class AgregarViaje extends Component {
                                             this.state.esOperadorPermisionario &&
                                             <Grid item xs={2}>
                                                 <TextField
-                                                    margin={"dense"}
+                                                    size={"small"}
                                                     variant={"outlined"}
                                                     label={"Nombre completo"}
                                                     name={"nombrePermisionario"}
@@ -1862,7 +1870,7 @@ class AgregarViaje extends Component {
                                         this.state.esOperadorPermisionario &&
                                         <Grid item xs={2}>
                                             <TextField
-                                                margin={"dense"}
+                                                size={"small"}
                                                 variant={"outlined"}
                                                 label={"No. de licencia"}
                                                 name={"licenciaPermisionario"}
@@ -1896,14 +1904,16 @@ class AgregarViaje extends Component {
                                 </div>
 
                                 <div className="row">
+                                    <Grid container spacing={1}>
 
                                     {/* Remolque 1 */}
-                                    <Grid container spacing={2}>
+                                    <Grid item container spacing={2}>
                                         <Grid item xs={6}>
                                             <div className="input">
 
                                                 <Autocomplete
                                                     freeSolo
+                                                    size={"small"}
                                                     onChange={this.handleRemolqueUnoFiltro}
                                                     value={this.state.IdRemolque1}
                                                     // inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
@@ -1924,7 +1934,7 @@ class AgregarViaje extends Component {
                                                         <div>
                                                             <TextField
                                                                 label="Remolque 1"
-                                                                margin="dense"
+                                                                size="small"
                                                                 required={this.state.aplicaRemolque === 1}
                                                                 variant="outlined"
                                                                 {...params}
@@ -1937,7 +1947,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={2}>
                                             <div className="input">
-                                                <TextField variant="outlined" margin="dense"
+                                                <TextField variant="outlined" size="small"
                                                            className="form-control"
                                                            type="text"
                                                            disabled
@@ -1950,7 +1960,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={3}>
                                             <div className="input">
-                                                <TextField variant="outlined" margin="dense"
+                                                <TextField variant="outlined" size="small"
                                                            className="form-control"
                                                            type="text"
                                                            label="Estatus"
@@ -1963,11 +1973,12 @@ class AgregarViaje extends Component {
                                         </Grid>
                                     </Grid>
 
-                                    <Grid container spacing={2}>
+                                    <Grid item container spacing={2}>
                                         <Grid item xs={6}>
                                             <div className="input">
                                                 <Autocomplete
                                                     freeSolo
+                                                    size={"small"}
                                                     onChange={this.handleRemolqueDosFiltro}
                                                     value={this.state.IdRemolque2}
                                                     // inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
@@ -1988,7 +1999,7 @@ class AgregarViaje extends Component {
                                                         <div>
                                                             <TextField
                                                                 label="Remolque 2"
-                                                                margin="dense"
+                                                                size="small"
                                                                 variant="outlined"
                                                                 {...params}
                                                             />
@@ -2000,7 +2011,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={2}>
                                             <div className="input">
-                                                <TextField variant="outlined" margin="dense"
+                                                <TextField variant="outlined" size="small"
                                                            disabled
                                                            className="form-control"
                                                            type="text"
@@ -2012,7 +2023,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={3}>
                                             <div className="input">
-                                                <TextField variant="outlined" margin="dense"
+                                                <TextField variant="outlined" size="small"
                                                            disabled
                                                            className="form-control"
                                                            type="text"
@@ -2025,11 +2036,12 @@ class AgregarViaje extends Component {
                                         </Grid>
                                     </Grid>
 
-                                    <Grid container spacing={2}>
+                                    <Grid item container spacing={2}>
                                         <Grid item xs={6}>
                                             <div className="input">
                                                 <Autocomplete
                                                     freeSolo
+                                                    size={"small"}
                                                     onChange={this.handleDollyFiltro}
                                                     value={this.state.IdDolly}
                                                     // inputValue={this.state.IdDolly ? this.state.IdDolly.m_sDescripcion : ""}
@@ -2049,7 +2061,7 @@ class AgregarViaje extends Component {
                                                         <div>
                                                             <TextField
                                                                 label="Dolly"
-                                                                margin="dense"
+                                                                size="small"
                                                                 variant="outlined"
                                                                 {...params}
                                                             />
@@ -2061,7 +2073,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={2}>
                                             <div className="input">
-                                                <TextField variant="outlined" margin="dense"
+                                                <TextField variant="outlined" size="small"
                                                            className="form-control"
                                                            type="text"
                                                            disabled
@@ -2071,6 +2083,7 @@ class AgregarViaje extends Component {
                                                 />
                                             </div>
                                         </Grid>
+                                    </Grid>
                                     </Grid>
 
                                 </div>
@@ -2111,7 +2124,7 @@ class AgregarViaje extends Component {
                                         <div className="row" style={{display: "flex"}}>
                                             <div className="col-sm-6 col-md-4 unit">
                                                 <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
+                                                    <TextField variant="outlined" size="small"
                                                                className="form-control"
                                                                type="text"
                                                                disabled
@@ -2123,7 +2136,7 @@ class AgregarViaje extends Component {
                                             </div>
                                             <div className="col-sm-6 col-md-4 unit">
                                                 <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
+                                                    <TextField variant="outlined" size="small"
                                                                className="form-control"
                                                                type="text"
                                                                disabled
