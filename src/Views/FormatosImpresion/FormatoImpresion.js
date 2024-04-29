@@ -295,9 +295,14 @@ class FormatoImpresion extends Component {
                                                     density="compact"
                                                     pageSize={Math.floor((this.state.height - 310) / 30)}
                                                     getRowId={(row) => row.m_nIdFormato}
-                                                    onRowSelected={(row) => {
+                                                    onRowSelectionModelChange={(newModel)=>{
+                                                        if(newModel.length<1)
+                                                            return
+                                                        let row=data.find(i=>i.m_nIdFormato==newModel[0])
+                                                        console.log(data.find(i=>i.m_nIdFormato==newModel[0]))
                                                         this.setState({
-                                                            idTarifa: row.data.m_nIdFormato
+                                                            ...this.state,
+                                                            idTarifa: row.m_nIdFormato,
                                                         })
                                                     }}
                                                 />

@@ -334,7 +334,7 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                                 variant="outlined"
                                 label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
                                 value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
-                                margin={'dense'}
+                                size={'small'}
                                 onClick={(e) => handleOpenDialog()}
                                 disabled={disaled}
                             />

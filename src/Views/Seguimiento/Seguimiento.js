@@ -191,6 +191,7 @@ class Seguimiento extends Component {
                                             <Autocomplete
                                                 id="free-solo-demo"
                                                 freeSolo
+                                                size={"small"}
                                                 style={{
                                                     width: "150px",
                                                     paddingRight: "8px",
@@ -205,7 +206,6 @@ class Seguimiento extends Component {
                                                 renderInput={(params) => (
                                                     <TextField
                                                         {...params}
-                                                        margin="normal"
                                                         variant="outlined"
                                                         name={"folioBusqueda"}
                                                         onChange={this.handleChage}

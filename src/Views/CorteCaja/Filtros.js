@@ -134,7 +134,7 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                     <Grid item xs={2}>
                         <TextField
                             variant={"outlined"}
-                            margin={"dense"}
+                            size="small"
                             label="Fecha"
                             type="date"
                             value={value.fecha}
@@ -166,7 +166,7 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                             variant="outlined"
                             label={value.busquedaPorUsuario ? `Usuario` : `Operador`}
                             value={value.busquedaPorUsuario ? value.usuario?.nombre || '' : value.operador?.m_sNombreCompleto || ''}
-                            margin={'dense'}
+                            size="small"
                             onClick={(e) => handleOpenDialog()}
                         />
                     </Grid>
