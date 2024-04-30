@@ -48,8 +48,10 @@ export default function DialogCheckbox(props) {
                         pageSize={Math.floor((state.height - 310) / 30)}
                         getRowId={(row) => row[props.rowId]}
                         checkboxSelection
-                        onSelectionModelChange={(e) => handleOnSelectionChange(e)}
-                        selectionModel={props.selection}
+                        onRowSelectionModelChange={(newModel)=>{
+                            setSelection(newModel)
+                        }}
+                        rowSelectionModel={selection}
                         disableSelectionOnClick={props.disabled}
                     />
                 </div>

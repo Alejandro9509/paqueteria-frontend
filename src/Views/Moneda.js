@@ -340,9 +340,10 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-8 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Código"
+                                                            <TextField variant="outlined" size="small" label="Código"
                                                                 onChange={handleChange}
                                                                 className="form-control"
+                                                                       fullWidth
                                                                 type="text"
                                                                 maxLength="10"
                                                                 required={true}
@@ -355,8 +356,9 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-4 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Moneda"
+                                                            <TextField variant="outlined" size="small" label="Moneda"
                                                                 onChange={handleChange}
+                                                                       fullWidth
                                                                 className="form-control"
                                                                 type="text"
                                                                 required={true}
@@ -369,9 +371,10 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-8 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Símbolo"
+                                                            <TextField variant="outlined" size="small" label="Símbolo"
                                                                 onChange={handleChange}
                                                                 className="form-control"
+                                                                       fullWidth
                                                                 type="text"
                                                                 maxLength="3"
                                                                 required={true}
@@ -384,9 +387,10 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-4 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Abreviación"
+                                                            <TextField variant="outlined" size="small" label="Abreviación"
                                                                 onChange={handleChange}
                                                                 className="form-control"
+                                                                       fullWidth
                                                                 required={true}
                                                                 type="text"
                                                                 maxLength="3"

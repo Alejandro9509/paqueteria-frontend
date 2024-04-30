@@ -498,10 +498,12 @@ function TiposServicio() {
                                             density="compact"
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdTipoServicio}
-                                            onRowSelected={(row) => {
+                                            onRowSelectionModelChange={(newModel)=>{
+                                                if(newModel.length<1)
+                                                    return
                                                 setState({
                                                     ...state,
-                                                    IdTipoServicio: row.data.m_nIdTipoServicio
+                                                    IdTipoServicio: data.find(i=>i.m_nIdTipoServicio==newModel[0]).m_nIdTipoServicio
                                                 })
                                             }}
                                         />
@@ -521,7 +523,7 @@ function TiposServicio() {
                                                     {/*****************************************Descripcion************************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        label="Descripción"
                                                                        onChange={handleChange}
                                                                        className="form-control"
@@ -537,7 +539,7 @@ function TiposServicio() {
                                                     {/*****************************************Dias Habiles************************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        label="Dias Habiles"
                                                                        onChange={handleChange}
                                                                        className="form-control"
@@ -578,7 +580,7 @@ function TiposServicio() {
                                                     {/*****************************************Costo*******************************************************/}
                                                     <div className="col-sm-12 col-md-12 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Costo"
+                                                            <TextField variant="outlined" size="small" fullWidth label="Costo"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="number"

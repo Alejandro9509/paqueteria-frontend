@@ -9,7 +9,7 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@mui/x-data-grid';
 import $ from "jquery";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
 import { toBase64 } from '../../Util/GlobalFunctions';
 import {
@@ -136,11 +136,15 @@ class FormatoImpresion extends Component {
     }
     handleModificar(id){
         console.log (id)
-        this.setState({
-            pantalla: 2,
-            edit: false,
-            agregar: "Modificar",
-            id: id});
+        this.setState(state => {
+            return {
+                ...state,
+                pantalla: 2,
+                edit: false,
+                agregar: "Modificar",
+                id: id
+            }
+        })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -300,9 +304,11 @@ class FormatoImpresion extends Component {
                                                             return
                                                         let row=data.find(i=>i.m_nIdFormato==newModel[0])
                                                         console.log(data.find(i=>i.m_nIdFormato==newModel[0]))
-                                                        this.setState({
-                                                            ...this.state,
-                                                            idTarifa: row.m_nIdFormato,
+                                                        this.setState(state => {
+                                                            return {
+                                                                ...state,
+                                                                idTarifa: row.m_nIdFormato
+                                                            }
                                                         })
                                                     }}
                                                 />

@@ -182,7 +182,7 @@ export default function ViajeForaneo(props) {
                         selection={dialogGrupo.selection}
                     />
                 }
-                <Grid container spacing={2} justifyContent="center" direction="row">
+                <Grid container spacing={2} direction="row">
                     <Grid item xs={3}>
                         <TextField
                             id="idOrigen"
@@ -192,7 +192,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="idOrigen"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -212,7 +212,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="idTipoMedida"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -230,7 +230,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="idDestino"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -263,7 +263,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="fleteMinimo"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         />

@@ -492,16 +492,17 @@ function ParametrosConfiguracion() {
                         value={tabIndex}
                         indicatorColor="primary"
                         textColor="primary"
+                        variant="fullWidth"
                         onChange={handleTab}
                         centered
                     >
-                        <Tab label="General" value="0"/>
-                        <Tab label="Embarque" value="1"/>
-                        <Tab label="Recoleccion" value="2"/>
-                        <Tab label="Guia" value="3"/>
-                        <Tab label="Tarifas" value="4"/>
-                        <Tab label="Correos" value="5"/>
-                        <Tab label="Facturación" value="6"/>
+                        <Tab style={{fontSize:"1em"}} label="General" value="0"/>
+                        <Tab style={{fontSize:"1em"}} label="Embarque" value="1"/>
+                        <Tab style={{fontSize:"1em"}}label="Recolección" value="2"/>
+                        <Tab style={{fontSize:"1em"}} label="Guía" value="3"/>
+                        <Tab style={{fontSize:"1em"}} label="Tarifas" value="4"/>
+                        <Tab style={{fontSize:"1em"}} label="Correos" value="5"/>
+                        <Tab style={{fontSize:"1em"}} label="Facturación" value="6"/>
                     </Tabs>
 
                 </Paper>
@@ -536,7 +537,7 @@ function ParametrosConfiguracion() {
                                                 type={"number"}
                                                 value={configuraciones.horasLimiteEntregasUltimaMilla}
                                                 variant="outlined"
-                                                margin="dense"
+                                                size="small"
                                                 InputProps={{ inputProps: { min: 1,step: 1 } }}
                                                 label="Horas"
                                                 onChange={handleChange}
@@ -564,7 +565,7 @@ function ParametrosConfiguracion() {
                                         <div className={classes.subtitulo}>Estatus por defecto</div>
                                     </Box>
                                     <Box width="60%" p={1} my={0.5}>
-                                        <FormControl fullWidth variant="outlined" width="25%">
+                                        <FormControl size="small" fullWidth variant="outlined" width="25%">
                                             <InputLabel id="idEmbarqueLabel">Estatus</InputLabel>
                                             <Select
                                                 labelId="estatusEmbarqueLabel"
@@ -577,11 +578,11 @@ function ParametrosConfiguracion() {
                                                 name="estatusEmbarque"
                                             >
                                                 {dataEstatusEmbarque.map((estatus) => (
-                                                    <option key={estatus.m_nIdEstatusEmbarque}
+                                                    <MenuItem key={estatus.m_nIdEstatusEmbarque}
                                                             value={estatus.m_nIdEstatusEmbarque}
                                                     >
                                                         {estatus.m_sEstatus}
-                                                    </option>
+                                                    </MenuItem>
                                                 ))}
                                             </Select>
                                         </FormControl>
@@ -593,7 +594,7 @@ function ParametrosConfiguracion() {
                                     </Box>
                                     <Box width="60%" p={1} my={0.5}>
                                         <FormControl fullWidth variant="outlined"
-                                                     margin="dense">
+                                                     size="small">
                                             <InputLabel id="idMonedaLabel">Moneda</InputLabel>
                                             <Select
                                                 labelId={"idMonedaLabel"}
@@ -609,12 +610,12 @@ function ParametrosConfiguracion() {
                                                 }}
                                             >
                                                 {dataMonedaEmbarque.map((moneda) => (
-                                                    <option
+                                                    <MenuItem
                                                         key={moneda.m_nIdMoneda}
                                                         value={moneda.m_nIdMoneda}
                                                     >
                                                         {moneda.m_sMoneda}
-                                                    </option>
+                                                    </MenuItem>
                                                 ))}
                                             </Select>
                                         </FormControl>
@@ -630,7 +631,7 @@ function ParametrosConfiguracion() {
                                         <FormControl fullWidth
                                                      variant="outlined"
                                                      required
-                                                     margin="dense">
+                                                     size="small">
                                             <InputLabel id="tipoCambioLabel">Tipo de
                                                 Cambio</InputLabel>
                                             <Select
@@ -643,12 +644,12 @@ function ParametrosConfiguracion() {
                                                 onChange={handleChange}
                                             >
                                                 {dataTipoCambioEmbarque.map((cambio) => (
-                                                    <option
+                                                    <MenuItem
                                                         key={cambio.m_nIdTipoCambio}
                                                         value={cambio.m_nIdTipoCambio}
                                                     >
                                                         {cambio.m_cTipoCambio}
-                                                    </option>
+                                                    </MenuItem>
                                                 ))}
                                             </Select>
                                         </FormControl>
@@ -663,7 +664,7 @@ function ParametrosConfiguracion() {
                                         <FormControl fullWidth
                                                      variant="outlined"
                                                      required
-                                                     margin="dense">
+                                                     size="small">
                                             <InputLabel id="tipoCobroLabel">Tipo de Cobro</InputLabel>
                                             <Select
                                                 labelId="tipoCambioLabel"
@@ -675,12 +676,12 @@ function ParametrosConfiguracion() {
                                                 onChange={handleChange}
                                             >
                                                 {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((cambio) => (
-                                                    <option
+                                                    <MenuItem
                                                         key={cambio.m_nIdTipoCobro}
                                                         value={cambio.m_nIdTipoCobro}
                                                     >
                                                         {cambio.m_sDescripcion}
-                                                    </option>
+                                                    </MenuItem>
                                                 ))}
                                             </Select>
                                         </FormControl>
@@ -705,7 +706,7 @@ function ParametrosConfiguracion() {
                                     <Box width="40%" p={1} my={0.5}>
                                         <h2>Tipos de cobro a mostrar</h2>
                                     </Box>
-                                    <Box width="40%" p={1} my={0.5}>
+                                    <Box width="50%" p={1} my={0.5}>
                                         <div style={{display: 'flex', height: '100%'}}>
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
@@ -796,7 +797,7 @@ function ParametrosConfiguracion() {
                                             <div className={classes.subtitulo}>Estatus por defecto</div>
                                         </Box>
                                         <Box width="60%" p={1} my={0.5}>
-                                            <FormControl fullWidth variant="outlined" width="25%">
+                                            <FormControl size="small" fullWidth variant="outlined" width="25%">
                                                 <InputLabel id="idRecoleccionLabel">Estatus</InputLabel>
                                                 <Select
                                                     labelId="estatusRecoleccionLabel"
@@ -809,11 +810,11 @@ function ParametrosConfiguracion() {
                                                     onChange={handleChange}
                                                 >
                                                     {dataEstatusRecoleccion.map((estatus) => (
-                                                        <option key={estatus.m_nIdEstatusRecoleccion}
+                                                        <MenuItem key={estatus.m_nIdEstatusRecoleccion}
                                                                 value={estatus.m_nIdEstatusRecoleccion}
                                                         >
                                                             {estatus.m_sEstatus}
-                                                        </option>
+                                                        </MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -838,7 +839,7 @@ function ParametrosConfiguracion() {
                                             <div className={classes.subtitulo}>Estatus por defecto</div>
                                         </Box>
                                         <Box width="60%" p={1} my={0.5}>
-                                            <FormControl fullWidth variant="outlined" width="25%">
+                                            <FormControl size="small" fullWidth variant="outlined" width="25%">
                                                 <InputLabel id="idGuiaLabel">Estatus</InputLabel>
                                                 <Select
                                                     labelId="estatusGuiaLabel"
@@ -851,10 +852,10 @@ function ParametrosConfiguracion() {
                                                     onChange={handleChange}
                                                 >
                                                     {dataEstatusGuia.map((estatus) => (
-                                                        <option key={estatus.m_nIdEstatusGuia}
+                                                        <MenuItem key={estatus.m_nIdEstatusGuia}
                                                                 value={estatus.m_nIdEstatusGuia}>
                                                             {estatus.m_sEstatus}
-                                                        </option>
+                                                        </MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
@@ -927,7 +928,7 @@ function ParametrosConfiguracion() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined"
-                                                             margin="dense" required>
+                                                             size="small" required>
                                                     <InputLabel> Tipo de Tarifa</InputLabel>
                                                     <Select
                                                         native
@@ -938,9 +939,9 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.tipoTarifa}
                                                     >
-                                                        {/*<option value="1">Por peso o volumen</option>*/}
-                                                        <option value="2">Por rango</option>
-                                                        <option value="3">Por región</option>
+                                                        {/*<MenuItem value="1">Por peso o volumen</MenuItem>*/}
+                                                        <MenuItem value="2">Por rango</MenuItem>
+                                                        <MenuItem value="3">Por región</MenuItem>
                                                     </Select>
                                                 </FormControl>
                                             </Box>
@@ -951,7 +952,7 @@ function ParametrosConfiguracion() {
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
                                                 <FormControl fullWidth variant="outlined"
-                                                             margin="dense" required>
+                                                             size="small" required>
                                                     <TextField
                                                         variant={'outlined'}
                                                         type={'number'}
@@ -992,7 +993,7 @@ function ParametrosConfiguracion() {
                                                     inputProps={{'aria-label': 'primary checkbox'}}
                                                     name="cobrarCita"
                                                 />
-                                                <TextField variant="outlined" margin="dense"
+                                                <TextField variant="outlined" size="small"
                                                            label="Costo($) "
                                                            className="form-control"
                                                            type="text"
@@ -1044,7 +1045,7 @@ function ParametrosConfiguracion() {
                                                 <div className={classes.subtitulo}>Concepto de flete</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                <FormControl fullWidth variant="outlined" size="small" required>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
@@ -1056,10 +1057,10 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoFlete}
                                                     >
-                                                        <option aria-label="None" value=""/>
+                                                        <MenuItem aria-label="None" value=""/>
                                                         {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoFlete')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -1070,7 +1071,7 @@ function ParametrosConfiguracion() {
                                                 <div className={classes.subtitulo}>Concepto de carga</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense"
+                                                <FormControl fullWidth variant="outlined" size="small"
                                                              required={configuraciones.cobrarConceptoCarga}>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
@@ -1083,10 +1084,10 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoCarga}
                                                     >
-                                                        <option aria-label="None" value=""/>
+                                                        <MenuItem aria-label="None" value=""/>
                                                         {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCarga')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -1097,7 +1098,7 @@ function ParametrosConfiguracion() {
                                                 <div className={classes.subtitulo}>Concepto de descarga</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense"
+                                                <FormControl fullWidth variant="outlined" size="small"
                                                              required={configuraciones.cobrarConceptoDescarga}>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
@@ -1110,10 +1111,10 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoDescarga}
                                                     >
-                                                        <option aria-label="None" value=""/>
+                                                        <MenuItem aria-label="None" value=""/>
                                                         {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoDescarga')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -1124,7 +1125,7 @@ function ParametrosConfiguracion() {
                                                 <div className={classes.subtitulo}>Concepto de recolección</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                <FormControl fullWidth variant="outlined" size="small" required>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
@@ -1136,10 +1137,10 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoRecoleccion}
                                                     >
-                                                        <option aria-label="None" value=""/>
+                                                        <MenuItem aria-label="None" value=""/>
                                                         {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoRecoleccion')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -1150,7 +1151,7 @@ function ParametrosConfiguracion() {
                                                 <div className={classes.subtitulo}>Concepto de entrega</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                <FormControl fullWidth variant="outlined" size="small" required>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
@@ -1162,10 +1163,10 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoEntrega}
                                                     >
-                                                        <option aria-label="None" value=""/>
+                                                        <MenuItem aria-label="None" value=""/>
                                                         {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoEntrega')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -1176,7 +1177,7 @@ function ParametrosConfiguracion() {
                                                 <div className={classes.subtitulo}>Concepto de seguro</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                <FormControl fullWidth variant="outlined" size="small" required>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
@@ -1188,10 +1189,10 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoSeguro}
                                                     >
-                                                        <option aria-label="None" value=""/>
+                                                        <MenuItem aria-label="None" value=""/>
                                                         {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoSeguro')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -1202,7 +1203,7 @@ function ParametrosConfiguracion() {
                                                 <div className={classes.subtitulo}>Concepto de cita</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" margin="dense"
+                                                <FormControl fullWidth variant="outlined" size="small"
                                                              required={configuraciones.cobrarCita}>
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
@@ -1215,10 +1216,10 @@ function ParametrosConfiguracion() {
                                                         onChange={handleChange}
                                                         value={configuraciones.idConceptoCita}
                                                     >
-                                                        <option aria-label="None" value=""/>
+                                                        <MenuItem aria-label="None" value=""/>
                                                         {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCita')).map(i => (
-                                                            <option key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                         ))}
                                                     </Select>
                                                 </FormControl>
@@ -1253,7 +1254,7 @@ function ParametrosConfiguracion() {
                             <Box display="flex" p={1} my={0.5} bgcolor="background.paper">
                                 <Grid container spacing={1}>
                                     <Grid item sm={2} xs={12}>
-                                        <FormControl variant="outlined" fullWidth>
+                                        <FormControl size="small" variant="outlined" fullWidth>
                                             <InputLabel id="idComplementoLabel">Tipo de servicio</InputLabel>
                                             <Select
                                                 labelId="idComplementoLabel"
@@ -1387,14 +1388,16 @@ function DataGridTiposDocumentoSucursal(props) {
         },
     ];
     return (
-        <div style={{height: 400,width: '50%'}}>
+        <div style={{height: 400,width: '50%',marginLeft:"20px",marginBottom:"30px"}}>
             <DataGrid
                 rows={props.rows}
                 columns={columns}
                 pageSize={10}
+                rowsPerPageOptions={[10]}
+                rowCount={props.rows.length}
+                autoPageSize
                 disableSelectionOnClick
                 getRowId={(row) => row.idSucursal}
-                autoHeight {...{dataSet: 'Commodity', rowLength: 4, maxColumns: 6}}
                 density={"compact"}
             />
         </div>

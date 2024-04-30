@@ -79,7 +79,7 @@ function Filtros(props) {
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container spacing={2} xs={3} item={6}>
                     <Grid item xs={12}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small" fullWidth
                                    onChange={handleChangeFiltros}
                                    onKeyDown={handleChangeFiltros}
                                    className="form-control"

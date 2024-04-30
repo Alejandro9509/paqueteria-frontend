@@ -23,18 +23,7 @@ const Root = styled('div')({
         width: '30%'}
 });
 
-const useStyle = makeStyles({
-    [`& .${classes.title}`]: {
-      marginBottom: 15
-    },
-    [`& .${classes.item}`]: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        width: '30%'}
-});
-
 export default function PlantillaCorreo() {
-    const classess = useStyle()
     const [state, setState] = React.useState({
         folio: true,
         paquetesGuia: true,
@@ -77,20 +66,20 @@ export default function PlantillaCorreo() {
                     <div className="widget-container">
                         <div className="widget-content">
                             <div className="row">
-                                <h3 className={classess.title}>Opciones de dirección de entrega</h3>
-                                <div className={classess.item}>
+                                <h3 className={classes.title}>Opciones de dirección de entrega</h3>
+                                <div className={classes.item}>
                                     <span>Mostrar dirección de entrega.</span>
                                     <Checkbox disabled={!validarDerecho(9101390)} checked={state.direccionEntrega} onChange={handleChanche} name="direccionEntrega"/>
                                 </div>
-                                <div className={classess.item}>
+                                <div className={classes.item}>
                                     <span>Mostrar estatus de guía.</span>
                                     <Checkbox disabled={!validarDerecho(9101391)} checked={state.estatusGuia} onChange={handleChanche} name="estatusGuia"/>
                                 </div>
-                                <div className={classess.item}>
+                                <div className={classes.item}>
                                     <span>Mostrar paquetes de guía.</span>
                                     <Checkbox disabled={!validarDerecho(9101392)} checked={state.paquetesGuia} onChange={handleChanche} name="paquetesGuia"/>
                                 </div>
-                                <div className={classess.item}>
+                                <div className={classes.item}>
                                     <span>Mostrar folio.</span>
                                     <Checkbox disabled={!validarDerecho(9101393)} checked={state.folio} onChange={handleChanche} name="folio"/>
                                 </div>

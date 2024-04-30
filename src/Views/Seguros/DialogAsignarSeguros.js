@@ -47,7 +47,7 @@ function DialogAsignarSeguros(props) {
     };
 
     const handleAceptar = () =>{
-       modificarSeguroCliente(state.idTipoSeguro,idCliente.data.m_nIdCliente,state.porcentajeSeguro,state.aplicaSeguro,state.aseguradora, state.poliza)
+       modificarSeguroCliente(state.idTipoSeguro,idCliente.m_nIdCliente,state.porcentajeSeguro,state.aplicaSeguro,state.aseguradora, state.poliza)
         .then((respuesta) => {
             if(state.idTipoSeguro==5){
                 showSuccess("Se ha desasignado el tipo de seguro exitosamente");

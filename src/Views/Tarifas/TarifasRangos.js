@@ -438,12 +438,15 @@ export default function TarifasRangos(props) {
                                         rows={filtrarTarifas}
                                         columns={state.columns}
                                         density="compact"
+                                        autoPageSize
                                         pageSize={Math.floor((state.height - 310) / 30)}
                                         getRowId={(row) => row.IdTarifa}
-                                        onRowSelected={(row) => {
+                                        onRowSelectionModelChange={(newModel)=>{
+                                            if(newModel.length<1)
+                                                return
                                             setState({
                                                 ...state,
-                                                idTarifa: row.data.IdTarifa
+                                                idTarifa: filtrarTarifas.find(i=>i.IdTarifa==newModel[0]).IdTarifa
                                             })
                                         }}
                                     />

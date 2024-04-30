@@ -178,7 +178,7 @@ class CuentasCorreo extends Component {
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <label className="input select">
-                            <FormControl fullWidth variant="outlined" margin="dense">
+                            <FormControl fullWidth variant="outlined" size="small">
                                 <InputLabel id="idTipoCuentaLabel">Tipo de Cuenta</InputLabel>
                                 <Select
                                     labelId="idTipoCuentaLabel"
@@ -205,7 +205,7 @@ class CuentasCorreo extends Component {
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <div className="input">
-                            <TextField variant="outlined" margin="dense"
+                            <TextField variant="outlined" size="small"
                                        onChange={this.handleChange}
                                        className="form-control"
                                        type="text"
@@ -220,7 +220,7 @@ class CuentasCorreo extends Component {
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <div className="input">
-                            <TextField variant="outlined" margin="dense"
+                            <TextField variant="outlined" size="small"
                                        onChange={this.handleChange}
                                        className="form-control"
                                        required
@@ -234,7 +234,7 @@ class CuentasCorreo extends Component {
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <div className="input">
-                            <TextField variant="outlined" margin="dense"
+                            <TextField variant="outlined" size="small"
                                        onChange={this.handleChange}
                                        className="form-control"
                                        required
@@ -248,7 +248,7 @@ class CuentasCorreo extends Component {
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <div className="input">
-                            <TextField variant="outlined" margin="dense"
+                            <TextField variant="outlined" size="small"
                                        onChange={this.handleChange}
                                        className="form-control"
                                        required
@@ -263,7 +263,7 @@ class CuentasCorreo extends Component {
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <label className="input select">
-                            <FormControl fullWidth variant="outlined" margin="dense">
+                            <FormControl fullWidth variant="outlined" size="small">
                                 <InputLabel id="idSeguridadLabel">Seguridad</InputLabel>
                                 <Select
                                     labelId="idSeguridadLabel"

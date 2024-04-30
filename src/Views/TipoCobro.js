@@ -368,10 +368,12 @@ function TipoCobro() {
                                             density="compact"
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdTipoCobro}
-                                            onRowSelected={(row) => {
+                                            onRowSelectionModelChange={(newModel)=>{
+                                                if(newModel.length<1)
+                                                    return
                                                 setState({
                                                     ...state,
-                                                    idTipoCobro: row.data.m_nIdTipoCobro
+                                                    idTipoCobro: data.find(i=>i.m_nIdTipoCobro==newModel[0])
                                                 })
                                             }}
                                         />
@@ -389,7 +391,7 @@ function TipoCobro() {
                                                 <div className="form-content">
                                                     <Grid container spacing={1} style={{margin:'20px'}}>
                                                         <Grid item xs={12} sm={2}>
-                                                            <TextField variant="outlined" margin="dense" label="Código"
+                                                            <TextField variant="outlined" fullWidth size="small" label="Código"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="number"
@@ -400,7 +402,7 @@ function TipoCobro() {
                                                             />
                                                         </Grid>
                                                         <Grid item xs={12} sm={2}>
-                                                            <TextField variant="outlined" margin="dense" label="Descripción"
+                                                            <TextField variant="outlined" fullWidth size="small" label="Descripción"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -412,7 +414,7 @@ function TipoCobro() {
                                                             />
                                                         </Grid>
                                                         <Grid item xs={12} sm={2}>
-                                                            <TextField variant="outlined" margin="dense" label="Tipo de pago por defecto"
+                                                            <TextField variant="outlined" fullWidth size="small" label="Tipo de pago por defecto"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        required={true}

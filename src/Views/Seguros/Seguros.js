@@ -251,18 +251,23 @@ function Seguros() {
                                    columns={columns}
                                    rows={data}
                                    getRowId={((row) => row.m_nNumeroCliente)}
-                                   onRowSelected={(row) => {
-                                       rowSelect = row;
+                                   onRowSelectionModelChange={(newModel)=>{
+                                       if(newModel.length<1)
+                                           return
+                                       rowSelect=data.find(i=>i.m_nNumeroCliente==newModel[0])
                                    }}
+                                   /*onRowSelected={(row) => {
+                                       rowSelect = row;
+                                   }}*/
                                    pagination
                                    page={pagina}
-                                   rowsPerPageOptions={[registros]}
+                                   autoPageSize
+                                   rowsPerPageOptions={[]}
                                    pageSize={registros}
                                    rowCount={13600}
                                    paginationMode="server"
-                                   onPageChange={(newPage) => {
+                                   onPaginationModelChange={(newPage)=>{
                                        setPagina(newPage.page)
-                                       console.log(newPage)
                                    }}
                                    
                                />

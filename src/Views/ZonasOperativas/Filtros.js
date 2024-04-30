@@ -53,12 +53,12 @@ function Filtros(props) {
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container item={6}>
                     <Grid item xs={3}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
                                    onChange={handleChangeFiltros}
                                    onKeyDown={handleChangeFiltros}
                                    className="form-control"
                                    type="text"
-                                   label="Codigo Postal"
+                                   label="Código Postal"
                                    id="cp"
                                    name="cp"
                                    value={filtros.cp}

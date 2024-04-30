@@ -375,12 +375,15 @@ function Embalaje() {
                                                 density="compact"
                                                 pageSize={Math.floor((state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdEmbalaje}
-                                                onRowSelected={(row) => {
+                                                onRowSelectionModelChange={(newModel)=>{
+                                                    if(newModel.length<1)
+                                                        return
                                                     setState({
                                                         ...state,
-                                                        IdEmbalaje: row.data.m_nIdEmbalaje
+                                                        IdEmbalaje: data.find(i=>i.m_nIdEmbalaje==newModel[0]).m_nIdEmbalaje,
                                                     })
                                                 }}
+                                                
                                             />
                                         ) : (
                                             <div>No se encontró ningún registro</div>
@@ -401,8 +404,9 @@ function Embalaje() {
                                                     <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
 
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Código"
+                                                            <TextField variant="outlined" size="small" label="Código"
                                                                 onChange={handleChange}
+                                                                       fullWidth
                                                                 className="form-control"
                                                                 type="text"
                                                                 maxlength="10"
@@ -420,8 +424,9 @@ function Embalaje() {
                                                     <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
 
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Nombre"
+                                                            <TextField variant="outlined" size="small" label="Nombre"
                                                                 onChange={handleChange}
+                                                                       fullWidth
                                                                 className="form-control"
                                                                 type="text"
                                                                 required
@@ -435,8 +440,9 @@ function Embalaje() {
                                                     {/*****************************************Descripción*******************************************************/}
                                                     <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Descripción"
+                                                            <TextField variant="outlined" size="small" label="Descripción"
                                                                 onChange={handleChange}
+                                                                       fullWidth
                                                                 className="form-control"
                                                                 type="text"
                                                                 required

@@ -288,7 +288,7 @@ export default function ViajeLocal(props) {
                             onChange={handleChangeViajeLocal}
                             name="idSucursal"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -308,7 +308,7 @@ export default function ViajeLocal(props) {
                             onChange={handleChangeViajeLocal}
                             name="idTipoMedida"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -325,7 +325,7 @@ export default function ViajeLocal(props) {
                             onChange={handleChangeViajeLocal}
                             name="idConcepto"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -337,7 +337,7 @@ export default function ViajeLocal(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={()=>handleShowDialogZonas(true)} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
                             {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>

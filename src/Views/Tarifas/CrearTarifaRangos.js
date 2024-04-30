@@ -685,7 +685,7 @@ export default function CrearTarifaRangos(props) {
                             <TextField
                                 variant="outlined"
                                 label="Responsable de pago"
-                                margin="dense"
+                                size="small"
                                 required
                                 value={state.cliente?.m_sNombreFiscal}
                                 placeholder={"No. Cliente: Nombre fiscal"}
@@ -705,6 +705,7 @@ export default function CrearTarifaRangos(props) {
                                 id="vigencia"
                                 name="vigencia"
                                 label="Vigencia"
+                                fullWidth
                                 type="date"
                                 onChange={handleOnChange}
                                 value={state.vigencia}
@@ -722,7 +723,7 @@ export default function CrearTarifaRangos(props) {
                                 <TextField
                                     variant="outlined"
                                     label="Cuota mensual"
-                                    margin="dense"
+                                    size="small"
                                     required
                                     name={"cuotaMensual"}
                                     type="number"
@@ -733,7 +734,7 @@ export default function CrearTarifaRangos(props) {
                             </Grid>
                         }
                         <Grid item xs={2}>
-                            <Button onClick={handleShowDialogTarifas} variant={"outlined"} disabled={props.disabled} color={"primary"}
+                            <Button size={"large"} style={{fontSize:".9em"}} fullWidth onClick={handleShowDialogTarifas} variant={"outlined"} disabled={props.disabled} color={"primary"}
                             >Importar tarifa existente</Button>
                         </Grid>
 
@@ -760,7 +761,7 @@ export default function CrearTarifaRangos(props) {
                             </IconButton>
                         </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="sucLabel">Sucursal</InputLabel>
                             <Select value={filtroPMUM.sucursal} onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})} labelId='sucLabel' label=''>
@@ -772,7 +773,7 @@ export default function CrearTarifaRangos(props) {
                             </FormControl>
                             </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="conceptoLabel">Concepto</InputLabel>
                                 <Select value={filtroPMUM.concepto} onChange={(e)=>setFiltroPMUM({...filtroPMUM,concepto: e.target.value})} labelId='conceptoLabel' label=''>
@@ -786,6 +787,7 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={2}>
                             <Autocomplete
                                 freeSolo
+                                size="small"
                                 value={filtroPMUM.producto}
                                 onChange={(e,newValue)=>setFiltroPMUM({...filtroPMUM,producto: newValue})}
                                 id="PMUM_Productos"
@@ -800,7 +802,7 @@ export default function CrearTarifaRangos(props) {
                                         <TextField
                                             variant="outlined"
                                             label="Producto"
-                                            margin="dense"
+                                            size="small"
                                             className="form-control"
                                             {...params}
                                             InputProps={{
@@ -815,12 +817,12 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                         <Grid item xs={1}>
                             <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:true})} size="large">
-                                <SearchIcon margin='dense' fontSize='large'/>
+                                <SearchIcon size="small" fontSize='large'/>
                             </IconButton>
                             /
                             <Tooltip title='Quitar Filtro'>
                             <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:false})} size="large">
-                                <Clear margin='dense' fontSize='large'/>
+                                <Clear size="small" fontSize='large'/>
                             </IconButton>
                             </Tooltip>
                         </Grid>
@@ -902,7 +904,7 @@ export default function CrearTarifaRangos(props) {
                             </IconButton>
                         </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="origenLbl">Origen</InputLabel>
                                 <Select value={filtroMM.origen} onChange={(e)=>setFiltroMM({...filtroMM,origen: e.target.value})} labelId='origenLbl' label=''>
@@ -914,7 +916,7 @@ export default function CrearTarifaRangos(props) {
                             </FormControl>
                         </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="destLabel">Destino</InputLabel>
                                 <Select value={filtroMM.destino} onChange={(e)=>setFiltroMM({...filtroMM,destino: e.target.value})} labelId='destLabel' label=''>
@@ -928,6 +930,7 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={2}>
                             <Autocomplete
                                 freeSolo
+                                size="small"
                                 value={filtroMM.producto}
                                 onChange={(e,newValue)=>setFiltroMM({...filtroMM,producto: newValue})}
                                 id="MM_Prod"
@@ -942,7 +945,7 @@ export default function CrearTarifaRangos(props) {
                                         <TextField
                                             variant="outlined"
                                             label="Producto"
-                                            margin="dense"
+                                            size="small"
                                             className="form-control"
                                             {...params}
                                             InputProps={{
@@ -957,12 +960,12 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                         <Grid item xs={1}>
                             <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:true})} size="large">
-                                <SearchIcon margin='dense' fontSize='large'/>
+                                <SearchIcon size="small" fontSize='large'/>
                             </IconButton>
                             /
                             <Tooltip title='Quitar Filtro'>
                                 <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:false})} size="large">
-                                    <Clear margin='dense' fontSize='large'/>
+                                    <Clear size="small" fontSize='large'/>
                                 </IconButton>
                             </Tooltip>
                         </Grid>
@@ -1040,7 +1043,7 @@ function DialogSelectList(props) {
             <DialogContent>
                 <Grid container spacing={1}>
                     <Grid item xs={11}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
                                    onChange={handleOnChangeSearch}
                                    label="Buscar"
                                    value={search}

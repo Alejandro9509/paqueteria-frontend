@@ -261,6 +261,7 @@ function ZonaOperativa() {
                                         <DataGrid columns={columns} rows={listadoZonas}                                               
                                                   locateText={dataGridLocaleText}
                                                   density={"compact"}
+                                                  autoPageSize={pantallaActiva==1?true:false}
                                                   pageSize={Math.floor((state.height - 310) / 30)}
                                                   getRowId={(row => row.m_nIdZona)}
                                                   disableColumnSelector

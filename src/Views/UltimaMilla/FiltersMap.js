@@ -309,7 +309,7 @@ class FiltersMap extends Component {
 
 
     render() {
-        const {classes} = this.props;
+        //const {classes} = this.props;
         return (
             <div className="leaflet-top leaflet-left" style={{paddingLeft: "40px"}}>
                 <AgregarRemolques paquetes={this.state.paquetesSeleccionadas} asignarRemolquesUnidad={this.asignarRemolquesUnidad} open={this.state.openRemolques} close={() => this.setState({openRemolques: false})} />
