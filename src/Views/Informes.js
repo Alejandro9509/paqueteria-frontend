@@ -1451,8 +1451,6 @@ function Informes({history}) {
                                                                     </div>
                                                                     <div className="row">
                                                                         <div className="col-sm-12 col-md-6 unit">
-                                                                            <Button onClick={()=>console.log(state)}>sssss</Button>
-
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
@@ -1562,6 +1560,7 @@ function Informes({history}) {
 
                                                                     {/*****************************************Remolque*************************************************/}
                                                                     <div className="row">
+                                                                        <Button onClick={()=>console.log(state)}>AAA</Button>
                                                                         <div className="col-sm-12 col-md-6 unit">
 
                                                                             <div className="input">
@@ -1571,7 +1570,6 @@ function Informes({history}) {
                                                                                     value={state.IdRemolque1}
                                                                                     onChange={(index, newValue) => onChangeRemolque1(index,newValue) }
                                                                                     id="IdRemolque1"
-                                                                                    disableClearable
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>

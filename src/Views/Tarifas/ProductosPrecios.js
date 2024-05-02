@@ -158,6 +158,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                         <TextField
                                             {...params}
                                             variant="outlined"
+                                            size="small"
                                             label="Producto"
                                             className="form-control"
                                             margin="dense"

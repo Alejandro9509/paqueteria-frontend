@@ -171,7 +171,7 @@ class UnidadesList extends Component {
     };
 
     render() {
-        const {classes} = this.props;
+        //const {classes} = this.props;
         const isSelected = (row) => this.props.unidadesSeleccionadas.find(u => u.m_nIdUnidad === row) != null;
 
 

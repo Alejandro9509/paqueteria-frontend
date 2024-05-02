@@ -5,12 +5,11 @@ import {
     ListItem,
     ListSubheader,
     IconButton,
-    withStyles,
     InputBase,
     ListItemText, InputAdornment, TextField, DialogTitle, DialogContent, DialogActions, Button, Dialog, Typography
 } from "@mui/material";
 import styled from '@mui/styles/styled';
-
+import {makeStyles,withStyles} from '@mui/styles'
 import Tooltip from "@mui/material/Tooltip";
 import SendIcon from '@mui/icons-material/Send';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -31,6 +30,9 @@ import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unida
 import {ReactComponent as UltimaMillaIcono} from "../../iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 import { DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import { StaticDatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import MomentUtils from "@date-io/moment";
 import FormControl from "@mui/material/FormControl";
 import {obtenerOperadores, obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
@@ -38,7 +40,52 @@ import PaquetesPlaneacion from "./PaquetesPlaneacion";
 import Autocomplete from '@mui/material/Autocomplete';
 import AgregarRemolques from "./AgregarRemolques";
 import {showSuccess, validarDerecho} from "../../Util/Util";
+import {alpha} from "@mui/material/styles";
 
+
+const useStyles = theme => ({
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: '12ch',
+            '&:focus': {
+                width: '20ch',
+            },
+        },
+    },
+});
+
+/*
 const PREFIX = 'FiltersMap';
 
 const classes = {
@@ -49,22 +96,79 @@ const classes = {
     arrow: `${PREFIX}-arrow`,
     tooltip: `${PREFIX}-tooltip`
 };
-
-const StyledTooltip = styled(Tooltip)((
+const Root = styled('div')((
     {
         theme
     }
 ) => ({
-    [`& .${classes.arrow}`]: {
-        color: "#F9A03E",
-    },
+    [`& .${classes.search}`]: {
+        position: 'relative',
 
-    [`& .${classes.tooltip}`]: {
-        heigth: "400px",
-        width: "1000px",
-        backgroundColor: "white",
+        borderRadius: theme.shape.borderRadius,
+
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+
+        '&:hover': {
+
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
+
+        },
+        marginLeft: 0,
+
+        width: '100%',
+
+        [theme.breakpoints.up('sm')]: {
+
+            marginLeft: theme.spacing(1),
+
+            width: 'auto',
+
+        },
+    },
+    [`& .${classes.searchIcon}`]: {
+        padding: theme.spacing(0, 2),
+
+        height: '100%',
+
+        position: 'absolute',
+
+        pointerEvents: 'none',
+
+        display: 'flex',
+
+        alignItems: 'center',
+
+        justifyContent: 'center',
+    },
+    [`& .${classes.inputRoot}`]: {
+        color: 'inherit',
+    },
+    [`& .${classes.inputInput}`]: {
+        padding: theme.spacing(1, 1, 1, 0),
+
+        // vertical padding + font size from searchIcon
+
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+
+        transition: theme.transitions.create('width'),
+
+        width: '100%',
+
+        [theme.breakpoints.up('sm')]: {
+
+            width: '12ch',
+
+            '&:focus': {
+
+                width: '20ch',
+
+            },
+
+        },
     }
 }));
+*/
+
 
 class FiltersMap extends Component {
     constructor(props) {
@@ -405,7 +509,7 @@ class FiltersMap extends Component {
                                 >
                                     {
                                         this.state.sucursalesFiltradas.map((c, index) =>
-                                            <ListItem button onClick={(e) =>{ 
+                                            <ListItem button onClick={(e) =>{
                                             this.selectCiudad(c) 
                                             this.props.closeResumenParada(false)}} key={c.m_nIdSucursal}>
                                                 <ListItemText id={c.m_nIdSucursal} primary={c.m_sSucursal}/>
@@ -483,12 +587,13 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <LocalizationProvider utils={MomentUtils}>
-                                    <DatePicker
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <StaticDatePicker
                                         autoOk
+                                        displayStaticWrapperAs="desktop"
                                         orientation="landscape"
                                         variant="static"
-                                        openTo="date"
+                                        openTo={"day"}
                                         format="dd/MMM/yyyy hh:mm a"
                                         value={this.state.fecha}
                                         disableFuture={!this.props.data.modoPlaneacion}
@@ -662,7 +767,7 @@ class FiltersMap extends Component {
 
                         
 
-                        <StyledTooltip title={"Generar Rutas"} onClose={() => {console.log('onCloseGEn')}}>
+                        <Tooltip title={"Generar Rutas"} onClose={() => {console.log('onCloseGEn')}}>
                             <Chip
                                 icon={<UltimaMillaIcono
                                     style={{fill: "white", paddingTop: "10px", paddingBottom: "10px"}}/>}
@@ -684,7 +789,7 @@ class FiltersMap extends Component {
                                 }}
             
                             />
-                        </StyledTooltip>
+                        </Tooltip>
 
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
@@ -754,16 +859,34 @@ class FiltersMap extends Component {
 
 FiltersMap.propTypes = {};
 
-export default (FiltersMap);
+export default withStyles(useStyles)(FiltersMap);
 
 
 
 
 
 function BootstrapTooltip(props) {
+    const useStylesBootstrap = makeStyles((theme) => ({
 
+        arrow: {
 
-    return <Tooltip classes={classes} {...props} />;
+            color: "#F9A03E",
+
+        },
+
+        tooltip: {
+
+            heigth: "400px",
+
+            width: "1000px",
+
+            backgroundColor: "white",
+
+        },
+
+    }));
+
+    return <Tooltip classes={useStylesBootstrap()} {...props} />;
 }
 
 

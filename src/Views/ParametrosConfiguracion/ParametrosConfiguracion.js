@@ -104,7 +104,7 @@ function ParametrosConfiguracion() {
         monedaPredeterminadaEmbarque: 0,
         tipoCambioEmbarque: 0,
         estatusGuia: 0,
-        tipoTarifa: 0,
+        tipoTarifa: 2,
         cobrarConceptoCarga: false,
         cobrarConceptoDescarga: false,
         cobrarCargaDescargaDisabled: false,
@@ -239,6 +239,7 @@ function ParametrosConfiguracion() {
 
     async function getParametrosConfiguracion() {
         obtenerParametrosConfiguracion().then(respuesta => {
+            console.log(respuesta)
             setConfiguraciones((config) => {
                 return {
                     ...config,
@@ -301,8 +302,8 @@ function ParametrosConfiguracion() {
         setConfiguraciones((config) => {
             return {
                 ...config,
-                idsTiposCobroSeleccionArray: e.selectionModel,
-                idsTiposCobroSeleccionString: e.selectionModel.join(),
+                idsTiposCobroSeleccionArray: e,
+                idsTiposCobroSeleccionString: e.join(),
             }
         })
     };
@@ -717,8 +718,22 @@ function ParametrosConfiguracion() {
                                                 checkboxSelection
                                                 hideFooter
                                                 autoHeight {...{dataSet: 'Commodity', rowLength: 4, maxColumns: 6}}
-                                                onSelectionModelChange={handleTiposCobroSeleccionados}
-                                                selectionModel={configuraciones.idsTiposCobroSeleccionArray}
+                                                onRowSelectionModelChange={handleTiposCobroSeleccionados}
+                                                /*onRowSelectionModelChange={(newModel,details)=>{
+                                                    handleTiposCobroSeleccionados
+                                                    console.log(newModel)
+                                                    console.log(configuraciones)
+                                                    console.log(details)
+                                                    setConfiguraciones({...configuraciones,idsTiposCobroSeleccionArray: newModel})
+                                                   // idsTiposCobroSeleccionArray: e.selectionModel,
+                                                    //    idsTiposCobroSeleccionString: e.selectionModel.join(),
+
+                                                   // handleTiposCobroSeleccionados
+                                                }}*/
+                                                rowSelectionModel={configuraciones.idsTiposCobroSeleccionArray}
+
+                                              //  onSelectionModelChange={handleTiposCobroSeleccionados}
+                                               // selectionModel={configuraciones.idsTiposCobroSeleccionArray}
                                             />
                                         </div>
                                     </Box>
@@ -931,7 +946,6 @@ function ParametrosConfiguracion() {
                                                              size="small" required>
                                                     <InputLabel> Tipo de Tarifa</InputLabel>
                                                     <Select
-                                                        native
                                                         label="Tipo de Tarifa"
                                                         className="form-control"
                                                         name="tipoTarifa"
@@ -1049,7 +1063,6 @@ function ParametrosConfiguracion() {
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
-                                                        native
                                                         className="form-control"
                                                         name="idConceptoFlete"
                                                         read="true"
@@ -1076,7 +1089,6 @@ function ParametrosConfiguracion() {
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
-                                                        native
                                                         className="form-control"
                                                         name="idConceptoCarga"
                                                         read="true"
@@ -1103,7 +1115,6 @@ function ParametrosConfiguracion() {
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
-                                                        native
                                                         className="form-control"
                                                         name="idConceptoDescarga"
                                                         read="true"
@@ -1129,7 +1140,6 @@ function ParametrosConfiguracion() {
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
-                                                        native
                                                         className="form-control"
                                                         name="idConceptoRecoleccion"
                                                         read="true"
@@ -1155,7 +1165,6 @@ function ParametrosConfiguracion() {
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
-                                                        native
                                                         className="form-control"
                                                         name="idConceptoEntrega"
                                                         read="true"
@@ -1181,7 +1190,6 @@ function ParametrosConfiguracion() {
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
-                                                        native
                                                         className="form-control"
                                                         name="idConceptoSeguro"
                                                         read="true"
@@ -1208,7 +1216,6 @@ function ParametrosConfiguracion() {
                                                     <InputLabel
                                                         htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
                                                     <Select
-                                                        native
                                                         className="form-control"
                                                         name="idConceptoCita"
                                                         read="true"
