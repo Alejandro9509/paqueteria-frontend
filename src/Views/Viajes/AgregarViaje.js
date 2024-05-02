@@ -95,8 +95,8 @@ class AgregarViaje extends Component {
             IdDolly: null,
             idRuta: 0,
             arrayIdRutas:[],
-            idCiudadOrigen: {},
-            idCiudadDestino: {},
+            idCiudadOrigen: null,
+            idCiudadDestino: null,
             dataCiudad: [],
             dataUnidades: [],
             dataRemolques: [],
@@ -511,8 +511,8 @@ class AgregarViaje extends Component {
             IdRemolque2: null,
             IdDolly: null,
             idRuta: 0,
-            idCiudadOrigen: {},
-            idCiudadDestino: {},
+            idCiudadOrigen: null,
+            idCiudadDestino: null,
             dataInformesPorAsignar: [],
             dataInformesAsignados: [],
             dataInformesSeleccionados: [],
@@ -951,7 +951,7 @@ class AgregarViaje extends Component {
 
     handleChangeAutocomplete = (input, value) => {
         console.log(JSON.stringify(value))
-        if(value.m_bEsPermisionario){
+        if(value?.m_bEsPermisionario){
             console.log("entra a validar")
             this.setState(state => {
                 return {
@@ -964,7 +964,7 @@ class AgregarViaje extends Component {
         }
         this.setState({
             [input]: value,
-            esOperadorPermisionario: value.m_bEsPermisionario,
+            esOperadorPermisionario: value?.m_bEsPermisionario,
             openDialogUnidades: true
         });
 
@@ -1345,7 +1345,7 @@ class AgregarViaje extends Component {
                         </DialogContent>
                     </Dialog>
                 }*/}
-                <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador.m_nIdOperador} />
+                <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador?.m_nIdOperador} />
                 {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />*/}
                 <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} />
                 <DialogDollys open={this.state.openDialogDollys} handleClose={this.handleCloseDialogDollys} handleAccept={this.handleAcceptDataDollys} idConvoy={this.state.identificadorConvoyUnidad} />
@@ -1421,7 +1421,7 @@ class AgregarViaje extends Component {
                                                 forcePopupIcon={false}
                                                 options={this.state.dataCiudad.filter(c => this.props.select ? this.props.select.m_arrIdRutas.filter(t => !t.Terminado && !t.Iniciado).map(t => t.IdOrigen).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
-                                                    option.m_sCiudad
+                                                    option?option.m_sCiudad:""
                                                 }
                                                 style={{
                                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -1452,7 +1452,7 @@ class AgregarViaje extends Component {
                                                 forcePopupIcon={false}
                                                 options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado || t.Iniciado).map(t => t.IdDestino).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
-                                                    option.m_sCiudad
+                                                    option?option.m_sCiudad:""
                                                 }
                                                 style={{
                                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -1676,12 +1676,11 @@ class AgregarViaje extends Component {
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="idCiudadOrigen"
                                                 size={"small"}
-                                                disableClearable
                                                 forcePopupIcon={false}
                                                 disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
                                                 options={this.state.dataCiudad}
                                                 getOptionLabel={(option) =>
-                                                    option.m_sCiudad
+                                                    option?option.m_sCiudad:""
                                                 }
                                                 style={{
                                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -1737,8 +1736,8 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-12 col-md-12 unit">
                                     <SeleccionarRuta
                                         IdRuta={this.state.idRuta}
-                                        IdOrigen={this.state.idCiudadOrigen.m_nIdCiudad ? this.state.idCiudadOrigen.m_nIdCiudad : '' }
-                                        IdDestino={this.state.idCiudadDestino.m_nIdCiudad ? this.state.idCiudadDestino.m_nIdCiudad : '' }
+                                        IdOrigen={this.state.idCiudadOrigen?.m_nIdCiudad ? this.state.idCiudadOrigen?.m_nIdCiudad : '' }
+                                        IdDestino={this.state.idCiudadDestino?.m_nIdCiudad ? this.state.idCiudadDestino?.m_nIdCiudad : '' }
                                         IdCliente={0}
                                         viaje={true}
                                         disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
@@ -1757,14 +1756,13 @@ class AgregarViaje extends Component {
                                                 freeSolo
                                                 size={"small"}
                                                 onChange={(e, value) => this.handleChangeAutocomplete("operador", value)}
-                                                value={this.state.operador}
+                                                value={this.state.operador=={}?"":this.state.operador}
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="dataOperador"
-                                                disableClearable
                                                 forcePopupIcon={false}
                                                 options={this.state.dataOperadores}
                                                 getOptionLabel={(option) =>
-                                                    option.m_sNombreCompleto
+                                                    option.m_sNombreCompleto?option.m_sNombreCompleto:""
                                                 }
                                                 style={{
                                                     transform: "translate(14px, 10px) scale(1) !important"

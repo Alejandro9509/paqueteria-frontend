@@ -142,20 +142,6 @@ function Informes({history}) {
     const [mensajesUtilizacion,setMensajeUtilizacion]=useState('')
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
-    // useEffect(()=>{
-    //
-    //     if( localStorage.getItem("RFC")==="ECC9510049KA"){
-    //         obtenerFormatosImpresionProceso(222).then(({data}) => {
-    //             setDataReportes(data)
-    //         })
-    //     }
-    //     else{
-    //         obtenerFormatosImpresionProceso(214).then(({data}) => {
-    //             setDataReportes(data)
-    //         })
-    //     }
-    //
-    // }, [])
 
     function confirmExit()
     {
@@ -723,6 +709,15 @@ function Informes({history}) {
             PlacasRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_sPlacas : "",
             PlacasDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_sPlacas : ""
         })
+        if(state.IdRemolque1==null){
+            document.getElementById("IdRemolque1").defaultValue=""
+            document.getElementById("IdRemolque1").value=""
+            document.getElementById("IdRemolque1").inputValue=""
+        }
+            console.log(document.getElementById("IdRemolque1").value)
+            console.dir(document.getElementById("IdRemolque1"))
+
+
         console.log(state.IdTipoUnidad)
         //cubicarInforme(dataGuias);
     }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
@@ -980,7 +975,9 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        console.log(state.IdCiudadDestino)
+        console.log(state.IdCiudadOrigen)
+        console.log(document.getElementById("IdCiudadOrigen").value)
+        console.dir(document.getElementById("IdCiudadOrigen"))
         if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
 
@@ -1023,7 +1020,6 @@ function Informes({history}) {
     }
     useEffect(() => {
         if( detectarModificaciones){
-            console.log("disprosio")
            // console.log(remitente)
            $.mostrarMensaje=true
             window.onbeforeunload = confirmExit
@@ -1560,14 +1556,13 @@ function Informes({history}) {
 
                                                                     {/*****************************************Remolque*************************************************/}
                                                                     <div className="row">
-                                                                        <Button onClick={()=>console.log(state)}>AAA</Button>
                                                                         <div className="col-sm-12 col-md-6 unit">
 
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
                                                                                     size="small"
-                                                                                    value={state.IdRemolque1}
+                                                                                    value={state.IdRemolque1==null?"":state.IdRemolque1}
                                                                                     onChange={(index, newValue) => onChangeRemolque1(index,newValue) }
                                                                                     id="IdRemolque1"
                                                                                     forcePopupIcon={false}
@@ -1583,6 +1578,7 @@ function Informes({history}) {
                                                                                         <div>
                                                                                             <TextField
                                                                                                 variant="outlined"
+                                                                                                id="Aut1"
                                                                                                 label="Remolque 1"
                                                                                                 size="small"
                                                                                                 required
@@ -1627,7 +1623,7 @@ function Informes({history}) {
                                                                                 <Autocomplete
                                                                                     freeSolo
                                                                                     size="small"
-                                                                                    value={state.IdRemolque2}
+                                                                                    value={state.IdRemolque2==null?"":state.IdRemolque2}
                                                                                     onChange={(index, newValue) => onChangeRemolque2(index,newValue) }
                                                                                     id="IdRemolque2"
                                                                                     onInputChange={(event, newInputValue, reason) => {
@@ -1702,13 +1698,12 @@ function Informes({history}) {
                                                                                             IdCiudadOrigen: newValue,
                                                                                         })
                                                                                     }
-                                                                                    value={state.IdCiudadOrigen}
+                                                                                    value={state.IdCiudadOrigen==null?"":state.IdCiudadOrigen}
                                                                                     id="IdCiudadOrigen"
-                                                                                    disableClearable
                                                                                     forcePopupIcon={false}
                                                                                     options={dataOrigenes}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option.m_sCiudad
+                                                                                        option? option.m_sCiudad:""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
@@ -1752,13 +1747,12 @@ function Informes({history}) {
                                                                                         })
                                                                                     }
 
-                                                                                    value={state.IdCiudadDestino}
+                                                                                    value={state.IdCiudadDestino==null?"":state.IdCiudadDestino}
                                                                                     id="IdCiudadDestino"
-                                                                                    disableClearable
                                                                                     forcePopupIcon={false}
                                                                                     options={dataOrigenes}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option.m_sCiudad
+                                                                                        option?option.m_sCiudad:""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     className="form-control"
@@ -1770,6 +1764,7 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Destino"
+                                                                                                required
                                                                                                 size="small"
                                                                                                 {...params}
                                                                                                 InputProps={{
@@ -2359,563 +2354,6 @@ function Informes({history}) {
                                 </div>
                             </div>
                         </div>
-                       {/* <div id="Cubicar" className="tab-pane fade">
-                            <div className="widget-wrap">
-                                <div className="widget-container">
-                                    <div className="widget-content">
-                                        <div className="row">
-                                            <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                <form className="j-forms" onSubmit={cubicarAccion}>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdCiudadOrigen: newValue,
-                                                                        })
-                                                                    }
-                                                                    value={state.IdCiudadOrigen || ""}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="IdCiudadOrigen"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataOrigenes}
-                                                                    getOptionLabel={(option) => option.m_sCiudad}
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                required
-                                                                                variant="outlined"
-                                                                                label="Origen"
-                                                                                size="small"
-                                                                                className="form-control"
-                                                                                {...params}
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    disabled: state.agregar == "Consultar",
-                                                                                    disableUnderline: true,
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdCiudadDestino: newValue,
-                                                                        })
-                                                                    }
-                                                                    value={state.IdCiudadDestino || ""}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="IdCiudadDestino"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataOrigenes}
-                                                                    getOptionLabel={(option) => option.m_sCiudad}
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                required
-                                                                                variant="outlined"
-                                                                                label="Destino"
-                                                                                size="small"
-                                                                                className="form-control"
-                                                                                {...params}
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    value: state.destinoRemitente,
-                                                                                    disabled: state.agregar == "Consultar",
-                                                                                    disableUnderline: true,
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    value={state.IdRemolque1 || {}}
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdRemolque1: newValue,
-                                                                        })
-                                                                    }
-                                                                    id="IdUnidad"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataUnidades}
-                                                                    getOptionLabel={(option) =>
-                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                                    }
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                required
-                                                                                variant="outlined"
-                                                                                label="Remolque 1"
-                                                                                size="small"
-                                                                                className="form-control"
-                                                                                {...params}
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    disableUnderline: true,
-                                                                                    endAdornment: (
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                padding="0px"
-                                                                                                style={{
-                                                                                                    paddingRight: "0px",
-                                                                                                }}
-                                                                                                onClick={() => {
-                                                                                                    setState({
-                                                                                                        ...state,
-                                                                                                        identificadorModal:
-                                                                                                            "IdRemolque1",
-                                                                                                        tipoModal: 4,
-                                                                                                        openDialog: true,
-                                                                                                    });
-                                                                                                }}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    ),
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    value={state.IdRemolque2 || ""}
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdRemolque2: newValue,
-                                                                        })
-                                                                    }
-                                                                    id="remolqueSecundario"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataUnidades}
-                                                                    getOptionLabel={(option) =>
-                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                                    }
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                {...params}
-                                                                                variant="outlined"
-                                                                                label="Remolque 2"
-                                                                                size="small"
-                                                                                className="form-control"
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    disableUnderline: true,
-                                                                                    endAdornment: (
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                padding="0px"
-                                                                                                style={{
-                                                                                                    paddingRight: "0px",
-                                                                                                }}
-                                                                                                onClick={() => {
-                                                                                                    setState({
-                                                                                                        ...state,
-                                                                                                        identificadorModal:
-                                                                                                            "IdRemolque2",
-                                                                                                        tipoModal: 4,
-                                                                                                        openDialog: true,
-                                                                                                    });
-                                                                                                }}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    ),
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div
-                                                            align="center"
-                                                            style={{padding: "10px", width: "100%"}}
-                                                        >
-                                                            <button
-                                                                type="submit"
-                                                                className="btn btn-primary primary-btn"
-                                                                style={{float: "none"}}
-                                                            >
-                                                                Cubicar
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                {
-                                                    <div
-                                                        style={{
-                                                            backgroundColor: "#ACACAC",
-                                                            minHeight: "400px",
-                                                        }}
-                                                    >
-                                                        <h4 style={{color: "white", padding: "5px"}}>
-                                                            Informes: {informes.length}
-                                                        </h4>
-                                                        {informes.map((i, index) => (
-                                                            <div style={{padding: "10px"}}>
-                                                                <table
-                                                                    style={{
-                                                                        backgroundColor: "white",
-                                                                        height: "100%",
-                                                                        width: "100%",
-                                                                        overflow: "scroll",
-                                                                    }}
-                                                                >
-                                                                    <thead>
-                                                                    <tr style={{backgroundColor: "#F9A03E"}}>
-                                                                        <th tyle={{paddingLeft: "5px"}}>
-                                                                            F1-00000{index} - {i[0].destino}
-                                                                        </th>
-                                                                        <th></th>
-                                                                        <th
-                                                                            style={{
-                                                                                textAlign: "right",
-                                                                                paddingRight: "5px",
-                                                                            }}
-                                                                        >
-                                                                            {" "}
-                                                                            Guias - {i.length}
-                                                                        </th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tr style={{backgroundColor: "#E6E6E6"}}>
-                                                                        <th>Guía</th>
-                                                                        <th>Destino</th>
-                                                                        <th>Paquetes</th>
-                                                                    </tr>
-                                                                    {i.map((g) => (
-                                                                        <tr
-                                                                            onClick={() =>
-                                                                                setState({...state, guiaSelected: g})
-                                                                            }
-                                                                        >
-                                                                            <td>{g.folio}</td>
-                                                                            <td>{g.destino}</td>
-                                                                            <td style={{textAlign: "center"}}>
-                                                                                {g.paquetes}
-                                                                            </td>
-                                                                        </tr>
-                                                                    ))}
-                                                                </table>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                {state.guiaSelected && (
-                                                    <div style={{backgroundColor: "#E6E6E6"}}>
-                                                        <h4 style={{color: "#717171", padding: "5px"}}>
-                                                            Detalles de Guía {state.guiaSelected.folio}
-                                                        </h4>
-                                                        {state.guiaSelected.arrayPaquetes.map(
-                                                            (p, index) => (
-                                                                <div
-                                                                    style={{color: "#707070", padding: "5px"}}
-                                                                >
-                                                                    <h4>Paquete {index + 1}</h4>
-                                                                    <div className="row">
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small" label="Peso"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xPeso}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small" label="Largo"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xLargo}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small" label="Ancho"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xAncho}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small" label="Alto"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xAlto}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-3 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small"
-                                                                                           label="Volumen"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={
-                                                                                               p.m_xAlto * p.m_xAlto * p.m_xLargo
-                                                                                           }
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-6 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small"
-                                                                                           label="Tipo embalaje"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={""}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-6 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small"
-                                                                                           label="Valor Declarado"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_cValorDeclarado}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-12 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small"
-                                                                                           label="Descripción"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_sDescripcion}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-12 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small" label="Ctd"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.ctd}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-sm-12 col-md-12 unit"
-                                                                             style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           size="small"
-                                                                                           label="Observaciones"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_sObservaciones}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div
-                                                className="form-footer"
-                                                className="col-md-12"
-                                                style={{padding: "10px"}}
-                                                align="center"
-                                            >
-                                                <button
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        setState({...state, agregar: "Agregar", cubicar: true});
-                                                        $('.nav-tabs li ').removeClass('active');
-                                                        $('.nav-tabs li').eq(1).addClass('active');
-                                                        $('.tab-content div ').removeClass('in show');
-                                                        $('#Agregar').addClass('in show');
-                                                        showAgregarFromCubicar(0);
-                                                    }}
-                                                    className="btn btn-primary primary-btn"
-                                                    style={{margin: "10px"}}
-                                                >
-                                                    Aceptar
-                                                </button>
-
-                                                <button
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        setState({...state, agregar: "Agregar", guias: []});
-                                                        $('.nav-tabs li ').removeClass('active');
-                                                        $('.nav-tabs li').eq(0).addClass('active');
-                                                        $('.tab-content div ').removeClass('in show');
-                                                        $('#Listado').addClass('in show');
-                                                    }}
-                                                    className="btn btn-secondary primary-btn"
-                                                    style={{margin: "10px"}}
-                                                >
-                                                    Cancelar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*/}
                     </div>
                 </div>
             </section>
