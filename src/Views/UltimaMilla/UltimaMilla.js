@@ -10,14 +10,17 @@ import {
     List,
     ListItem,
     ListSubheader,
-    makeStyles,
     Dialog,
     DialogContent,
     DialogActions,
-    DialogTitle, Button, MenuItem, DialogContentText
-} from "@material-ui/core";
-import FaceIcon from "@material-ui/icons/Face";
-import Tooltip from "@material-ui/core/Tooltip";
+    DialogTitle,
+    Button,
+    MenuItem,
+    DialogContentText,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import FaceIcon from "@mui/icons-material/Face";
+import Tooltip from "@mui/material/Tooltip";
 import FiltersMap from "./FiltersMap";
 import Cronograma from "./Cronograma";
 import {
@@ -35,16 +38,16 @@ import {
 import {actualizarCoordenadasRemitentesDestinatarios} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
-import MessageIcon from "@material-ui/icons/Message";
+import MessageIcon from "@mui/icons-material/Message";
 import {ReactComponent as FullscreenIcono} from "../../iconos/Mapa/fullscreen.svg";
 import {ReactComponent as FullscreenExitIcono} from "../../iconos/Mapa/fullscreen-exit.svg";
 import DetalleParadas from "./DetalleParadas";
 import Noty from "noty";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import TourUltimaMilla from "./TourUltimaMilla";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 import Buttons from "../../Util/CarruselButtons";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
@@ -642,7 +645,7 @@ class UltimaMilla extends Component {
                         <DialogContent>
                             <form onSubmit={this.reasignarParada}>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                    <FormControl fullWidth variant="outlined" size="small">
                                         <InputLabel id="sucursalListadoLabel">Operador</InputLabel>
                                         <Select
                                             labelId="sucursalListadoLabel"

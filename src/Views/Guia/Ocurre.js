@@ -11,9 +11,9 @@ import {
     InputLabel,
     Select,
     TextField, Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import { obtenerBancos } from '../../Util/Contexts/GuiaContext';
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import {numberToMoneyFormatt} from "../../Util/Util";
 import $ from 'jquery';
 window.jQuery = window.$ = $;
@@ -168,9 +168,10 @@ class MyComponent extends Component {
                         </Grid>
                         {/*<Grid item xs={2}/>*/}
                         <Grid item xs={12}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
+                            <FormControl fullWidth variant="outlined" size="small">
                                 <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
                                 <Select
+                                    size="small"
                                     labelId={"idTipoCobroLabel"}
                                     label={"Tipo de cobro"}
                                     key={"tipoCobroOcurre"}
@@ -201,8 +202,8 @@ class MyComponent extends Component {
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl fullWidth variant={'outlined'} margin={'dense'}>
-                                <TextField label={"Recibe"} name={"recibe"} className={"form-control"} variant={"outlined"} margin={"dense"}
+                            <FormControl fullWidth variant={'outlined'} size={"small"}>
+                                <TextField size="small" fullWidth label={"Recibe"} name={"recibe"} className={"form-control"} variant={"outlined"}
                                 value={this.state.recibe} onChange={(event) => this.handleChangeDataOcurre(event)}
                                            key={"recibe"}
                                            disabled={this.props.agregar === "Consultar"}>
@@ -211,7 +212,7 @@ class MyComponent extends Component {
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} >
-                            <FormControl fullWidth variant={'outlined'} margin={'dense'}>
+                            <FormControl fullWidth variant={'outlined'} size={"small"}>
                                 <label style={{alignSelf:"center"}} htmlFor="files">Seleccione evidencia para adjuntarla</label>
                                 <input style={{alignSelf:"center"}} id="files" name="file" type="file" multiple />
                                 <output style={{textAlign:"center"}} id={"result"} ></output>
@@ -219,7 +220,7 @@ class MyComponent extends Component {
                         </Grid>
                         {/*<Grid item xs={2}/>*/}
                         <Grid item xs={12}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
+                            <FormControl fullWidth variant="outlined" size="small">
                                 <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
                                 <Select
                                     labelId={"idTipoPagoLabel"}
@@ -253,6 +254,7 @@ class MyComponent extends Component {
                                 onChange={(event) => this.handleChangeDataOcurre(event)}
                                 className="form-control"
                                 type="text"
+                                fullWidth
                                 autoFocus
                                 key={"comentarioOcurre"}
                                 value={this.state.comentariosOcurre}
@@ -274,7 +276,7 @@ class MyComponent extends Component {
 
                         {this.state.aplicaDetalle && <>
                         <Grid item xs={6}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
+                            <FormControl fullWidth variant="outlined" size="small">
                                 <InputLabel id="idBancoproveniente">Banco proveniente</InputLabel>
                                 <Select
                                     labelId={"idBancoproveniente"}
@@ -320,7 +322,7 @@ class MyComponent extends Component {
                         }
                         {/*{(this.state.tipoPago == 1) &&
                         <Grid item xs={6}>
-                            <TextField variant="outlined" margin="dense" label="Importe recibido"
+                            <TextField variant="outlined" size="small" label="Importe recibido"
                                        onChange={(event) => this.handleChangeDataOcurre(event)}
                                        className="form-control"
                                        type="number"

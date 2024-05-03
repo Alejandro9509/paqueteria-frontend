@@ -1,12 +1,43 @@
 import React from 'react';
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-import { GridOverlay, DataGrid } from '@material-ui/data-grid';
-import {makeStyles} from "@material-ui/core/styles";
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import { DataGrid } from '@mui/x-data-grid' ;
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+
+const PREFIX = 'Historial';
+
+const classes = {
+    headerText: `${PREFIX}-headerText`,
+    root: `${PREFIX}-root`,
+    cardListContent: `${PREFIX}-cardListContent`,
+    input: `${PREFIX}-input`
+};
+
+const Root = styled('div')({
+   [`& .${classes.headerText}`]: {
+       marginBottom: 20,
+       marginTop: 20,
+       marginLeft: 5,
+       fontWeight: 'bold',
+   },
+    [`& .${classes.root}`]: {
+        minWidth: 275,
+        margin: 10,
+        boxShadow: '0px 0px 6px -1px',
+    },
+    [`& .${classes.cardListContent}`]: {
+       padding: 0,
+       margin:0,
+    },
+    [`& .${classes.input}`]: {
+       marginRight: 15
+    }
+});
 
 const data = []
 const types = [
@@ -28,29 +59,8 @@ const types = [
     }
 ]
 
-const useStyles = makeStyles({
-   headerText:{
-       marginBottom: 20,
-       marginTop: 20,
-       marginLeft: 5,
-       fontWeight: 'bold',
-   },
-    root: {
-        minWidth: 275,
-        margin: 10,
-        boxShadow: '0px 0px 6px -1px',
-    },
-    cardListContent:{
-       padding: 0,
-       margin:0,
-    },
-    input:{
-       marginRight: 15
-    }
-});
-
 export default function Historial(){
-    const classes = useStyles();
+
     const [selectedStartDate, setSelectedStartDate] = React.useState();
     const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [changeType, setChangeType] = React.useState(0);
@@ -96,8 +106,8 @@ export default function Historial(){
         return data.length != 0;
     }
 
-    return(
-        <div>
+    return (
+        <Root>
             <div className="row" style={{ paddingLeft: "8px" }}>
                 <h1 className={classes.headerText}>Historial de cambios del viaje</h1>
                 <form className="j-forms">
@@ -176,6 +186,6 @@ export default function Historial(){
                     <div style={{margin:20}}>No se encontró ningún registro</div>
                 </div>
             )}
-        </div>
-    )
+        </Root>
+    );
 }

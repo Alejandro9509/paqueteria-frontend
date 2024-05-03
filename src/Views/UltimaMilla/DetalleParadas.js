@@ -12,27 +12,27 @@ import {
     ListItem,
     ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, ButtonGroup, Popover, Fade, Dialog, DialogContent, DialogTitle, DialogActions,
-    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip, MenuItem
-} from "@material-ui/core";
+    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip,MenuItem
+} from "@mui/material";
 import {confirmAlert} from 'react-confirm-alert'; // Import
-import DescriptionIcon from '@material-ui/icons/Description';
-import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import DescriptionIcon from '@mui/icons-material/Description';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import DeleteIcon from '@material-ui/icons/Delete';
-import ReorderIcon from '@material-ui/icons/Reorder';
-import CachedIcon from '@material-ui/icons/Cached';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ReorderIcon from '@mui/icons-material/Reorder';
+import CachedIcon from '@mui/icons-material/Cached';
 import {ReactComponent as ParadasIcono} from "../../iconos/Mapa/paradas.svg";
-import CloseIcon from "@material-ui/icons/Close";
-import SearchIcon from "@material-ui/icons/Search";
+import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import {PieChart} from 'react-minimal-pie-chart';
-import BlockIcon from '@material-ui/icons/Block';
+import BlockIcon from '@mui/icons-material/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import PaquetesParcialesGuia from './PaquetesParcialesGuia';
 import OrdenarParadasUltimaMilla from "./OrdenarParadasUltimaMilla";
 import PaquetesList from "./PaquetesList";
-import GetAppIcon from '@material-ui/icons/GetApp';
-import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import DepartureBoardIcon from '@mui/icons-material/DepartureBoard';
 
 import {
     actualizarCoordenadasGuia,
@@ -49,11 +49,11 @@ import {
     remplazarPaqueteUltimaMilla
 } from "../../Util/Contexts/UltimaMillaContext";
 import Noty from "noty";
-import {InsertDriveFile} from "@material-ui/icons";
+import {InsertDriveFile} from "@mui/icons-material";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import CancelIcon from '@material-ui/icons/Cancel';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
 import CancelarSAT from "../SAT/CancelarSAT";
 import {
@@ -882,7 +882,8 @@ class DetalleParadas extends Component {
                             position: "fixed",
                             zIndex: 3000,
                             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                        }}>
+                        }}
+                        size="large">
                         <ParadasIcono style={{fill: "white"}}/>
                     </IconButton>
                 }
@@ -925,7 +926,7 @@ class DetalleParadas extends Component {
                                     style={{height: "30px"}}
                                     onClick={(e) => {this.setState({openDetail: false})
                                     this.props.changeFiltersMapDialogsState(e)}}
-                                >
+                                    size="large">
                                     <CloseIcon style={{fill: "white"}}/>
                                 </IconButton>
                             </div>
@@ -965,7 +966,7 @@ class DetalleParadas extends Component {
 
                             </Grid>
                             <Grid item md={6} sm={12}>
-                                <Grid container spacing={1} justify={"space-between"}
+                                <Grid container spacing={1} justifyContent={"space-between"}
                                       style={{paddingTop: "10px", paddingRight: "10px", height: "100%"}}>
                                     <Grid item sm={12}>
                                         <div style={{
@@ -1032,7 +1033,7 @@ class DetalleParadas extends Component {
                                                           }}>
                                                     <ListItemText primary={
                                                         <Grid container spacing={1} style={{width:"100%"}} alignItems={"center"}
-                                                              justify={"space-between"}>
+                                                              justifyContent={"space-between"}>
                                                             <Grid item sm={5}>
                                                                 <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} align={"left"}>{r.m_snNombreOperador}</Typography>
                                                             </Grid>
@@ -1058,7 +1059,10 @@ class DetalleParadas extends Component {
                                                             <Grid item sm={1}
                                                             >
                                                                 <Tooltip title="Reporte">
-                                                                    <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour)}>
+                                                                    <IconButton
+                                                                        aria-label="file"
+                                                                        onClick={(e) => this.generarReporte(e,tour)}
+                                                                        size="large">
                                                                         <InsertDriveFile fontSize={"large"}/>
                                                                     </IconButton>
                                                                 </Tooltip>
@@ -1068,7 +1072,11 @@ class DetalleParadas extends Component {
                                                                     {
                                                                         tour.m_bActiva &&
                                                                         <>
-                                                                    <IconButton disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)} aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                    <IconButton
+                                                                        disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)}
+                                                                        aria-label="file"
+                                                                        onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}
+                                                                        size="large">
                                                                         <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
                                                                     </IconButton>
                                                                     </>
@@ -1206,7 +1214,8 @@ class DetalleParadas extends Component {
                                                                                                                     console.log(JSON.stringify(g))
                                                                                                                     this.openPaquetesParciales(tour, g)
                                                                                                                 }}
-                                                                                                                aria-label="reorder">
+                                                                                                                aria-label="reorder"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Entregas Parciales"}>
                                                                                                                     <DepartureBoardIcon
@@ -1221,7 +1230,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101449)}
                                                                                                                 onClick={() => this.openRemplazarPaquete(tour, g)}
-                                                                                                                aria-label="reorder">
+                                                                                                                aria-label="reorder"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Remplazar"}>
                                                                                                                     <CachedIcon
@@ -1237,7 +1247,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101450)}
                                                                                                                 onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
-                                                                                                                aria-label="delete">
+                                                                                                                aria-label="delete"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cambiar ubicación"}>
                                                                                                                     <GpsFixedIcon
@@ -1252,7 +1263,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101452)}
                                                                                                                 onClick={() => this.descargarXMLCFDIPermisionario( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
-                                                                                                                aria-label="Descargar XML">
+                                                                                                                aria-label="Descargar XML"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Permisionario"}>
                                                                                                                     <GetAppIcon
@@ -1268,7 +1280,8 @@ class DetalleParadas extends Component {
                                                                                                                 onClick={() =>
                                                                                                                     this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)//g
                                                                                                                 }
-                                                                                                                aria-label="Timbrar SAT">
+                                                                                                                aria-label="Timbrar SAT"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Generar CFDI Traslado"}>
                                                                                                                     <DescriptionIcon
@@ -1282,7 +1295,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
-                                                                                                                aria-label="XML SAT">
+                                                                                                                aria-label="XML SAT"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Traslado"}>
                                                                                                                     <GetAppIcon
@@ -1293,8 +1307,7 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
-                                                                                                            <IconButton
-                                                                                                                aria-label="PDF TASLADO Opción 1">
+                                                                                                            <IconButton aria-label="PDF TRASLADO Opción 1" size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar PDF Opción 1"}>
                                                                                                                     <PictureAsPdfIcon
@@ -1317,8 +1330,7 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
-                                                                                                            <IconButton
-                                                                                                                aria-label="Descargar xml">
+                                                                                                            <IconButton aria-label="Descargar xml" size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML"}>
                                                                                                                     <GetAppIcon
@@ -1332,7 +1344,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() => this.showCancelarCFDI(g)}
-                                                                                                                aria-label="Cancelar SAT">
+                                                                                                                aria-label="Cancelar SAT"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cancelar SAT"}>
                                                                                                                     <BlockIcon
@@ -1346,7 +1359,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101453)}
                                                                                                                 onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
-                                                                                                                aria-label="delete">
+                                                                                                                aria-label="delete"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Eliminar"}>
                                                                                                                     <DeleteIcon
@@ -1361,7 +1375,7 @@ class DetalleParadas extends Component {
 
                                                                                             </TableCell>
                                                                                         </TableRow>
-                                                                                    )
+                                                                                    );
                                                                                 })
                                                                             }
                                                                         </TableBody>
@@ -1376,7 +1390,7 @@ class DetalleParadas extends Component {
 
                                                 </Collapse>
                                             </div>
-                                        )
+                                        );
                                     })
                                 }
 

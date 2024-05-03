@@ -12,11 +12,11 @@ import {
     Paper,
     Select,
     TextField
-} from "@material-ui/core";
+} from "@mui/material";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import DestinosTarifa from "./DestinosTarifa";
 import ProductosPrecios from "./ProductosPrecios";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import Noty from "noty";
 import Region from "./Region";
 import {getRandomId} from "../../Util/Util";

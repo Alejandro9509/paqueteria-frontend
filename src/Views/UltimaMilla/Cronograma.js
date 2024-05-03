@@ -13,15 +13,15 @@ import {
     TableContainer,
     TableHead,
     TableRow, Typography
-} from "@material-ui/core"
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import AutorenewIcon from '@material-ui/icons/Autorenew';
+} from "@mui/material"
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import moment from "moment";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 import Paradas from "./Paradas";
 import Noty from "noty";
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import { fil } from 'date-fns/locale';
 
@@ -123,7 +123,7 @@ class Cronograma extends Component {
                                 boxShadow: "rgb(0 0 0 / 16%) 0px -6px 5px"
                             }}>
 
-                                <Grid container direction={"row"} justify={"center"} alignItems="baseline">
+                                <Grid container direction={"row"} justifyContent={"center"} alignItems="baseline">
                                     <div align={"center"}
                                          style={{
                                              width: "216px",
@@ -228,11 +228,7 @@ class Cronograma extends Component {
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
-                                                                        <Chip
-                                                                            label={u.m_arrClsProGuia.length}
-                                                                            color={"default"}
-                                                                            variant="default"
-                                                                        />
+                                                                        <Chip label={u.m_arrClsProGuia.length} color={"default"} />
                                                                     </TableCell>
                                                                     <TableCell style={{
                                                                         borderBottom: "none"
@@ -247,7 +243,7 @@ class Cronograma extends Component {
 
                                                                     </TableCell>
                                                                 </TableRow>
-                                                            )
+                                                            );
                                                         })
                                                     }
                                                 </TableBody>

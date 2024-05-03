@@ -5,17 +5,39 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import * as XLSX from 'xlsx';
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
-import { makeStyles } from "@material-ui/core/styles";
-import { DataGrid } from '@material-ui/data-grid';
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import { DataGrid } from '@mui/x-data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@mui/material";
 import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obtenerTipoServicio, obtenerTipoServicioId } from "../Util/Contexts/TipoServiciosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
 import { confirmAlert } from "react-confirm-alert";
+const PREFIX = 'TiposServicio';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
+
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -26,23 +48,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
-
 function TiposServicio() {
 
-    const classes = useStyles();
+
 
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
@@ -179,7 +187,7 @@ function TiposServicio() {
             field: "",
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar">
                             <a onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))}
                                className="btn btn-default btn-xs"
@@ -211,8 +219,8 @@ function TiposServicio() {
                             disabled={!validarDerecho(9101317)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {
@@ -490,10 +498,12 @@ function TiposServicio() {
                                             density="compact"
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdTipoServicio}
-                                            onRowSelected={(row) => {
+                                            onRowSelectionModelChange={(newModel)=>{
+                                                if(newModel.length<1)
+                                                    return
                                                 setState({
                                                     ...state,
-                                                    IdTipoServicio: row.data.m_nIdTipoServicio
+                                                    IdTipoServicio: data.find(i=>i.m_nIdTipoServicio==newModel[0]).m_nIdTipoServicio
                                                 })
                                             }}
                                         />
@@ -513,7 +523,7 @@ function TiposServicio() {
                                                     {/*****************************************Descripcion************************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        label="Descripción"
                                                                        onChange={handleChange}
                                                                        className="form-control"
@@ -529,7 +539,7 @@ function TiposServicio() {
                                                     {/*****************************************Dias Habiles************************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        label="Dias Habiles"
                                                                        onChange={handleChange}
                                                                        className="form-control"
@@ -570,7 +580,7 @@ function TiposServicio() {
                                                     {/*****************************************Costo*******************************************************/}
                                                     <div className="col-sm-12 col-md-12 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Costo"
+                                                            <TextField variant="outlined" size="small" fullWidth label="Costo"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="number"

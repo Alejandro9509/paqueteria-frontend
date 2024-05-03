@@ -4,25 +4,34 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Button, Card, Checkbox,
-    Dialog, DialogActions, DialogContent,
-    Grid, List, ListItem, ListItemIcon, ListItemText, makeStyles,
-    MenuItem, Paper,
-    TextField
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
+    Button,
+    Card,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    Grid,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    MenuItem,
+    Paper,
+    TextField,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
 import RangosTarifa from "./RangosTarifa";
 import DialogCheckbox from "./DialogCheckbox";
-import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import CardHeader from "@material-ui/core/CardHeader";
-import Divider from "@material-ui/core/Divider";
+import CardHeader from "@mui/material/CardHeader";
+import Divider from "@mui/material/Divider";
 import DialogTransferList from "./DialogTransferList";
 import {getRandomId} from "../../Util/Util";
-import CancelIcon from "@material-ui/icons/Cancel";
-import AddIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
+import CancelIcon from "@mui/icons-material/Cancel";
+import AddIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 export default function ViajeLocal(props) {
@@ -279,7 +288,7 @@ export default function ViajeLocal(props) {
                             onChange={handleChangeViajeLocal}
                             name="idSucursal"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -299,7 +308,7 @@ export default function ViajeLocal(props) {
                             onChange={handleChangeViajeLocal}
                             name="idTipoMedida"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -316,7 +325,7 @@ export default function ViajeLocal(props) {
                             onChange={handleChangeViajeLocal}
                             name="idConcepto"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -328,7 +337,7 @@ export default function ViajeLocal(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={()=>handleShowDialogZonas(true)} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
                             {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>

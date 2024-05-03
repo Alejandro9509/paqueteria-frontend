@@ -1,22 +1,46 @@
 import React, {Component} from 'react';
+import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import {Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ListItemIcon, ListItemText, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, withStyles} from "@material-ui/core";
-import {DataGrid} from "@material-ui/data-grid";
-import {dataGridLocaleText} from "../../Constants";
+import {
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+} from "@mui/material";
 import { Table } from 'react-bootstrap';
 import Noty from 'noty';
-import Paper from '@material-ui/core/Paper';
-import { confirmAlert } from 'react-confirm-alert';
 import {
     agregarPaquetesParciales,
     obtenerPaquetesParciales,
     obtenerPaquetesPorParada
 } from "../../Util/Contexts/UltimaMillaContext";
-const useStyles = theme => ({
-    table: {
+const PREFIX = 'PaquetesParcialesGuia';
+
+const classes = {
+    table: `${PREFIX}-table`
+};
+
+const StyledDialog = styled(Dialog)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.table}`]: {
         maxWidth: 650,
-      },
-});
+      }
+}));
 
 function showSuccess(mensaje) {
     new Noty({
@@ -101,7 +125,7 @@ class PaquetesParcialesGuia extends Component{
     render() {
         const {classes} = this.props;
         return (
-            <Dialog
+            <StyledDialog
                 fullWidth={true}
                 maxWidth={'xs'}
                 open={this.props.open}
@@ -162,9 +186,9 @@ class PaquetesParcialesGuia extends Component{
                     </Button>
 
                 </DialogActions>
-            </Dialog>
+            </StyledDialog>
         );
     }
 }
 
-export default withStyles(useStyles)(PaquetesParcialesGuia);
+export default (PaquetesParcialesGuia);

@@ -9,7 +9,7 @@ import {
     InputLabel,
     MenuItem,
     Select
-} from "@material-ui/core";
+} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {imprimirFormatosIdInforme, obtenerFormatosImpresionProceso} from "../Util/Contexts/FormatosImpresionContext";
 import {showSuccess} from "../Util/Util";

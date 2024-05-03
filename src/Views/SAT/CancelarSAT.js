@@ -1,17 +1,17 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, Typography} from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, Typography} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 import {obtenerClavesCancelacionSAT} from "../../Util/Contexts/SATContext";
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerRecoleccionId, modificarRecoleccionSAT} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiaRecoleccionPorFolio} from "../../Util/Contexts/UltimaMillaContext";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import {obtenerTipoSeguro} from "../../Util/Contexts/TipoSeguroContext";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import InputAdornment from "@mui/material/InputAdornment";
 import Paquetes from "../Paquetes/Paquetes";
 import ComplementosSAT from "./ComplementosSAT";
 import DialogTableRemDes from "../RemitenteDestinatario/DialogTableRemDes";
@@ -209,14 +209,13 @@ class CancelarSAT extends Component {
                                 />
                             </div>
                             <DialogActions>
-                                <Button variant={"contained"} color={"default"} onClick={() => this.props.close()}>Cancelar</Button>
+                                <Button variant={"contained"} onClick={() => this.props.close()}>Cancelar</Button>
                                 <Button variant={"contained"} type={"submit"} color={"primary"}>Aceptar</Button>
                             </DialogActions>
                         </form>
                     </DialogContent>
                 </Dialog>
             </div>
-
         );
     }
 }

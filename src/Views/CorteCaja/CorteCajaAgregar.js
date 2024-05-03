@@ -1,17 +1,20 @@
 import React, {useState, useEffect} from 'react'
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import {
     Box,
     Button,
     FormControlLabel,
     Grid,
     Paper,
-    Switch, ThemeProvider,
-} from "@material-ui/core";
+    Switch,
+    ThemeProvider,
+    StyledEngineProvider,
+    adaptV4Theme,
+} from "@mui/material";
 import Noty from "noty";
 import {agregarCorte, modificarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
-import {createMuiTheme} from "@material-ui/core/styles";
+import {createTheme} from "@mui/material/styles";
 import DialogGuias from "./DialogGuias";
 import TableGuias from "./TableGuias";
 import DialogOperadores from "./DialogOperador";
@@ -40,7 +43,7 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
 
     const [openDialog, setOpenDialog] = useState(false);
     const [openDialogGuias, setOpenDialogGuias] = useState(false);
-    const theme = createMuiTheme({
+    const theme = createTheme(adaptV4Theme({
         overrides: {
             MuiSwitch: {
                 switchBase: {
@@ -70,7 +73,7 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                 }
             }
         }
-    });
+    }));
 
 
     useEffect( () => {
@@ -255,7 +258,7 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
 
     }
 
-    return(
+    return (
         <div>
             <DialogOperadores
                 open={!!(openDialog && !filtros.busquedaPorUsuario)}
@@ -310,26 +313,28 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                             />
                         </Grid>
                         <Grid item xs={2}>
-                            <ThemeProvider theme={theme}>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={filtros.busquedaPorUsuario}
-                                            onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
-                                            color="primary"
-                                            disabled={disaled}
-                                        />
-                                    }
-                                    label="Busqueda por usuario"
-                                />
-                            </ThemeProvider>
+                            <StyledEngineProvider injectFirst>
+                                <ThemeProvider theme={theme}>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={filtros.busquedaPorUsuario}
+                                                onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                                color="primary"
+                                                disabled={disaled}
+                                            />
+                                        }
+                                        label="Busqueda por usuario"
+                                    />
+                                </ThemeProvider>
+                            </StyledEngineProvider>
                         </Grid>
                         <Grid item xs={3}>
                             <TextField
                                 variant="outlined"
                                 label={filtros.busquedaPorUsuario ? `Usuario` : `Operador`}
                                 value={filtros.busquedaPorUsuario ? filtros.usuario?.nombre || '' : filtros.operador?.m_sNombreCompleto || ''}
-                                margin={'dense'}
+                                size={'small'}
                                 onClick={(e) => handleOpenDialog()}
                                 disabled={disaled}
                             />
@@ -372,6 +377,6 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                 </section>
             </Paper>
         </div>
-    )
+    );
 }
 export default CorteCajaAgregar

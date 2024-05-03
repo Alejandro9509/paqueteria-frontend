@@ -7,9 +7,9 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
-    InputLabel, Select,
+    InputLabel, MenuItem, Select,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 
 class MyComponent extends Component {
@@ -47,13 +47,13 @@ class MyComponent extends Component {
                         <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth
                                          variant="outlined"
-                                         margin="dense">
+                                         margin="small">
                                 <InputLabel id="idTipoCobroLabel">Tipo
                                     Cobro</InputLabel>
                                 <Select
-                                    native
                                     error={this.props.creditoVencido}
                                     labelId="idTipoCobroLabel"
+                                    size="small"
                                     label="Tipo Cobro"
                                     className="form-control"
                                     helperText={ (this.props.creditoVencido) ? "El cliente presenta saldo vencido.": ""}
@@ -66,18 +66,18 @@ class MyComponent extends Component {
                                     value={this.state.tipoCobro}
                                     >
 
-                                    <option value="0">
+                                    <MenuItem value="0">
                                         Seleccionar
-                                    </option>
+                                    </MenuItem>
                                     {this.state.dataTipoCobro.map(
                                         (tipoCobro) => (
-                                            <option
+                                            <MenuItem
                                                 key={tipoCobro.m_nIdTipoCobro}
                                                 value={tipoCobro.m_nIdTipoCobro}>
                                                 {
                                                     tipoCobro.m_sDescripcion
                                                 }
-                                            </option>
+                                            </MenuItem>
                                         )
                                     )}
                                 </Select>

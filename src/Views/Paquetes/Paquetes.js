@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@material-ui/core';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from "@material-ui/icons/Save";
-import {DataGrid} from "@material-ui/data-grid";
-import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
+import {FormControl, Grid, InputLabel, Select} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from "@mui/icons-material/Save";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
 import {
@@ -229,8 +228,6 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
     const addPaquetev2 = (data) => {
 
         console.log(data)
-        console.log(groupBy(dataPaquetes, 'm_nIdProducto'));
-        console.log(groupByArray(dataPaquetes, 'm_nIdProducto'));
         let paq = data
         /*if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
@@ -241,7 +238,7 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
             }*!/
 
         }*/
-        const arraynew = []
+        let arraynew = []
         let entra = false
         if (dataPaquetes.find(item => item.m_nIdPaquete === data.m_nIdPaquete)){//aqui entra en la modificacion
             dataPaquetes.forEach(item => {
@@ -261,20 +258,23 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                     item = data
 
                 }
-                arraynew.push(item)
+                arraynew=[...arraynew,item]
             })
             if(entra){
                 seCalculaTarifa()
             }
         }else{//aqui solo agrega el paquete
-            dataPaquetes.push(paq);
-            dataPaquetes.forEach(item => {
+            arraynew=dataPaquetes
+            console.log(dataPaquetes)
+            //dataPaquetes.push(paq)
+            console.log(paq)
+            arraynew=[...arraynew,paq]
+            /*dataPaquetes.forEach(item => {
+                console.log(item)
                 arraynew.push(item)
-            })
+            })*/
             seCalculaTarifa()
         }
-        /*dataPaquetes.push(paq);
-        resetPaquete()*/
         onChangeList(arraynew)
     }
 
@@ -330,7 +330,6 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                     limpiarProducto={limpiarProducto}
                 />
             </div>
-
             <div className="widget-container">
                 <div className="widget-content">
                     <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
@@ -354,7 +353,7 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                     {
                         dataPaquetes.length !== 0 &&
                         (
-                            <div className="row" style={{height: `${(dataPaquetes.length * 20)+80}px` , width: "100%"}}>
+                            <div className="row" >
                                 <DataGrid
                                     onSelectionModelChange={(e) => {
                                         setRowSelectionModel(e.selectionModel);
@@ -363,9 +362,12 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                                     localeText={dataGridLocaleText}
                                     checkboxSelection={seleccionable}
                                     density="compact"
-                                    pageSize={10}
+                                    //pageSize={10}
+                                    pageSizeOptions={[]}
                                     columns={columnsPaquetes}
                                     rows={dataPaquetes}
+                                    rowCount={dataPaquetes.length}
+                                    //autoPageSize
                                     getRowId={(row) => row.m_nIdPaquete}
                                 />
                             </div>

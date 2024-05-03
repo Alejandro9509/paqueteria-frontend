@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
-import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Dialog, DialogActions, DialogContent, Grid, MenuItem, TextField} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, Grid, MenuItem, TextField} from "@mui/material";
 import axios from "axios";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import InputAdornment from "@mui/material/InputAdornment";
 import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
@@ -48,7 +47,7 @@ function DialogAsignarSeguros(props) {
     };
 
     const handleAceptar = () =>{
-       modificarSeguroCliente(state.idTipoSeguro,idCliente.data.m_nIdCliente,state.porcentajeSeguro,state.aplicaSeguro,state.aseguradora, state.poliza)
+       modificarSeguroCliente(state.idTipoSeguro,idCliente.m_nIdCliente,state.porcentajeSeguro,state.aplicaSeguro,state.aseguradora, state.poliza)
         .then((respuesta) => {
             if(state.idTipoSeguro==5){
                 showSuccess("Se ha desasignado el tipo de seguro exitosamente");

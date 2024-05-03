@@ -4,7 +4,7 @@ import {ReactComponent as BanderaIcono} from "../../iconos/Mapa/flagIcon.svg";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import Noty from "noty";
 import DatosEntregaRecoleccion from "./DatosEntregaRecoleccion"
-import {Dialog, DialogContent} from "@material-ui/core";
+import {Dialog, DialogContent} from "@mui/material";
 
 function showSuccess(mensaje) {
     new Noty({

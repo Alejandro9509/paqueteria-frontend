@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Checkbox, FormControlLabel, Grid, TextField, Typography} from "@material-ui/core";
+import {Checkbox, FormControlLabel, Grid, TextField, Typography} from "@mui/material";
 import {Row} from "react-bootstrap";
 
 class InformacionBasica extends Component {
@@ -15,34 +15,35 @@ class InformacionBasica extends Component {
 
     render() {
         const {data} = this.props
-        return (<div>
-            <Grid container spacing={1} alignItems={"flex-start"} justify={"flex-start"}>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Folio
-                        seguimiento: <Typography> {data.m_sFolio}</Typography></Typography>
-                </Grid>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Fecha de
-                        registro: <Typography> {data.m_dFechaRegistro} {data.m_tHoraRegistro}</Typography></Typography>
-                </Grid>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Cliente: <Typography>{data.m_sNombreResponsablePago}</Typography></Typography>
-                </Grid>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Núm. de seguimiento: <Typography>{data.m_sTracking}</Typography></Typography>
-                </Grid>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Tipo seguro: <Typography>{data.m_sTipoSeguro}</Typography></Typography>
-                </Grid>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus: <Typography>{data.m_sEstatus}</Typography></Typography>
-                </Grid>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Registrada por: <Typography>{data.m_sRegistradaPor}</Typography></Typography>
-                </Grid>
-                <Grid item xs={3}>
-                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus Pago: <Typography>{data.m_sTipoCobro}</Typography></Typography>
-                </Grid>
+        return (
+            <div>
+                <Grid container spacing={1} alignItems={"flex-start"} justifyContent={"flex-start"}>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Folio
+                            seguimiento: <Typography> {data.m_sFolio}</Typography></Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Fecha de
+                            registro: <Typography> {data.m_dFechaRegistro} {data.m_tHoraRegistro}</Typography></Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Cliente: <Typography>{data.m_sNombreResponsablePago}</Typography></Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Núm. de seguimiento: <Typography>{data.m_sTracking}</Typography></Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Tipo seguro: <Typography>{data.m_sTipoSeguro}</Typography></Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus: <Typography>{data.m_sEstatus}</Typography></Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Registrada por: <Typography>{data.m_sRegistradaPor}</Typography></Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus Pago: <Typography>{data.m_sTipoCobro}</Typography></Typography>
+                    </Grid>
 
                 <Grid item xs={3}>
                     <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Valor declarado: <Typography>${data.m_xValorDeclarado}</Typography></Typography>
@@ -93,8 +94,9 @@ class InformacionBasica extends Component {
 
 
 
-            </Grid>
-        </div>);
+                </Grid>
+            </div>
+        );
     }
 }
 

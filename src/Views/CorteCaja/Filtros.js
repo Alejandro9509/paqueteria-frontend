@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
-import {Paper, Grid, TextField, Button, ThemeProvider, FormControlLabel, Switch} from '@material-ui/core';
+import {
+    Paper,
+    Grid,
+    TextField,
+    Button,
+    ThemeProvider,
+    StyledEngineProvider,
+    FormControlLabel,
+    Switch,
+    adaptV4Theme,
+} from '@mui/material';
 import DialogOperadores from "./DialogOperador";
 import {getCurrentDate, getCurrentTime, validarDerecho} from "../../Util/Util";
 import DialogUsuarios from "./DialogUsuarios";
-import {createMuiTheme} from "@material-ui/core/styles";
-import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
-import IconButton from "@material-ui/core/IconButton";
-import GridOnIcon from '@material-ui/icons/GridOn';
-import Tooltip from "@material-ui/core/Tooltip";
+import {createTheme} from "@mui/material/styles";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import IconButton from "@mui/material/IconButton";
+import GridOnIcon from '@mui/icons-material/GridOn';
+import Tooltip from "@mui/material/Tooltip";
 
 const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick}) => {
     const [clicked, setClicked] = useState(false);
@@ -20,7 +30,7 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
         fecha: getCurrentDate(),
     })
 
-    const theme = createMuiTheme({
+    const theme = createTheme(adaptV4Theme({
         overrides: {
             MuiSwitch: {
                 switchBase: {
@@ -50,7 +60,7 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                 }
             }
         }
-    });
+    }));
 
 
     const handleReportClick = () => {
@@ -124,7 +134,7 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                     <Grid item xs={2}>
                         <TextField
                             variant={"outlined"}
-                            margin={"dense"}
+                            size="small"
                             label="Fecha"
                             type="date"
                             value={value.fecha}
@@ -136,25 +146,27 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                         />
                     </Grid>
                     <Grid item xs={2}>
-                        <ThemeProvider theme={theme}>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={value.busquedaPorUsuario}
-                                        onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
-                                        color="primary"
-                                    />
-                                }
-                                label="Busqueda por usuario"
-                            />
-                        </ThemeProvider>
+                        <StyledEngineProvider injectFirst>
+                            <ThemeProvider theme={theme}>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={value.busquedaPorUsuario}
+                                            onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Busqueda por usuario"
+                                />
+                            </ThemeProvider>
+                        </StyledEngineProvider>
                     </Grid>
                     <Grid item xs={3}>
                         <TextField
                             variant="outlined"
                             label={value.busquedaPorUsuario ? `Usuario` : `Operador`}
                             value={value.busquedaPorUsuario ? value.usuario?.nombre || '' : value.operador?.m_sNombreCompleto || ''}
-                            margin={'dense'}
+                            size="small"
                             onClick={(e) => handleOpenDialog()}
                         />
                     </Grid>
@@ -178,7 +190,6 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                 </Grid>
             </Paper>
         </div>
-
     );
 };
 

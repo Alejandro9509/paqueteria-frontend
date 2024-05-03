@@ -9,16 +9,29 @@ import {
     TableCell,
     TableRow,
     Checkbox,
-    withStyles,
-    TableSortLabel, Typography, Grid, TextField
-} from "@material-ui/core";
+    TableSortLabel,
+    Typography,
+    Grid,
+    TextField,
+} from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
-import {fade} from "@material-ui/core/styles";
+import { alpha, styled } from "@mui/material/styles";
 import {obtenerGuia, obtenerGuiasFiltro, obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import {arrayGuias} from "../../Util/Data";
 
-const useStyles = theme => ({
-    visuallyHidden: {
+const PREFIX = 'PaquetesList';
+
+const classes = {
+    visuallyHidden: `${PREFIX}-visuallyHidden`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.visuallyHidden}`]: {
         border: 0,
         clip: 'rect(0 0 0 0)',
         height: 1,
@@ -29,7 +42,7 @@ const useStyles = theme => ({
         top: 20,
         width: 1,
     }
-});
+}));
 
 class PaquetesList extends Component {
     constructor(props) {
@@ -140,7 +153,7 @@ class PaquetesList extends Component {
         });
 
         return (
-            <div>
+            <Root>
                 <br/>
                 <TextField label="Filtrar por folio" value={this.state.filtro} onChange={this.handleChangeFiltro}
                            variant="outlined" margin={"dense"}/>
@@ -305,12 +318,11 @@ class PaquetesList extends Component {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </div>
-
+            </Root>
         );
     }
 }
 
 PaquetesList.propTypes = {};
 
-export default withStyles(useStyles)(PaquetesList);
+export default (PaquetesList);

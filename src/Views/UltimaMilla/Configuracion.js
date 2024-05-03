@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Grid, Typography, RadioGroup, FormControlLabel, Radio, FormLabel} from "@material-ui/core"
+import {Grid, Typography, RadioGroup, FormControlLabel, Radio, FormLabel} from "@mui/material"
 
 class Configuracion extends Component {
     constructor(props) {
