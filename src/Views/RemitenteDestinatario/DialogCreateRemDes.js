@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
-import {Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, TextField, Select} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, TextField, Select} from "@mui/material";
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
