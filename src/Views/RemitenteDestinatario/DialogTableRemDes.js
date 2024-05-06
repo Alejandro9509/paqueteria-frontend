@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Dialog, DialogActions, DialogContent, TextField} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, TextField} from "@mui/material";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from '@mui/material/styles';
@@ -42,7 +42,7 @@ function showSuccess(mensaje) {
 let rowSelect
 function DialogTableRemDes(props) {
 
-    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
+    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario, handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [

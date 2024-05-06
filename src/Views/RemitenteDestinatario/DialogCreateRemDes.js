@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
-import {Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, TextField, Select} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, TextField, Select} from "@mui/material";
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
@@ -49,7 +49,7 @@ let rowSelect
 
 function DialogCreateRemDes(props) {
     const classes = useStyles();
-    let {createVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
+    let {createVisible} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
     const [dataMunicipios, setDataMunicipios] = React.useState([]);
@@ -582,22 +582,22 @@ function DialogCreateRemDes(props) {
 
             </div>
             <DialogActions style={{justifyContent: "rigth"}}>
-                <button
+                <Button
                     onClick={() => {
                         createVisible(false)
                     }}
                     className="btn btn-secondary secondary-btn"
                 >
                     Cerrar
-                </button>
-                <button
+                </Button>
+                <Button
                     onClick={() => {
                         handleAgregar();
                     }}
                     className="btn btn-primary primary-btn"
                 >
                     Guardar
-                </button>
+                </Button>
             </DialogActions>
         </div>
     );
