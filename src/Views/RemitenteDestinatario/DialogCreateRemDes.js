@@ -4,8 +4,8 @@ import {Button, Dialog, DialogActions, DialogContent, FormControl, InputLabel, T
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
-import { makeStyles } from '@material-ui/core/styles';
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import makeStyles from '@mui/styles/makeStyles';
+import Autocomplete from '@mui/material/Autocomplete';
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
