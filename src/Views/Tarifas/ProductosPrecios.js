@@ -12,11 +12,11 @@ import {
     InputLabel,
     Select,
     TextField
-} from '@material-ui/core';
-import PageviewIcon from "@material-ui/icons/Pageview";
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import CancelIcon from '@material-ui/icons/Cancel';
+} from '@mui/material';
+import PageviewIcon from "@mui/icons-material/Pageview";
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import Autocomplete from '@mui/material/Autocomplete';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {
     useTable,
     useFilters,
@@ -158,6 +158,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                         <TextField
                                             {...params}
                                             variant="outlined"
+                                            size="small"
                                             label="Producto"
                                             className="form-control"
                                             margin="dense"
@@ -191,7 +192,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                     </div>
                     </Grid>
                     <Grid item xs>
-                        <IconButton onClick={onSubmit} style={{padding: "0px"}}>
+                        <IconButton onClick={onSubmit} style={{padding: "0px"}} size="large">
                             <AddBoxIcon style={{fill: "green", fontSize: "xx-large"}}/>
                         </IconButton>
                     </Grid>
@@ -231,10 +232,12 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                         {
                                             !disabled &&
                                             <td>
-                                                <IconButton onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    removeConcepto(e, c)
-                                                }}>
+                                                <IconButton
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        removeConcepto(e, c)
+                                                    }}
+                                                    size="large">
                                                     <CancelIcon style={{fill: "red", fontSize: "x-large"}}/>
                                                 </IconButton>
                                             </td>

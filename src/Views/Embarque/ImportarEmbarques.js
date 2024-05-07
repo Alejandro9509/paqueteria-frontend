@@ -10,9 +10,9 @@ import {
     InputLabel, List, ListItem, ListItemIcon, ListItemText,
     Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import {importarProductos} from "../../Util/Contexts/ProductosContext";
 import {
     showSuccess,
@@ -23,12 +23,11 @@ import {
 import {FilePond} from "react-filepond";
 import 'filepond/dist/filepond.min.css';
 import {descargarPlantillaImportarEmbarque} from "../../Util/Contexts/UtileriasContext";
-import {ExpandLess} from "@material-ui/icons";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import {DataGrid} from "@material-ui/data-grid";
+import {ExpandLess} from "@mui/icons-material";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {dataGridLocaleText} from "../../Constants";
 import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
-import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {

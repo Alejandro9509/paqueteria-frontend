@@ -2,7 +2,7 @@
 import React, {Component, useRef, useState} from 'react'
 import boxImage from "../../iconos/Cubicar/crate_box_assing.jpg"
 import boxImageAsignada from "../../iconos/Cubicar/crate_box.jpg"
-import {Button, Dialog, DialogContent, DialogTitle, Typography} from "@material-ui/core";
+import {Button, Dialog, DialogContent, DialogTitle, Typography} from "@mui/material";
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import {getRandomId} from "../../Util/Util";
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {Button, Dialog, DialogContent, Grid, Typography} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import {Button, Dialog, DialogContent, Grid, Typography} from "@mui/material";
+import TextField from "@mui/material/TextField";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import MultiSelect from "@kenshooui/react-multi-select";
 import {imprimirFormatosECCId, imprimirFormatosId} from "../../Util/Contexts/FormatosImpresionContext";
@@ -131,7 +131,7 @@ class FiltroReporteViajes extends Component {
     handlePatrocinadorSelected (row){
         this.setState( ({
             showDialogClientes: false,
-            cliente: row.data
+            cliente: row
         }))
 
     }

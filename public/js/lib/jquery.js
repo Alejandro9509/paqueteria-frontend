@@ -2662,7 +2662,7 @@ jQuery.contains = Sizzle.contains;
 
 var rneedsContext = jQuery.expr.match.needsContext;
 
-var rsingleTag = (/^<(\w+)\s*\/?>(?:<\/\1>|)$/);
+var rsingleTag = (((((((((((((((((((((((((((((((((((((((((/^<(\w+)\s*\/?>(?:<\/\1>|)$/)))))))))))))))))))))))))))))))))))))))));
 
 
 
@@ -3074,7 +3074,7 @@ jQuery.each({
 		return this.pushStack( ret );
 	};
 });
-var rnotwhite = (/\S+/g);
+var rnotwhite = (((((((((((((((((((((((((((((((((((((((((/\S+/g)))))))))))))))))))))))))))))))))))))))));
 
 
 
@@ -4116,7 +4116,7 @@ jQuery.fn.extend({
 		return defer.promise( obj );
 	}
 });
-var pnum = (/[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/).source;
+var pnum = (((((((((((((((((((((((((((((((((((((((((/[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/))))))))))))))))))))))))))))))))))))))))).source;
 
 var cssExpand = [ "Top", "Right", "Bottom", "Left" ];
 
@@ -4181,7 +4181,7 @@ var access = jQuery.access = function( elems, fn, key, value, chainable, emptyGe
 			fn.call( elems ) :
 			length ? fn( elems[0], key ) : emptyGet;
 };
-var rcheckableType = (/^(?:checkbox|radio)$/i);
+var rcheckableType = (((((((((((((((((((((((((((((((((((((((((/^(?:checkbox|radio)$/i)))))))))))))))))))))))))))))))))))))))));
 
 
 
@@ -6133,7 +6133,7 @@ function defaultDisplay( nodeName ) {
 	};
 
 })();
-var rmargin = (/^margin/);
+var rmargin = (((((((((((((((((((((((((((((((((((((((((/^margin/)))))))))))))))))))))))))))))))))))))))));
 
 var rnumnonpx = new RegExp( "^(" + pnum + ")(?!px)[a-z%]+$", "i" );
 
@@ -8506,7 +8506,7 @@ jQuery.fn.extend({
 
 var nonce = jQuery.now();
 
-var rquery = (/\?/);
+var rquery = (((((((((((((((((((((((((((((((((((((((((/\?/)))))))))))))))))))))))))))))))))))))))));
 
 
 

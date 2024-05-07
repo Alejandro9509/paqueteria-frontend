@@ -8,24 +8,24 @@ import {
     DialogContent,
     DialogTitle,
     Grid,
-    makeStyles,
     TextField,
-    Typography
-} from "@material-ui/core";
+    Typography,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import {MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents} from "react-leaflet";
 import {LocationMarker} from "../../Views/DisplayMapClass";
 import {obtenerUbicacion} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/marker.png";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 import {
     searchLocationAddress,
     searchAdressWithCoordinates,
     searchLocationGuia,
     searchLocationGuiav2
 } from "../../Util/Contexts/UltimaMillaContext";
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import {getAddressFormated} from "../../Util/Util";
 
 class ConfirmarUbicacion extends Component {
@@ -118,8 +118,11 @@ class ConfirmarUbicacion extends Component {
                             la {this.props.titulo}</Typography>
                         </Box>
                         <Box width="10%">
-                            <IconButton aria-label="close" onClick={() => this.props.mostrarDialogoMapa(false)}
-                                        style={{position: 'absolute', right: '20px', top: '20px', padding: '5px'}}>
+                            <IconButton
+                                aria-label="close"
+                                onClick={() => this.props.mostrarDialogoMapa(false)}
+                                style={{position: 'absolute', right: '20px', top: '20px', padding: '5px'}}
+                                size="large">
                                 <CloseIcon style={{fontSize: '30px'}}/>
                             </IconButton>
                         </Box>

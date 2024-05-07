@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {obtenerTiposDocumento, obtenerTiposDocumentoSucursal} from "../../Util/Contexts/TipoDocumentosContext";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField} from "@material-ui/core";
-import DialogContentText from "@material-ui/core/DialogContentText";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField} from "@mui/material";
+import DialogContentText from "@mui/material/DialogContentText";
 
 export default function DialogTiposDocumentoSucursal(props) {
     const [dataTiposDocumento, setDataTiposDocumento] = useState([]);

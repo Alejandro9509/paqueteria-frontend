@@ -1,15 +1,16 @@
 import React, {useEffect, useMemo, useState} from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {DataGrid, GridToolbar} from "@material-ui/data-grid";
+import {DataGrid, GridToolbar} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import CorteCajaAgregar from "../CorteCaja/CorteCajaAgregar";
 import $ from "jquery";
-import {Tooltip} from "@material-ui/core";
+import {Tooltip} from "@mui/material";
 import {confirmAlert} from "react-confirm-alert";
 import {eliminarCorte, obtenerCortes} from "../../Util/Contexts/CorteCajaContext";
 import {validarDerecho} from "../../Util/Util"
-import {makeStyles} from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import {
     agregarZonaOperativa, eliminarZonaOperativa,
     modificarZonaOperativa, obtenerByIdZonaOperativa,
@@ -18,6 +19,19 @@ import {
 import ZonaAgregar from "./ZonaAgregar";
 import Noty from "noty";
 import Filtros from "./Filtros";
+const PREFIX = 'ZonaOperativa';
+
+const classes = {
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+});
+
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -29,16 +43,8 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    }
-};
-const useStyles = makeStyles(styles);
-
 function ZonaOperativa() {
-    const classes = useStyles();
+
     const columns = useMemo(() => [
         {
             headerName: "Acciones",
@@ -46,7 +52,7 @@ function ZonaOperativa() {
             sortable: false, filterable: false,
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101398)}>
                             <a href="#Agregar" role="tab" data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row))}
@@ -75,8 +81,8 @@ function ZonaOperativa() {
                                       style={{ color: "#F30B0B" }} /></a>
                         </Tooltip>
 
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {
@@ -255,6 +261,7 @@ function ZonaOperativa() {
                                         <DataGrid columns={columns} rows={listadoZonas}                                               
                                                   locateText={dataGridLocaleText}
                                                   density={"compact"}
+                                                  autoPageSize={pantallaActiva==1?true:false}
                                                   pageSize={Math.floor((state.height - 310) / 30)}
                                                   getRowId={(row => row.m_nIdZona)}
                                                   disableColumnSelector

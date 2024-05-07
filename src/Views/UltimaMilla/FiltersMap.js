@@ -5,18 +5,16 @@ import {
     ListItem,
     ListSubheader,
     IconButton,
-    withStyles,
     InputBase,
     ListItemText, InputAdornment, TextField, DialogTitle, DialogContent, DialogActions, Button, Dialog, Typography
-} from "@material-ui/core";
-import {fade, makeStyles} from '@material-ui/core/styles';
-
-import Tooltip from "@material-ui/core/Tooltip";
-import DateRangeIcon from '@material-ui/icons/DateRange';
-import SendIcon from '@material-ui/icons/Send';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import SettingsIcon from '@material-ui/icons/Settings';
-import SearchIcon from '@material-ui/icons/Search';
+} from "@mui/material";
+import styled from '@mui/styles/styled';
+import {makeStyles,withStyles} from '@mui/styles'
+import Tooltip from "@mui/material/Tooltip";
+import SendIcon from '@mui/icons-material/Send';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SearchIcon from '@mui/icons-material/Search';
 import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import moment from "moment";
@@ -31,26 +29,27 @@ import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/ic
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import {ReactComponent as UltimaMillaIcono} from "../../iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
-import {Calendar, DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
+import { DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import { StaticDatePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import MomentUtils from "@date-io/moment";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import FormControl from "@mui/material/FormControl";
 import {obtenerOperadores, obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
-import MessageIcon from "@material-ui/icons/Message";
-import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
-import {Autocomplete} from "@material-ui/lab";
+import Autocomplete from '@mui/material/Autocomplete';
 import AgregarRemolques from "./AgregarRemolques";
 import {showSuccess, validarDerecho} from "../../Util/Util";
+import {alpha} from "@mui/material/styles";
+
 
 const useStyles = theme => ({
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
         },
         marginLeft: 0,
         width: '100%',
@@ -74,7 +73,7 @@ const useStyles = theme => ({
     inputInput: {
         padding: theme.spacing(1, 1, 1, 0),
         // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
@@ -85,6 +84,91 @@ const useStyles = theme => ({
         },
     },
 });
+
+/*
+const PREFIX = 'FiltersMap';
+
+const classes = {
+    search: `${PREFIX}-search`,
+    searchIcon: `${PREFIX}-searchIcon`,
+    inputRoot: `${PREFIX}-inputRoot`,
+    inputInput: `${PREFIX}-inputInput`,
+    arrow: `${PREFIX}-arrow`,
+    tooltip: `${PREFIX}-tooltip`
+};
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.search}`]: {
+        position: 'relative',
+
+        borderRadius: theme.shape.borderRadius,
+
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+
+        '&:hover': {
+
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
+
+        },
+        marginLeft: 0,
+
+        width: '100%',
+
+        [theme.breakpoints.up('sm')]: {
+
+            marginLeft: theme.spacing(1),
+
+            width: 'auto',
+
+        },
+    },
+    [`& .${classes.searchIcon}`]: {
+        padding: theme.spacing(0, 2),
+
+        height: '100%',
+
+        position: 'absolute',
+
+        pointerEvents: 'none',
+
+        display: 'flex',
+
+        alignItems: 'center',
+
+        justifyContent: 'center',
+    },
+    [`& .${classes.inputRoot}`]: {
+        color: 'inherit',
+    },
+    [`& .${classes.inputInput}`]: {
+        padding: theme.spacing(1, 1, 1, 0),
+
+        // vertical padding + font size from searchIcon
+
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+
+        transition: theme.transitions.create('width'),
+
+        width: '100%',
+
+        [theme.breakpoints.up('sm')]: {
+
+            width: '12ch',
+
+            '&:focus': {
+
+                width: '20ch',
+
+            },
+
+        },
+    }
+}));
+*/
+
 
 class FiltersMap extends Component {
     constructor(props) {
@@ -329,7 +413,7 @@ class FiltersMap extends Component {
 
 
     render() {
-        const {classes} = this.props;
+        //const {classes} = this.props;
         return (
             <div className="leaflet-top leaflet-left" style={{paddingLeft: "40px"}}>
                 <AgregarRemolques paquetes={this.state.paquetesSeleccionadas} asignarRemolquesUnidad={this.asignarRemolquesUnidad} open={this.state.openRemolques} close={() => this.setState({openRemolques: false})} />
@@ -425,7 +509,7 @@ class FiltersMap extends Component {
                                 >
                                     {
                                         this.state.sucursalesFiltradas.map((c, index) =>
-                                            <ListItem button onClick={(e) =>{ 
+                                            <ListItem button onClick={(e) =>{
                                             this.selectCiudad(c) 
                                             this.props.closeResumenParada(false)}} key={c.m_nIdSucursal}>
                                                 <ListItemText id={c.m_nIdSucursal} primary={c.m_sSucursal}/>
@@ -503,19 +587,20 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <MuiPickersUtilsProvider utils={MomentUtils}>
-                                    <DatePicker
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <StaticDatePicker
                                         autoOk
+                                        displayStaticWrapperAs="desktop"
                                         orientation="landscape"
                                         variant="static"
-                                        openTo="date"
+                                        openTo={"day"}
                                         format="dd/MMM/yyyy hh:mm a"
                                         value={this.state.fecha}
                                         disableFuture={!this.props.data.modoPlaneacion}
                                         disablePast={this.props.data.modoPlaneacion}
                                         onChange={this.changeDateConsult}
                                     />
-                                </MuiPickersUtilsProvider>
+                                </LocalizationProvider>
                             }>
                             <Chip
                                 icon={<CalendarioIcono
@@ -777,21 +862,31 @@ FiltersMap.propTypes = {};
 export default withStyles(useStyles)(FiltersMap);
 
 
-const useStylesBootstrap = makeStyles((theme) => ({
-    arrow: {
-        color: "#F9A03E",
-    },
-    tooltip: {
-        heigth: "400px",
-        width: "1000px",
-        backgroundColor: "white",
-    },
-}));
+
+
 
 function BootstrapTooltip(props) {
-    const classes = useStylesBootstrap();
+    const useStylesBootstrap = makeStyles((theme) => ({
 
-    return <Tooltip classes={classes} {...props} />;
+        arrow: {
+
+            color: "#F9A03E",
+
+        },
+
+        tooltip: {
+
+            heigth: "400px",
+
+            width: "1000px",
+
+            backgroundColor: "white",
+
+        },
+
+    }));
+
+    return <Tooltip classes={useStylesBootstrap()} {...props} />;
 }
 
 

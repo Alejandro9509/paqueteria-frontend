@@ -9,13 +9,13 @@ import {
     RadioGroup,
     TextField,
     Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import {showSuccess, validarDerecho} from "../../Util/Util";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {FilePond} from "react-filepond";
 import {agregarPlantillaImportacion, modificarPlantillaImportacion} from "../../Util/Contexts/PlantillasContext";
 import {toBase64} from "../../Util/GlobalFunctions";
-import InfoRoundedIcon from "@material-ui/icons/InfoRounded";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 
 export default function PlantillasImportacionAgregar(props){
     const grid = {
@@ -418,7 +418,7 @@ export default function PlantillasImportacionAgregar(props){
                                 <TextField
                                     variant="outlined"
                                     label="Responsable de pago"
-                                    margin="dense"
+                                    size="small"
                                     required
                                     value={state.cliente ? state.cliente.numeroCliente + ". " + state.cliente.nombreFiscal : ""}
                                     placeholder={"No. Cliente: Nombre fiscal"}
@@ -446,7 +446,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Nombre de hoja con embarques"
-                                            margin="dense"
+                                            size="small"
                                             name="hojaEmbarques"
                                             value={state.hojaEmbarques}
                                             helperText={"Nombre de la hoja donde se estarán los datos del embarque."}
@@ -458,7 +458,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Nombre de hoja con paquetes"
-                                            margin="dense"
+                                            size="small"
                                             name="hojaPaquetes"
                                             value={state.hojaPaquetes}
                                             helperText={"Nombre de la hoja donde se estarán los paquetes del embarque."}
@@ -470,7 +470,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Nombre de hoja con complementos SAT"
-                                            margin="dense"
+                                            size="small"
                                             name="hojaComplementos"
                                             value={state.hojaComplementos}
                                             helperText={"Nombre de la hoja donde se estarán los complementos SAT del embarque."}
@@ -488,7 +488,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Número de embarque"
-                                            margin="dense"
+                                            size="small"
                                             name="numeroEmbarque"
                                             value={state.numeroEmbarque}
                                             onChange={handleOnChange}
@@ -499,7 +499,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Moneda"
-                                            margin="dense"
+                                            size="small"
                                             name="moneda"
                                             value={state.moneda}
                                             onChange={handleOnChange}
@@ -510,7 +510,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Tipo de cambio"
-                                            margin="dense"
+                                            size="small"
                                             name="tipoCambio"
                                             value={state.tipoCambio}
                                             onChange={handleOnChange}
@@ -521,7 +521,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Tipo de cobro"
-                                            margin="dense"
+                                            size="small"
                                             name="tipoCobro"
                                             value={state.tipoCobro}
                                             onChange={handleOnChange}
@@ -532,7 +532,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Referencia"
-                                            margin="dense"
+                                            size="small"
                                             name="referencia"
                                             value={state.referencia}
                                             onChange={handleOnChange}
@@ -548,7 +548,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Tipo de seguro"
-                                            margin="dense"
+                                            size="small"
                                             name="tipoSeguro"
                                             value={state.tipoSeguro}
                                             onChange={handleOnChange}
@@ -559,7 +559,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Porcentaje de seguro"
-                                            margin="dense"
+                                            size="small"
                                             name="porcentajeSeguro"
                                             value={state.porcentajeSeguro}
                                             onChange={handleOnChange}
@@ -569,7 +569,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Valor declarado"
-                                            margin="dense"
+                                            size="small"
                                             name="valorDeclarado"
                                             value={state.valorDeclarado}
                                             onChange={handleOnChange}
@@ -579,7 +579,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Observaciones"
-                                            margin="dense"
+                                            size="small"
                                             name="observacionesEmbarque"
                                             value={state.observacionesEmbarque}
                                             onChange={handleOnChange}
@@ -595,7 +595,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Validar timbrado"
-                                            margin="dense"
+                                            size="small"
                                             name="validarTimbradoFactura"
                                             value={state.validarTimbradoFactura}
                                             onChange={handleOnChange}
@@ -606,7 +606,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Tipo de servicio"
-                                            margin="dense"
+                                            size="small"
                                             name="tipoServicio"
                                             value={state.tipoServicio}
                                             onChange={handleOnChange}
@@ -623,7 +623,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Número de remitente"
-                                            margin="dense"
+                                            size="small"
                                             name="numeroRemitente"
                                             value={state.numeroRemitente}
                                             onChange={handleOnChange}
@@ -634,7 +634,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Correo de remitente"
-                                            margin="dense"
+                                            size="small"
                                             name="correoRemitente"
                                             value={state.correoRemitente}
                                             onChange={handleOnChange}
@@ -645,7 +645,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Teléfono de remitente"
-                                            margin="dense"
+                                            size="small"
                                             name="telefonoRemitente"
                                             value={state.telefonoRemitente}
                                             onChange={handleOnChange}
@@ -655,7 +655,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Contacto de remitente"
-                                            margin="dense"
+                                            size="small"
                                             name="contactoRemitente"
                                             value={state.contactoRemitente}
                                             onChange={handleOnChange}
@@ -671,7 +671,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Número de destinatario"
-                                            margin="dense"
+                                            size="small"
                                             name="numeroDestinatario"
                                             value={state.numeroDestinatario}
                                             onChange={handleOnChange}
@@ -682,7 +682,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Correo de destinatario"
-                                            margin="dense"
+                                            size="small"
                                             name="correoDestinatario"
                                             value={state.correoDestinatario}
                                             onChange={handleOnChange}
@@ -693,7 +693,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Teléfono de destinatario"
-                                            margin="dense"
+                                            size="small"
                                             name="telefonoDestinatario"
                                             value={state.telefonoDestinatario}
                                             onChange={handleOnChange}
@@ -703,7 +703,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Contacto de destinatario"
-                                            margin="dense"
+                                            size="small"
                                             name="contactoDestinatario"
                                             value={state.contactoDestinatario}
                                             onChange={handleOnChange}
@@ -719,7 +719,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Entrega en sucursal"
-                                            margin="dense"
+                                            size="small"
                                             name="entregaEnSucursal"
                                             value={state.entregaEnSucursal}
                                             onChange={handleOnChange}
@@ -729,7 +729,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Sucursal de entrega"
-                                            margin="dense"
+                                            size="small"
                                             name="sucursalEntrega"
                                             value={state.sucursalEntrega}
                                             onChange={handleOnChange}
@@ -745,7 +745,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Entrega en diferente"
-                                            margin="dense"
+                                            size="small"
                                             name="entregaDiferenteDomicilio"
                                             value={state.entregaDiferenteDomicilio}
                                             onChange={handleOnChange}
@@ -755,7 +755,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Código postal"
-                                            margin="dense"
+                                            size="small"
                                             name="codigoPostalDiferenteDomicilio"
                                             value={state.codigoPostalDiferenteDomicilio}
                                             onChange={handleOnChange}
@@ -765,7 +765,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Colonia"
-                                            margin="dense"
+                                            size="small"
                                             name="coloniaDiferenteDomicilio"
                                             value={state.coloniaDiferenteDomicilio}
                                             onChange={handleOnChange}
@@ -775,7 +775,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Calle y número"
-                                            margin="dense"
+                                            size="small"
                                             name="calleNumeroDiferenteDomicilio"
                                             value={state.calleNumeroDiferenteDomicilio}
                                             onChange={handleOnChange}
@@ -785,7 +785,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Entregar en"
-                                            margin="dense"
+                                            size="small"
                                             name="entregarEn"
                                             value={state.entregarEn}
                                             onChange={handleOnChange}
@@ -795,7 +795,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Datos adicionales"
-                                            margin="dense"
+                                            size="small"
                                             name="datosAdicionales"
                                             value={state.datosAdicionales}
                                             onChange={handleOnChange}
@@ -811,7 +811,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Recoleccion en diferente"
-                                            margin="dense"
+                                            size="small"
                                             name="recoleccionDiferenteDomicilio"
                                             value={state.recoleccionDiferenteDomicilio}
                                             onChange={handleOnChange}
@@ -821,7 +821,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Código postal"
-                                            margin="dense"
+                                            size="small"
                                             name="codigoPostalDiferenteDomicilioRecoleccion"
                                             value={state.codigoPostalDiferenteDomicilioRecoleccion}
                                             onChange={handleOnChange}
@@ -831,7 +831,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Colonia"
-                                            margin="dense"
+                                            size="small"
                                             name="coloniaDiferenteDomicilioRecoleccion"
                                             value={state.coloniaDiferenteDomicilioRecoleccion}
                                             onChange={handleOnChange}
@@ -841,7 +841,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Calle y número"
-                                            margin="dense"
+                                            size="small"
                                             name="calleNumeroDiferenteDomicilioRecoleccion"
                                             value={state.calleNumeroDiferenteDomicilioRecoleccion}
                                             onChange={handleOnChange}
@@ -851,7 +851,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Recogerr en"
-                                            margin="dense"
+                                            size="small"
                                             name="recogerEn"
                                             value={state.recogerEn}
                                             onChange={handleOnChange}
@@ -861,7 +861,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Datos adicionales"
-                                            margin="dense"
+                                            size="small"
                                             name="datosAdicionalesRecoleccion"
                                             value={state.datosAdicionalesRecoleccion}
                                             onChange={handleOnChange}
@@ -877,7 +877,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Latitud"
-                                            margin="dense"
+                                            size="small"
                                             name="latitud"
                                             value={state.latitud}
                                             onChange={handleOnChange}
@@ -888,7 +888,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Longitud"
-                                            margin="dense"
+                                            size="small"
                                             name="longitud"
                                             value={state.longitud}
                                             onChange={handleOnChange}
@@ -905,7 +905,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Agregar cita"
-                                            margin="dense"
+                                            size="small"
                                             name="conCita"
                                             value={state.conCita}
                                             onChange={handleOnChange}
@@ -915,7 +915,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Dejar cita pendiente"
-                                            margin="dense"
+                                            size="small"
                                             name="citaPendiente"
                                             value={state.citaPendiente}
                                             onChange={handleOnChange}
@@ -925,7 +925,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Fecha de cita"
-                                            margin="dense"
+                                            size="small"
                                             name="fechaCita"
                                             value={state.fechaCita}
                                             onChange={handleOnChange}
@@ -935,7 +935,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Hora mínima de cita"
-                                            margin="dense"
+                                            size="small"
                                             name="horaMinimaCita"
                                             value={state.horaMinimaCita}
                                             onChange={handleOnChange}
@@ -945,7 +945,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Hora máxima de cita"
-                                            margin="dense"
+                                            size="small"
                                             name="horaMaximaCita"
                                             value={state.horaMaximaCita}
                                             onChange={handleOnChange}
@@ -961,7 +961,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Cantidad de paquetes"
-                                            margin="dense"
+                                            size="small"
                                             name="cantidadPaquete"
                                             value={state.cantidadPaquete}
                                             onChange={handleOnChange}
@@ -972,7 +972,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Número de paquete"
-                                            margin="dense"
+                                            size="small"
                                             name="numeroProducto"
                                             value={state.numeroProducto}
                                             onChange={handleOnChange}
@@ -983,7 +983,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Descripción"
-                                            margin="dense"
+                                            size="small"
                                             name="descripcionPaquete"
                                             value={state.descripcionPaquete}
                                             onChange={handleOnChange}
@@ -994,7 +994,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Largo"
-                                            margin="dense"
+                                            size="small"
                                             name="largo"
                                             value={state.largo}
                                             onChange={handleOnChange}
@@ -1005,7 +1005,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Alto"
-                                            margin="dense"
+                                            size="small"
                                             name="alto"
                                             value={state.alto}
                                             onChange={handleOnChange}
@@ -1016,7 +1016,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Ancho"
-                                            margin="dense"
+                                            size="small"
                                             name="ancho"
                                             value={state.ancho}
                                             onChange={handleOnChange}
@@ -1027,7 +1027,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Embalaje de paquete"
-                                            margin="dense"
+                                            size="small"
                                             name="embalajePaquete"
                                             value={state.embalajePaquete}
                                             onChange={handleOnChange}
@@ -1038,7 +1038,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Peso"
-                                            margin="dense"
+                                            size="small"
                                             name="pesoPaquete"
                                             value={state.pesoPaquete}
                                             onChange={handleOnChange}
@@ -1049,7 +1049,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Observaciones"
-                                            margin="dense"
+                                            size="small"
                                             name="observacionesPaquete"
                                             value={state.observacionesPaquete}
                                             onChange={handleOnChange}
@@ -1065,7 +1065,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Cantidad"
-                                            margin="dense"
+                                            size="small"
                                             name="cantidadComplemento"
                                             value={state.cantidadComplemento}
                                             onChange={handleOnChange}
@@ -1076,7 +1076,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Peso"
-                                            margin="dense"
+                                            size="small"
                                             name="pesoComplemento"
                                             value={state.pesoComplemento}
                                             onChange={handleOnChange}
@@ -1087,7 +1087,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Clave producto/servicio"
-                                            margin="dense"
+                                            size="small"
                                             name="claveProductoServicio"
                                             value={state.claveProductoServicio}
                                             onChange={handleOnChange}
@@ -1098,7 +1098,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Clave unidad de medida"
-                                            margin="dense"
+                                            size="small"
                                             name="claveUnidadMedida"
                                             value={state.claveUnidadMedida}
                                             onChange={handleOnChange}
@@ -1109,7 +1109,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Es material peligroso"
-                                            margin="dense"
+                                            size="small"
                                             name="esMaterialPeligroso"
                                             value={state.esMaterialPeligroso}
                                             onChange={handleOnChange}
@@ -1119,7 +1119,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Clave material peligroso"
-                                            margin="dense"
+                                            size="small"
                                             name="claveMaterialPeligroso"
                                             value={state.claveMaterialPeligroso}
                                             onChange={handleOnChange}
@@ -1129,7 +1129,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Clave de embalaje"
-                                            margin="dense"
+                                            size="small"
                                             name="claveEmbalaje"
                                             value={state.claveEmbalaje}
                                             onChange={handleOnChange}
@@ -1139,7 +1139,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Descripcion de embalaje"
-                                            margin="dense"
+                                            size="small"
                                             name="descripcionEmbalajeComplemento"
                                             value={state.descripcionEmbalajeComplemento}
                                             onChange={handleOnChange}
@@ -1149,7 +1149,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Clave de fracción arancelaria"
-                                            margin="dense"
+                                            size="small"
                                             name="claveFraccionArancelaria"
                                             value={state.claveFraccionArancelaria}
                                             onChange={handleOnChange}
@@ -1159,7 +1159,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Es fármaco"
-                                            margin="dense"
+                                            size="small"
                                             name="EsFarmaco"
                                             value={state.esFarmaco}
                                             onChange={handleOnChange}
@@ -1169,7 +1169,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Clave de Sector COFEPRIS"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="ClaveSectorCofepris"
                                                    value={state.claveSectorCofepris}
                                                    onChange={handleOnChange}
@@ -1179,7 +1179,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Nombre de Ingrediente Activo"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="NombreIngredienteActivo"
                                                    value={state.nombreIngredienteActivo}
                                                    onChange={handleOnChange}
@@ -1189,7 +1189,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Nombre Químico"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="NombreQuimico"
                                                    value={state.nombreQuimico}
                                                    onChange={handleOnChange}
@@ -1199,7 +1199,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Denominación Genérica"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="DenominacionGenericaProd"
                                                    value={state.denominacionGenericaProd}
                                                    onChange={handleOnChange}
@@ -1209,7 +1209,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Denominación Distintiva"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="DenominacionDistintivaProd"
                                                    value={state.denominacionDistintivaProd}
                                                    onChange={handleOnChange}
@@ -1219,7 +1219,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Fabricante"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="Fabricante"
                                                    value={state.fabricante}
                                                    onChange={handleOnChange}
@@ -1229,7 +1229,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Fecha de Caducidad (dd/MM/AAAA o AAAA-MM-dd)"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="FechaCaducidad"
                                                    value={state.fechaCaducidad}
                                                    onChange={handleOnChange}
@@ -1239,7 +1239,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Lote de Medicamento"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="LoteMedicamento"
                                                    value={state.loteMedicamento}
                                                    onChange={handleOnChange}
@@ -1249,7 +1249,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Clave de Forma Farmacéutica"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="FormaFarmaceutica"
                                                    value={state.formaFarmaceutica}
                                                    onChange={handleOnChange}
@@ -1259,7 +1259,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                                    variant="outlined"
                                                    label="Clave de Condición Especial de Transporte"
-                                                   margin="dense"
+                                                   size="small"
                                                    name="CondicionesEspTransp"
                                                    value={state.condicionesEspTransp}
                                                    onChange={handleOnChange}
@@ -1269,7 +1269,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Registro Sanitario/Folio de Autorización"
-                                            margin="dense"
+                                            size="small"
                                             name="RegistroSanitarioFolioAutorizacion"
                                             value={state.registroSanitarioFolioAutorizacion}
                                             onChange={handleOnChange}
@@ -1279,7 +1279,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Número CAS"
-                                            margin="dense"
+                                            size="small"
                                             name="NumeroCAS"
                                             value={state.numeroCAS}
                                             onChange={handleOnChange}
@@ -1289,7 +1289,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Núm. Registro CICLOPLAFEST"
-                                            margin="dense"
+                                            size="small"
                                             name="NumRegSanPlagCOFEPRIS"
                                             value={state.numRegSanPlagCOFEPRIS}
                                             onChange={handleOnChange}
@@ -1299,7 +1299,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Datos del Fabricante"
-                                            margin="dense"
+                                            size="small"
                                             name="DatosFabricante"
                                             value={state.datosFabricante}
                                             onChange={handleOnChange}
@@ -1309,7 +1309,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Datos del Formulador"
-                                            margin="dense"
+                                            size="small"
                                             name="DatosFormulador"
                                             value={state.datosFormulador}
                                             onChange={handleOnChange}
@@ -1319,7 +1319,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Datos del Maquilador"
-                                            margin="dense"
+                                            size="small"
                                             name="DatosMaquilador"
                                             value={state.datosMaquilador}
                                             onChange={handleOnChange}
@@ -1329,7 +1329,7 @@ export default function PlantillasImportacionAgregar(props){
                                         <TextField
                                             variant="outlined"
                                             label="Uso Autorizado"
-                                            margin="dense"
+                                            size="small"
                                             name="UsoAutorizado"
                                             value={state.usoAutorizado}
                                             onChange={handleOnChange}
@@ -1401,7 +1401,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Nombre de hoja con embarques"
-                            margin="dense"
+                            size="small"
                             name="hojaEmbarques"
                             value={props.value.hojaEmbarques}
                             helperText={"Es el nombre que tendrá la hoja donde se agregará los datos del embarque."}
@@ -1419,7 +1419,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Número de embarque"
-                            margin="dense"
+                            size="small"
                             name="numeroEmbarque"
                             value={props.value.numeroEmbarque}
                             onChange={handleOnChange}
@@ -1430,7 +1430,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Referencia"
-                            margin="dense"
+                            size="small"
                             name="referencia"
                             value={props.value.referencia}
                             onChange={handleOnChange}
@@ -1441,7 +1441,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Es recolección"
-                            margin="dense"
+                            size="small"
                             name="esRecoleccion"
                             value={props.value.esRecoleccion}
                             onChange={handleOnChange}
@@ -1458,7 +1458,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Responsable de pago"
-                            margin="dense"
+                            size="small"
                             name="responsablePago"
                             value={props.value.responsablePago}
                             onChange={handleOnChange}
@@ -1495,7 +1495,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Valor declarado"
-                            margin="dense"
+                            size="small"
                             name="valorDeclarado"
                             value={props.value.valorDeclarado}
                             onChange={handleOnChange}
@@ -1506,7 +1506,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Observaciones"
-                            margin="dense"
+                            size="small"
                             name="observacionesEmbarque"
                             value={props.value.observacionesEmbarque}
                             onChange={handleOnChange}
@@ -1522,7 +1522,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Número de remitente"
-                            margin="dense"
+                            size="small"
                             name="numeroRemitente"
                             value={props.value.numeroRemitente}
                             onChange={handleOnChange}
@@ -1539,7 +1539,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Número de destinatario"
-                            margin="dense"
+                            size="small"
                             name="numeroDestinatario"
                             value={props.value.numeroDestinatario}
                             onChange={handleOnChange}
@@ -1577,7 +1577,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Entrega en sucursal"
-                            margin="dense"
+                            size="small"
                             name="entregaEnSucursal"
                             value={props.value.entregaEnSucursal}
                             onChange={handleOnChange}
@@ -1587,7 +1587,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Sucursal de entrega"
-                            margin="dense"
+                            size="small"
                             name="sucursalEntrega"
                             value={props.value.sucursalEntrega}
                             onChange={handleOnChange}
@@ -1603,7 +1603,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Entrega en diferente"
-                            margin="dense"
+                            size="small"
                             name="entregaDiferenteDomicilio"
                             value={props.value.entregaDiferenteDomicilio}
                             onChange={handleOnChange}
@@ -1613,7 +1613,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Código postal"
-                            margin="dense"
+                            size="small"
                             name="codigoPostalDiferenteDomicilio"
                             value={props.value.codigoPostalDiferenteDomicilio}
                             onChange={handleOnChange}
@@ -1623,7 +1623,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Colonia"
-                            margin="dense"
+                            size="small"
                             name="coloniaDiferenteDomicilio"
                             value={props.value.coloniaDiferenteDomicilio}
                             onChange={handleOnChange}
@@ -1633,7 +1633,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Calle y número"
-                            margin="dense"
+                            size="small"
                             name="calleNumeroDiferenteDomicilio"
                             value={props.value.calleNumeroDiferenteDomicilio}
                             onChange={handleOnChange}
@@ -1643,7 +1643,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Entregar en"
-                            margin="dense"
+                            size="small"
                             name="entregarEn"
                             value={props.value.entregarEn}
                             onChange={handleOnChange}
@@ -1653,7 +1653,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Datos adicionales"
-                            margin="dense"
+                            size="small"
                             name="datosAdicionales"
                             value={props.value.datosAdicionales}
                             onChange={handleOnChange}
@@ -1669,7 +1669,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Recoleccion en diferente"
-                            margin="dense"
+                            size="small"
                             name="recoleccionDiferenteDomicilio"
                             value={props.value.recoleccionDiferenteDomicilio}
                             onChange={handleOnChange}
@@ -1679,7 +1679,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Código postal"
-                            margin="dense"
+                            size="small"
                             name="codigoPostalDiferenteDomicilioRecoleccion"
                             value={props.value.codigoPostalDiferenteDomicilioRecoleccion}
                             onChange={handleOnChange}
@@ -1689,7 +1689,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Colonia"
-                            margin="dense"
+                            size="small"
                             name="coloniaDiferenteDomicilioRecoleccion"
                             value={props.value.coloniaDiferenteDomicilioRecoleccion}
                             onChange={handleOnChange}
@@ -1699,7 +1699,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Calle y número"
-                            margin="dense"
+                            size="small"
                             name="calleNumeroDiferenteDomicilioRecoleccion"
                             value={props.value.calleNumeroDiferenteDomicilioRecoleccion}
                             onChange={handleOnChange}
@@ -1709,7 +1709,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Recogerr en"
-                            margin="dense"
+                            size="small"
                             name="recogerEn"
                             value={props.value.recogerEn}
                             onChange={handleOnChange}
@@ -1719,7 +1719,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Datos adicionales"
-                            margin="dense"
+                            size="small"
                             name="datosAdicionalesRecoleccion"
                             value={props.value.datosAdicionalesRecoleccion}
                             onChange={handleOnChange}
@@ -1735,7 +1735,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Agregar cita"
-                            margin="dense"
+                            size="small"
                             name="conCita"
                             value={props.value.conCita}
                             onChange={handleOnChange}
@@ -1745,7 +1745,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Dejar cita pendiente"
-                            margin="dense"
+                            size="small"
                             name="citaPendiente"
                             value={props.value.citaPendiente}
                             onChange={handleOnChange}
@@ -1755,7 +1755,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Fecha de cita"
-                            margin="dense"
+                            size="small"
                             name="fechaCita"
                             value={props.value.fechaCita}
                             onChange={handleOnChange}
@@ -1765,7 +1765,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Hora mínima de cita"
-                            margin="dense"
+                            size="small"
                             name="horaMinimaCita"
                             value={props.value.horaMinimaCita}
                             onChange={handleOnChange}
@@ -1775,7 +1775,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Hora máxima de cita"
-                            margin="dense"
+                            size="small"
                             name="horaMaximaCita"
                             value={props.value.horaMaximaCita}
                             onChange={handleOnChange}
@@ -1791,7 +1791,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Cantidad de paquetes"
-                            margin="dense"
+                            size="small"
                             name="cantidadPaquete"
                             value={props.value.cantidadPaquete}
                             onChange={handleOnChange}
@@ -1802,7 +1802,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Número de producto"
-                            margin="dense"
+                            size="small"
                             name="numeroProducto"
                             value={props.value.numeroProducto}
                             onChange={handleOnChange}
@@ -1813,7 +1813,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Observaciones"
-                            margin="dense"
+                            size="small"
                             name="observacionesPaquete"
                             value={props.value.observacionesPaquete}
                             onChange={handleOnChange}
@@ -1829,7 +1829,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Cantidad"
-                            margin="dense"
+                            size="small"
                             name="cantidadComplemento"
                             value={props.value.cantidadComplemento}
                             onChange={handleOnChange}
@@ -1840,7 +1840,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Clave producto/servicio"
-                            margin="dense"
+                            size="small"
                             name="claveProductoServicio"
                             value={props.value.claveProductoServicio}
                             onChange={handleOnChange}
@@ -1851,7 +1851,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Clave unidad de medida"
-                            margin="dense"
+                            size="small"
                             name="claveUnidadMedida"
                             value={props.value.claveUnidadMedida}
                             onChange={handleOnChange}
@@ -1862,7 +1862,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Es material peligroso"
-                            margin="dense"
+                            size="small"
                             name="esMaterialPeligroso"
                             value={props.value.esMaterialPeligroso}
                             onChange={handleOnChange}
@@ -1873,7 +1873,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Clave material peligroso"
-                            margin="dense"
+                            size="small"
                             name="claveMaterialPeligroso"
                             value={props.value.claveMaterialPeligroso}
                             onChange={handleOnChange}
@@ -1884,7 +1884,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Clave de embalaje"
-                            margin="dense"
+                            size="small"
                             name="claveEmbalaje"
                             value={props.value.claveEmbalaje}
                             onChange={handleOnChange}
@@ -1895,7 +1895,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Descripcion de embalaje"
-                            margin="dense"
+                            size="small"
                             name="descripcionEmbalajeComplemento"
                             value={props.value.descripcionEmbalajeComplemento}
                             onChange={handleOnChange}
@@ -1906,7 +1906,7 @@ function PlantillaLineal(props) {
                         <TextField
                             variant="outlined"
                             label="Clave de fracción arancelaria"
-                            margin="dense"
+                            size="small"
                             name="claveFraccionArancelaria"
                             value={props.value.claveFraccionArancelaria}
                             onChange={handleOnChange}

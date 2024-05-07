@@ -993,7 +993,7 @@
                     return;
                 }
 
-                sp = new $.fn.sparkline[options.get('type')](this, values, options, width, height);
+                sp = new ($.fn.sparkline[options.get('type')])(this, values, options, width, height);
 
                 sp.render();
 

@@ -12,11 +12,11 @@ import {
     InputLabel,
     Select,
     TextField, Tooltip
-} from '@material-ui/core';
-import PageviewIcon from "@material-ui/icons/Pageview";
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import CancelIcon from '@material-ui/icons/Cancel';
+} from '@mui/material';
+import PageviewIcon from "@mui/icons-material/Pageview";
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import Autocomplete from '@mui/material/Autocomplete';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {
     useTable,
     useFilters,
@@ -30,11 +30,11 @@ import {
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import {getUniqueListBy} from "../../Util/Util";
-import {DataGrid} from "@material-ui/data-grid";
-import SaveIcon from "@material-ui/icons/Save";
-import EditIcon from "@material-ui/icons/Edit";
+import {DataGrid} from "@mui/x-data-grid";
+import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteIcon from "@mui/icons-material/Delete";
 const headers = API_HEADERS
 
 /**Props usadas:
@@ -624,7 +624,7 @@ export default function ConceptosFacturacion(props) {
                         </Grid>
                     }
                     <Grid item xs>
-                        <IconButton onClick={onSubmit} style={{ padding: "0px" }}>
+                        <IconButton onClick={onSubmit} style={{ padding: "0px" }} size="large">
                             <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                         </IconButton>
                     </Grid>

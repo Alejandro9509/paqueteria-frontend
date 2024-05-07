@@ -3,34 +3,44 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
-    Grid, InputLabel, List, ListItem, ListItemText, makeStyles,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    Grid,
+    InputLabel,
+    List,
+    ListItem,
+    ListItemText,
     MenuItem,
-    Paper, Select,
-    TextField
-} from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
+    Paper,
+    Select,
+    TextField,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import Typography from "@mui/material/Typography";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
     obtenerConceptosFacturacion,
     obtenerImpuestosByConceptosFacturacion
 } from "../../Util/Contexts/ConceptosFacturacionContext";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     obtenerListadoZonaOperativaByOrigenDestino,
     obtenerListadoZonaOperativaBySucursal
 } from "../../Util/Contexts/ZonaOperativaContext";
-import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {getCurrentDate, getRandomId, getUniqueListBy} from "../../Util/Util";
 import DialogCheckbox from "./DialogCheckbox";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
-import IconButton from "@material-ui/core/IconButton";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import axios from "axios";
 import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
@@ -40,7 +50,7 @@ import Maniobras from "./Maniobras";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
-import AddIcon from '@material-ui/icons/AddBox';
+import AddIcon from '@mui/icons-material/AddBox';
 import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
@@ -49,10 +59,10 @@ import {
     obtenerClienteTieneConvenio
 } from "../../Util/Contexts/ClientesContext";
 import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
-import {Clear, ExpandLess} from "@material-ui/icons";
-import SearchIcon from "@material-ui/icons/Search";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import Tooltip from "@material-ui/core/Tooltip";
+import {Clear, ExpandLess} from "@mui/icons-material";
+import SearchIcon from "@mui/icons-material/Search";
+import Autocomplete from '@mui/material/Autocomplete';
+import Tooltip from "@mui/material/Tooltip";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -644,7 +654,7 @@ export default function CrearTarifaRangos(props) {
 
     }
 
-    return(
+    return (
         <div>
             <Dialog
                 open={state.showDialogClientes}
@@ -675,7 +685,7 @@ export default function CrearTarifaRangos(props) {
                             <TextField
                                 variant="outlined"
                                 label="Responsable de pago"
-                                margin="dense"
+                                size="small"
                                 required
                                 value={state.cliente?.m_sNombreFiscal}
                                 placeholder={"No. Cliente: Nombre fiscal"}
@@ -695,6 +705,7 @@ export default function CrearTarifaRangos(props) {
                                 id="vigencia"
                                 name="vigencia"
                                 label="Vigencia"
+                                fullWidth
                                 type="date"
                                 onChange={handleOnChange}
                                 value={state.vigencia}
@@ -712,7 +723,7 @@ export default function CrearTarifaRangos(props) {
                                 <TextField
                                     variant="outlined"
                                     label="Cuota mensual"
-                                    margin="dense"
+                                    size="small"
                                     required
                                     name={"cuotaMensual"}
                                     type="number"
@@ -723,7 +734,7 @@ export default function CrearTarifaRangos(props) {
                             </Grid>
                         }
                         <Grid item xs={2}>
-                            <Button onClick={handleShowDialogTarifas} variant={"outlined"} disabled={props.disabled} color={"primary"}
+                            <Button size={"large"} style={{fontSize:".9em"}} fullWidth onClick={handleShowDialogTarifas} variant={"outlined"} disabled={props.disabled} color={"primary"}
                             >Importar tarifa existente</Button>
                         </Grid>
 
@@ -737,7 +748,10 @@ export default function CrearTarifaRangos(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={()=> {setShowPMUM(showPMUM?false:true); document.querySelector('.PMUM').classList.toggle('hide')}} className='btn-secondary'>
+                            <IconButton
+                                onClick={()=> {setShowPMUM(showPMUM?false:true); document.querySelector('.PMUM').classList.toggle('hide')}}
+                                className='btn-secondary'
+                                size="large">
                                 {showPMUM?
                                     <ExpandLess fontSize='default'/>
                                 :
@@ -747,7 +761,7 @@ export default function CrearTarifaRangos(props) {
                             </IconButton>
                         </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="sucLabel">Sucursal</InputLabel>
                             <Select value={filtroPMUM.sucursal} onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})} labelId='sucLabel' label=''>
@@ -759,7 +773,7 @@ export default function CrearTarifaRangos(props) {
                             </FormControl>
                             </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="conceptoLabel">Concepto</InputLabel>
                                 <Select value={filtroPMUM.concepto} onChange={(e)=>setFiltroPMUM({...filtroPMUM,concepto: e.target.value})} labelId='conceptoLabel' label=''>
@@ -773,6 +787,7 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={2}>
                             <Autocomplete
                                 freeSolo
+                                size="small"
                                 value={filtroPMUM.producto}
                                 onChange={(e,newValue)=>setFiltroPMUM({...filtroPMUM,producto: newValue})}
                                 id="PMUM_Productos"
@@ -787,7 +802,7 @@ export default function CrearTarifaRangos(props) {
                                         <TextField
                                             variant="outlined"
                                             label="Producto"
-                                            margin="dense"
+                                            size="small"
                                             className="form-control"
                                             {...params}
                                             InputProps={{
@@ -801,13 +816,13 @@ export default function CrearTarifaRangos(props) {
                             />
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:true})} >
-                                <SearchIcon margin='dense' fontSize='large'/>
+                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:true})} size="large">
+                                <SearchIcon size="small" fontSize='large'/>
                             </IconButton>
                             /
                             <Tooltip title='Quitar Filtro'>
-                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:false})}>
-                                <Clear margin='dense' fontSize='large'/>
+                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:false})} size="large">
+                                <Clear size="small" fontSize='large'/>
                             </IconButton>
                             </Tooltip>
                         </Grid>
@@ -844,7 +859,11 @@ export default function CrearTarifaRangos(props) {
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
                     <Typography variant="h3" component="h2">
                         Maniobras
-                        <IconButton style={{marginLeft:'10.5%'}} onClick={()=> {setShowManiobras(showManiobras?false:true); document.querySelector('.MAN').classList.toggle('hide')}} className='btn-secondary'>
+                        <IconButton
+                            style={{marginLeft:'10.5%'}}
+                            onClick={()=> {setShowManiobras(showManiobras?false:true); document.querySelector('.MAN').classList.toggle('hide')}}
+                            className='btn-secondary'
+                            size="large">
                             {showManiobras?
                                 <ExpandLess fontSize='default'/>
                                 :
@@ -872,7 +891,10 @@ export default function CrearTarifaRangos(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={()=> {setShowMM(showMM?false:true); document.querySelector('.MM').classList.toggle('hide')}} className='btn-secondary'>
+                            <IconButton
+                                onClick={()=> {setShowMM(showMM?false:true); document.querySelector('.MM').classList.toggle('hide')}}
+                                className='btn-secondary'
+                                size="large">
                                 {showMM?
                                     <ExpandLess fontSize='default'/>
                                     :
@@ -882,7 +904,7 @@ export default function CrearTarifaRangos(props) {
                             </IconButton>
                         </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="origenLbl">Origen</InputLabel>
                                 <Select value={filtroMM.origen} onChange={(e)=>setFiltroMM({...filtroMM,origen: e.target.value})} labelId='origenLbl' label=''>
@@ -894,7 +916,7 @@ export default function CrearTarifaRangos(props) {
                             </FormControl>
                         </Grid>
                         <Grid item xs={2}>
-                            <FormControl fullWidth variant='outlined' margin='dense'>
+                            <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="destLabel">Destino</InputLabel>
                                 <Select value={filtroMM.destino} onChange={(e)=>setFiltroMM({...filtroMM,destino: e.target.value})} labelId='destLabel' label=''>
@@ -908,6 +930,7 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={2}>
                             <Autocomplete
                                 freeSolo
+                                size="small"
                                 value={filtroMM.producto}
                                 onChange={(e,newValue)=>setFiltroMM({...filtroMM,producto: newValue})}
                                 id="MM_Prod"
@@ -922,7 +945,7 @@ export default function CrearTarifaRangos(props) {
                                         <TextField
                                             variant="outlined"
                                             label="Producto"
-                                            margin="dense"
+                                            size="small"
                                             className="form-control"
                                             {...params}
                                             InputProps={{
@@ -936,13 +959,13 @@ export default function CrearTarifaRangos(props) {
                             />
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:true})} >
-                                <SearchIcon margin='dense' fontSize='large'/>
+                            <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:true})} size="large">
+                                <SearchIcon size="small" fontSize='large'/>
                             </IconButton>
                             /
                             <Tooltip title='Quitar Filtro'>
-                                <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:false})}>
-                                    <Clear margin='dense' fontSize='large'/>
+                                <IconButton onClick={()=>setFiltroMM({...filtroMM,activo:false})} size="large">
+                                    <Clear size="small" fontSize='large'/>
                                 </IconButton>
                             </Tooltip>
                         </Grid>
@@ -983,7 +1006,7 @@ export default function CrearTarifaRangos(props) {
             </div>
 
         </div>
-    )
+    );
 }
 
 function DialogSelectList(props) {
@@ -1020,7 +1043,7 @@ function DialogSelectList(props) {
             <DialogContent>
                 <Grid container spacing={1}>
                     <Grid item xs={11}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
                                    onChange={handleOnChangeSearch}
                                    label="Buscar"
                                    value={search}

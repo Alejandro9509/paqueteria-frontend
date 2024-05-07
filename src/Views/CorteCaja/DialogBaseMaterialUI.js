@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 
 function MyDialog({ open, handleClose, handleAccept }) {
     const [inputValue, setInputValue] = useState('');

@@ -8,7 +8,7 @@ import {
     Table, TableBody, TableCell,
     TableContainer,
     TableHead, TableRow, TextField, Typography
-} from "@material-ui/core";
+} from "@mui/material";
 
 export default function DialogImpresion({ open, handleClose, handleAccept, paquetes }) {
     const [listadoPaquete, setListadoPaquetes] = useState([]);

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Noty from 'noty';
 import {
     Checkbox,
@@ -17,15 +17,15 @@ import {
     Radio,
     RadioGroup,
     Select
-} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+} from "@mui/material";
+import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import {obtenerProductos, obtenerProductosByConvenioCliente} from "../../Util/Contexts/ProductosContext";
 function showSuccess(mensaje) {
@@ -192,7 +192,7 @@ export default function DialogoNuevoPaquete(props) {
                     setPaquete(paquete=>{
                         return{
                             ...paquete,
-                            m_rLargo:Number(paquete.m_rLargo)
+                            m_rLargo:Number(paquete.m_xLargo)
                         }
                     })
                     props.agregar(paquete)
@@ -671,7 +671,7 @@ export default function DialogoNuevoPaquete(props) {
     return (
         <div>
             {!props.disabled &&
-                <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
+                <Button variant="contained" size="x-large" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
                     Agregar paquete
                 </Button>
             }
@@ -689,7 +689,7 @@ export default function DialogoNuevoPaquete(props) {
 
                             <Grid item xs={12}>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense" required>
+                                    <FormControl fullWidth variant="outlined" size="small" required>
                                         <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de paquete</InputLabel>
                                         <Select
                                             label="Tipo de paquete"
@@ -715,6 +715,7 @@ export default function DialogoNuevoPaquete(props) {
                             <Grid item xs={12}>
                                 <div className="input">
                                     <Autocomplete
+                                        size="small"
                                         value={paquete.producto}
                                         freeSolo
                                         required
@@ -732,7 +733,7 @@ export default function DialogoNuevoPaquete(props) {
                                                 variant="outlined"
                                                 label="Producto"
                                                 required
-                                                margin="dense"
+                                                size="small"
                                                 onClick={handleClickProducto}
                                                 {...params}
                                                 error={errores.nameInput === 'producto'}
@@ -746,7 +747,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                type="number"
                                                label="Cantidad"
@@ -764,7 +765,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                label="Embalaje"
                                                labelId="m_nIdTipoEmbalajeLabel"
                                                value={paquete.m_nIdTipoEmbalaje}
@@ -783,7 +784,7 @@ export default function DialogoNuevoPaquete(props) {
                                     </TextField>
                                 </div>
                                 {/*<label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                    <FormControl fullWidth variant="outlined" size="small">
                                         <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
 
                                     </FormControl>
@@ -793,7 +794,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                type="text"
                                                label="Peso"
@@ -811,7 +812,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
-                                <TextField variant="outlined" margin="dense"
+                                <TextField variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                type="text"
                                                label="Largo"
@@ -829,7 +830,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                type="text"
                                                required
@@ -847,7 +848,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                type="text"
                                                value={paquete.m_rAlto}
@@ -865,7 +866,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={12}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                         // onChange={(event) => handleChangePaquete(event, index)}
                                                className="form-control"
                                                type="text"
@@ -880,7 +881,7 @@ export default function DialogoNuevoPaquete(props) {
                             }
                             <Grid item xs={12}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                className="form-control"
                                                type="text"
@@ -897,7 +898,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={12}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                className="form-control"
                                                type="text"

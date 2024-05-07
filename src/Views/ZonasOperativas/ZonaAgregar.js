@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
+import {FormControl, Grid, InputLabel, Select} from "@mui/material";
 import CodigosPostalesZonas from "./CodigosPostalesZonas";
 import {
     agregarZonaOperativa,

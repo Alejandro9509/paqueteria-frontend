@@ -4,16 +4,38 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
-import { makeStyles } from "@material-ui/core/styles";
-import { DataGrid } from '@material-ui/data-grid';
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import { DataGrid } from '@mui/x-data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@mui/material";
 import { agregarMonedas, eliminarMonedas, modificarMonedas, obtenerMonedas, obtenerMonedasId } from "../Util/Contexts/MonedaContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
 import $ from "jquery";
+const PREFIX = 'Moneda';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents:"none",
+        cursor:"default",
+    }
+});
+
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -24,23 +46,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled:{
-        pointerEvents:"none",
-        cursor:"default",
-    }
-};
-const useStyles = makeStyles(styles);
-
 function Moneda() {
 
-    const classes = useStyles();
+
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idMoneda: 0,
@@ -170,7 +178,7 @@ function Moneda() {
             field: "",
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101269)}>
                             <a   href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdMoneda))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
@@ -183,8 +191,8 @@ function Moneda() {
                             <a  href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdMoneda))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {
@@ -332,9 +340,10 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-8 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Código"
+                                                            <TextField variant="outlined" size="small" label="Código"
                                                                 onChange={handleChange}
                                                                 className="form-control"
+                                                                       fullWidth
                                                                 type="text"
                                                                 maxLength="10"
                                                                 required={true}
@@ -347,8 +356,9 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-4 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Moneda"
+                                                            <TextField variant="outlined" size="small" label="Moneda"
                                                                 onChange={handleChange}
+                                                                       fullWidth
                                                                 className="form-control"
                                                                 type="text"
                                                                 required={true}
@@ -361,9 +371,10 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-8 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Símbolo"
+                                                            <TextField variant="outlined" size="small" label="Símbolo"
                                                                 onChange={handleChange}
                                                                 className="form-control"
+                                                                       fullWidth
                                                                 type="text"
                                                                 maxLength="3"
                                                                 required={true}
@@ -376,9 +387,10 @@ function Moneda() {
 
                                                     <div className="col-sm-12 col-md-4 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Abreviación"
+                                                            <TextField variant="outlined" size="small" label="Abreviación"
                                                                 onChange={handleChange}
                                                                 className="form-control"
+                                                                       fullWidth
                                                                 required={true}
                                                                 type="text"
                                                                 maxLength="3"

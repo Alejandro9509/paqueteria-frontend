@@ -703,7 +703,7 @@ if (typeof jQuery === 'undefined') {
       if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
       if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
       if (typeof option == 'string') data[option]()
-    })
+    });
   }
 
   var old = $.fn.collapse
@@ -1698,7 +1698,7 @@ if (typeof jQuery === 'undefined') {
       if (!data && /destroy|hide/.test(option)) return
       if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
       if (typeof option == 'string') data[option]()
-    })
+    });
   }
 
   var old = $.fn.tooltip
@@ -1807,7 +1807,7 @@ if (typeof jQuery === 'undefined') {
       if (!data && /destroy|hide/.test(option)) return
       if (!data) $this.data('bs.popover', (data = new Popover(this, options)))
       if (typeof option == 'string') data[option]()
-    })
+    });
   }
 
   var old = $.fn.popover
