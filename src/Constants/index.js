@@ -331,7 +331,7 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 // `)
 
 export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, indexPartida,paquetesTotales, indexQR) => {
-    return localStorage.getItem("RFC") === 'PLG090716IA7' || true?
+    return localStorage.getItem("RFC") === 'PLG090716IA7' ?
         (`CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
@@ -340,7 +340,7 @@ export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, indexPartida,paquetesTotale
 ^PW812
 ^LL0812
 ^LS0
-^FO0,0^GFA,03840,03840,00024,:Z64:
+^FO0,0^GFA,07680,07680,00040,:Z64:
 ${guia.m_sLogoEtiqueta}
 ^FT41,239^A0N,79,79^FB730,1,0,C^FH\\^FD${guia.m_nFolioGuia}^FS
 ^FT410,286^A0N,28,28^FH\^FD${guia.m_sSucursalorigen}^FS
