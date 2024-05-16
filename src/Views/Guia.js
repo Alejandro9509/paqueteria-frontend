@@ -1205,7 +1205,7 @@ function Guia(props) {
         }
         else{
             if(respuesta.data.folioViajeERP)
-                showSuccess("La guía no puede ser cancelada ya que pertenece al viaje activo "+ respuesta.data.folioViajeERP +". Cancelar viaje en ERP ")
+                showSuccess("La guía no puede ser cancelada ya que pertenece al viaje activo "+ respuesta.data.folioViajeERP +". Cancelar viaje en Trafico/Viajes ")
             else
                 showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
         return
@@ -1825,7 +1825,6 @@ function Guia(props) {
                                         let result
                                         try {
                                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal,i), undefined, errorCallback);
-                                            console.log(currentIndex)
                                             showSuccess('Impresión en curso.')
                                             await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                                             currentIndex+=1
@@ -1833,6 +1832,7 @@ function Guia(props) {
                                             showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                                             break
                                         }
+
                                     }
                                 }
                             }
@@ -1855,7 +1855,6 @@ function Guia(props) {
                         let result
                         try {
                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal, i), undefined, errorCallback);
-                            console.log(currentIndex)
                             showSuccess('Impresión en curso.')
                             await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                             currentIndex+=1
