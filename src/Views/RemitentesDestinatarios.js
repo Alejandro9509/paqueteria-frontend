@@ -19,7 +19,6 @@ import { Dialog, DialogContent, Grid } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { obtenerCiudadId } from "../Util/Contexts/CiudadesContext";
 import DialogTableRemDes from "./RemitenteDestinatario/DialogTableRemDes";
-import {tr} from "date-fns/locale";
 import DialogCreateRemDes from "./RemitenteDestinatario/DialogCreateRemDes";
 function showSuccess(mensaje) {
   new Noty({
@@ -541,6 +540,7 @@ function RemitenteDestinatario(props) {
   const handleCrearRemitente = () => {
     createVisible(true);
   }
+
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
       if(!row.m_nIdCP){
         showSuccess("La dirección seleccionada contiene datos que no coinciden con los catálogos del SAT, favor de validar la dirección en Tráfico - Catálogos - Remitentes/ Destinatarios.")
@@ -639,12 +639,14 @@ function RemitenteDestinatario(props) {
       openDialog: isVisible,
     }));
   };
+
   const createVisible = (isVisible) => {
     setState(() => ({
       ...state,
       createDialog: isVisible,
     }));
   };
+
   return (
     <div className="widget-content">
 
