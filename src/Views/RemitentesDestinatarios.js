@@ -19,7 +19,6 @@ import { Dialog, DialogContent, Grid } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { obtenerCiudadId } from "../Util/Contexts/CiudadesContext";
 import DialogTableRemDes from "./RemitenteDestinatario/DialogTableRemDes";
-import {tr} from "date-fns/locale";
 import DialogCreateRemDes from "./RemitenteDestinatario/DialogCreateRemDes";
 function showSuccess(mensaje) {
   new Noty({
@@ -541,6 +540,7 @@ function RemitenteDestinatario(props) {
   const handleCrearRemitente = () => {
     createVisible(true);
   }
+
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
       if(!row.data.m_nIdCP){
         showSuccess("El código postal del remitente no se encuentra en el catálogo.\n Verifique la información en ERP paquetería para continuar.")
@@ -639,12 +639,14 @@ function RemitenteDestinatario(props) {
       openDialog: isVisible,
     }));
   };
+
   const createVisible = (isVisible) => {
     setState(() => ({
       ...state,
       createDialog: isVisible,
     }));
   };
+
   return (
     <div className="widget-content">
 

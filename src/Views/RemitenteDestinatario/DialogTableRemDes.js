@@ -6,6 +6,7 @@ import {Button, Dialog, DialogActions, DialogContent, TextField} from "@material
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from '@material-ui/core/styles';
+import {validarDerecho} from "../../Util/Util";
 
 const useStyles = makeStyles({
     root: {
@@ -105,6 +106,7 @@ function cargarDesdeServidor(pagina,registros){
                     variant={"contained"}
                     style={{width:'70ch'}}
                     type="submit"
+                    disabled={!validarDerecho(9101470)}
                     onClick={() => {
                         handleCrearRemitente();
                     }}>
