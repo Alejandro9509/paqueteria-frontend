@@ -192,15 +192,13 @@ export default function DialogoNuevoPaquete(props) {
                     setPaquete(paquete=>{
                         return{
                             ...paquete,
-                            m_rLargo:Number(paquete.m_rLargo)
+                            m_rLargo:Number(paquete.m_xLargo)
                         }
                     })
                     props.agregar(paquete)
                     resetPaquete()
                     resetErrores()
                 }
-            }else{
-                showSuccess("El producto no se encuentra en la lista")
             }
         }
 
@@ -671,7 +669,7 @@ export default function DialogoNuevoPaquete(props) {
     return (
         <div>
             {!props.disabled &&
-                <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
+                <Button variant="contained" size="x-large" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
                     Agregar paquete
                 </Button>
             }
@@ -715,6 +713,7 @@ export default function DialogoNuevoPaquete(props) {
                             <Grid item xs={12}>
                                 <div className="input">
                                     <Autocomplete
+                                        size="small"
                                         value={paquete.producto}
                                         freeSolo
                                         required
