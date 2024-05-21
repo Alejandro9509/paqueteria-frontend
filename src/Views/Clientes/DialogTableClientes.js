@@ -80,66 +80,66 @@ function cargarDesdeServidor(pagina,registros){
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
 
-            InputProps={{
-                endAdornment: <SearchIcon style={{
-                    color: "#F9A03E",
-                    fontSize: 32,
-                    paddingInlineEnd: 0,
-                    paddingRight: 0,
-                    paddingBlockEnd: 0,
-                    paddingLeft: 0,
-                    paddingBlock: 0,
-                    cursor: "pointer"
-                }} onClick={() => {
-                    cargarDesdeServidor(0, registros)
-                    setPagina(0)
-                }}/>,
-            }}
-            onKeyDown={e => {if (e.code === "Enter" ) {
-                cargarDesdeServidor(0, registros)
-                setPagina(0)
-            }}}
-            style={{width: '60ch'}}
-        />
-        <div className={classes.root} style={{height:"300px", padding:"5px", marginBottom: 0}}>
-            <DataGrid
-                localeText={dataGridLocaleText}
-                columns={columns}
-                rows={rows}
-                getRowId={((row) => row.m_nIdCliente)}
-                onRowSelected={(row) => {
-                    rowSelect = row;
-                }}
-                page={pagina}
-                pagination
-                pageSize={registros}
-                rowCount={rowsCount}
-                paginationMode="server"
-                onPageChange={(newPage) => {
-                    setPagina(newPage.page)
-                    console.log(newPage)
-                }}
-            />
-        </div>
-        <DialogActions style={{justifyContent: "rigth"}}>
-                   <button
-                    onClick={() => {
-                        dialogVisible(false)}}
-                    className="btn btn-secondary secondary-btn"
-                >
-                    Cerrar
-                </button>
-                <button
-                    onClick={() => {
-                        if(rowSelect !=null){
-                            handlePatrocinadorSelected(rowSelect)}
-                        }}
-                    className="btn btn-primary primary-btn"
-                >
-                    Seleccionar
-                </button>
-            </DialogActions>
-    </>
+              InputProps={{
+                  endAdornment: <SearchIcon style={{
+                      color: "#F9A03E",
+                      fontSize: 32,
+                      paddingInlineEnd: 0,
+                      paddingRight: 0,
+                      paddingBlockEnd: 0,
+                      paddingLeft: 0,
+                      paddingBlock: 0,
+                      cursor: "pointer"
+                  }} onClick={() => {
+                      cargarDesdeServidor(0, registros)
+                      setPagina(0)
+                  }}/>,
+              }}
+              onKeyDown={e => {if (e.code === "Enter" ) {
+                  cargarDesdeServidor(0, registros)
+                  setPagina(0)
+              }}}
+              style={{width: '60ch'}}
+          />
+          <div className={classes.root} style={{height:"300px", padding:"5px", marginBottom: 0}}>
+              <DataGrid
+                  localeText={dataGridLocaleText}
+                  columns={columns}
+                  rows={rows}
+                  getRowId={((row) => row.m_nIdCliente)}
+                  onRowSelected={(row) => {
+                      rowSelect = row;
+                  }}
+                  page={pagina}
+                  pagination
+                  autoPageSize
+                  pageSize={registros}
+                  rowCount={rowsCount}
+                  paginationMode="server"
+                  onPageChange={(newPage) => {
+                      setPagina(newPage.page)
+                  }}
+              />
+          </div>
+          <DialogActions style={{justifyContent: "right"}}>
+                     <button
+                      onClick={() => {
+                          dialogVisible(false)}}
+                      className="btn btn-secondary secondary-btn"
+                  >
+                      Cerrar
+                  </button>
+                  <button
+                      onClick={() => {
+                          if(rowSelect !=null){
+                              handlePatrocinadorSelected(rowSelect)}
+                          }}
+                      className="btn btn-primary primary-btn"
+                  >
+                      Seleccionar
+                  </button>
+              </DialogActions>
+      </>
   );
 }
 
