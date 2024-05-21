@@ -823,7 +823,8 @@ function Informes({history}) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
                 usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
                 estatusCancelacion: respuesta.data.m_sEstatusInforme,
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
+                countGuias:respuesta.data.countGuias,
             });
 
             if (!respuesta.data.m_bSePuedeCancelar) {
@@ -840,20 +841,40 @@ function Informes({history}) {
         if (e) {
             e.preventDefault();
         }
-        let params = {
-            motivoCancelacion: state.motivoCancelacion,
-            usuarioCancelacion: localStorage.getItem("UsuarioId"),
-            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
-        };
-        console.log(params)
-        console.log(JSON.stringify(params))
-        cancelarInformes(state.IdInforme, params).then((respuesta) => {
-            console.log(respuesta.data);
-            showSuccess(respuesta.data)
-            setDetectar(false)
-            $.mostrarMensaje=false
-            handleShowListado()
+        if(state.motivoCancelacion?.trim()==""){
+            showSuccess("Favor de llenar campo de motivo")
+            return;
+        }
+        confirmAlert({
+            title: 'Este informe cuenta con '+state.countGuias+' guía(s)',
+            message: '¿Esta seguro de que quiere cancelar?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: async () => {
+                        let params = {
+                            motivoCancelacion: state.motivoCancelacion,
+                            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+                            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
+                        };
+                        console.log(params)
+                        console.log(JSON.stringify(params))
+                        cancelarInformes(state.IdInforme, params).then((respuesta) => {
+                            console.log(respuesta.data);
+                            showSuccess(respuesta.data)
+                            setDetectar(false)
+                            $.mostrarMensaje=false
+                            handleShowListado()
+                        });
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: async () => {console.log(state)}
+                }
+            ]
         });
+
     };
 
     function getAllGuiasFrom(cubicar) {
