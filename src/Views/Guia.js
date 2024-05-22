@@ -1825,7 +1825,6 @@ function Guia(props) {
                                         let result
                                         try {
                                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal,i), undefined, errorCallback);
-                                            console.log(currentIndex)
                                             showSuccess('Impresión en curso.')
                                             await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                                             currentIndex+=1
@@ -1855,7 +1854,6 @@ function Guia(props) {
                         let result
                         try {
                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal, i), undefined, errorCallback);
-                            console.log(currentIndex)
                             showSuccess('Impresión en curso.')
                             await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                             currentIndex+=1
