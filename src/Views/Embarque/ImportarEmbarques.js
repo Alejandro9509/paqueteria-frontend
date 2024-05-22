@@ -36,6 +36,7 @@ import {
     obtenerPlantillaImportacionByIdCliente
 } from "../../Util/Contexts/PlantillasContext";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
+import {showError} from "../../Util/GlobalFunctions";
 
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -93,6 +94,7 @@ function ImportarEmbarques(props) {
 
     const handleOnImportarClick = () => {
         if (files.length === 0){
+            showError("Favor de cargar un documento")
             return
         }
         obtenerPlantillaImportacionByIdCliente(state.cliente.m_nIdCliente).then(respuesta => {
@@ -196,7 +198,6 @@ function ImportarEmbarques(props) {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
         setState(state => {
             return {
                 ...state,
