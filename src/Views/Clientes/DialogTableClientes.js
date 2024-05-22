@@ -73,12 +73,8 @@ useEffect(() => {
 //--------------------------->Funciones<----------------------------------------------------------------------
 function cargarDesdeServidor(pagina,registros){
   obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
-    console.log(respuesta.data)
-    console.log(respuesta.data.total)
-    console.log(respuesta.data.data)
     setRow(respuesta.data.data)
     setRowCount(respuesta.data.total)
-
   })
 }
 
