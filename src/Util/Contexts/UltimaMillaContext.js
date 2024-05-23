@@ -543,8 +543,8 @@ function cancelarRuta(id) {
     return result
 }
 
-function obtenerCFDI(id, esRecolecion, IdSucursal) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
+function obtenerCFDI(id, esRecolecion, IdSucursal,fecha,hora) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}/${fecha}/${hora}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})
@@ -552,8 +552,8 @@ function obtenerCFDI(id, esRecolecion, IdSucursal) {
     return result
 }
 
-function obtenerXMLCFDI(id, esRecolecion, IdSucursal) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
+function obtenerXMLCFDI(id, esRecolecion, IdSucursal,fecha,hora) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}/${fecha}/${hora}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})
