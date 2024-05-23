@@ -140,6 +140,7 @@ import DialogImpresion from "./Guia/DialogImpresion";
 import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
 import {obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {FileDownloadOutlined} from "@mui/icons-material";
+import {obtenerImagenEvidencia} from "../Util/Contexts/UltimaMillaContext";
 const PREFIX = 'Guia';
 
 const classes = {
@@ -1368,11 +1369,13 @@ function Guia(props) {
     function generarReporte(row) {
         let mes = mesString(today.getMonth()+1)
         obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then((respuesta) => {
-            imprimirFormatoGuiaMoroleon(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia,today.getFullYear(),today.getDate(),mes).then(({data}) => {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+            obtenerImagenEvidencia(row.m_nIdGuia,0).then((img)=> {
+                imprimirFormatoGuiaMoroleon(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia, today.getFullYear(), today.getDate(), mes,img.data.find(i=>i.m_nTipoArchivo==2)?.m_sImagen).then(({data}) => {
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.', '');
+                })
             })
         })
     }
