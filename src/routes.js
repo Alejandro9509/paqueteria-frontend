@@ -21,11 +21,13 @@ import {ReactComponent as EmbarqueIcon} from './iconos/Menu/IconoEmbarque/iconoE
 import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.svg';
 import {ReactComponent as UltimaMillaIcono} from './iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg';
 import {ReactComponent as SeguimientoIcon} from './iconos/Menu/Icono Tracking/Trackingnaranja.svg'
+import {ReactComponent as TarifaZonaIcon} from './iconos/Catalogos/Icono Zonas Tarifas/IconoTarifaZona.svg'
 
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
 import {ReactComponent as corteCajaIcon} from './iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg';
 import Seguimiento from "./Views/Seguimiento/Seguimiento";
 import {validarDerecho} from "./Util/Util";
+import BuscarTarifa from "./Views/BuscarTarifa/BuscarTarifa";
 
 const dashboardRoutes = [
   {
@@ -137,6 +139,16 @@ const dashboardRoutes = [
     child:[],
     visible: validarDerecho(9101204)
   },
+  {
+    path: "/Buscar_Tarifa",
+    name: "Buscar Tarifa",
+    icon: TarifaZonaIcon,
+    component: BuscarTarifa,
+    single: true,
+    child:[],
+    visible: validarDerecho(9101204),
+
+  },
   /*{
     path: "/Tutoriales",
     name: "Tutoriales",
@@ -149,3 +161,4 @@ const dashboardRoutes = [
 ];
 
 export default dashboardRoutes;
+
