@@ -162,6 +162,7 @@ class DetalleParadas extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla
+            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_nIdOperador)) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_nIdOperador))
             || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0)
             || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_nUltimaMillaOrden * d.m_nIdParadaGuia), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_nUltimaMillaOrden * d.m_nIdParadaGuia), 0), 0)
             || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0)
