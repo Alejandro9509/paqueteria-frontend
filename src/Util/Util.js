@@ -355,13 +355,20 @@ export function readExcel(FORMAT,file, esRecoleccion){
 
         fileReader.onload = (e) => {
             const bufferArray = e.target.result;
-
             const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
 
             //SE OBTIENEN LAS HOJAS DEL EXCEL
             const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
             const wsPaquetes = (wb.Sheets[FORMAT.hojaPaquetes]);
             const wsComplementosSat = (wb.Sheets[FORMAT.hojaComplementos]);
+            if(wsGuias == undefined || wsComplementosSat == undefined || wsPaquetes == undefined){
+                resolve([]);
+                showSuccess("En el documento no se encontraron las hojas: " +
+                    (wsComplementosSat == undefined ? FORMAT.hojaEmbarques+", " : "") +
+                    (wsGuias == undefined ? FORMAT.hojaComplementos+", " : "") +
+                    (wsPaquetes == undefined ? FORMAT.hojaPaquetes+", " : ""))
+                return;
+            }
 
             //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
             const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
@@ -511,6 +518,12 @@ export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
 
             //SE OBTIENEN LAS HOJAS DEL EXCEL
             const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
+            if(wsGuias == undefined){
+                resolve([]);
+                showSuccess("No se encontró la hoja " + FORMAT.hojaEmbarques
+                    +  ", el nombre de la hoja en el documento debe ser igual al configurado")
+                return;
+            }
 
             //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
             const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
