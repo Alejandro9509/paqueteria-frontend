@@ -49,7 +49,7 @@ let rowSelect
 
 function DialogCreateRemDes(props) {
     const classes = useStyles();
-    let {createVisible} = props
+    let {createVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
     const [dataMunicipios, setDataMunicipios] = React.useState([]);

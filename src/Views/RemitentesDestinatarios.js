@@ -483,22 +483,21 @@ function RemitenteDestinatario(props) {
 
   const handleChangeAutocomplete = (input, newValue) => {
     props.seCalculaTarifa()
-if(input=="codigoPostal"){
-  obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
-    ( zonaOperativa ) => {
-      obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
-          ( zonaTarifa ) => {
-            if(zonaOperativa.data.length == 0){
-              showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
-            }         
-            setState((state) => ({
-              ...state,
-              zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-              zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
-            }));
-          }
-      );
-
+    if(input=="codigoPostal"){
+      obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
+        ( zonaOperativa ) => {
+          obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
+            ( zonaTarifa ) => {
+              if(zonaOperativa.data.length == 0){
+                showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
+              }
+              setState((state) => ({
+                ...state,
+                zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
+              }));
+            }
+          );
     }
 );
   

@@ -41,8 +41,8 @@ function showSuccess(mensaje) {
 }
 let rowSelect
 function DialogTableRemDes(props) {
-
-    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario, handleCrearRemitente} = props
+    const classes = useStyles();
+    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
@@ -82,87 +82,87 @@ function cargarDesdeServidor(pagina,registros){
 
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
-      <Root>
-          <DialogActions style={{justifyContent: "left"}}>
-          <TextField
-              variant="standard"
-              value={busqueda}
-              onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
-              placeholder
-              InputProps={{
-                  endAdornment: <SearchIcon style={{
-                      color: "#F9A03E",
-                      fontSize: 32,
-                      paddingInlineEnd: 0,
-                      paddingRight: 0,
-                      paddingBlockEnd: 0,
-                      paddingLeft: 0,
-                      paddingBlock: 0,
-                  }} onClick={() => {
-                      cargarDesdeServidor(0, registros)
-                      setPagina(0)
-                  }}/>,
-              }}
-              onKeyDown={e => {if (e.code === "Enter" ) {
-                  cargarDesdeServidor(0, registros)
-                  setPagina(0)
-              }}}
-              style={{width:'60ch'}}
-          />
-              <Button fullWidth
-                      color={"primary"}
-                      variant={"contained"}
-                      style={{width:'70ch'}}
-                      type="submit"
-                      onClick={() => {
-                          handleCrearRemitente();
-                      }}>
-                  Nuevo Remitente / Destinatario
-              </Button>
-          </DialogActions>
-          <div className={classes.root} style={{height: "400px", padding: "5px"}}>
-              <DataGrid
-                  localeText={dataGridLocaleText}
-                  columns={columns}
-                  rows={rows}
-                  getRowId={((row) => row.m_nNumero)}
-                  onRowSelectionModelChange={(newRowSelectionModel,e) => {
-                      if(newRowSelectionModel.length<1)
-                          return
-                      rowSelect=rows.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0])
-                  }}
-                  autoPageSize
-                  pagination
-                  page={pagina}
-                  rowsPerPageOptions={[]}
-                  pageSize={registros}
-                  rowCount={13600}
-                  paginationMode="server"
-                  onPaginationModelChange={(newPaginationModel)=>{
-                      setPagina(newPaginationModel.page)
-                  }}
-              />
-          </div>
-          <DialogActions style={{justifyContent: "right"}}>
-                     <button
-                      onClick={() => {
-                          dialogVisible(false)}}
-                      className="btn btn-secondary secondary-btn"
-                  >
-                      Cerrar
-                  </button>
-                  <button
-                      onClick={() => {
-                          console.log(rowSelect)
-                          if(rowSelect !=null){
-                            handleChangeAutoCompleteRemitenteDestinatario(rowSelect);}
-                          }}
-                      className="btn btn-primary primary-btn"
-                  >
-                      Seleccionar
-                  </button>
-              </DialogActions>
-      </Root>
+    <Root>
+        <DialogActions style={{justifyContent: "left"}}>
+            <TextField
+                variant="standard"
+                value={busqueda}
+                onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
+                placeholder
+                InputProps={{
+                    endAdornment: <SearchIcon style={{
+                        color: "#F9A03E",
+                        fontSize: 32,
+                        paddingInlineEnd: 0,
+                        paddingRight: 0,
+                        paddingBlockEnd: 0,
+                        paddingLeft: 0,
+                        paddingBlock: 0,
+                    }} onClick={() => {
+                        cargarDesdeServidor(0, registros)
+                        setPagina(0)
+                    }}/>,
+                }}
+                onKeyDown={e => {if (e.code === "Enter" ) {
+                    cargarDesdeServidor(0, registros)
+                    setPagina(0)
+                }}}
+                style={{width:'60ch'}}
+            />
+            <Button fullWidth
+                    color={"primary"}
+                    variant={"contained"}
+                    style={{width:'70ch'}}
+                    type="submit"
+                    onClick={() => {
+                        handleCrearRemitente();
+                    }}>
+                Nuevo Remitente / Destinatario
+            </Button>
+        </DialogActions>
+        <div className={classes.root} style={{height: "400px", padding: "5px"}}>
+            <DataGrid
+                localeText={dataGridLocaleText}
+                columns={columns}
+                rows={rows}
+                getRowId={((row) => row.m_nNumero)}
+                onRowSelectionModelChange={(newRowSelectionModel,e) => {
+                    if(newRowSelectionModel.length<1)
+                        return
+                    rowSelect=rows.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0])
+                }}
+                autoPageSize
+                pagination
+                page={pagina}
+                rowsPerPageOptions={[]}
+                pageSize={registros}
+                rowCount={13600}
+                paginationMode="server"
+                onPaginationModelChange={(newPaginationModel)=>{
+                    setPagina(newPaginationModel.page)
+                }}
+            />
+        </div>
+        <DialogActions style={{justifyContent: "right"}}>
+                   <button
+                    onClick={() => {
+                        dialogVisible(false)}}
+                    className="btn btn-secondary secondary-btn"
+                >
+                    Cerrar
+                </button>
+                <button
+                    onClick={() => {
+                        console.log(rowSelect)
+                        if(rowSelect !=null){
+                          handleChangeAutoCompleteRemitenteDestinatario(rowSelect);}
+                        }}
+                    className="btn btn-primary primary-btn"
+                >
+                    Seleccionar
+                </button>
+            </DialogActions>
+    </Root>
   );
 }
 
