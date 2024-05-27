@@ -252,7 +252,8 @@ class FiltersMap extends Component {
     }
     reasignarOperador(unidad) {
         obtenerOperadoresPorSucursal(this.state.sucursalSeleccionada?.m_nIdSucursal).then(({data}) => {
-
+            if(data.filter((op)=>!op.ocupado).length==0)
+                showSuccess("No se encontraron operadores disponibles")
             this.setState({
                 operadores: data.filter((operador) => !operador.ocupado),
                 unidadSeleccionada: unidad.m_nIdUnidad,
@@ -346,7 +347,7 @@ class FiltersMap extends Component {
                     <DialogContent>
                         <form onSubmit={this.asignarOperadorUnidad}>
                             <label className="input select" style={{width: "100%"}}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
+                                <FormControl fullWidth variant="outlined" size="small">
                                     <Autocomplete
                                         labelId="operadorListadoLabel"
                                         label="Operador"
@@ -363,9 +364,10 @@ class FiltersMap extends Component {
                                         }
                                         freeSolo
                                         style={{
-                                            transform: "translate(14px, 10px) scale(1) !important"
+                                            transform: "translate(14px, 10px) scale(1) !important",marginTop:"1%"
                                         }}
-                                        getOptionLabel={(option) => option.m_sNombreCompleto}
+                                        getOptionLabel={(option) => `${option.m_sNombreCompleto} - ${option.ocupado?"En Ruta":""}`}
+                                        getOptionDisabled={(option)=>option.ocupado}
                                         renderInput={(params) => <TextField {...params} margin="dense" label="Operador" variant="outlined" />}
                                     />
                                 </FormControl>
