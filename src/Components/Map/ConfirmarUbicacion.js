@@ -65,7 +65,6 @@ class ConfirmarUbicacion extends Component {
 
     }
 
-
     cargarMapa(map) {
         if (this.props.ultimaMilla) {
             this.setState({
@@ -95,6 +94,22 @@ class ConfirmarUbicacion extends Component {
 
     confirmarUbicacion(e) {
         this.props.confirmarUbicacion(this.state.coordenadas, e, this.props.direccion.idGuia ? this.props.direccion.idGuia : 0, this.props.remitente)
+        searchLocationGuiav2(
+            null,
+            null,
+            null,
+            null,
+            null,
+            this.props.direccion.codigoPostal,
+            null,
+            null,
+            this.props.direccion.direccionCompleta,
+        ).then(data => {
+            this.setState({
+                coordenadas: {lat: data.y, lng: data.x}
+            })
+            this.state.map.setView([data.y, data.x], 18)
+        })
     }
 
     buscarDireccion(e) {
@@ -214,7 +229,6 @@ export default ConfirmarUbicacion;
 function MapEvents(props) {
     const map = useMapEvents({
         click(e) {
-            console.log(e.latlng);
             props.cambiarCordenadas(e.latlng)
         },
     })
