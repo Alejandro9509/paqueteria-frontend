@@ -41,7 +41,6 @@ function showSuccess(mensaje) {
 }
 let rowSelect
 function DialogTableRemDes(props) {
-    const classes = useStyles();
     let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
@@ -120,7 +119,7 @@ function cargarDesdeServidor(pagina,registros){
                 Nuevo Remitente / Destinatario
             </Button>
         </DialogActions>
-        <div className={classes.root} style={{height: "400px", padding: "5px"}}>
+        <div  style={{height: "400px", padding: "5px"}}>
             <DataGrid
                 localeText={dataGridLocaleText}
                 columns={columns}
