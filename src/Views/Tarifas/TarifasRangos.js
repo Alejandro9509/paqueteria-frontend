@@ -378,7 +378,10 @@ export default function TarifasRangos(props) {
                 }
                 handleShowListado()
             }else{
-                showSuccess("Hubo un error al guardar");
+                if(respuesta.data.error!=="")
+                    showSuccess(respuesta.data.error)
+                else
+                    showSuccess("Hubo un error al guardar");
             }
         })
     }
@@ -393,7 +396,10 @@ export default function TarifasRangos(props) {
                 }
                 handleShowListado()
             }else{
-                showSuccess("Hubo un error al guardar");
+                if(respuesta.data.error!=="")
+                    showSuccess(respuesta.data.error)
+                else
+                    showSuccess("Hubo un error al guardar");
             }
         })
     }
@@ -438,7 +444,6 @@ export default function TarifasRangos(props) {
                                         rows={filtrarTarifas}
                                         columns={state.columns}
                                         density="compact"
-                                        autoPageSize
                                         pageSize={Math.floor((state.height - 310) / 30)}
                                         getRowId={(row) => row.IdTarifa}
                                         onRowSelectionModelChange={(newModel)=>{
