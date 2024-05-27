@@ -334,7 +334,7 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                 <div className="widget-content">
                     <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
                     setRowSelectionModel([])}
-                    } className="btn btn-secondary" style={{visibility:dataPaquetes.length>0 && !disabled?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+                    } className="btn btn-secondary" style={{fontSize:12,visibility:dataPaquetes.length>0 && !disabled?'visible':'hidden',color:"white",marginLeft:"73%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
 
                         <Button onClick={()=>confirmAlert({
                         title: 'Confirmación',
@@ -348,17 +348,17 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                                 label: 'No',
                             }
                         ]
-                    })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%"}}>Borrar Selección</Button>
+                    })} className="btn btn-primary" style={{fontSize:12,visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%"}}>Borrar Selección</Button>
 
                     {
                         dataPaquetes.length !== 0 &&
                         (
                             <div className="row" >
                                 <DataGrid
-                                    onSelectionModelChange={(e) => {
-                                        setRowSelectionModel(e.selectionModel);
+                                    onRowSelectionModelChange={(e) => {
+                                        setRowSelectionModel(e);
                                     }}
-                                    selectionModel={rowSelectionModel}
+                                    rowSelectionModel={rowSelectionModel}
                                     localeText={dataGridLocaleText}
                                     checkboxSelection={seleccionable}
                                     density="compact"
