@@ -2038,6 +2038,7 @@ function Informes({history}) {
                                                                                                                     fullWidth
                                                                                                                     label="Observaciones"
                                                                                                                     disabled="true"
+                                                                                                                    InputLabelProps={{ shrink: true }}
                                                                                                                     value={
                                                                                                                         value.m_sObservaciones
                                                                                                                     }
