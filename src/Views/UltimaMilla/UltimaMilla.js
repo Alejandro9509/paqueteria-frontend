@@ -217,8 +217,77 @@ class UltimaMilla extends Component {
         this.handleAceptar(e, coordenadas);
     }
 
-    selectPaquete (){
+    selectPaquete (paquete){
+        console.log(paquete);
+        this.setState({
+            entregaDD: {
+                idPais: '',
+                pais: '',
+                idEstado: '',
+                estado: '',
+                idMunicipio: '',
+                municipio: '',
+                codigoPostal: '',
+                zonaOperativa: paquete.m_sZona,
+                domicilio: paquete.m_sDomicilioDestinatario,
+                detalles: "",
+                datosAdicionales: paquete.m_sDatosAdicionalesDetalleRecoleccion,
+                latitud: '0',
+                longitud: '0'
+            },
+            destinatario:{
+                idDestinatario: '',
+                aliasDestinatario: '',
+                nombreDestinatario: paquete.m_sNombreDestinatario,
+                RFCDestinatario: paquete.m_sRFCDestinatario,
+                domicilioDestinatario: paquete.m_sDomicilioDestinatario,
+                calleDestinatario: paquete.m_sCalleDestinatario,
+                numeroIntDestinatario: '0',
+                numeroExtDestinatario: paquete.m_sNoExtDestinatario,
+                coloniaDestinatario: paquete.m_sColoniaDestinatario,
+                estadoDestinatario: '',
+                municipioDestinatario: '',
+                codigoPostalDestinatario: '',
+                correoDestinatario: paquete.m_sCorreoDestinatario,
+                telefonoDestinatario: paquete.m_sTelefonoDestinatario,
+                contactoDestinatario: paquete.m_sContactoDestinatario,
+                destinoDestinatario: null,
+                zonaOperativaDestinatario: '',
+                zonaTarifaDestinatario: paquete.m_sZona,
+                latitudD: '0',
+                longitudD: '0'
+            }
+        });
+        this.setState({
+            showConfirmarUbicacion: true,
+            obtenerDatosDireccion: {
+                nombreLugar: this.state.destinatario.nombreDestinatario,
+                numeroInterior: '',
+                numeroExterior: '',
+                calle: this.state.entregaDD.domicilio,
+                colonia: '',
+                ciudad: this.state.entregaDD.municipio,
+                estado: this.state.entregaDD.estado,
+                pais: this.state.entregaDD.pais,
+                codigoPostal: this.state.entregaDD.codigoPostal?.m_sCP,
+                direccionCompleta: getAddressFormated(
+                    this.state.entregaDD.domicilio,
+                    null,
+                    null,
+                    null,
+                    this.state.entregaDD.codigoPostal?.m_sCP,
+                    this.state.entregaDD.municipio,
+                    this.state.entregaDD.estado,
+                    this.state.entregaDD.pais
+                )
+            }
+        })
+    }
 
+    cerrarListadoUbicaciones (){
+        this.mostrarDialogoListado(false)
+        this.mostrarDialogoMapa(false);
+        this.generarRuta(this.state.filtros);
     }
 
     async handleAceptar (e, coordenadas) {
@@ -236,9 +305,10 @@ class UltimaMilla extends Component {
             filtros.paquetesSeleccionadas[index].m_sLongitud = coordenadas.lng;
             this.setState({filtros: filtros})
         });
-        console.log(this.state.paquetesSinCoord);
-        if(this.state.paquetesSinCoord.length < 1){
-            //this.mostrarDialogoMapa(false);
+        this.mostrarDialogoMapa(false);
+        this.mostrarDialogoListado(true);
+        /*if(this.state.paquetesSinCoord.length < 1){
+            this.mostrarDialogoMapa(false);
             this.generarRuta(filtros);
         }else{
             this.setState({
@@ -304,9 +374,8 @@ class UltimaMilla extends Component {
                     )
                 }
             })
-            //console.log(this.state.obtenerDatosDireccion);
             //this.mostrarDialogoMapa(true);
-        }
+        }*/
     }
     componentDidMount() {
     }
@@ -531,7 +600,7 @@ class UltimaMilla extends Component {
                         }
                     });
                     this.setState({
-                        showConfirmarUbicacion: true,
+                        //showConfirmarUbicacion: true,
                         showListaUbicaciones: true,
                         paquetesSinCoord: paqSinLoc,
                         filtros: data,
@@ -557,8 +626,7 @@ class UltimaMilla extends Component {
                             )
                         }
                     })
-                    console.log(this.state);
-                    this.mostrarDialogoMapa(true);
+                    this.mostrarDialogoListado(true);
                     return
                 }
 
@@ -574,7 +642,7 @@ class UltimaMilla extends Component {
                                 if (i.reasons[0]?.code === 'TIME_WINDOW_CONSTRAINT'){
                                     i.reasons[0].descripcion = `El registro ${guias[index].m_sFolio} no puede ser agregado a la ruta porque no alcanzaría a ser completado en límite de horas configurado.`
                                 }else if (i.reasons[0]?.code === 'REACHABLE_CONSTRAINT'){
-                                    this.setState({showConfirmarUbicacion: true, showListaUbicaciones: true, paquetesSinCoord: paqSinLoc})
+                                    this.setState({showListaUbicaciones: true, paquetesSinCoord: paqSinLoc})
                                     this.mostrarDialogoMapa(true);
                                     //i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
 
@@ -781,9 +849,8 @@ class UltimaMilla extends Component {
                     <ListaUbicaciones
                                         open={this.state.showListaUbicaciones}
                                         paquetes={this.state.paquetesSinCoord}
-                                        paquetesSeleccionados={this.state.filtros}
                                         selectPaquete={this.selectPaquete}
-                                        onClose={() => this.state({showListaUbicaciones: false})}
+                                        onClose={this.cerrarListadoUbicaciones}
                     />
                 }
                 <section>

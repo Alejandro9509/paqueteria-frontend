@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import {
     Box,
     Button,
-    Checkbox,
+    Checkbox, Chip,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
     Grid,
     makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
-    TextField,
+    TextField, Tooltip,
     Typography
 } from "@material-ui/core";
 import {MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents} from "react-leaflet";
@@ -27,7 +27,9 @@ import {
 } from "../../Util/Contexts/UltimaMillaContext";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import {getAddressFormated} from "../../Util/Util";
+import {getAddressFormated, validarDerecho} from "../../Util/Util";
+import {confirmAlert} from "react-confirm-alert";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 export default class ListaUbicaciones extends Component {
     constructor(props) {
@@ -38,6 +40,7 @@ export default class ListaUbicaciones extends Component {
     }
 
     componentDidMount(){
+        this.setState({listado: this.props.paquetes});
     }
 
     render() {
@@ -48,77 +51,50 @@ export default class ListaUbicaciones extends Component {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        indeterminate={this.props.paquetesSeleccionadas.length > 0 && this.props.paquetesSeleccionadas.length < this.state.paquetes.length}
-                                        checked={this.state.paquetes.length > 0 && this.props.paquetesSeleccionadas.length === this.state.paquetes.length}
-                                        onChange={this.handleSelectAllClickevent}
-                                        inputProps={{'aria-label': 'select all desserts'}}
-                                    />
-                                </TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sFolio" ? this.state.order : false}
-                                    align="left">
+                                <TableCell sortDirection={this.state.orderBy === "m_sFolio" ? this.state.order : false} align="left">
                                     <TableSortLabel
                                         active={this.state.orderBy === "m_sFolio"}
                                         direction={this.state.orderBy === "m_sFolio" ? this.state.order : 'asc'}
-                                        onClick={(event) => this.createSortHandler("m_sFolio", event)}
-                                    >
+                                        onClick={(event) => this.createSortHandler("m_sFolio", event)}>
                                         Folio
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                    align="left">Tipo</TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                    align="left">Tipo de cobro</TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sZona" ? this.state.order : false}
-                                    align="left">Zona</TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                    align="left">Cliente</TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_bClienteBloqueado" ? this.state.order : false}
-                                    align="left">Estatus cliente</TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
-                                    align="left">Domicilio</TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
-                                    align="left">Ventana de entrega</TableCell>
-                                <TableCell sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false}
-                                           align="left">Fecha</TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
-                                    align="left">Estatus</TableCell>
+                                <TableCell sortDirection={this.state.orderBy === "m_sZona" ? this.state.order : false} align="left">
+                                    Zona
+                                </TableCell>
+                                <TableCell sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false} align="left">
+                                    Cliente
+                                </TableCell>
+                                <TableCell sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false} align="left">
+                                    Domicilio
+                                </TableCell>
+                                <TableCell sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false} align="left">
+                                    Fecha
+                                </TableCell>
+                                <TableCell sortDirection={this.state.orderBy === "m_sEstatusUltimaMilla" ? this.state.order : false} align="left">
+                                    Estatus
+                                </TableCell>
+                                <TableCell align="left">
+                                    Seleccionar
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {
-                                this.listado.map((u, index) => {
-                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                this.props.paquetes.map((u, index) => {
                                     return (
                                         <TableRow>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    disabled={u.m_bClienteBloqueado}
-                                                    onClick={(event) => this.handleClick(event, u)}
-                                                    inputProps={{'aria-labelledby': labelId}}
-                                                />
-                                            </TableCell>
                                             <TableCell align="left">{u.m_sFolio}</TableCell>
-                                            <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
-                                            <TableCell align="left">{u.m_sTipoCobro}</TableCell>
                                             <TableCell align="left">{u.m_sZona}</TableCell>
-                                            <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
-                                            <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
-                                                       align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
-                                            <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
-                                            <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? (u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaRecoleccionCita + " " + u.m_sHoraCitarRecoleccionMinima + " a " + u.m_sHoraCitaRecoleccionMaxima)) : "Sin cita") : u.m_bEmbarqueConCita ? u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaEmbarqueCita + " " + u.m_sHoraEmbarqueCitaMinima + " a " + u.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}</TableCell>
+                                            <TableCell align="left">{u.m_sNombreDestinatario}</TableCell>
+                                            <TableCell align="left">{u.m_sDomicilioDestinatario}</TableCell>
                                             <TableCell align="left">{u.m_dFechaRegistro}</TableCell>
                                             <TableCell align="left">{u.m_sEstatusUltimaMilla}</TableCell>
+                                            <TableCell>
+                                                <button className="btn btn-default" onClick={this.props.selectPaquete(u)}>
+                                                    Seleccionar
+                                                </button>
+                                            </TableCell>
                                         </TableRow>
                                     )
                                 })
