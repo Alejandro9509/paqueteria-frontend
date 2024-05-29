@@ -3213,7 +3213,7 @@ function Guia(props) {
                                                                 </FormControl>
                                                                 }
                                                                 {state.agregar != "Agregar" &&
-                                                                    <TextField variant="outlined" size="small"
+                                                                    <TextField variant="outlined" size="small" fullWidth
                                                                     labelId="idEmbarqueLabel"
                                                                     label="Folio Embarque"
                                                                     className="form-control"
@@ -4330,7 +4330,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Sucursal</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" size="small"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4345,7 +4345,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Fecha</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" size="small"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4363,7 +4363,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Usuario</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" size="small"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4381,7 +4381,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Estatus</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" size="small"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4399,7 +4399,7 @@ function Guia(props) {
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <label className="label">Motivo</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" size="small"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
