@@ -53,7 +53,8 @@ import {forEach} from "react-bootstrap/ElementChildren";
 import {getAddressFormated, getCurrentDate} from "../../Util/Util";
 import moment from "moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
-import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion"; // Import css
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
+import ListaUbicaciones from "./ListaUbicaciones"; // Import css
 
 
 function showSuccess(mensaje) {
@@ -110,6 +111,7 @@ class UltimaMilla extends Component {
             closeResumenParadas:false,
             openDialogGenerarRutaError: false,
             showConfirmarUbicacion: false,
+            showListaUbicaciones: false,
             paquetesSinCoord: [],
             titulo: "",
             entregaEnSucursal: false,
@@ -206,9 +208,17 @@ class UltimaMilla extends Component {
         });
     }
 
+    mostrarDialogoListado = (isVisible) => {
+        this.setState({showListaUbicaciones: isVisible});
+    }
+
     confirmarUbicacion (coordenadas, e) {
         console.log("Se confirma ubicacion");
         this.handleAceptar(e, coordenadas);
+    }
+
+    selectPaquete (){
+
     }
 
     async handleAceptar (e, coordenadas) {
@@ -228,7 +238,7 @@ class UltimaMilla extends Component {
         });
         console.log(this.state.paquetesSinCoord);
         if(this.state.paquetesSinCoord.length < 1){
-            this.mostrarDialogoMapa(false);
+            //this.mostrarDialogoMapa(false);
             this.generarRuta(filtros);
         }else{
             this.setState({
@@ -295,7 +305,7 @@ class UltimaMilla extends Component {
                 }
             })
             //console.log(this.state.obtenerDatosDireccion);
-            this.mostrarDialogoMapa(true);
+            //this.mostrarDialogoMapa(true);
         }
     }
     componentDidMount() {
@@ -522,6 +532,7 @@ class UltimaMilla extends Component {
                     });
                     this.setState({
                         showConfirmarUbicacion: true,
+                        showListaUbicaciones: true,
                         paquetesSinCoord: paqSinLoc,
                         filtros: data,
                         obtenerDatosDireccion: {
@@ -563,7 +574,7 @@ class UltimaMilla extends Component {
                                 if (i.reasons[0]?.code === 'TIME_WINDOW_CONSTRAINT'){
                                     i.reasons[0].descripcion = `El registro ${guias[index].m_sFolio} no puede ser agregado a la ruta porque no alcanzaría a ser completado en límite de horas configurado.`
                                 }else if (i.reasons[0]?.code === 'REACHABLE_CONSTRAINT'){
-                                    this.setState({showConfirmarUbicacion: true, paquetesSinCoord: paqSinLoc})
+                                    this.setState({showConfirmarUbicacion: true, showListaUbicaciones: true, paquetesSinCoord: paqSinLoc})
                                     this.mostrarDialogoMapa(true);
                                     //i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
 
@@ -765,7 +776,16 @@ class UltimaMilla extends Component {
                                         onClose={() => this.state({showConfirmarUbicacion: false})}
                     />
                 }
-
+                {
+                    this.state.showListaUbicaciones &&
+                    <ListaUbicaciones
+                                        open={this.state.showListaUbicaciones}
+                                        paquetes={this.state.paquetesSinCoord}
+                                        paquetesSeleccionados={this.state.filtros}
+                                        selectPaquete={this.selectPaquete}
+                                        onClose={() => this.state({showListaUbicaciones: false})}
+                    />
+                }
                 <section>
                     <div className="widget-content" id={"mapFullScreen"}>
                         <div className="row"
