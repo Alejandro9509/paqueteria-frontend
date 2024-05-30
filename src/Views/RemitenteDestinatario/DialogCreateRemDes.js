@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -9,17 +8,16 @@ import {
     InputLabel,
     TextField,
     Select,
-    Grid
-} from "@material-ui/core";
-import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
+    Grid, MenuItem
+} from "@mui/material";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
-import { makeStyles } from '@material-ui/core/styles';
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import {agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
+import { makeStyles } from "@mui/styles";
+import Autocomplete from "@mui/lab/Autocomplete";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
-import {obtenerCodigoPostal, obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
+import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
 
 const useStyles = makeStyles({
@@ -88,9 +86,11 @@ function DialogCreateRemDes(props) {
     useEffect(() => {
         getAllEstados();
         obtenerMunicipiosByIdEstado(11).then(({ data }) => {
+            console.log(data);
             setDataMunicipios(data);
         });
         obtenerCodigosPostalesPorEstadoMunicipio(11, 20).then(({ data }) => {
+            console.log(data);
             setDataCodigosPostales(data);
         });
     }, [pagina])
@@ -98,6 +98,7 @@ function DialogCreateRemDes(props) {
 //--------------------------->Funciones<----------------------------------------------------------------------
     const getAllEstados = () => {
         obtenerAllEstados().then((respuesta) => {
+            console.log(respuesta.data);
             setDataEstados(respuesta.data);
         });
     }
@@ -124,6 +125,7 @@ function DialogCreateRemDes(props) {
 
     const handleChange = (event) => {
         event.preventDefault();
+        console.log(event.target)
         setState((state) => {
             return {
                 ...state,
@@ -219,7 +221,7 @@ function DialogCreateRemDes(props) {
                 </div>
                 <div className="widget-container">
                     <div className="widget-content">
-                        <Grid container spacing={2} alignItems="center" justifyContent="center">
+                        <Grid container rowSpacing={2} columnSpacing={{ xs: 2, sm: 2, md: 3 }}>
                             {/*<Grid item xs={4}>
                                 <div className="input">
                                     <TextField
@@ -250,7 +252,7 @@ function DialogCreateRemDes(props) {
                                 </div>
                             </Grid>*/}
 
-                            <Grid item xs={4}>
+                            <Grid item xs={6}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
@@ -281,11 +283,12 @@ function DialogCreateRemDes(props) {
                                         label="Nombre"
                                         value={state.nombre}
                                         name="nombre"
+                                        fullWidth
                                     />
                                 </div>
                             </Grid>
 
-                            <Grid item xs={6}>
+                            <Grid item xs={8}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
@@ -298,6 +301,7 @@ function DialogCreateRemDes(props) {
                                         className="form-control"
                                         type="text"
                                         name="cliente"
+                                        fullWidth
                                         onClick={() => {
                                                 setState({
                                                     ...state,
@@ -308,11 +312,14 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
+                        </Grid>
 
-                            <div className="col-md-12">
-                                <p>Domicilio fiscal</p>
-                            </div>
+                        <div className="col-md-12">
+                            <br/>
+                            <span>Domicilio fiscal</span>
+                        </div>
 
+                        <Grid container rowSpacing={2} columnSpacing={{xs: 2, sm: 2, md: 3}}>
                             <Grid item xs={8}>
                                 <div className="input">
                                     <Autocomplete
@@ -322,6 +329,7 @@ function DialogCreateRemDes(props) {
                                         }
                                         value={state.codigoPostal}
                                         name="codigoPostal"
+                                        fullWidth
                                         disableClearable
                                         forcePopupIcon={false}
                                         options={dataCodigosPostales}
@@ -349,253 +357,261 @@ function DialogCreateRemDes(props) {
                                 </div>
                             </Grid>
 
-                            <Grid container rowSpacing={2} columnSpacing={{ xs: 2, sm: 2, md: 3 }}>
-                                <Grid item xs={6}>
-                                    <FormControl fullWidth variant="outlined" margin="dense" required>
-                                        <InputLabel id="idEstadoLabel">Estado</InputLabel>
-                                        <Select
-                                            fullWidth
-                                            labelId="idEstadoLabel"
-                                            label="Estado"
-                                            className="form-control"
-                                            value={state.estado}
-                                            onChange={handleChange}
-                                            name="estado"
-                                            default={11}
-                                        >
-                                            {dataEstados.map((estado) => (
-                                                <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                                    {estado.m_sEstado}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <FormControl
-                                        className="input select"
+                            <Grid item xs={6}>
+                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                    <InputLabel id="idEstadoLabel">Estado</InputLabel>
+                                    <Select
                                         fullWidth
+                                        labelId="idEstadoLabel"
+                                        label="Estado"
+                                        className="form-control"
+                                        value={state.estado}
+                                        onChange={handleChange}
+                                        name="estado"
+                                        defaultValue={11}
+                                        InputLabelProps={{shrink: true}}
+                                    >
+                                        {dataEstados.map((estado) => (
+                                            <MenuItem key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
+                                                {estado.m_sEstado}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <FormControl
+                                    className="input select"
+                                    fullWidth
+                                    variant="outlined"
+                                    margin="dense"
+                                    required
+                                >
+                                    <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                                    <Select
+                                        fullWidth
+                                        labelId={"idMunicipioLabel"}
+                                        label={"Municipio"}
+                                        className="form-control"
+                                        value={state.municipio}
+                                        onChange={handleChange}
+                                        name="municipio"
+                                        InputProps={{name: "municipio"}}
+                                        defaultValue={20}
+                                        InputLabelProps={{shrink: true}}
+                                    >
+                                        {dataMunicipios.map((municipio) => (
+                                            <MenuItem
+                                                key={municipio.m_sCodigoMunicipio}
+                                                value={municipio.m_sCodigoMunicipio}
+                                            >
+                                                {municipio.m_sMunicipio}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
                                         variant="outlined"
                                         margin="dense"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
                                         required
-                                    >
-                                        <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
-                                        <Select
-                                            fullWidth
-                                            labelId={"idMunicipioLabel"}
-                                            label={"Municipio"}
-                                            className="form-control"
-                                            value={state.municipio}
-                                            onChange={handleChange}
-                                            name="municipio"
-                                            InputProps={{name: "municipio"}}
-                                        >
-                                            {dataMunicipios.map((municipio) => (
-                                                <option
-                                                    key={municipio.m_sCodigoMunicipio}
-                                                    value={municipio.m_sCodigoMunicipio}
-                                                >
-                                                    {municipio.m_sMunicipio}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            label="Colonia / Localidad"
-                                            value={state.colonia}
-                                            name="colonia"
-                                        />
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            label="Calle"
-                                            value={state.calle}
-                                            name="calle"
-                                        />
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={3}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            label="Número interior"
-                                            value={state.numeroInt}
-                                            name="numeroInt"
-                                        />
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={3}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            label="Número exterior"
-                                            value={state.numeroExt}
-                                            name="numeroExt"
-                                        />
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            label="Contacto"
-                                            value={state.contacto}
-                                            name="contacto"
-                                        />
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            label="Teléfono"
-                                            required
-                                            value={state.telefono}
-                                            disabled={props.consulta}
-                                            name="telefono"
-                                        />
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            label="Correo Electrónico"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="email"
-                                            required
-                                            value={state.correo}
-                                            disabled={props.consulta}
-                                            name="correo"
-                                        />
-                                    </div>
-                                </Grid>
-
-                                {/* {props.mostrarZonas && (
-                                <div className="col-sm-12 col-md-12 unit">
-                                    <div className="input">
-                                        <Autocomplete
-                                            value={state.zonaOperativa}
-                                            freeSolo
-                                            onChange={(event, newValue) =>
-                                                handleChangeAutocomplete("zonaOperativa", newValue)
-                                            }
-                                            id="zonaOperativa"
-                                            disableClearable
-                                            forcePopupIcon={false}
-                                            options={dataZonasOperativas}
-                                            disabled={props.consulta || props.modificar || props.agregar}
-                                            getOptionLabel={(option) =>
-                                                option
-                                                    ? `${option.m_sCodigoZona} - CP: ${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
-                                                    : ""
-                                            }
-                                            variant="outlined"
-                                            name={"zonaOperativa"}
-                                            style={{
-                                                transform: "translate(14px, 10px) scale(1) !important",
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    variant="outlined"
-                                                    label="Zona Operativa"
-                                                    margin="dense"
-                                                    required={
-                                                        !state.diferenteEntrega && !state.entregaEnSucursal
-                                                    }
-                                                    onClick={() => handleClickZona()}
-                                                    {...params}
-                                                />
-                                            )}
-                                        />
-                                    </div>
+                                        label="Colonia / Localidad"
+                                        value={state.colonia}
+                                        name="colonia"
+                                        fullWidth
+                                    />
                                 </div>
-                            )}
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        margin="dense"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        label="Calle"
+                                        value={state.calle}
+                                        name="calle"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={3}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        margin="dense"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        label="Número interior"
+                                        value={state.numeroInt}
+                                        name="numeroInt"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={3}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        margin="dense"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        label="Número exterior"
+                                        value={state.numeroExt}
+                                        name="numeroExt"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        margin="dense"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        label="Contacto"
+                                        value={state.contacto}
+                                        name="contacto"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        margin="dense"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        label="Teléfono"
+                                        required
+                                        value={state.telefono}
+                                        disabled={props.consulta}
+                                        name="telefono"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        margin="dense"
+                                        label="Correo Electrónico"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="email"
+                                        required
+                                        value={state.correo}
+                                        disabled={props.consulta}
+                                        name="correo"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
+
+                            {/* {props.mostrarZonas && (
                             <div className="col-sm-12 col-md-12 unit">
                                 <div className="input">
                                     <Autocomplete
-                                        value={state.zonaTarifa}
+                                        value={state.zonaOperativa}
                                         freeSolo
-                                        // onChange={(event, newValue) =>
-                                        //     handleChangeAutocomplete("zonaTarifa", newValue)
-                                        // }
-                                        id="zonaTarifa"
+                                        onChange={(event, newValue) =>
+                                            handleChangeAutocomplete("zonaOperativa", newValue)
+                                        }
+                                        id="zonaOperativa"
                                         disableClearable
                                         forcePopupIcon={false}
-                                        options={dataZonasTarifa}
+                                        options={dataZonasOperativas}
                                         disabled={props.consulta || props.modificar || props.agregar}
                                         getOptionLabel={(option) =>
                                             option
-                                                ? option.m_sCodigoZona || "Código Postal sin zona asignada"
+                                                ? `${option.m_sCodigoZona} - CP: ${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
                                                 : ""
                                         }
                                         variant="outlined"
-                                        name={"zonaTarifa"}
+                                        name={"zonaOperativa"}
                                         style={{
                                             transform: "translate(14px, 10px) scale(1) !important",
                                         }}
                                         renderInput={(params) => (
                                             <TextField
                                                 variant="outlined"
-                                                label="Zona Tarifa"
+                                                label="Zona Operativa"
                                                 margin="dense"
                                                 required={
                                                     !state.diferenteEntrega && !state.entregaEnSucursal
                                                 }
-                                                onClick={handleClickZona}
+                                                onClick={() => handleClickZona()}
                                                 {...params}
                                             />
                                         )}
                                     />
                                 </div>
-                            </div>*/}
-                            </Grid>
-
+                            </div>
+                        )}
+                        <div className="col-sm-12 col-md-12 unit">
+                            <div className="input">
+                                <Autocomplete
+                                    value={state.zonaTarifa}
+                                    freeSolo
+                                    // onChange={(event, newValue) =>
+                                    //     handleChangeAutocomplete("zonaTarifa", newValue)
+                                    // }
+                                    id="zonaTarifa"
+                                    disableClearable
+                                    forcePopupIcon={false}
+                                    options={dataZonasTarifa}
+                                    disabled={props.consulta || props.modificar || props.agregar}
+                                    getOptionLabel={(option) =>
+                                        option
+                                            ? option.m_sCodigoZona || "Código Postal sin zona asignada"
+                                            : ""
+                                    }
+                                    variant="outlined"
+                                    name={"zonaTarifa"}
+                                    style={{
+                                        transform: "translate(14px, 10px) scale(1) !important",
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            variant="outlined"
+                                            label="Zona Tarifa"
+                                            margin="dense"
+                                            required={
+                                                !state.diferenteEntrega && !state.entregaEnSucursal
+                                            }
+                                            onClick={handleClickZona}
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>*/}
                         </Grid>
+
 
                     </div>
                 </div>

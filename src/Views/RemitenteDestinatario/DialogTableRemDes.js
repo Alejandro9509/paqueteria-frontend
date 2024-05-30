@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Button, Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
-import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
+import {DialogActions, TextField, Button} from "@mui/material";
+import {obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from '@mui/material/styles';
-
-import makeStyles from '@mui/styles/makeStyles';
 
 const PREFIX = 'DialogTableRemDes';
 
