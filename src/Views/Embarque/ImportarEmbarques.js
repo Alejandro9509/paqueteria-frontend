@@ -200,7 +200,7 @@ function ImportarEmbarques(props) {
         setState(state => {
             return {
                 ...state,
-                cliente: row.data,
+                cliente: row,
                 /*idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
                 porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
                 aplicaSeguro: row.data.m_bTieneSeguro,

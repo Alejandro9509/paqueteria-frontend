@@ -363,10 +363,11 @@ export function readExcel(FORMAT,file, esRecoleccion){
             const wsComplementosSat = (wb.Sheets[FORMAT.hojaComplementos]);
             if(wsGuias == undefined || wsComplementosSat == undefined || wsPaquetes == undefined){
                 resolve([]);
-                showSuccess("En el documento no se encontraron las hojas: " +
+                let mensaje = ("En el documento no se encontraron las hojas: " +
                     (wsComplementosSat == undefined ? FORMAT.hojaEmbarques+", " : "") +
                     (wsGuias == undefined ? FORMAT.hojaComplementos+", " : "") +
-                    (wsPaquetes == undefined ? FORMAT.hojaPaquetes+", " : ""))
+                    (wsPaquetes == undefined ? FORMAT.hojaPaquetes+", " : "")).slice(0, -2)
+                showSuccess(mensaje)
                 return;
             }
 
