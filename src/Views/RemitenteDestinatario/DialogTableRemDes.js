@@ -39,7 +39,6 @@ function showSuccess(mensaje) {
 }
 let rowSelect
 function DialogTableRemDes(props) {
-
     let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
@@ -63,7 +62,7 @@ const columns = [
 
 let registros=10
 //----------------------------->Hooks useState <----------------------------------------------------------------------
-const [rows, setRow] = React.useState([])
+const [rows, setRow] = React.useState([]);
 const [pagina, setPagina] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
@@ -124,8 +123,10 @@ function cargarDesdeServidor(pagina,registros){
                 columns={columns}
                 rows={rows}
                 getRowId={((row) => row.m_nNumero)}
-                onRowSelected={(row) => {
-                    rowSelect = row;
+                onRowSelectionModelChange={(newRowSelectionModel,e) => {
+                    if(newRowSelectionModel.length<1)
+                        return
+                    rowSelect=rows.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0])
                 }}
                 pagination
                 page={pagina}
@@ -149,10 +150,10 @@ function cargarDesdeServidor(pagina,registros){
                 </button>
                 <button
                     onClick={() => {
-                        console.log(rowSelect)
                         if(rowSelect !=null){
-                          handleChangeAutoCompleteRemitenteDestinatario(rowSelect);}
-                        }}
+                            handleChangeAutoCompleteRemitenteDestinatario(rowSelect);
+                        }
+                    }}
                     className="btn btn-primary primary-btn"
                 >
                     Seleccionar

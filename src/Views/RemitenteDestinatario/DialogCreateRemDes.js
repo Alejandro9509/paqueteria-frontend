@@ -107,11 +107,10 @@ function DialogCreateRemDes(props) {
         setState(state => {
             return {
                 ...state,
-                clientePaga: row.data,
+                clientePaga: row,
                 openDialog: false
             }
         });
-        console.log(state.clientePaga);
     }
 
     const dialogVisible = (isVisible) => {
@@ -173,7 +172,7 @@ function DialogCreateRemDes(props) {
 
     const handleAgregar = () => {
         const params = {
-            idCliente: state.clientePaga.id,
+            idCliente: state.clientePaga.m_nIdCliente ? state.clientePaga.m_nIdCliente : null,
             nombre: state.nombre,
             rfc: state.RFC,
             activo: true,
