@@ -1,7 +1,7 @@
 import {React, useEffect, useState} from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField} from "@mui/material";
+import {Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Switch, TextField} from "@mui/material";
 import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
@@ -23,6 +23,10 @@ import Autocomplete from "@mui/lab/Autocomplete";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ViajeForaneo from "../Tarifas/ViajeForaneo";
+import ListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
+import ListItemText from "@mui/material/ListItemText";
+import {Label, RemoveCircle} from "@mui/icons-material";
 
 function BuscarTarifa() {
 
@@ -45,6 +49,7 @@ function BuscarTarifa() {
     const [origenesDestinosListado, setOrigenesDestinosListado] = useState([])
     const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([])
     const [productosListado, setProductosListado] = useState([])
+    const [filtrosProductos,setFiltrosProductos]=useState([])
     const [filtrosBusqueda,setFiltrosBusqueda]=useState({
         sucOrigen:-1,
         sucDestino:-1,
@@ -53,6 +58,7 @@ function BuscarTarifa() {
         ciudadOrigen:-1,
         ciudadDestino:-1,
         producto:null,
+        productos:[],
         showMillaM:false,
         showPM:false,
         showUM:false
@@ -405,7 +411,7 @@ function BuscarTarifa() {
                                     <h3>Origen</h3>
                                 </Grid>
                                 <Grid item sm={2}>
-                                    <FormControl fullWidth variant='outlined' margin='dense'>
+                                    <FormControl fullWidth variant='outlined' size='small'>
                                         <InputLabel
                                             id="sucLabel">Sucursal</InputLabel>
                                         <Select value={filtrosBusqueda.sucOrigen} onChange={(e)=>{
@@ -423,6 +429,7 @@ function BuscarTarifa() {
                                 </Grid>
                                 <Grid item sm={2}>
                                     <Autocomplete
+                                        size='small'
                                         freeSolo
                                         value={filtrosBusqueda.direccionOrigen}
                                         onChange={(e,newValue)=>{
@@ -439,7 +446,6 @@ function BuscarTarifa() {
                                                 <TextField
                                                     variant="outlined"
                                                     label="Código Postal - Colonia"
-                                                    margin="dense"
                                                     className="form-control"
                                                     {...params}
                                                     InputProps={{
@@ -454,7 +460,7 @@ function BuscarTarifa() {
 
                                 </Grid>
                                 <Grid item sm={2}>
-                                    <FormControl disabled fullWidth variant='outlined' margin='dense'>
+                                    <FormControl disabled fullWidth variant='outlined' size='small'>
                                         <InputLabel
                                             id="origenLbl">Origen</InputLabel>
                                         <Select value={filtrosBusqueda.ciudadOrigen} onChange={(e)=>setFiltrosBusqueda({...filtrosBusqueda,ciudadOrigen: e.target.value})} labelId='origenLbl' label=''>
@@ -472,7 +478,7 @@ function BuscarTarifa() {
                                     <h3>Destino</h3>
                                 </Grid>
                                 <Grid item sm={2}>
-                                    <FormControl fullWidth variant='outlined' margin='dense'>
+                                    <FormControl fullWidth variant='outlined' size='small'>
                                         <InputLabel
                                             id="sucLabel">Sucursal</InputLabel>
                                         <Select value={filtrosBusqueda.sucDestino}
@@ -491,6 +497,7 @@ function BuscarTarifa() {
                                 <Grid item sm={2}>
                                     <Autocomplete
                                         freeSolo
+                                        size='small'
                                         value={filtrosBusqueda.direccionDestino}
                                         onChange={(e,newValue)=>{
                                             setFiltrosBusqueda({...filtrosBusqueda,direccionDestino: newValue,sucDestino: newValue!=null?newValue.IdSucursal:-1,ciudadDestino:newValue!=null?newValue.IdOrigenDestino:-1})
@@ -506,7 +513,6 @@ function BuscarTarifa() {
                                                 <TextField
                                                     variant="outlined"
                                                     label="Código Postal - Colonia"
-                                                    margin="dense"
                                                     className="form-control"
                                                     {...params}
                                                     InputProps={{
@@ -521,7 +527,7 @@ function BuscarTarifa() {
 
                                 </Grid>
                                 <Grid item sm={2}>
-                                    <FormControl disabled fullWidth variant='outlined' margin='dense'>
+                                    <FormControl disabled fullWidth variant='outlined' size='small'>
                                         <InputLabel
                                             id="origenLbl">Destino</InputLabel>
                                         <Select value={filtrosBusqueda.ciudadDestino} onChange={(e)=>setFiltrosBusqueda({...filtrosBusqueda,ciudadDestino: e.target.value})} labelId='origenLbl' label=''>
@@ -534,6 +540,97 @@ function BuscarTarifa() {
 
                                 </Grid>
                             </Grid>
+                            <Grid item sm={12} spacing={1}>
+                                <Button className='btn btn-primary primary-btn' onClick={()=>setFiltrosProductos([...filtrosProductos,{desc:productosListado[0],cantidad:1,medida:0}])}>Agregar Producto</Button>
+                            </Grid>
+                            <Grid item container sm={12} spacing={1}>
+                                <List fullWidth>
+                                    {
+                                        filtrosProductos.length>0 &&
+                                        filtrosProductos.map((p,index)=>{
+                                            return (
+
+                                                <ListItem style={{width:'300%'}}>
+                                                    <Grid item container spacing={1} sm={12}>
+                                                    <Grid item sm={5}>
+
+                                                <Autocomplete
+                                                    fullWidth
+                                                    freeSolo
+                                                    size='small'
+                                                    value={p.desc}
+                                                    onChange={(e,newValue)=>
+                                                    {
+                                                        let newArr=filtrosProductos
+                                                        newArr[index].desc=newValue
+                                                        setFiltrosProductos(newArr)
+                                                    }}
+                                                    forcePopupIcon={false}
+                                                    options={productosListado}
+                                                    getOptionLabel={(option) =>
+                                                        option.numeroDescripcion
+                                                    }
+                                                    variant="outlined"
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                label="Producto"
+                                                                className="form-control"
+                                                                {...params}
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    type: "search",
+                                                                    disableUnderline: true,
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+                                                    </Grid>
+                                                    <Grid item sm={2}>
+                                                    <TextField label={p.medida?'Peso (kg)':"Cantidad"} type='number' size={'small'}
+                                                               onChange={(e)=>{
+                                                                   const myPromise=new Promise((resolve)=>{
+                                                                       const updatedArr = [...filtrosProductos];
+                                                                       updatedArr[index].cantidad = e.target.value;
+                                                                       setFiltrosProductos(updatedArr);
+                                                                   })
+                                                                   myPromise.then((v)=>setFiltrosProductos(v))
+                                                               }}
+                                                               value={p.cantidad}></TextField>
+                                                    </Grid>
+                                                    <Grid item style={{textAlign:'center'}} sm={2}>
+                                                    <Switch
+                                                        checked={p.medida}
+                                                        onChange={()=>{
+                                                            const updatedArr = [...filtrosProductos];
+                                                            updatedArr[index].medida = !p.medida;
+                                                            setFiltrosProductos(updatedArr);
+                                                        }}
+                                                        edge='start'
+                                                        aria-labelledby={'medida-label'+index}
+                                                    />
+                                                        <ListItemText id={'medida-label'+index} primary={p.medida?"Peso":"Cantidad"}/>
+
+                                                    </Grid>
+                                                        <Grid item sm={1}>
+                                                            <IconButton onClick={()=>{
+                                                                let newArray=[...filtrosProductos]
+                                                                newArray.splice(index,1)
+                                                                setFiltrosProductos(newArray)
+                                                            }} size={'large'} style={{color:'red'}}>
+                                                                <RemoveCircle fontSize={'inherit'}/>
+                                                            </IconButton>
+                                                        </Grid>
+
+                                                    </Grid>
+                                            </ListItem>
+                                                )
+                                        })
+                                    }
+                                </List>
+                            </Grid>
                             <Grid item container spacing={1}>
                                 <Grid item sm={12}>
                                     <h3>Producto</h3>
@@ -541,6 +638,7 @@ function BuscarTarifa() {
                                 <Grid item sm={2}>
                                     <Autocomplete
                                         freeSolo
+                                        size='small'
                                         value={filtrosBusqueda.producto}
                                         onChange={(e,newValue)=>setFiltrosBusqueda({...filtrosBusqueda,producto: newValue})}
                                         forcePopupIcon={false}
@@ -554,7 +652,6 @@ function BuscarTarifa() {
                                                 <TextField
                                                     variant="outlined"
                                                     label="Producto"
-                                                    margin="dense"
                                                     className="form-control"
                                                     {...params}
                                                     InputProps={{
@@ -604,7 +701,7 @@ function BuscarTarifa() {
 
 
                                         </Grid>
-                                        <Button onClick={()=>console.log(filtrosBusqueda.direccionOrigen)}>PRUEBA</Button>
+                                        <Button onClick={()=>console.log(filtrosProductos)}>PRUEBA</Button>
                                         <div className='PM hide'>
                                             {
                                                 viajesPrimeraMilla.map((viaje) =>
