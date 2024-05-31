@@ -27,6 +27,7 @@ import ListItem from "@mui/material/ListItem";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
 import {Label, RemoveCircle} from "@mui/icons-material";
+import {obtenerCotizacionTarifario} from "../../Util/Contexts/CotizadorContext";
 
 function BuscarTarifa() {
 
@@ -50,6 +51,7 @@ function BuscarTarifa() {
     const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([])
     const [productosListado, setProductosListado] = useState([])
     const [filtrosProductos,setFiltrosProductos]=useState([])
+    const [conceptosResult,setConceptosResult]=useState([])
     const [filtrosBusqueda,setFiltrosBusqueda]=useState({
         sucOrigen:-1,
         sucDestino:-1,
@@ -144,6 +146,12 @@ function BuscarTarifa() {
             let productosList = respuestas.data.map(p => ({
                 m_nIdProducto: p.m_nIdProducto,
                 m_nNoProducto: p.m_nNoProducto,
+                m_xAlto:p.m_xAlto,
+                m_xAncho:p.m_xAncho,
+                m_xLargo:p.m_xLargo,
+                m_sEmbalaje: p.m_sEmbalaje,
+                m_xPeso: p.m_xPeso,
+                m_nIdEmbalaje:p.m_nIdEmbalaje,
                 m_sDescripcion: p.m_sDescripcion,
                 m_bActivo: p.m_bActivo
             }))
@@ -361,6 +369,93 @@ function BuscarTarifa() {
             setZonasListado(respuesta.data)
             setShowDialogZonas(true)
         })
+    }
+    function handleCotizar(){
+        const promise=new Promise((resolve)=>{
+            setConceptosResult([],resolve())
+        })
+        promise.then(()=>{
+            for(const prod of filtrosProductos){
+                const myPromise=new Promise((resolve)=>{
+                    let params = {
+                        idOrigen: filtrosBusqueda.ciudadOrigen,
+                        idDestino: filtrosBusqueda.ciudadDestino,
+                        idEmbarque: 0,
+                        idRecoleccion: 0,
+                        idZonaEntrega: filtrosBusqueda.direccionOrigen.IdZona,
+                        idZonaRecoleccion: filtrosBusqueda.direccionDestino.IdZona,
+                        idCliente: 3140,
+                        entregaEnSucursal:  0,
+                        idSeguro: 5,
+                        valorDeclarado: 0,
+                        aplicaRecoleccion: 1,
+                        aplicaSeguro: 0,
+                        porcentajeSeguro: 0,
+                        recoleccionConCita: 0,
+                        embarqueConCita: 0,
+                        paquetesCotizacion: [{
+                            tipo: 2,
+                            peso: prod.desc.m_xPeso,
+                            largo: prod.desc.m_xLargo,
+                            ancho: prod.desc.m_xAncho,
+                            alto: prod.desc.m_xAlto,
+                            volumen: prod.desc.m_xLargo*prod.desc.m_xAncho*prod.desc.m_xAlto,
+                            idTipoEmpaque: prod.desc.m_nIdEmbalaje,
+                            activo: prod.desc.m_bActivo,
+                            ctd: prod.cantidad,
+                            idProducto: prod.desc.m_nIdProducto,
+                        }]
+                    }
+                    obtenerCotizacionTarifario(params).then(({data})=>{
+                        setConceptosResult([...conceptosResult,data],resolve())
+                    })
+                })
+                myPromise.then(()=>console.log("sss"))
+
+            }
+        })
+
+       /* filtrosProductos.map(async (prod)=>{
+
+        })*/
+
+      /*  filtrosProductos.forEach((prod)=>{
+            let params = {
+                idOrigen: filtrosBusqueda.ciudadOrigen,
+                idDestino: filtrosBusqueda.ciudadDestino,
+                idEmbarque: 0,
+                idRecoleccion: 0,
+                idZonaEntrega: filtrosBusqueda.direccionOrigen.IdZona,
+                idZonaRecoleccion: filtrosBusqueda.direccionDestino.IdZona,
+                idCliente: 3140,
+                entregaEnSucursal:  0,
+                idSeguro: 5,
+                valorDeclarado: 0,
+                aplicaRecoleccion: 1,
+                aplicaSeguro: 0,
+                porcentajeSeguro: 0,
+                recoleccionConCita: 0,
+                embarqueConCita: 0,
+                paquetesCotizacion: [{
+                    tipo: 2,
+                    peso: prod.desc.m_xPeso,
+                    largo: prod.desc.m_xLargo,
+                    ancho: prod.desc.m_xAncho,
+                    alto: prod.desc.m_xAlto,
+                    volumen: prod.desc.m_xLargo*prod.desc.m_xAncho*prod.desc.m_xAlto,
+                    idTipoEmpaque: prod.desc.m_nIdEmbalaje,
+                    activo: prod.desc.m_bActivo,
+                    ctd: prod.cantidad,
+                    idProducto: prod.desc.m_nIdProducto,
+                }]
+            }
+            obtenerCotizacionTarifario(params).then(({data})=>{
+                setConceptosResult([...conceptosResult,data])
+            })
+        })*/
+
+
+
     }
     function handleBuscar(){
 
@@ -589,7 +684,7 @@ function BuscarTarifa() {
                                                 />
                                                     </Grid>
                                                     <Grid item sm={2}>
-                                                    <TextField label={p.medida?'Peso (kg)':"Cantidad"} type='number' size={'small'}
+                                                    <TextField label={"Cantidad"} type='number' size={'small'}
                                                                onChange={(e)=>{
                                                                    const myPromise=new Promise((resolve)=>{
                                                                        const updatedArr = [...filtrosProductos];
@@ -601,7 +696,7 @@ function BuscarTarifa() {
                                                                value={p.cantidad}></TextField>
                                                     </Grid>
                                                     <Grid item style={{textAlign:'center'}} sm={2}>
-                                                    <Switch
+                                                        {/*<Switch
                                                         checked={p.medida}
                                                         onChange={()=>{
                                                             const updatedArr = [...filtrosProductos];
@@ -610,9 +705,9 @@ function BuscarTarifa() {
                                                         }}
                                                         edge='start'
                                                         aria-labelledby={'medida-label'+index}
-                                                    />
+                                                         />
                                                         <ListItemText id={'medida-label'+index} primary={p.medida?"Peso":"Cantidad"}/>
-
+                                                        */}
                                                     </Grid>
                                                         <Grid item sm={1}>
                                                             <IconButton onClick={()=>{
@@ -633,45 +728,174 @@ function BuscarTarifa() {
                             </Grid>
                             <Grid item container spacing={1}>
                                 <Grid item sm={12}>
-                                    <h3>Producto</h3>
+                                    <h3>Conceptos</h3>
                                 </Grid>
-                                <Grid item sm={2}>
-                                    <Autocomplete
-                                        freeSolo
-                                        size='small'
-                                        value={filtrosBusqueda.producto}
-                                        onChange={(e,newValue)=>setFiltrosBusqueda({...filtrosBusqueda,producto: newValue})}
-                                        forcePopupIcon={false}
-                                        options={productosListado}
-                                        getOptionLabel={(option) =>
-                                            option.numeroDescripcion
-                                        }
-                                        variant="outlined"
-                                        renderInput={(params) => (
-                                            <div>
-                                                <TextField
-                                                    variant="outlined"
-                                                    label="Producto"
-                                                    className="form-control"
-                                                    {...params}
-                                                    InputProps={{
-                                                        ...params.InputProps,
-                                                        type: "search",
-                                                        disableUnderline: true,
-                                                    }}
-                                                />
-                                            </div>
-                                        )}
-                                    />
+                                <Grid item sm={11}>
+                                    <Paper elevation={7} style={{marginTop:'10px',padding: '20px', marginBottom: '10px'}}>
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={2}>
+                                                <Typography variant="h3" component="h2">
+                                                    Primera Milla
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item sm={2}>
+                                                <IconButton onClick={()=> {setFiltrosBusqueda({
+                                                    ...filtrosBusqueda,
+                                                    showPM: filtrosBusqueda.showPM ? false : true
+                                                }); document.querySelector('.PM').classList.toggle('hide')}} className='btn-secondary'>
+                                                    {filtrosBusqueda.showPM?
+                                                        <ExpandLess fontSize='default'/>
+                                                        :
+                                                        <ExpandMoreIcon fontSize='default'/>
+                                                    }
+
+                                                </IconButton>
+
+                                            </Grid>
+
+
+
+
+
+                                        </Grid>
+                                        <div className='PM hide'>
+                                            {
+                                                conceptosResult.length>0 &&
+                                                conceptosResult.map((c,index)=>{
+                                                    if(c[1].m_bError)
+                                                    return(
+                                                        <Typography>{c[1]?.m_sDetalles}</Typography>
+                                                    )
+                                                    else
+                                                        return(
+                                                            <Grid style={{textAlign:"center"}} item container sm={12} spacing={1}>
+                                                                <Grid item sm={12}>
+                                                                    <h5 style={{textAlign:"left"}}>{c[1].m_sConcepto}</h5>
+                                                                </Grid>
+                                                                <Grid item sm={3}>
+                                                                    Tipo Medida
+                                                                </Grid>
+                                                                <Grid item sm={3}>
+                                                                    Rango
+                                                                </Grid>
+                                                                <Grid item sm={2}>
+                                                                    Importe
+                                                                </Grid>
+                                                                <Grid item sm={2}>
+                                                                    Cálculo
+                                                                </Grid>
+                                                                <Grid item sm={2}>
+                                                                    Total
+                                                                </Grid>
+                                                                <Grid item sm={3}>
+                                                                    Tipo Medida
+                                                                </Grid>
+                                                                <Grid item sm={3}>
+                                                                    {c[1].rangoMin} - {c[1].rangoMax}
+                                                                </Grid>
+                                                                <Grid item sm={2}>
+                                                                    Importe
+                                                                </Grid>
+                                                                <Grid item sm={2}>
+                                                                    Cálculo
+                                                                </Grid>
+                                                                <Grid item sm={2}>
+                                                                    Total
+                                                                </Grid>
+                                                            </Grid>
+                                                        )
+                                                })
+                                            }
+                                            {/*
+                                                conceptosResult.length>0 &&
+                                                !conceptosResult[1].m_bError && (
+                                                    <Grid style={{textAlign:"center"}} item container sm={12} spacing={1}>
+                                                        <Grid item sm={12}>
+                                                            <h5 style={{textAlign:"left"}}>{conceptosResult[1].m_sConcepto}</h5>
+                                                        </Grid>
+                                                        <Grid item sm={3}>
+                                                            Tipo Medida
+                                                        </Grid>
+                                                        <Grid item sm={3}>
+                                                            Rango
+                                                        </Grid>
+                                                        <Grid item sm={2}>
+                                                            Importe
+                                                        </Grid>
+                                                        <Grid item sm={2}>
+                                                            Cálculo
+                                                        </Grid>
+                                                        <Grid item sm={2}>
+                                                            Total
+                                                        </Grid>
+                                                        <Grid item sm={3}>
+                                                            Tipo Medida
+                                                        </Grid>
+                                                        <Grid item sm={3}>
+                                                            {conceptosResult[1].rangoMin} - {conceptosResult[1].rangoMax}
+                                                        </Grid>
+                                                        <Grid item sm={2}>
+                                                            Importe
+                                                        </Grid>
+                                                        <Grid item sm={2}>
+                                                            Cálculo
+                                                        </Grid>
+                                                        <Grid item sm={2}>
+                                                            Total
+                                                        </Grid>
+                                                    </Grid>
+                                                )*/
+                                            }
+                                        </div>
+                                    </Paper>
 
                                 </Grid>
                             </Grid>
+
+                            <Grid item sm={11}>
+                                <Paper elevation={7} style={{marginTop:'10px',padding: '20px', marginBottom: '10px'}}>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={2}>
+                                            <Typography variant="h3" component="h2">
+                                                Última Milla
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item sm={2}>
+                                            <IconButton onClick={()=> {setFiltrosBusqueda({
+                                                ...filtrosBusqueda,
+                                                showUM: filtrosBusqueda.showUM ? false : true
+                                            }); document.querySelector('.UM').classList.toggle('hide')}} className='btn-secondary'>
+                                                {filtrosBusqueda.showUM?
+                                                    <ExpandLess fontSize='default'/>
+                                                    :
+                                                    <ExpandMoreIcon fontSize='default'/>
+                                                }
+
+                                            </IconButton>
+
+                                        </Grid>
+
+
+
+
+
+                                    </Grid>
+                                    <Button onClick={()=>console.log(conceptosResult)}>PRUEBA</Button>
+                                    <div className='UM hide'>
+                                        {
+
+                                        }
+                                    </div>
+                                </Paper>
+
+                            </Grid>
+
                             <Grid item container spacing={1}>
                                 <Grid item sm={7}>
                                     <h3 style={{fontSize:'24px'}}>Tarifas</h3>
                                 </Grid>
                                 <Grid item sm={3}>
-                                    <Button onClick={()=>handleBuscar()} fullWidth className='btn-primary'>Buscar</Button>
+                                    <Button onClick={()=>handleCotizar()} fullWidth className='btn-primary'>Buscar</Button>
                                 </Grid>
                                 <Grid item sm={11}>
                                     <Paper elevation={7} style={{marginTop:'10px',padding: '20px', marginBottom: '10px'}}>
@@ -755,7 +979,7 @@ function BuscarTarifa() {
 
 
                                         </Grid>
-                                        <Button onClick={()=>console.log(viajesForaneosListado)}>PRUEBA</Button>
+                                        <Button onClick={()=>console.log(filtrosBusqueda)}>PRUEBA</Button>
                                         <div className='UM hide'>
                                             {
                                                 viajesUltimaMilla.map((viaje) =>
