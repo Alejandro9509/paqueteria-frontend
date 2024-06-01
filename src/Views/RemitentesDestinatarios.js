@@ -19,7 +19,6 @@ import { Dialog, DialogContent, Grid } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { obtenerCiudadId } from "../Util/Contexts/CiudadesContext";
 import DialogTableRemDes from "./RemitenteDestinatario/DialogTableRemDes";
-import {tr} from "date-fns/locale";
 import DialogCreateRemDes from "./RemitenteDestinatario/DialogCreateRemDes";
 function showSuccess(mensaje) {
   new Noty({
@@ -541,6 +540,7 @@ function RemitenteDestinatario(props) {
   const handleCrearRemitente = () => {
     createVisible(true);
   }
+
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
       if(!row.m_nIdCP){
         showSuccess("La dirección seleccionada contiene datos que no coinciden con los catálogos del SAT, favor de validar la dirección en Tráfico - Catálogos - Remitentes/ Destinatarios.")
@@ -549,58 +549,58 @@ function RemitenteDestinatario(props) {
       if (props.componentePadre !== 'CANCELAR_SAT'){
         props.seCalculaTarifa()
       }
-    const promise = new Promise((resolve, reject) => {
-          obtenerZonaOperativaByIdCodigoPostal(row.m_nIdCP).then(
-              ( zonaOperativa ) => {
-                setState((state) => ({
-                  ...state,
-                  id: row.m_nIdRemitenteDestinatario,
-                  alias: row.m_sAlias,
-                  nombre: row.m_sNombre,
-                  RFC: row.m_sRFC,
-                  domicilio: row.m_sDomicilio || "No especificado",
-                  codigoPostal:
-                      {
-                        m_nIdCP: row.m_nIdCP,
-                        m_sCP: row.m_sCodigoPostal,
-                        m_sColonia: row.m_sColonia || "No especificado",
-                      },
-                  estado: row.m_nIdEstado || "",
-                  estadoTexto: row.m_sEstado || "No especificado",
-                  municipio: row.m_nIdMunicipio || "",
-                  correo: row.m_sCorreoElectronico || "",
-                  telefono: row.m_sTelefono || 0,
-                  contacto: row.m_sContacto || row.m_sNombre,
-                  calle: row.m_sCalle || "No especificado",
-                  municipioTexto: row.m_sMunicipio || "No especificado",
-                  numeroExt: row.m_sNoExterior || 0,
-                  numeroInt: row.m_sNoInterior || 0,
-                  colonia: row.m_sColonia || row.m_sLocalidad || "No especificado",
-                  latitud: row.m_sLatitud,
-                  longitud: row.m_sLongitud,
-                  origen: zonaOperativa.data.length !== 0 ? {
-                    m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino,
-                    m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
-                  } : null,
-                  destino: zonaOperativa.data.length !== 0 ? {
-                    m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino,
-                    m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
-                  } : null,
-                  openDialog: false,
-                  createDialog: false,
-                  zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-                  paisTexto: row.m_sPais
-                }));
-                if (zonaOperativa.data.length === 0) {
-                  if (props.remitente) {
-                    showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
-                  } else if (props.destinatario) {
-                    showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
-                  }
+      const promise = new Promise((resolve, reject) => {
+          obtenerZonaOperativaByIdCodigoPostal(row.m_nIdCP).then((zonaOperativa) => {
+            console.log(zonaOperativa.data)
+              setState((state) => ({
+                ...state,
+                id: row.m_nIdRemitenteDestinatario,
+                alias: row.m_sAlias,
+                nombre: row.m_sNombre,
+                RFC: row.m_sRFC,
+                domicilio: row.m_sDomicilio || "No especificado",
+                codigoPostal:
+                    {
+                      m_nIdCP: row.m_nIdCP,
+                      m_sCP: row.m_sCodigoPostal,
+                      m_sColonia: row.m_sColonia || "No especificado",
+                    },
+                estado: row.m_nIdEstado || "",
+                estadoTexto: row.m_sEstado || "No especificado",
+                municipio: row.m_nIdMunicipio || "",
+                correo: row.m_sCorreoElectronico || "",
+                telefono: row.m_sTelefono || 0,
+                contacto: row.m_sContacto || row.data.m_sNombre,
+                calle: row.m_sCalle || "No especificado",
+                municipioTexto: row.m_sMunicipio || "No especificado",
+                numeroExt: row.m_sNoExterior || 0,
+                numeroInt: row.m_sNoInterior || 0,
+                colonia: row.m_sColonia || row.data.m_sLocalidad || "No especificado",
+                latitud: row.m_sLatitud,
+                longitud: row.m_sLongitud,
+                origen: zonaOperativa.data.length !== 0 ? {
+                  m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino,
+                  m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
+                } : null,
+                destino: zonaOperativa.data.length !== 0 ? {
+                  m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino,
+                  m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
+                } : null,
+                openDialog: false,
+                createDialog: false,
+                zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                paisTexto: row.m_sPais
+              }));
+              if (zonaOperativa.data.length === 0) {
+                if (props.remitente) {
+                  showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
+                } else if (props.destinatario) {
+                  showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
                 }
-                resolve(zonaOperativa)
-              })
-    });
+              }
+              resolve(zonaOperativa)
+            })
+      });
       promise.then((zonaOperativa)=> {
 
         if(props.destinatario){
@@ -639,12 +639,14 @@ function RemitenteDestinatario(props) {
       openDialog: isVisible,
     }));
   };
+
   const createVisible = (isVisible) => {
     setState(() => ({
       ...state,
       createDialog: isVisible,
     }));
   };
+
   return (
     <div className="widget-content">
 

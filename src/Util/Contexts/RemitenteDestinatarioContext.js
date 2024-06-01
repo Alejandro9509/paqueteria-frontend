@@ -93,6 +93,7 @@ function obtenerClientesPaginado(pagina,registros, busqueda){
         );
     return result
 }
+
 export {
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId,

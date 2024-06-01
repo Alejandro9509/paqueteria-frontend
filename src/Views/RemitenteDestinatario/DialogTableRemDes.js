@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Button, Dialog, DialogActions, DialogContent, TextField} from "@mui/material";
+import {DialogActions, Dialog,TextField, Button,DialogContent} from "@mui/material";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from '@mui/material/styles';
@@ -64,7 +64,7 @@ const columns = [
 
 let registros=10
 //----------------------------->Hooks useState <----------------------------------------------------------------------
-const [rows, setRow] = React.useState([])
+const [rows, setRow] = React.useState([]);
 const [pagina, setPagina] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
@@ -81,7 +81,7 @@ function cargarDesdeServidor(pagina,registros){
 
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
-    <Root>
+    <div>
         <DialogActions style={{justifyContent: "left"}}>
             <TextField
                 variant="standard"
@@ -119,7 +119,7 @@ function cargarDesdeServidor(pagina,registros){
                 Nuevo Remitente / Destinatario
             </Button>
         </DialogActions>
-        <div  style={{height: "400px", padding: "5px"}}>
+        <div className={classes.root} style={{height: "400px", padding: "5px"}}>
             <DataGrid
                 localeText={dataGridLocaleText}
                 columns={columns}
@@ -161,7 +161,7 @@ function cargarDesdeServidor(pagina,registros){
                     Seleccionar
                 </button>
             </DialogActions>
-    </Root>
+    </div>
   );
 }
 
