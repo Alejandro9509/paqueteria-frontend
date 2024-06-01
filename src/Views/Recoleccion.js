@@ -3670,7 +3670,6 @@ function Recoleccion() {
                                         className={classes.root}
                                         onSortModelChange={(model) => setSortModel(model)}
                                         rows={data}
-                                        autoPageSize
                                         pagination
                                         rowsPerPageOptions={[]}
                                         page={pagina}
