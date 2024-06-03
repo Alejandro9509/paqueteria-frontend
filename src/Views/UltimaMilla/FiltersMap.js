@@ -295,7 +295,6 @@ class FiltersMap extends Component {
     }
 
     asignarRemolquesUnidad(remolques) {
-        console.log(remolques)
         const {unidad} = this.state
         unidad.idRemolque1 = remolques.IdRemolque1.m_nIdUnidad
         unidad.idRemolque2 =  remolques.IdRemolque2 ? remolques.IdRemolque2.m_nIdUnidad : 0

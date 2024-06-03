@@ -115,55 +115,6 @@ class UltimaMilla extends Component {
             paquetesSinCoord: [],
             titulo: "",
             entregaEnSucursal: false,
-            entregaDD: {
-                idPais: '',
-                pais: '',
-                idEstado: '',
-                estado: '',
-                idMunicipio: '',
-                municipio: '',
-                codigoPostal: '',
-                zonaOperativa: '',
-                domicilio: '',
-                detalles: '',
-                datosAdicionales: '',
-                latitud: '',
-                longitud: ''
-            },
-            destinatario:{
-                idDestinatario: '',
-                aliasDestinatario: '',
-                nombreDestinatario: '',
-                RFCDestinatario: '',
-                domicilioDestinatario: '',
-                calleDestinatario: '',
-                numeroIntDestinatario: '0',
-                numeroExtDestinatario: '',
-                coloniaDestinatario: '',
-                estadoDestinatario: '',
-                municipioDestinatario: '',
-                codigoPostalDestinatario: '',
-                correoDestinatario: '',
-                telefonoDestinatario: '',
-                contactoDestinatario: '',
-                destinoDestinatario: null,
-                zonaOperativaDestinatario: '',
-                zonaTarifaDestinatario: '',
-                latitudD: '',
-                longitudD: ''
-            },
-            obtenerDatosDireccion: {
-                nombreLugar: '',
-                numeroInterior: '',
-                numeroExterior: '',
-                calle: '',
-                colonia: '',
-                ciudad: '',
-                estado: '',
-                pais: '',
-                codigoPostal: '',
-                direccionCompleta: ''
-            }
         }
         this.generarRuta = this.generarRuta.bind(this)
         this.getLocation = this.getLocation.bind(this)
@@ -181,201 +132,24 @@ class UltimaMilla extends Component {
         this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
         this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
         this.closeResumenParada = this.closeResumenParada.bind(this)
+        this.mostrarDialogoListado = this.mostrarDialogoListado.bind(this)
         this.handleAceptar = this.handleAceptar.bind(this)
-        this.mostrarDialogoMapa = this.mostrarDialogoMapa.bind(this)
-        this.confirmarUbicacion = this.confirmarUbicacion.bind(this)
-    }
-
-    validarCoordenadas = (coordenadas) => {
-        if (!this.isValidText(this.state.destinatario.latitudD)
-            && !this.isValidText(this.state.destinatario.longitudD)
-            && !coordenadas
-        ) {
-            this.mostrarDialogoMapa(true)
-            return false
-        }
-        return true
-    }
-
-    isValidText = (data) => {
-        return !(data.length === 0 || data == '0')
-    }
-
-    mostrarDialogoMapa = (isVisible) => {
-        this.setState({
-            showConfirmarUbicacion: isVisible,
-            titulo: "entrega"
-        });
     }
 
     mostrarDialogoListado = (isVisible) => {
         this.setState({showListaUbicaciones: isVisible});
     }
 
-    confirmarUbicacion (coordenadas, e) {
-        console.log("Se confirma ubicacion");
-        this.handleAceptar(e, coordenadas);
-    }
-
-    selectPaquete (paquete){
-        console.log(paquete);
-        this.setState({
-            entregaDD: {
-                idPais: '',
-                pais: '',
-                idEstado: '',
-                estado: '',
-                idMunicipio: '',
-                municipio: '',
-                codigoPostal: '',
-                zonaOperativa: paquete.m_sZona,
-                domicilio: paquete.m_sDomicilioDestinatario,
-                detalles: "",
-                datosAdicionales: paquete.m_sDatosAdicionalesDetalleRecoleccion,
-                latitud: '0',
-                longitud: '0'
-            },
-            destinatario:{
-                idDestinatario: '',
-                aliasDestinatario: '',
-                nombreDestinatario: paquete.m_sNombreDestinatario,
-                RFCDestinatario: paquete.m_sRFCDestinatario,
-                domicilioDestinatario: paquete.m_sDomicilioDestinatario,
-                calleDestinatario: paquete.m_sCalleDestinatario,
-                numeroIntDestinatario: '0',
-                numeroExtDestinatario: paquete.m_sNoExtDestinatario,
-                coloniaDestinatario: paquete.m_sColoniaDestinatario,
-                estadoDestinatario: '',
-                municipioDestinatario: '',
-                codigoPostalDestinatario: '',
-                correoDestinatario: paquete.m_sCorreoDestinatario,
-                telefonoDestinatario: paquete.m_sTelefonoDestinatario,
-                contactoDestinatario: paquete.m_sContactoDestinatario,
-                destinoDestinatario: null,
-                zonaOperativaDestinatario: '',
-                zonaTarifaDestinatario: paquete.m_sZona,
-                latitudD: '0',
-                longitudD: '0'
-            }
-        });
-        this.setState({
-            showConfirmarUbicacion: true,
-            obtenerDatosDireccion: {
-                nombreLugar: this.state.destinatario.nombreDestinatario,
-                numeroInterior: '',
-                numeroExterior: '',
-                calle: this.state.entregaDD.domicilio,
-                colonia: '',
-                ciudad: this.state.entregaDD.municipio,
-                estado: this.state.entregaDD.estado,
-                pais: this.state.entregaDD.pais,
-                codigoPostal: this.state.entregaDD.codigoPostal?.m_sCP,
-                direccionCompleta: getAddressFormated(
-                    this.state.entregaDD.domicilio,
-                    null,
-                    null,
-                    null,
-                    this.state.entregaDD.codigoPostal?.m_sCP,
-                    this.state.entregaDD.municipio,
-                    this.state.entregaDD.estado,
-                    this.state.entregaDD.pais
-                )
-            }
-        })
-    }
-
     cerrarListadoUbicaciones (){
         this.mostrarDialogoListado(false)
-        this.mostrarDialogoMapa(false);
-        this.generarRuta(this.state.filtros);
     }
 
-    async handleAceptar (e, coordenadas) {
+    async handleAceptar (e, paquetes) {
         e.preventDefault();
-        if (!this.validarCoordenadas(coordenadas)) {
-            return;
-        }
-        let filtros = this.state.filtros;
-        let paquete = this.state.paquetesSinCoord.pop();
-        await actualizarCoordenadasRemitentesDestinatarios(paquete.m_sRFCDestinatario, paquete.m_sNombreDestinatario,
-            coordenadas.lat, coordenadas.lng, paquete.m_nId).then((respuesta)=>{
-            showSuccess(respuesta.data);
-            let index = filtros.paquetesSeleccionadas.findIndex(p => p.m_nId === paquete.m_nId);
-            filtros.paquetesSeleccionadas[index].m_sLatitud = coordenadas.lat;
-            filtros.paquetesSeleccionadas[index].m_sLongitud = coordenadas.lng;
-            this.setState({filtros: filtros})
-        });
-        this.mostrarDialogoMapa(false);
-        this.mostrarDialogoListado(true);
-        /*if(this.state.paquetesSinCoord.length < 1){
-            this.mostrarDialogoMapa(false);
-            this.generarRuta(filtros);
-        }else{
-            this.setState({
-                entregaDD: {
-                    idPais: '',
-                    pais: '',
-                    idEstado: '',
-                    estado: '',
-                    idMunicipio: '',
-                    municipio: '',
-                    codigoPostal: '',
-                    zonaOperativa: this.state.paquetesSinCoord[0].m_sZona,
-                    domicilio: this.state.paquetesSinCoord[0].m_sDomicilioDestinatario,
-                    detalles: "",
-                    datosAdicionales: this.state.paquetesSinCoord[0].m_sDatosAdicionalesDetalleRecoleccion,
-                    latitud: '0',
-                    longitud: '0'
-                },
-                destinatario:{
-                    idDestinatario: '',
-                    aliasDestinatario: '',
-                    nombreDestinatario: this.state.paquetesSinCoord[0].m_sNombreDestinatario,
-                    RFCDestinatario: this.state.paquetesSinCoord[0].m_sRFCDestinatario,
-                    domicilioDestinatario: this.state.paquetesSinCoord[0].m_sDomicilioDestinatario,
-                    calleDestinatario: this.state.paquetesSinCoord[0].m_sCalleDestinatario,
-                    numeroIntDestinatario: '0',
-                    numeroExtDestinatario: this.state.paquetesSinCoord[0].m_sNoExtDestinatario,
-                    coloniaDestinatario: this.state.paquetesSinCoord[0].m_sColoniaDestinatario,
-                    estadoDestinatario: '',
-                    municipioDestinatario: '',
-                    codigoPostalDestinatario: '',
-                    correoDestinatario: this.state.paquetesSinCoord[0].m_sCorreoDestinatario,
-                    telefonoDestinatario: this.state.paquetesSinCoord[0].m_sTelefonoDestinatario,
-                    contactoDestinatario: this.state.paquetesSinCoord[0].m_sContactoDestinatario,
-                    destinoDestinatario: null,
-                    zonaOperativaDestinatario: '',
-                    zonaTarifaDestinatario: this.state.paquetesSinCoord[0].m_sZona,
-                    latitudD: '0',
-                    longitudD: '0'
-                }
-            });
-            this.setState({
-                showConfirmarUbicacion: true,
-                obtenerDatosDireccion: {
-                    nombreLugar: this.state.destinatario.nombreDestinatario,
-                    numeroInterior: '',
-                    numeroExterior: '',
-                    calle: this.state.entregaDD.domicilio,
-                    colonia: '',
-                    ciudad: this.state.entregaDD.municipio,
-                    estado: this.state.entregaDD.estado,
-                    pais: this.state.entregaDD.pais,
-                    codigoPostal: this.state.entregaDD.codigoPostal?.m_sCP,
-                    direccionCompleta: getAddressFormated(
-                        this.state.entregaDD.domicilio,
-                        null,
-                        null,
-                        null,
-                        this.state.entregaDD.codigoPostal?.m_sCP,
-                        this.state.entregaDD.municipio,
-                        this.state.entregaDD.estado,
-                        this.state.entregaDD.pais
-                    )
-                }
-            })
-            //this.mostrarDialogoMapa(true);
-        }*/
+        var filtrosTemp = this.state.filtros;
+        filtrosTemp.paquetesSeleccionadas = paquetes;
+        this.mostrarDialogoListado(false);
+        this.generarRuta(filtrosTemp);
     }
     componentDidMount() {
     }
@@ -527,6 +301,7 @@ class UltimaMilla extends Component {
 
     async generarRuta(data) {
         this.setState({tour: null})
+        console.log(this.state);
         if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
             let unidadYaAsignada = false
@@ -549,6 +324,7 @@ class UltimaMilla extends Component {
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas);
                 data.paquetesSeleccionadas.forEach((paquete) => {
                     if(paquete.m_sLatitud === "0" || paquete.m_sLongitud === "0" || paquete.m_sLatitud === "" || paquete.m_sLongitud === ""){
+                        paquete.actualizado = false;
                         paqSinLoc.push(paquete);
                     }
                 })
@@ -561,70 +337,9 @@ class UltimaMilla extends Component {
                 console.log(paqSinLoc);
                 if(paqSinLoc.length > 0){
                     this.setState({
-                        entregaDD: {
-                            idPais: '',
-                            pais: '',
-                            idEstado: '',
-                            estado: '',
-                            idMunicipio: '',
-                            municipio: '',
-                            codigoPostal: '',
-                            zonaOperativa: paqSinLoc[0].m_sZona,
-                            domicilio: paqSinLoc[0].m_sDomicilioDestinatario,
-                            detalles: "",
-                            datosAdicionales: paqSinLoc[0].m_sDatosAdicionalesDetalleRecoleccion,
-                            latitud: '0',
-                            longitud: '0'
-                        },
-                        destinatario:{
-                            idDestinatario: '',
-                            aliasDestinatario: '',
-                            nombreDestinatario: paqSinLoc[0].m_sNombreDestinatario,
-                            RFCDestinatario: paqSinLoc[0].m_sRFCDestinatario,
-                            domicilioDestinatario: paqSinLoc[0].m_sDomicilioDestinatario,
-                            calleDestinatario: paqSinLoc[0].m_sCalleDestinatario,
-                            numeroIntDestinatario: '0',
-                            numeroExtDestinatario: paqSinLoc[0].m_sNoExtDestinatario,
-                            coloniaDestinatario: paqSinLoc[0].m_sColoniaDestinatario,
-                            estadoDestinatario: '',
-                            municipioDestinatario: '',
-                            codigoPostalDestinatario: '',
-                            correoDestinatario: paqSinLoc[0].m_sCorreoDestinatario,
-                            telefonoDestinatario: paqSinLoc[0].m_sTelefonoDestinatario,
-                            contactoDestinatario: paqSinLoc[0].m_sContactoDestinatario,
-                            destinoDestinatario: null,
-                            zonaOperativaDestinatario: '',
-                            zonaTarifaDestinatario: paqSinLoc[0].m_sZona,
-                            latitudD: '0',
-                            longitudD: '0'
-                        }
-                    });
-                    this.setState({
-                        //showConfirmarUbicacion: true,
                         showListaUbicaciones: true,
                         paquetesSinCoord: paqSinLoc,
-                        filtros: data,
-                        obtenerDatosDireccion: {
-                            nombreLugar: this.state.destinatario.nombreDestinatario,
-                            numeroInterior: '',
-                            numeroExterior: '',
-                            calle: this.state.entregaDD.domicilio,
-                            colonia: '',
-                            ciudad: this.state.entregaDD.municipio,
-                            estado: this.state.entregaDD.estado,
-                            pais: this.state.entregaDD.pais,
-                            codigoPostal: this.state.entregaDD.codigoPostal?.m_sCP,
-                            direccionCompleta: getAddressFormated(
-                                this.state.entregaDD.domicilio,
-                                null,
-                                null,
-                                null,
-                                this.state.entregaDD.codigoPostal?.m_sCP,
-                                this.state.entregaDD.municipio,
-                                this.state.entregaDD.estado,
-                                this.state.entregaDD.pais
-                            )
-                        }
+                        filtros: data
                     })
                     this.mostrarDialogoListado(true);
                     return
@@ -833,7 +548,7 @@ class UltimaMilla extends Component {
                         </Cabecera>
                     </header>
                 }
-                {
+                {/*{
                     this.state.showConfirmarUbicacion &&
                     <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion}
                                         open={this.state.showConfirmarUbicacion}
@@ -843,14 +558,15 @@ class UltimaMilla extends Component {
                                         direccion={this.state.obtenerDatosDireccion}
                                         onClose={() => this.state({showConfirmarUbicacion: false})}
                     />
-                }
+                }*/}
                 {
                     this.state.showListaUbicaciones &&
                     <ListaUbicaciones
                                         open={this.state.showListaUbicaciones}
                                         paquetes={this.state.paquetesSinCoord}
-                                        selectPaquete={this.selectPaquete}
                                         onClose={this.cerrarListadoUbicaciones}
+                                        handleAceptar={this.handleAceptar}
+                                        cerrarListadoUbicaciones={this.cerrarListadoUbicaciones}
                     />
                 }
                 <section>

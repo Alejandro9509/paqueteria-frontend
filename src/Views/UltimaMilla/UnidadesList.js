@@ -117,7 +117,6 @@ class UnidadesList extends Component {
         const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
         if (selectedIndex === -1) {
             this.props.cerrarDialogos()
-            console.log(row)
             if (row.m_bAplicaRemolques) {
                 if(row.m_sTipoUnidad == "TRACTOCAMION"){//Si la unidad es tractocamion el remolque es obligatorio
                     this.props.asignarRemolques(row)
