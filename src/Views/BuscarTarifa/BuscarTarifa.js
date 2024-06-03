@@ -97,6 +97,14 @@ function BuscarTarifa() {
             setSucursalesListado(respuesta.data)
         })
     }
+    /*const getAllTiposConceptos = () => {
+        if (sucursalesListado.length > 0){
+            return
+        }
+        getAllTiposConceptos().then(respuesta => {
+            s(respuesta.data)
+        })
+    }*/
     const getAllColoniasCPs = () => {
         if (listadoColoniasCPs.length > 0){
             return
@@ -370,10 +378,76 @@ function BuscarTarifa() {
             setShowDialogZonas(true)
         })
     }
-    function handleCotizar(){
-        const promise=new Promise((resolve)=>{
+    function getCotizacionProducto(prod) {
+        return new Promise((resolve) => {
+            let params = {
+                idOrigen: filtrosBusqueda.ciudadOrigen,
+                idDestino: filtrosBusqueda.ciudadDestino,
+                idEmbarque: 0,
+                idRecoleccion: 0,
+                idZonaEntrega: filtrosBusqueda.direccionOrigen.IdZona,
+                idZonaRecoleccion: filtrosBusqueda.direccionDestino.IdZona,
+                idCliente: 3140,
+                entregaEnSucursal: 0,
+                idSeguro: 5,
+                valorDeclarado: 0,
+                aplicaRecoleccion: 1,
+                aplicaSeguro: 0,
+                porcentajeSeguro: 0,
+                recoleccionConCita: 0,
+                embarqueConCita: 0,
+                paquetesCotizacion: [{
+                    tipo: 2,
+                    peso: prod.desc.m_xPeso,
+                    largo: prod.desc.m_xLargo,
+                    ancho: prod.desc.m_xAncho,
+                    alto: prod.desc.m_xAlto,
+                    volumen: prod.desc.m_xLargo * prod.desc.m_xAncho * prod.desc.m_xAlto,
+                    idTipoEmpaque: prod.desc.m_nIdEmbalaje,
+                    activo: prod.desc.m_bActivo,
+                    ctd: prod.cantidad,
+                    idProducto: prod.desc.m_nIdProducto,
+                }]
+            }
+            obtenerCotizacionTarifario(params).then(({data}) => {
+
+                data.index=filtrosProductos.indexOf(prod)
+                setConceptosResult(conceptosResult => {
+                    return [...conceptosResult, data]
+                })
+            }).then(()=>resolve)
+           // setConceptosResult([...conceptosResult, data], resolve())
+        })
+    }
+    async function handleCotizar(){
+
+        try {
+            await new Promise((resolve) => {
+                setConceptosResult([], resolve());
+            });
+            filtrosProductos.forEach(async (prod)=>{
+                const llamarCotizacion = await getCotizacionProducto(prod);
+            })
+            /*for (const prod of filtrosProductos) {
+                console.log(prod)
+                console.log(conceptosResult)
+                const llamarCotizacion = await getCotizacionProducto(prod);
+                // Process the result of getCotizacionProducto(prod) here
+            }*/
+        } catch (error) {
+            console.error("Error:", error);
+        }
+
+      /*  const promise=await new Promise((resolve)=>{
             setConceptosResult([],resolve())
         })
+        promise.then(()=> {
+            for(const prod of filtrosProductos){
+                const llamarCotizacion= await getCotizacionProducto(prod)
+            }
+        })*/
+        /*
+
         promise.then(()=>{
             for(const prod of filtrosProductos){
                 const myPromise=new Promise((resolve)=>{
@@ -407,6 +481,7 @@ function BuscarTarifa() {
                         }]
                     }
                     obtenerCotizacionTarifario(params).then(({data})=>{
+                        console.log(conceptosResult)
                         setConceptosResult([...conceptosResult,data],resolve())
                     })
                 })
@@ -414,7 +489,7 @@ function BuscarTarifa() {
 
             }
         })
-
+*/
        /* filtrosProductos.map(async (prod)=>{
 
         })*/
@@ -761,16 +836,28 @@ function BuscarTarifa() {
                                         <div className='PM hide'>
                                             {
                                                 conceptosResult.length>0 &&
+                                                <Grid item sm={7}>
+                                                    <h5 style={{textAlign:"left"}}>MANIOBRAS DE RECOLECCIÓN</h5>
+                                                </Grid>
+                                            }
+                                            {
+                                                conceptosResult.length>0 &&
+
+                                                //conceptosResult.filter((c)=>c.IdConceptoRecoleccion==conceptosParamsConfig.IdConceptoRecoleccion).map((c,index)=>{
                                                 conceptosResult.map((c,index)=>{
-                                                    if(c[1].m_bError)
+                                                    let concepto=c.find((c)=>c.m_nIdConceptosFacturacion==conceptosParamsConfig.IdConceptoRecoleccion)
+                                                    console.log(c)
+                                                    console.log(c.find((comp)=>comp.m_nIdConceptosFacturacion==conceptosParamsConfig.IdConceptoRecoleccion))
+                                                    if(concepto.m_bError)
                                                     return(
-                                                        <Typography>{c[1]?.m_sDetalles}</Typography>
+                                                        <Typography>{concepto?.m_sDetalles}</Typography>
                                                     )
                                                     else
                                                         return(
                                                             <Grid style={{textAlign:"center"}} item container sm={12} spacing={1}>
+
                                                                 <Grid item sm={12}>
-                                                                    <h5 style={{textAlign:"left"}}>{c[1].m_sConcepto}</h5>
+                                                                    <h5 style={{textAlign:"right"}}>{concepto.m_sConcepto}</h5>
                                                                 </Grid>
                                                                 <Grid item sm={3}>
                                                                     Tipo Medida
@@ -791,7 +878,7 @@ function BuscarTarifa() {
                                                                     Tipo Medida
                                                                 </Grid>
                                                                 <Grid item sm={3}>
-                                                                    {c[1].rangoMin} - {c[1].rangoMax}
+                                                                    {concepto.rangoMin} - {concepto.rangoMax}
                                                                 </Grid>
                                                                 <Grid item sm={2}>
                                                                     Importe

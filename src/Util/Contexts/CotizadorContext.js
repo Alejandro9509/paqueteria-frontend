@@ -59,5 +59,13 @@ function obtenerCotizacionTarifario(params) {
     );
     return result
 }
+function obtenerConceptosPorTipo() {
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Cotizador/GetTiposConcepto`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
-export {obtenerCotizacion,obtenerCotizacionTarifario}
+export {obtenerCotizacion,obtenerCotizacionTarifario,obtenerConceptosPorTipo}
