@@ -32,20 +32,9 @@ import {obtenerCotizacionTarifario} from "../../Util/Contexts/CotizadorContext";
 function BuscarTarifa() {
 
     const [listadoColoniasCPs, setListadoColoniasCPs] = useState([])
-    const [viajesPrimeraMilla, setViajesPrimeraMilla] = useState([])
-    const [viajesUltimaMilla, setViajesUltimaMilla] = useState([])
-    const [viajesMillaIntermedia, setViajesMillaIntermedia] = useState([])
-    const [maniobrasFiltradas, setManiobrasFiltradas] = useState([])
-    const [viajesForaneosFiltrados, setViajesForaneosFiltrados] = useState([])
-    const [viajesLocalesListado, setViajesLocalesListado] = useState([])
-    const [maniobrasTarifa, setManiobrasTarifa] = useState([])
-    const [viajesForaneosListado, setViajesForaneosListado] = useState([])
     const [sucursalesListado, setSucursalesListado] = useState([])
-    const [listadoCodigoPostal, setListadoCodigoPostal] = useState([])
-    const [listadoColonias, setListadoColonia] = useState([])
     const [conceptosListado, setConceptosListado] = useState([])
     const [conceptosParamsConfig, setConceptosParamsConfig] = useState([])
-    const [zonasListado, setZonasListado] = useState([])
     const [tiposCalculoListado, setTiposCalculoListado] = useState([])
     const [origenesDestinosListado, setOrigenesDestinosListado] = useState([])
     const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([])
@@ -73,25 +62,6 @@ function BuscarTarifa() {
         showUM: false
     })
 
-
-    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38)
-
-    const filtrarUnidadesMedidaManiobras = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
-    const filtrarTiposCalculoManiobras = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
-
-
-    //  console.log(respuesta.data)
-    /* setDataParaConsultar(respuesta.data)
-     setState(state => {
-         return {
-             ...state,
-             pantalla: 2,
-             agregar: "Consultar",
-             consult: true,
-             selected: setDataParaConsultar(respuesta.data)
-         }
-     });
- })*/
     const getAllSucursales = () => {
         if (sucursalesListado.length > 0) {
             return
@@ -100,14 +70,6 @@ function BuscarTarifa() {
             setSucursalesListado(respuesta.data)
         })
     }
-    /*const getAllTiposConceptos = () => {
-        if (sucursalesListado.length > 0){
-            return
-        }
-        getAllTiposConceptos().then(respuesta => {
-            s(respuesta.data)
-        })
-    }*/
     const getAllColoniasCPs = () => {
         if (listadoColoniasCPs.length > 0) {
             return
@@ -172,97 +134,8 @@ function BuscarTarifa() {
         })
     }
 
-    const handleChangeViajeLocal = (viaje) => {
-        let newViajes = []
-        viajesLocalesListado.forEach(i => {
-            newViajes.push(i)
-        })
-        newViajes.forEach(i => {
-            if (i.idViaje === viaje.idViaje) {
-                i.idViaje = viaje.idViaje
-                i.idSucursal = viaje.idSucursal
-                i.idTipoMedida = viaje.idTipoMedida
-                i.zonas = viaje.zonas
-                i.idConcepto = viaje.idConcepto
-                i.rangos = viaje.rangos
-                i.productos = viaje.productos
-            }
-        })
-        setViajesLocalesListado(newViajes)
-    }
-    const handleChangeManiobras = (maniobras) => {
-        setManiobrasTarifa(maniobras)
-    }
-
-    const handleChangeViajeForaneo = (viaje) => {
-        let newViajes = []
-        viajesForaneosListado.forEach(i => {
-            newViajes.push(i)
-        })
-        newViajes.forEach(i => {
-            if (i.idViaje === viaje.idViaje) {
-                i.idOrigen = viaje.idOrigen
-                i.idTipoMedida = viaje.idTipoMedida
-                i.fleteMinimo = viaje.fleteMinimo
-                i.idDestino = viaje.idDestino
-                i.grupos = viaje.grupos
-            }
-        })
-        setViajesForaneosListado(newViajes)
-    }
-    const handleDeleteViajeLocal = (viaje) => {
-        setViajesLocalesListado(viajesLocalesListado.filter(i => i.idViaje !== viaje.idViaje))
-    }
-    const handleOnRequestZonasBySucursal = (idSucursal) => {
-        obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
-            setZonasListado(respuesta.data)
-            setShowDialogZonas(true)
-        })
-    }
-    /*function esConceptoViajeLocal(concepto){
-
-            return concepto.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoRecoleccion
-                || concepto.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoEntrega
-    }*/
-    const esConceptoViajeLocal = (concepto) => {
-        return concepto.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoRecoleccion
-            || concepto.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoEntrega
-    }
-    const filtrarProductosViajeLocal = (viaje) => {
-        let productosDisponibles = []
-        productosListado.forEach(i => {
-            productosDisponibles.push(i)
-        })
-        let otrosViajes = viajesLocalesListado.filter(v => v.idViaje !== viaje.idViaje)
-        otrosViajes = otrosViajes.filter(v => v.idSucursal === viaje.idSucursal && v.idConcepto === viaje.idConcepto)
-
-        viaje.zonas.forEach(zonaViajeActual => {
-            otrosViajes.forEach(v => {
-                if (v.zonas.some(i => i.m_nIdZona === zonaViajeActual.m_nIdZona)) {
-                    otrosViajes.forEach(v => {
-                        v.productos.forEach(z => {
-                            productosDisponibles = productosDisponibles.filter(j => j.m_nIdProducto !== z.m_nIdProducto)
-                        })
-                    })
-                }
-            })
-        })
-
-        return productosDisponibles
-    }
-    const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
-    const [showDialogZonas, setShowDialogZonas] = useState(false)
-    const handleShowDialogZonas = (show) => {
-        setShowDialogZonas(show)
-    }
 
     useEffect(() => {
-        obtenerTarifaGeneral().then(respuesta => {
-
-            setViajesLocalesListado(setDataParaConsultar(respuesta.data).viajesLocales)
-            setViajesForaneosListado(setDataParaConsultar(respuesta.data).viajesForaneos)
-            console.log(respuesta.data.ViajesLocales)
-        })
         getAllSucursales()
         getAllTiposCalculo()
         getAllUnidadesMedida()
@@ -279,109 +152,10 @@ function BuscarTarifa() {
                 IdConceptoCarga: respuesta.data.IdConceptoCarga,
                 IdConceptoDescarga: respuesta.data.IdConceptoDescarga
             })
-            // return concepto.m_nIdConceptosFacturacion === respuesta.data.IdConceptoRecoleccion
-            //     || concepto.m_nIdConceptosFacturacion === respuesta.data.IdConceptoEntrega
+
         })
 
     }, []);
-    const setDataParaConsultar = (data) => {
-        let viajesLocales = data.ViajesLocales.map(viaje => ({
-            idViaje: viaje.IdViajeLocal,
-            idSucursal: viaje.IdSucursal,
-            idTipoMedida: viaje.IdTipoMedida,
-            zonas: data.Zonas.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
-                m_nIdZona: j.IdZonaOperativa,
-                m_sCodigoZona: j.CodigoZona
-            })),
-            idConcepto: viaje.IdConcepto,
-            rangos: data.Conceptos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(rango => ({
-                id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
-                idConcepto: rango.IdConceptoFacturacion || null,
-                concepto: rango.ConceptoFacturacion || '',
-                importe: rango.Importe || 0,
-                minimo: rango.Minimo || 0,
-                maximo: rango.Maximo || 0,
-                idTipoCalculo: rango.IdTipoCalculo || null,
-                idUnidadMedida: rango.IdUnidadMedida || null,
-                tipoCalculo: rango.TipoCalculo || '',
-                unidadMedida: rango.UnidadMedida || '',
-            })),
-            productos: data.Productos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
-                m_nIdProducto: j.IdProducto,
-                m_sDescripcion: j.Descripcion,
-                m_nNoProducto: j.NoProducto,
-                m_bActivo: j.Activo
-            })),
-        }))
-        let maniobras = data.Conceptos.filter(i => i.IdTarifa === data.IdTarifa).map(rango => ({
-            id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
-            idConcepto: rango.IdConceptoFacturacion || null,
-            concepto: rango.ConceptoFacturacion || '',
-            importe: rango.Importe || 0,
-            minimo: rango.Minimo || 0,
-            maximo: rango.Maximo || 0,
-            idTipoCalculo: rango.IdTipoCalculo || null,
-            idUnidadMedida: rango.IdUnidadMedida || null,
-            tipoCalculo: rango.TipoCalculo || '',
-            unidadMedida: rango.UnidadMedida || '',
-        }))
-
-        let viajesForaneos = data.ViajesForaneos.map(viaje => ({
-            idViaje: viaje.IdViajeForaneo || getRandomId(),
-            idOrigen: viaje.IdOrigen || null,
-            idTipoMedida: viaje.IdTipoMedida || null,
-            idDestino: viaje.IdDestino || null,
-            fleteMinimo: viaje.fleteMinimo || 0,
-            grupos: data.Grupos.filter(i => i.IdViajeForaneo === viaje.IdViajeForaneo).map(grupo => ({
-                idGrupo: grupo.IdViajeForaneoGrupo || Math.floor(Math.random() * 10000),
-                nombre: grupo.Referencia || '',
-                zonas: data.Zonas.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
-                    m_nIdZona: j.IdZonaOperativa,
-                    m_sCodigoZona: j.CodigoZona
-                })),
-                rangos: data.Conceptos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(rango => ({
-                    id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
-                    idConcepto: rango.IdConceptoFacturacion || null,
-                    concepto: rango.ConceptoFacturacion || '',
-                    importe: rango.Importe || 0,
-                    minimo: rango.Minimo || 0,
-                    maximo: rango.Maximo || 0,
-                    idTipoCalculo: rango.IdTipoCalculo || null,
-                    idUnidadMedida: rango.IdUnidadMedida || null,
-                    tipoCalculo: rango.TipoCalculo || '',
-                    unidadMedida: rango.UnidadMedida || '',
-                    porcentaje: rango.Porcentaje || 0,
-                })),
-                productos: data.Productos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
-                    m_nIdProducto: j.IdProducto,
-                    m_sDescripcion: j.Descripcion,
-                    m_nNoProducto: j.NoProducto,
-                    m_bActivo: j.Activo
-                })),
-            })),
-        }))
-        let tarifa = {
-            idTarifa: data.IdTarifa,
-            cliente: {
-                m_nIdCliente: data.IdCliente,
-                m_sNombreFiscal: data.Cliente
-            },
-            vigencia: data.Vigencia,
-            cuotaMensual: data.CuotaMensual,
-            viajesLocales: viajesLocales,
-            maniobras: maniobras,
-            viajesForaneos: viajesForaneos
-        }
-
-        return tarifa
-
-    }
-    const handleOnRequestZonasByDestino = (idDestino) => {
-        obtenerListadoZonaOperativaByOrigenDestino(idDestino).then(respuesta => {
-            setZonasListado(respuesta.data)
-            setShowDialogZonas(true)
-        })
-    }
 
     function getCotizacionProducto(prod) {
         return new Promise((resolve) => {
@@ -421,18 +195,14 @@ function BuscarTarifa() {
                     return [...conceptosResult, data]
                 })
             }).then(() => resolve)
-            // setConceptosResult([...conceptosResult, data], resolve())
         })
+    }
+    function agregarComasNumero(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
     function determinarConceptosAplicados() {
         return new Promise((resolve) => {
-            /*let pm=false,um=false,im=false
-            if(filtrosBusqueda?.ciudadOrigen && filtrosBusqueda.direccionDestino?.IdZona)
-                im=true
-            if(filtrosBusqueda.direccionOrigen?.IdZona)
-                pm=true
-            if(filtrosBusqueda.direccionDestino?.IdZona)
-                um=true*/
+
             resolve({
                 pm: filtrosBusqueda.direccionOrigen?.IdZona,
                 um:filtrosBusqueda.direccionDestino?.IdZona,
@@ -457,126 +227,6 @@ function BuscarTarifa() {
         } catch (error) {
             console.error("Error:", error);
         }
-
-        /*  const promise=await new Promise((resolve)=>{
-              setConceptosResult([],resolve())
-          })
-          promise.then(()=> {
-              for(const prod of filtrosProductos){
-                  const llamarCotizacion= await getCotizacionProducto(prod)
-              }
-          })*/
-        /*
-
-        promise.then(()=>{
-            for(const prod of filtrosProductos){
-                const myPromise=new Promise((resolve)=>{
-                    let params = {
-                        idOrigen: filtrosBusqueda.ciudadOrigen,
-                        idDestino: filtrosBusqueda.ciudadDestino,
-                        idEmbarque: 0,
-                        idRecoleccion: 0,
-                        idZonaEntrega: filtrosBusqueda.direccionOrigen.IdZona,
-                        idZonaRecoleccion: filtrosBusqueda.direccionDestino.IdZona,
-                        idCliente: 3140,
-                        entregaEnSucursal:  0,
-                        idSeguro: 5,
-                        valorDeclarado: 0,
-                        aplicaRecoleccion: 1,
-                        aplicaSeguro: 0,
-                        porcentajeSeguro: 0,
-                        recoleccionConCita: 0,
-                        embarqueConCita: 0,
-                        paquetesCotizacion: [{
-                            tipo: 2,
-                            peso: prod.desc.m_xPeso,
-                            largo: prod.desc.m_xLargo,
-                            ancho: prod.desc.m_xAncho,
-                            alto: prod.desc.m_xAlto,
-                            volumen: prod.desc.m_xLargo*prod.desc.m_xAncho*prod.desc.m_xAlto,
-                            idTipoEmpaque: prod.desc.m_nIdEmbalaje,
-                            activo: prod.desc.m_bActivo,
-                            ctd: prod.cantidad,
-                            idProducto: prod.desc.m_nIdProducto,
-                        }]
-                    }
-                    obtenerCotizacionTarifario(params).then(({data})=>{
-                        console.log(conceptosResult)
-                        setConceptosResult([...conceptosResult,data],resolve())
-                    })
-                })
-                myPromise.then(()=>console.log("sss"))
-
-            }
-        })
-*/
-        /* filtrosProductos.map(async (prod)=>{
-
-         })*/
-
-        /*  filtrosProductos.forEach((prod)=>{
-              let params = {
-                  idOrigen: filtrosBusqueda.ciudadOrigen,
-                  idDestino: filtrosBusqueda.ciudadDestino,
-                  idEmbarque: 0,
-                  idRecoleccion: 0,
-                  idZonaEntrega: filtrosBusqueda.direccionOrigen.IdZona,
-                  idZonaRecoleccion: filtrosBusqueda.direccionDestino.IdZona,
-                  idCliente: 3140,
-                  entregaEnSucursal:  0,
-                  idSeguro: 5,
-                  valorDeclarado: 0,
-                  aplicaRecoleccion: 1,
-                  aplicaSeguro: 0,
-                  porcentajeSeguro: 0,
-                  recoleccionConCita: 0,
-                  embarqueConCita: 0,
-                  paquetesCotizacion: [{
-                      tipo: 2,
-                      peso: prod.desc.m_xPeso,
-                      largo: prod.desc.m_xLargo,
-                      ancho: prod.desc.m_xAncho,
-                      alto: prod.desc.m_xAlto,
-                      volumen: prod.desc.m_xLargo*prod.desc.m_xAncho*prod.desc.m_xAlto,
-                      idTipoEmpaque: prod.desc.m_nIdEmbalaje,
-                      activo: prod.desc.m_bActivo,
-                      ctd: prod.cantidad,
-                      idProducto: prod.desc.m_nIdProducto,
-                  }]
-              }
-              obtenerCotizacionTarifario(params).then(({data})=>{
-                  setConceptosResult([...conceptosResult,data])
-              })
-          })*/
-
-
-    }
-
-    function handleBuscar() {
-
-        let localesRecoleccion
-        let localesEntrega
-        let foraneos
-        const promisePrimeraMilla = new Promise((resolve, reject) => {
-            localesRecoleccion = viajesLocalesListado.filter(v => (filtrosBusqueda.sucOrigen != -1 ? v.idSucursal == filtrosBusqueda.sucOrigen : true) && v.idConcepto == conceptosParamsConfig.IdConceptoRecoleccion)
-            resolve(localesRecoleccion.filter(v => filtrosBusqueda.producto != null ? (v.productos.filter(prod => prod.m_nIdProducto == filtrosBusqueda.producto.m_nIdProducto).length > 0) : true))
-        })
-        promisePrimeraMilla.then((value) => setViajesPrimeraMilla(value))
-
-        const promiseUltimaMilla = new Promise((resolve, reject) => {
-            localesEntrega = viajesLocalesListado.filter(v => (filtrosBusqueda.sucDestino != -1 ? v.idSucursal == filtrosBusqueda.sucDestino : true) && v.idConcepto == conceptosParamsConfig.IdConceptoEntrega)
-            resolve(localesEntrega.filter(v => filtrosBusqueda.producto != null ? (v.productos.filter(prod => prod.m_nIdProducto == filtrosBusqueda.producto.m_nIdProducto).length > 0) : true))
-        })
-        promiseUltimaMilla.then((value) => setViajesUltimaMilla(value))
-
-        promisePrimeraMilla.then((value) => setViajesPrimeraMilla(value))
-
-        const promiseMillaIntermedia = new Promise((resolve, reject) => {
-            foraneos = viajesForaneosListado.filter(v => (filtrosBusqueda.ciudadOrigen != -1 ? v.idOrigen == filtrosBusqueda.ciudadOrigen : true) && (filtrosBusqueda.ciudadDestino != -1 ? v.idDestino == filtrosBusqueda.ciudadDestino : true))
-            resolve(foraneos.filter(v => filtrosBusqueda.producto != null ? (v.grupos.filter(g => g.productos.filter(p => p.m_nIdProducto == filtrosBusqueda.producto.m_nIdProducto).length > 0).length > 0) : true))
-        })
-        promiseMillaIntermedia.then((value) => setViajesMillaIntermedia(value))
-
     }
 
     return (
@@ -596,7 +246,7 @@ function BuscarTarifa() {
             <section className="main-container">
                 <div className="container-fluid">
                     <div className="widget-wrap">
-                        <Grid style={{marginLeft: '5%', marginTop: '5%', marginBottom: '5%'}} container spacing={3}>
+                        <Grid style={{marginLeft: '5%', marginTop: '1%', marginBottom: '5%'}} container spacing={3}>
                             <Grid item container spacing={3}>
                                 <Grid item sm={12}>
                                     <h3>Origen</h3>
@@ -955,8 +605,6 @@ function BuscarTarifa() {
                                                 //conceptosResult.filter((c)=>c.IdConceptoRecoleccion==conceptosParamsConfig.IdConceptoRecoleccion).map((c,index)=>{
                                                 conceptosResult.sort(function(a, b){return a.index - b.index}).map((c, index) => {
                                                     let concepto = c.find((c) => c.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion)
-                                                    console.log(c)
-                                                    console.log(c.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion))
                                                     let pesoVol=(productosCotizados[index].desc.m_xLargo*productosCotizados[index].desc.m_xAncho*productosCotizados[index].desc.m_xAlto*conceptosParamsConfig.FactorConversion)
                                                     if (concepto.m_bError)
                                                         return (
@@ -1009,19 +657,19 @@ function BuscarTarifa() {
                                                                     {concepto.rangoMin} - {concepto.rangoMax}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                    ${concepto.m_cImporte}
+                                                                    ${agregarComasNumero(concepto.m_cImporte)}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                    ${concepto.m_cImporteIva}
+                                                                    ${agregarComasNumero(concepto.m_cImporteIva)}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                    ${concepto.m_cImporteRetiene}
+                                                                    ${agregarComasNumero(concepto.m_cImporteRetiene)}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                     {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                    ${concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva}
+                                                                    ${agregarComasNumero(concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva)}
                                                                 </Grid>
                                                                 <Grid item sm={12}>
                                                                     <hr style={{color:"black",height:1,backgroundColor:"black"}}></hr>
@@ -1037,7 +685,14 @@ function BuscarTarifa() {
                                                     <Grid item sm={10}></Grid>
                                                     <Grid item sm={2}>Total Final</Grid>
                                                     <Grid item sm={10}></Grid>
-                                                    <Grid item sm={2}>${conceptosResult?.reduce((acum,a)=>acum+(a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion).m_cImporte?a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion).m_cImporte:0),0)}</Grid>
+                                                    <Grid item sm={2}>${agregarComasNumero(conceptosResult.reduce((acum,a)=>{
+                                                        let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion)
+                                                        if(val.m_cImporte)
+                                                            return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
+                                                        else
+                                                            return (acum+0)
+
+                                                    },0))}</Grid>
                                                 </Grid>
                                             }
                                         </div>
@@ -1092,8 +747,6 @@ function BuscarTarifa() {
 
                                             conceptosResult.sort(function(a, b){return a.index - b.index}).map((c, index) => {
                                                 let concepto = c.find((c) => c.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoEntrega)
-                                                console.log(c)
-                                                console.log(c.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoEntrega))
                                                 let pesoVol=(productosCotizados[index].desc.m_xLargo*productosCotizados[index].desc.m_xAncho*productosCotizados[index].desc.m_xAlto*conceptosParamsConfig.FactorConversion)
                                                 if (concepto.m_bError)
                                                     return (
@@ -1146,19 +799,19 @@ function BuscarTarifa() {
                                                                 {concepto.rangoMin} - {concepto.rangoMax}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${concepto.m_cImporte}
+                                                                ${agregarComasNumero(concepto.m_cImporte)}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${concepto.m_cImporteIva}
+                                                                ${agregarComasNumero(concepto.m_cImporteIva)}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${concepto.m_cImporteRetiene}
+                                                                ${agregarComasNumero(concepto.m_cImporteRetiene)}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva}
+                                                                ${agregarComasNumero(concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva)}
                                                             </Grid>
                                                             <Grid item sm={12}>
                                                                 <hr style={{color:"black",height:1,backgroundColor:"black"}}></hr>
@@ -1174,14 +827,14 @@ function BuscarTarifa() {
                                                 <Grid item sm={10}></Grid>
                                                 <Grid item sm={2}>Total Final</Grid>
                                                 <Grid item sm={10}></Grid>
-                                                <Grid item sm={2}>${conceptosResult.reduce((acum,a)=>{
+                                                <Grid item sm={2}>${agregarComasNumero(conceptosResult.reduce((acum,a)=>{
                                                     let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoEntrega)
                                                     if(val.m_cImporte)
                                                         return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                     else
                                                         return (acum+0)
 
-                                                },0)}</Grid>
+                                                },0))}</Grid>
                                             </Grid>
                                         }
                                     </div>
@@ -1233,11 +886,8 @@ function BuscarTarifa() {
                                         {
                                             conceptosResult.length > 0 && conceptosActivos.millaIntermedia &&
 
-                                            //conceptosResult.filter((c)=>c.IdConceptoRecoleccion==conceptosParamsConfig.IdConceptoRecoleccion).map((c,index)=>{
                                             conceptosResult.sort(function(a, b){return a.index - b.index}).map((c, index) => {
                                                 let concepto = c.find((c) => c.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoFlete)
-                                                console.log(c)
-                                                console.log(c.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoFlete))
                                                 let pesoVol=(productosCotizados[index].desc.m_xLargo*productosCotizados[index].desc.m_xAncho*productosCotizados[index].desc.m_xAlto*conceptosParamsConfig.FactorConversion)
                                                 if (concepto.m_bError)
                                                     return (
@@ -1290,19 +940,19 @@ function BuscarTarifa() {
                                                                 {concepto.rangoMin} - {concepto.rangoMax}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${concepto.m_cImporte}
+                                                                ${agregarComasNumero(concepto.m_cImporte)}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${concepto.m_cImporteIva}
+                                                                ${agregarComasNumero(concepto.m_cImporteIva)}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${concepto.m_cImporteRetiene}
+                                                                ${agregarComasNumero(concepto.m_cImporteRetiene)}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva}
+                                                                ${agregarComasNumero(concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva)}
                                                             </Grid>
                                                             <Grid item sm={12}>
                                                                 <hr style={{color:"black",height:1,backgroundColor:"black"}}></hr>
@@ -1318,14 +968,14 @@ function BuscarTarifa() {
                                                 <Grid item sm={10}></Grid>
                                                 <Grid item sm={2}>Total Final</Grid>
                                                 <Grid item sm={10}></Grid>
-                                                <Grid item sm={2}>${conceptosResult.reduce((acum,a)=>{
+                                                <Grid item sm={2}>${agregarComasNumero(conceptosResult.reduce((acum,a)=>{
                                                     let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoFlete)
                                                     if(val.m_cImporte)
                                                         return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                     else
                                                         return (acum+0)
 
-                                                },0)}</Grid>
+                                                },0))}</Grid>
                                             </Grid>
                                         }
                                     </div>

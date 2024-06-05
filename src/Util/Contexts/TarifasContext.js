@@ -56,7 +56,7 @@ function obtenerTarifasRangos() {
 }
 
 function obtenerTarifaRangosById(id) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Rangos/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -64,7 +64,7 @@ function obtenerTarifaRangosById(id) {
     return result
 }
 function obtenerTarifaGeneral() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Rangos/GetGeneral`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetGeneral`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

@@ -83,7 +83,7 @@ function obtenerParametrosDestino(idGuia) {
     return result
 }
 function obtenerColoniasCPs() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ZonaOperativa/GetColoniasCPs`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetColoniasCPs`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
