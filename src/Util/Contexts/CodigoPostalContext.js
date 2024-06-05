@@ -42,6 +42,15 @@ function obtenerCodigoPostalId(id){
     return result
 }
 
+function obtenerCodigoPostalPorCodigo(code){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByCode/${code}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function obtenerCodigosPostalesPorCiudad(id){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/${id}`;
     let result;
@@ -67,4 +76,4 @@ function obtenerCodigosPostalesPorEstadoMunicipioDisponibles(estado, municipio){
     );
     return result
 }
-export {obtenerCodigosPostalesPorEstadoMunicipio, obtenerCodigoPostalId, obtenerCodigoPostalCiudad, obtenerCodigoPostal, obtenerCodigoPostalEstado, obtenerCodigosPostalesPorCiudad,obtenerCodigosPostalesPorEstadoMunicipioDisponibles}
+export {obtenerCodigosPostalesPorEstadoMunicipio, obtenerCodigoPostalId, obtenerCodigoPostalPorCodigo, obtenerCodigoPostalCiudad, obtenerCodigoPostal, obtenerCodigoPostalEstado, obtenerCodigosPostalesPorCiudad,obtenerCodigosPostalesPorEstadoMunicipioDisponibles}

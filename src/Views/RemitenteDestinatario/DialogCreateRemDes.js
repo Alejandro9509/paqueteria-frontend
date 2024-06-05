@@ -9,18 +9,24 @@ import {
     InputLabel,
     TextField,
     Select,
-    Grid
+    Grid, DialogTitle
 } from "@material-ui/core";
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
+import {obtenerRemitentesDestinatariosNombre, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
-import {obtenerCodigoPostal, obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
+import {
+    obtenerCodigoPostal,
+    obtenerCodigoPostalPorCodigo,
+    obtenerCodigosPostalesPorEstadoMunicipio
+} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles({
     root: {
@@ -46,6 +52,15 @@ function showSuccess(mensaje) {
     }).show();
 }
 
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
+
 function DialogCreateRemDes(props) {
     const classes = useStyles();
     let {createVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
@@ -58,28 +73,24 @@ function DialogCreateRemDes(props) {
         alias: "",
         nombre: "",
         RFC: "",
-        domicilio: "",
         calle: "",
         numeroInt: "",
         numeroExt: "",
         colonia: "",
         estado: 11,
-        estadoTexto: "",
-        paisTexto: "",
         municipio: 20,
-        municipioTexto: "",
         codigoPostal: "",
         correo: "",
         telefono: "",
         contacto: "",
-        destino: "",
         zonaOperativa: "",
         zonaTarifa: "",
         clientePaga: {},
         cliente:"",
         numero: 0,
         equivalencia: 0,
-        openDialog: false
+        openDialog: false,
+        openCodigos: false
     });
 //----------------------------->Hooks useState <----------------------------------------------------------------------
     const [pagina, setPagina] = React.useState(0);
@@ -137,12 +148,27 @@ function DialogCreateRemDes(props) {
         }
     };
 
+    const handleChangeCodigoPostal = (event) => {
+        event.preventDefault();
+        let nuevoCodigo = {
+            idCP: state.codigoPostal.idCP,
+            m_sCP: event.target.value,
+            m_sColonia: ""
+        }
+        setState((state) => {
+            return {
+                ...state,
+                codigoPostal: nuevoCodigo,
+            };
+        });
+    };
+
     const handleChangeAutocomplete = (input, newValue) => {
         if(input=="codigoPostal"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
-                ( zonaOperativa ) => {
+                (zonaOperativa ) => {
                     obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
-                        ( zonaTarifa ) => {
+                        (zonaTarifa ) => {
                             // if(zonaOperativa.data.length == 0){
                             //     showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
                             // }
@@ -159,7 +185,7 @@ function DialogCreateRemDes(props) {
 
         setState(() => ({
             ...state,
-            [input]: newValue,
+            [input]: newValue
         }));
     };
 
@@ -169,46 +195,130 @@ function DialogCreateRemDes(props) {
         });
     };
 
+    const validacionesAgregar = () => {
+        obtenerRemitentesDestinatariosNombre(state.nombre).then((respuesta) =>{
+            if(respuesta.data.total > 0){
+                showError("Ya se encuentra registrado un remitente/destnatario con ese nombre.")
+                return false;
+            }
+        })
+        if(!state.nombre || !state.RFC || !state.codigoPostal.m_sCP || !state.calle || !state.contacto || !state.correo || !state.telefono){
+            showSuccess("Faltan campos por llenar");
+            return false;
+        }
+        /*console.log(state.codigoPostal)
+        if(state.codigoPostal.m_sCP && !state.codigoPostal.m_nIdCP){
+            obtenerCodigoPostalPorCodigo(state.codigoPostal.m_sCP).then((response) => {
+                console.log(response.data)
+                if(response.data.length > 0) {
+                    let nuevoCodigo = {
+                        idCP: response.data[0].m_nIdCP,
+                        m_sCP: state.codigoPostal.m_sCP
+                    }
+                    setState((state) => {
+                        return {
+                            ...state,
+                            codigoPostal: nuevoCodigo
+                        };
+                    });
+                    //estadoId = dataEstados.find(i => i.m_sAbreviacion === response.data[0].m_nIdEstado) //.m_nIdEstado
+                }
+            })
+        }*/
+        return true;
+    }
+
     const handleAgregar = () => {
-        const params = {
-            idCliente: state.clientePaga.id,
-            nombre: state.nombre,
-            rfc: state.RFC,
-            activo: true,
-            calle: state.calle,
-            noExterior: state.numeroExt,
-            noInterior: state.numeroInt,
-            colonia: state.colonia,
-            localidad: state.colonia,
-            municipio: state.municipio,
-            idEstado: state.estado,
-            creadoPor: localStorage.getItem("UsuarioId"),
-            idCP: state.codigoPostal.m_nIdCP,
-            codigoPostal: state.codigoPostal.m_sCP,
-            idSucursal: localStorage.getItem("Sucursal") || 0,
-            contacto: state.contacto,
-            correoElectronico: state.correo,
-            telefono: state.telefono,
-            noRegistroIdentidadFiscal: state.RFC,
-            alias: state.nombre,
-            numero: state.numero,
-            equivalencia: state.equivalencia
-        };
-        agregarRemitenteDestinatario(params).then((respuesta) => {
-            showSuccess("Creado con número: "+respuesta.data);
-            createVisible(false);
-        }).catch((err) => {
-            console.log(err);
-            showSuccess(err.response.data);
-        });
+        if(validacionesAgregar()){
+            const params = {
+                idCliente: state.clientePaga.id,
+                nombre: state.nombre,
+                rfc: state.RFC,
+                activo: true,
+                calle: state.calle,
+                noExterior: state.numeroExt,
+                noInterior: state.numeroInt,
+                colonia: state.colonia,
+                localidad: state.colonia,
+                municipio: state.municipio,
+                idEstado: state.estado,
+                creadoPor: localStorage.getItem("UsuarioId"),
+                idCP: state.codigoPostal.m_nIdCP,
+                codigoPostal: state.codigoPostal.m_sCP,
+                idSucursal: localStorage.getItem("Sucursal") || 0,
+                contacto: state.contacto,
+                correoElectronico: state.correo,
+                telefono: state.telefono,
+                noRegistroIdentidadFiscal: state.RFC,
+                alias: state.nombre,
+                numero: state.numero,
+                equivalencia: state.equivalencia
+            };
+            console.log(params);
+            agregarRemitenteDestinatario(params).then((respuesta) => {
+                showSuccess("Creado con número: "+respuesta.data);
+                createVisible(false);
+            }).catch((err) => {
+                console.log(err);
+                showSuccess(err.response.data);
+            });
+        }
     }
 
 //----------------------------------------------Renderizado-------------------------------------------------
     return (
         <div>
-            <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}>
+            <Dialog fullWidth open={state.openCodigos} onClose={() => setState({...state, openCodigos: false})}>
+                <DialogTitle>Seleccionar código postal</DialogTitle>
                 <DialogContent>
-                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                    <p>
+                        <span>Se muestran los códigos pertenecientes al municipio seleccionado</span>
+                        <br/>
+                    </p>
+
+                    <div style={{backgroundColor: '#FFFFFF'}}>
+                        <Autocomplete
+                                freeSolo
+                                onChange={(event, newValue) =>
+                                    handleChangeAutocomplete("codigoPostal", newValue)
+                                }
+                                value={state.codigoPostal}
+                                name="codigoPostal"
+                                disableClearable
+                                forcePopupIcon={false}
+                                options={dataCodigosPostales}
+                                getOptionLabel={(option) =>
+                                    option ? `${option.m_sCP} - ${option.m_sColonia}` : ""
+                                }
+                                style={{
+                                    transform: "translate(14px, 10px) scale(1) !important",
+                                }}
+                                renderInput={(params) => (
+                                    <div>
+                                        <TextField
+                                            label="Código Postal"
+                                            margin="dense"
+                                            variant="outlined"
+                                            onClick={(e) =>
+                                                handleClickCodigosPostalesInput("codigoPostal")
+                                            }
+                                            required
+                                            {...params}
+                                        />
+                                    </div>
+                                )}
+                        />
+                    </div>
+                </DialogContent>
+                <DialogActions style={{justifyContent: "rigth"}}>
+                    <button onClick={() => {setState({...state, openCodigos: false})}} className="btn btn-secondary secondary-btn">
+                        Cerrar
+                    </button>
+                </DialogActions>
+            </Dialog>
+            <Dialog fullWidth open={state.openDialog} onClose={() => setState({...state, openDialog: false})}>
+                <DialogContent>
+                    <div style={{backgroundColor: '#FFFFFF'}}>
                         <DialogTableClientes dialogVisible={dialogVisible} handlePatrocinadorSelected={handleClienteSelected}/>
                     </div>
                 </DialogContent>
@@ -315,38 +425,24 @@ function DialogCreateRemDes(props) {
 
                             <Grid item xs={8}>
                                 <div className="input">
-                                    <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                            handleChangeAutocomplete("codigoPostal", newValue)
-                                        }
-                                        value={state.codigoPostal}
+                                    <TextField
+                                        label="Código Postal"
+                                        margin="dense"
+                                        variant="outlined"
+                                        onChange={handleChangeCodigoPostal}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        value={state.codigoPostal.m_sCP}
                                         name="codigoPostal"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataCodigosPostales}
-                                        getOptionLabel={(option) =>
-                                            option ? `${option.m_sCP} - ${option.m_sColonia}` : ""
-                                        }
-                                        style={{
-                                            transform: "translate(14px, 10px) scale(1) !important",
-                                        }}
-                                        renderInput={(params) => (
-                                            <div>
-                                                <TextField
-                                                    label="Código Postal"
-                                                    margin="dense"
-                                                    variant="outlined"
-                                                    onClick={(e) =>
-                                                        handleClickCodigosPostalesInput("codigoPostal")
-                                                    }
-                                                    required
-                                                    {...params}
-                                                />
-                                            </div>
-                                        )}
                                     />
                                 </div>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <IconButton aria-label="Buscar código" onClick={() => setState({...state, openCodigos: true})}>
+                                    <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                                    Seleccionar código
+                                </IconButton>
                             </Grid>
 
                             <Grid container rowSpacing={2} columnSpacing={{ xs: 2, sm: 2, md: 3 }}>
