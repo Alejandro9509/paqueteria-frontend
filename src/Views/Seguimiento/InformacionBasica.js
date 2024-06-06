@@ -55,6 +55,12 @@ class InformacionBasica extends Component {
                         <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Entregó Guía: <Typography>{data.operadorEntrega?data.operadorEntrega:'No Aplica'}</Typography> </Typography>
                     </Grid>
                     <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Factura: <Typography>{data.folioFactura!='NA'?data.folioFactura:'No Aplica'}</Typography> </Typography>
+                    </Grid>
+                    <Grid item xs={9}>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus Factura: <Typography>{data.estatusFactura!='NA'?data.estatusFactura:'No Aplica'}</Typography> </Typography>
                     </Grid>
                     <Grid item xs={3}>
                         <FormControlLabel disabled style={{padding:"0px !important"}}
