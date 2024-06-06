@@ -256,15 +256,17 @@ function BuscarTarifa() {
                                         <InputLabel
                                             id="sucLabel">Sucursal</InputLabel>
                                         <Select value={filtrosBusqueda.sucOrigen} onChange={(e) => {
-                                            let valorOrigen = listadoColoniasCPs.find(cp => cp.IdSucursal == e.target.value)?.IdOrigenDestino
+                                            let IdCPSuc=sucursalesListado.find((s)=>s.m_nIdSucursal==e.target.value)?.m_nIdCodigoPostal
+                                            let valorOrigen=listadoColoniasCPs.find((cp)=>cp.IdCodigoPostal==IdCPSuc)
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
                                                 sucOrigen: e.target.value,
-                                                ciudadOrigen: valorOrigen ? valorOrigen : -1
+                                                direccionOrigen: valorOrigen ? valorOrigen : null,
+                                                ciudadOrigen: valorOrigen ? valorOrigen.IdOrigenDestino : -1
                                             })
                                         }}
                                                 labelId='sucLabel' label=''>
-                                            <MenuItem value={-1}>{'TODAS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {sucursalesListado.map(suc => {
                                                 return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
                                             })}
@@ -276,7 +278,7 @@ function BuscarTarifa() {
                                     <Autocomplete
                                         size='small'
                                         freeSolo
-                                        value={filtrosBusqueda.direccionOrigen}
+                                        value={filtrosBusqueda.direccionOrigen==null?"": filtrosBusqueda.direccionOrigen}
                                         onChange={(e, newValue) => {
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
@@ -288,7 +290,7 @@ function BuscarTarifa() {
                                         forcePopupIcon={false}
                                         options={listadoColoniasCPs}
                                         getOptionLabel={(option) =>
-                                            `${option.CodigoPostal} - ${option.Colonia}`
+                                            option?`${option.CodigoPostal} - ${option.Colonia}`:""
                                         }
                                         variant="outlined"
                                         style={{
@@ -321,7 +323,7 @@ function BuscarTarifa() {
                                                     ...filtrosBusqueda,
                                                     ciudadOrigen: e.target.value
                                                 })} labelId='origenLbl' label=''>
-                                            <MenuItem value={-1}>{'TODOS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {origenesDestinosListado.map(i => {
                                                 return <MenuItem value={i.m_nIdCiudad}>{i.m_sCiudad}</MenuItem>
                                             })}
@@ -340,15 +342,18 @@ function BuscarTarifa() {
                                             id="sucLabel">Sucursal</InputLabel>
                                         <Select value={filtrosBusqueda.sucDestino}
                                                 onChange={(e) => {
-                                                    let valorDestino = listadoColoniasCPs.find(cp => cp.IdSucursal == e.target.value)?.IdOrigenDestino
+                                                    let IdCPSuc=sucursalesListado.find((s)=>s.m_nIdSucursal==e.target.value)?.m_nIdCodigoPostal
+                                                    let valorDestino=listadoColoniasCPs.find((cp)=>cp.IdCodigoPostal==IdCPSuc)
+
                                                     setFiltrosBusqueda({
                                                         ...filtrosBusqueda,
                                                         sucDestino: e.target.value,
-                                                        ciudadDestino: valorDestino ? valorDestino : -1
+                                                        direccionDestino: valorDestino ? valorDestino : null,
+                                                        ciudadDestino: valorDestino ? valorDestino.IdOrigenDestino : -1
                                                     })
                                                 }}
                                                 labelId='sucLabel' label=''>
-                                            <MenuItem value={-1}>{'TODAS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {sucursalesListado.map(suc => {
                                                 return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
                                             })}
@@ -359,7 +364,7 @@ function BuscarTarifa() {
                                     <Autocomplete
                                         freeSolo
                                         size='small'
-                                        value={filtrosBusqueda.direccionDestino}
+                                        value={filtrosBusqueda.direccionDestino==null?"":filtrosBusqueda.direccionDestino}
                                         onChange={(e, newValue) => {
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
@@ -371,7 +376,7 @@ function BuscarTarifa() {
                                         forcePopupIcon={false}
                                         options={listadoColoniasCPs}
                                         getOptionLabel={(option) =>
-                                            option.CodigoPostal + ' - ' + option.Colonia
+                                            option?`${option.CodigoPostal} - ${option.Colonia}`:""
                                         }
                                         variant="outlined"
                                         renderInput={(params) => (
@@ -401,7 +406,7 @@ function BuscarTarifa() {
                                                     ...filtrosBusqueda,
                                                     ciudadDestino: e.target.value
                                                 })} labelId='origenLbl' label=''>
-                                            <MenuItem value={-1}>{'TODOS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {origenesDestinosListado.map(i => {
                                                 return <MenuItem value={i.m_nIdCiudad}>{i.m_sCiudad}</MenuItem>
                                             })}
@@ -482,7 +487,6 @@ function BuscarTarifa() {
                                                         </Grid>
                                                         <Grid item sm={1}>
                                                             <TextField label={"Largo"} type='number' size={'small'}
-                                                                       disabled={p.desc?.m_nIdProducto != 1}
                                                                        onChange={(e) => {
                                                                            const myPromise = new Promise((resolve) => {
                                                                                const updatedArr = [...filtrosProductos];
@@ -495,7 +499,6 @@ function BuscarTarifa() {
                                                         </Grid>
                                                         <Grid item sm={1}>
                                                             <TextField label={"Alto"} type='number' size={'small'}
-                                                                       disabled={p.desc?.m_nIdProducto != 1}
                                                                        onChange={(e) => {
                                                                            const myPromise = new Promise((resolve) => {
                                                                                const updatedArr = [...filtrosProductos];
@@ -508,7 +511,6 @@ function BuscarTarifa() {
                                                         </Grid>
                                                         <Grid item sm={1}>
                                                             <TextField label={"Ancho"} type='number' size={'small'}
-                                                                       disabled={p.desc?.m_nIdProducto != 1}
                                                                        onChange={(e) => {
                                                                            const myPromise = new Promise((resolve) => {
                                                                                const updatedArr = [...filtrosProductos];
@@ -521,7 +523,6 @@ function BuscarTarifa() {
                                                         </Grid>
                                                         <Grid item sm={1}>
                                                             <TextField label={"Peso"} type='number' size={'small'}
-                                                                       disabled={p.desc?.m_nIdProducto != 1}
                                                                        onChange={(e)=>{
                                                                            const myPromise=new Promise((resolve)=>{
                                                                                const updatedArr = [...filtrosProductos];
@@ -657,19 +658,19 @@ function BuscarTarifa() {
                                                                     {concepto.rangoMin} - {concepto.rangoMax}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                    ${agregarComasNumero(concepto.m_cImporte)}
+                                                                    ${agregarComasNumero((concepto.m_cImporte/productosCotizados[index].cantidad).toFixed(2))}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                    ${agregarComasNumero(concepto.m_cImporteIva)}
+                                                                    ${agregarComasNumero((concepto.m_cImporteIva/productosCotizados[index].cantidad).toFixed(2))}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                    ${agregarComasNumero(concepto.m_cImporteRetiene)}
+                                                                    ${agregarComasNumero((concepto.m_cImporteRetiene/productosCotizados[index].cantidad).toFixed(2))}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                     {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                    ${agregarComasNumero(concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva)}
+                                                                    ${agregarComasNumero((concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva).toFixed(2))}
                                                                 </Grid>
                                                                 <Grid item sm={12}>
                                                                     <hr style={{color:"black",height:1,backgroundColor:"black"}}></hr>
@@ -685,14 +686,14 @@ function BuscarTarifa() {
                                                     <Grid item sm={10}></Grid>
                                                     <Grid item sm={2}>Total Final</Grid>
                                                     <Grid item sm={10}></Grid>
-                                                    <Grid item sm={2}>${agregarComasNumero(conceptosResult.reduce((acum,a)=>{
+                                                    <Grid item sm={2}>${agregarComasNumero((conceptosResult.reduce((acum,a)=>{
                                                         let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion)
                                                         if(val.m_cImporte)
                                                             return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                         else
                                                             return (acum+0)
 
-                                                    },0))}</Grid>
+                                                    },0)).toFixed(2))}</Grid>
                                                 </Grid>
                                             }
                                         </div>
@@ -799,19 +800,19 @@ function BuscarTarifa() {
                                                                 {concepto.rangoMin} - {concepto.rangoMax}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${agregarComasNumero(concepto.m_cImporte)}
+                                                                ${agregarComasNumero((concepto.m_cImporte/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero(concepto.m_cImporteIva)}
+                                                                ${agregarComasNumero((concepto.m_cImporteIva/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero(concepto.m_cImporteRetiene)}
+                                                                ${agregarComasNumero((concepto.m_cImporteRetiene/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${agregarComasNumero(concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva)}
+                                                                ${agregarComasNumero((concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva).toFixed(2))}
                                                             </Grid>
                                                             <Grid item sm={12}>
                                                                 <hr style={{color:"black",height:1,backgroundColor:"black"}}></hr>
@@ -827,14 +828,14 @@ function BuscarTarifa() {
                                                 <Grid item sm={10}></Grid>
                                                 <Grid item sm={2}>Total Final</Grid>
                                                 <Grid item sm={10}></Grid>
-                                                <Grid item sm={2}>${agregarComasNumero(conceptosResult.reduce((acum,a)=>{
+                                                <Grid item sm={2}>${agregarComasNumero((conceptosResult.reduce((acum,a)=>{
                                                     let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoEntrega)
                                                     if(val.m_cImporte)
                                                         return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                     else
                                                         return (acum+0)
 
-                                                },0))}</Grid>
+                                                },0)).toFixed(2))}</Grid>
                                             </Grid>
                                         }
                                     </div>
@@ -940,19 +941,19 @@ function BuscarTarifa() {
                                                                 {concepto.rangoMin} - {concepto.rangoMax}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${agregarComasNumero(concepto.m_cImporte)}
+                                                                ${agregarComasNumero((concepto.m_cImporte/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero(concepto.m_cImporteIva)}
+                                                                ${agregarComasNumero((concepto.m_cImporteIva/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero(concepto.m_cImporteRetiene)}
+                                                                ${agregarComasNumero((concepto.m_cImporteRetiene/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
-                                                                ${agregarComasNumero(concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva)}
+                                                                ${agregarComasNumero((concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva).toFixed(2))}
                                                             </Grid>
                                                             <Grid item sm={12}>
                                                                 <hr style={{color:"black",height:1,backgroundColor:"black"}}></hr>
@@ -968,14 +969,14 @@ function BuscarTarifa() {
                                                 <Grid item sm={10}></Grid>
                                                 <Grid item sm={2}>Total Final</Grid>
                                                 <Grid item sm={10}></Grid>
-                                                <Grid item sm={2}>${agregarComasNumero(conceptosResult.reduce((acum,a)=>{
+                                                <Grid item sm={2}>${agregarComasNumero((conceptosResult.reduce((acum,a)=>{
                                                     let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoFlete)
                                                     if(val.m_cImporte)
                                                         return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                     else
                                                         return (acum+0)
 
-                                                },0))}</Grid>
+                                                },0)).toFixed(2))}</Grid>
                                             </Grid>
                                         }
                                     </div>
