@@ -891,7 +891,7 @@ function ComplementosSAT(props) {
                     <div className="widget-content">
                         <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
                             setRowSelectionModel([])}
-                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',color:"white",marginLeft:"73%",fontSize:12}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
                         <Button onClick={()=>confirmAlert({
                             title: 'Confirmación',
                             message: '¿Desea eliminar los complementos seleccionados?',
@@ -904,15 +904,15 @@ function ComplementosSAT(props) {
                                     label: 'No',
                                 }
                             ]
-                        })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%"}}>Borrar Selección</Button>
+                        })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%",fontSize:12}}>Borrar Selección</Button>
                         <div className="row" style={{ height: 200}}>
                             <DataGrid
                                 localeText={dataGridLocaleText}
                                 density="compact"
-                                onSelectionModelChange={(e) => {
-                                    setRowSelectionModel(e.selectionModel);
+                                onRowSelectionModelChange={(e) => {
+                                    setRowSelectionModel(e);
                                 }}
-                                selectionModel={rowSelectionModel}
+                                rowSelectionModel={rowSelectionModel}
                                 checkboxSelection={seleccionable}
                                 pageSize={10}
                                 columns={columnsPaquetes}
