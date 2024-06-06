@@ -133,6 +133,7 @@ class UltimaMilla extends Component {
         this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
         this.closeResumenParada = this.closeResumenParada.bind(this)
         this.mostrarDialogoListado = this.mostrarDialogoListado.bind(this)
+        this.cerrarListadoUbicaciones = this.cerrarListadoUbicaciones.bind(this)
         this.handleAceptar = this.handleAceptar.bind(this)
     }
 
@@ -149,7 +150,7 @@ class UltimaMilla extends Component {
         var filtrosTemp = this.state.filtros;
         filtrosTemp.paquetesSeleccionadas = paquetes;
         this.mostrarDialogoListado(false);
-        this.generarRuta(filtrosTemp);
+        //this.generarRuta(filtrosTemp);
     }
     componentDidMount() {
     }

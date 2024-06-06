@@ -269,6 +269,7 @@ export default class ListaUbicaciones extends Component {
                     </Table>
                 </TableContainer>
                 <DialogActions>
+                    <Button onClick={() => this.props.cerrarListadoUbicaciones()} color="secondary">Cerrar</Button>
                     <Button onClick={(e) => this.props.handleAceptar(e, this.state.listado)} color="primary">Aceptar</Button>
                 </DialogActions>
                 {
