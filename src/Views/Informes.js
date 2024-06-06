@@ -138,6 +138,8 @@ function Informes({history}) {
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
+    const [filtroFolio, setFiltroFolio] = React.useState(false);
+    const [textoFiltro,setTextoFiltro]=React.useState('');
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
     const [mensajesUtilizacion,setMensajeUtilizacion]=useState('')
 
@@ -183,7 +185,20 @@ function Informes({history}) {
 
         setOrdenAscendente(!ordenAscendente)
     };
+    const handleFiltroFolio = () => {
 
+        let filtro=document.getElementById('filtroFolio').value
+        if(filtro=='')
+        {
+            setTextoFiltro('')
+            setFiltroFolio(false)
+        }
+        else
+        {
+            setTextoFiltro(filtro)
+            setFiltroFolio(true)
+        }
+    };
     function handleSelectCP(id, dobleClick, e) {
         clearTimeout(timer);
         if (e.detail === 1) {
@@ -727,9 +742,9 @@ function Informes({history}) {
         getAllGuiasFrom(true);
     }
 
-    const selectGuia = (index) => {
+    const selectGuia = (guia) => {
         const newGuia = [...dataGuias];
-
+        let index=dataGuias.findIndex(g=>g==guia)
         newGuia[index]["select"] = newGuia[index].select ? false : true;
         cubicarInforme(newGuia);
         setDataGuias(newGuia);
@@ -980,7 +995,7 @@ function Informes({history}) {
         console.dir(document.getElementById("IdCiudadOrigen"))
         if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
-
+            setFiltroFolio(false)
         }
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
     const clickCancelar=()=>{
@@ -1848,12 +1863,31 @@ function Informes({history}) {
                                                                             }
 
                                                                         </IconButton>
+
+
+                                                                        <TextField style={{width:'40%'}}
+                                                                                   /*onChange={(e)=>{
+                                                                                       const waitTime=1000
+                                                                                       let timer
+                                                                                       clearTimeout(timer)
+                                                                                       timer=setTimeout(()=>{
+                                                                                           setFiltro(e.target.value)
+                                                                                       },waitTime)
+                                                                                   }}*/
+                                                                                   id='filtroFolio' variant={'outlined'} margin='dense' label='Filtro por Folio' type='text'></TextField>
+                                                                        <IconButton aria-label="search"
+                                                                                    className={classes.margin}
+                                                                                    onClick={()=>handleFiltroFolio()}>
+                                                                            <SearchIcon fontSize={'default'}></SearchIcon>
+                                                                            BUSCAR
+
+                                                                        </IconButton>
                                                                         <div style={{
                                                                             padding: "10px",
                                                                             maxHeight: "500px",
                                                                             overflow: "scroll"
                                                                         }}>
-                                                                            {dataGuias.map((value, index) => {
+                                                                            {(filtroFolio?dataGuias.filter((g)=>g.m_nFolioGuia.includes(textoFiltro)):dataGuias).map((value, index) => {
                                                                                 return (
                                                                                     <div>
                                                                                         <br/>
@@ -1863,7 +1897,7 @@ function Informes({history}) {
                                                                                                 borderRadius: "10px",
                                                                                             }}
                                                                                             disabled={state.agregar === "Consultar"}
-                                                                                            onClick={() => selectGuia(index)}
+                                                                                            onClick={() => selectGuia(value)}
                                                                                         >
                                                                                             <Grid container spacing={2}>
                                                                                                 <Grid
