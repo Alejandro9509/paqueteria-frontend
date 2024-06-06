@@ -199,8 +199,6 @@ export default function DialogoNuevoPaquete(props) {
                     resetPaquete()
                     resetErrores()
                 }
-            }else{
-                showSuccess("El producto no se encuentra en la lista")
             }
         }
 
@@ -866,7 +864,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={12}>
                                 <div className="input">
-                                    <TextField variant="outlined" size="small"
+                                    <TextField fullWidth variant="outlined" size="small"
                                         // onChange={(event) => handleChangePaquete(event, index)}
                                                className="form-control"
                                                type="text"
@@ -881,7 +879,7 @@ export default function DialogoNuevoPaquete(props) {
                             }
                             <Grid item xs={12}>
                                 <div className="input">
-                                    <TextField variant="outlined" size="small"
+                                    <TextField fullWidth variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                className="form-control"
                                                type="text"
@@ -898,7 +896,7 @@ export default function DialogoNuevoPaquete(props) {
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
                             <Grid item xs={12}>
                                 <div className="input">
-                                    <TextField variant="outlined" size="small"
+                                    <TextField fullWidth variant="outlined" size="small"
                                                onChange={(event) => handleChangePaquetev2(event)}
                                                className="form-control"
                                                type="text"
