@@ -258,16 +258,15 @@ function BuscarTarifa() {
                                         <Select value={filtrosBusqueda.sucOrigen} onChange={(e) => {
                                             let IdCPSuc=sucursalesListado.find((s)=>s.m_nIdSucursal==e.target.value)?.m_nIdCodigoPostal
                                             let valorOrigen=listadoColoniasCPs.find((cp)=>cp.IdCodigoPostal==IdCPSuc)
-
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
                                                 sucOrigen: e.target.value,
-                                                direccionOrigen: valorOrigen?valorOrigen:null,
+                                                direccionOrigen: valorOrigen ? valorOrigen : null,
                                                 ciudadOrigen: valorOrigen ? valorOrigen.IdOrigenDestino : -1
                                             })
                                         }}
                                                 labelId='sucLabel' label=''>
-                                            <MenuItem value={-1}>{'TODAS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {sucursalesListado.map(suc => {
                                                 return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
                                             })}
@@ -279,7 +278,7 @@ function BuscarTarifa() {
                                     <Autocomplete
                                         size='small'
                                         freeSolo
-                                        value={filtrosBusqueda.direccionOrigen}
+                                        value={filtrosBusqueda.direccionOrigen==null?"": filtrosBusqueda.direccionOrigen}
                                         onChange={(e, newValue) => {
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
@@ -291,7 +290,7 @@ function BuscarTarifa() {
                                         forcePopupIcon={false}
                                         options={listadoColoniasCPs}
                                         getOptionLabel={(option) =>
-                                            `${option.CodigoPostal} - ${option.Colonia}`
+                                            option?`${option.CodigoPostal} - ${option.Colonia}`:""
                                         }
                                         variant="outlined"
                                         style={{
@@ -324,7 +323,7 @@ function BuscarTarifa() {
                                                     ...filtrosBusqueda,
                                                     ciudadOrigen: e.target.value
                                                 })} labelId='origenLbl' label=''>
-                                            <MenuItem value={-1}>{'TODOS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {origenesDestinosListado.map(i => {
                                                 return <MenuItem value={i.m_nIdCiudad}>{i.m_sCiudad}</MenuItem>
                                             })}
@@ -354,7 +353,7 @@ function BuscarTarifa() {
                                                     })
                                                 }}
                                                 labelId='sucLabel' label=''>
-                                            <MenuItem value={-1}>{'TODAS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {sucursalesListado.map(suc => {
                                                 return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
                                             })}
@@ -365,7 +364,7 @@ function BuscarTarifa() {
                                     <Autocomplete
                                         freeSolo
                                         size='small'
-                                        value={filtrosBusqueda.direccionDestino}
+                                        value={filtrosBusqueda.direccionDestino==null?"":filtrosBusqueda.direccionDestino}
                                         onChange={(e, newValue) => {
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
@@ -377,7 +376,7 @@ function BuscarTarifa() {
                                         forcePopupIcon={false}
                                         options={listadoColoniasCPs}
                                         getOptionLabel={(option) =>
-                                            option.CodigoPostal + ' - ' + option.Colonia
+                                            option?`${option.CodigoPostal} - ${option.Colonia}`:""
                                         }
                                         variant="outlined"
                                         renderInput={(params) => (
@@ -407,7 +406,7 @@ function BuscarTarifa() {
                                                     ...filtrosBusqueda,
                                                     ciudadDestino: e.target.value
                                                 })} labelId='origenLbl' label=''>
-                                            <MenuItem value={-1}>{'TODOS'}</MenuItem>
+                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
                                             {origenesDestinosListado.map(i => {
                                                 return <MenuItem value={i.m_nIdCiudad}>{i.m_sCiudad}</MenuItem>
                                             })}
