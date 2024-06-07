@@ -636,8 +636,11 @@ function BuscarTarifa() {
                                                                 <Grid item sm={2}>
                                                                     Rango
                                                                 </Grid>
-                                                                <Grid item sm={2}>
+                                                                <Grid item sm={1}>
                                                                     Importe
+                                                                </Grid>
+                                                                <Grid item sm={2}>
+                                                                    Subtotal
                                                                 </Grid>
                                                                 <Grid item sm={1}>
                                                                     IVA
@@ -645,7 +648,7 @@ function BuscarTarifa() {
                                                                 <Grid item sm={1}>
                                                                     Retiene
                                                                 </Grid>
-                                                                <Grid item sm={2}>
+                                                                <Grid item sm={1}>
                                                                     Cálculo
                                                                 </Grid>
                                                                 <Grid item sm={2}>
@@ -657,16 +660,19 @@ function BuscarTarifa() {
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                     {concepto.rangoMin} - {concepto.rangoMax}
                                                                 </Grid>
-                                                                <Grid item style={{"font-weight":"normal"}} sm={2}>
+                                                                <Grid item style={{"font-weight":"normal"}} sm={1}>
                                                                     ${agregarComasNumero((concepto.m_cImporte/productosCotizados[index].cantidad).toFixed(2))}
                                                                 </Grid>
-                                                                <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                    ${agregarComasNumero((concepto.m_cImporteIva/productosCotizados[index].cantidad).toFixed(2))}
-                                                                </Grid>
-                                                                <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                    ${agregarComasNumero((concepto.m_cImporteRetiene/productosCotizados[index].cantidad).toFixed(2))}
-                                                                </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
+                                                                    ${agregarComasNumero(concepto.m_cImporte.toFixed(2))}
+                                                                </Grid>
+                                                                <Grid item style={{"font-weight":"normal"}} sm={1}>
+                                                                    ${agregarComasNumero(concepto.m_cImporteIva.toFixed(2))}
+                                                                </Grid>
+                                                                <Grid item style={{"font-weight":"normal"}} sm={1}>
+                                                                    ${agregarComasNumero(concepto.m_cImporteRetiene.toFixed(2))}
+                                                                </Grid>
+                                                                <Grid item style={{"font-weight":"normal"}} sm={1}>
                                                                     {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
@@ -778,8 +784,11 @@ function BuscarTarifa() {
                                                             <Grid item sm={2}>
                                                                 Rango
                                                             </Grid>
-                                                            <Grid item sm={2}>
+                                                            <Grid item sm={1}>
                                                                 Importe
+                                                            </Grid>
+                                                            <Grid item sm={2}>
+                                                                Subtotal
                                                             </Grid>
                                                             <Grid item sm={1}>
                                                                 IVA
@@ -787,7 +796,7 @@ function BuscarTarifa() {
                                                             <Grid item sm={1}>
                                                                 Retiene
                                                             </Grid>
-                                                            <Grid item sm={2}>
+                                                            <Grid item sm={1}>
                                                                 Cálculo
                                                             </Grid>
                                                             <Grid item sm={2}>
@@ -799,16 +808,19 @@ function BuscarTarifa() {
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 {concepto.rangoMin} - {concepto.rangoMax}
                                                             </Grid>
-                                                            <Grid item style={{"font-weight":"normal"}} sm={2}>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
                                                                 ${agregarComasNumero((concepto.m_cImporte/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
-                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero((concepto.m_cImporteIva/productosCotizados[index].cantidad).toFixed(2))}
-                                                            </Grid>
-                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero((concepto.m_cImporteRetiene/productosCotizados[index].cantidad).toFixed(2))}
-                                                            </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
+                                                                ${agregarComasNumero(concepto.m_cImporte.toFixed(2))}
+                                                            </Grid>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
+                                                                ${agregarComasNumero(concepto.m_cImporteIva.toFixed(2))}
+                                                            </Grid>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
+                                                                ${agregarComasNumero(concepto.m_cImporteRetiene.toFixed(2))}
+                                                            </Grid>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
                                                                 {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
@@ -919,8 +931,11 @@ function BuscarTarifa() {
                                                             <Grid item sm={2}>
                                                                 Rango
                                                             </Grid>
-                                                            <Grid item sm={2}>
+                                                            <Grid item sm={1}>
                                                                 Importe
+                                                            </Grid>
+                                                            <Grid item sm={2}>
+                                                                Subtotal
                                                             </Grid>
                                                             <Grid item sm={1}>
                                                                 IVA
@@ -928,7 +943,7 @@ function BuscarTarifa() {
                                                             <Grid item sm={1}>
                                                                 Retiene
                                                             </Grid>
-                                                            <Grid item sm={2}>
+                                                            <Grid item sm={1}>
                                                                 Cálculo
                                                             </Grid>
                                                             <Grid item sm={2}>
@@ -940,16 +955,19 @@ function BuscarTarifa() {
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 {concepto.rangoMin} - {concepto.rangoMax}
                                                             </Grid>
-                                                            <Grid item style={{"font-weight":"normal"}} sm={2}>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
                                                                 ${agregarComasNumero((concepto.m_cImporte/productosCotizados[index].cantidad).toFixed(2))}
                                                             </Grid>
-                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero((concepto.m_cImporteIva/productosCotizados[index].cantidad).toFixed(2))}
-                                                            </Grid>
-                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                ${agregarComasNumero((concepto.m_cImporteRetiene/productosCotizados[index].cantidad).toFixed(2))}
-                                                            </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
+                                                                ${agregarComasNumero(concepto.m_cImporte.toFixed(2))}
+                                                            </Grid>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
+                                                                ${agregarComasNumero(concepto.m_cImporteIva.toFixed(2))}
+                                                            </Grid>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
+                                                                ${agregarComasNumero(concepto.m_cImporteRetiene.toFixed(2))}
+                                                            </Grid>
+                                                            <Grid item style={{"font-weight":"normal"}} sm={1}>
                                                                 {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
