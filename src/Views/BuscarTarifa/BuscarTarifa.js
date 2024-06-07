@@ -276,21 +276,21 @@ function BuscarTarifa() {
                                 </Grid>
                                 <Grid item sm={2}>
                                     <Autocomplete
+                                        noOptionsText="Sin resultados"
                                         size='small'
-                                        freeSolo
                                         value={filtrosBusqueda.direccionOrigen==null?"": filtrosBusqueda.direccionOrigen}
                                         onChange={(e, newValue) => {
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
                                                 direccionOrigen: newValue,
-                                                sucOrigen: newValue != null ? newValue.IdSucursal : -1,
-                                                ciudadOrigen: newValue != null ? newValue.IdOrigenDestino : -1
+                                                sucOrigen: newValue?.CodigoPostal ? newValue.IdSucursal : -1,
+                                                ciudadOrigen: newValue?.CodigoPostal ? newValue.IdOrigenDestino : -1
                                             })
                                         }}
                                         forcePopupIcon={false}
                                         options={listadoColoniasCPs}
                                         getOptionLabel={(option) =>
-                                            option?`${option.CodigoPostal} - ${option.Colonia}`:""
+                                            option.CodigoPostal?`${option.CodigoPostal} - ${option.Colonia}`:""
                                         }
                                         variant="outlined"
                                         style={{
@@ -362,21 +362,21 @@ function BuscarTarifa() {
                                 </Grid>
                                 <Grid item sm={2}>
                                     <Autocomplete
-                                        freeSolo
                                         size='small'
+                                        noOptionsText="Sin resultados"
                                         value={filtrosBusqueda.direccionDestino==null?"":filtrosBusqueda.direccionDestino}
                                         onChange={(e, newValue) => {
                                             setFiltrosBusqueda({
                                                 ...filtrosBusqueda,
                                                 direccionDestino: newValue,
-                                                sucDestino: newValue != null ? newValue.IdSucursal : -1,
-                                                ciudadDestino: newValue != null ? newValue.IdOrigenDestino : -1
+                                                sucDestino: newValue?.CodigoPostal ? newValue.IdSucursal : -1,
+                                                ciudadDestino: newValue?.CodigoPostal ? newValue.IdOrigenDestino : -1
                                             })
                                         }}
                                         forcePopupIcon={false}
                                         options={listadoColoniasCPs}
                                         getOptionLabel={(option) =>
-                                            option?`${option.CodigoPostal} - ${option.Colonia}`:""
+                                            option.CodigoPostal?`${option.CodigoPostal} - ${option.Colonia}`:""
                                         }
                                         variant="outlined"
                                         renderInput={(params) => (
@@ -436,7 +436,7 @@ function BuscarTarifa() {
 
                                                             <Autocomplete
                                                                 fullWidth
-                                                                freeSolo
+                                                                noOptionsText="Sin resultados"
                                                                 disableClearable
                                                                 size='small'
                                                                 value={p.desc}
