@@ -55,6 +55,8 @@ import {forEach} from "react-bootstrap/ElementChildren";
 import {getAddressFormated, getCurrentDate} from "../../Util/Util";
 import moment from "moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
+import {cambiarOperadorUnidad} from "../../Util/Contexts/UnidadesContext"; // Import css
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion"; // Import css
 import {reasignarOperador} from "../../Util/Contexts/OperadoresContext";
 import ListaUbicaciones from "./ListaUbicaciones"; // Import css
@@ -113,11 +115,14 @@ class UltimaMilla extends Component {
             closeFiltersMapDialogs: false,
             closeResumenParadas:false,
             openDialogGenerarRutaError: false,
+            operadorSeleccionado: null,
             showConfirmarUbicacion: false,
             showListaUbicaciones: false,
+            operadores: [],
+            unidad: null,
             paquetesSinCoord: [],
             titulo: "",
-            listadoOperadores:{},
+            listadoOperadores:[],
             idOperador:0,
             entregaEnSucursal: false,
         }
@@ -217,7 +222,6 @@ class UltimaMilla extends Component {
                         filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
-                console.log(filtered)
                 this.setState({
                     mostrarRuta: true,
                     modoEdicion: false,
@@ -411,19 +415,27 @@ class UltimaMilla extends Component {
         this.setState({fullScreen: false})
     }
 
-    selectGuiaReasignar(idParadaFuente, idOperador,listadoOperadores) {
-        this.setState({openDialog: true, paradaFuente: idParadaFuente, idOperador: idOperador,listadoOperadores:listadoOperadores})
+    selectGuiaReasignar(idParadaFuente, idGuia) {
+        obtenerOperadoresPorSucursal(this.state.idSucursal).then(({data}) => {
+            this.setState({
+                operadores: data,
+                unidad: idGuia
+            })
+        })
+        this.setState({openDialog: true, paradaFuente: idParadaFuente, idGuia: idGuia})
     }
 
     reasignarParada(event) {
-        event.preventDefault()
-        reasignarOperador(this.state.paradaFuente, this.state.idOperador).then((data) => {
-            showSuccess(data.data)
-            this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
-            this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
+        event.preventDefault();
+        cambiarOperadorUnidad(this.state.unidad,this.state.operadorSeleccionado.m_nIdOperador).then(({data}) => {
+            this.setState({openDialog: false, paradaFuente: 0, idGuia: 0});
+            this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda);
         })
-
-
+        // reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
+        //     showSuccess(data.data)
+        //     this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
+        //     this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
+        // })
     }
 
     changeFiltersMapDialogsState(isVisible){
@@ -511,28 +523,19 @@ class UltimaMilla extends Component {
                                             className="form-control"
                                             required
                                             fullWidth
-                                            value={this.state.idOperador}
-                                            onChange={(event) => {
-
-                                                let valorUM=this.state.ultimaMilla
-
-                                                let valorParada=this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(i=>i.m_nIdParadaUltimaMilla==this.state.paradaFuente)
-                                                valorParada.m_nIdOperador=event.target.value
-                                                let indexParada=valorUM.m_arrClsParadaUltimaMilla.findIndex(i=>i==valorParada)
-                                                valorUM.m_arrClsParadaUltimaMilla[indexParada]=valorParada
-                                                this.setState({
-                                                    ...this.state,ultimaMilla:valorUM,idOperador:valorParada.m_nIdOperador
-                                                })
-                                            }
-                                            }
+                                            value={this.state.operadorSeleccionado}
+                                            onChange={(event) => this.setState({
+                                                operadorSeleccionado: event.target.value
+                                            })}
                                             id="formatoSeleccionado"
                                             name="formatoSeleccionado"
                                         >
-                                            {this.state.listadoOperadores.map((op) => (
-                                                <MenuItem disabled={!op.operadorDisponible}
-                                                          value={op.m_nIdOperador}
+                                            {this.state.operadores.map((operador) => (
+                                                <MenuItem
+                                                    key={operador.m_nIdOperador}
+                                                    value={operador}
                                                 >
-                                                    {op.m_sNombreCompleto}
+                                                    {operador.m_sNombreCompleto}
                                                 </MenuItem>
                                             ))}
                                         </Select>

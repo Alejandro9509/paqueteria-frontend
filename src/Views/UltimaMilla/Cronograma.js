@@ -191,10 +191,7 @@ class Cronograma extends Component {
                                                                                         }
                                                                                         if (filterEstatus.length > 0 ){
                                                                                             if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
-                                                                                                obtenerOperadores().then((operadoresListado)=>{
-                                                                                                    this.props.selectGuiaReasignar(u.m_nIdParadaUltimaMilla, u.m_nIdOperador,operadoresListado.data.filter(op=>op.idSucursal==this.props.tour.m_nIdSucursalReceptora))
-                                                                                                })
-
+                                                                                                this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, tour.m_nIdUnidad)
                                                                                             }else{
                                                                                                 showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
                                                                                             }
