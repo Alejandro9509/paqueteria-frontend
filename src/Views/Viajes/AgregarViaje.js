@@ -996,10 +996,11 @@ class AgregarViaje extends Component {
     onSubmitDestinoInforme(e){
         e.preventDefault()
         var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === this.state.idInformeSeleccionado)
-        var arrayInformesAsignados = this.state.dataInformesAsignados
+        var arrayInformesAsignados = [...this.state.dataInformesAsignados]
         informeAsignar.m_nDestinoSeleccionado = this.state.destinoSeleccionado.IdDestino
         informeAsignar.m_sDestinoSeleccionado =  this.state.destinoSeleccionado.Destino
         arrayInformesAsignados.push(informeAsignar)
+        console.log(arrayInformesAsignados)
         this.setState({dataInformesAsignados: arrayInformesAsignados, openDestino: false})
         showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
     }
