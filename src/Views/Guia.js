@@ -3007,14 +3007,14 @@ function Guia(props) {
                             </a>
                         </li>
 
-                        <li>
-                            <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}
-                               onClick={() => {
-                                   setState({...state, openAsignarTrayectos: true})
-                               }}>
-                                <i className="fa fa-road"/> Asignar Trayectos
-                            </a>
-                        </li>
+                        {/*<li>*/}
+                        {/*    <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}*/}
+                        {/*       onClick={() => {*/}
+                        {/*           setState({...state, openAsignarTrayectos: true})*/}
+                        {/*       }}>*/}
+                        {/*        <i className="fa fa-road"/> Asignar Trayectos*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
 
                         <li>
                             <a onClick={handleShowCancelar}
