@@ -209,6 +209,7 @@ class CuentasCorreo extends Component {
                                        onChange={this.handleChange}
                                        className="form-control"
                                        type="text"
+                                       fullWidth
                                        label="Servidor"
                                        required
                                        value={this.state.servidor}
@@ -224,6 +225,7 @@ class CuentasCorreo extends Component {
                                        onChange={this.handleChange}
                                        className="form-control"
                                        required
+                                       fullWidth
                                        type="number"
                                        label="Puerto"
                                        value={this.state.puerto}
@@ -238,6 +240,7 @@ class CuentasCorreo extends Component {
                                        onChange={this.handleChange}
                                        className="form-control"
                                        required
+                                       fullWidth
                                        type="text"
                                        label="Usuario"
                                        value={this.state.usuario}
@@ -252,6 +255,7 @@ class CuentasCorreo extends Component {
                                        onChange={this.handleChange}
                                        className="form-control"
                                        required
+                                       fullWidth
                                        type="password"
                                        autoComplete="current-password"
                                        label="Contraseña"
