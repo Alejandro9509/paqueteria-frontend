@@ -234,9 +234,9 @@ export default function PlantillasImportacionAgregar(props){
             return {
                 ...state,
                 cliente: {
-                    idCliente: row.data.m_nIdCliente,
-                    numeroCliente: row.data.m_nNumeroCliente,
-                    nombreFiscal: row.data.m_sNombreFiscal,
+                    idCliente: row.m_nIdCliente,
+                    numeroCliente: row.m_nNumeroCliente,
+                    nombreFiscal: row.m_sNombreFiscal,
                 },
             }
         })

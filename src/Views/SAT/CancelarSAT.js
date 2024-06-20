@@ -368,12 +368,12 @@ export function RecoleccionResumen(props) {
         setData(data => {
             return {
                 ...data,
-                clientePaga: row.data,
-                idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
-                porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
-                aplicaSeguro: row.data.m_bTieneSeguro,
-                idTipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
-                observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
+                clientePaga: row,
+                idTipoSeguro: row.m_nIdTipoSeguro !== 0 ? row.m_nIdTipoSeguro : 5,
+                porcentajeSeguro:  row.m_cPorcentajeSeguro,
+                aplicaSeguro: row.m_bTieneSeguro,
+                idTipoCobro: configuraciones.detectarTipoCobro ? row.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+                observaciones: row.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.m_sAseguradora + ", Poliza: " + row.m_sPoliza) : "",
             }
         })
         setState({...state, openDialog: false})
