@@ -34,7 +34,7 @@ import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
-import {getUniqueListBy} from "../../Util/Util";
+import {getUniqueListBy, validarDerecho} from "../../Util/Util";
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -46,7 +46,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,keys, conceptosBase=[],ivaRetiene, ivaTraslada}) {
+function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,keys, conceptosBase=[],esRec,ivaRetiene, ivaTraslada}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
@@ -65,10 +65,10 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
 
         return (
             <div>
-                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleEditClick}>
+                <IconButton disabled={esRec?!validarDerecho(9101506):!validarDerecho(9101501)} color="inherit" size="small" aria-label="delete" onClick={handleEditClick}>
                     <EditIcon fontSize="large" />
                 </IconButton>
-                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                <IconButton disabled={esRec?!validarDerecho(9101507):!validarDerecho(9101502)} color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
                     <DeleteIcon fontSize="large" />
                 </IconButton>
             </div>
@@ -379,6 +379,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     dataPaquetes={dataPaquetes}
                     conceptosBase={conceptosBase}
                     keys={keys}
+                    esRec={esRec}
                     disabled={disabled}
                     resetPaquete={resetPaquete}
                 />
