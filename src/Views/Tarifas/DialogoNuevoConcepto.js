@@ -325,15 +325,15 @@ export default function DialogoNuevoConcepto(props) {
                                         getOptionLabel={(option) => option.m_sConcepto}
                                         variant="outlined"
                                         fullWidth
-                                        required          
-                                        style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                        required
                                         renderInput={(params) => (
                                             <div>
                                                 <TextField
                                                     {...params}
                                                     variant="outlined"
+                                                    size="small"
+                                                    className="form-control"
                                                     label="Concepto"
-                                                    margin="dense"
                                                     fullWidth
                                                     required
                                                     helperText={errores.errorConcepto?errores.errorTexto:''}
@@ -345,11 +345,11 @@ export default function DialogoNuevoConcepto(props) {
                                 </div>
                             </Grid>
                             <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined"
                                                onChange={handleChangePaquetev2}
                                                type="number"
                                                label="Importe"
+                                               size="small"
                                                style={{textAlign: "right"}}
                                                step="1"
                                                min="0"
@@ -358,15 +358,15 @@ export default function DialogoNuevoConcepto(props) {
                                                helperText={errores.errorImporte?errores.errorTextoImporte:''}
                                                error={errores.errorImporte}
                                     />
-                                </div>
                             </Grid>
                             <Grid item xs={6}>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                    <FormControl fullWidth variant="outlined" >
                                         <InputLabel id="trasladaLabel">Traslada</InputLabel>
                                         <Select
                                             labelId="trasladaLabel"
                                             label="Traslada"
+                                            size="small"
                                             className="form-control"
                                             value={concepto.traslada}
                                             onChange={handleChangePaquetev2}
@@ -386,20 +386,18 @@ export default function DialogoNuevoConcepto(props) {
                                 </label>
                             </Grid>
                             <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined"
                                                onChange={handleChangePaquetev2}
-                                               className="form-control"
                                                type="number"
                                                style={{textAlign: "right"}}
                                                disabled
+                                               size="small"
                                                label="Importe IVA"
                                                step="1"
                                                min="0"
                                                value={concepto.importeIVA}
                                                name="importeIVA"
                                     />
-                                </div>
                             </Grid>
                             <Grid item xs={6}>
                                 <label className="input select" style={{width: "100%"}}>
@@ -411,6 +409,7 @@ export default function DialogoNuevoConcepto(props) {
                                             className="form-control"
                                             onChange={handleChangePaquetev2}
                                             name="retiene"
+                                            size="small"
                                             value={concepto.retiene}
                                         >
                                             <option key={0} value={0}>Selecciona</option>
@@ -427,10 +426,8 @@ export default function DialogoNuevoConcepto(props) {
                                 </label>
                             </Grid>
                             <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined"
                                                onChange={handleChangePaquetev2}
-                                               className="form-control"
                                                type="number"
                                                style={{textAlign: "right"}}
                                                disabled
@@ -440,12 +437,10 @@ export default function DialogoNuevoConcepto(props) {
                                                value={concepto.importeRet}
                                                name="importeRet"
                                     />
-                                </div>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField variant="outlined" margin="dense"
+                                <TextField variant="outlined"
                                            onChange={handleChangePaquetev2}
-                                           className="form-control"
                                            type="number"
                                            style={{textAlign: "right"}}
                                            label="Descuento ($)"
