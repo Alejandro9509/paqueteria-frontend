@@ -42,6 +42,7 @@ import AgregarRemolques from "./AgregarRemolques";
 import {showSuccess, validarDerecho} from "../../Util/Util";
 import {alpha} from "@mui/material/styles";
 
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 
 const useStyles = theme => ({
     search: {
@@ -379,7 +380,6 @@ class FiltersMap extends Component {
     }
 
     asignarRemolquesUnidad(remolques) {
-        console.log(remolques)
         const {unidad} = this.state
         unidad.idRemolque1 = remolques.IdRemolque1.m_nIdUnidad
         unidad.idRemolque2 =  remolques.IdRemolque2 ? remolques.IdRemolque2.m_nIdUnidad : 0

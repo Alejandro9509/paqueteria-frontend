@@ -84,9 +84,9 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        console.log("Inicio de validación")
+        //console.log("Inicio de validación")
         if (g.m_sLatitud.length === 0) {
-            console.log("Se buscara la dirección")
+            //console.log("Se buscara la dirección")
             var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen : g.m_sCiudadDestino, g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario, g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente : g.m_sCodigoPostalDestinatario)
             guias.push({
                 ...g,
@@ -95,7 +95,7 @@ async function obtenerGuiasUbicacion(paquetes) {
                 index: i
             })
         } else {
-            console.log("Dirección ya obtenida")
+            //console.log("Dirección ya obtenida")
             guias.push({
                 ...g,
                 lat: g.m_sLatitud,

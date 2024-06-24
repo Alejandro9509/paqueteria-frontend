@@ -65,6 +65,17 @@ function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
     return result
 }
 
+function actualizarCoordenadasRemitentesDestinatarios(rfc, nombre, latitud, longitud, idRecoleccion){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/ConfirmarCoordenadas`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {
+            nombre: nombre, rfc: rfc, latitud: latitud, longitud: longitud, numero: idRecoleccion
+        }), { headers })
+    );
+    return result
+}
+
 function obtenerClientesPaginado(pagina,registros, busqueda){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
     let result;
@@ -73,5 +84,12 @@ function obtenerClientesPaginado(pagina,registros, busqueda){
         );
     return result
 }
-export {obtenerRemitentesDestinatarios,
-    obtenerRemitentesDestinatariosId, obtenerUbicacion, actualizarRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado,obtenerClientesPaginado}
+export {
+    obtenerRemitentesDestinatarios,
+    obtenerRemitentesDestinatariosId,
+    obtenerUbicacion,
+    actualizarRemitentesDestinatarios,
+    obtenerRemitentesDestinatariosPaginado,
+    obtenerClientesPaginado,
+    actualizarCoordenadasRemitentesDestinatarios
+}

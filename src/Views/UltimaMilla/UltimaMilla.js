@@ -1,4 +1,4 @@
-import React, {Component, useEffect} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
@@ -35,6 +35,7 @@ import {
     validarUnidadesSeleccionadas,
     validarUnidadOcupada, obtenerUltimaMillaFechaImagenes
 } from "../../Util/Contexts/UltimaMillaContext";
+import {actualizarCoordenadasRemitentesDestinatarios} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
 import MessageIcon from "@mui/icons-material/Message";
@@ -51,12 +52,15 @@ import Buttons from "../../Util/CarruselButtons";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {forEach} from "react-bootstrap/ElementChildren";
-import {getCurrentDate} from "../../Util/Util";
+import {getAddressFormated, getCurrentDate} from "../../Util/Util";
 import moment from "moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
 import {cambiarOperadorUnidad} from "../../Util/Contexts/UnidadesContext"; // Import css
 import {reasignarOperador} from "../../Util/Contexts/OperadoresContext";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
+import ListaUbicaciones from "./ListaUbicaciones"; // Import css
 
 
 function showSuccess(mensaje) {
@@ -88,6 +92,7 @@ const MarkerIcon = new L.Icon({
 
 var actualizar = true
 
+
 class UltimaMilla extends Component {
     constructor(props) {
         super(props);
@@ -115,7 +120,12 @@ class UltimaMilla extends Component {
             listadoOperadores:[],
             idOperador:0,
             operadores: [],
-            unidad: null
+            unidad: null,
+            showConfirmarUbicacion: false,
+            showListaUbicaciones: false,
+            paquetesSinCoord: [],
+            titulo: "",
+            entregaEnSucursal: false,
         }
         this.generarRuta = this.generarRuta.bind(this)
         this.getLocation = this.getLocation.bind(this)
@@ -133,9 +143,26 @@ class UltimaMilla extends Component {
         this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
         this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
         this.closeResumenParada = this.closeResumenParada.bind(this)
+        this.mostrarDialogoListado = this.mostrarDialogoListado.bind(this)
+        this.cerrarListadoUbicaciones = this.cerrarListadoUbicaciones.bind(this)
+        this.handleAceptar = this.handleAceptar.bind(this)
     }
 
+    mostrarDialogoListado = (isVisible) => {
+        this.setState({showListaUbicaciones: isVisible});
+    }
 
+    cerrarListadoUbicaciones (){
+        this.mostrarDialogoListado(false)
+    }
+
+    async handleAceptar (e, paquetes) {
+        e.preventDefault();
+        var filtrosTemp = this.state.filtros;
+        filtrosTemp.paquetesSeleccionadas = paquetes;
+        this.mostrarDialogoListado(false);
+        //this.generarRuta(filtrosTemp);
+    }
     componentDidMount() {
     }
 
@@ -285,6 +312,7 @@ class UltimaMilla extends Component {
 
     async generarRuta(data) {
         this.setState({tour: null})
+        console.log(this.state);
         if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
             let unidadYaAsignada = false
@@ -302,7 +330,32 @@ class UltimaMilla extends Component {
             if (unidadYaAsignada){
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
             }else{
-                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                let paqSinLoc = [];
+                let guiasSinLoc = [];
+                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas);
+                data.paquetesSeleccionadas.forEach((paquete) => {
+                    if(paquete.m_sLatitud === "0" || paquete.m_sLongitud === "0" || paquete.m_sLatitud === "" || paquete.m_sLongitud === ""){
+                        paquete.actualizado = false;
+                        paqSinLoc.push(paquete);
+                    }
+                })
+                guias.forEach((guia) => {
+                    //console.log(guia)
+                    if(guia.m_sLatitud === "0" || guia.m_sLongitud === "0"){
+                        guiasSinLoc.push(guia);
+                    }
+                })
+                console.log(paqSinLoc);
+                if(paqSinLoc.length > 0){
+                    this.setState({
+                        showListaUbicaciones: true,
+                        paquetesSinCoord: paqSinLoc,
+                        filtros: data
+                    })
+                    this.mostrarDialogoListado(true);
+                    return
+                }
+
                 await obtenerParametrosConfiguracion().then((respuesta) => {
                     data.finishDate = moment(new Date()).add(respuesta.data.HorasLimiteEntregasUltimaMilla, 'hours').format('YYYY-MM-DDTHH:mm')
                 })
@@ -315,7 +368,10 @@ class UltimaMilla extends Component {
                                 if (i.reasons[0]?.code === 'TIME_WINDOW_CONSTRAINT'){
                                     i.reasons[0].descripcion = `El registro ${guias[index].m_sFolio} no puede ser agregado a la ruta porque no alcanzaría a ser completado en límite de horas configurado.`
                                 }else if (i.reasons[0]?.code === 'REACHABLE_CONSTRAINT'){
-                                    i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
+                                    this.setState({showListaUbicaciones: true, paquetesSinCoord: paqSinLoc})
+                                    this.mostrarDialogoMapa(true);
+                                    //i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
+
                                 }else{
                                     i.reasons[0].descripcion = `No se pudo agregar a la ruta el registro ${guias[index].m_sFolio}.`
                                 }
@@ -337,7 +393,6 @@ class UltimaMilla extends Component {
     ultimaMillaCompletada(ultimaMilla){
         return !ultimaMilla.m_arrClsProGuia.find(i => i.m_nEstatusUlimaMilla !== 3 && i.m_nEstatusUlimaMilla !== 4)
     }
-
 
     openFullscreen() {
         var elem = document.getElementById("mapFullScreen");
@@ -399,6 +454,57 @@ class UltimaMilla extends Component {
     }
 
     render() {
+        /*let obtenerDatosDireccion = (esRecoleccion) => {
+            let esDiferenteDomicilio = true; //state.diferenteEntrega
+            if (!esRecoleccion) {
+                if (esDiferenteDomicilio) {
+                    return {
+                        nombreLugar: this.state.destinatario.nombreDestinatario,
+                        numeroInterior: '',
+                        numeroExterior: '',
+                        calle: this.state.entregaDD.domicilio,
+                        colonia: '',
+                        ciudad: this.state.entregaDD.municipio,
+                        estado: this.state.entregaDD.estado,
+                        pais: this.state.entregaDD.pais,
+                        codigoPostal: this.state.entregaDD.codigoPostal?.m_sCP,
+                        direccionCompleta: getAddressFormated(
+                            this.state.entregaDD.domicilio,
+                            null,
+                            null,
+                            null,
+                            this.state.entregaDD.codigoPostal?.m_sCP,
+                            this.state.entregaDD.municipio,
+                            this.state.entregaDD.estado,
+                            this.state.entregaDD.pais
+                        )
+                    }
+                }
+                /!*else {
+                    return {
+                        nombreLugar: destinatario.nombreDestinatario,
+                        numeroInterior: destinatario.numeroIntDestinatario,
+                        numeroExterior: destinatario.numeroExtDestinatario,
+                        calle: destinatario.calleDestinatario,
+                        colonia: destinatario.coloniaDestinatario,
+                        ciudad: destinatario.municipioTexto,
+                        estado: destinatario.estadoTexto,
+                        pais: destinatario.paisTexto,
+                        codigoPostal: destinatario.codigoPostalDestinatario?.m_sCP,
+                        direccionCompleta: getAddressFormated(
+                            destinatario.calleDestinatario,
+                            destinatario.numeroExtDestinatario,
+                            destinatario.numeroIntDestinatario,
+                            destinatario.coloniaDestinatario,
+                            destinatario.codigoPostalDestinatario?.m_sCP,
+                            destinatario.municipioTexto,
+                            destinatario.estadoTexto,
+                            destinatario.paisTexto
+                        )
+                    }
+                }*!/
+            }
+        }*/
 
         return (
             <div>
@@ -461,7 +567,27 @@ class UltimaMilla extends Component {
                         </Cabecera>
                     </header>
                 }
-
+                {/*{
+                    this.state.showConfirmarUbicacion &&
+                    <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion}
+                                        open={this.state.showConfirmarUbicacion}
+                                        titulo={this.state.titulo}
+                                        remitente={false}
+                                        mostrarDialogoMapa={this.mostrarDialogoMapa}
+                                        direccion={this.state.obtenerDatosDireccion}
+                                        onClose={() => this.state({showConfirmarUbicacion: false})}
+                    />
+                }*/}
+                {
+                    this.state.showListaUbicaciones &&
+                    <ListaUbicaciones
+                                        open={this.state.showListaUbicaciones}
+                                        paquetes={this.state.paquetesSinCoord}
+                                        onClose={this.cerrarListadoUbicaciones}
+                                        handleAceptar={this.handleAceptar}
+                                        cerrarListadoUbicaciones={this.cerrarListadoUbicaciones}
+                    />
+                }
                 <section>
                     <div className="widget-content" id={"mapFullScreen"}>
                         <div className="row"
