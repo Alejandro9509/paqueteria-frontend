@@ -230,6 +230,7 @@ export default function PlantillasImportacionAgregar(props){
     },[props.value])
 
     const handlePatrocinadorSelected = (row) => {
+        console.log("Entro")
         setState(state => {
             return {
                 ...state,
