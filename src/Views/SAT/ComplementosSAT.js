@@ -394,6 +394,15 @@ function ComplementosSAT(props) {
 
     const handleChangeComplementoSat = (idComplemento, data,caracter) => {
        setDetectar(true)
+        if (data.target?.name === "descripcionEmbalajeSAT"){
+            setDataComplemento(dataComplemento =>{
+                return {
+                    ...dataComplemento,
+                    descripcionEmbalajeSAT: data.target.value
+                }
+            });
+            return;
+        }
         if (idComplemento === 1){
             setDataComplemento(dataComplemento =>{
                 return {

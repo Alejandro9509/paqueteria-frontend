@@ -636,6 +636,7 @@ function CrearConceptoSAT(props) {
                                 <TextField
                                     variant="outlined"
                                     size="small"
+                                    fullWidth
                                     type="text"
                                     className="form-control"
                                     label="Clave SAT"
@@ -660,6 +661,7 @@ function CrearConceptoSAT(props) {
                                     size="small"
                                     className="form-control"
                                     type="text"
+                                    fullWidth
                                     label="Material peligroso"
                                     aria-readonly={true}
                                     required
@@ -672,6 +674,7 @@ function CrearConceptoSAT(props) {
                             <Grid item xs={12} sm={2}>
                                 <Button
                                     type="button"
+                                    fullWidth
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
@@ -686,6 +689,7 @@ function CrearConceptoSAT(props) {
                                 <TextField
                                     variant="outlined"
                                     size="small"
+                                    fullWidth
                                     type="text"
                                     className="form-control"
                                     label="Clave SAT"
@@ -710,6 +714,7 @@ function CrearConceptoSAT(props) {
                                     size="small"
                                     className="form-control"
                                     type="text"
+                                    fullWidth
                                     label="Embalaje"
                                     aria-readonly={true}
                                     required
@@ -724,6 +729,7 @@ function CrearConceptoSAT(props) {
                                     variant="outlined"
                                     size="small"
                                     type="text"
+                                    fullWidth
                                     className="form-control"
                                     label="Descripción embalaje"
                                     disabled={props.consulta}
@@ -752,6 +758,7 @@ function CrearConceptoSAT(props) {
                                     type="text"
                                     className="form-control"
                                     label="Clave SAT"
+                                    fullWidth
                                     aria-readonly={true}
                                     value={props.dataComplemento.claveFraccion}
                                     name="claveFraccion"
@@ -770,6 +777,7 @@ function CrearConceptoSAT(props) {
                                 <TextField
                                     variant="outlined"
                                     size="small"
+                                    fullWidth
                                     className="form-control"
                                     type="text"
                                     label="Fracción arancelaria"
@@ -802,6 +810,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         size="small"
+                                        fullWidth
                                         disabled={props.consulta}
                                         className="form-control"
                                         label="Clave SAT"
@@ -843,6 +852,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        fullWidth
                                         id={"c2c5q"}
                                         size="small"
                                         value={props.dataComplemento.nombreIngredienteActivo}
@@ -865,6 +875,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c2c4p"}
+                                        fullWidth
                                         size="small"
                                         inputProps={{maxLength:150}}
                                         value={props.dataComplemento.nomQuimico}
@@ -885,6 +896,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="text"
+                                        fullWidth
                                         size="small"
                                         inputProps={{maxLength:50}}
                                         value={props.dataComplemento.denominacionGenerica}
@@ -908,6 +920,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         id={"c1c3b"}
                                         type="text"
+                                        fullWidth
                                         size="small"
                                         inputProps={{maxLength:50}}
                                         value={props.dataComplemento.denominacionDistintiva}
@@ -929,6 +942,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         size="small"
+                                        fullWidth
                                         value={props.dataComplemento.fabricante}
                                         id={"c1c2c3d"}
                                         inputProps={{maxLength:240}}
@@ -950,6 +964,7 @@ function CrearConceptoSAT(props) {
                                     <TextField
                                         variant="outlined"
                                         type="date"
+                                        fullWidth
                                         id={"c1c2c3e"}
                                         label={"Fecha de Caducidad"}
                                         value={props.dataComplemento.fechaCaducidad}
@@ -973,6 +988,7 @@ function CrearConceptoSAT(props) {
                                             id={"c1c2c3f"}
                                             type="text"
                                             size="small"
+                                            fullWidth
                                             label={"Lote Medicamento"}
                                             value={props.dataComplemento.loteMedicamento}
                                             inputProps={{maxLength:10}}
@@ -994,6 +1010,7 @@ function CrearConceptoSAT(props) {
                                             variant="outlined"
                                             type="text"
                                             size="small"
+                                            fullWidth
                                             disabled={props.consulta}
                                             className="form-control"
                                             label="Clave SAT"
@@ -1037,6 +1054,7 @@ function CrearConceptoSAT(props) {
                                             variant="outlined"
                                             type="text"
                                             size="small"
+                                            fullWidth
                                             className="form-control"
                                             label="Clave SAT"
                                             aria-readonly={true}
@@ -1077,6 +1095,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c1c3i"}
+                                        fullWidth
                                         size="small"
                                         inputProps={{maxLength:15}}
                                         value={props.dataComplemento.regSanitario_folioAut}
@@ -1098,6 +1117,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c4j"}
+                                        fullWidth
                                         size="small"
                                         inputProps={{maxLength:15}}
                                         value={props.dataComplemento.numCAS}
@@ -1119,6 +1139,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5k"}
+                                        fullWidth
                                         size="small"
                                         inputProps={{maxLength:60}}
                                         label={"Núm. Registro CICLOPLAFEST"}
@@ -1140,6 +1161,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5l"}
+                                        fullWidth
                                         size="small"
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1162,6 +1184,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5m"}
+                                        fullWidth
                                         size="small"
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1184,6 +1207,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5n"}
+                                        fullWidth
                                         size="small"
                                         multiline
                                         style={{overflowY:"auto"}}
@@ -1206,6 +1230,7 @@ function CrearConceptoSAT(props) {
                                         variant="outlined"
                                         type="text"
                                         id={"c5o"}
+                                        fullWidth
                                         size="small"
                                         multiline
                                         style={{overflowY:"auto"}}
