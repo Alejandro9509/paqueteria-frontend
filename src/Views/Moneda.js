@@ -80,7 +80,11 @@ function Moneda() {
         if (state.idMoneda != 0) {
             modificarMonedas(state.idMoneda, params).then(respuesta => {
                 showSuccess(respuesta.data)
-                window.location.reload();
+                getAllData();
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess(err.response?.data)
@@ -90,6 +94,10 @@ function Moneda() {
                 showSuccess(respuesta.data)
                 window.location.reload();
               getAllData();
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
             }).catch(err => {
                 console.log(err)
                 showSuccess(err.response?.data)
@@ -134,6 +142,8 @@ function Moneda() {
                 abreviacion: respuesta.data.m_sAbreviacion,
             })
         });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
     function handleShowConsultar(id) {
         obtenerMonedasId(id).then(respuesta => {
@@ -148,6 +158,8 @@ function Moneda() {
                 abreviacion: respuesta.data.m_sAbreviacion,
             })
         });
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
 
     function handleShowAgregar() {
@@ -160,6 +172,8 @@ function Moneda() {
             simbolo: "",
             abreviacion: "",
         })
+        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
     }
 
     const handleChange = event => {
@@ -180,15 +194,15 @@ function Moneda() {
                 return (
                     <Root>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101269)}>
-                            <a   href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdMoneda))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a onClick={() => (handleShowModificar(row.row.m_nIdMoneda))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a >
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdMoneda))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdMoneda))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101270)}>
-                            <a  href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdMoneda))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a  className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdMoneda))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </Root>
@@ -238,6 +252,10 @@ function Moneda() {
             return;
         }
         getAllData();
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
     }, []);
 
     function getAllData() {
@@ -290,19 +308,19 @@ function Moneda() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado" onClick={() => getAllData()}>
+                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
                         <li>
-                            <a className={validarDerecho(9101268)?"":classes.disabled}  data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101268)?"":classes.disabled}  data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
