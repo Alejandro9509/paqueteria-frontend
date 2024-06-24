@@ -118,7 +118,7 @@ function cargarDesdeServidor(pagina,registros){
                   rows={rows}
                   getRowId={((row) => row.m_nIdCliente)}
                   onRowSelectionModelChange={(newRowSelectionModel,e) => {
-                      rowSelect=rows.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0])
+                      rowSelect=rows.find(i=>i.m_nNumeroCliente===newRowSelectionModel[0])
                   }}
                   page={pagina}
                   pagination
@@ -142,6 +142,7 @@ function cargarDesdeServidor(pagina,registros){
                   <button
                       onClick={() => {
                           if(rowSelect !=null){
+                              console.log(rowSelect)
                               handlePatrocinadorSelected(rowSelect)}
                           }}
                       className="btn btn-primary primary-btn"

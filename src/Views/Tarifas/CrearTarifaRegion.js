@@ -121,14 +121,14 @@ function CrearTarifaRegion(props) {
 
     const handlePatrocinadorSelected = (row) => {
         if (props.convenio){
-            obtenerClienteTieneConvenio(row.data.m_nIdCliente, 3).then(respuesta => {
+            obtenerClienteTieneConvenio(row.m_nIdCliente, 3).then(respuesta => {
                 if (respuesta.data.value){
                     showSuccess("El cliente seleccionado ya tiene convenio activo.")
                 }else{
                     setState(state => {
                         return {
                             ...state,
-                            cliente: row.data,
+                            cliente: row,
                         }
                     })
                 }
