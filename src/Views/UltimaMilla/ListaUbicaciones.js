@@ -12,7 +12,7 @@ import {
     makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
     TextField, Tooltip,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {
     actualizarCoordenadasRemitentesDestinatarios,
     obtenerUbicacion
