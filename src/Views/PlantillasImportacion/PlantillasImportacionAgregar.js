@@ -1161,7 +1161,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Es fármaco"
                                             size="small"
-                                            name="EsFarmaco"
+                                            name="esFarmaco"
                                             value={state.esFarmaco}
                                             onChange={handleOnChange}
                                         />
@@ -1171,7 +1171,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Clave de Sector COFEPRIS"
                                                    size="small"
-                                                   name="ClaveSectorCofepris"
+                                                   name="claveSectorCofepris"
                                                    value={state.claveSectorCofepris}
                                                    onChange={handleOnChange}
                                         />
@@ -1181,7 +1181,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Nombre de Ingrediente Activo"
                                                    size="small"
-                                                   name="NombreIngredienteActivo"
+                                                   name="nombreIngredienteActivo"
                                                    value={state.nombreIngredienteActivo}
                                                    onChange={handleOnChange}
                                         />
@@ -1191,7 +1191,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Nombre Químico"
                                                    size="small"
-                                                   name="NombreQuimico"
+                                                   name="nombreQuimico"
                                                    value={state.nombreQuimico}
                                                    onChange={handleOnChange}
                                         />
@@ -1201,7 +1201,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Denominación Genérica"
                                                    size="small"
-                                                   name="DenominacionGenericaProd"
+                                                   name="denominacionGenericaProd"
                                                    value={state.denominacionGenericaProd}
                                                    onChange={handleOnChange}
                                         />
@@ -1211,7 +1211,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Denominación Distintiva"
                                                    size="small"
-                                                   name="DenominacionDistintivaProd"
+                                                   name="denominacionDistintivaProd"
                                                    value={state.denominacionDistintivaProd}
                                                    onChange={handleOnChange}
                                         />
@@ -1221,7 +1221,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Fabricante"
                                                    size="small"
-                                                   name="Fabricante"
+                                                   name="fabricante"
                                                    value={state.fabricante}
                                                    onChange={handleOnChange}
                                         />
@@ -1231,7 +1231,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Fecha de Caducidad (dd/MM/AAAA o AAAA-MM-dd)"
                                                    size="small"
-                                                   name="FechaCaducidad"
+                                                   name="fechaCaducidad"
                                                    value={state.fechaCaducidad}
                                                    onChange={handleOnChange}
                                         />
@@ -1241,7 +1241,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Lote de Medicamento"
                                                    size="small"
-                                                   name="LoteMedicamento"
+                                                   name="loteMedicamento"
                                                    value={state.loteMedicamento}
                                                    onChange={handleOnChange}
                                         />
@@ -1251,7 +1251,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Clave de Forma Farmacéutica"
                                                    size="small"
-                                                   name="FormaFarmaceutica"
+                                                   name="formaFarmaceutica"
                                                    value={state.formaFarmaceutica}
                                                    onChange={handleOnChange}
                                         />
@@ -1261,7 +1261,7 @@ export default function PlantillasImportacionAgregar(props){
                                                    variant="outlined"
                                                    label="Clave de Condición Especial de Transporte"
                                                    size="small"
-                                                   name="CondicionesEspTransp"
+                                                   name="condicionesEspTransp"
                                                    value={state.condicionesEspTransp}
                                                    onChange={handleOnChange}
                                         />
@@ -1271,7 +1271,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Registro Sanitario/Folio de Autorización"
                                             size="small"
-                                            name="RegistroSanitarioFolioAutorizacion"
+                                            name="registroSanitarioFolioAutorizacion"
                                             value={state.registroSanitarioFolioAutorizacion}
                                             onChange={handleOnChange}
                                         />
@@ -1281,7 +1281,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Número CAS"
                                             size="small"
-                                            name="NumeroCAS"
+                                            name="numeroCAS"
                                             value={state.numeroCAS}
                                             onChange={handleOnChange}
                                         />
@@ -1291,7 +1291,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Núm. Registro CICLOPLAFEST"
                                             size="small"
-                                            name="NumRegSanPlagCOFEPRIS"
+                                            name="numRegSanPlagCOFEPRIS"
                                             value={state.numRegSanPlagCOFEPRIS}
                                             onChange={handleOnChange}
                                         />
@@ -1301,7 +1301,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Datos del Fabricante"
                                             size="small"
-                                            name="DatosFabricante"
+                                            name="datosFabricante"
                                             value={state.datosFabricante}
                                             onChange={handleOnChange}
                                         />
@@ -1311,7 +1311,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Datos del Formulador"
                                             size="small"
-                                            name="DatosFormulador"
+                                            name="datosFormulador"
                                             value={state.datosFormulador}
                                             onChange={handleOnChange}
                                         />
@@ -1321,7 +1321,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Datos del Maquilador"
                                             size="small"
-                                            name="DatosMaquilador"
+                                            name="datosMaquilador"
                                             value={state.datosMaquilador}
                                             onChange={handleOnChange}
                                         />
@@ -1331,7 +1331,7 @@ export default function PlantillasImportacionAgregar(props){
                                             variant="outlined"
                                             label="Uso Autorizado"
                                             size="small"
-                                            name="UsoAutorizado"
+                                            name="usoAutorizado"
                                             value={state.usoAutorizado}
                                             onChange={handleOnChange}
                                         />
