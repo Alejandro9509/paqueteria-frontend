@@ -428,9 +428,10 @@ class UltimaMilla extends Component {
 
     reasignarParada(event) {
         event.preventDefault();
-        cambiarOperadorUnidad(this.state.unidad,this.state.operadorSeleccionado.m_nIdOperador).then(({data}) => {
-            this.setState({openDialog: false, paradaFuente: 0, idGuia: 0});
-            this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda);
+        reasignarOperador(this.state.paradaFuente, this.state.idOperador).then((data) => {
+            showSuccess(data.data)
+            this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
+            this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
         })
         // reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
         //     showSuccess(data.data)
