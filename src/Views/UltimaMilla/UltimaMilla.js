@@ -57,8 +57,8 @@ import moment from "moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
 import {cambiarOperadorUnidad} from "../../Util/Contexts/UnidadesContext"; // Import css
-import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion"; // Import css
 import {reasignarOperador} from "../../Util/Contexts/OperadoresContext";
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import ListaUbicaciones from "./ListaUbicaciones"; // Import css
 
 
@@ -115,7 +115,6 @@ class UltimaMilla extends Component {
             closeFiltersMapDialogs: false,
             closeResumenParadas:false,
             openDialogGenerarRutaError: false,
-            operadorSeleccionado: null,
             showConfirmarUbicacion: false,
             showListaUbicaciones: false,
             operadores: [],
