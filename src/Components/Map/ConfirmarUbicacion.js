@@ -171,27 +171,30 @@ class ConfirmarUbicacion extends Component {
 
                     </Grid>
                     <br/>
-                    <Grid item sm={12}>
-                        <TextField
-                            margin="dense"
-                            className="form-control"
-                            variant={"filled"}
-                            label={"Direccion"}
-                            value={this.state.busqueda}
-                            onChange={(e) => this.setState({busqueda: e.target.value})}
-                            InputProps={{
-                                endAdornment: <SearchIcon style={{
-                                    color: "#F9A03E",
-                                    fontSize: 32,
-                                    paddingInlineEnd: 0,
-                                    paddingRight: 0,
-                                    paddingBlockEnd: 0,
-                                    paddingLeft: 0,
-                                    paddingBlock: 0,
-                                    cursor: "pointer"
-                                }} onClick={this.buscarDireccion}/>,
-                            }}
-                        />
+                    <Grid container sm={12}>
+                        <Grid item sm={6}>
+                            <TextField
+                                margin="dense"
+                                fullWidth
+                                className="form-control"
+                                variant={"filled"}
+                                label={"Direccion"}
+                                value={this.state.busqueda}
+                                onChange={(e) => this.setState({busqueda: e.target.value})}
+                                InputProps={{
+                                    endAdornment: <SearchIcon style={{
+                                        color: "#F9A03E",
+                                        fontSize: 32,
+                                        paddingInlineEnd: 0,
+                                        paddingRight: 0,
+                                        paddingBlockEnd: 0,
+                                        paddingLeft: 0,
+                                        paddingBlock: 0,
+                                        cursor: "pointer"
+                                    }} onClick={this.buscarDireccion}/>,
+                                }}
+                            />
+                        </Grid>
                     </Grid>
                     <br/>
                     <MapContainer style={{width: "100%", height: "500px"}} center={[32.62781, -115.44632]} zoom={18}
