@@ -11,14 +11,16 @@ import TableRemolques from "./TableRemolques";
 import { obtenerUnidadesConvoy } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
 
-function DialogRemolques({ open, handleClose, handleAccept, idConvoy }) {
+function DialogRemolques({ open, handleClose, handleAccept, idConvoy, isTorton }) {
     const [selectedRow, setSelectedRow] = useState(null);
     const [listadoRemolques, setListadoRemolques] = useState([]);
 
     useEffect(() => {
         if (open){
             if(idConvoy === ""){
-                showSuccess('La unidad seleccionada no tiene un convoy definido')
+                if(!isTorton){
+                    showSuccess('La unidad seleccionada no tiene un convoy definido el que ando viendo')
+                }
                 handleClose()
             } else {
                 obtenerUnidadesConvoy(idConvoy).then((respuesta) => {
