@@ -517,18 +517,25 @@ class UltimaMilla extends Component {
                         <DialogContent>
                             <form onSubmit={this.reasignarParada}>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" size="small">
+                                    <FormControl fullWidth variant="outlined" size="small" sx={{ marginTop: 1 }}>
                                         <InputLabel id="sucursalListadoLabel">Operador</InputLabel>
                                         <Select
                                             labelId="sucursalListadoLabel"
-                                            label="Formato"
+                                            label="Operador"
                                             className="form-control"
                                             required
                                             fullWidth
                                             value={this.state.operadorSeleccionado}
-                                            onChange={(event) => this.setState({
-                                                operadorSeleccionado: event.target.value
-                                            })}
+                                            onChange={(event) => {
+                                                if(event.target.value.ocupado){
+                                                    showSuccess("Este operador ya se encuentra en ruta.")
+                                                    return
+                                                }
+                                                this.setState({
+                                                    operadorSeleccionado: event.target.value
+                                                })
+                                            }
+                                        }
                                             id="formatoSeleccionado"
                                             name="formatoSeleccionado"
                                         >
@@ -537,7 +544,7 @@ class UltimaMilla extends Component {
                                                     key={operador.m_nIdOperador}
                                                     value={operador}
                                                 >
-                                                    {operador.m_sNombreCompleto}
+                                                    {`${operador.m_sNombreCompleto} ${operador.ocupado ? "- En ruta" : ""}`}
                                                 </MenuItem>
                                             ))}
                                         </Select>
