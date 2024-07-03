@@ -4030,7 +4030,18 @@ function Embarque(props) {
                                                                            required
                                                                            disabled={state.agregar === "Consultar" || !state.aplicaSeguro || state.embarqueConGuia}
                                                                            label="Porcentaje de seguro"
-                                                                           onChange={handleChange}
+                                                                           onChange={(e) => {
+                                                                            const value = e.target.value;
+                                                                            // Validar y permitir solo hasta 3 decimales
+                                                                            if (/^\d*\.?\d{0,3}$/.test(value)) {
+                                                                                // Si el valor es válido (número con hasta 3 decimales), permitir la entrada
+                                                                                handleChange({ target: { name: e.target.name, value: value } });
+                                                                            } else {
+                                                                                // Si el valor tiene más de 3 decimales, formatearlo para que solo tenga 3
+                                                                                const formattedValue = parseFloat(value).toFixed(3);
+                                                                                handleChange({ target: { name: e.target.name, value: formattedValue } });
+                                                                            }
+                                                                        }}
                                                                            value={state.porcentajeSeguro}
                                                                            placeholder="%"
                                                                            name="porcentajeSeguro"
