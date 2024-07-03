@@ -79,7 +79,8 @@ class UnidadesList extends Component {
             guias: this.props.paquetes.filter(p => !p.m_bEsRecoleccion).map(p => ({m_nIdGuia: p.m_nId}))
         }
         obtenerUnidadesUltimaMilla(this.props.sucursalId, params).then(({data}) => {
-            this.setState({unidades: data})
+            const unidadesDisponibles = data.filter(item => item.ocupado === false);
+            this.setState({unidades: unidadesDisponibles})
         })
     }
 
