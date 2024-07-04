@@ -418,6 +418,10 @@ class UltimaMilla extends Component {
 
     selectGuiaReasignar(idParadaFuente, idGuia) {
         obtenerOperadoresPorSucursal(this.state.idSucursal).then(({data}) => {
+            const operadoresDisponibles = data.filter(operador => operador.ocupado === false)
+            if(operadoresDisponibles.length < 1){
+                showSuccess("Todos los operadores se encuentran en ruta.")
+            }
             this.setState({
                 operadores: data,
                 unidad: idGuia
