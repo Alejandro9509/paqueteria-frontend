@@ -176,6 +176,7 @@ class ConfirmarUbicacion extends Component {
                             margin="dense"
                             className="form-control"
                             variant={"filled"}
+                            fullWidth
                             label={"Direccion"}
                             value={this.state.busqueda}
                             onChange={(e) => this.setState({busqueda: e.target.value})}
