@@ -230,7 +230,7 @@ class DetalleParadas extends Component {
     }
     descargarXMLCFDI(id,esRecoleccion, folio) {
         let fechaHoraActual=new Date()
-        let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+fechaHoraActual.getMonth().toString().padStart(2,'0')+'-'+fechaHoraActual.getDay().toString().padStart(2,'0'))
+        let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+(fechaHoraActual.getMonth()+1).toString().padStart(2,'0')+'-'+fechaHoraActual.getDay().toString().padStart(2,'0'))
         let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
         obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then(({data}) => {
 
@@ -358,7 +358,7 @@ class DetalleParadas extends Component {
                         label: 'Sí',
                         onClick: () => {
                             let fechaHoraActual=new Date()
-                            let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+fechaHoraActual.getMonth().toString().padStart(2,'0')+'-'+fechaHoraActual.getDay().toString().padStart(2,'0'))
+                            let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+(fechaHoraActual.getMonth()+1).toString().padStart(2,'0')+'-'+fechaHoraActual.getDay().toString().padStart(2,'0'))
                             let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
 
                             obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then((result) => {
