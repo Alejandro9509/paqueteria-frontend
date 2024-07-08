@@ -373,9 +373,13 @@ class FiltersMap extends Component {
 
     asignarOperadorUnidad(event) {
         event.preventDefault()
-        cambiarOperadorUnidad(this.state.unidadSeleccionada,this.state.operadorSeleccionada.m_nIdOperador).then(({data}) => {
-            this.setState({openUnidades: true, openOperadorDialog: false,unidadesSeleccionadas: []})
-        })
+        if (this.state.operadorSeleccionada) {
+            cambiarOperadorUnidad(this.state.unidadSeleccionada, this.state.operadorSeleccionada.m_nIdOperador).then(({data}) => {
+                this.setState({openUnidades: true, openOperadorDialog: false, unidadesSeleccionadas: []})
+            })
+        } else {
+            showSuccess("No se seleccionó ningún operador.")
+        }
     }
 
     asignarRemolquesUnidad(remolques) {

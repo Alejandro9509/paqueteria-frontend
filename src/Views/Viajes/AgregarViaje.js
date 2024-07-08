@@ -922,6 +922,7 @@ class AgregarViaje extends Component {
 
     cubicarViaje(arrayInformesAsignados){
         const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
+        console.log('Los paquetes', paquetes)
         const params = {
             idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
             idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
@@ -989,6 +990,10 @@ class AgregarViaje extends Component {
 
     handleShowDialog = (event) => {
         event.preventDefault()
+        if(!this.state.trayectos){
+            showSuccess("Debes seleccionar una ruta.")
+            return
+        }
         this.setState({
             openDialogInformes: !this.state.openDialogInformes,
         })
