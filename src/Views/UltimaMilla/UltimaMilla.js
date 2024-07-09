@@ -513,7 +513,7 @@ class UltimaMilla extends Component {
                                         <InputLabel id="sucursalListadoLabel">Operador</InputLabel>
                                         <Select
                                             labelId="sucursalListadoLabel"
-                                            label="Formato"
+                                            label="Operador"
                                             className="form-control"
                                             required
                                             fullWidth
