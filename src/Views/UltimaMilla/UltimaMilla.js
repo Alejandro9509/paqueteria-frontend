@@ -416,28 +416,20 @@ class UltimaMilla extends Component {
         this.setState({fullScreen: false})
     }
 
-    selectGuiaReasignar(idParadaFuente, idGuia) {
-        obtenerOperadoresPorSucursal(this.state.idSucursal).then(({data}) => {
-            this.setState({
-                operadores: data,
-                unidad: idGuia
-            })
-        })
-        this.setState({openDialog: true, paradaFuente: idParadaFuente, idGuia: idGuia})
+    selectGuiaReasignar(idParadaFuente, idOperador,listadoOperadores) {
+        this.setState({openDialog: true, paradaFuente: idParadaFuente, idOperador: idOperador,listadoOperadores:listadoOperadores})
     }
 
+
     reasignarParada(event) {
-        event.preventDefault();
+        event.preventDefault()
         reasignarOperador(this.state.paradaFuente, this.state.idOperador).then((data) => {
             showSuccess(data.data)
             this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
             this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
         })
-        // reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
-        //     showSuccess(data.data)
-        //     this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
-        //     this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
-        // })
+
+
     }
 
     changeFiltersMapDialogsState(isVisible){
@@ -525,19 +517,28 @@ class UltimaMilla extends Component {
                                             className="form-control"
                                             required
                                             fullWidth
-                                            value={this.state.operadorSeleccionado}
-                                            onChange={(event) => this.setState({
-                                                operadorSeleccionado: event.target.value
-                                            })}
+                                            value={this.state.idOperador}
+                                            onChange={(event) => {
+
+                                                let valorUM=this.state.ultimaMilla
+
+                                                let valorParada=this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(i=>i.m_nIdParadaUltimaMilla==this.state.paradaFuente)
+                                                valorParada.m_nIdOperador=event.target.value
+                                                let indexParada=valorUM.m_arrClsParadaUltimaMilla.findIndex(i=>i==valorParada)
+                                                valorUM.m_arrClsParadaUltimaMilla[indexParada]=valorParada
+                                                this.setState({
+                                                    ...this.state,ultimaMilla:valorUM,idOperador:valorParada.m_nIdOperador
+                                                })
+                                            }
+                                            }
                                             id="formatoSeleccionado"
                                             name="formatoSeleccionado"
                                         >
-                                            {this.state.operadores.map((operador) => (
-                                                <MenuItem
-                                                    key={operador.m_nIdOperador}
-                                                    value={operador}
+                                            {this.state.listadoOperadores.map((op) => (
+                                                <MenuItem disabled={!op.operadorDisponible}
+                                                          value={op.m_nIdOperador}
                                                 >
-                                                    {operador.m_sNombreCompleto}
+                                                    {op.m_sNombreCompleto}
                                                 </MenuItem>
                                             ))}
                                         </Select>
