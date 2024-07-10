@@ -661,6 +661,8 @@ function Informes({history}) {
                         console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
+                        setTextoFiltro('')
+                        setFiltroFolio(false)
                         $.mostrarMensaje=false
                         handleShowListado()
                     }
