@@ -645,6 +645,8 @@ function Informes({history}) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    setTextoFiltro('')
+                    setFiltroFolio(false)
                     $.mostrarMensaje=false
                     handleShowListado()
                 })
