@@ -661,6 +661,8 @@ function Informes({history}) {
                         console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
+                        setTextoFiltro('')
+                        setFiltroFolio(false)
                         $.mostrarMensaje=false
                         handleShowListado()
                     }
@@ -1046,6 +1048,8 @@ function Informes({history}) {
         setDataParaAgregar()
         getEmptyState()
         setDetectar(false)
+        setTextoFiltro('')
+        setFiltroFolio(false)
         $.mostrarMensaje=false
         window.onbeforeunload={}
         $('.nav-tabs li ').removeClass('active');
@@ -1090,6 +1094,8 @@ function Informes({history}) {
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
+            setTextoFiltro('')
+            setFiltroFolio(false)
             setDataParaModificarConsultar(data, "Modificar")
         });
     }
@@ -1101,6 +1107,8 @@ function Informes({history}) {
             console.log(data.m_arrClsProGuia)
             data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
+            setTextoFiltro('')
+            setFiltroFolio(false)
             setDataParaModificarConsultar(data, "Consultar")
         });
     }
@@ -1855,7 +1863,9 @@ function Informes({history}) {
                                                                                 <Checkbox
                                                                                     name="selecionarGuias"
                                                                                     onClick={(e) => setDataGuias(dataGuias.map(d => {
-                                                                                        d.select = e.target.checked;
+                                                                                        if ((filtroFolio?dataGuias.filter((g)=>g.m_nFolioGuia.includes(textoFiltro)):dataGuias).map(g => g.m_nIdGuia).includes(d.m_nIdGuia)){
+                                                                                            d.select = e.target.checked;
+                                                                                        }
                                                                                         return d;
                                                                                     }))}
                                                                                     color="primary"
