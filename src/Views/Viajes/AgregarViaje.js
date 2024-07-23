@@ -921,7 +921,7 @@ class AgregarViaje extends Component {
 
     }
 
-    cubicarViaje(arrayInformesAsignados){
+    cubicarViaje(arrayInformesAsignados, eliminar = false){
         const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
         console.log('Los paquetes', paquetes)
         const params = {
@@ -939,7 +939,10 @@ class AgregarViaje extends Component {
             this.setState({utilizacion: data.utilizacion.toFixed(0)})
         }).catch(e => {
             this.setState({utilizacion: 0})
-            showError(e.response?.data)
+            if (!eliminar){
+                showError(e.response?.data)
+            }
+
         })
     }
 
@@ -947,7 +950,7 @@ class AgregarViaje extends Component {
     handleEliminarInforme(id) {
         var dataInformesAsignados = [...this.state.dataInformesAsignados]
         dataInformesAsignados.splice(dataInformesAsignados.findIndex(i => i.m_nIdInforme === id), 1)
-        this.cubicarViaje(dataInformesAsignados)
+        this.cubicarViaje(dataInformesAsignados, true)
         this.setState({dataInformesAsignados: dataInformesAsignados})
     }
 
