@@ -41,6 +41,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import AgregarRemolques from "./AgregarRemolques";
 import {showSuccess, validarDerecho} from "../../Util/Util";
 import {alpha} from "@mui/material/styles";
+
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 
 const useStyles = theme => ({
@@ -337,10 +338,11 @@ class FiltersMap extends Component {
     }
     reasignarOperador(unidad) {
         obtenerOperadoresPorSucursal(this.state.sucursalSeleccionada?.m_nIdSucursal).then(({data}) => {
+            const operadoresDisponibles = data
             if(data.filter((op)=>!op.ocupado).length==0)
                 showSuccess("No se encontraron operadores disponibles")
             this.setState({
-                operadores: data.filter((operador) => !operador.ocupado),
+                operadores: operadoresDisponibles,
                 unidadSeleccionada: unidad.m_nIdUnidad,
                 openOperadorDialog: true,
                 openUnidades: false
