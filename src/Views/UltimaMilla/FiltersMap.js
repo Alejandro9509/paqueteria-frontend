@@ -452,7 +452,7 @@ class FiltersMap extends Component {
                                         style={{
                                             transform: "translate(14px, 10px) scale(1) !important",marginTop:"1%"
                                         }}
-                                        getOptionLabel={(option) => `${option.m_sNombreCompleto} - ${option.ocupado?"En Ruta":""}`}
+                                        getOptionLabel={(option) => `${option.m_sNombreCompleto} - ${option.ocupado?"(En Ruta) ("+option.fechaUltimaRuta+")":"(DISPONIBLE)"}`}
                                         getOptionDisabled={(option)=>option.ocupado}
                                         renderInput={(params) => <TextField {...params} margin="dense" label="Operador" variant="outlined" />}
                                     />
