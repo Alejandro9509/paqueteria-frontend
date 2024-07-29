@@ -1358,7 +1358,7 @@ function Embarque(props) {
             item.m_bEsMaterialPeligroso = item.esPeligroso
             item.m_sClaveEmbalaje = item.claveEmbalaje
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
-            item.m_xPeso = item.peso
+            item.m_xPeso = parseFloat(parseFloat(item.peso).toFixed(3))
             item.nombreQuimico=item.nomQuimico
             item.numeroCAS=item.numCAS
             item.claveCondicionEspecial=item.claveCondicionesEspeciales
@@ -1499,7 +1499,7 @@ function Embarque(props) {
 
         params.m_nIdRuta = state.idRuta
         console.log(params)
-        console.log(JSON.stringify(params))
+        console.log(Object.assign({}, params))
         if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {

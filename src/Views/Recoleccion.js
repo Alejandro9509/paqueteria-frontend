@@ -995,7 +995,7 @@ function Recoleccion() {
                 item.m_sClaveEmbalaje = item.claveEmbalaje
                 // item.m_sTipoEmbalaje = item.embalajeSAT
                 item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
-                item.m_xPeso = item.peso
+                item.m_xPeso = parseFloat(parseFloat(item.peso).toFixed(3))
                 item.nombreQuimico=item.nomQuimico
                 item.numeroCAS=item.numCAS
                 item.claveCondicionEspecial=item.claveCondicionesEspeciales

@@ -9,7 +9,7 @@ function modificarRecoleccion(id, params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Modificar/${id}`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, params, { headers })
         );
     return result
 }
@@ -36,7 +36,7 @@ function agregarRecoleccion(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Agregar`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, params, { headers })
         );
     return result
 }
