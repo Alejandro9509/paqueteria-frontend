@@ -30,13 +30,14 @@ class MyComponent extends Component {
     };
 
     trylogin(desencriptar) {
-        const rfc = this.getUrlParameter('RFC');
+        let rfc = this.getUrlParameter('RFC');
         let usuario = ''
         let contrasena = ''
         if (desencriptar) {
             try {
                 usuario = atob(this.getUrlParameter('usuario')); //DESENCRIPTA LAS CREDENCIALES RECIBIDAS POR EL ERP
                 contrasena = atob(this.getUrlParameter('pass'));
+                rfc = atob(this.getUrlParameter('RFC'));
             } catch (e) {
                 usuario = this.getUrlParameter('usuario'); //SI NO PUEDE DESENCRIPTAR ES PORQUE NO ESTAN ENCRIPTADAS...
                 contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
