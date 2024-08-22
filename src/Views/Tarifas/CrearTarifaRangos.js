@@ -174,8 +174,7 @@ export default function CrearTarifaRangos(props) {
             getClienteGenerico()
         }
     }, [])
-    useEffect(value => {
-    }, [viajesLocalesListado])
+
     const handleDialogVisible = (isVisible) => {
         setState({
             ...state,

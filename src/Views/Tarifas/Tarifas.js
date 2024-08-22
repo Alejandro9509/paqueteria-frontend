@@ -1,44 +1,12 @@
-import React, {Component, useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
 import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
-import CrearTarifa from './CrearTarifa';
-import Noty from 'noty';
-import axios from "axios";
-import SvgIcon from "@mui/material/SvgIcon";
-import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
-import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
-import {API_HEADERS, dataGridLocaleText} from '../../Constants';
-import {FormControl, InputLabel, MenuItem, Select, Tooltip} from '@mui/material';
-import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
-import {
-    agregarTarifa,
-    eliminarTarifa,
-    modificarTarifa,
-    obtenerTarifaBy,
-    obtenerTarifasByTipo
-} from "../../Util/Contexts/TarifasContext";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
-import {ContentState, EditorState} from "draft-js";
-import htmlToDraft from "html-to-draftjs";
 import TarifasRangos from "./TarifasRangos";
-import {getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../../Util/Util"
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
-import CrearTarifaRegion from "./CrearTarifaRegion";
 import TarifasRegion from "./TarifasRegion";
-import { confirmAlert } from 'react-confirm-alert';
 
 window.jQuery = window.$ = $;
-/*function showSuccess(mensaje) {
-    new Noty({
-        type: "information",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000"
-    }).show()
-}*/
 
 function Tarifa(){
     const [state, setState] = useState({
@@ -60,19 +28,6 @@ function Tarifa(){
         getParametrosConfiguracion()
     }, [])
 
-
-    const getTarifas = (idTipoTarifa) => {
-        obtenerTarifasByTipo(idTipoTarifa).then(respuesta => {
-            setState(state =>{
-                return {
-                    ...state,
-                    data: respuesta.data,
-                    agregar: "Agregar"
-                }
-            })
-        })
-    }
-
     const getParametrosConfiguracion = () =>  {
         obtenerParametrosConfiguracion().then(respuesta => {
             setState(state =>{
@@ -92,7 +47,6 @@ function Tarifa(){
                     },
                 }
             })
-            getTarifas(respuesta.data.TipoTarifaTarifas)
         })
     }
 
