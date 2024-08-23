@@ -977,7 +977,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Cancelar Timbrado SAT">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (showCancelarCFDI(row))}><i className="zmdi zmdi-card-off"
+                                   onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off"
                                                                                   style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
