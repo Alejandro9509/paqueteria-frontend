@@ -104,7 +104,7 @@ function DialogCreateRemDes(props) {
         setState(state => {
             return {
                 ...state,
-                clientePaga: row.data,
+                clientePaga: row,
                 openDialog: false
             }
         });
