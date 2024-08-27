@@ -43,7 +43,7 @@ function showSuccess(mensaje) {
 let rowSelect
 function DialogTableRemDes(props) {
 
-    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
+    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
@@ -66,9 +66,9 @@ const columns = [
 
 let registros=10
 //----------------------------->Hooks useState <----------------------------------------------------------------------
-const [rows, setRow] = React.useState([])
-const [pagina, setPagina] = React.useState(0);
-    const [busqueda, setBusqueda] = React.useState("");
+const [rows, setRow] = useState([])
+const [pagina, setPagina] = useState(0);
+    const [busqueda, setBusqueda] = useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
   cargarDesdeServidor(pagina,registros)

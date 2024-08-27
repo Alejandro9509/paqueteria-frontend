@@ -9,17 +9,17 @@ import {
     TextField,
     Select,
     Grid, DialogTitle
-} from "@material-ui/core";
+} from "@mui/material";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerRemitentesDestinatariosNombre, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
-import { makeStyles } from '@material-ui/core/styles';
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { makeStyles } from '@mui/styles';
+import Autocomplete from "@mui/lab/Autocomplete";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 import { obtenerCodigoPostalPorCodigo } from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
-import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
+import { IconButton } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 const useStyles = makeStyles({
     root: {
@@ -284,7 +284,7 @@ function DialogCreateRemDes(props) {
                                     <div>
                                         <TextField
                                             label="Código Postal"
-                                            margin="dense"
+                                            size="small"
                                             variant="outlined"
                                             onClick={(e) =>
                                                 handleClickCodigosPostalesInput("codigoPostal")
@@ -314,19 +314,19 @@ function DialogCreateRemDes(props) {
                 <div className="widget-header">
                     <h2>Nuevo Remitente/Destinatario</h2>
                 </div>
-                <div>
-                    <h3>Form Values in Real Time:</h3>
-                    <pre>{JSON.stringify(state, null, 2)}</pre>
-                </div>
+                {/*<div>*/}
+                {/*    <h3>Form Values in Real Time:</h3>*/}
+                {/*    <pre>{JSON.stringify(state, null, 2)}</pre>*/}
+                {/*</div>*/}
                 <div className="widget-container">
                     <div className="widget-content">
-                        <Grid container spacing={2} alignItems="center" justifyContent="center">
+                        <Grid container spacing={2} >
 
-                            <Grid item xs={4}>
+                            <Grid item xs={3}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -341,11 +341,11 @@ function DialogCreateRemDes(props) {
                                 </div>
                             </Grid>
 
-                            <Grid item xs={6}>
+                            <Grid item xs={9}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -353,16 +353,18 @@ function DialogCreateRemDes(props) {
                                         label="Nombre"
                                         value={state.nombre}
                                         name="nombre"
+                                        fullWidth
                                     />
                                 </div>
                             </Grid>
 
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
                                         label="Cliente"
-                                        margin="dense"
+                                        size="small"
+                                        fullWidth
                                         value={state.clientePaga.m_sNombreFiscal}
                                         placeholder={"Cliente"}
                                         InputLabelProps={{shrink: true}}
@@ -375,21 +377,22 @@ function DialogCreateRemDes(props) {
                                                 ...state,
                                                 openDialog: true
                                             })
-                                        }
-                                        }
+                                        }}
                                     />
                                 </div>
                             </Grid>
+                            <Grid item xs={12}>
+                                <div className="col-md-12">
+                                    <p>Domicilio fiscal</p>
+                                </div>
+                            </Grid>
 
-                            <div className="col-md-12">
-                                <p>Domicilio fiscal</p>
-                            </div>
 
                             <Grid item xs={8}>
                                 <div className="input">
                                     <TextField
                                         label="Código Postal"
-                                        margin="dense"
+                                        size="small"
                                         variant="outlined"
                                         onChange={handleChangeCodigoPostal}
                                         className="form-control"
@@ -397,6 +400,7 @@ function DialogCreateRemDes(props) {
                                         required
                                         value={state.codigoPostal.m_sCP}
                                         name="codigoPostal"
+                                        fullWidth
                                     />
                                 </div>
                             </Grid>
@@ -408,173 +412,178 @@ function DialogCreateRemDes(props) {
                                 </IconButton>
                             </Grid>
 
-                            <Grid container rowSpacing={2} columnSpacing={{xs: 2, sm: 2, md: 3}}>
-                                <Grid item xs={6}>
-                                    <FormControl fullWidth variant="outlined" margin="dense" required>
-                                        <InputLabel id="idEstadoLabel">Estado</InputLabel>
-                                        <Select
-                                            fullWidth
-                                            labelId="idEstadoLabel"
-                                            label="Estado"
-                                            className="form-control"
-                                            value={state.estado}
-                                            onChange={handleChange}
-                                            name="estado"
-                                            disabled
-                                        >
-                                            {dataEstados.map((estado) => (
-                                                <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
-                                                    {estado.m_sEstado}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <FormControl
-                                        className="input select"
+                            <Grid item xs={6}>
+                                <FormControl fullWidth variant="outlined" size="small" required>
+                                    <InputLabel id="idEstadoLabel">Estado</InputLabel>
+                                    <Select
                                         fullWidth
-                                        variant="outlined"
-                                        margin="dense"
-                                        required
+                                        labelId="idEstadoLabel"
+                                        label="Estado"
+                                        className="form-control"
+                                        value={state.estado}
+                                        onChange={handleChange}
+                                        name="estado"
+                                        disabled
                                     >
-                                        <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
-                                        <Select
-                                            fullWidth
-                                            labelId={"idMunicipioLabel"}
-                                            label={"Municipio"}
-                                            className="form-control"
-                                            value={state.idMunicipio}
-                                            onChange={handleChange}
-                                            name="idMunicipio"
-                                            InputProps={{name: "municipio"}}
-                                            disabled
-                                        >
-                                            {dataMunicipios.map((municipio) => (
-                                                <option
-                                                    key={municipio.m_sCodigoMunicipio}
-                                                    value={municipio.m_sCodigoMunicipio}
-                                                >
-                                                    {municipio.m_sMunicipio}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
+                                        {dataEstados.map((estado) => (
+                                            <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
+                                                {estado.m_sEstado}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            label="Colonia / Localidad"
-                                            value={state.colonia}
-                                            name="colonia"
-                                            disabled
-                                        />
-                                    </div>
-                                </Grid>
+                            <Grid item xs={6}>
+                                <FormControl
+                                    className="input select"
+                                    fullWidth
+                                    variant="outlined"
+                                    size="small"
+                                    required
+                                >
+                                    <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                                    <Select
+                                        fullWidth
+                                        labelId={"idMunicipioLabel"}
+                                        label={"Municipio"}
+                                        className="form-control"
+                                        value={state.idMunicipio}
+                                        onChange={handleChange}
+                                        name="idMunicipio"
+                                        InputProps={{name: "municipio"}}
+                                        disabled
+                                    >
+                                        {dataMunicipios.map((municipio) => (
+                                            <option
+                                                key={municipio.m_sCodigoMunicipio}
+                                                value={municipio.m_sCodigoMunicipio}
+                                            >
+                                                {municipio.m_sMunicipio}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
 
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            label="Calle"
-                                            value={state.calle}
-                                            name="calle"
-                                        />
-                                    </div>
-                                </Grid>
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        label="Colonia / Localidad"
+                                        value={state.colonia}
+                                        name="colonia"
+                                        disabled
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
 
-                                <Grid item xs={3}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            label="Número interior"
-                                            value={state.numeroInt}
-                                            name="numeroInt"
-                                        />
-                                    </div>
-                                </Grid>
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        label="Calle"
+                                        value={state.calle}
+                                        name="calle"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
 
-                                <Grid item xs={3}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            label="Número exterior"
-                                            value={state.numeroExt}
-                                            name="numeroExt"
-                                        />
-                                    </div>
-                                </Grid>
+                            <Grid item xs={3}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        label="Número interior"
+                                        value={state.numeroInt}
+                                        name="numeroInt"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
 
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            required
-                                            label="Contacto"
-                                            value={state.contacto}
-                                            name="contacto"
-                                        />
-                                    </div>
-                                </Grid>
+                            <Grid item xs={3}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        label="Número exterior"
+                                        value={state.numeroExt}
+                                        name="numeroExt"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
 
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="text"
-                                            label="Teléfono"
-                                            required
-                                            value={state.telefono}
-                                            disabled={props.consulta}
-                                            name="telefono"
-                                        />
-                                    </div>
-                                </Grid>
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        label="Contacto"
+                                        value={state.contacto}
+                                        name="contacto"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
 
-                                <Grid item xs={6}>
-                                    <div className="input">
-                                        <TextField
-                                            variant="outlined"
-                                            margin="dense"
-                                            label="Correo Electrónico"
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            type="email"
-                                            required
-                                            value={state.correo}
-                                            disabled={props.consulta}
-                                            name="correo"
-                                        />
-                                    </div>
-                                </Grid>
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="text"
+                                        label="Teléfono"
+                                        required
+                                        value={state.telefono}
+                                        disabled={props.consulta}
+                                        name="telefono"
+                                        fullWidth
+                                    />
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        label="Correo Electrónico"
+                                        onChange={handleChange}
+                                        className="form-control"
+                                        type="email"
+                                        required
+                                        value={state.correo}
+                                        disabled={props.consulta}
+                                        name="correo"
+                                        fullWidth
+                                    />
+                                </div>
                             </Grid>
 
                         </Grid>
