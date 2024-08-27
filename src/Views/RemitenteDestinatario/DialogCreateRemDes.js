@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -11,19 +10,13 @@ import {
     Select,
     Grid, DialogTitle
 } from "@material-ui/core";
-import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerRemitentesDestinatariosNombre, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
-import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
-import {
-    obtenerCodigoPostal,
-    obtenerCodigoPostalPorCodigo,
-    obtenerCodigosPostalesPorEstadoMunicipio
-} from "../../Util/Contexts/CodigoPostalContext";
+import { obtenerCodigoPostalPorCodigo } from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
@@ -63,7 +56,7 @@ function showError(mensaje) {
 
 function DialogCreateRemDes(props) {
     const classes = useStyles();
-    let {createVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
+    let { createVisible } = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
     const [dataMunicipios, setDataMunicipios] = React.useState([]);
@@ -77,14 +70,14 @@ function DialogCreateRemDes(props) {
         numeroInt: "",
         numeroExt: "",
         colonia: "",
-        estado: 11,
-        municipio: 20,
+        estado: '',
+        idMunicipio: '',
+        municipio: '',
         codigoPostal: "",
         correo: "",
         telefono: "",
         contacto: "",
         zonaOperativa: "",
-        zonaTarifa: "",
         clientePaga: {},
         cliente:"",
         numero: 0,
@@ -98,12 +91,6 @@ function DialogCreateRemDes(props) {
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
     useEffect(() => {
         getAllEstados();
-        obtenerMunicipiosByIdEstado(11).then(({ data }) => {
-            setDataMunicipios(data);
-        });
-        obtenerCodigosPostalesPorEstadoMunicipio(11, 20).then(({ data }) => {
-            setDataCodigosPostales(data);
-        });
     }, [pagina])
 
 //--------------------------->Funciones<----------------------------------------------------------------------
@@ -163,36 +150,39 @@ function DialogCreateRemDes(props) {
         });
     };
 
+    /**Se llama al seleccionar una opcion del autocomplete del dialog seleccionar código postal*/
     const handleChangeAutocomplete = (input, newValue) => {
         if(input=="codigoPostal"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
                 (zonaOperativa ) => {
-                    obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
-                        (zonaTarifa ) => {
-                            // if(zonaOperativa.data.length == 0){
-                            //     showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
-                            // }
-                            setState((state) => ({
-                                ...state,
-                                zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-                                zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
-                            }));
-                        }
-                    );
+                    setState((state) => ({
+                        ...state,
+                        zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                        openCodigos: false,
+                        codigoPostal: newValue,
+                        estado: newValue.m_nIdEstado,
+                        idMunicipio: newValue.m_nIdMunicipio,
+                        municipio: newValue.m_sMunicipio,
+                        colonia: newValue.m_sColonia
+                    }));
+                    obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({ data }) => {
+                            setDataMunicipios(data);
+                    });
+                    // obtenerCodigosPostalesPorEstadoMunicipio(11, 20).then(({ data }) => {
+                    //     setDataCodigosPostales(data);
+                    // });
                 }
             );
         }
-
-        setState(() => ({
-            ...state,
-            [input]: newValue
-        }));
     };
 
+    /** Se llama al presionar el input del dialogo para seleccionar código postal*/
     const handleClickCodigosPostalesInput = (input) => {
-        obtenerCodigosPostalesPorEstadoMunicipio(state.estado, state.municipio).then(({ data }) => {
-            setDataCodigosPostales(data);
-        });
+        if (state.codigoPostal?.m_sCP.length > 0) {
+            obtenerCodigoPostalPorCodigo(state.codigoPostal?.m_sCP).then(({ data }) => {
+                setDataCodigosPostales(data);
+            });
+        }
     };
 
     const validacionesAgregar = () => {
@@ -240,6 +230,7 @@ function DialogCreateRemDes(props) {
                 noInterior: state.numeroInt,
                 colonia: state.colonia,
                 localidad: state.colonia,
+                idMunicipio: state.idMunicipio,
                 municipio: state.municipio,
                 idEstado: state.estado,
                 creadoPor: localStorage.getItem("UsuarioId"),
@@ -287,12 +278,8 @@ function DialogCreateRemDes(props) {
                                 disableClearable
                                 forcePopupIcon={false}
                                 options={dataCodigosPostales}
-                                getOptionLabel={(option) =>
-                                    option ? `${option.m_sCP} - ${option.m_sColonia}` : ""
-                                }
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important",
-                                }}
+                                getOptionLabel={(option) => option ? `${option.m_sCP} - ${option.m_sColonia}` : ""}
+                                style={{ transform: "translate(14px, 10px) scale(1) !important" }}
                                 renderInput={(params) => (
                                     <div>
                                         <TextField
@@ -327,38 +314,13 @@ function DialogCreateRemDes(props) {
                 <div className="widget-header">
                     <h2>Nuevo Remitente/Destinatario</h2>
                 </div>
+                <div>
+                    <h3>Form Values in Real Time:</h3>
+                    <pre>{JSON.stringify(state, null, 2)}</pre>
+                </div>
                 <div className="widget-container">
                     <div className="widget-content">
                         <Grid container spacing={2} alignItems="center" justifyContent="center">
-                            {/*<Grid item xs={4}>
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="number"
-                                        label="Número"
-                                        value={state.numero}
-                                        name="numero"
-                                    />
-                                </div>
-                            </Grid>*/}
-
-                            {/*<Grid item xs={4}>
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="number"
-                                        label="No. equivalencia"
-                                        value={state.equivalencia}
-                                        name="equivalencia"
-                                    />
-                                </div>
-                            </Grid>*/}
 
                             <Grid item xs={4}>
                                 <div className="input">
@@ -409,11 +371,11 @@ function DialogCreateRemDes(props) {
                                         type="text"
                                         name="cliente"
                                         onClick={() => {
-                                                setState({
-                                                    ...state,
-                                                    openDialog: true
-                                                })
-                                            }
+                                            setState({
+                                                ...state,
+                                                openDialog: true
+                                            })
+                                        }
                                         }
                                     />
                                 </div>
@@ -439,13 +401,14 @@ function DialogCreateRemDes(props) {
                                 </div>
                             </Grid>
                             <Grid item xs={4}>
-                                <IconButton aria-label="Buscar código" onClick={() => setState({...state, openCodigos: true})}>
+                                <IconButton aria-label="Buscar código"
+                                            onClick={() => setState({...state, openCodigos: true})}>
                                     <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                                     Seleccionar código
                                 </IconButton>
                             </Grid>
 
-                            <Grid container rowSpacing={2} columnSpacing={{ xs: 2, sm: 2, md: 3 }}>
+                            <Grid container rowSpacing={2} columnSpacing={{xs: 2, sm: 2, md: 3}}>
                                 <Grid item xs={6}>
                                     <FormControl fullWidth variant="outlined" margin="dense" required>
                                         <InputLabel id="idEstadoLabel">Estado</InputLabel>
@@ -457,7 +420,7 @@ function DialogCreateRemDes(props) {
                                             value={state.estado}
                                             onChange={handleChange}
                                             name="estado"
-                                            default={11}
+                                            disabled
                                         >
                                             {dataEstados.map((estado) => (
                                                 <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
@@ -482,10 +445,11 @@ function DialogCreateRemDes(props) {
                                             labelId={"idMunicipioLabel"}
                                             label={"Municipio"}
                                             className="form-control"
-                                            value={state.municipio}
+                                            value={state.idMunicipio}
                                             onChange={handleChange}
-                                            name="municipio"
+                                            name="idMunicipio"
                                             InputProps={{name: "municipio"}}
+                                            disabled
                                         >
                                             {dataMunicipios.map((municipio) => (
                                                 <option
@@ -511,6 +475,7 @@ function DialogCreateRemDes(props) {
                                             label="Colonia / Localidad"
                                             value={state.colonia}
                                             name="colonia"
+                                            disabled
                                         />
                                     </div>
                                 </Grid>
@@ -610,85 +575,6 @@ function DialogCreateRemDes(props) {
                                         />
                                     </div>
                                 </Grid>
-
-                                {/* {props.mostrarZonas && (
-                                <div className="col-sm-12 col-md-12 unit">
-                                    <div className="input">
-                                        <Autocomplete
-                                            value={state.zonaOperativa}
-                                            freeSolo
-                                            onChange={(event, newValue) =>
-                                                handleChangeAutocomplete("zonaOperativa", newValue)
-                                            }
-                                            id="zonaOperativa"
-                                            disableClearable
-                                            forcePopupIcon={false}
-                                            options={dataZonasOperativas}
-                                            disabled={props.consulta || props.modificar || props.agregar}
-                                            getOptionLabel={(option) =>
-                                                option
-                                                    ? `${option.m_sCodigoZona} - CP: ${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
-                                                    : ""
-                                            }
-                                            variant="outlined"
-                                            name={"zonaOperativa"}
-                                            style={{
-                                                transform: "translate(14px, 10px) scale(1) !important",
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField
-                                                    variant="outlined"
-                                                    label="Zona Operativa"
-                                                    margin="dense"
-                                                    required={
-                                                        !state.diferenteEntrega && !state.entregaEnSucursal
-                                                    }
-                                                    onClick={() => handleClickZona()}
-                                                    {...params}
-                                                />
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-                            )}
-                            <div className="col-sm-12 col-md-12 unit">
-                                <div className="input">
-                                    <Autocomplete
-                                        value={state.zonaTarifa}
-                                        freeSolo
-                                        // onChange={(event, newValue) =>
-                                        //     handleChangeAutocomplete("zonaTarifa", newValue)
-                                        // }
-                                        id="zonaTarifa"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataZonasTarifa}
-                                        disabled={props.consulta || props.modificar || props.agregar}
-                                        getOptionLabel={(option) =>
-                                            option
-                                                ? option.m_sCodigoZona || "Código Postal sin zona asignada"
-                                                : ""
-                                        }
-                                        variant="outlined"
-                                        name={"zonaTarifa"}
-                                        style={{
-                                            transform: "translate(14px, 10px) scale(1) !important",
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                variant="outlined"
-                                                label="Zona Tarifa"
-                                                margin="dense"
-                                                required={
-                                                    !state.diferenteEntrega && !state.entregaEnSucursal
-                                                }
-                                                onClick={handleClickZona}
-                                                {...params}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                            </div>*/}
                             </Grid>
 
                         </Grid>
