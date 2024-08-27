@@ -3,7 +3,7 @@ import { usePromiseTracker } from 'react-promise-tracker'
 import './style.css'
 import * as animationData from '../../Assets/Animations/Loader.json'
 import Lottie from 'react-lottie-player'
-import { Modal } from '@material-ui/core'
+import { Modal } from '@mui/material'
 
 export const Spinner = props => {
     const { promiseInProgress } = usePromiseTracker()

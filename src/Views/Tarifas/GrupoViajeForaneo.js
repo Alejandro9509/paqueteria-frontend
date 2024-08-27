@@ -2,13 +2,13 @@ import React, {useEffect, useState} from "react";
 import DialogCheckbox from "./DialogCheckbox";
 import DialogoNuevoRango from "./DialogoNuevoRango";
 import DialogTransferList from "./DialogTransferList";
-import {Accordion, AccordionDetails, AccordionSummary, Button, Grid, IconButton} from "@material-ui/core";
+import {Accordion, AccordionDetails, AccordionSummary, Button, Grid, IconButton} from "@mui/material";
 import RangosTarifa from "./RangosTarifa";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/AddBox";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/AddBox";
 import DialogoNuevoPorcentaje from "./DialogoNuevoPorcentaje";
 
 export default function GrupoViajeForaneo(props){
@@ -355,10 +355,10 @@ function SimpleAccordion(props) {
                             <Typography variant={"h4"} component={"h2"}>{props.titulo}</Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <IconButton onClick={props.onEditGrupo} disabled={props.disabled}>
+                            <IconButton onClick={props.onEditGrupo} disabled={props.disabled} size="large">
                                 <EditIcon fontSize={'large'}/>
                             </IconButton>
-                            <IconButton onClick={props.onDeleteGrupo} disabled={props.disabled}>
+                            <IconButton onClick={props.onDeleteGrupo} disabled={props.disabled} size="large">
                                 <DeleteIcon fontSize={'large'}/>
                             </IconButton>
                         </Grid>

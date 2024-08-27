@@ -5,9 +5,9 @@ import {Polyline, Popup} from "react-leaflet";
 import {calcularRuta, calcularRutaUltimaMilla, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
-import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent, Button} from "@material-ui/core";
-import {InsertDriveFile} from "@material-ui/icons";
-import IconButton from "@material-ui/core/IconButton";
+import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent, Button} from "@mui/material";
+import {InsertDriveFile} from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import {obtenerRecoleccionReporte} from "../../Util/Contexts/RecoleccionContext";
 import {decodePolyline} from "../../Util/HereDecoading";
@@ -113,7 +113,10 @@ class DatosEntregaRecoleccion extends Component {
                                             {
                                                 this.props.isTour &&
                                                 <Grid item md={2}>
-                                                <IconButton aria-label="file" onClick={() => this.generarReporte(this.props.data)}>
+                                                <IconButton
+                                                    aria-label="file"
+                                                    onClick={() => this.generarReporte(this.props.data)}
+                                                    size="large">
                                                     <InsertDriveFile fontSize={"default"}/>
                                                 </IconButton>
                                                 </Grid>

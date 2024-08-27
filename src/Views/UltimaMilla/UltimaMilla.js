@@ -1,4 +1,4 @@
-import React, {Component, useEffect} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
@@ -10,14 +10,17 @@ import {
     List,
     ListItem,
     ListSubheader,
-    makeStyles,
     Dialog,
     DialogContent,
     DialogActions,
-    DialogTitle, Button, MenuItem, DialogContentText
-} from "@material-ui/core";
-import FaceIcon from "@material-ui/icons/Face";
-import Tooltip from "@material-ui/core/Tooltip";
+    DialogTitle,
+    Button,
+    MenuItem,
+    DialogContentText,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import FaceIcon from "@mui/icons-material/Face";
+import Tooltip from "@mui/material/Tooltip";
 import FiltersMap from "./FiltersMap";
 import Cronograma from "./Cronograma";
 import {
@@ -32,26 +35,31 @@ import {
     validarUnidadesSeleccionadas,
     validarUnidadOcupada, obtenerUltimaMillaFechaImagenes
 } from "../../Util/Contexts/UltimaMillaContext";
+import {actualizarCoordenadasRemitentesDestinatarios} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
-import MessageIcon from "@material-ui/icons/Message";
+import MessageIcon from "@mui/icons-material/Message";
 import {ReactComponent as FullscreenIcono} from "../../iconos/Mapa/fullscreen.svg";
 import {ReactComponent as FullscreenExitIcono} from "../../iconos/Mapa/fullscreen-exit.svg";
 import DetalleParadas from "./DetalleParadas";
 import Noty from "noty";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import TourUltimaMilla from "./TourUltimaMilla";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 import Buttons from "../../Util/CarruselButtons";
-import {reasignarGuia} from "../../Util/Contexts/GuiaContext";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {forEach} from "react-bootstrap/ElementChildren";
-import {getCurrentDate} from "../../Util/Util";
+import {getAddressFormated, getCurrentDate} from "../../Util/Util";
 import moment from "moment";
-import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext"; // Import css
+import {obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
+import {cambiarOperadorUnidad} from "../../Util/Contexts/UnidadesContext"; // Import css
+import {reasignarOperador} from "../../Util/Contexts/OperadoresContext";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
+import ListaUbicaciones from "./ListaUbicaciones"; // Import css
 
 
 function showSuccess(mensaje) {
@@ -83,6 +91,7 @@ const MarkerIcon = new L.Icon({
 
 var actualizar = true
 
+
 class UltimaMilla extends Component {
     constructor(props) {
         super(props);
@@ -105,8 +114,17 @@ class UltimaMilla extends Component {
             openDialog: false,
             closeFiltersMapDialogs: false,
             closeResumenParadas:false,
-            openDialogGenerarRutaError: false
-
+            openDialogGenerarRutaError: false,
+            operadorSeleccionado: null,
+            listadoOperadores:[],
+            idOperador:0,
+            operadores: [],
+            unidad: null,
+            showConfirmarUbicacion: false,
+            showListaUbicaciones: false,
+            paquetesSinCoord: [],
+            titulo: "",
+            entregaEnSucursal: false,
         }
         this.generarRuta = this.generarRuta.bind(this)
         this.getLocation = this.getLocation.bind(this)
@@ -124,9 +142,26 @@ class UltimaMilla extends Component {
         this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
         this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
         this.closeResumenParada = this.closeResumenParada.bind(this)
+        this.mostrarDialogoListado = this.mostrarDialogoListado.bind(this)
+        this.cerrarListadoUbicaciones = this.cerrarListadoUbicaciones.bind(this)
+        this.handleAceptar = this.handleAceptar.bind(this)
     }
 
+    mostrarDialogoListado = (isVisible) => {
+        this.setState({showListaUbicaciones: isVisible});
+    }
 
+    cerrarListadoUbicaciones (){
+        this.mostrarDialogoListado(false)
+    }
+
+    async handleAceptar (e, paquetes) {
+        e.preventDefault();
+        var filtrosTemp = this.state.filtros;
+        filtrosTemp.paquetesSeleccionadas = paquetes;
+        this.mostrarDialogoListado(false);
+        //this.generarRuta(filtrosTemp);
+    }
     componentDidMount() {
     }
 
@@ -188,7 +223,6 @@ class UltimaMilla extends Component {
                         filtered.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
-                console.log(filtered)
                 this.setState({
                     mostrarRuta: true,
                     modoEdicion: false,
@@ -275,9 +309,9 @@ class UltimaMilla extends Component {
         this.state.map.setView([location.y, location.x], 14)
     }
 
-
     async generarRuta(data) {
         this.setState({tour: null})
+        console.log(this.state);
         if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
             let unidadYaAsignada = false
@@ -295,7 +329,32 @@ class UltimaMilla extends Component {
             if (unidadYaAsignada){
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
             }else{
-                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                let paqSinLoc = [];
+                let guiasSinLoc = [];
+                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas);
+                data.paquetesSeleccionadas.forEach((paquete) => {
+                    if(paquete.m_sLatitud === "0" || paquete.m_sLongitud === "0" || paquete.m_sLatitud === "" || paquete.m_sLongitud === ""){
+                        paquete.actualizado = false;
+                        paqSinLoc.push(paquete);
+                    }
+                })
+                guias.forEach((guia) => {
+                    //console.log(guia)
+                    if(guia.m_sLatitud === "0" || guia.m_sLongitud === "0"){
+                        guiasSinLoc.push(guia);
+                    }
+                })
+                console.log(paqSinLoc);
+                if(paqSinLoc.length > 0){
+                    this.setState({
+                        showListaUbicaciones: true,
+                        paquetesSinCoord: paqSinLoc,
+                        filtros: data
+                    })
+                    this.mostrarDialogoListado(true);
+                    return
+                }
+
                 await obtenerParametrosConfiguracion().then((respuesta) => {
                     data.finishDate = moment(new Date()).add(respuesta.data.HorasLimiteEntregasUltimaMilla, 'hours').format('YYYY-MM-DDTHH:mm')
                 })
@@ -308,7 +367,10 @@ class UltimaMilla extends Component {
                                 if (i.reasons[0]?.code === 'TIME_WINDOW_CONSTRAINT'){
                                     i.reasons[0].descripcion = `El registro ${guias[index].m_sFolio} no puede ser agregado a la ruta porque no alcanzaría a ser completado en límite de horas configurado.`
                                 }else if (i.reasons[0]?.code === 'REACHABLE_CONSTRAINT'){
-                                    i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
+                                    this.setState({showListaUbicaciones: true, paquetesSinCoord: paqSinLoc})
+                                    this.mostrarDialogoMapa(true);
+                                    //i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
+
                                 }else{
                                     i.reasons[0].descripcion = `No se pudo agregar a la ruta el registro ${guias[index].m_sFolio}.`
                                 }
@@ -330,7 +392,6 @@ class UltimaMilla extends Component {
     ultimaMillaCompletada(ultimaMilla){
         return !ultimaMilla.m_arrClsProGuia.find(i => i.m_nEstatusUlimaMilla !== 3 && i.m_nEstatusUlimaMilla !== 4)
     }
-
 
     openFullscreen() {
         var elem = document.getElementById("mapFullScreen");
@@ -355,14 +416,14 @@ class UltimaMilla extends Component {
         this.setState({fullScreen: false})
     }
 
-    selectGuiaReasignar(idParadaFuente, idGuia) {
-        this.setState({openDialog: true, paradaFuente: idParadaFuente, idGuia: idGuia})
+    selectGuiaReasignar(idParadaFuente, idOperador,listadoOperadores) {
+        this.setState({openDialog: true, paradaFuente: idParadaFuente, idOperador: idOperador,listadoOperadores:listadoOperadores})
     }
 
 
     reasignarParada(event) {
         event.preventDefault()
-        reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
+        reasignarOperador(this.state.paradaFuente, this.state.idOperador).then((data) => {
             showSuccess(data.data)
             this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
             this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
@@ -385,6 +446,57 @@ class UltimaMilla extends Component {
     }
 
     render() {
+        /*let obtenerDatosDireccion = (esRecoleccion) => {
+            let esDiferenteDomicilio = true; //state.diferenteEntrega
+            if (!esRecoleccion) {
+                if (esDiferenteDomicilio) {
+                    return {
+                        nombreLugar: this.state.destinatario.nombreDestinatario,
+                        numeroInterior: '',
+                        numeroExterior: '',
+                        calle: this.state.entregaDD.domicilio,
+                        colonia: '',
+                        ciudad: this.state.entregaDD.municipio,
+                        estado: this.state.entregaDD.estado,
+                        pais: this.state.entregaDD.pais,
+                        codigoPostal: this.state.entregaDD.codigoPostal?.m_sCP,
+                        direccionCompleta: getAddressFormated(
+                            this.state.entregaDD.domicilio,
+                            null,
+                            null,
+                            null,
+                            this.state.entregaDD.codigoPostal?.m_sCP,
+                            this.state.entregaDD.municipio,
+                            this.state.entregaDD.estado,
+                            this.state.entregaDD.pais
+                        )
+                    }
+                }
+                /!*else {
+                    return {
+                        nombreLugar: destinatario.nombreDestinatario,
+                        numeroInterior: destinatario.numeroIntDestinatario,
+                        numeroExterior: destinatario.numeroExtDestinatario,
+                        calle: destinatario.calleDestinatario,
+                        colonia: destinatario.coloniaDestinatario,
+                        ciudad: destinatario.municipioTexto,
+                        estado: destinatario.estadoTexto,
+                        pais: destinatario.paisTexto,
+                        codigoPostal: destinatario.codigoPostalDestinatario?.m_sCP,
+                        direccionCompleta: getAddressFormated(
+                            destinatario.calleDestinatario,
+                            destinatario.numeroExtDestinatario,
+                            destinatario.numeroIntDestinatario,
+                            destinatario.coloniaDestinatario,
+                            destinatario.codigoPostalDestinatario?.m_sCP,
+                            destinatario.municipioTexto,
+                            destinatario.estadoTexto,
+                            destinatario.paisTexto
+                        )
+                    }
+                }*!/
+            }
+        }*/
 
         return (
             <div>
@@ -397,27 +509,36 @@ class UltimaMilla extends Component {
                         <DialogContent>
                             <form onSubmit={this.reasignarParada}>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                    <FormControl fullWidth variant="outlined" size="small">
                                         <InputLabel id="sucursalListadoLabel">Operador</InputLabel>
                                         <Select
                                             labelId="sucursalListadoLabel"
-                                            label="Formato"
+                                            label="Operador"
                                             className="form-control"
                                             required
                                             fullWidth
-                                            value={this.state.unidadSeleccionada}
-                                            onChange={(event) => this.setState({
-                                                unidadSeleccionada: event.target.value
-                                            })}
+                                            value={this.state.idOperador}
+                                            onChange={(event) => {
+
+                                                let valorUM=this.state.ultimaMilla
+
+                                                let valorParada=this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(i=>i.m_nIdParadaUltimaMilla==this.state.paradaFuente)
+                                                valorParada.m_nIdOperador=event.target.value
+                                                let indexParada=valorUM.m_arrClsParadaUltimaMilla.findIndex(i=>i==valorParada)
+                                                valorUM.m_arrClsParadaUltimaMilla[indexParada]=valorParada
+                                                this.setState({
+                                                    ...this.state,ultimaMilla:valorUM,idOperador:valorParada.m_nIdOperador
+                                                })
+                                            }
+                                            }
                                             id="formatoSeleccionado"
                                             name="formatoSeleccionado"
                                         >
-                                            {this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map((ultimaMilla) => (
-                                                <MenuItem
-                                                    key={ultimaMilla.m_nIdParadaUltimaMilla}
-                                                    value={ultimaMilla.m_nIdParadaUltimaMilla}
+                                            {this.state.listadoOperadores.map((op) => (
+                                                <MenuItem disabled={!op.operadorDisponible}
+                                                          value={op.m_nIdOperador}
                                                 >
-                                                    {ultimaMilla.m_snNombreOperador}
+                                                    {op.m_sNombreCompleto}
                                                 </MenuItem>
                                             ))}
                                         </Select>
@@ -447,7 +568,27 @@ class UltimaMilla extends Component {
                         </Cabecera>
                     </header>
                 }
-
+                {/*{
+                    this.state.showConfirmarUbicacion &&
+                    <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion}
+                                        open={this.state.showConfirmarUbicacion}
+                                        titulo={this.state.titulo}
+                                        remitente={false}
+                                        mostrarDialogoMapa={this.mostrarDialogoMapa}
+                                        direccion={this.state.obtenerDatosDireccion}
+                                        onClose={() => this.state({showConfirmarUbicacion: false})}
+                    />
+                }*/}
+                {
+                    this.state.showListaUbicaciones &&
+                    <ListaUbicaciones
+                                        open={this.state.showListaUbicaciones}
+                                        paquetes={this.state.paquetesSinCoord}
+                                        onClose={this.cerrarListadoUbicaciones}
+                                        handleAceptar={this.handleAceptar}
+                                        cerrarListadoUbicaciones={this.cerrarListadoUbicaciones}
+                    />
+                }
                 <section>
                     <div className="widget-content" id={"mapFullScreen"}>
                         <div className="row"
@@ -456,7 +597,7 @@ class UltimaMilla extends Component {
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
                                 <TileLayer style={{width: "100%", height: "100%"}}
-                                           url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
+                                           url="https://maps.hereapi.com/v3/base/mc/{z}/{x}/{y}/png8?style=logistics.day&apiKey={token}"
                                            token={process.env.REACT_APP_HERE_API_TOEKN}
                                 />
                                 {

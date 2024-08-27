@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField} from "@material-ui/core";
-import {DataGrid} from "@material-ui/data-grid";
+import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField} from "@mui/material";
 import {dataGridLocaleText} from "../../Constants";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 import Noty from "noty";
 
 function showSuccess(mensaje) {
@@ -271,7 +270,7 @@ export default function DialogoNuevoRango(props) {
                                 onChange={handleOnDataChange}
                                 name="idConcepto"
                                 variant="outlined"
-                                margin={"dense"}
+                                size="small"
                                 error={errores.idConcepto}
                                 helperText={errores.idConcepto ? errores.descripcionError : null}
                             >
@@ -292,7 +291,7 @@ export default function DialogoNuevoRango(props) {
                             onChange={handleOnDataChange}
                             name="idUnidadMedida"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             error={errores.idUnidadMedida}
                             helperText={errores.idUnidadMedida ? errores.descripcionError : null}
                         >
@@ -304,7 +303,7 @@ export default function DialogoNuevoRango(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
                                    onChange={handleOnDataChange}
                                    type="number"
                                    label="Mínimo"
@@ -319,7 +318,7 @@ export default function DialogoNuevoRango(props) {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
                                    onChange={handleOnDataChange}
                                    type="number"
                                    label="Máximo"
@@ -333,7 +332,7 @@ export default function DialogoNuevoRango(props) {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
                                    onChange={handleOnDataChange}
                                    type="number"
                                    label="Importe"
@@ -355,7 +354,7 @@ export default function DialogoNuevoRango(props) {
                             onChange={handleOnDataChange}
                             name="idTipoCalculo"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             error={errores.idTipoCalculo}
                             helperText={errores.idTipoCalculo ? errores.descripcionError : null}
                         >

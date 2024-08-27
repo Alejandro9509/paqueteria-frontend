@@ -1,8 +1,6 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField} from "@material-ui/core";
-import {DataGrid} from "@material-ui/data-grid";
+import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField,Grid} from "@mui/material";
 import {dataGridLocaleText} from "../../Constants";
-import Grid from "@material-ui/core/Grid";
 import Noty from "noty";
 
 function showSuccess(mensaje) {

@@ -8,9 +8,7 @@ import {getAddressFormated} from "../Util";
 
 const headers = API_HEADERS
 
-const XTourClient = window.XTourClient;
-var xtour = new XTourClient();
-xtour.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
+
 
 const Depot = (id, x, y, startDate, finishDate) => ({
     "$type": "DepotSite",
@@ -86,9 +84,9 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        console.log("Inicio de validación")
+        //console.log("Inicio de validación")
         if (g.m_sLatitud.length === 0) {
-            console.log("Se buscara la dirección")
+            //console.log("Se buscara la dirección")
             var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen : g.m_sCiudadDestino, g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario, g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente : g.m_sCodigoPostalDestinatario)
             guias.push({
                 ...g,
@@ -97,7 +95,7 @@ async function obtenerGuiasUbicacion(paquetes) {
                 index: i
             })
         } else {
-            console.log("Dirección ya obtenida")
+            //console.log("Dirección ya obtenida")
             guias.push({
                 ...g,
                 lat: g.m_sLatitud,
@@ -545,8 +543,8 @@ function cancelarRuta(id) {
     return result
 }
 
-function obtenerCFDI(id, esRecolecion, IdSucursal) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
+function obtenerCFDI(id, esRecolecion, IdSucursal,fecha,hora) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}/${fecha}/${hora}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})
@@ -554,8 +552,8 @@ function obtenerCFDI(id, esRecolecion, IdSucursal) {
     return result
 }
 
-function obtenerXMLCFDI(id, esRecolecion, IdSucursal) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
+function obtenerXMLCFDI(id, esRecolecion, IdSucursal,fecha,hora) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}/${fecha}/${hora}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})

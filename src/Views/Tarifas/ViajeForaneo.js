@@ -3,28 +3,38 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Button, Card, Checkbox,
-    Dialog, DialogActions, DialogContent,
-    Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, makeStyles,
-    MenuItem, Paper,
-    TextField
-} from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Typography from "@material-ui/core/Typography";
+    Button,
+    Card,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    Grid,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    MenuItem,
+    Paper,
+    TextField,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
 import RangosTarifa from "./RangosTarifa";
 import DialogCheckbox from "./DialogCheckbox";
-import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import CardHeader from "@material-ui/core/CardHeader";
-import Divider from "@material-ui/core/Divider";
+import CardHeader from "@mui/material/CardHeader";
+import Divider from "@mui/material/Divider";
 import DialogTransferList from "./DialogTransferList";
-import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
-import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
 import DialogTextView from "./DialogTextView";
 import GrupoViajeForaneo from "./GrupoViajeForaneo";
 import {getRandomId} from "../../Util/Util";
-import AddIcon from "@material-ui/icons/AddBox";
+import AddIcon from "@mui/icons-material/AddBox";
 
 
 export default function ViajeForaneo(props) {
@@ -172,7 +182,7 @@ export default function ViajeForaneo(props) {
                         selection={dialogGrupo.selection}
                     />
                 }
-                <Grid container spacing={2} justifyContent="center" direction="row">
+                <Grid container spacing={2} direction="row">
                     <Grid item xs={3}>
                         <TextField
                             id="idOrigen"
@@ -182,7 +192,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="idOrigen"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -202,7 +212,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="idTipoMedida"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -220,7 +230,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="idDestino"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         >
@@ -253,7 +263,7 @@ export default function ViajeForaneo(props) {
                             onChange={handleChangeViajeForaneo}
                             name="fleteMinimo"
                             variant="outlined"
-                            margin={"dense"}
+                            size="small"
                             required
                             disabled={props.disabled}
                         />

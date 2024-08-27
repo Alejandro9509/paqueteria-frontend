@@ -1,16 +1,16 @@
-import { Dialog, DialogContent, IconButton, TextField, Tooltip } from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
+import { Dialog, DialogContent, IconButton, TextField, Tooltip } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import React, { useEffect, useState, useMemo } from "react";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import Cabecera from "../../Components/Template/Cabecera";
-import RestartAltIcon from "@material-ui/icons/Refresh";
+import RestartAltIcon from "@mui/icons-material/Refresh";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../../Constants";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 import { obtenerClientesPaginado, obtenerRemitentesDestinatariosPaginado } from '../../Util/Contexts/RemitenteDestinatarioContext';
 import DialogAsignarSeguros from './DialogAsignarSeguros';
 import axios from "axios";
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import {API_HEADERS} from "../../Constants";
 function showSuccess(mensaje) {
     new Noty({
@@ -45,15 +45,14 @@ function Seguros() {
                 return (
                     <div>
                         <Tooltip title="Asignar seguro">
-                            <IconButton component="span"  onClick={(e)=>{openDialog(row)}}
-                          >
+                            <IconButton component="span" onClick={(e)=>{openDialog(row)}} size="large">
                                 <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
                             </IconButton>
 
                         </Tooltip>
 
                     </div>
-                )
+                );
             }
             },
             {
@@ -140,167 +139,178 @@ function Seguros() {
         setState({ ...state, openDialog: true, select: row });
       };
   return (
-    <div>
-        {
-            state.openDialog &&
-            <Dialog
-                open={state.openDialog}
-                onClose={(e) => {e.preventDefault();setState({ ...state, openDialog: false })}}
-                fullWidth
-                maxWidth="md"
-            >
-                <DialogContent>
-                    <DialogAsignarSeguros
-                        dialogVisible={dialogVisible}
-                        openDialog={state.openDialog}
-                        idCliente={rowSelect}
+      <div>
+          {
+              state.openDialog &&
+              <Dialog
+                  open={state.openDialog}
+                  onClose={(e) => {e.preventDefault();setState({ ...state, openDialog: false })}}
+                  fullWidth
+                  maxWidth="md"
+              >
+                  <DialogContent>
+                      <DialogAsignarSeguros
+                          dialogVisible={dialogVisible}
+                          openDialog={state.openDialog}
+                          idCliente={rowSelect}
 
-                        select={state.select}
-                        dataTiposSeguro={dataTiposSeguro}
-                        recargarClientes={()=>cargarDesdeServidor(pagina, registros)}
-                    />
-                </DialogContent>
-            </Dialog>
-        }
+                          select={state.select}
+                          dataTiposSeguro={dataTiposSeguro}
+                          recargarClientes={()=>cargarDesdeServidor(pagina, registros)}
+                      />
+                  </DialogContent>
+              </Dialog>
+          }
 
-        <header className="topbar clearfix">
-                <Cabecera titulo="Seguros" >
-                    <div className="page-header">
-                        <ul className="list-page-breadcrumb">
-                            <li>
-                                <a href="/Catalogos" className="color-mapeo">
-                                    Catálogos <i className="zmdi zmdi-chevron-right" />
-                                </a>
-                            </li>
-                            <li className="active-page">Seguros</li>
-                        </ul>
-                    </div>
-                </Cabecera>
-            </header>
+          <header className="topbar clearfix">
+                  <Cabecera titulo="Seguros" >
+                      <div className="page-header">
+                          <ul className="list-page-breadcrumb">
+                              <li>
+                                  <a href="/Catalogos" className="color-mapeo">
+                                      Catálogos <i className="zmdi zmdi-chevron-right" />
+                                  </a>
+                              </li>
+                              <li className="active-page">Seguros</li>
+                          </ul>
+                      </div>
+                  </Cabecera>
+              </header>
 
-            {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar">
-                <BarraLateralIzquierda />
-            </aside>
-            {/*Leftbar End Here*/}
-            <section className="main-container">
+              {/*Leftbar Start Here*/}
+              <aside className="iconic-leftbar">
+                  <BarraLateralIzquierda />
+              </aside>
+              {/*Leftbar End Here*/}
+              <section className="main-container">
 
-            <div className="container-fluid">
-             <ul className="nav navStatica nav-tabs">
-              <li className="active">
-                <a>
-                 <i className="fa fa-list" /> Listado
-                </a>
-              </li>
-             </ul>
+              <div className="container-fluid">
+               <ul className="nav navStatica nav-tabs">
+                <li className="active">
+                  <a>
+                   <i className="fa fa-list" /> Listado
+                  </a>
+                </li>
+               </ul>
 
-    <div className="row" className="tab-content">
-        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
-            <div className="widget-wrap">
+      <div className="row" className="tab-content">
+          <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
+              <div className="widget-wrap">
 
-            
-                <div className="widget-content">
-                    <div style={{marginLeft:"55%"}}>
+              
+                  <div className="widget-content">
+                      <div style={{marginLeft:"55%"}}>
 
-                        <TextField
-                            id={"search_client"}
-                            name={"search_client"}
-                            key={"search_client"}
-                            variant="standard"
-                            value={state.busqueda}
-                            onChange={handleBusquedaChange}
-                            style={{width:'60ch'}}
-                        />
-                        <IconButton aria-label="delete" onClick={(e) => {
-                            e.preventDefault();
-                            cargarDesdeServidor(0, registros)
-                            setPagina(0)
-                        }}>
-                            <SearchIcon style={{
-                                color: "#F9A03E",
-                                fontSize: 32,
-                                paddingInlineEnd: 0,
-                                paddingRight: 0,
-                                paddingBlockEnd: 0,
-                                paddingLeft: 0,
-                                paddingBlock: 0,
-                                marginRight: '10px'
-                            }}  />
-                            Buscar
-                        </IconButton>
-                        <IconButton aria-label="delete" onClick={(e) => {
-                            e.preventDefault();
-                            setState({...state,busqueda:""})
-                            limpiarBuscador(0,registros);
-                            setPagina(0)
-                        }}>
-                            <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                            Limpiar filtros
-                        </IconButton>
-                    </div>
-                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                        {data.length != 0 ? (
-                             <div style={{height: "500px", padding: "5px"}}>
-                             <DataGrid
-                                 localeText={dataGridLocaleText}
-                                 columns={columns}
-                                 rows={data}
-                                 getRowId={((row) => row.m_nNumeroCliente)}
-                                 onRowSelected={(row) => {
-                                     rowSelect = row;
-                                 }}
-                                 pagination
-                                 page={pagina}
-                                 rowsPerPageOptions={[registros]}
-                                 pageSize={registros}
-                                 rowCount={13600}
-                                 paginationMode="server"
-                                 onPageChange={(newPage) => {
-                                     setPagina(newPage.page)
-                                     console.log(newPage)
-                                 }}
-                                 
-                             />
-                         </div>
-                        ) : (
-                            <div>No se encontró ningún registro</div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
+                          <TextField
+                              id={"search_client"}
+                              name={"search_client"}
+                              key={"search_client"}
+                              variant="standard"
+                              value={state.busqueda}
+                              onChange={handleBusquedaChange}
+                              style={{width:'60ch'}}
+                          />
+                          <IconButton
+                              aria-label="delete"
+                              onClick={(e) => {
+                                  e.preventDefault();
+                                  cargarDesdeServidor(0, registros)
+                                  setPagina(0)
+                              }}
+                              size="large">
+                              <SearchIcon style={{
+                                  color: "#F9A03E",
+                                  fontSize: 32,
+                                  paddingInlineEnd: 0,
+                                  paddingRight: 0,
+                                  paddingBlockEnd: 0,
+                                  paddingLeft: 0,
+                                  paddingBlock: 0,
+                                  marginRight: '10px'
+                              }}  />
+                              Buscar
+                          </IconButton>
+                          <IconButton
+                              aria-label="delete"
+                              onClick={(e) => {
+                                  e.preventDefault();
+                                  setState({...state,busqueda:""})
+                                  limpiarBuscador(0,registros);
+                                  setPagina(0)
+                              }}
+                              size="large">
+                              <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                              Limpiar filtros
+                          </IconButton>
+                      </div>
+                      <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                          {data.length != 0 ? (
+                               <div style={{height: "500px", padding: "5px"}}>
+                               <DataGrid
+                                   localeText={dataGridLocaleText}
+                                   columns={columns}
+                                   rows={data}
+                                   getRowId={((row) => row.m_nNumeroCliente)}
+                                   onRowSelectionModelChange={(newModel)=>{
+                                       if(newModel.length<1)
+                                           return
+                                       rowSelect=data.find(i=>i.m_nNumeroCliente==newModel[0])
+                                   }}
+                                   /*onRowSelected={(row) => {
+                                       rowSelect = row;
+                                   }}*/
+                                   pagination
+                                   page={pagina}
+                                   autoPageSize
+                                   rowsPerPageOptions={[]}
+                                   pageSize={registros}
+                                   rowCount={13600}
+                                   paginationMode="server"
+                                   onPaginationModelChange={(newPage)=>{
+                                       setPagina(newPage.page)
+                                   }}
+                                   
+                               />
+                           </div>
+                          ) : (
+                              <div>No se encontró ningún registro</div>
+                          )}
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
-            <div className="widget-wrap">
-                <div className="widget-content">
-                    <div className="row">
-                        <div className="col-md-12">
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+          <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+              <div className="widget-wrap">
+                  <div className="widget-content">
+                      <div className="row">
+                          <div className="col-md-12">
+                              
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-        <div className="widget-wrap" id="Importar" className="tab-pane fade">
-            <div className="widget-wrap">
-                <div className="widget-content">
-                    <div className="row">
-                        <div className="col-md-12">
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+          <div className="widget-wrap" id="Importar" className="tab-pane fade">
+              <div className="widget-wrap">
+                  <div className="widget-content">
+                      <div className="row">
+                          <div className="col-md-12">
+                              
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-    </div>
-</div>
+      </div>
+  </div>
 
-</section>
+  </section>
 
-    </div>
-  )
+      </div>
+  );
 }
 
 export default Seguros

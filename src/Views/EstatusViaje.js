@@ -4,17 +4,39 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
-import { makeStyles } from "@material-ui/core/styles";
-import { DataGrid } from '@material-ui/data-grid';
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import { DataGrid } from '@mui/x-data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@mui/material";
 import { obtenerEstatusViaje } from "../Util/Contexts/EstatusViajeContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
 import { confirmAlert } from "react-confirm-alert";
+const PREFIX = 'EstatusViaje';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
+
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -25,23 +47,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
-
 function EstatusViaje() {
 
-    const classes = useStyles();
+
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idEstatusViaje: 0,
@@ -67,10 +75,10 @@ function EstatusViaje() {
             width: 125,
             renderCell: (row) => {
                 return (
-                    <div style={{ backgroundColor: "#" + row.row.m_sColor, width: "100%", textAlign: "center" }}>
+                    <Root style={{ backgroundColor: "#" + row.row.m_sColor, width: "100%", textAlign: "center" }}>
                         {row.row.m_sAbreviacion}
-                    </div>
-                )
+                    </Root>
+                );
             }
         }, {
             headerName: "Estatus",

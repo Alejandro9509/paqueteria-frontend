@@ -2,8 +2,8 @@ import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
 import {getCurrentDateTime,getCurrentTime,getCurrentDate,mesString} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
-import IconButton from "@material-ui/core/IconButton";
-import RestartAltIcon from '@material-ui/icons/Refresh';
+import IconButton from "@mui/material/IconButton";
+import RestartAltIcon from '@mui/icons-material/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import {
@@ -24,22 +24,23 @@ import {
     ListItemIcon,
     ListItemText,
     MenuItem
-} from '@material-ui/core';
+} from '@mui/material';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
 import Carousel, {propTypes} from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import {makeStyles} from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import * as XLSX from 'xlsx';
 import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
 import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
-import {DataGrid, GridToolbarContainer, GridToolbarExport} from '@material-ui/data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EnvioCorreoDialogo from "../Views/SAT/EnvioCorreoDialogo";
 
 import {
@@ -60,7 +61,7 @@ import {
     Stepper,
     TextField,
     Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 import {
     API_HEADERS,
     dataGridLocaleText,
@@ -134,10 +135,54 @@ import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
-import EmailIcon from '@material-ui/icons/Email';
+import EmailIcon from '@mui/icons-material/Email';
 import DialogImpresion from "./Guia/DialogImpresion";
 import {confirmarEtiquetasAdicionalesDialog} from "../Util/GlobalFunctions";
 import {obtenerClienteId} from "../Util/Contexts/ClientesContext";
+import {FileDownloadOutlined} from "@mui/icons-material";
+import {obtenerImagenEvidencia} from "../Util/Contexts/UltimaMillaContext";
+const PREFIX = 'Guia';
+
+const classes = {
+    paqueteCarrusel: `${PREFIX}-paqueteCarrusel`,
+    conceptoCarrusel: `${PREFIX}-conceptoCarrusel`,
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.paqueteCarrusel}`]: {
+        height: "190px !important",
+        // position: "initial !important"
+    },
+    [`& .${classes.conceptoCarrusel}`]: {
+        height: "70px !important",
+        position: "initial !important"
+    },
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+});
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -160,28 +205,6 @@ var EB = window.EB;
 var BrowserPrint = window.BrowserPrint;
 var selected_device;
 var devices = [];
-const styles = {
-    paqueteCarrusel: {
-        height: "190px !important",
-        // position: "initial !important"
-    },
-    conceptoCarrusel: {
-        height: "70px !important",
-        position: "initial !important"
-    },
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    }
-};
-
-const useStyles = makeStyles(styles);
 
 const FORMATOS_IMPRESION = {
     GUIA: 212,
@@ -193,7 +216,7 @@ function Guia(props) {
     let today = new Date();
     let React = require('react');
     let QRCode = require('qrcode.react');
-    const classes = useStyles();
+
     localStorage.getItem("UsuarioId");
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
@@ -363,7 +386,7 @@ function Guia(props) {
             field: "",
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_sEstatusGuia === "Cancelado"}>
                             <a
                                 onClick={() => (handleShowModificar(row.row,row.row.m_nIdGuia,row.row.m_nFolioGuia))}
@@ -421,8 +444,8 @@ function Guia(props) {
                                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {
@@ -587,6 +610,11 @@ function Guia(props) {
         {
             headerName: "Folio ERP",
             field: "FolioERP",
+            width: 200
+        },
+        {
+            headerName: "Tipo de cobro inicial",
+            field: "m_sTipoCobroInicial",
             width: 200
         },
         {
@@ -1182,8 +1210,11 @@ function Guia(props) {
         })
         }
         else{
-        showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
-        return
+            if(respuesta.data.folioViajeERP)
+                showSuccess("La guía no puede ser cancelada ya que pertenece al viaje activo "+ respuesta.data.folioViajeERP +". Cancelar viaje en Tráfico/Viajes ")
+            else
+                showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
+            return
         }
         }).catch((err)=>{
             showSuccess(err)
@@ -1343,11 +1374,13 @@ function Guia(props) {
     function generarReporte(row) {
         let mes = mesString(today.getMonth()+1)
         obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.GUIA).then((respuesta) => {
-            imprimirFormatoGuiaMoroleon(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia,today.getFullYear(),today.getDate(),mes).then(({data}) => {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.','');
+            obtenerImagenEvidencia(row.m_nIdGuia,0).then((img)=> {
+                imprimirFormatoGuiaMoroleon(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdGuia, today.getFullYear(), today.getDate(), mes,img.data.find(i=>i.m_nTipoArchivo==2)?.m_sImagen).then(({data}) => {
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "Guía" + row.m_nFolioGuia.replace('.', '');
+                })
             })
         })
     }
@@ -1800,7 +1833,6 @@ function Guia(props) {
                                         let result
                                         try {
                                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal,i), undefined, errorCallback);
-                                            console.log(currentIndex)
                                             showSuccess('Impresión en curso.')
                                             await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                                             currentIndex+=1
@@ -1830,7 +1862,6 @@ function Guia(props) {
                         let result
                         try {
                             result = await selected_device.send(TICKET_ZEBRA_TEMPLATE(guia, p, currentIndex,ctdTotal, i), undefined, errorCallback);
-                            console.log(currentIndex)
                             showSuccess('Impresión en curso.')
                             await new Promise(resolve => setTimeout(resolve, 1000)); // 3 sec
                             currentIndex+=1
@@ -2302,7 +2333,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Remitente"
@@ -2315,7 +2346,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="RFC"
@@ -2328,7 +2359,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Dirección"
@@ -2341,7 +2372,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Zona"
@@ -2354,7 +2385,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="CP"
@@ -2367,7 +2398,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Ciudad"
@@ -2380,7 +2411,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Teléfono"
@@ -2397,7 +2428,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Destinatario"
@@ -2410,7 +2441,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="RFC"
@@ -2423,7 +2454,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Dirección"
@@ -2438,7 +2469,7 @@ function Guia(props) {
                                                         Zona
                                                     </label>
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Zona"
@@ -2451,7 +2482,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="CP"
@@ -2464,7 +2495,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Ciudad"
@@ -2477,7 +2508,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Teléfono"
@@ -2490,7 +2521,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Cantidad"
@@ -2503,7 +2534,7 @@ function Guia(props) {
                                                 <div className="col-md-12 unit">
 
                                                     <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
+                                                        <TextField variant="outlined" size="small"
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Descripcion"
@@ -2739,7 +2770,7 @@ function Guia(props) {
             {/*                                className="input select"*/}
             {/*                                fullWidth variant="outlined"*/}
             {/*                                required*/}
-            {/*                                margin="dense">*/}
+            {/*                                size="small">*/}
             {/*                                <InputLabel*/}
             {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
             {/*                                <Select*/}
@@ -2803,7 +2834,7 @@ function Guia(props) {
             {/*                                className="input select"*/}
             {/*                                fullWidth variant="outlined"*/}
             {/*                                required*/}
-            {/*                                margin="dense">*/}
+            {/*                                size="small">*/}
             {/*                                <InputLabel*/}
             {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
             {/*                                <Select*/}
@@ -2975,14 +3006,14 @@ function Guia(props) {
                             </a>
                         </li>
 
-                        <li>
-                            <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}
-                               onClick={() => {
-                                   setState({...state, openAsignarTrayectos: true})
-                               }}>
-                                <i className="fa fa-road"/> Asignar Trayectos
-                            </a>
-                        </li>
+                        {/*<li>*/}
+                        {/*    <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}*/}
+                        {/*       onClick={() => {*/}
+                        {/*           setState({...state, openAsignarTrayectos: true})*/}
+                        {/*       }}>*/}
+                        {/*        <i className="fa fa-road"/> Asignar Trayectos*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
 
                         <li>
                             <a onClick={handleShowCancelar}
@@ -3012,22 +3043,34 @@ function Guia(props) {
                                     </div>
 
                                     <div className="row" style={{height: state.height - 250, width: '100%'}}>
-                                    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-textSizeSmall MuiButton-sizeSmall" tabindex="0" type="button" aria-haspopup="menu" aria-labelledby="mui-66113" id="mui-38414" aria-expanded="true" onClick={handleClickOpen}>
-                                        <span class="MuiButton-label">
-                                         <span class="MuiButton-startIcon MuiButton-iconSizeSmall">
-                                            <svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-                                                <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z">
-                                            </path></svg></span>Exportar</span><span class="MuiTouchRipple-root">
-                                        </span>
-                                    </button>
+                                        <Button onClick={handleClickOpen} sx={{fontSize:12}} component="label" startIcon={<FileDownloadOutlined/>}>
+                                            Exportar
+                                            <VisuallyHiddenInput/>
+                                        </Button>
+
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             rows={data}
                                             columns={columns}
                                             density="compact"
+                                            rowsPerPageOptions={[]}
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdGuia}
-                                            onRowSelected={(row) => {
+                                            onRowSelectionModelChange={(newRowSelectionModel) => {
+                                                if(newRowSelectionModel.length<1)
+                                                    return
+                                                let row=data.find(i=>i.m_nIdGuia==newRowSelectionModel[0])
+                                                setGuiaSeleccionada(data.find(i=>i.m_nIdGuia==newRowSelectionModel[0]))
+                                                setState({
+                                                    ...state,
+                                                    idGuia: row.m_nIdGuia,
+                                                    estatusGuia:row.m_nIdEstatusGuia,
+                                                    cambioCobro: true,
+                                                    creditoVencido: row.m_bCreditoVencido && !row.m_bSinCredito,
+                                                    folioInforme:row.m_sFolioInforme
+                                                })
+                                            }}
+                                            /*onRowSelected={(row) => {
                                                 setGuiaSeleccionada(row.data)
                                                 setState({
                                                     ...state,
@@ -3037,7 +3080,7 @@ function Guia(props) {
                                                     creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito,
                                                     folioInforme:row.data.m_sFolioInforme
                                                 })
-                                            }}
+                                            }}*/
 
                                         />
                                     </div>
@@ -3084,15 +3127,15 @@ function Guia(props) {
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <Grid container spacing={2}>
+                                                    <Grid container spacing={1}>
+                                                    <Grid container item spacing={2}>
                                                         <Grid item xs>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
+                                                                             size="small">
                                                                     <InputLabel
                                                                         id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                                     <Select
-                                                                        native
                                                                         labelId="idSucursalAgregarLabel"
                                                                         className="form-control"
                                                                         required
@@ -3106,14 +3149,14 @@ function Guia(props) {
                                                                             shrink: true,
                                                                         }}
                                                                     >
-                                                                        <option value="0"></option>
+                                                                        <MenuItem value="0"></MenuItem>
                                                                         {dataSucursal.map((sucursal) => (
-                                                                            <option
+                                                                            <MenuItem
                                                                                 key={sucursal.m_nIdSucursal}
                                                                                 value={sucursal.m_nIdSucursal}
                                                                             >
                                                                                 {sucursal.m_sSucursal}
-                                                                            </option>
+                                                                            </MenuItem>
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
@@ -3121,7 +3164,7 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"
@@ -3130,6 +3173,7 @@ function Guia(props) {
                                                                            readOnly={state.agregar == "Consultar"}
                                                                            id="folioGuia"
                                                                            name="folioGuia"
+                                                                           fullWidth
                                                                            disabled="disabled"
                                                                            InputLabelProps={{
                                                                                shrink: true,
@@ -3141,11 +3185,11 @@ function Guia(props) {
                                                             <label className="label">
                                                              {state.agregar == "Agregar" &&
                                                               <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
+                                                                             size="small">
                                                                     <InputLabel id="idEmbarqueLabel">Folio
                                                                         Embarque</InputLabel>
                                                                     <Select
-                                                                        native
+                                                                        size="small"
                                                                         labelId="idEmbarqueLabel"
                                                                         label="Folio Embarque"
                                                                         className="form-control"
@@ -3157,25 +3201,24 @@ function Guia(props) {
                                                                         disabled={state.agregar == "Consultar" || state.validarEmbarqueGuia || state.agregar == "Modificar" }
 
                                                                     >
-                                                                        <option value="0">
+                                                                        <MenuItem value="0">
                                                                             Seleccionar
-                                                                        </option>
+                                                                        </MenuItem>
                                                                         {dataEmbarque.map(
                                                                             (embarque) => (
-                                                                                <option key={embarque.m_nIdEmbarque}
+                                                                                <MenuItem key={embarque.m_nIdEmbarque}
                                                                                         value={embarque.m_nIdEmbarque}>
                                                                                     {
                                                                                         embarque.m_sFolioEmbarque
                                                                                     }
-                                                                                </option>
+                                                                                </MenuItem>
                                                                             )
                                                                         )}
                                                                     </Select>
                                                                 </FormControl>
                                                                 }
                                                                 {state.agregar != "Agregar" &&
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                    native
+                                                                    <TextField variant="outlined" size="small" fullWidth
                                                                     labelId="idEmbarqueLabel"
                                                                     label="Folio Embarque"
                                                                     className="form-control"
@@ -3192,7 +3235,7 @@ function Guia(props) {
                                                         </Grid>
                                                       {/*  <Grid item xs>
                                                           <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            className="form-control"
                                                                            type="text"
                                                                            InputLabelProps={{
@@ -3208,10 +3251,11 @@ function Guia(props) {
                                                         </Grid>*/}
                                                         <Grid item xs>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"
+                                                                           fullWidth
                                                                            label="Folio Informe"
                                                                            //placeholder={state.folioInforme}
                                                                            value={state.folioInforme}
@@ -3223,13 +3267,14 @@ function Guia(props) {
                                                             </div>
                                                         </Grid>
                                                     </Grid>
-                                                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
+                                                    <Grid item container spacing={2} style={{marginBottom: '15px'}}>
                                                         <Grid item xs={2}>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"
+                                                                           fullWidth
                                                                            label="Tracking"
                                                                            placeholder={state.tracking}
                                                                            readOnly={state.agregar == "Consultar"}
@@ -3244,10 +3289,11 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs={2}>
                                                             <div className="input">
-                                                                <TextField variant="outlined" margin="dense"
+                                                                <TextField variant="outlined" size="small"
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="datetime-local"
+                                                                           fullWidth
                                                                            InputLabelProps={{shrink: true,}}
                                                                            label="Fecha / Hora"
                                                                            value={state.fecha}
@@ -3261,11 +3307,10 @@ function Guia(props) {
                                                         <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
+                                                                             size="small">
                                                                     <InputLabel id="idEstatusGuiaLabel"> Estatus de la
                                                                         Guia</InputLabel>
                                                                     <Select
-                                                                        native
                                                                         labelId="idEstatusGuiaLabel"
                                                                         label="Estatus de la Guia"
                                                                         className="form-control"
@@ -3280,14 +3325,14 @@ function Guia(props) {
                                                                             shrink: true,
                                                                         }}
                                                                     >
-                                                                        <option key={0} value="0">Seleccionar</option>
+                                                                        <MenuItem key={0} value="0">Seleccionar</MenuItem>
                                                                         {dataEstatusGuia.map(
                                                                             (estatusGuia) => (
-                                                                                <option
+                                                                                <MenuItem
                                                                                     key={estatusGuia.m_nIdEstatusGuia}
                                                                                     value={estatusGuia.m_nIdEstatusGuia}>
                                                                                     {estatusGuia.m_sEstatus}
-                                                                                </option>
+                                                                                </MenuItem>
                                                                             )
                                                                         )}
                                                                     </Select>
@@ -3297,10 +3342,9 @@ function Guia(props) {
                                                         <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
+                                                                             size="small">
                                                                     <InputLabel id="idMonedaLabel"> Moneda</InputLabel>
                                                                     <Select
-                                                                        native
                                                                         labelId="idMonedaLabel"
                                                                         label="Moneda"
                                                                         className="form-control"
@@ -3312,17 +3356,17 @@ function Guia(props) {
                                                                         disabled
                                                                         // disabled
                                                                     >
-                                                                        <option value="0">
+                                                                        <MenuItem value="0">
                                                                             Seleccionar
-                                                                        </option>
+                                                                        </MenuItem>
                                                                         {dataMoneda.map(
                                                                             (moneda) => (
-                                                                                <option key={moneda.m_nIdMoneda}
+                                                                                <MenuItem key={moneda.m_nIdMoneda}
                                                                                         value={moneda.m_nIdMoneda}>
                                                                                     {
                                                                                         moneda.m_sMoneda
                                                                                     }
-                                                                                </option>
+                                                                                </MenuItem>
                                                                             )
                                                                         )}
                                                                     </Select>
@@ -3332,11 +3376,10 @@ function Guia(props) {
                                                         <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
+                                                                             size="small">
                                                                     <InputLabel id="tipoCambioLabel">Tipo de
                                                                         Cambio</InputLabel>
                                                                     <Select
-                                                                        native
                                                                         labelId="tipoCambioLabel"
                                                                         label="Tipo de Cambio"
                                                                         className="form-control"
@@ -3348,14 +3391,14 @@ function Guia(props) {
                                                                         id="tipoCambio"
                                                                         name="tipoCambio"
                                                                     >
-                                                                        <option value="0">Seleccionar</option>
+                                                                        <MenuItem value="0">Seleccionar</MenuItem>
                                                                         {dataTipoCambio.map((cambio) => (
-                                                                            <option
+                                                                            <MenuItem
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
                                                                                 {cambio.m_cTipoCambio.toFixed(4)}
-                                                                            </option>
+                                                                            </MenuItem>
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
@@ -3365,10 +3408,9 @@ function Guia(props) {
                                                         <Grid item xs={2}>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                             margin="dense" required>
+                                                                             size="small" required>
                                                                     <InputLabel> Tipo de Tarifa</InputLabel>
                                                                     <Select
-                                                                        native
                                                                         label="Tipo de Tarifa"
                                                                         className="form-control"
                                                                         onChange={handleChange}
@@ -3377,9 +3419,9 @@ function Guia(props) {
                                                                         value={state.idTipoTarifa}
                                                                         disabled
                                                                     >
-                                                                        <option value="1">Por peso o volumen</option>
-                                                                        <option value="2">Por rango</option>
-                                                                        <option value="3">Por región</option>
+                                                                        <MenuItem value="1">Por peso o volumen</MenuItem>
+                                                                        <MenuItem value="2">Por rango</MenuItem>
+                                                                        <MenuItem value="3">Por región</MenuItem>
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
@@ -3389,8 +3431,9 @@ function Guia(props) {
                                                             <TextField
                                                                 variant="outlined"
                                                                 label="Responsable de pago"
-                                                                margin="dense"
+                                                                size="small"
                                                                 type="text"
+                                                                fullWidth
                                                                 disabled
                                                                 readOnly
                                                                 value={state.clientePaga}
@@ -3400,8 +3443,9 @@ function Guia(props) {
                                                         <Grid item xs={3}>
                                                             <TextField
                                                                 variant="outlined"
+                                                                fullWidth
                                                                 label="Referencia"
-                                                                margin="dense"
+                                                                size="small"
                                                                 type="text"
                                                                 disabled
                                                                 readOnly
@@ -3411,8 +3455,9 @@ function Guia(props) {
                                                         <Grid item xs={6}>
                                                             <TextField
                                                                 variant="outlined"
+                                                                fullWidth
                                                                 label="Observaciones"
-                                                                margin="dense"
+                                                                size="small"
                                                                 type="text"
                                                                 disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
                                                                 value={state.observaciones}
@@ -3429,6 +3474,7 @@ function Guia(props) {
                                                                 InputLabelProps={{shrink: true}}
                                                             />
                                                         </Grid>
+                                                    </Grid>
                                                     </Grid>
                                                 </div>
                                             </div>
@@ -3459,10 +3505,11 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
+                                                                                           fullWidth
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
@@ -3480,7 +3527,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3501,7 +3549,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3522,7 +3571,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3543,7 +3593,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3564,9 +3615,10 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
+                                                                                           fullWidth
                                                                                            type="text"
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
@@ -3585,7 +3637,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3606,7 +3659,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3628,10 +3682,11 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
+                                                                                           fullWidth
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
@@ -3664,7 +3719,7 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
 
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3672,6 +3727,7 @@ function Guia(props) {
                                                                                                shrink: true,
                                                                                            }}
                                                                                            label="Nombre"
+                                                                                           fullWidth
                                                                                            value={state.sNombreDestinatario}
                                                                                            readOnly={state.agregar == "Consultar"}
                                                                                            id="sNombreDestinatario"
@@ -3684,7 +3740,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -3703,7 +3760,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -3722,9 +3780,10 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            className="form-control"
                                                                                            type="text"
+                                                                                           fullWidth
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
@@ -3741,9 +3800,10 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            className="form-control"
                                                                                            type="text"
+                                                                                           fullWidth
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
@@ -3760,7 +3820,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           fullWidth
+                                                                                           size="small"
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -3779,7 +3840,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           fullWidth
+                                                                                           size="small"
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -3798,7 +3860,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           fullWidth
+                                                                                           size="small"
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -3818,7 +3881,8 @@ function Guia(props) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           fullWidth
+                                                                                           size="small"
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -3930,12 +3994,12 @@ function Guia(props) {
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense">
+                                                                                             size="small">
                                                                                     <InputLabel id="idTipoCobroLabel">Tipo
                                                                                         Cobro</InputLabel>
                                                                                     <Select
-                                                                                        native
                                                                                         labelId="idTipoCobroLabel"
+                                                                                        size="small"
                                                                                         label="Tipo Cobro"
                                                                                         className="form-control"
                                                                                         required
@@ -3947,18 +4011,18 @@ function Guia(props) {
                                                                                         // disabled={state.agregar == "Consultar"}
                                                                                         disabled="disabled">
 
-                                                                                        <option value="0">
+                                                                                        <MenuItem value="0">
                                                                                             Seleccionar
-                                                                                        </option>
+                                                                                        </MenuItem>
                                                                                         {dataTipoCobro.map(
                                                                                             (tipoCobro) => (
-                                                                                                <option
+                                                                                                <MenuItem
                                                                                                     key={tipoCobro.m_nIdTipoCobro}
                                                                                                     value={tipoCobro.m_nIdTipoCobro}>
                                                                                                     {
                                                                                                         tipoCobro.m_sDescripcion
                                                                                                     }
-                                                                                                </option>
+                                                                                                </MenuItem>
                                                                                             )
                                                                                         )}
                                                                                     </Select>
@@ -3969,12 +4033,12 @@ function Guia(props) {
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense">
+                                                                                             size="small">
                                                                                     <InputLabel
                                                                                         id="idTipoServicioLabel">Tipo
                                                                                         Servicio</InputLabel>
                                                                                     <Select
-                                                                                        native
+                                                                                        fullWidth
                                                                                         labelId="idTipoServicioLabel"
                                                                                         label="Tipo Servicio"
                                                                                         className="form-control"
@@ -3987,19 +4051,19 @@ function Guia(props) {
                                                                                         value={state.idTipoServicio}
 
                                                                                     >
-                                                                                        <option key={0}
+                                                                                        <MenuItem key={0}
                                                                                                 value="0">Seleccionar
-                                                                                        </option>
-                                                                                        <option key={"1"}
+                                                                                        </MenuItem>
+                                                                                        <MenuItem key={"1"}
                                                                                                 value={1}
                                                                                         >
                                                                                             Consolidado
-                                                                                        </option>
-                                                                                        <option key={"2"}
+                                                                                        </MenuItem>
+                                                                                        <MenuItem key={"2"}
                                                                                                 value={2}
                                                                                         >
                                                                                             Paquetería
-                                                                                        </option>
+                                                                                        </MenuItem>
                                                                                     </Select>
                                                                                 </FormControl>
                                                                             </label>
@@ -4007,7 +4071,7 @@ function Guia(props) {
                                                                         <Grid item xs>
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -4032,7 +4096,7 @@ function Guia(props) {
                                                                         <Grid item xs>
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            className="form-control"
                                                                                            type="number"
                                                                                            disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
@@ -4132,7 +4196,7 @@ function Guia(props) {
                                         <div className="form-footer ol-md-12">
                                             <Grid container spacing={1}>
                                                 <Grid item xs>
-                                                    <Button fullWidth color={"secondary"} variant={"contained"}
+                                                    <Button fullWidth color={"secondary"} className="btn btn-secondary secondary-btn" variant={"contained"}
                                                             onClick={(event) => {
                                                                 event.stopPropagation();
                                                                 setState({...state, agregar: "Agregar"});
@@ -4202,7 +4266,7 @@ function Guia(props) {
                                                             Importar
                                                         </label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleUpload}
                                                                        className="form-control"
                                                                        type="file"
@@ -4252,10 +4316,11 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Folio Guía</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{
                                                                            shrink: true,
                                                                        }}
@@ -4270,7 +4335,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Sucursal</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4285,7 +4350,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Fecha</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4303,7 +4368,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Usuario</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4321,7 +4386,7 @@ function Guia(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <label className="label">Estatus</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -4339,7 +4404,7 @@ function Guia(props) {
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <label className="label">Motivo</label>
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small" fullWidth
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"

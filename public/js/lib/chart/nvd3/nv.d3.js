@@ -11371,7 +11371,7 @@ nv.models.scatter = function() {
     chart.options = nv.utils.optionsFunc.bind(chart);
 
     // utility function calls provided by this chart
-    chart._calls = new function() {
+    chart._calls = new (function() {
         this.clearHighlights = function () {
             nv.dom.write(function() {
                 container.selectAll(".nv-point.hover").classed("hover", false);
@@ -11386,7 +11386,7 @@ nv.models.scatter = function() {
                   .classed("hover", isHoverOver);
             });
         };
-    };
+    });
 
     // trigger calls from events too
     dispatch.on('elementMouseover.point', function(d) {

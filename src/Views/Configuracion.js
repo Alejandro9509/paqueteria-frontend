@@ -3,12 +3,12 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import configurationRoutes from '../routesConfiguraciones';
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import {
     Link,
 } from 'react-router-dom';
 import $ from 'jquery';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import CuentasCorreo from "./CuentasCorreo/CuentasCorreo";
 window.jQuery = window.$ = $;
 

@@ -11,12 +11,12 @@ import {
     Typography,
     Divider,
     TextField, InputAdornment, Button
-} from "@material-ui/core";
-import MessageIcon from '@material-ui/icons/Message';
-import CloseIcon from '@material-ui/icons/Close';
-import EmailIcon from '@material-ui/icons/Email';
+} from "@mui/material";
+import MessageIcon from '@mui/icons-material/Message';
+import CloseIcon from '@mui/icons-material/Close';
+import EmailIcon from '@mui/icons-material/Email';
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
-import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from '@mui/icons-material/Search';
 import {agregarMensajes, obtenerMensajes} from "../../Util/Contexts/MensajesConetext";
 import Buttons from "../../Util/CarruselButtons";
 import Noty from "noty";
@@ -132,7 +132,8 @@ class Mensajes extends Component {
                             position: "fixed",
                             zIndex: 3000,
                             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                        }}>
+                        }}
+                        size="large">
                         <MessageIcon/>
                     </IconButton>
                 }
@@ -170,7 +171,7 @@ class Mensajes extends Component {
                                 <IconButton
                                     style={{height: "30px"}}
                                     onClick={() => this.setState({openDetail: false})}
-                                >
+                                    size="large">
                                     <CloseIcon style={{fill: "white"}} onClick={()=>{ 
                                          this.setState({indexOpen:-1 })
                                         clearInterval(this.state.idIntervalo)}}/>

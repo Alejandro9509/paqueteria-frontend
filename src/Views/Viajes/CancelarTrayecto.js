@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Dialog, DialogContent, DialogTitle, TextField} from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
+import {Dialog, DialogContent, DialogTitle, TextField} from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 const getCurrentDateTime = () => {
     return `${new Date().getFullYear()}-${`${new Date().getMonth() +

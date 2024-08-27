@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Divider, Grid, Typography} from "@material-ui/core";
+import {Divider, Grid, Typography} from "@mui/material";
 
 class PaquetesList extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class PaquetesList extends Component {
                 {this.props.paquetes.map((p, index) =>
                 <>
                     <Divider orientation="horizontal" flexItem />
-                    <Grid container alignItems={"center"} justify={"center"} direction="row" spacing={2}>
+                    <Grid container alignItems={"center"} justifyContent={"center"} direction="row" spacing={2}>
                         <Grid item md={12}>
                             <Typography variant={"h5"}> Paquete: {index + 1} de {this.props.paquetes.length}</Typography>
 
@@ -41,7 +41,7 @@ class PaquetesList extends Component {
 
                         </Grid>
                     </Grid>
-                    <Grid container alignItems={"center"} justify={"center"} direction="row" spacing={2}>
+                    <Grid container alignItems={"center"} justifyContent={"center"} direction="row" spacing={2}>
                         <Grid item md={6}>
                         <Typography variant={"body1"}>Descripción: <b>{p.m_sDescripcion}</b></Typography>
                         </Grid>

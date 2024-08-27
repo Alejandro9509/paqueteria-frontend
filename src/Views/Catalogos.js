@@ -4,7 +4,7 @@ import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda"
 import catalogRoutes from "../routesCatalogos";
 import { Link } from "react-router-dom";
 import $ from "jquery";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import {validarDerecho} from "../Util/Util"
 
 window.jQuery = window.$ = $;

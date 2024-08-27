@@ -1,4 +1,4 @@
-import {Box, Button, Grid, Typography} from '@material-ui/core'
+import {Box, Button, Grid, Typography} from '@mui/material'
 import React, {useEffect, useState} from 'react'
 import {obtenerImagenEvidencia} from '../Util/Contexts/UltimaMillaContext'
 import DialogoEvidenciasUltimaMilla from "./UltimaMilla/DialogoEvidenciasUltimaMilla";

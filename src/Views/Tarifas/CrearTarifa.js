@@ -13,15 +13,15 @@ import {
     Typography,
     Checkbox,
     DialogContent, Dialog, Grid, MenuItem, Paper
-} from '@material-ui/core';
+} from '@mui/material';
 import ConceptosAdicionales from './ConceptosAdicionales';
 import ConceptosAdicionalesManiobra from './ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesRecoleccion from './ConceptosAdicionalesRecoleccion';
 import TipoCobro from './TipoCobro';
 import TipoServicio from './TipoServicio';
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import { getUniqueListBy } from '../../Util/Util';
-import { PowerInputSharp } from '@material-ui/icons';
+import { PowerInputSharp } from '@mui/icons-material';
 import { obtenerCiudades } from '../../Util/Contexts/CiudadesContext';
 import ProductosTarifa from "./ProductosTarifa";
 import DestinosTarifa from "./DestinosTarifa";
@@ -38,7 +38,7 @@ import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerClientePublicoGeneral, obtenerClienteTieneConvenio} from "../../Util/Contexts/ClientesContext";
 import Noty from "noty";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 const headers = API_HEADERS
 
@@ -1223,13 +1223,13 @@ function CrearTarifav2(props) {
 
     const handlePatrocinadorSelected = (row) => {
         if (props.convenio){
-            obtenerClienteTieneConvenio(row.data.m_nIdCliente,0).then(respuesta => {
+            obtenerClienteTieneConvenio(row.m_nIdCliente,0).then(respuesta => {
                 if (respuesta.data.value){
                     showSuccess("El cliente seleccionado ya tiene convenio activo.")
                 }else{
                     setState(() => ({
                         ...state,
-                        cliente: row.data,
+                        cliente: row,
                     }))
                 }
             }).catch(e => {

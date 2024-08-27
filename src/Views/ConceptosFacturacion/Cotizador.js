@@ -5,11 +5,11 @@ import {obtenerCotizacion} from "../../Util/Contexts/CotizadorContext";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {currencyFormatter, getUniqueListBy} from "../../Util/Util";
 import Noty from "noty";
-import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@material-ui/core";
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import DialogContentText from "@material-ui/core/DialogContentText";
-import Button from "@material-ui/core/Button";
-import ListRoundedIcon from '@material-ui/icons/ListRounded';
+import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@mui/material";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import DialogContentText from "@mui/material/DialogContentText";
+import Button from "@mui/material/Button";
+import ListRoundedIcon from '@mui/icons-material/ListRounded';
 
 function showSuccess(mensaje) {
     new Noty({
@@ -208,13 +208,13 @@ class Cotizador extends Component {
                                 <h2>Conceptos de facturación
                                     {
                                         (this.props.embarque.mostrarCotizador && this.state.showErrorIconButton) &&
-                                        <IconButton onClick={() => this.handleShowDialogError(true)}>
+                                        <IconButton onClick={() => this.handleShowDialogError(true)} size="large">
                                             <InfoOutlinedIcon color={"error"} fontSize={"large"} />
                                         </IconButton>
                                     }
                                     {
                                         (this.props.embarque.mostrarCotizador && this.state.showJustificacionIconButton) &&
-                                        <IconButton onClick={() => this.handleShowDialogJustificacion(true)}>
+                                        <IconButton onClick={() => this.handleShowDialogJustificacion(true)} size="large">
                                             <ListRoundedIcon color={"primary"} fontSize={"large"} />
                                         </IconButton>
                                     }
@@ -226,6 +226,7 @@ class Cotizador extends Component {
                                 this.props.embarque.mostrarCotizador &&
                                 <ConceptosFacturacionGuias
                                     keys={0}
+                                    esRec={this.props.recoleccion}
                                     disabled={this.props.disabled}
                                     dataPaquetes={this.props.conceptos}
                                     onChangeList={this.handleChangeListConceptos}

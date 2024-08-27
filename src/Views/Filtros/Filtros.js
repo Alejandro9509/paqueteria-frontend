@@ -1,12 +1,12 @@
 import React, {useEffect, useState, useMemo} from "react";
-import {Dialog, DialogActions, DialogContent, Grid} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import IconButton from "@material-ui/core/IconButton";
-import RestartAltIcon from "@material-ui/icons/Refresh";
-import SearchIcon from '@material-ui/icons/Search';
+import {Dialog, DialogActions, DialogContent, Grid,MenuItem} from "@mui/material";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import IconButton from "@mui/material/IconButton";
+import RestartAltIcon from "@mui/icons-material/Refresh";
+import SearchIcon from '@mui/icons-material/Search';
 import {obtenerEmbarquesFiltro} from "../../Util/Contexts/EmbarquesContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
@@ -20,7 +20,7 @@ import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 import {obtenerInformeFiltro} from "../../Util/Contexts/InformesContext";
 import {obtenerViajesByFiltro} from "../../Util/Contexts/ViajesContext";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import InputAdornment from "@mui/material/InputAdornment";
 import DialogTableRemDes from "../RemitenteDestinatario/DialogTableRemDes";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
@@ -257,13 +257,13 @@ function Filtros(props) {
         setFiltros(filtros => {
             return{
                 ...filtros,
-                clientePaga: row.data,
+                clientePaga: row,
             }
         });
         setOpenDialog(false);
     }
 
-    return(
+    return (
         <div>
             <Dialog
                 open={openDialog}
@@ -277,7 +277,8 @@ function Filtros(props) {
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container spacing={2} item={12}>
                     <Grid item xs>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small"
+                                   fullWidth
                                    onChange={handleChangeFiltros}
                                    onKeyDown={handleChangeFiltros}
                                    className="form-control"
@@ -292,6 +293,7 @@ function Filtros(props) {
                         <FormControl className="input select" fullWidth variant="outlined">
                             <TextField
                                 autoFocus
+                                fullWidth
                                 type="date"
                                 margin="dense"
                                 label="Fecha Inicial"
@@ -309,6 +311,7 @@ function Filtros(props) {
                         <FormControl className="input select" fullWidth variant="outlined">
                             <TextField variant="outlined" margin="dense"
                                        type="date"
+                                       fullWidth
                                        className="form-control"
                                        label="Fecha Final"
                                        InputLabelProps={{
@@ -325,7 +328,7 @@ function Filtros(props) {
                     </Grid>
                     {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
                             <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
                             <Select
                                 labelId="sucursalListadoLabel"
@@ -336,14 +339,14 @@ function Filtros(props) {
                                 id="sucursalListado"
                                 name="sucursalListado"
                             >
-                                <option value="0">Todas</option>
+                                <MenuItem value="0">Todas</MenuItem>
                                 {dataSucursal.map((sucursal) => (
-                                    <option
+                                    <MenuItem
                                         key={sucursal.m_nIdSucursal}
                                         value={sucursal.m_nIdSucursal}
                                     >
                                         {sucursal.m_sSucursal}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -351,7 +354,7 @@ function Filtros(props) {
                     }
                     {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth size="small" variant="outlined">
                             <InputLabel id="idEstatusLabel">Estatus</InputLabel>
                             <Select
                                 labelId="estatusListadoLabel"
@@ -363,33 +366,33 @@ function Filtros(props) {
                                 id="estatusListado"
                                 name="estatusListado"
                             >
-                                <option value="0">Todos</option>
+                                <MenuItem value="0">Todos</MenuItem>
                                 {props.embarque && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
+                                    <MenuItem key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.recoleccion && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusRecoleccion}
+                                    <MenuItem key={estatus.m_nIdEstatusRecoleccion}
                                             value={estatus.m_nIdEstatusRecoleccion}
                                     >
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.guia && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusGuia} value={estatus.m_nIdEstatusGuia}>
+                                    <MenuItem key={estatus.m_nIdEstatusGuia} value={estatus.m_nIdEstatusGuia}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.informe && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusInforme} value={estatus.m_nIdEstatusInforme}>
+                                    <MenuItem key={estatus.m_nIdEstatusInforme} value={estatus.m_nIdEstatusInforme}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                                 {props.viajes && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusViaje} value={estatus.m_nIdEstatusViaje}>
+                                    <MenuItem key={estatus.m_nIdEstatusViaje} value={estatus.m_nIdEstatusViaje}>
                                         {estatus.m_sEstatus}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -397,7 +400,7 @@ function Filtros(props) {
                     }
                     {(props.informe) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
                             <InputLabel id="idSucusalLabel">Sucursal Emisora</InputLabel>
                             <Select
                                 labelId="sucursalListadoLabel"
@@ -408,14 +411,14 @@ function Filtros(props) {
                                 id="sucursalEmisora"
                                 name="sucursalEmisora"
                             >
-                                <option value="0">Todas</option>
+                                <MenuItem value="0">Todas</MenuItem>
                                 {dataSucursal.map((sucursal) => (
-                                    <option
+                                    <MenuItem
                                         key={sucursal.m_nIdSucursal}
                                         value={sucursal.m_nIdSucursal}
                                     >
                                         {sucursal.m_sSucursal}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -423,7 +426,7 @@ function Filtros(props) {
                     }
                     {(props.informe) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" size="small" fullWidth variant="outlined">
                             <InputLabel id="idSucusalLabel">Sucursal Receptora</InputLabel>
                             <Select
                                 labelId="sucursalListadoLabel"
@@ -434,14 +437,14 @@ function Filtros(props) {
                                 id="sucursalReceptora"
                                 name="sucursalReceptora"
                             >
-                                <option value="0">Todas</option>
+                                <MenuItem value="0">Todas</MenuItem>
                                 {dataSucursal.map((sucursal) => (
-                                    <option
+                                    <MenuItem
                                         key={sucursal.m_nIdSucursal}
                                         value={sucursal.m_nIdSucursal}
                                     >
                                         {sucursal.m_sSucursal}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -451,7 +454,7 @@ function Filtros(props) {
                 <Grid container spacing={2} item={12}>
                     {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
                             <InputLabel id="OrigenListado">Origen</InputLabel>
                             <Select
                                 labelId="OrigenListado"
@@ -463,14 +466,14 @@ function Filtros(props) {
                                 id="OrigenListado"
                                 name="OrigenListado"
                             >
-                                <option value="0">Todos</option>
+                                <MenuItem value="0">Todos</MenuItem>
                                 {dataCiudad.map((ciudad) => (
-                                    <option
+                                    <MenuItem
                                         key={ciudad.m_nIdCiudad}
                                         value={ciudad.m_nIdCiudad}
                                     >
                                         {ciudad.m_sCiudad}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -478,7 +481,7 @@ function Filtros(props) {
                     }
                     {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
-                        <FormControl className="input select" fullWidth variant="outlined">
+                        <FormControl className="input select" size="small" fullWidth variant="outlined">
                             <InputLabel id="DestinoListado">Destino</InputLabel>
                             <Select
                                 labelId="DestinoListado"
@@ -490,14 +493,14 @@ function Filtros(props) {
                                 id="DestinoListado"
                                 name="DestinoListado"
                             >
-                                <option value="0">Todos</option>
+                                <MenuItem value="0">Todos</MenuItem>
                                 {dataCiudad.map((ciudad) => (
-                                    <option
+                                    <MenuItem
                                         key={ciudad.m_nIdCiudad}
                                         value={ciudad.m_nIdCiudad}
                                     >
                                         {ciudad.m_sCiudad}
-                                    </option>
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -509,7 +512,7 @@ function Filtros(props) {
                             <TextField
                                 variant="outlined"
                                 label="Cliente"
-                                margin="dense"
+                                size="small"
                                 value={filtros.clientePaga.m_sNombreFiscal||''}
                                 placeholder={"No. Cliente: Nombre fiscal"}
                                 // InputLabelProps={{shrink: true}}
@@ -534,16 +537,19 @@ function Filtros(props) {
                     </Grid>
                     }*/}
                     <Grid item container xs>
-                        <IconButton aria-label="delete" onClick={() => {
-                            resetFiltros()
-                            getAllListado()
-                        }}>
+                        <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                                resetFiltros()
+                                getAllListado()
+                            }}
+                            size="large">
                             <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Limpiar filtros
                         </IconButton>
                     </Grid>
                     <Grid item container xs>
-                        <IconButton aria-label="delete" onClick={() => filtrar()}>
+                        <IconButton aria-label="delete" onClick={() => filtrar()} size="large">
                             <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Buscar
                         </IconButton>

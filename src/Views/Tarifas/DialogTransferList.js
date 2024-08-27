@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import { styled } from '@mui/material/styles';
 import {
     Button,
     Card,
@@ -6,12 +7,49 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    Grid, List, ListItem, ListItemIcon, ListItemText,
-    makeStyles,
-    TextField
-} from "@material-ui/core";
-import CardHeader from "@material-ui/core/CardHeader";
-import Divider from "@material-ui/core/Divider";
+    Grid,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    TextField,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import CardHeader from "@mui/material/CardHeader";
+import Divider from "@mui/material/Divider";
+
+const PREFIX = 'DialogTransferList';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    cardHeader: `${PREFIX}-cardHeader`,
+    list: `${PREFIX}-list`,
+    button: `${PREFIX}-button`
+};
+
+const StyledGrid = styled(Grid)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
+        margin: 'auto',
+    },
+
+    [`& .${classes.cardHeader}`]: {
+        padding: theme.spacing(1, 2),
+    },
+
+    [`& .${classes.list}`]: {
+        height: '500px',
+        backgroundColor: theme.palette.background.paper,
+        overflow: 'auto',
+    },
+
+    [`& .${classes.button}`]: {
+        margin: theme.spacing(0.5, 0),
+    }
+}));
 
 export default function DialogTransferList(props) {
     /** Props
@@ -55,7 +93,7 @@ export default function DialogTransferList(props) {
 
 
 
-    return(
+    return (
         <Dialog
             fullWidth={true}
             maxWidth={'xl'}
@@ -64,7 +102,7 @@ export default function DialogTransferList(props) {
             aria-labelledby="max-width-dialog-title"
         >
             <DialogContent>
-                <Grid container spacing={1}>
+                <StyledGrid container spacing={1}>
                     <Grid item xs={11}>
                         <TextField variant="outlined" margin="dense"
                                    onChange={handleOnChangeSearch}
@@ -78,7 +116,7 @@ export default function DialogTransferList(props) {
                             Buscar
                         </Button>
                     </Grid>
-                </Grid>
+                </StyledGrid>
                 <TransferList
                     onSelectionChange={handleOnSelectionChange}
                     leftList={dataFiltered.filter((value) => !selection.some(s => value.m_nIdProducto === s.m_nIdProducto))}
@@ -96,26 +134,9 @@ export default function DialogTransferList(props) {
 
             </DialogActions>
         </Dialog>
-    )
+    );
 
 }
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: 'auto',
-    },
-    cardHeader: {
-        padding: theme.spacing(1, 2),
-    },
-    list: {
-        height: '500px',
-        backgroundColor: theme.palette.background.paper,
-        overflow: 'auto',
-    },
-    button: {
-        margin: theme.spacing(0.5, 0),
-    },
-}));
 
 function not(a, b) {
     return a.filter((value) => b.indexOf(value) === -1);
@@ -130,7 +151,7 @@ function union(a, b) {
 }
 
 function TransferList(props) {
-    const classes = useStyles();
+
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(props.leftList);
     const [right, setRight] = React.useState(props.rightList);

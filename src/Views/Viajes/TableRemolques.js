@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Checkbox} from "@material-ui/core";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Checkbox} from "@mui/material";
 
 export default function TableRemolques({ data, handleSelection }) {
     const [selectedRows, setSelectedRows] = useState([]);

@@ -356,7 +356,7 @@
             nSign = '',
             rDec = (typeof (settings.aPad) === 'boolean' || settings.aPad === null) ? (settings.aPad ? settings.mDec : 0) : +settings.aPad;
         var truncateZeros = function (ivRounded) { /** truncate not needed zeros */
-            var regex = (rDec === 0) ? (/(\.(?:\d*[1-9])?)0*$/) : rDec === 1 ? (/(\.\d(?:\d*[1-9])?)0*$/) : new RegExp('(\\.\\d{' + rDec + '}(?:\\d*[1-9])?)0*$');
+            var regex = (rDec === 0) ? (((((((((((((((((((((((((((((((((((((((((/(\.(?:\d*[1-9])?)0*$/))))))))))))))))))))))))))))))))))))))))) : rDec === 1 ? (((((((((((((((((((((((((((((((((((((((((/(\.\d(?:\d*[1-9])?)0*$/))))))))))))))))))))))))))))))))))))))))) : new RegExp('(\\.\\d{' + rDec + '}(?:\\d*[1-9])?)0*$');
             ivRounded = ivRounded.replace(regex, '$1'); /** If there are no decimal places, we don't need a decimal point at the end */
             if (rDec === 0) {
                 ivRounded = ivRounded.replace(/\.$/, '');

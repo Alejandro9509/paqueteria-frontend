@@ -116,12 +116,12 @@ function imprimirFormatosIdCorteCajaGeneral(id,fechaRegistro,horaRegistro){
     );
     return result
 }
-function imprimirFormatoGuiaMoroleon(id,idTipoReporte,anio,dia,mes){
+function imprimirFormatoGuiaMoroleon(id,idTipoReporte,anio,dia,mes,firma){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
     if(anio && dia && mes){
         trackPromise(
-            result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte, anio: anio, dia: dia,mes: mes}), { headers})
+            result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte, anio: anio, dia: dia,mes: mes,imagen64:firma?firma:""}), { headers})
         );
     }else{
         trackPromise(

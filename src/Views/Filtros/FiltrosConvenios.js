@@ -1,9 +1,9 @@
 import React, {useEffect, useState, useMemo} from "react";
-import {Dialog, DialogActions, DialogContent, Grid} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import RestartAltIcon from "@material-ui/icons/Refresh";
-import SearchIcon from '@material-ui/icons/Search';
+import {Dialog, DialogActions, DialogContent, Grid} from "@mui/material";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import RestartAltIcon from "@mui/icons-material/Refresh";
+import SearchIcon from '@mui/icons-material/Search';
 import {obtenerTarifasRangosFiltro} from "../../Util/Contexts/TarifasContext"
 import {obtenerFechaFinal, obtenerFechaInicio} from "../../Util/Contexts/UtileriasContext";
 
@@ -73,13 +73,13 @@ function Filtros(props) {
     }
 
 
-    return(
+    return (
         <div>
 
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container spacing={2} xs={3} item={6}>
                     <Grid item xs={12}>
-                        <TextField variant="outlined" margin="dense"
+                        <TextField variant="outlined" size="small" fullWidth
                                    onChange={handleChangeFiltros}
                                    onKeyDown={handleChangeFiltros}
                                    className="form-control"
@@ -100,16 +100,19 @@ function Filtros(props) {
 
 
                     <Grid item container xs={6}>
-                        <IconButton aria-label="delete" onClick={() => {
-                            resetFiltros()
-                            getAllListado()
-                        }}>
+                        <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                                resetFiltros()
+                                getAllListado()
+                            }}
+                            size="large">
                             <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Limpiar filtros
                         </IconButton>
                     </Grid>
                     <Grid item container xs={6}>
-                        <IconButton aria-label="delete" onClick={() => filtrar()}>
+                        <IconButton aria-label="delete" onClick={() => filtrar()} size="large">
                             <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Buscar
                         </IconButton>

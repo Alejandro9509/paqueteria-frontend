@@ -10,10 +10,10 @@ import {
     Select,
     Button,
     IconButton,
-} from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 
 class ClavesCFDI extends Component {
     constructor(props) {
@@ -260,13 +260,20 @@ class ClavesCFDI extends Component {
                             rows={this.props.dataSAT}
                             columns={this.state.columnsUnidades}
                             paginationMode="server"
-                            rowsPerPageOptions={[25]}
-                            onPageChange={(newPage)=>{this.props.setPagina(newPage)}}
+                            autoPageSize
+                            onPaginationModelChange={(newPaginationModel)=>{
+                                console.log(newPaginationModel)
+                                this.props.setPagina(newPaginationModel)
+                            }}
+                            pagination
                             density="compact"
                             rowCount={100000}
                             getRowId={ ((row)=> row.m_sClaveSAT)}
-                            onRowSelected={(row) => {
-                                this.props.selectClase(row);
+                            onRowSelectionModelChange={(newRowSelectionModel,e) => {
+                                //console.log(this.props.dataSAT.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0]))
+                                console.log(this.props.dataSAT)
+                                console.log(newRowSelectionModel)
+                                this.props.selectClase(this.props.dataSAT.find(i=>i.m_sClaveSAT==newRowSelectionModel[0]))
                             }}
                         />
                     </div>

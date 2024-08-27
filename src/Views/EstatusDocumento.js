@@ -3,7 +3,7 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext"

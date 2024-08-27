@@ -1,11 +1,18 @@
 import React from 'react';
-import {Grid, MenuItem, TextField} from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from "@material-ui/core/InputAdornment";
+import {Grid, MenuItem, TextField} from "@mui/material";
+import { styled } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import InputAdornment from "@mui/material/InputAdornment";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 
-const useStyles = makeStyles(() => ({
-    root: {
+const PREFIX = 'SalidaParadas';
+
+const classes = {
+    root: `${PREFIX}-root`
+};
+
+const Root = styled('form')(() => ({
+    [`& .${classes.root}`]: {
         '& .MuiTextField-root': {
             width: 200,
             marginLeft: 10
@@ -13,11 +20,11 @@ const useStyles = makeStyles(() => ({
         '& .MuiFormControl-marginDense': {
             margin: '10px !important',
         }
-    },
+    }
 }));
 
 export default function SalidaParadas(props){
-    const classes = useStyles();
+
     const [data, setData] = React.useState({
         sucursal: props.data.m_sSucursal,
         recorrido: props.data.m_sFolioViaje,
@@ -166,8 +173,8 @@ export default function SalidaParadas(props){
         props.onSubmit(data);
     }
 
-    return(
-        <form onSubmit={onSubmit}>
+    return (
+        <Root onSubmit={onSubmit}>
             <Grid container spacing={2}>
                 <Grid item xs={2}>
                     <TextField
@@ -406,6 +413,6 @@ export default function SalidaParadas(props){
 
             </Grid>
             {props.children}
-        </form>
-    )
+        </Root>
+    );
 }

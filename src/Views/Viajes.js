@@ -9,14 +9,15 @@ import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
 import {useTable, useFilters, useSortBy} from 'react-table'
-import {makeStyles} from "@material-ui/core/styles";
-import {DataGrid} from '@material-ui/data-grid';
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import {DataGrid} from '@mui/x-data-grid';
 import Noty from 'noty';
 import AgregarViaje from "./Viajes/AgregarViaje";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
@@ -31,8 +32,8 @@ import {
     List,
     ListItem,
     Collapse,
-    ListItemText, Link, Chip, Grid
-} from "@material-ui/core";
+    ListItemText, Link, Chip, Grid, MenuItem
+} from "@mui/material";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
 import {confirmAlert} from "react-confirm-alert";
@@ -56,8 +57,8 @@ import {
     eliminarViaje,
     validarCFDI
 } from "../Util/Contexts/ViajesContext";
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
     cancelarInformes,
     obtenerInformeFiltro, obtenerInformesId,
@@ -70,17 +71,44 @@ import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import Filtros from "./Filtros/Filtros";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasContext";
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import CancelarSAT from "./SAT/CancelarSAT";
 import {cancelarInformeCFDI, enviarCorreoCFDIViaje, obtenerClavesByInforme} from "../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
-import { RowingSharp } from "@material-ui/icons";
+import { RowingSharp } from "@mui/icons-material";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { obtenerTrayectosByRuta } from "../Util/Contexts/RutasContext";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {
+    imprimirFormatosIdIdTipoReporte, imprimirFormatosIdTimbradoViajes,
+    obtenerFormatosImpresionProceso
+} from "../Util/Contexts/FormatosImpresionContext";
+import {GridColDef} from "@mui/x-data-grid";
+import {GridRenderCellParams} from "@mui/x-data-grid";
+const PREFIX = 'Viajes';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -97,23 +125,10 @@ function showError(mensaje) {
         timeout: "8000"
     }).show()
 }
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
 window.jQuery = window.$ = $;
 
 function Viajes() {
-    const classes = useStyles();
+
     const [data, setData] = React.useState([])
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [indexOpen, setIndexOpen] = React.useState(-1);
@@ -141,7 +156,16 @@ function Viajes() {
 
 
     })
+    const [openDialog, setOpenDialog] = useState(false)
+    const [dataReportes, setDataReportes] = useState([])
+    const [seleccion, setSeleccion] = useState(null)
 
+    useEffect(()=>{
+
+        obtenerFormatosImpresionProceso(218).then(({data}) => {
+            setDataReportes(data)
+        })
+    }, [])
 
 
     function getAllEstatusDocumento() {
@@ -180,7 +204,7 @@ function Viajes() {
                 message: '¿Está seguro de eliminar viaje?',
                 buttons: [
                     {
-                        label: 'Si',
+                        label: 'Sí',
                         onClick: () => {
 
                           eliminarViaje(id,idEstatus).then(respuesta => {
@@ -347,7 +371,7 @@ function Viajes() {
             width: 150,
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar">
                             <a
                                 onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
@@ -371,8 +395,8 @@ function Viajes() {
                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {
@@ -557,8 +581,7 @@ function Viajes() {
 
 
     }
-
-    function descargarPDF(id, idInforme, folio) {
+    function descargarPDFOpcion1(id,idInforme,folio) {
         obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
             try{
                 const link = document.createElement('a');
@@ -570,6 +593,31 @@ function Viajes() {
                 console.log(e)
                 showSuccess("No se pudo abrir el pdf")
             }
+         })
+
+    }
+
+    function descargarPDF(idViaje,idInforme,folio) {
+
+        setSeleccion({
+            m_nIdViaje:idViaje,
+            m_nIdInforme:idInforme,
+            m_sFolioInforme:folio
+        })
+        setOpenDialog(true)
+
+
+        /*obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
+            try{
+                const link = document.createElement('a');
+                link.href = "data:application/pdf;base64," + data;
+                link.setAttribute('download', "CFDI_ " + folio);
+                document.body.appendChild(link);
+                link.click();
+            }catch (e) {
+                console.log(e)
+                showSuccess("No se pudo abrir el pdf")
+            }*/
             /*try {
                 var filename = folio+".pdf";
                 var pom = document.createElement('a');
@@ -598,8 +646,40 @@ function Viajes() {
                 console.log(e)
                 showSuccess("No se pudo abrir el pdf")
             }*/
-        })
+       /* })*/
 
+    }
+
+    const handleOnChangeReporte = (data) => {
+        console.log(data)
+        setState({
+            ...state,
+            reporteSeleccionado: data
+        })
+    }
+
+    const handleGenerarReporte=(e)=>{
+        e.preventDefault()
+        console.log(state.reporteSeleccionado)
+        console.log(seleccion)
+
+        if (state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+
+        imprimirFormatosIdTimbradoViajes(state.reporteSeleccionado,seleccion.m_nIdViaje, seleccion.m_nIdInforme).then(({data}) => {
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "CFDI Timbrado Viajes" + seleccion.m_sFolioInforme;
+        })
+        setState({
+            ...state,
+            reporteSeleccionado: null
+        })
+        setOpenDialog(false)
     }
 
     function generarCFDI(idParada, folio, idViaje, sustituir, idInforme) {
@@ -827,13 +907,13 @@ function Viajes() {
 
     /**DETALLE DE PARADAS*/
 
-    const columnsParadas = [
+    const columnsParadas:GridColDef=[
         {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
             width: 150,
-            renderCell: (row) => {
+            renderCell: (row: GridRenderCellParams<any, any>) => {
                 return (
                     <div>
                         {
@@ -877,7 +957,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i
+                                   onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
                                     className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -897,7 +977,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Cancelar Timbrado SAT">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off"
+                                   onClick={() => (showCancelarCFDI(row))}><i className="zmdi zmdi-card-off"
                                                                                   style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -918,9 +998,11 @@ function Viajes() {
             headerName: "Origen - Destino",
             field: "origenDestino",
             width: 200,
-            valueFormatter: row => {
-                return (`${row.row.m_sCiudadOrigen} - ${row.row.m_sCiudadDestino}`)
-            }
+            renderCell: (params: GridRenderCellParams<any, any>) => (
+                <strong>
+                    {params.row.m_sCiudadOrigen+"-"+params.row.m_sCiudadDestino}
+                </strong>
+            )
         },
         {
             headerName: "Salida",
@@ -937,7 +1019,7 @@ function Viajes() {
         {
             headerName: "Guías",
             field: "m_nIdViaje",
-            renderCell: (row) => {
+            renderCell: (row:GridRenderCellParams<any,any>) => {
                 return (
                     <Link style={{cursor: "pointer"}} onClick={() => {
                         setInformeSeleccionado(row.row);
@@ -967,7 +1049,7 @@ function Viajes() {
             headerName: "Folio Fiscal sustituido",
             field: "m_nIdOrigen",
             width: 300,
-            valueFormatter: row => row.row.m_sFolioFiscalUUIDSustituido || row.row.m_sUltimoFolioFiscalUUIDSustituido || " "
+            valueFormatter: row => row.m_sFolioFiscalUUIDSustituido || row.m_sUltimoFolioFiscalUUIDSustituido || " "
         },
         // {
         //     headerName: "Liq",
@@ -1217,6 +1299,70 @@ function Viajes() {
     return (
         <div>
             {
+                openDialog &&
+                <Dialog
+                    open={openDialog}
+                    onClose={() => setOpenDialog(false)}
+                    fullWidth maxWidth="md"
+                >
+                    <DialogTitle>
+                        Reporte de CFDI TimbradoViajes
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                            <form onSubmit={handleGenerarReporte}>
+                                <Grid container spacing={1}>
+                                    <Grid item sm={6}>
+                                        <FormControl
+                                            className="input select"
+                                            fullWidth variant="outlined"
+                                            required
+                                            size="small">
+                                            <InputLabel
+                                                id="idReporteLabel">Formato de Reporte</InputLabel>
+                                            <Select
+                                                fullWidth
+                                                labelId="idReporteLabel"
+                                                label="Reporte"
+                                                className="form-control"
+                                                value={state.reporteSeleccionado ?? ''}
+                                                onChange={(e) => handleOnChangeReporte(e.target.value)}
+                                                name="reporteSeleccionado"
+                                            >
+                                                {dataReportes.map((reporte) => (
+                                                    <MenuItem
+                                                        key={reporte.m_nIdFormato}
+                                                        value={reporte.m_nIdFormato}
+                                                    >
+                                                        {reporte.m_sFormato}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </Grid>
+                                <DialogActions>
+
+                                    <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                        setOpenDialog(false)
+                                        setState({
+                                            ...state,
+                                            reporteSeleccionado: null
+                                        })
+                                    }
+                                    }>
+                                        Cancelar
+                                    </button>
+                                    <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                        Aceptar
+                                    </button>
+                                </DialogActions>
+                            </form>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            }
+            {
                 state.openEnvioCorreo &&
                 <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={() => {
                     setState({...state, openEnvioCorreo: false});
@@ -1428,14 +1574,22 @@ function Viajes() {
                                             columns={columns}
                                             density="compact"
                                             getRowId={(row) => row.m_nIdViaje}
-                                            onRowSelected={(row) => {
+                                            rowsPerPageOptions={[]}
+                                            onRowSelectionModelChange={(newModel)=>{
+                                                if(newModel.length<1)
+                                                    return
+                                                let row=data.find(i=>i.m_nIdViaje==newModel[0])
+                                                setViajeSeleccionado(row)
+                                                getParadasListado(row)
+                                            }}
+                                            /*onRowSelected={(row) => {
                                                 /*  setState({
                                                      ...state,
                                                      idViaje: row.data.m_nIdViaje
-                                                 }) */
+                                                 })
                                                 setViajeSeleccionado(row.data)
                                                 getParadasListado(row.data)
-                                            }}
+                                            }}*/
                                         />
 
                                     </div>
@@ -1615,6 +1769,7 @@ function Viajes() {
                                                                        label="Folio Viaje"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.FolioViaje}
                                                                        id="FolioViaje"
@@ -1629,6 +1784,7 @@ function Viajes() {
                                                                        label="Sucursal Emisora"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.sucursalCancelacion}
                                                                        id="sucursalCancelacion"
@@ -1641,6 +1797,7 @@ function Viajes() {
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
                                                                        label="Fecha de cancelación"
+                                                                       fullWidth
                                                                        className="form-control"
                                                                        type="datetime-local"
                                                                        InputLabelProps={{shrink: true,}}
@@ -1656,6 +1813,7 @@ function Viajes() {
                                                             <TextField variant="outlined" margin="dense" label="Usuario"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.usuarioCancelacion}
                                                                        id="usuarioCancelacion"
@@ -1669,6 +1827,7 @@ function Viajes() {
                                                             <TextField variant="outlined" margin="dense" label="Estatus"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        value={state.estatusCancelacion}
                                                                        id="estatusCancelacion"
@@ -1682,6 +1841,7 @@ function Viajes() {
                                                             <TextField variant="outlined" margin="dense" label="Motivo"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        InputLabelProps={{shrink: true,}}
                                                                        onChange={handleChange}
                                                                        value={state.motivoCancelacion}

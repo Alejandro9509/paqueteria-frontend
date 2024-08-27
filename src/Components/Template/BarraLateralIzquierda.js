@@ -3,7 +3,7 @@ import AM from "../Departamento/AMDepartamento";
 import Login from "../../Views/Login";
 import { Route, Link, NavLink } from "react-router-dom";
 import dashboardRoutes from "../../routes";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 
 function BarraLateralDerecha() {
 

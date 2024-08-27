@@ -183,7 +183,7 @@ function Transitionize(element, props) {
  */
 
 Transitionize.prototype.isSafari = function() {
-  return (/Safari/).test(navigator.userAgent) && (/Apple Computer/).test(navigator.vendor);
+  return (((((((((((((((((((((((((((((((((((((((((/Safari/))))))))))))))))))))))))))))))))))))))))).test(navigator.userAgent) && (((((((((((((((((((((((((((((((((((((((((/Apple Computer/))))))))))))))))))))))))))))))))))))))))).test(navigator.vendor);
 };
 
 /**
@@ -396,7 +396,7 @@ FastClick.prototype.deviceIsIOS = /iP(ad|hone|od)/.test(navigator.userAgent);
  *
  * @type boolean
  */
-FastClick.prototype.deviceIsIOS4 = FastClick.prototype.deviceIsIOS && (/OS 4_\d(_\d)?/).test(navigator.userAgent);
+FastClick.prototype.deviceIsIOS4 = FastClick.prototype.deviceIsIOS && (((((((((((((((((((((((((((((((((((((((((/OS 4_\d(_\d)?/))))))))))))))))))))))))))))))))))))))))).test(navigator.userAgent);
 
 
 /**
@@ -404,7 +404,7 @@ FastClick.prototype.deviceIsIOS4 = FastClick.prototype.deviceIsIOS && (/OS 4_\d(
  *
  * @type boolean
  */
-FastClick.prototype.deviceIsIOSWithBadTarget = FastClick.prototype.deviceIsIOS && (/OS ([6-9]|\d{2})_\d/).test(navigator.userAgent);
+FastClick.prototype.deviceIsIOSWithBadTarget = FastClick.prototype.deviceIsIOS && (((((((((((((((((((((((((((((((((((((((((/OS ([6-9]|\d{2})_\d/))))))))))))))))))))))))))))))))))))))))).test(navigator.userAgent);
 
 
 /**
@@ -439,7 +439,7 @@ FastClick.prototype.needsClick = function(target) {
 		return true;
 	}
 
-	return (/\bneedsclick\b/).test(target.className);
+	return (((((((((((((((((((((((((((((((((((((((((/\bneedsclick\b/))))))))))))))))))))))))))))))))))))))))).test(target.className);
 };
 
 
@@ -470,7 +470,7 @@ FastClick.prototype.needsFocus = function(target) {
 		// No point in attempting to focus disabled inputs
 		return !target.disabled && !target.readOnly;
 	default:
-		return (/\bneedsfocus\b/).test(target.className);
+		return (((((((((((((((((((((((((((((((((((((((((/\bneedsfocus\b/))))))))))))))))))))))))))))))))))))))))).test(target.className);
 	}
 };
 

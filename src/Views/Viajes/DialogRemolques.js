@@ -6,7 +6,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle
-} from '@material-ui/core';
+} from '@mui/material';
 import TableRemolques from "./TableRemolques";
 import { obtenerUnidadesConvoy } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";

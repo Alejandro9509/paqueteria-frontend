@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Select} from "@material-ui/core";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@material-ui/core';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from "@material-ui/icons/Save";
-import PublishIcon from '@material-ui/icons/Publish';
-import {DataGrid} from "@material-ui/data-grid";
+import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Select} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from "@mui/icons-material/Save";
+import PublishIcon from '@mui/icons-material/Publish';
+import {DataGrid} from "@mui/x-data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import ExcelFile from '../../Files/ImportarMateriales_Consolidado.xlsx'
 import * as XLSX from "xlsx";
 import {
@@ -44,6 +44,8 @@ function showError(mensaje) {
 
 function ComplementosSAT(props) {
     const [detectarModificaciones,setDetectar]=useState(false)
+    const [seleccionable, setSeleccionable] = useState(false)
+    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
     const [openDialog, setOpenDialog] = useState(false)
     const [dataComplemento, setDataComplemento] = useState({
         id:0,
@@ -575,10 +577,12 @@ function ComplementosSAT(props) {
         if (dataComplemento.id === 0){
             const item = dataComplemento
             item.id = Math.floor(Math.random() * 10000)
-            props.dataList.push(item);
-            props.onChangeList(props.dataList)
+            let arrayNew=props.dataList
+            arrayNew=[...arrayNew,item]
+            props.onChangeList(arrayNew)
         }else{
-            props.dataList.forEach(item => {
+            let arrayNew=props.dataList
+            arrayNew.forEach(item => {
                 if (item.id === dataComplemento.id){
                    // item=dataComplemento
                     item.id = dataComplemento.id
@@ -617,7 +621,7 @@ function ComplementosSAT(props) {
                     item.usoAutorizado=dataComplemento.usoAutorizado
                 }
             })
-            props.onChangeList(props.dataList)
+            props.onChangeList(arrayNew)
         }
 
 
@@ -808,8 +812,17 @@ function ComplementosSAT(props) {
             // props.dataList.push(newArray)
         });
     };
+    const removerSeleccion=()=>{
+        let complementosFiltrados=props.dataList
+        rowSelectionModel.forEach(id=>{
+            complementosFiltrados=complementosFiltrados.filter((comp)=>comp.id!=id)
+        })
+        props.setDataList(complementosFiltrados)
+        setRowSelectionModel([])
+        setSeleccionable(false)
+    }
 
-    return(
+    return (
         <div>
             <Dialog open={openDialog} fullWidth maxWidth="md" >
                 <DialogTitle>Complemento Carta Porte</DialogTitle>
@@ -836,7 +849,11 @@ function ComplementosSAT(props) {
                 <Grid item xs={3}/>
                 <Grid item xs={1}>
                 <Tooltip title="Agregar Complemento" >
-                    <IconButton onClick={handleOpenClick} style={{ padding: "0px" }} disabled={props.disabled}>
+                    <IconButton
+                        onClick={handleOpenClick}
+                        style={{ padding: "0px" }}
+                        disabled={props.disabled}
+                        size="large">
                         <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                     </IconButton>
                 </Tooltip>
@@ -845,7 +862,13 @@ function ComplementosSAT(props) {
                     <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} onClick={handleCleanExcel} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
                     <Tooltip title="Cargar Plantilla" >
-                        <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }} disabled={props.disabled}>
+                        <IconButton
+                            color="primary"
+                            aria-label="upload file"
+                            component="span"
+                            style={{ padding: "0px" }}
+                            disabled={props.disabled}
+                            size="large">
                             <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }}/>
                         </IconButton>
                     </Tooltip>
@@ -866,10 +889,31 @@ function ComplementosSAT(props) {
                 props.dataList.length !== 0 &&
                 <div className="widget-container">
                     <div className="widget-content">
+                        <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
+                            setRowSelectionModel([])}
+                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',color:"white",marginLeft:"73%",fontSize:12}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+                        <Button onClick={()=>confirmAlert({
+                            title: 'Confirmación',
+                            message: '¿Desea eliminar los complementos seleccionados?',
+                            buttons: [
+                                {
+                                    label: 'Sí',
+                                    onClick: async () => removerSeleccion()
+                                },
+                                {
+                                    label: 'No',
+                                }
+                            ]
+                        })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%",fontSize:12}}>Borrar Selección</Button>
                         <div className="row" style={{ height: 200}}>
                             <DataGrid
                                 localeText={dataGridLocaleText}
                                 density="compact"
+                                onRowSelectionModelChange={(e) => {
+                                    setRowSelectionModel(e);
+                                }}
+                                rowSelectionModel={rowSelectionModel}
+                                checkboxSelection={seleccionable}
                                 pageSize={10}
                                 columns={columnsPaquetes}
                                 rows={props.dataList}
@@ -882,7 +926,7 @@ function ComplementosSAT(props) {
             }
 
         </div>
-    )
+    );
 }
 
 export default ComplementosSAT;

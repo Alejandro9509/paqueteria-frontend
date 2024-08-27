@@ -9,7 +9,7 @@ import {
     DialogTitle, FormControlLabel,
     TextField,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 
 class EnvioCorreoDialogo extends Component {
     constructor(props) {

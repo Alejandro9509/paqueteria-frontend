@@ -12,21 +12,58 @@ import {
     Tab,
     Tabs,
     Typography,
-    withStyles
-} from "@material-ui/core";
+} from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
 import Timeline from "react-time-line";
 import LogoPaqueteria from "../../iconos/LogoPaqueteria.png"
 import $ from "jquery";
-import StepConnector  from '@material-ui/core/StepConnector';
+import StepConnector  from '@mui/material/StepConnector';
 import clsx from "clsx";
-import {Check} from "@material-ui/icons";
-import {makeStyles} from "@material-ui/core/styles";
+import {Check} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import PaquetesList from "./PaquetesList";
 import RemitenteDestinatario from "./RemitenteDestinatario";
 import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
 import {obtenerInformeFolioTipo} from "../../Util/Contexts/SeguimientoContext";
 import { obtenerImagenEvidencia } from '../../Util/Contexts/UltimaMillaContext';
 import DialogoEvidenciasUltimaMilla from "../UltimaMilla/DialogoEvidenciasUltimaMilla";
+const PREFIX = 'TrackingEmail';
+
+const classes = {
+    alternativeLabel: `${PREFIX}-alternativeLabel`,
+    active: `${PREFIX}-active`,
+    completed: `${PREFIX}-completed`,
+    line: `${PREFIX}-line`,
+    root: `${PREFIX}-root`,
+    active2: `${PREFIX}-active2`,
+    circle: `${PREFIX}-circle`,
+    completed2: `${PREFIX}-completed2`
+};
+
+const Root = styled('div')({
+    [`&.${classes.root}`]: {
+        color: '#eaeaf0',
+        display: 'flex',
+        height: 22,
+        alignItems: 'center',
+    },
+    [`& .${classes.active2}`]: {
+        color: '#F9A03E',
+    },
+    [`& .${classes.circle}`]: {
+        width: 8,
+        height: 8,
+        borderRadius: '50%',
+        backgroundColor: 'currentColor',
+    },
+    [`& .${classes.completed2}`]: {
+        color: '#F9A03E',
+        zIndex: 1,
+        fontSize: 18,
+    },
+});
+
 const headers = API_HEADERS
 
 
@@ -68,8 +105,8 @@ class TrackingEmail extends Component {
             this.setState({didSearch:true})
             if(data.Estatus == true){
                 
-                obtenerImagenEvidencia(data.m_nIdRecoleccion,1).then(respuestaRec=>{
-                    obtenerImagenEvidencia(data.m_nIdGuia,0).then(respuestaEmb=>{
+                obtenerImagenEvidencia(data.m_nIdRecoleccion?data.m_nIdRecoleccion:-1,1).then(respuestaRec=>{
+                    obtenerImagenEvidencia(data.m_nIdGuia?data.m_nIdGuia:-1,0).then(respuestaEmb=>{
                         this.setState({
                             imagenesEvidenciaRecoleccion:respuestaRec.data?respuestaRec.data:[],
                             imagenesEvidenciaEmbarque:respuestaEmb.data?respuestaEmb.data:[],
@@ -110,34 +147,34 @@ class TrackingEmail extends Component {
             const classes = useQontoStepIconStyles();
             const { active, completed } = props;
             return (
-                <div
+                <Root
                     className={clsx(classes.root, {
                         [classes.active]: active,
                     })}
                 >
                      
                     {completed ? <Check className={classes.completed} /> : <div className={classes.circle} />}
-                </div>
+                </Root>
             );
         }
 
         const useQontoStepIconStyles = makeStyles({
-            root: {
+            [`&.${classes.root}`]: {
                 color: '#eaeaf0',
                 display: 'flex',
                 height: 22,
                 alignItems: 'center',
             },
-            active: {
+            [`& .${classes.active2}`]: {
                 color: '#F9A03E',
             },
-            circle: {
+            [`& .${classes.circle}`]: {
                 width: 8,
                 height: 8,
                 borderRadius: '50%',
                 backgroundColor: 'currentColor',
             },
-            completed: {
+            [`& .${classes.completed2}`]: {
                 color: '#F9A03E',
                 zIndex: 1,
                 fontSize: 18,
@@ -146,31 +183,10 @@ class TrackingEmail extends Component {
 
 
 
-        const QontoConnector = withStyles({
-            alternativeLabel: {
-                top: 10,
-                left: 'calc(-50% + 16px)',
-                right: 'calc(50% + 16px)',
-            },
-            active: {
-                '& $line': {
-                    borderColor: '#F9A03E',
-                },
-            },
-            completed: {
-                '& $line': {
-                    borderColor: '#F9A03E',
-                },
-            },
-            line: {
-                borderColor: '#eaeaf0',
-                borderTopWidth: 3,
-                borderRadius: 1,
-            },
-        })(StepConnector);
+        const QontoConnector = StepConnector;
         
         return (
-            <Grid container spacing={2} justify="center" style={{padding:"5px",alignItems:"center"}}>
+            <Grid container spacing={2} justifyContent="center" style={{padding:"5px",alignItems:"center"}}>
                 { (this.state.setOpenDialogEvidenciasEntrega && (this.state.imagenesEvidenciaEmbarque)) &&
                 <DialogoEvidenciasUltimaMilla
                     open={this.state.setOpenDialogEvidenciasEntrega}
@@ -204,7 +220,13 @@ class TrackingEmail extends Component {
 
                 <Grid item sx={12} md={12}>
                     <Box sx={{ width: '100%' }}>
-                        <Stepper alternativeLabel activeStep={this.props.data.m_nEstatusSeguimiento} connector={<QontoConnector />}>
+                        <Stepper alternativeLabel activeStep={this.props.data.m_nEstatusSeguimiento} connector={<QontoConnector
+                            classes={{
+                                alternativeLabel: classes.alternativeLabel,
+                                active: classes.active,
+                                completed: classes.completed,
+                                line: classes.line
+                            }} />}>
                             {[this.props.data.m_bAplicaRecoleccion ? "Recolectado" : "Documentado","En ruta", "Entregado"].map((label) => (
                                 <Step key={label}>
                                     <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>

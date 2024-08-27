@@ -31,6 +31,22 @@ function agregarGuia(params) {
         );
     return result
 }
+function cubicarGuia(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+function cubicarGuiaInforme(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar/Informe`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
 
 function eliminarGuia(id, idEliminadoPor) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Eliminar/${id}/${idEliminadoPor}`;
@@ -330,6 +346,6 @@ function subirImagenEvidencia(imagen,IdGuia,ImagenNombreArchivo,Descripcion,esRe
     return result
 }
 
-export {cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
+export {cubicarGuiaInforme, cubicarGuia, cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
     obtenerGuiaUltimaMilla, subirImagenEvidencia,reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaGuiaRangos,enviarCorreoGuia,obtenerPaquetesGuia,validarRangosEtiqueta}

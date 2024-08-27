@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import Noty from "noty";
 import {
   Button,
@@ -12,13 +12,14 @@ import {
   Select,
   TextField,
   Tooltip,
-} from "@material-ui/core";
+} from "@mui/material";
 import { confirmAlert } from "react-confirm-alert";
 import { dataGridLocaleText } from "../../Constants";
 import { obtenerEmbalajes } from "../../Util/Contexts/EmbalajesContext";
 import $ from "jquery";
 import {validarDerecho} from "../../Util/Util"
-import {makeStyles} from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+
 
 import {
   obtenerProductos,
@@ -27,6 +28,19 @@ import {
   modificarProducto,
   eliminarProducto
 } from "../../Util/Contexts/ProductosContext";
+const PREFIX = 'Productos';
+
+const classes = {
+  disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+  [`& .${classes.disabled}`]: {
+      pointerEvents: "none",
+      cursor: "default",
+  }
+});
+
 function showSuccess(mensaje) {
   new Noty({
     type: "information",
@@ -35,14 +49,6 @@ function showSuccess(mensaje) {
     timeout: "3000",
   }).show();
 }
-
-const styles = {
-  disabled: {
-      pointerEvents: "none",
-      cursor: "default",
-  }
-};
-const useStyles = makeStyles(styles);
 
 function Productos() {
   /*-=---------------------------------------------Variables------------------------------------------------=-*/
@@ -64,7 +70,7 @@ function Productos() {
     NoProducto: "",
     predeterminado: false
   });
-  const classes = useStyles();
+
   const [productos, setProductos] = React.useState([]);
   const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
   const columns = React.useMemo(() => [
@@ -75,7 +81,7 @@ function Productos() {
       field: "",
       renderCell: (row) => {
         return (
-          <div>
+          <Root>
             <Tooltip title={"Modificar"}>
               <a
                 data-toggle={"tab"}
@@ -120,7 +126,7 @@ function Productos() {
                 <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
               </a>
             </Tooltip>
-          </div>
+          </Root>
         );
       },
     },

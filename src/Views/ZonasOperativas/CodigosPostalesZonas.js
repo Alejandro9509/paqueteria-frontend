@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, MenuItem, Select} from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import {FormControl, Grid, InputLabel, MenuItem, Select} from "@mui/material";
+import TextField from "@mui/material/TextField";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerEstadosPais} from "../../Util/Contexts/EstadosContext";
 import CPTransferList from "./CPTransferList";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio,obtenerCodigosPostalesPorEstadoMunicipioDisponibles} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
-import {Autocomplete} from "@material-ui/lab";
-import Button from "@material-ui/core/Button";
-import { CheckBox } from "@material-ui/icons";
+import { Autocomplete } from '@mui/material';
+import Button from "@mui/material/Button";
+import { CheckBox } from "@mui/icons-material";
 import { showSuccess } from "../../Util/Util";
 
 function not(a, b) {
@@ -41,6 +41,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     }, [])
 
     useEffect( value => {
+        console.log(seleccion)
         setState(state => {
             return {
                 idZona: seleccion.m_nIdZona ? seleccion.m_nIdZona : 0,
@@ -66,6 +67,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     },[state.idEstado])
 
     useEffect(value =>{
+        console.log(state)
         if (state.idPais){
             getEstadosByIdPais(state.idPais)
         }
@@ -188,7 +190,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                         <div className="input">
                             <TextField
                                 fullWidth
-                                margin="dense"
+                                size="small"
                                 variant="outlined"
                                 id="codigoZona"
                                 name="codigoZona"
@@ -205,7 +207,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                     <Grid item xs={2}>
                         {
                             tarifa ? (
-                                <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
+                                <FormControl className="input select" fullWidth variant="outlined" size="small" required>
                                     <InputLabel
                                         id="idSucursalLabel">Destino</InputLabel>
                                     <Select
@@ -230,7 +232,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                                     </Select>
                                 </FormControl>
                             ) : (
-                                <FormControl className="input select" fullWidth variant="outlined" margin="dense">
+                                <FormControl className="input select" fullWidth variant="outlined" size="small">
                                     <InputLabel
                                         id="idSucursalLabel">Sucursal</InputLabel>
                                     <Select
@@ -260,7 +262,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
 
                     </Grid>
                     <Grid item xs={2}>
-                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
+                        <FormControl className="input select" fullWidth variant="outlined" size="small" required>
                             <InputLabel
                                 id="idOrigenDestino">Origen/Destino</InputLabel>
                             <Select
@@ -285,7 +287,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
+                        <FormControl className="input select" fullWidth variant="outlined" size="small" required>
                             <InputLabel
                                 id="idPaisLabel">País</InputLabel>
                             <Select
@@ -309,7 +311,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
+                        <FormControl className="input select" fullWidth variant="outlined" size="small" required>
                             <InputLabel
                                 id="idEstadoLabel">Estado</InputLabel>
                             <Select
@@ -335,7 +337,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                        <FormControl className="input select" fullWidth variant="outlined" margin="dense">
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
                             <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
                             <Select
                                 fullWidth
@@ -361,7 +363,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                    <FormControl className="input select" fullWidth variant="outlined" margin="dense">
+                    <FormControl className="input select" fullWidth variant="outlined" size="small">
                     <div className="row" style={{display:"flex",justifyContent:"space-evenly",marginLeft:"-60px"}}>
 
 

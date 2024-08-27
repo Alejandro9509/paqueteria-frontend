@@ -3,7 +3,7 @@ import axios from "axios";
 import {
   FormControl,
   Input, InputLabel
-} from "@material-ui/core";
+} from "@mui/material";
 import $ from 'jquery';
 import { sha512 } from "../Util/Sha";
 import LogoGMTransportDIG from "../iconos/LogoGMTransportDIG.png"

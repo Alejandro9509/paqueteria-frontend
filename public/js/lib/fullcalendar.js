@@ -294,7 +294,7 @@ function getScrollParent(el) {
 	var position = el.css('position'),
 		scrollParent = el.parents().filter(function() {
 			var parent = $(this);
-			return (/(auto|scroll)/).test(
+			return (((((((((((((((((((((((((((((((((((((((((/(auto|scroll)/))))))))))))))))))))))))))))))))))))))))).test(
 				parent.css('overflow') + parent.css('overflow-y') + parent.css('overflow-x')
 			);
 		}).eq(0);

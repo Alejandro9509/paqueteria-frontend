@@ -7,12 +7,6 @@ import moment from "moment";
 import Noty from "noty";
 import {es} from "date-fns/locale";
 
-const XRouteClient = window.XRouteClient;
-const XLoadClient = window.XLoadClient;
-var xroute = new XRouteClient();
-xroute.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
-var xload = new XLoadClient();
-xload.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 
 const headers = API_HEADERS
@@ -107,10 +101,10 @@ export function remove_array_element(array, index) {
     return array;
 }
 
-
+/*
 export  function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
     var result;
-    trackPromise(
+    /*trackPromise(
         result = new Promise(async (resolve, reject)  => {
             guias = guias.filter(g => g.m_nIdCiudadDestino !== origin.m_nIdCiudad && origin.m_nIdCiudad === g.m_nIdCiudadOrigen)
             var locationOrigin = await searchLocation(origin.m_sCiudad)
@@ -149,7 +143,7 @@ export  function cubicarGuias(guias, origin, destiny, remolque1, remolque2) {
     )
     return result
 
-}
+}*/
 
 async function searchLocation(city) {
     var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
@@ -166,7 +160,7 @@ async function searchLocation(city) {
     }
 
 }
-
+/*
 async function route(locationOrigin, locationDestiny) {
     var location = await xroute.calculateRoute(
         {
@@ -271,7 +265,7 @@ async function packBins(remolque1, remolque2, guias) {
     console.log([].concat.apply([], location.packedBins.map(p => p.packedItems)))
     return getUniqueListBy([].concat.apply([], location.packedBins.map(p => p.packedItems)).map(i => guias.find(r => r.embarqueId === parseInt(i.itemTypeId.split("-")[1]))), "idGuia");
 
-}
+}*/
 
 async function obtenerEmbarque(id) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
@@ -368,6 +362,16 @@ export function readExcel(FORMAT,file, esRecoleccion){
             const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
             const wsPaquetes = (wb.Sheets[FORMAT.hojaPaquetes]);
             const wsComplementosSat = (wb.Sheets[FORMAT.hojaComplementos]);
+            if(wsGuias == undefined || wsComplementosSat == undefined || wsPaquetes == undefined){
+                resolve([]);
+                let mensaje = ("En el documento no se encontraron la(s) hoja(s): " +
+                    (wsComplementosSat == undefined ? FORMAT.hojaEmbarques+", " : "") +
+                    (wsGuias == undefined ? FORMAT.hojaComplementos+", " : "") +
+                    (wsPaquetes == undefined ? FORMAT.hojaPaquetes+", " : "")).slice(0, -2)
+                    + "; el nombre de la hoja en el documento debe ser igual al configurado."
+                showSuccess(mensaje)
+                return;
+            }
 
             //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
             const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
@@ -402,6 +406,25 @@ export function readExcel(FORMAT,file, esRecoleccion){
                 claveEmbalaje: item[FORMAT.complementosSat.claveEmbalaje],
                 descripcionEmbalaje: item[FORMAT.complementosSat.descripcionEmbalajeComplemento],
                 claveFraccionArancelaria: item[FORMAT.complementosSat.claveFraccionArancelaria],
+                //esFarmaco: item[FORMAT.complementosSat.esFarmaco],
+                nombreIngredienteActivo: item[FORMAT.complementosSat.nombreIngredienteActivo],
+                claveSectorCofepris: item[FORMAT.complementosSat.claveSectorCofepris]?.toString().length==1?"0"+item[FORMAT.complementosSat.claveSectorCofepris]:item[FORMAT.complementosSat.claveSectorCofepris],
+                esFarmaco: (item[FORMAT.complementosSat.esFarmaco])?.toUpperCase().trim() === 'SI'|| (item[FORMAT.complementosSat.esFarmaco])?.toUpperCase().trim() === 'SÍ',
+                fechaCaducidad:item[FORMAT.complementosSat.fechaCaducidad],
+                denominacionGenericaProd: item[FORMAT.complementosSat.denominacionGenericaProd],
+                denominacionDistintivaProd: item[FORMAT.complementosSat.denominacionDistintivaProd],
+                nombreQuimico: item[FORMAT.complementosSat.nombreQuimico],
+                fabricante: item[FORMAT.complementosSat.fabricante],
+                loteMedicamento: item[FORMAT.complementosSat.loteMedicamento],
+                formaFarmaceutica: item[FORMAT.complementosSat.formaFarmaceutica]?.toString().length==1?"0"+item[FORMAT.complementosSat.formaFarmaceutica]:item[FORMAT.complementosSat.formaFarmaceutica],
+                condicionesEspTransp: item[FORMAT.complementosSat.condicionesEspTransp]?.toString().length==1?"0"+item[FORMAT.complementosSat.condicionesEspTransp]:item[FORMAT.complementosSat.condicionesEspTransp],
+                registroSanitarioFolioAutorizacion: item[FORMAT.complementosSat.registroSanitarioFolioAutorizacion],
+                numeroCAS: item[FORMAT.complementosSat.numeroCAS],
+                numRegSanPlagCOFEPRIS: item[FORMAT.complementosSat.numRegSanPlagCOFEPRIS],
+                datosFabricante: item[FORMAT.complementosSat.datosFabricante],
+                datosFormulador: item[FORMAT.complementosSat.datosFormulador],
+                datosMaquilador: item[FORMAT.complementosSat.datosMaquilador],
+                usoAutorizado: item[FORMAT.complementosSat.usoAutorizado],
             }))
             console.log(arrayComplementos)
 
@@ -499,6 +522,12 @@ export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
 
             //SE OBTIENEN LAS HOJAS DEL EXCEL
             const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
+            if(wsGuias == undefined){
+                resolve([]);
+                showSuccess("No se encontró la hoja " + FORMAT.hojaEmbarques
+                    +  ", el nombre de la hoja en el documento debe ser igual al configurado")
+                return;
+            }
 
             //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
             const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);

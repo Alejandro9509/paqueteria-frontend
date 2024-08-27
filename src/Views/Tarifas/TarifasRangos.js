@@ -1,9 +1,9 @@
 import React, {Component, useEffect, useState} from 'react';
 import $ from "jquery";
-import {DataGrid, GridToolbar} from "@material-ui/data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import {Button, Grid, TextField, Tooltip} from "@material-ui/core";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import Tooltip from '@mui/material/Tooltip';
+import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
@@ -11,8 +11,7 @@ import axios from "axios";
 import Filtros from "../Filtros/FiltrosConvenios"
 import CrearTarifaRangos from "./CrearTarifaRangos";
 import {validarDerecho} from "../../Util/Util"
-import {makeStyles} from "@material-ui/core/styles";
-import { withStyles } from '@material-ui/core/styles';
+import styled from "@mui/styles/styled";
 import {
     agregarTarifaRangos,
     eliminarTarifaRangos,
@@ -24,6 +23,27 @@ import Noty from "noty";
 import {getRandomId} from "../../Util/Util";
 import {obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
 import { confirmAlert } from 'react-confirm-alert';
+const PREFIX = 'TarifasRangos';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('section')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
+
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -35,23 +55,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
-
 
 export default function TarifasRangos(props) {
-    const classes = useStyles();
+
     const [state, setState] = useState({
         tarifas: [],
         agregar: "Agregar",
@@ -372,7 +378,10 @@ export default function TarifasRangos(props) {
                 }
                 handleShowListado()
             }else{
-                showSuccess("Hubo un error al guardar");
+                if(respuesta.data.error!=="")
+                    showSuccess(respuesta.data.error)
+                else
+                    showSuccess("Hubo un error al guardar");
             }
         })
     }
@@ -387,7 +396,10 @@ export default function TarifasRangos(props) {
                 }
                 handleShowListado()
             }else{
-                showSuccess("Hubo un error al guardar");
+                if(respuesta.data.error!=="")
+                    showSuccess(respuesta.data.error)
+                else
+                    showSuccess("Hubo un error al guardar");
             }
         })
     }
@@ -403,8 +415,8 @@ export default function TarifasRangos(props) {
             state.tarifas.filter(i => i.IdCliente !== state.clienteGenerico.m_nIdCliente)
             : state.tarifas.filter(i => i.IdCliente === state.clienteGenerico.m_nIdCliente)
 
-    return(
-        <section className="main-container">
+    return (
+        <Root className="main-container">
             <div className="container-fluid">
                 <ul className="nav navStatica nav-tabs">
                     <li className="active">
@@ -434,10 +446,12 @@ export default function TarifasRangos(props) {
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
                                         getRowId={(row) => row.IdTarifa}
-                                        onRowSelected={(row) => {
+                                        onRowSelectionModelChange={(newModel)=>{
+                                            if(newModel.length<1)
+                                                return
                                             setState({
                                                 ...state,
-                                                idTarifa: row.data.IdTarifa
+                                                idTarifa: filtrarTarifas.find(i=>i.IdTarifa==newModel[0]).IdTarifa
                                             })
                                         }}
                                     />
@@ -464,6 +478,6 @@ export default function TarifasRangos(props) {
 
                 </div>
             </div>
-        </section>
-    )
+        </Root>
+    );
 }

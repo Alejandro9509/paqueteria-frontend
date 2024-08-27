@@ -1,27 +1,37 @@
 import React, {useState, useEffect} from 'react'
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import {
     Button,
     Dialog,
     DialogActions,
     DialogContent,
-    FormControl, FormControlLabel, FormGroup, FormLabel,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
     Grid,
-    InputLabel, MenuItem, Radio, RadioGroup,
-    Select, Switch, ThemeProvider,
-    Tooltip
-} from "@material-ui/core";
+    InputLabel,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Select,
+    Switch,
+    ThemeProvider,
+    StyledEngineProvider,
+    Tooltip,
+    adaptV4Theme,
+} from "@mui/material";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import IconButton from "@material-ui/core/IconButton";
-import AddBoxIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/Delete";
-import {DataGrid} from "@material-ui/data-grid";
+import Autocomplete from '@mui/material/Autocomplete';
+import IconButton from "@mui/material/IconButton";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import InputAdornment from "@mui/material/InputAdornment";
+import PageviewIcon from "@mui/icons-material/Pageview";
 import {obtenerCiudades, obtenerCiudadId} from "../../Util/Contexts/CiudadesContext";
 import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
 import {obtenerGuiaId, obtenerGuiasFiltro, obtenerGuiasFiltroCorteCaja} from "../../Util/Contexts/GuiaContext";
@@ -29,7 +39,7 @@ import Noty from "noty";
 import {agregarCorte, modificarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
 import {obtenerTiposPago} from "../../Util/Contexts/TipoPagoContext";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
-import {createMuiTheme} from "@material-ui/core/styles";
+import {createTheme} from "@mui/material/styles";
 import MyDialog from "./DialogOperador";
 
 function showSuccess(mensaje) {
@@ -108,7 +118,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
 
     const [openDialog, setOpenDialog] = useState(false);
     const [dialogData, setDialogData] = useState('');
-    const theme = createMuiTheme({
+    const theme = createTheme(adaptV4Theme({
         overrides: {
             MuiSwitch: {
                 switchBase: {
@@ -138,7 +148,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 }
             }
         }
-    });
+    }));
     const listado = 1
     const agregar = 2
     const modificar = 3
@@ -541,7 +551,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
 
         handleCloseDialog();
     };
-    return(
+    return (
         <div>
             <Dialog
                 fullWidth={true}
@@ -628,18 +638,20 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                             />
                                         </Grid>
                                         <Grid item xs={2}>
-                                            <ThemeProvider theme={theme}>
-                                                <FormControlLabel
-                                                    control={
-                                                        <Switch
-                                                            checked={filtros.busquedaPorUsuario}
-                                                            onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
-                                                            color="primary"
-                                                        />
-                                                    }
-                                                    label="Busqueda por usuario"
-                                                />
-                                            </ThemeProvider>
+                                            <StyledEngineProvider injectFirst>
+                                                <ThemeProvider theme={theme}>
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Switch
+                                                                checked={filtros.busquedaPorUsuario}
+                                                                onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                                                color="primary"
+                                                            />
+                                                        }
+                                                        label="Busqueda por usuario"
+                                                    />
+                                                </ThemeProvider>
+                                            </StyledEngineProvider>
                                         </Grid>
                                         <Grid item xs={3}>
                                             <TextField
@@ -814,6 +826,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 </div>
             </section>
         </div>
-    )
+    );
 }
 export default CorteCajaAgregar

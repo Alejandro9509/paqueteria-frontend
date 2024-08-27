@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import TextField from "@material-ui/core/TextField";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from "@mui/material/TextField";
 import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
+import {cubicarGuiaInforme} from "../../Util/Contexts/GuiaContext";
+import {showError} from "../../Util/GlobalFunctions";
+import ProgressBarCubicaje from "../Viajes/ProgressBarCubicaje";
 
 class AgregarRemolques extends Component {
     constructor(props) {
@@ -12,7 +15,8 @@ class AgregarRemolques extends Component {
             dataUnidades: [],
             IdRemolque1:null,
             IdRemolque2: null,
-            IdDolly: null
+            IdDolly: null,
+            utilizacion: 0
         }
 
         this.handleRemolqueUnoFiltro = this.handleRemolqueUnoFiltro.bind(this);
@@ -43,12 +47,29 @@ class AgregarRemolques extends Component {
 
     handleRemolqueDosFiltro(event, newValue) {
         event.preventDefault();
+        var params = {
+            idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: newValue?.m_nIdUnidad ?? null,
+            guias: this.props.paquetes.filter(p => !p.m_bEsRecoleccion).map(p => ({m_nIdGuia: p.m_nId}))
+        }
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({
-                IdRemolque2: newValue,
-                placasRemolque2: newValue.m_sPlacas,
-                colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+            cubicarGuiaInforme(params).then(({data}) => {
+                this.setState({
+                    IdRemolque2: newValue,
+                    placasRemolque2: newValue.m_sPlacas,
+                    colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus,
+                    utilizacion: data.utilizacion.toFixed(0)
+                })
+            }).catch(e => {
+                this.setState({
+                    IdRemolque2: newValue,
+                    placasRemolque2: newValue.m_sPlacas,
+                    colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus,
+                    utilizacion: 0
+                })
+                showError(e.response?.data)
             })
         })
 
@@ -62,13 +83,32 @@ class AgregarRemolques extends Component {
 
     handleRemolqueUnoFiltro(event, newValue) {
         event.preventDefault();
+        var params = {
+            idRemolque1: newValue?.m_nIdUnidad ?? null,
+            idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: this.props.paquetes.filter(p => !p.m_bEsRecoleccion).map(p => ({m_nIdGuia: p.m_nId}))
+        }
+
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({
-                IdRemolque1: newValue,
-                placasRemolque1: newValue.m_sPlacas,
-                colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+            cubicarGuiaInforme(params).then(({data}) => {
+                this.setState({
+                    IdRemolque1: newValue,
+                    placasRemolque1: newValue.m_sPlacas,
+                    colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus,
+                    utilizacion: data.utilizacion.toFixed(0)
+                })
+            }).catch(e => {
+                this.setState({
+                    IdRemolque1: newValue,
+                    placasRemolque1: newValue.m_sPlacas,
+                    colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus,
+                    utilizacion: 0
+                })
+                showError(e.response?.data)
             })
+
         })
     }
     guardarRemolques(e){
@@ -306,6 +346,10 @@ this.props.asignarRemolquesUnidad(this.state)
                             </div>
                         </div>
 
+                        <div className="col-sm-12 col-md-12 unit">
+                            <ProgressBarCubicaje value={this.state.utilizacion}>Espacio de carga usado: {this.state.utilizacion}%</ProgressBarCubicaje>
+
+                        </div>
 
 
                     </div>

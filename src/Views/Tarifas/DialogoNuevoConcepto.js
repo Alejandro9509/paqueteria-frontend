@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Radio, RadioGroup, Select} from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Radio, RadioGroup, Select} from "@mui/material";
+import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import {validarDerecho} from "../../Util/Util";
 
 export default function DialogoNuevoConcepto(props) {
     const [open, setOpen] = React.useState(false);
@@ -298,7 +299,7 @@ export default function DialogoNuevoConcepto(props) {
         <div>
             {
                 !props.disabled &&
-                <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
+                <Button disabled={props.esRec?!validarDerecho(9101505):!validarDerecho(9101500)} variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
                     Agregar concepto
                 </Button>
             }
@@ -324,15 +325,15 @@ export default function DialogoNuevoConcepto(props) {
                                         getOptionLabel={(option) => option.m_sConcepto}
                                         variant="outlined"
                                         fullWidth
-                                        required          
-                                        style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                        required
                                         renderInput={(params) => (
                                             <div>
                                                 <TextField
                                                     {...params}
                                                     variant="outlined"
+                                                    size="small"
+                                                    className="form-control"
                                                     label="Concepto"
-                                                    margin="dense"
                                                     fullWidth
                                                     required
                                                     helperText={errores.errorConcepto?errores.errorTexto:''}
@@ -344,11 +345,11 @@ export default function DialogoNuevoConcepto(props) {
                                 </div>
                             </Grid>
                             <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined"
                                                onChange={handleChangePaquetev2}
                                                type="number"
                                                label="Importe"
+                                               size="small"
                                                style={{textAlign: "right"}}
                                                step="1"
                                                min="0"
@@ -357,15 +358,15 @@ export default function DialogoNuevoConcepto(props) {
                                                helperText={errores.errorImporte?errores.errorTextoImporte:''}
                                                error={errores.errorImporte}
                                     />
-                                </div>
                             </Grid>
                             <Grid item xs={6}>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                    <FormControl fullWidth variant="outlined" >
                                         <InputLabel id="trasladaLabel">Traslada</InputLabel>
                                         <Select
                                             labelId="trasladaLabel"
                                             label="Traslada"
+                                            size="small"
                                             className="form-control"
                                             value={concepto.traslada}
                                             onChange={handleChangePaquetev2}
@@ -385,20 +386,18 @@ export default function DialogoNuevoConcepto(props) {
                                 </label>
                             </Grid>
                             <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined"
                                                onChange={handleChangePaquetev2}
-                                               className="form-control"
                                                type="number"
                                                style={{textAlign: "right"}}
                                                disabled
+                                               size="small"
                                                label="Importe IVA"
                                                step="1"
                                                min="0"
                                                value={concepto.importeIVA}
                                                name="importeIVA"
                                     />
-                                </div>
                             </Grid>
                             <Grid item xs={6}>
                                 <label className="input select" style={{width: "100%"}}>
@@ -410,6 +409,7 @@ export default function DialogoNuevoConcepto(props) {
                                             className="form-control"
                                             onChange={handleChangePaquetev2}
                                             name="retiene"
+                                            size="small"
                                             value={concepto.retiene}
                                         >
                                             <option key={0} value={0}>Selecciona</option>
@@ -426,10 +426,8 @@ export default function DialogoNuevoConcepto(props) {
                                 </label>
                             </Grid>
                             <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined"
                                                onChange={handleChangePaquetev2}
-                                               className="form-control"
                                                type="number"
                                                style={{textAlign: "right"}}
                                                disabled
@@ -439,12 +437,10 @@ export default function DialogoNuevoConcepto(props) {
                                                value={concepto.importeRet}
                                                name="importeRet"
                                     />
-                                </div>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField variant="outlined" margin="dense"
+                                <TextField variant="outlined"
                                            onChange={handleChangePaquetev2}
-                                           className="form-control"
                                            type="number"
                                            style={{textAlign: "right"}}
                                            label="Descuento ($)"

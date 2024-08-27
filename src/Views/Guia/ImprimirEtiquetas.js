@@ -5,27 +5,63 @@ import {
     DialogTitle,
     Typography,
     Button,
-    makeStyles,
     Slider,
-    Checkbox
-} from '@material-ui/core'
+    Checkbox,
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import React, {useEffect, useState} from 'react'
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import {
     TableBody,
     TableCell,
     TableHead,
     TableRow,
     Table,
-} from "@material-ui/core";
+} from "@mui/material";
 import PropTypes from 'prop-types';
+
+const PREFIX = 'ImprimirEtiquetas';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    tabs: `${PREFIX}-tabs`,
+    tab: `${PREFIX}-tab`,
+    botonesImprimir: `${PREFIX}-botonesImprimir`
+};
+
+const Root = styled('div')((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.paper,
+        display: 'flex',
+        height: 224,
+        width: '100%'
+    },
+
+    [`& .${classes.tabs}`]: {
+        borderRight: `1px solid ${theme.palette.divider}`,
+    },
+
+    [`& .${classes.tab}`]: {
+        width: '100%'
+    },
+
+    [`& .${classes.botonesImprimir}`]: {
+        margin: '0 10px'
+    }
+}));
 
 export default function ImprimirEtiquetas(props) {
 
-    const classes = useStyles();
+
     const [value, setValue] = React.useState(0);
     const [Paquetes, setPaquetes] = React.useState([])
     const handleChange = (event, newValue) => {
@@ -74,8 +110,11 @@ export default function ImprimirEtiquetas(props) {
                     <Box width="90%"><Typography variant={"h1"}>Etiquetas</Typography>
                     </Box>
                     <Box width="10%">
-                        <IconButton aria-label="close" onClick={() => props.closeEtiquetas(null)}
-                                    style={{position: 'absolute', right: '20px', top: '20px', padding: '5px'}}>
+                        <IconButton
+                            aria-label="close"
+                            onClick={() => props.closeEtiquetas(null)}
+                            style={{position: 'absolute', right: '20px', top: '20px', padding: '5px'}}
+                            size="large">
                             <CloseIcon style={{fontSize: '30px'}}/>
                         </IconButton>
                     </Box>
@@ -83,7 +122,7 @@ export default function ImprimirEtiquetas(props) {
             </DialogTitle>
 
             <DialogContent>
-                <div className={classes.root}>
+                <Root className={classes.root}>
                     {/*------------------------------TABS--------------------------------------*/}
                     <Tabs
                         orientation="vertical"
@@ -150,7 +189,7 @@ export default function ImprimirEtiquetas(props) {
                         );
                     })}
 
-                </div>
+                </Root>
             </DialogContent>
             <DialogActions>
                 <Box display="flex">
@@ -168,7 +207,7 @@ export default function ImprimirEtiquetas(props) {
                 </Box>
             </DialogActions>
         </form>
-    )
+    );
 }
 
 function TabPanel(props) {
@@ -203,22 +242,3 @@ function a11yProps(index) {
         'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
-        display: 'flex',
-        height: 224,
-        width: '100%'
-    },
-    tabs: {
-        borderRight: `1px solid ${theme.palette.divider}`,
-    },
-    tab: {
-        width: '100%'
-    },
-    botonesImprimir: {
-        margin: '0 10px'
-    }
-}));

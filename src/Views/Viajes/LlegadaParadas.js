@@ -1,12 +1,19 @@
 import React from 'react';
-import {FormControl, MenuItem, OutlinedInput, TextField} from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import {FormControl, MenuItem, OutlinedInput, TextField} from "@mui/material";
+import { styled } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import InputAdornment from '@mui/material/InputAdornment';
 import clsx from 'clsx';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 
-const useStyles = makeStyles(() => ({
+const PREFIX = 'LlegadaParadas';
+
+const classes = {
+    root: `${PREFIX}-root`
+};
+
+const Root = styled('form')(() => ({
     /*root: {
         '& .MuiTextField-root': {
             width: 200,
@@ -23,14 +30,13 @@ const useStyles = makeStyles(() => ({
             width: '25ch',
         },
     },*/
-    root: {
+    [`& .${classes.root}`]: {
         flexGrow: 1,
-    },
-
+    }
 }));
 
 export default function LlegadaParadas(props){
-    const classes = useStyles();
+
 
     const [data, setData] = React.useState({
         sucursal: props.viaje.m_sSucursal,
@@ -204,8 +210,8 @@ export default function LlegadaParadas(props){
         props.onSubmit(data);
     }
 
-    return(
-        <form onSubmit={onSubmit}>
+    return (
+        <Root onSubmit={onSubmit}>
             {/*<div className={classes.root}></div>*/}
             
             <Grid container spacing={2}>
@@ -517,6 +523,6 @@ export default function LlegadaParadas(props){
 
             </Grid>
             {props.children}
-        </form>
-    )
+        </Root>
+    );
 }

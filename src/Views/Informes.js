@@ -1,5 +1,4 @@
 import React, {useEffect, useState, setData, useMemo, Component} from "react";
-import {cubicarGuias, remove_array_element} from "../Util/Util";
 import {validarDerecho} from "../Util/Util"
 import {
     ButtonBase,
@@ -22,18 +21,17 @@ import {
     Step,
     StepLabel,
     Stepper, Tooltip,
-} from "@material-ui/core";
-import RestartAltIcon from '@material-ui/icons/Refresh';
+} from "@mui/material";
+import RestartAltIcon from '@mui/icons-material/Refresh';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import {getCurrentDateTime} from "../Util/Util"
 
-import DataTable from "react-data-table-component";
 import $ from "jquery";
 import {useTable, useFilters, useSortBy} from "react-table";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import TextField from "@mui/material/TextField";
+import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from "@mui/material/InputAdornment";
+import PageviewIcon from "@mui/icons-material/Pageview";
 import useModal from "react-hooks-use-modal";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
@@ -44,16 +42,23 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import {makeStyles} from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import * as XLSX from "xlsx";
 import {render} from "react-dom";
-import SearchIcon from "@material-ui/icons/Search";
-import {DataGrid} from "@material-ui/data-grid";
+import SearchIcon from "@mui/icons-material/Search";
+import {DataGrid} from "@mui/x-data-grid";
 import Noty from "noty";
 import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
-import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {
+    cubicarGuiaInforme,
+    obtenerGuia,
+    obtenerGuiaPendientes,
+    obtenerGuiaReporte,
+    obtenerGuiasFiltro
+} from "../Util/Contexts/GuiaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
 import {obtenerUnidades, obtenerUnidadesInforme, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {obtenerRutas} from "../Util/Contexts/RutasContext";
@@ -74,13 +79,36 @@ import {
 } from "../Util/Contexts/FormatosImpresionContext";
 import Filtros from "./Filtros/Filtros";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
-import Button from "@material-ui/core/Button";
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import Button from "@mui/material/Button";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import {confirmAlert} from "react-confirm-alert";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogFormatosImpresion from "./DialogFormatosImpresion";
+import {showError} from "../Util/GlobalFunctions";
+import ProgressBarCubicaje from "./Viajes/ProgressBarCubicaje";
+
+const PREFIX = 'Informes';
+
+const classes = {
+    seleccionado: `${PREFIX}-seleccionado`,
+    noSeleccionado: `${PREFIX}-noSeleccionado`,
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.seleccionado}`]: {
+        backgroundColor: "#FCC88F",
+    },
+    [`& .${classes.noSeleccionado}`]: {
+        backgroundColor: "#FFFFFF",
+    },
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+});
 
 function showSuccess(mensaje) {
     new Noty({
@@ -90,36 +118,14 @@ function showSuccess(mensaje) {
         timeout: "8000",
     }).show();
 }
-function showError(mensaje) {
-    new Noty({
-        type: "error",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000",
-    }).show();
-}
-
-const styles = {
-    seleccionado: {
-        backgroundColor: "#FCC88F",
-    },
-    noSeleccionado: {
-        backgroundColor: "#FFFFFF",
-    },
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    },
-};
-const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
 
 let timer;
 
 function Informes({history}) {
-    const classes = useStyles();
-    const [stepActive, setStepActive] = React.useState(1);
+
+    const [utilizacion, setUtilizacion] = React.useState(0);
     const [data, setData] = React.useState([]);
     const [guias, setGuias] = React.useState([]);
     const [informes, setInformes] = React.useState([]);
@@ -130,25 +136,15 @@ function Informes({history}) {
     const [dataUnidades, setDataUnidades] = React.useState([]);
     const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
+    const [dataGuiasSeleccionadas, setDataGuiasSeleccionadas] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
+    const [filtroFolio, setFiltroFolio] = React.useState(false);
+    const [textoFiltro,setTextoFiltro]=React.useState('');
     const [openDialogReportes, setOpenDialogReportes] = useState(false)
+    const [mensajesUtilizacion,setMensajeUtilizacion]=useState('')
 
     const [detectarModificaciones,setDetectar]=React.useState(false)
-    // useEffect(()=>{
-    //
-    //     if( localStorage.getItem("RFC")==="ECC9510049KA"){
-    //         obtenerFormatosImpresionProceso(222).then(({data}) => {
-    //             setDataReportes(data)
-    //         })
-    //     }
-    //     else{
-    //         obtenerFormatosImpresionProceso(214).then(({data}) => {
-    //             setDataReportes(data)
-    //         })
-    //     }
-    //
-    // }, [])
-    
+
     function confirmExit()
     {
 
@@ -189,7 +185,20 @@ function Informes({history}) {
 
         setOrdenAscendente(!ordenAscendente)
     };
+    const handleFiltroFolio = () => {
 
+        let filtro=document.getElementById('filtroFolio').value
+        if(filtro=='')
+        {
+            setTextoFiltro('')
+            setFiltroFolio(false)
+        }
+        else
+        {
+            setTextoFiltro(filtro)
+            setFiltroFolio(true)
+        }
+    };
     function handleSelectCP(id, dobleClick, e) {
         clearTimeout(timer);
         if (e.detail === 1) {
@@ -217,7 +226,7 @@ function Informes({history}) {
             width: 200,
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <a
                             onClick={() => handleShowModificar(row.row.m_nIdInforme, row.row)}
                             className="btn btn-default btn-xs"
@@ -269,7 +278,7 @@ function Informes({history}) {
                         >
                             <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                         </a>
-                    </div>
+                    </Root>
                 );
             },
         },
@@ -523,6 +532,7 @@ function Informes({history}) {
         sePuedeCancelar: false,
         Informes: [],
         indexCubicar: 0,
+        tipoTimbrado:1,
     });
 
     const getEmptyState = () => {
@@ -583,7 +593,10 @@ function Informes({history}) {
                 indexCubicar: 0,
             }
         })
+        setMensajeUtilizacion('')
+        setDataGuiasSeleccionadas([])
         setDataGuias([])
+        setUtilizacion(0)
     }
 
     /* const getCurrentDateTime = () => {
@@ -628,9 +641,12 @@ function Informes({history}) {
         console.log(JSON.stringify(params))
         // handleShowListado()
         if (state.IdInforme !== 0) {
+            console.log("Modificar")
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    setTextoFiltro('')
+                    setFiltroFolio(false)
                     $.mostrarMensaje=false
                     handleShowListado()
                 })
@@ -639,12 +655,16 @@ function Informes({history}) {
                     showSuccess("El Usuario no tiene derecho para modificar");
                 });
         } else {
+            console.log("Agregar")
             agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     if (state.cuibicar && state.indexCubicar < informes.length) {
+                        console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
+                        setTextoFiltro('')
+                        setFiltroFolio(false)
                         $.mostrarMensaje=false
                         handleShowListado()
                     }
@@ -701,92 +721,6 @@ function Informes({history}) {
 
     }
 
-    function TableCiudades({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdCiudad === select ? "orange" : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
     useEffect(value => {
         setState({
             ...state,
@@ -794,259 +728,109 @@ function Informes({history}) {
             PlacasRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_sPlacas : "",
             PlacasDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_sPlacas : ""
         })
+        if(state.IdRemolque1==null){
+            document.getElementById("IdRemolque1").defaultValue=""
+            document.getElementById("IdRemolque1").value=""
+            document.getElementById("IdRemolque1").inputValue=""
+        }
+            console.log(document.getElementById("IdRemolque1").value)
+            console.dir(document.getElementById("IdRemolque1"))
+
+
+        console.log(state.IdTipoUnidad)
+        //cubicarInforme(dataGuias);
     }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
-
-    function TableOperadores({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            <th>Acciones</th>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdOperador === select
-                                            ? "#FCC88F"
-                                            : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectCP.bind(this, row.original, false)}
-                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                            >
-                                <td>
-                                    <div>
-                                        <a
-                                            href="#Agregar"
-                                            role="tab"
-                                            data-toggle="tab"
-                                            onClick={() =>
-                                                handleShowModificar(row.original.m_nIdRecoleccion)
-                                            }
-                                            className="btn btn-default"
-                                        >
-                                            <i
-                                                className="fa fa-pencil-square-o"
-                                                style={{color: "#F9A03E"}}
-                                            />
-                                        </a>
-                                        <a
-                                            href="#"
-                                            className="btn btn-default btn-sm m-user-delete"
-                                            onClick={() =>
-                                                confirmAlert({
-                                                    title: 'Confirmar Eliminar',
-                                                    message: '¿Está seguro de eliminar Embarque?',
-                                                    buttons: [
-                                                        {
-                                                            label: 'Sí',
-                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
-                                                        },
-                                                        {
-                                                            label: 'No',
-                                                        }
-                                                    ]
-                                                })
-                                            }
-                                        >
-                                            <i
-                                                className="zmdi zmdi-delete"
-                                                style={{color: "#F30B0B"}}
-                                            />
-                                        </a>
-                                        <a
-                                            href="#"
-                                            className="btn btn-default btn-sm m-user-delete"
-                                            onClick={() =>
-                                                confirmAlert({
-                                                    title: 'Confirmar Eliminar',
-                                                    message: '¿Está seguro de eliminar Embarque?',
-                                                    buttons: [
-                                                        {
-                                                            label: 'Sí',
-                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
-                                                        },
-                                                        {
-                                                            label: 'No',
-                                                        }
-                                                    ]
-                                                })
-                                            }
-                                        >
-                                            <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
-                                        </a>
-                                    </div>
-                                </td>
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
-    function TableUnidad({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdUnidad === select ? "orange" : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectCP.bind(this, row.original, false)}
-                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
 
     function cubicarAccion(e) {
         e.preventDefault();
         getAllGuiasFrom(true);
     }
 
-    const selectGuia = (index) => {
+    const selectGuia = (guia) => {
         const newGuia = [...dataGuias];
-
+        let index=dataGuias.findIndex(g=>g==guia)
         newGuia[index]["select"] = newGuia[index].select ? false : true;
+        cubicarInforme(newGuia);
         setDataGuias(newGuia);
     };
+
+    function cubicarInforme(newGuia){
+        console.log("Cubicar")
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia.filter(g => g.select)
+        }
+        if(params.guias.length > 0){
+            setDataGuiasSeleccionadas(params.guias)
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+                if(data.mensaje!=null)
+                {
+                    setMensajeUtilizacion(data.mensaje)
+                }
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
+        else{
+            setUtilizacion(0)
+        }
+        setDataGuias(newGuia);
+    };
+
+    const onChangeRemolque1 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: newValue?.m_nIdUnidad ?? null,
+            idRemolque2: state.IdRemolque2?.m_nIdUnidad ?? null,
+            guias: newGuia
+        }
+        if(dataGuiasSeleccionadas.length > 0){
+            console.log("Cubicar")
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+                console.log(e.response?.data)
+            })
+        }
+
+        setState({
+            ...state,
+            IdRemolque1: newValue,
+        })
+    }
+
+    const onChangeRemolque2 = (index,newValue) =>{
+        const newGuia = [...dataGuiasSeleccionadas];
+        console.log(newGuia)
+        var params = {
+            idRemolque1: state.IdRemolque1?.m_nIdUnidad ?? null,
+            idRemolque2: newValue?.m_nIdUnidad ?? null,
+            guias: newGuia
+        }
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }else {
+            setUtilizacion(0)
+        }
+
+        setState({
+            ...state,
+            IdRemolque2: newValue,
+        })
+    }
 
     function handleShowCancelar(event) {
         obtenerInformesId(state.IdInforme).then((respuesta) => {
@@ -1058,7 +842,8 @@ function Informes({history}) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
                 usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
                 estatusCancelacion: respuesta.data.m_sEstatusInforme,
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
+                countGuias:respuesta.data.countGuias,
             });
 
             if (!respuesta.data.m_bSePuedeCancelar) {
@@ -1075,24 +860,44 @@ function Informes({history}) {
         if (e) {
             e.preventDefault();
         }
-        let params = {
-            motivoCancelacion: state.motivoCancelacion,
-            usuarioCancelacion: localStorage.getItem("UsuarioId"),
-            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
-        };
-        console.log(params)
-        console.log(JSON.stringify(params))
-        cancelarInformes(state.IdInforme, params).then((respuesta) => {
-            console.log(respuesta.data);
-            showSuccess(respuesta.data)
-            setDetectar(false)
-            $.mostrarMensaje=false
-            handleShowListado()
+        if(state.motivoCancelacion?.trim()==""){
+            showSuccess("Favor de llenar campo de motivo")
+            return;
+        }
+        confirmAlert({
+            title: 'Este informe cuenta con '+state.countGuias+' guía(s)',
+            message: '¿Esta seguro de que quiere cancelar?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: async () => {
+                        let params = {
+                            motivoCancelacion: state.motivoCancelacion,
+                            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+                            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
+                        };
+                        console.log(params)
+                        console.log(JSON.stringify(params))
+                        cancelarInformes(state.IdInforme, params).then((respuesta) => {
+                            console.log(respuesta.data);
+                            showSuccess(respuesta.data)
+                            setDetectar(false)
+                            $.mostrarMensaje=false
+                            handleShowListado()
+                        });
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: async () => {console.log(state)}
+                }
+            ]
         });
+
     };
 
     function getAllGuiasFrom(cubicar) {
-        if (!cubicar) {
+        // if (!cubicar) {
             obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad, state.tipoTimbrado).then((respuesta) => {
                 if (respuesta.data !== "Vacio") {
                     if (state.agregar === "Modificar") {
@@ -1106,23 +911,23 @@ function Informes({history}) {
                     }
                 }
             })
-        } else {
-            obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
-                setDataGuias(respuesta.data);
-                if (cubicar) {
-                    cubicarGuias(
-                        respuesta.data,
-                        state.IdCiudadOrigen,
-                        state.IdCiudadDestino,
-                        state.IdRemolque1,
-                        state.IdRemolque2
-                    ).then(result => {
-                        setInformes(result);
-                    })
-
-                }
-            })
-        }
+        // } else {
+        //     obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
+        //         setDataGuias(respuesta.data);
+        //         if (cubicar) {
+        //             cubicarGuias(
+        //                 respuesta.data,
+        //                 state.IdCiudadOrigen,
+        //                 state.IdCiudadDestino,
+        //                 state.IdRemolque1,
+        //                 state.IdRemolque2
+        //             ).then(result => {
+        //                 setInformes(result);
+        //             })
+        //
+        //         }
+        //     })
+        // }
 
 
     }
@@ -1172,6 +977,7 @@ function Informes({history}) {
                 setState((config) => {
                     return {
                         ...config,
+                        validarTimbrado:respuesta.data.ValidarTimbrado,
                         tipoTimbrado: respuesta.data.TipoTimbrado,
                     }
                 })
@@ -1209,10 +1015,12 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        console.log(state.IdCiudadDestino)
+        console.log(state.IdCiudadOrigen)
+        console.log(document.getElementById("IdCiudadOrigen").value)
+        console.dir(document.getElementById("IdCiudadOrigen"))
         if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
-
+            setFiltroFolio(false)
         }
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
     const clickCancelar=()=>{
@@ -1242,6 +1050,8 @@ function Informes({history}) {
         setDataParaAgregar()
         getEmptyState()
         setDetectar(false)
+        setTextoFiltro('')
+        setFiltroFolio(false)
         $.mostrarMensaje=false
         window.onbeforeunload={}
         $('.nav-tabs li ').removeClass('active');
@@ -1252,12 +1062,11 @@ function Informes({history}) {
     }
     useEffect(() => {
         if( detectarModificaciones){
-            console.log("disprosio")
            // console.log(remitente)
            $.mostrarMensaje=true
             window.onbeforeunload = confirmExit
 
-           
+
         }
     }, [state])
     const handleShowCubicar = () => {
@@ -1287,6 +1096,8 @@ function Informes({history}) {
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
+            setTextoFiltro('')
+            setFiltroFolio(false)
             setDataParaModificarConsultar(data, "Modificar")
         });
     }
@@ -1298,6 +1109,8 @@ function Informes({history}) {
             console.log(data.m_arrClsProGuia)
             data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
+            setTextoFiltro('')
+            setFiltroFolio(false)
             setDataParaModificarConsultar(data, "Consultar")
         });
     }
@@ -1327,6 +1140,21 @@ function Informes({history}) {
                 tipoTimbrado:data.m_nTipoTimbrado
             }
         });
+        var params = {
+            idRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1)?.m_nIdUnidad ?? null,
+            idRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2)?.m_nIdUnidad ?? null,
+            guias: data.m_arrClsProGuia
+        }
+        console.log("Cubicar")
+        console.log(params)
+        if(params.guias.length > 0){
+            cubicarGuiaInforme(params).then(({data}) => {
+                setUtilizacion( data.utilizacion.toFixed(0))
+            }).catch(e => {
+                setUtilizacion(0)
+                showError(e.response?.data)
+            })
+        }
     }
 
     const setDataParaAgregar = () => {
@@ -1373,34 +1201,6 @@ function Informes({history}) {
         })
     }
 
-    function openSection(index) {
-        // closeSeccions();
-        var $section;
-        switch (index) {
-            case 1:
-                setStepActive(1);
-                $section = $("#infogral");
-                break;
-            case 2:
-                setStepActive(2);
-                $section = $("#caracteristicas");
-
-                break;
-
-            case 3:
-                setStepActive(3);
-                $section = $("#seguros");
-                break;
-
-            default:
-        }
-        $("html, body").animate(
-            {
-                scrollTop: parseInt($section.offset().top - 150),
-            },
-            200
-        );
-    }
 
     const setDataListado = (listado) => {
         setData(listado)
@@ -1428,139 +1228,13 @@ function Informes({history}) {
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
-                    {state.tipoModal == 1 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Ciudades");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
 
-                            {dataOrigenes.length != 0 ? (
-                                <TableCiudades
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdCiudad
-                                    }
-                                    columns={columnsCiudades}
-                                    data={dataOrigenes}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
-                    {state.tipoModal == 2 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Operadores");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataOperadores.length != 0 ? (
-                                <TableOperadores
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdOperador
-                                    }
-                                    columns={columnsOperadores}
-                                    data={dataOperadores}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
-
-                    {state.tipoModal == 4 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Unidades");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataUnidades.length != 0 ? (
-                                <TableUnidad
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdUnidad
-                                    }
-                                    columns={columnsUnidades}
-                                    data={dataUnidades}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
                     {state.tipoModal === 6 &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                             <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
                             <div>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                    <FormControl fullWidth variant="outlined" size="small">
                                         <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
                                         <Select
                                             labelId="sucursalListadoLabel"
@@ -1576,12 +1250,12 @@ function Informes({history}) {
                                             name="formatoSeleccionado"
                                         >
                                             {dataFormatos.map((formato) => (
-                                                <option
+                                                <MenuItem
                                                     key={formato.m_nIdFormato}
                                                     value={formato.m_nIdFormato}
                                                 >
                                                     {formato.m_sFormato}
-                                                </option>
+                                                </MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -1692,11 +1366,15 @@ function Informes({history}) {
                                             density="compact"
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdInforme}
-                                            onRowSelected={(row) => {
+                                            rowsPerPageOptions={[]}
+                                            onRowSelectionModelChange={(newModel,e) => {
+                                                if(newModel.length<1)
+                                                    return
+                                                let row=data.find(i=>i.m_nIdInforme==newModel[0])
                                                 setState({
                                                     ...state,
-                                                    IdInforme: row.data.m_nIdInforme,
-                                                    FolioInforme: row.data.m_sFolioInforme,
+                                                    IdInforme: row.m_nIdInforme,
+                                                    FolioInforme: row.m_sFolioInforme,
                                                 });
                                             }}
                                         />
@@ -1725,7 +1403,7 @@ function Informes({history}) {
                                                     <div
                                                         className="widget-header">
                                                         <div className="pull-left">
-                                                            <h3>Información De Envío</h3>
+                                                            <h3 style={{marginBottom:"3%"}}>Información De Envío</h3>
                                                         </div>
                                                     </div>
 
@@ -1738,8 +1416,9 @@ function Informes({history}) {
                                                                             className="col-sm-6 col-md-6 col-xs-12 unit">
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Folio"
+                                                                                           fullWidth
                                                                                            className="form-control"
                                                                                            type="text"
                                                                                            InputLabelProps={{
@@ -1758,7 +1437,8 @@ function Informes({history}) {
                                                                     <div className="col-sm-6 col-md-6 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined"
-                                                                                       margin="dense"
+                                                                                       size="small"
+                                                                                       fullWidth
                                                                                        label="Fecha y Hora"
                                                                                        onChange={handleChange}
                                                                                        className="form-control"
@@ -1780,12 +1460,13 @@ function Informes({history}) {
                                                                         <label className="input select">
                                                                             <FormControl required fullWidth
                                                                                          variant="outlined"
-                                                                                         margin="dense">
+                                                                                         size="small">
                                                                                 <InputLabel
                                                                                     id="EstatusInformeLabel">Estatus</InputLabel>
                                                                                 <Select
                                                                                     labelId="EstatusInformeLabel"
                                                                                     label="Estatus"
+                                                                                    fullWidth
                                                                                     className="form-control"
                                                                                     required
                                                                                     onChange={handleSelectEstatus}
@@ -1793,16 +1474,16 @@ function Informes({history}) {
                                                                                     id="EstatusInforme"
                                                                                     disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
                                                                                 >
-                                                                                    <option
+                                                                                    <MenuItem
                                                                                         value="">Seleccionar
-                                                                                    </option>
+                                                                                    </MenuItem>
                                                                                     {dataEstatusInformes.map(
                                                                                         (EstatusInforme) => (
-                                                                                            <option
+                                                                                            <MenuItem
                                                                                                 key={EstatusInforme.m_nIdEstatusInforme}
                                                                                                 value={EstatusInforme.m_nIdEstatusInforme}
                                                                                             >{EstatusInforme.m_sEstatus}
-                                                                                            </option>
+                                                                                            </MenuItem>
                                                                                         )
                                                                                     )
                                                                                     }
@@ -1812,15 +1493,13 @@ function Informes({history}) {
                                                                     </div>
                                                                     <div className="row">
                                                                         <div className="col-sm-12 col-md-6 unit">
-
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense" required>
+                                                                                             size="small" required>
                                                                                     <InputLabel
                                                                                         id="tipoTimbradoLabel">Tipo de servicio</InputLabel>
                                                                                     <Select
-                                                                                        native
                                                                                         labelId="tipoTimbradoLabel"
                                                                                         label="Tipo de timbrado"
                                                                                         className="form-control"
@@ -1832,16 +1511,16 @@ function Informes({history}) {
                                                                                         onChange={handleSelectTipoTimbrado}
                                                                                         value={state.tipoTimbrado}
                                                                                     >
-                                                                                        <option key={"1"}
+                                                                                        <MenuItem key={"1"}
                                                                                                 value={1}
                                                                                         >
                                                                                             Consolidado
-                                                                                        </option>
-                                                                                        <option key={"2"}
+                                                                                        </MenuItem>
+                                                                                        <MenuItem key={"2"}
                                                                                                 value={2}
                                                                                         >
                                                                                             Paquetería
-                                                                                        </option>
+                                                                                        </MenuItem>
                                                                                     </Select>
                                                                                 </FormControl>
                                                                             </label>
@@ -1855,7 +1534,7 @@ function Informes({history}) {
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense" required>
+                                                                                             size="small" required>
                                                                                     <InputLabel
                                                                                         id="sucursalEmisoraLabel">Oficina
                                                                                         Emisora</InputLabel>
@@ -1870,11 +1549,11 @@ function Informes({history}) {
                                                                                         disabled
                                                                                     >
                                                                                         {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalReceptora)).map((sucursalEmisora) => (
-                                                                                                <option
+                                                                                                <MenuItem
                                                                                                     key={sucursalEmisora.m_nIdSucursal}
                                                                                                     value={sucursalEmisora.m_nIdSucursal}>
                                                                                                     {sucursalEmisora.m_sSucursal}
-                                                                                                </option>
+                                                                                                </MenuItem>
                                                                                             )
                                                                                         )}
                                                                                     </Select>
@@ -1890,7 +1569,7 @@ function Informes({history}) {
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
-                                                                                             margin="dense" required>
+                                                                                             size="small" required>
                                                                                     <InputLabel
                                                                                         id="sucursalReceptoraLabel">Oficina
                                                                                         Receptora</InputLabel>
@@ -1905,11 +1584,11 @@ function Informes({history}) {
                                                                                     >
                                                                                         {dataSucursal.filter(i => parseInt(i.m_nIdSucursal) !== parseInt(state.sucursalEmisora)).map(
                                                                                             (sucursalReceptora) => (
-                                                                                                <option
+                                                                                                <MenuItem
                                                                                                     key={sucursalReceptora.m_nIdSucursal}
                                                                                                     value={sucursalReceptora.m_nIdSucursal}>
                                                                                                     {sucursalReceptora.m_sSucursal}
-                                                                                                </option>
+                                                                                                </MenuItem>
                                                                                             )
                                                                                         )}
                                                                                     </Select>
@@ -1928,16 +1607,10 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
-
-                                                                                    value={state.IdRemolque1}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque1: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    size="small"
+                                                                                    value={state.IdRemolque1==null?"":state.IdRemolque1}
+                                                                                    onChange={(index, newValue) => onChangeRemolque1(index,newValue) }
                                                                                     id="IdRemolque1"
-                                                                                    disableClearable
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
@@ -1951,8 +1624,9 @@ function Informes({history}) {
                                                                                         <div>
                                                                                             <TextField
                                                                                                 variant="outlined"
+                                                                                                id="Aut1"
                                                                                                 label="Remolque 1"
-                                                                                                margin="dense"
+                                                                                                size="small"
                                                                                                 required
                                                                                                 className="form-control"
                                                                                                 {...params}
@@ -1975,8 +1649,9 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
                                                                                            label="Placa Int"
+                                                                                           fullWidth
                                                                                            disabled
                                                                                            value={state.PlacasRemolque1}
                                                                                            className="form-control"
@@ -1993,15 +1668,19 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
-                                                                                    value={state.IdRemolque2}
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRemolque2: newValue,
-                                                                                        })
-                                                                                    }
+                                                                                    size="small"
+                                                                                    value={state.IdRemolque2==null?"":state.IdRemolque2}
+                                                                                    onChange={(index, newValue) => onChangeRemolque2(index,newValue) }
                                                                                     id="IdRemolque2"
-                                                                                    disableClearable
+                                                                                    onInputChange={(event, newInputValue, reason) => {
+                                                                                        if (reason === 'reset') {
+                                                                                            setState({
+                                                                                                ...state,
+                                                                                                IdRemolque2: null
+                                                                                            })
+
+                                                                                        }
+                                                                                    }}
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
@@ -2016,7 +1695,7 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Remolque 2"
-                                                                                                margin="dense"
+                                                                                                size="small"
                                                                                                 className="form-control"
                                                                                                 {...params}
                                                                                                 InputProps={{
@@ -2038,7 +1717,8 @@ function Informes({history}) {
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
-                                                                                           margin="dense"
+                                                                                           size="small"
+                                                                                           fullWidth
                                                                                            label="Placa Int"
                                                                                            value={state.PlacasRemolque2}
                                                                                            disabled
@@ -2057,19 +1737,19 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
+                                                                                    size="small"
                                                                                     onChange={(event, newValue) =>
                                                                                         setState({
                                                                                             ...state,
                                                                                             IdCiudadOrigen: newValue,
                                                                                         })
                                                                                     }
-                                                                                    value={state.IdCiudadOrigen}
+                                                                                    value={state.IdCiudadOrigen==null?"":state.IdCiudadOrigen}
                                                                                     id="IdCiudadOrigen"
-                                                                                    disableClearable
                                                                                     forcePopupIcon={false}
                                                                                     options={dataOrigenes}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option.m_sCiudad
+                                                                                        option? option.m_sCiudad:""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
@@ -2080,7 +1760,7 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Origen"
-                                                                                                margin="dense"
+                                                                                                size="small"
                                                                                                 required
                                                                                                 className="form-control"
                                                                                                 {...params}
@@ -2104,6 +1784,8 @@ function Informes({history}) {
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
+                                                                                    required
+                                                                                    size="small"
                                                                                     onChange={(event, newValue) =>
                                                                                         setState({
                                                                                             ...state,
@@ -2111,15 +1793,15 @@ function Informes({history}) {
                                                                                         })
                                                                                     }
 
-                                                                                    value={state.IdCiudadDestino}
+                                                                                    value={state.IdCiudadDestino==null?"":state.IdCiudadDestino}
                                                                                     id="IdCiudadDestino"
-                                                                                    disableClearable
                                                                                     forcePopupIcon={false}
                                                                                     options={dataOrigenes}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option.m_sCiudad
+                                                                                        option?option.m_sCiudad:""
                                                                                     }
                                                                                     variant="outlined"
+                                                                                    className="form-control"
                                                                                     style={{
                                                                                         transform: "translate(14px, 10px) scale(1) !important"
                                                                                     }}
@@ -2128,9 +1810,8 @@ function Informes({history}) {
                                                                                             <TextField
                                                                                                 variant="outlined"
                                                                                                 label="Destino"
-                                                                                                margin="dense"
                                                                                                 required
-                                                                                                className="form-control"
+                                                                                                size="small"
                                                                                                 {...params}
                                                                                                 InputProps={{
                                                                                                     ...params.InputProps,
@@ -2145,6 +1826,14 @@ function Informes({history}) {
                                                                                     )}
                                                                                 />
                                                                             </div>
+                                                                        </div>
+                                                                        {/*****************************************Utilización*************************************************/}
+
+                                                                        <div className="col-sm-12 col-md-12 unit">
+                                                                            <ProgressBarCubicaje
+                                                                                value={utilizacion}>{utilizacion > 100 ? mensajesUtilizacion : `Espacio de carga usado: ${utilizacion}%`}
+                                                                            </ProgressBarCubicaje>
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -2176,7 +1865,9 @@ function Informes({history}) {
                                                                                 <Checkbox
                                                                                     name="selecionarGuias"
                                                                                     onClick={(e) => setDataGuias(dataGuias.map(d => {
-                                                                                        d.select = e.target.checked;
+                                                                                        if ((filtroFolio?dataGuias.filter((g)=>g.m_nFolioGuia.includes(textoFiltro)):dataGuias).map(g => g.m_nIdGuia).includes(d.m_nIdGuia)){
+                                                                                            d.select = e.target.checked;
+                                                                                        }
                                                                                         return d;
                                                                                     }))}
                                                                                     color="primary"
@@ -2184,9 +1875,11 @@ function Informes({history}) {
                                                                             }
                                                                             label="Seleccionar todas"
                                                                         />
-                                                                        <IconButton aria-label="delete"
-                                                                                    className={classes.margin}
-                                                                                    onClick={handleChangeOrden}>
+                                                                        <IconButton
+                                                                            aria-label="delete"
+                                                                            className={classes.margin}
+                                                                            onClick={handleChangeOrden}
+                                                                            size="large">
                                                                             {
                                                                                 ordenAscendente ?
                                                                                     <ArrowUpwardIcon
@@ -2203,12 +1896,31 @@ function Informes({history}) {
                                                                             }
 
                                                                         </IconButton>
+
+
+                                                                        <TextField style={{width:'40%'}}
+                                                                                   /*onChange={(e)=>{
+                                                                                       const waitTime=1000
+                                                                                       let timer
+                                                                                       clearTimeout(timer)
+                                                                                       timer=setTimeout(()=>{
+                                                                                           setFiltro(e.target.value)
+                                                                                       },waitTime)
+                                                                                   }}*/
+                                                                                   id='filtroFolio' variant={'outlined'} margin='dense' label='Filtro por Folio' type='text'></TextField>
+                                                                        <IconButton aria-label="search"
+                                                                                    className={classes.margin}
+                                                                                    onClick={()=>handleFiltroFolio()}>
+                                                                            <SearchIcon fontSize={'default'}></SearchIcon>
+                                                                            BUSCAR
+
+                                                                        </IconButton>
                                                                         <div style={{
                                                                             padding: "10px",
                                                                             maxHeight: "500px",
                                                                             overflow: "scroll"
                                                                         }}>
-                                                                            {dataGuias.map((value, index) => {
+                                                                            {(filtroFolio?dataGuias.filter((g)=>g.m_nFolioGuia.includes(textoFiltro)):dataGuias).map((value, index) => {
                                                                                 return (
                                                                                     <div>
                                                                                         <br/>
@@ -2218,27 +1930,28 @@ function Informes({history}) {
                                                                                                 borderRadius: "10px",
                                                                                             }}
                                                                                             disabled={state.agregar === "Consultar"}
-                                                                                            onClick={() => selectGuia(index)}
+                                                                                            onClick={() => selectGuia(value)}
                                                                                         >
                                                                                             <Grid container spacing={2}>
                                                                                                 <Grid
                                                                                                     item
                                                                                                     sm={1}
-                                                                                                    justify="center"
-                                                                                                    alignItems="center"
                                                                                                     style={{
-                                                                                                        display: "flex",
+                                                                                                        display:"flex",
                                                                                                         justifyContent: "center",
                                                                                                         alignItems: "center",
                                                                                                         textAlign: "center",
-                                                                                                        backgroundColor: value.select
+                                                                                                        padding:"0% 0% 0% 1%",
+                                                                                                        backgroundColor: state.validarTimbrado? value.isTimbrada? value.select? "#F9A03E" : "gray" : value.select? "#FF6600": "#ffc9bb" :value.select
                                                                                                             ? "#F9A03E"
                                                                                                             : "gray",
                                                                                                     }}
+
                                                                                                 >
                                                                                                     {index + 1}
                                                                                                 </Grid>
                                                                                                 <Grid
+                                                                                                    container
                                                                                                     item
                                                                                                     sm={11}
                                                                                                     style={{
@@ -2256,7 +1969,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
+                                                                                                                    fullWidth
                                                                                                                     label="Folio Guía"
                                                                                                                     onChange={handleChange}
                                                                                                                     value={value.m_nFolioGuia}
@@ -2275,7 +1989,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    fullWidth
+                                                                                                                    size="small"
                                                                                                                     label="Estatus Guía"
                                                                                                                     className="form-control"
                                                                                                                     type="text"
@@ -2295,8 +2010,9 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
                                                                                                                     label="Total"
+                                                                                                                    fullWidth
                                                                                                                     value={`$${value.m_xTotal.toFixed(2)}`}
                                                                                                                     disabled="true"
                                                                                                                     className="form-control"
@@ -2313,7 +2029,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
+                                                                                                                    fullWidth
                                                                                                                     label="Destino"
                                                                                                                     value={value.m_sCiudadDestino}
                                                                                                                     className="form-control"
@@ -2331,7 +2048,8 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    fullWidth
+                                                                                                                    size="small"
                                                                                                                     label="Tipo de Servicio"
                                                                                                                     disabled="true"
                                                                                                                     value={parseInt(state.tipoTimbrado) === 1? 'Consolidado' : parseInt(state.tipoTimbrado) === 2?'Paqueteria':'Indefinido'}
@@ -2349,9 +2067,11 @@ function Informes({history}) {
 
                                                                                                                 <TextField
                                                                                                                     variant="outlined"
-                                                                                                                    margin="dense"
+                                                                                                                    size="small"
+                                                                                                                    fullWidth
                                                                                                                     label="Observaciones"
                                                                                                                     disabled="true"
+                                                                                                                    InputLabelProps={{ shrink: true }}
                                                                                                                     value={
                                                                                                                         value.m_sObservaciones
                                                                                                                     }
@@ -2384,7 +2104,7 @@ function Informes({history}) {
                                                                             <Grid
                                                                                 item
                                                                                 sm={4}
-                                                                                justify="center"
+                                                                                justifyContent="center"
                                                                                 alignItems="center"
                                                                                 style={{
                                                                                     display: "flex",
@@ -2527,7 +2247,7 @@ function Informes({history}) {
                                                                             <Grid
                                                                                 item
                                                                                 sm={4}
-                                                                                justify="center"
+                                                                                justifyContent="center"
                                                                                 alignItems="center"
                                                                                 style={{
                                                                                     display: "flex",
@@ -2601,10 +2321,11 @@ function Informes({history}) {
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label="Folio Informe"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.FolioInforme}
                                                                        id="FolioInforme"
                                                                        disabled
@@ -2614,10 +2335,11 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label="Sucursal Emisora"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.sucursalCancelacion}
                                                                        id="sucursalCancelacion"
                                                                        disabled
@@ -2627,10 +2349,11 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label="Fecha de cancelación"
                                                                        className="form-control"
                                                                        type="datetime-local"
+                                                                       fullWidth
                                                                        value={state.fechaCancelacion}
                                                                        id="fechaCancelacion"
                                                                        disabled
@@ -2640,9 +2363,10 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Usuario"
+                                                            <TextField variant="outlined" size="small" label="Usuario"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.usuarioCancelacion}
                                                                        id="usuarioCancelacion"
                                                                        disabled
@@ -2652,9 +2376,10 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Estatus"
+                                                            <TextField variant="outlined" size="small" label="Estatus"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        value={state.estatusCancelacion}
                                                                        id="estatusCancelacion"
                                                                        disabled
@@ -2664,9 +2389,10 @@ function Informes({history}) {
 
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Motivo"
+                                                            <TextField variant="outlined" size="small" label="Motivo"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       fullWidth
                                                                        onChange={handleChange}
                                                                        value={state.motivoCancelacion}
                                                                        id="motivoCancelacion"
@@ -2691,563 +2417,6 @@ function Informes({history}) {
                                                     </div>
                                                 </div>
                                             </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="Cubicar" className="tab-pane fade">
-                            <div className="widget-wrap">
-                                <div className="widget-container">
-                                    <div className="widget-content">
-                                        <div className="row">
-                                            <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                <form className="j-forms" onSubmit={cubicarAccion}>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdCiudadOrigen: newValue,
-                                                                        })
-                                                                    }
-                                                                    value={state.IdCiudadOrigen || ""}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="IdCiudadOrigen"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataOrigenes}
-                                                                    getOptionLabel={(option) => option.m_sCiudad}
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                required
-                                                                                variant="outlined"
-                                                                                label="Origen"
-                                                                                margin="dense"
-                                                                                className="form-control"
-                                                                                {...params}
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    disabled: state.agregar == "Consultar",
-                                                                                    disableUnderline: true,
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdCiudadDestino: newValue,
-                                                                        })
-                                                                    }
-                                                                    value={state.IdCiudadDestino || ""}
-                                                                    disabled={state.agregar == "Consultar"}
-                                                                    id="IdCiudadDestino"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataOrigenes}
-                                                                    getOptionLabel={(option) => option.m_sCiudad}
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                required
-                                                                                variant="outlined"
-                                                                                label="Destino"
-                                                                                margin="dense"
-                                                                                className="form-control"
-                                                                                {...params}
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    value: state.destinoRemitente,
-                                                                                    disabled: state.agregar == "Consultar",
-                                                                                    disableUnderline: true,
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    value={state.IdRemolque1 || {}}
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdRemolque1: newValue,
-                                                                        })
-                                                                    }
-                                                                    id="IdUnidad"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataUnidades}
-                                                                    getOptionLabel={(option) =>
-                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                                    }
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                required
-                                                                                variant="outlined"
-                                                                                label="Remolque 1"
-                                                                                margin="dense"
-                                                                                className="form-control"
-                                                                                {...params}
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    disableUnderline: true,
-                                                                                    endAdornment: (
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                padding="0px"
-                                                                                                style={{
-                                                                                                    paddingRight: "0px",
-                                                                                                }}
-                                                                                                onClick={() => {
-                                                                                                    setState({
-                                                                                                        ...state,
-                                                                                                        identificadorModal:
-                                                                                                            "IdRemolque1",
-                                                                                                        tipoModal: 4,
-                                                                                                        openDialog: true,
-                                                                                                    });
-                                                                                                }}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    ),
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    freeSolo
-                                                                    value={state.IdRemolque2 || ""}
-                                                                    onChange={(event, newValue) =>
-                                                                        setState({
-                                                                            ...state,
-                                                                            IdRemolque2: newValue,
-                                                                        })
-                                                                    }
-                                                                    id="remolqueSecundario"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataUnidades}
-                                                                    getOptionLabel={(option) =>
-                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                                    }
-                                                                    variant="outlined"
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) => (
-                                                                        <div>
-                                                                            <TextField
-                                                                                {...params}
-                                                                                variant="outlined"
-                                                                                label="Remolque 2"
-                                                                                margin="dense"
-                                                                                className="form-control"
-                                                                                InputProps={{
-                                                                                    ...params.InputProps,
-                                                                                    style: {
-                                                                                        height: "33px",
-                                                                                        fontSize: "14px",
-                                                                                    },
-                                                                                    type: "search",
-                                                                                    disableUnderline: true,
-                                                                                    endAdornment: (
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                padding="0px"
-                                                                                                style={{
-                                                                                                    paddingRight: "0px",
-                                                                                                }}
-                                                                                                onClick={() => {
-                                                                                                    setState({
-                                                                                                        ...state,
-                                                                                                        identificadorModal:
-                                                                                                            "IdRemolque2",
-                                                                                                        tipoModal: 4,
-                                                                                                        openDialog: true,
-                                                                                                    });
-                                                                                                }}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    ),
-                                                                                }}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div
-                                                            align="center"
-                                                            style={{padding: "10px", width: "100%"}}
-                                                        >
-                                                            <button
-                                                                type="submit"
-                                                                className="btn btn-primary primary-btn"
-                                                                style={{float: "none"}}
-                                                            >
-                                                                Cubicar
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                {
-                                                    <div
-                                                        style={{
-                                                            backgroundColor: "#ACACAC",
-                                                            minHeight: "400px",
-                                                        }}
-                                                    >
-                                                        <h4 style={{color: "white", padding: "5px"}}>
-                                                            Informes: {informes.length}
-                                                        </h4>
-                                                        {informes.map((i, index) => (
-                                                            <div style={{padding: "10px"}}>
-                                                                <table
-                                                                    style={{
-                                                                        backgroundColor: "white",
-                                                                        height: "100%",
-                                                                        width: "100%",
-                                                                        overflow: "scroll",
-                                                                    }}
-                                                                >
-                                                                    <thead>
-                                                                    <tr style={{backgroundColor: "#F9A03E"}}>
-                                                                        <th tyle={{paddingLeft: "5px"}}>
-                                                                            F1-00000{index} - {i[0].destino}
-                                                                        </th>
-                                                                        <th></th>
-                                                                        <th
-                                                                            style={{
-                                                                                textAlign: "right",
-                                                                                paddingRight: "5px",
-                                                                            }}
-                                                                        >
-                                                                            {" "}
-                                                                            Guias - {i.length}
-                                                                        </th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tr style={{backgroundColor: "#E6E6E6"}}>
-                                                                        <th>Guía</th>
-                                                                        <th>Destino</th>
-                                                                        <th>Paquetes</th>
-                                                                    </tr>
-                                                                    {i.map((g) => (
-                                                                        <tr
-                                                                            onClick={() =>
-                                                                                setState({...state, guiaSelected: g})
-                                                                            }
-                                                                        >
-                                                                            <td>{g.folio}</td>
-                                                                            <td>{g.destino}</td>
-                                                                            <td style={{textAlign: "center"}}>
-                                                                                {g.paquetes}
-                                                                            </td>
-                                                                        </tr>
-                                                                    ))}
-                                                                </table>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                {state.guiaSelected && (
-                                                    <div style={{backgroundColor: "#E6E6E6"}}>
-                                                        <h4 style={{color: "#717171", padding: "5px"}}>
-                                                            Detalles de Guía {state.guiaSelected.folio}
-                                                        </h4>
-                                                        {state.guiaSelected.arrayPaquetes.map(
-                                                            (p, index) => (
-                                                                <div
-                                                                    style={{color: "#707070", padding: "5px"}}
-                                                                >
-                                                                    <h4>Paquete {index + 1}</h4>
-                                                                    <div className="row">
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense" label="Peso"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xPeso}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense" label="Largo"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xLargo}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense" label="Ancho"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xAncho}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense" label="Alto"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_xAlto}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-3 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           label="Volumen"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={
-                                                                                               p.m_xAlto * p.m_xAlto * p.m_xLargo
-                                                                                           }
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-6 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           label="Tipo embalaje"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={""}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-6 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           label="Valor Declarado"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_cValorDeclarado}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-12 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           label="Descripción"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_sDescripcion}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div
-                                                                            className="col-sm-12 col-md-12 col-lg-3 unit"
-                                                                            style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense" label="Ctd"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.ctd}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-sm-12 col-md-12 unit"
-                                                                             style={{padding: "5px"}}>
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           label="Observaciones"
-                                                                                           style={{backgroundColor: "#FFFFFF"}}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           disabled
-                                                                                           value={p.m_sObservaciones}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div
-                                                className="form-footer"
-                                                className="col-md-12"
-                                                style={{padding: "10px"}}
-                                                align="center"
-                                            >
-                                                <button
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        setState({...state, agregar: "Agregar", cubicar: true});
-                                                        $('.nav-tabs li ').removeClass('active');
-                                                        $('.nav-tabs li').eq(1).addClass('active');
-                                                        $('.tab-content div ').removeClass('in show');
-                                                        $('#Agregar').addClass('in show');
-                                                        showAgregarFromCubicar(0);
-                                                    }}
-                                                    className="btn btn-primary primary-btn"
-                                                    style={{margin: "10px"}}
-                                                >
-                                                    Aceptar
-                                                </button>
-
-                                                <button
-                                                    onClick={(event) => {
-                                                        event.stopPropagation();
-                                                        setState({...state, agregar: "Agregar", guias: []});
-                                                        $('.nav-tabs li ').removeClass('active');
-                                                        $('.nav-tabs li').eq(0).addClass('active');
-                                                        $('.tab-content div ').removeClass('in show');
-                                                        $('#Listado').addClass('in show');
-                                                    }}
-                                                    className="btn btn-secondary primary-btn"
-                                                    style={{margin: "10px"}}
-                                                >
-                                                    Cancelar
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -12,9 +12,9 @@ import {
     ListItemText,
     Typography,
     ListItemSecondaryAction
-} from "@material-ui/core";
-import DeleteIcon from '@material-ui/icons/Delete';
-import DragHandleIcon from '@material-ui/icons/DragHandle';
+} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import {arrayMoveImmutable} from 'array-move';
 import {
     sortableContainer,
@@ -23,7 +23,7 @@ import {
 } from 'react-sortable-hoc';
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
-import IconButton from "@material-ui/core/IconButton";
+import IconButton from "@mui/material/IconButton";
 import {showSuccess} from "../../Util/Util";
 
 class OrdenarParadasUltimaMilla extends Component {
@@ -153,16 +153,16 @@ const DragHandle = sortableHandle(() => <DragHandleIcon fontSize={"large"}/>);
 
 const SortableItem = sortableElement(({primary, secundary, quitarPaquete, position, apagao}) => {
     return (
-    <ListItem style={{zIndex: 3000000000}}>
-        <ListItemIcon>
-            <DragHandle />
-        </ListItemIcon>
-        <ListItemText primary={`${primary}`} secondary={secundary}/>
-        <IconButton onClick={() => quitarPaquete(position)} disabled={apagao}>
-            <DeleteIcon />
-        </IconButton>
-    </ListItem>
-)});
+        <ListItem style={{zIndex: 3000000000}}>
+            <ListItemIcon>
+                <DragHandle />
+            </ListItemIcon>
+            <ListItemText primary={`${primary}`} secondary={secundary}/>
+            <IconButton onClick={() => quitarPaquete(position)} disabled={apagao} size="large">
+                <DeleteIcon />
+            </IconButton>
+        </ListItem>
+    );});
 
 const SortableContainer = sortableContainer(({children}) => {
     return <List>{children}</List>;

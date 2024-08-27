@@ -9,19 +9,36 @@ import {
     TableCell,
     TableRow,
     Checkbox,
-    withStyles,
-    TableSortLabel, InputBase, InputAdornment, TextField
-} from "@material-ui/core";
-import {fade} from "@material-ui/core/styles";
+    TableSortLabel,
+    InputBase,
+    InputAdornment,
+    TextField,
+} from "@mui/material";
+import withStyles from '@mui/styles/withStyles';
+import { alpha, styled } from "@mui/material/styles";
 import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from "@mui/icons-material/Search";
 import {
     obtenerListadoZonaOperativa,
     obtenerListadoZonaOperativaBySucursal
 } from "../../Util/Contexts/ZonaOperativaContext";
 
-const useStyles = theme => ({
-    visuallyHidden: {
+const PREFIX = 'ZonasList';
+
+const classes = {
+    visuallyHidden: `${PREFIX}-visuallyHidden`,
+    search: `${PREFIX}-search`,
+    searchIcon: `${PREFIX}-searchIcon`,
+    inputRoot: `${PREFIX}-inputRoot`,
+    inputInput: `${PREFIX}-inputInput`
+};
+
+const StyledTableContainer = styled(TableContainer)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.visuallyHidden}`]: {
         border: 0,
         clip: 'rect(0 0 0 0)',
         height: 1,
@@ -32,12 +49,13 @@ const useStyles = theme => ({
         top: 20,
         width: 1,
     },
-    search: {
+
+    [`& .${classes.search}`]: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+            backgroundColor: alpha(theme.palette.common.white, 0.25),
         },
         marginLeft: 0,
         width: '100%',
@@ -46,7 +64,8 @@ const useStyles = theme => ({
             width: 'auto',
         },
     },
-    searchIcon: {
+
+    [`& .${classes.searchIcon}`]: {
         padding: theme.spacing(0, 2),
         height: '100%',
         position: 'absolute',
@@ -55,13 +74,15 @@ const useStyles = theme => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    inputRoot: {
+
+    [`& .${classes.inputRoot}`]: {
         color: 'inherit',
     },
-    inputInput: {
+
+    [`& .${classes.inputInput}`]: {
         padding: theme.spacing(1, 1, 1, 0),
         // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
@@ -70,8 +91,8 @@ const useStyles = theme => ({
                 width: '20ch',
             },
         },
-    },
-});
+    }
+}));
 
 class ZonasList extends Component {
     constructor(props) {
@@ -174,12 +195,12 @@ class ZonasList extends Component {
     }
 
     render() {
-        const {classes} = this.props;
+       // const {classes} = this.props;
         const isSelected = (row) => this.props.zonasSeleccionadas.find(u => u.m_nIdZona === row) != null;
 
 
         return (
-            <TableContainer className={"j-forms"} style={{height:"300px"}}>
+            <StyledTableContainer className={"j-forms"} style={{height:"300px"}}>
                 <TextField variant="outlined" size={"small"} placeholder={"Buscar"} style={{padding: "0px"}}
                            value={this.state.searchText}
                            onChange={(e) => this.setState({searchText: e.target.value})}
@@ -244,11 +265,11 @@ class ZonasList extends Component {
                         }
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </StyledTableContainer>
         );
     }
 }
 
 ZonasList.propTypes = {};
 
-export default withStyles(useStyles)(ZonasList);
+export default (ZonasList);

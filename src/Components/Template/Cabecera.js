@@ -1,18 +1,18 @@
-import {Hidden} from "@material-ui/core";
+import {Hidden} from "@mui/material";
 import { Link } from 'react-router-dom';
 import React, {useEffect} from "react";
 import iconoAyuda from '../../iconos/Cabecera/icono_ayuda.svg';
 import iconoShortcuts from '../../iconos/Cabecera/icono_shortcuts.svg';
 import iconoMenu from '../../iconos/Cabecera/icono_menu.svg';
 import pdfAyuda from '../../Files/AYUDA_EN_LINEA.pdf';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Tooltip from '@mui/material/Tooltip';
 import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 function Cabecera({ titulo, children }) {
 
@@ -89,7 +89,7 @@ function Cabecera({ titulo, children }) {
         <div style={{display:"flex"}}>
             {/*Topbar Left Branding With Logo Start*/}
             
-            <Hidden xsDown implementation="css">
+            <Hidden smDown implementation="css">
                 <div className="topbar-left pull-left" style={{ backgroundColor: "#F9A03E", height: "60px" }}>
                     <div style={{ margin: "auto", marginLeft: "0px" }}>
                         <h2 style={{ position: "absolute",marginLeft:"75px" }}>{titulo}</h2>
@@ -147,7 +147,7 @@ function Cabecera({ titulo, children }) {
                     </Tooltip> */}
                     <Tooltip title={"Tutoriales"}>
                         <Link component="a" to={{pathname: "/Tutoriales"}} target="_blank">
-                                    <IconButton >
+                                    <IconButton size="large">
                                         <img src={iconoAyuda} style={{height: 30, width:30, margin: 10}}/>
                                     </IconButton>
                         </Link>
@@ -178,7 +178,7 @@ function Cabecera({ titulo, children }) {
                     <div style={{height: 40}}>
                         <div className="user-profile clearfix">
                             <div className="admin-user-thumb" style={{padding: '0px 0px 0px 0px'}}>
-                                    <IconButton aria-label="delete" href="login" onClick={() => logout()}>
+                                    <IconButton aria-label="delete" href="login" onClick={() => logout()} size="large">
                                       <ExitToAppIcon fontSize="large" />
                                     </IconButton>
                             </div>
@@ -263,7 +263,6 @@ function Cabecera({ titulo, children }) {
             </Hidden>*/}
             {/*Topbar Left Branding With Logo End*/}
         </div>
-
     );
 }
 

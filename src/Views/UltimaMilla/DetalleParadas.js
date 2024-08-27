@@ -12,27 +12,27 @@ import {
     ListItem,
     ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, ButtonGroup, Popover, Fade, Dialog, DialogContent, DialogTitle, DialogActions,
-    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip
-} from "@material-ui/core";
+    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip,MenuItem
+} from "@mui/material";
 import {confirmAlert} from 'react-confirm-alert'; // Import
-import DescriptionIcon from '@material-ui/icons/Description';
-import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import DescriptionIcon from '@mui/icons-material/Description';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import DeleteIcon from '@material-ui/icons/Delete';
-import ReorderIcon from '@material-ui/icons/Reorder';
-import CachedIcon from '@material-ui/icons/Cached';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ReorderIcon from '@mui/icons-material/Reorder';
+import CachedIcon from '@mui/icons-material/Cached';
 import {ReactComponent as ParadasIcono} from "../../iconos/Mapa/paradas.svg";
-import CloseIcon from "@material-ui/icons/Close";
-import SearchIcon from "@material-ui/icons/Search";
+import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import {PieChart} from 'react-minimal-pie-chart';
-import BlockIcon from '@material-ui/icons/Block';
+import BlockIcon from '@mui/icons-material/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import PaquetesParcialesGuia from './PaquetesParcialesGuia';
 import OrdenarParadasUltimaMilla from "./OrdenarParadasUltimaMilla";
 import PaquetesList from "./PaquetesList";
-import GetAppIcon from '@material-ui/icons/GetApp';
-import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import DepartureBoardIcon from '@mui/icons-material/DepartureBoard';
 
 import {
     actualizarCoordenadasGuia,
@@ -49,11 +49,11 @@ import {
     remplazarPaqueteUltimaMilla
 } from "../../Util/Contexts/UltimaMillaContext";
 import Noty from "noty";
-import {InsertDriveFile} from "@material-ui/icons";
+import {InsertDriveFile} from "@mui/icons-material";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import CancelIcon from '@material-ui/icons/Cancel';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
 import CancelarSAT from "../SAT/CancelarSAT";
 import {
@@ -88,6 +88,9 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+const REPORTE_INFORME_ULTIMAMILLA=1
+const REPORTE_CFDI_PRIMERA_MILLA=2
+const REPORTE_CFDI_ULTIMAMILLA=3
 
 class DetalleParadas extends Component {
     constructor(props) {
@@ -105,6 +108,13 @@ class DetalleParadas extends Component {
             openRemplazar: false,
             openParciales: false,
             openOrdenarParadas: false,
+            openDialog:false,
+            dataReportes:[],
+            dataReportesCFDIPrimeraMilla:[],
+            dataReportesCFDIUltimaMilla:[],
+            seleccion:null,
+            tipoReporte:0,
+            mensajeTitulo:""
 
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
@@ -121,17 +131,39 @@ class DetalleParadas extends Component {
         this.showCancelarCFDI = this.showCancelarCFDI.bind(this)
         this.cancelarCFDI = this.cancelarCFDI.bind(this)
         this.envioCorreoAction = this.envioCorreoAction.bind(this)
+        this.handleOnChangeReporte=this.handleOnChangeReporte.bind(this)
+        this.handleGenerarReporte=this.handleGenerarReporte.bind(this)
+
+    }
+    componentDidMount() {
+    /*    if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
+            obtenerFormatosImpresionProceso(215).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
+            obtenerFormatosImpresionProceso(216).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        if(this.state.tipoReporte===REPORTE_CFDI_ULTIMAMILLA){
+            obtenerFormatosImpresionProceso(217).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }*/
 
     }
 
-
     componentDidUpdate(prevProps, prevState, snapshot) {
+
         if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla
-            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0)
-            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_nUltimaMillaOrden * d.m_nIdParadaGuia), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_nUltimaMillaOrden * d.m_nIdParadaGuia), 0), 0)
-            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0)
-            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)
-            || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.length / b.m_nIdParadaUltimaMilla, 0)) {
+            || this.props.tour.m_arrClsParadaUltimaMilla.filter((arr)=>!prevProps.tour.m_arrClsParadaUltimaMilla.includes(arr)).length>0) {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
 
@@ -197,7 +229,11 @@ class DetalleParadas extends Component {
         pom.click();
     }
     descargarXMLCFDI(id,esRecoleccion, folio) {
-        obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then(({data}) => {
+        let fechaHoraActual=new Date()
+        let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+(fechaHoraActual.getMonth()+1).toString().padStart(2,'0')+'-'+fechaHoraActual.getDate().toString().padStart(2,'0'))
+        let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
+        obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then(({data}) => {
+
             var filename = folio+".xml";
             var pom = document.createElement('a');
             var bb = new Blob([data], {type: 'text/plain'});
@@ -235,7 +271,39 @@ class DetalleParadas extends Component {
         })
     }
     obtenerPDFCFDI(id,esRecoleccion, folio){
-            if (esRecoleccion){
+
+        if(esRecoleccion){
+            this.setState({
+                idParada: id,
+                esRecoleccion: esRecoleccion,
+                folio: folio,
+                openDialog:true,
+                tipoReporte:REPORTE_CFDI_PRIMERA_MILLA,
+                mensajeTitulo:"CFDI Primera Milla/Recolección"
+            })
+            obtenerFormatosImpresionProceso(216).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+        else{
+            this.setState({
+                idParada: id,
+                esRecoleccion: esRecoleccion,
+                folio: folio,
+                openDialog:true,
+                tipoReporte:REPORTE_CFDI_ULTIMAMILLA,
+                mensajeTitulo:"CFDI Última Milla/Guía"
+            })
+            obtenerFormatosImpresionProceso(217).then(({data}) => {
+                this.setState({
+                    dataReportes:data
+                })
+            })
+        }
+
+           /* if (esRecoleccion){
                 obtenerReporteCFDIRecoleccion(id).then(({data}) => {
                     console.log(data)
                     let pdfWindow = window.open("");
@@ -250,8 +318,9 @@ class DetalleParadas extends Component {
                     pdfWindow.document.body.style.margin = "0px";
                     pdfWindow.document.title = "CFDI_ " + folio;
                 })
-            }
+            }*/
     }
+
     generarCFDI(id,esRecoleccion, folio) {
         obtenerParametrosConfiguracion().then(respuesta => {
             let titulo;
@@ -270,8 +339,11 @@ class DetalleParadas extends Component {
                     {
                         label: 'Sí',
                         onClick: () => {
+                            let fechaHoraActual=new Date()
+                            let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+(fechaHoraActual.getMonth()+1).toString().padStart(2,'0')+'-'+fechaHoraActual.getDate().toString().padStart(2,'0'))
+                            let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
 
-                            obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                            obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then((result) => {
                                 this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
                             }).catch((error) => {
                                 if (error.response){
@@ -555,6 +627,55 @@ class DetalleParadas extends Component {
             pdfWindow.document.title = "Última Milla";
         })*/
     }
+   handleOnChangeReporte (data) {
+        console.log(data)
+        this.setState({
+            reporteSeleccionado: data
+        })
+    }
+    handleGenerarReporte(e){
+        e.preventDefault()
+        console.log(this.state.reporteSeleccionado)
+        console.log(this.state.seleccion)
+
+        if (this.state.reporteSeleccionado.length === 0) {
+            showError("Es necesario seleccionar al menos un reporte")
+            return
+        }
+        if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.seleccion.m_nIdParadaUltimaMilla).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Última Milla" + this.state.seleccion.m_nIdUltimaMilla;
+            })
+        }
+        else if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI Primera Milla" + this.state.folio;
+            })
+        }
+        else{
+            imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
+                console.log(data)
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI Última Milla" + this.state.folio;
+            })
+        }
+
+
+        this.setState({
+            reporteSeleccionado: null,
+            openDialog:false
+        })
+    }
     validarRutasCompletadas(tour){
         return tour.m_arrClsProGuia.some(g=> g.m_nEstatusUlimaMilla === 3)
     }
@@ -619,6 +740,71 @@ class DetalleParadas extends Component {
         return (
             <div>
                 {
+                    this.state.openDialog &&
+                    <Dialog
+                        open={this.state.openDialog}
+                        onClose={() => this.setState({
+                            openDialog:false
+                        })}
+                        fullWidth maxWidth="md"
+                    >
+                        <DialogTitle>
+                            Reporte de Informe de {this.state.mensajeTitulo}
+                        </DialogTitle>
+                        <DialogContent>
+                            <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                                <form onSubmit={this.handleGenerarReporte}>
+                                    <Grid container spacing={1}>
+                                        <Grid item sm={6}>
+                                            <FormControl
+                                                className="input select"
+                                                fullWidth variant="outlined"
+                                                required
+                                                margin="dense">
+                                                <InputLabel
+                                                    id="idReporteLabel">Formato de Reporte</InputLabel>
+                                                <Select
+                                                    fullWidth
+                                                    labelId="idReporteLabel"
+                                                    label="Reporte"
+                                                    className="form-control"
+                                                    value={this.state.reporteSeleccionado ?? ''}
+                                                    onChange={(e) => this.handleOnChangeReporte(e.target.value)}
+                                                    name="reporteSeleccionado"
+                                                >
+                                                    {this.state.dataReportes.map((reporte) => (
+                                                        <MenuItem
+                                                            key={reporte.m_nIdFormato}
+                                                            value={reporte.m_nIdFormato}
+                                                        >
+                                                            {reporte.m_sFormato}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                    <DialogActions>
+
+                                        <button className="btn btn-secondary secondary-btn" onClick={() => {
+                                           this.setState({
+                                                openDialog:false,
+                                                reporteSeleccionado: null
+                                            })
+                                        }
+                                        }>
+                                            Cancelar
+                                        </button>
+                                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
+                                            Aceptar
+                                        </button>
+                                    </DialogActions>
+                                </form>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                }
+                {
                     this.state.openEnvioCorreo &&
                     <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
                 }
@@ -682,7 +868,8 @@ class DetalleParadas extends Component {
                             position: "fixed",
                             zIndex: 3000,
                             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                        }}>
+                        }}
+                        size="large">
                         <ParadasIcono style={{fill: "white"}}/>
                     </IconButton>
                 }
@@ -725,7 +912,7 @@ class DetalleParadas extends Component {
                                     style={{height: "30px"}}
                                     onClick={(e) => {this.setState({openDetail: false})
                                     this.props.changeFiltersMapDialogsState(e)}}
-                                >
+                                    size="large">
                                     <CloseIcon style={{fill: "white"}}/>
                                 </IconButton>
                             </div>
@@ -765,7 +952,7 @@ class DetalleParadas extends Component {
 
                             </Grid>
                             <Grid item md={6} sm={12}>
-                                <Grid container spacing={1} justify={"space-between"}
+                                <Grid container spacing={1} justifyContent={"space-between"}
                                       style={{paddingTop: "10px", paddingRight: "10px", height: "100%"}}>
                                     <Grid item sm={12}>
                                         <div style={{
@@ -832,7 +1019,7 @@ class DetalleParadas extends Component {
                                                           }}>
                                                     <ListItemText primary={
                                                         <Grid container spacing={1} style={{width:"100%"}} alignItems={"center"}
-                                                              justify={"space-between"}>
+                                                              justifyContent={"space-between"}>
                                                             <Grid item sm={5}>
                                                                 <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} align={"left"}>{r.m_snNombreOperador}</Typography>
                                                             </Grid>
@@ -858,7 +1045,10 @@ class DetalleParadas extends Component {
                                                             <Grid item sm={1}
                                                             >
                                                                 <Tooltip title="Reporte">
-                                                                    <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour)}>
+                                                                    <IconButton
+                                                                        aria-label="file"
+                                                                        onClick={(e) => this.generarReporte(e,tour)}
+                                                                        size="large">
                                                                         <InsertDriveFile fontSize={"large"}/>
                                                                     </IconButton>
                                                                 </Tooltip>
@@ -868,7 +1058,11 @@ class DetalleParadas extends Component {
                                                                     {
                                                                         tour.m_bActiva &&
                                                                         <>
-                                                                    <IconButton disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)} aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                    <IconButton
+                                                                        disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)}
+                                                                        aria-label="file"
+                                                                        onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}
+                                                                        size="large">
                                                                         <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
                                                                     </IconButton>
                                                                     </>
@@ -1006,7 +1200,8 @@ class DetalleParadas extends Component {
                                                                                                                     console.log(JSON.stringify(g))
                                                                                                                     this.openPaquetesParciales(tour, g)
                                                                                                                 }}
-                                                                                                                aria-label="reorder">
+                                                                                                                aria-label="reorder"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Entregas Parciales"}>
                                                                                                                     <DepartureBoardIcon
@@ -1021,7 +1216,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101449)}
                                                                                                                 onClick={() => this.openRemplazarPaquete(tour, g)}
-                                                                                                                aria-label="reorder">
+                                                                                                                aria-label="reorder"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Remplazar"}>
                                                                                                                     <CachedIcon
@@ -1037,7 +1233,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101450)}
                                                                                                                 onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
-                                                                                                                aria-label="delete">
+                                                                                                                aria-label="delete"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cambiar ubicación"}>
                                                                                                                     <GpsFixedIcon
@@ -1052,7 +1249,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101452)}
                                                                                                                 onClick={() => this.descargarXMLCFDIPermisionario( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
-                                                                                                                aria-label="Descargar XML">
+                                                                                                                aria-label="Descargar XML"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Permisionario"}>
                                                                                                                     <GetAppIcon
@@ -1068,7 +1266,8 @@ class DetalleParadas extends Component {
                                                                                                                 onClick={() =>
                                                                                                                     this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
                                                                                                                 }
-                                                                                                                aria-label="Timbrar SAT">
+                                                                                                                aria-label="Timbrar SAT"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Generar CFDI Traslado"}>
                                                                                                                     <DescriptionIcon
@@ -1082,7 +1281,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
-                                                                                                                aria-label="XML SAT">
+                                                                                                                aria-label="XML SAT"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Traslado"}>
                                                                                                                     <GetAppIcon
@@ -1093,8 +1293,7 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
-                                                                                                            <IconButton
-                                                                                                                aria-label="PDF TASLADO">
+                                                                                                            <IconButton aria-label="PDF TASLADO" size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar PDF"}>
                                                                                                                     <PictureAsPdfIcon
@@ -1105,8 +1304,7 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
-                                                                                                            <IconButton
-                                                                                                                aria-label="Descargar xml">
+                                                                                                            <IconButton aria-label="Descargar xml" size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML"}>
                                                                                                                     <GetAppIcon
@@ -1120,7 +1318,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() => this.showCancelarCFDI(g)}
-                                                                                                                aria-label="Cancelar SAT">
+                                                                                                                aria-label="Cancelar SAT"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cancelar SAT"}>
                                                                                                                     <BlockIcon
@@ -1134,7 +1333,8 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101453)}
                                                                                                                 onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
-                                                                                                                aria-label="delete">
+                                                                                                                aria-label="delete"
+                                                                                                                size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Eliminar"}>
                                                                                                                     <DeleteIcon
@@ -1149,7 +1349,7 @@ class DetalleParadas extends Component {
 
                                                                                             </TableCell>
                                                                                         </TableRow>
-                                                                                    )
+                                                                                    );
                                                                                 })
                                                                             }
                                                                         </TableBody>
@@ -1164,7 +1364,7 @@ class DetalleParadas extends Component {
 
                                                 </Collapse>
                                             </div>
-                                        )
+                                        );
                                     })
                                 }
 

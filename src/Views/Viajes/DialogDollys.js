@@ -5,7 +5,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle
-} from '@material-ui/core';
+} from '@mui/material';
 import TableDollys from "./TableDollys";
 import { obtenerUnidadesConvoy } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";

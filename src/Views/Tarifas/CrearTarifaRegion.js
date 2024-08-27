@@ -12,11 +12,11 @@ import {
     Paper,
     Select,
     TextField
-} from "@material-ui/core";
+} from "@mui/material";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import DestinosTarifa from "./DestinosTarifa";
 import ProductosPrecios from "./ProductosPrecios";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import Noty from "noty";
 import Region from "./Region";
 import {getRandomId} from "../../Util/Util";
@@ -121,14 +121,14 @@ function CrearTarifaRegion(props) {
 
     const handlePatrocinadorSelected = (row) => {
         if (props.convenio){
-            obtenerClienteTieneConvenio(row.data.m_nIdCliente, 3).then(respuesta => {
+            obtenerClienteTieneConvenio(row.m_nIdCliente, 3).then(respuesta => {
                 if (respuesta.data.value){
                     showSuccess("El cliente seleccionado ya tiene convenio activo.")
                 }else{
                     setState(state => {
                         return {
                             ...state,
-                            cliente: row.data,
+                            cliente: row,
                         }
                     })
                 }

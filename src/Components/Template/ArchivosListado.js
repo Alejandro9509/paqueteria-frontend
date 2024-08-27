@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 
 export default function ArchivosListado(props) {
     const archivos = props.archivos;

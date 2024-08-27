@@ -13,15 +13,16 @@ import {
     TableContainer,
     TableHead,
     TableRow, Typography
-} from "@material-ui/core"
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import AutorenewIcon from '@material-ui/icons/Autorenew';
+} from "@mui/material"
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import moment from "moment";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 import Paradas from "./Paradas";
 import Noty from "noty";
-import Tooltip from "@material-ui/core/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
+import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import { fil } from 'date-fns/locale';
 
 function showSuccess(mensaje) {
@@ -122,7 +123,7 @@ class Cronograma extends Component {
                                 boxShadow: "rgb(0 0 0 / 16%) 0px -6px 5px"
                             }}>
 
-                                <Grid container direction={"row"} justify={"center"} alignItems="baseline">
+                                <Grid container direction={"row"} justifyContent={"center"} alignItems="baseline">
                                     <div align={"center"}
                                          style={{
                                              width: "216px",
@@ -181,7 +182,7 @@ class Cronograma extends Component {
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">{u.m_snNombreOperador}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
-                                                                               align="left">
+                                                                               align="center">
                                                                                 <Tooltip title="Remplazar Operador">                                           
                                                                                     <AutorenewIcon color={"primary"} align="center" fontSize={"large"} onClick={()=> {
                                                                                         if (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) {
@@ -190,7 +191,10 @@ class Cronograma extends Component {
                                                                                         }
                                                                                         if (filterEstatus.length > 0 ){
                                                                                             if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
-                                                                                                this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, u.m_nId)
+                                                                                                obtenerOperadores().then((operadoresListado)=>{
+                                                                                                    this.props.selectGuiaReasignar(u.m_nIdParadaUltimaMilla, u.m_nIdOperador,operadoresListado.data.filter(op=>op.idSucursal==this.props.tour.m_nIdSucursalReceptora))
+                                                                                                })
+
                                                                                             }else{
                                                                                                 showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
                                                                                             }
@@ -224,11 +228,7 @@ class Cronograma extends Component {
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
-                                                                        <Chip
-                                                                            label={u.m_arrClsProGuia.length}
-                                                                            color={"default"}
-                                                                            variant="default"
-                                                                        />
+                                                                        <Chip label={u.m_arrClsProGuia.length} color={"default"} />
                                                                     </TableCell>
                                                                     <TableCell style={{
                                                                         borderBottom: "none"
@@ -243,7 +243,7 @@ class Cronograma extends Component {
 
                                                                     </TableCell>
                                                                 </TableRow>
-                                                            )
+                                                            );
                                                         })
                                                     }
                                                 </TableBody>

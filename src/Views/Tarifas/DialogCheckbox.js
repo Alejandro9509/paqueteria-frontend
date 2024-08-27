@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent} from "@material-ui/core";
-import {DataGrid} from "@material-ui/data-grid";
+import {Button, Dialog, DialogActions, DialogContent} from "@mui/material";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 
 
@@ -48,8 +48,10 @@ export default function DialogCheckbox(props) {
                         pageSize={Math.floor((state.height - 310) / 30)}
                         getRowId={(row) => row[props.rowId]}
                         checkboxSelection
-                        onSelectionModelChange={(e) => handleOnSelectionChange(e)}
-                        selectionModel={props.selection}
+                        onRowSelectionModelChange={(newModel)=>{
+                            setSelection(newModel)
+                        }}
+                        rowSelectionModel={selection}
                         disableSelectionOnClick={props.disabled}
                     />
                 </div>

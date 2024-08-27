@@ -1,32 +1,49 @@
 import React, {useEffect, useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
+import { styled } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'ProductosTarifa';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    cardHeader: `${PREFIX}-cardHeader`,
+    list: `${PREFIX}-list`,
+    button: `${PREFIX}-button`
+};
+
+const StyledGrid = styled(Grid)((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
         margin: 'auto',
     },
-    cardHeader: {
+
+    [`& .${classes.cardHeader}`]: {
         padding: theme.spacing(1, 2),
     },
-    list: {
+
+    [`& .${classes.list}`]: {
         width: 400,
         height: 400,
         backgroundColor: theme.palette.background.paper,
         overflow: 'auto',
     },
-    button: {
+
+    [`& .${classes.button}`]: {
         margin: theme.spacing(0.5, 0),
-    },
+    }
 }));
 
 function not(a, b) {
@@ -42,7 +59,7 @@ function union(a, b) {
 }
 
 export default function ProductosTarifa({productos = [], productosSeleccionados = [], actualizarProductos, consult}){
-    const classes = useStyles();
+
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(productos);
     const [right, setRight] = React.useState(productosSeleccionados);
@@ -138,7 +155,7 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
     );
 
     return (
-        <Grid
+        <StyledGrid
             container
             spacing={2}
             justifyContent="center"
@@ -171,6 +188,6 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                 </Grid>
             </Grid>
             <Grid item>{customList('Productos en  tarifa', right)}</Grid>
-        </Grid>
+        </StyledGrid>
     );
 }

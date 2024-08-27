@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import { DialogActions, TextField } from "@material-ui/core";
+import { DialogActions, TextField } from "@mui/material";
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
-import SearchIcon from "@material-ui/icons/Search";
-import { makeStyles } from '@material-ui/core/styles';
+import SearchIcon from "@mui/icons-material/Search";
+import { styled } from '@mui/material/styles';
 
 
-const useStyles = makeStyles({
-    root: {
+import makeStyles from '@mui/styles/makeStyles';
+
+
+const PREFIX = 'DialogTableClientes';
+
+const classes = {
+    root: `${PREFIX}-root`
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')({
+    [`& .${classes.root}`]: {
         '& .MuiDataGrid-dataContainer': {
             minHeight: 'auto !important',
         },
@@ -27,7 +37,7 @@ function showSuccess(mensaje) {
 }
 let rowSelect
 function DialogTableClientes(props) {
-    const classes = useStyles();
+
     let {dialogVisible,handlePatrocinadorSelected} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
@@ -74,72 +84,75 @@ function cargarDesdeServidor(pagina,registros){
 
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
-    <>
-        <TextField
-            variant="standard"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
+      (<Root>
+          <TextField
+              variant="standard"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
 
-            InputProps={{
-                endAdornment: <SearchIcon style={{
-                    color: "#F9A03E",
-                    fontSize: 32,
-                    paddingInlineEnd: 0,
-                    paddingRight: 0,
-                    paddingBlockEnd: 0,
-                    paddingLeft: 0,
-                    paddingBlock: 0,
-                    cursor: "pointer"
-                }} onClick={() => {
-                    cargarDesdeServidor(0, registros)
-                    setPagina(0)
-                }}/>,
-            }}
-            onKeyDown={e => {if (e.code === "Enter" ) {
-                cargarDesdeServidor(0, registros)
-                setPagina(0)
-            }}}
-            style={{width: '60ch'}}
-        />
-        <div className={classes.root} style={{height:"300px", padding:"5px", marginBottom: 0}}>
-            <DataGrid
-                localeText={dataGridLocaleText}
-                columns={columns}
-                rows={rows}
-                getRowId={((row) => row.m_nIdCliente)}
-                onRowSelected={(row) => {
-                    rowSelect = row;
-                }}
-                page={pagina}
-                pagination
-                pageSize={registros}
-                rowCount={rowsCount}
-                paginationMode="server"
-                onPageChange={(newPage) => {
-                    setPagina(newPage.page)
-                    console.log(newPage)
-                }}
-            />
-        </div>
-        <DialogActions style={{justifyContent: "rigth"}}>
-                   <button
-                    onClick={() => {
-                        dialogVisible(false)}}
-                    className="btn btn-secondary secondary-btn"
-                >
-                    Cerrar
-                </button>
-                <button
-                    onClick={() => {
-                        if(rowSelect !=null){
-                            handlePatrocinadorSelected(rowSelect)}
-                        }}
-                    className="btn btn-primary primary-btn"
-                >
-                    Seleccionar
-                </button>
-            </DialogActions>
-    </>
+              InputProps={{
+                  endAdornment: <SearchIcon style={{
+                      color: "#F9A03E",
+                      fontSize: 32,
+                      paddingInlineEnd: 0,
+                      paddingRight: 0,
+                      paddingBlockEnd: 0,
+                      paddingLeft: 0,
+                      paddingBlock: 0,
+                      cursor: "pointer"
+                  }} onClick={() => {
+                      cargarDesdeServidor(0, registros)
+                      setPagina(0)
+                  }}/>,
+              }}
+              onKeyDown={e => {if (e.code === "Enter" ) {
+                  cargarDesdeServidor(0, registros)
+                  setPagina(0)
+              }}}
+              style={{width: '60ch'}}
+          />
+          <div className={classes.root} style={{height:"300px", padding:"5px", marginBottom: 0}}>
+              <DataGrid
+                  localeText={dataGridLocaleText}
+                  columns={columns}
+                  rows={rows}
+                  getRowId={((row) => row.m_nIdCliente)}
+                  onRowSelectionModelChange={(newRowSelectionModel,e) => {
+                      console.log(newRowSelectionModel)
+                      rowSelect=rows.find(i=>i.m_nIdCliente==newRowSelectionModel[0])
+                      console.log(rowSelect)
+                  }}
+                  page={pagina}
+                  pagination
+                  autoPageSize
+                  pageSize={registros}
+                  rowCount={rowsCount}
+                  paginationMode="server"
+                  onPaginationModelChange={(newPaginationModel)=>{
+                      setPagina(newPaginationModel.page)
+                  }}
+              />
+          </div>
+          <DialogActions style={{justifyContent: "right"}}>
+                     <button
+                      onClick={() => {
+                          dialogVisible(false)}}
+                      className="btn btn-secondary secondary-btn"
+                  >
+                      Cerrar
+                  </button>
+                  <button
+                      onClick={() => {
+                          console.log(rowSelect)
+                          if(rowSelect !=null){
+                              handlePatrocinadorSelected(rowSelect)}
+                          }}
+                      className="btn btn-primary primary-btn"
+                  >
+                      Seleccionar
+                  </button>
+              </DialogActions>
+      </Root>)
   );
 }
 

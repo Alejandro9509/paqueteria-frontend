@@ -1,10 +1,11 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import StarIcon from '@material-ui/icons/Star';
+import { styled } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import StarIcon from '@mui/icons-material/Star';
 import "../../App.css"
 import { ReactComponent as KeepLeftArrow } from '../../iconos/Mapa/svg/001-left arrow.svg';
 import { ReactComponent as ChangeArrow } from '../../iconos/Mapa/svg/012-change.svg';
@@ -14,22 +15,32 @@ import { ReactComponent as TurnRightArrow } from '../../iconos/Mapa/svg/003-righ
 import { ReactComponent as RoundaboutArrow } from '../../iconos/Mapa/svg/007-roundabout.svg';
 import { ReactComponent as TurnUArrow } from '../../iconos/Mapa/svg/004-u turn.svg';
 
-import SvgIcon from '@material-ui/icons/Star';
+import SvgIcon from '@mui/icons-material/Star';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
+const PREFIX = 'ListNavigation';
+
+const classes = {
+    root: `${PREFIX}-root`
+};
+
+const StyledList = styled(List)((
+    {
+        theme
+    }
+) => ({
+    [`&.${classes.root}`]: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
         height: "450px",
         overflow: 'auto',
-    },
+    }
 }));
 
 export default function NavigationList(props) {
-    const classes = useStyles();
+
 
     return (
-        <List component="nav" className={classes.root} aria-label="navication">
+        <StyledList component="nav" className={classes.root} aria-label="navication">
             {
 
 props.indications && props.indications.map(i => {
@@ -109,6 +120,6 @@ props.indications && props.indications.map(i => {
                 })
             }
 
-        </List>
+        </StyledList>
     );
 }

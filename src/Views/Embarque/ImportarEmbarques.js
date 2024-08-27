@@ -10,9 +10,9 @@ import {
     InputLabel, List, ListItem, ListItemIcon, ListItemText,
     Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, Tooltip
-} from "@material-ui/core";
+} from "@mui/material";
 
-import MenuItem from "@material-ui/core/MenuItem";
+import MenuItem from "@mui/material/MenuItem";
 import {importarProductos} from "../../Util/Contexts/ProductosContext";
 import {
     showSuccess,
@@ -23,12 +23,11 @@ import {
 import {FilePond} from "react-filepond";
 import 'filepond/dist/filepond.min.css';
 import {descargarPlantillaImportarEmbarque} from "../../Util/Contexts/UtileriasContext";
-import {ExpandLess} from "@material-ui/icons";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import {DataGrid} from "@material-ui/data-grid";
+import {ExpandLess} from "@mui/icons-material";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {dataGridLocaleText} from "../../Constants";
 import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
-import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {
@@ -36,6 +35,7 @@ import {
     obtenerPlantillaImportacionByIdCliente
 } from "../../Util/Contexts/PlantillasContext";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
+import {showError} from "../../Util/GlobalFunctions";
 
 function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
@@ -93,6 +93,7 @@ function ImportarEmbarques(props) {
 
     const handleOnImportarClick = () => {
         if (files.length === 0){
+            showError("Favor de cargar un documento")
             return
         }
         obtenerPlantillaImportacionByIdCliente(state.cliente.m_nIdCliente).then(respuesta => {
@@ -200,7 +201,7 @@ function ImportarEmbarques(props) {
         setState(state => {
             return {
                 ...state,
-                cliente: row.data,
+                cliente: row,
                 /*idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
                 porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
                 aplicaSeguro: row.data.m_bTieneSeguro,
@@ -459,6 +460,7 @@ function ImportarEmbarques(props) {
                                         <Grid item xs={1}>
                                             <Button fullWidth
                                                     color={"primary"}
+                                                    style={{fontSize:'1em'}}
                                                     variant={"contained"}
                                                     onClick={() => handleOnImportarClick()}
                                                     disabled={!state.cliente || files.length === 0}
@@ -467,6 +469,7 @@ function ImportarEmbarques(props) {
                                         <Grid item xs={2}>
                                             <Button fullWidth
                                                     color={"primary"}
+                                                    style={{fontSize:'1em'}}
                                                     variant={"outlined"}
                                                     onClick={() => handleOnDescargarPlantillaClick()}
                                                     disabled={!state.cliente}
@@ -476,6 +479,7 @@ function ImportarEmbarques(props) {
                                             <Button fullWidth
                                                     color={"primary"}
                                                     variant={"outlined"}
+                                                    style={{fontSize:'1em'}}
                                                     onClick={() => handleOnLimpiarClick()}
                                             >Limpiar</Button>
                                         </Grid>

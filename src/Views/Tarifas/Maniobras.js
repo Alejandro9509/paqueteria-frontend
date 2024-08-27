@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import DialogoNuevoRango from "./DialogoNuevoRango";
-import {Button, Grid} from "@material-ui/core";
+import {Button, Grid} from "@mui/material";
 import RangosTarifa from "./RangosTarifa";
-import AddIcon from "@material-ui/icons/AddBox";
+import AddIcon from "@mui/icons-material/AddBox";
 
 /**PROPS
  * rangos array = listado de rangos a mostrar en datagrid

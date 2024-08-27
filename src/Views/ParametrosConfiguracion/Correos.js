@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Paper, Tab, Tabs} from "@material-ui/core";
-import {TabContext, TabPanel} from "@material-ui/lab";
+import {Paper, Tab, Tabs} from "@mui/material";
+import {TabContext, TabPanel} from "@mui/lab";
 import {TOOLBAR_OPTIONS} from "../../Constants";
 import {EditorState} from "draft-js";
 import { Editor } from 'react-draft-wysiwyg';

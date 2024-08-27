@@ -1,11 +1,11 @@
 import React, { Component, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { Dialog, DialogActions, DialogContent, FormControl, IconButton, InputAdornment, InputLabel, Select, TextField } from '@material-ui/core';
-import PageviewIcon from "@material-ui/icons/Pageview";
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import CancelIcon from '@material-ui/icons/Cancel';
+import { Dialog, DialogActions, DialogContent, FormControl, IconButton, InputAdornment, InputLabel, Select, TextField } from '@mui/material';
+import PageviewIcon from "@mui/icons-material/Pageview";
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import Autocomplete from '@mui/material/Autocomplete';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {
     useTable,
     useFilters,
@@ -309,7 +309,7 @@ class ConceptosAdicionales extends Component {
                                                                         openDialog: true
                                                                     });
                                                                 }}
-                                                            >
+                                                                size="large">
                                                                 <PageviewIcon
                                                                     style={{
                                                                         color: "#F9A03E",
@@ -520,7 +520,7 @@ class ConceptosAdicionales extends Component {
                         </div>
 
                         <div className="col-md-12 col-sm-12" style={{ padding: "0px", textAlign: "right" }}>
-                            <IconButton onClick={this.onSubmit} style={{ padding: "0px" }}>
+                            <IconButton onClick={this.onSubmit} style={{ padding: "0px" }} size="large">
                                 <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                             </IconButton>
                         </div>
@@ -560,10 +560,12 @@ class ConceptosAdicionales extends Component {
                                             {
                                                 !this.props.consult &&
                                                 <td>
-                                                    <IconButton onClick={(e) => {
-                                                        e.stopPropagation()
-                                                        this.removeConcepto(e, c)
-                                                    }}>
+                                                    <IconButton
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            this.removeConcepto(e, c)
+                                                        }}
+                                                        size="large">
                                                         <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
                                                     </IconButton>
                                                 </td>

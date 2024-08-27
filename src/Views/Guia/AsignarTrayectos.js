@@ -9,7 +9,7 @@ import {
     FormControl,
     InputLabel, Select,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 
 function MyComponent(props){
     const [state, setState] = useState({})

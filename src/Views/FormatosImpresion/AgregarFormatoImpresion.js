@@ -4,17 +4,26 @@ import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
 import axios from "axios";
-import SvgIcon from "@material-ui/core/SvgIcon";
+import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
-import {DataGrid} from '@material-ui/data-grid';
 import $ from "jquery";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment} from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
+    InputAdornment,
+    MenuItem
+} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
     obtenerFormatosImpresionId,
     obtenerFormatosImpresionProceso
@@ -110,10 +119,11 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                    onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
+                                                   fullWidth
                                                    required
                                                    label="Formato"
                                                    value={this.state.formato}
@@ -125,7 +135,7 @@ class AgregarFormatoImpresion extends Component {
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input select">
-                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                        <FormControl fullWidth variant="outlined" size="small">
                                             <InputLabel id="idTipoProcesoAgregarLabel">Tipo de Proceso</InputLabel>
                                             <Select
                                                 labelId="idTipoProcesoAgregarLabel"
@@ -137,109 +147,109 @@ class AgregarFormatoImpresion extends Component {
                                                 name={"idTipoProcesoAgregar"}
                                                 label="Tipo de Proceso"
                                             >
-                                                <option
+                                                <MenuItem
                                                     key={42}
                                                     value={42}
                                                 >
                                                     Viajes Paquetería
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={43}
                                                     value={43}
                                                 >
                                                     Viajes Cliente TXT
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={44}
                                                     value={44}
                                                 >
                                                     Viajes Cliente EXCEL
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={210}
                                                     value={210}
                                                 >
                                                    Recolección
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={211}
                                                     value={211}
                                                 >
                                                     Embarque
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={212}
                                                     value={212}
                                                 >
                                                     Guía
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={213}
                                                     value={213}
                                                 >
                                                     Guía Etiqueta
-                                                </option>
+                                                </MenuItem>
                                                 {
                                                     localStorage.getItem("RFC")==="ECC9510049KA" &&
-                                                    <option
+                                                    <MenuItem
                                                         key={222}
                                                         value={222}
                                                     >
                                                         Informe
-                                                    </option>
+                                                    </MenuItem>
                                                 }
                                                 {
                                                     localStorage.getItem("RFC")!=="ECC9510049KA" &&
-                                                    <option
+                                                    <MenuItem
                                                         key={214}
                                                         value={214}
                                                     >
                                                         Informe
-                                                    </option>
+                                                    </MenuItem>
                                                 }
 
-                                                <option
+                                                <MenuItem
                                                     key={215}
                                                     value={215}
                                                 >
                                                     Informe Última Milla
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={216}
                                                     value={216}
                                                 >
                                                     CFDI Primera Milla
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={217}
                                                     value={217}
                                                 >
                                                     CFDI Última Milla
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={218}
                                                     value={218}
                                                 >
                                                     CFDI Timbrado Viajes
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={219}
                                                     value={219}
                                                 >
                                                     Corte de Caja
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={220}
                                                     value={220}
                                                 >
                                                     Corte de Caja General
-                                                </option>
-                                                <option
+                                                </MenuItem>
+                                                <MenuItem
                                                     key={223}
                                                     value={223}
                                                 >
                                                     Guía Etiqueta Rangos
-                                                </option>
+                                                </MenuItem>
                                             </Select>
                                         </FormControl>
                                     </label>
@@ -254,11 +264,12 @@ class AgregarFormatoImpresion extends Component {
                                     <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {
                                         if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}
                                     } />
-                                    <TextField variant="outlined" margin="dense"
+                                    <TextField variant="outlined" size="small"
                                                    onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
                                                    required
+                                                   fullWidth
                                                    disabled={true}
                                                    label="Archivo WDE"
                                                    value={this.state.file.length !== 0 ? this.state.file[0].name : ""}
@@ -272,7 +283,7 @@ class AgregarFormatoImpresion extends Component {
                                                             <IconButton
                                                                 onClick={() => document.getElementById("file").click()}
                                                                 edge="end"
-                                                            >
+                                                                size="large">
                                                                 <CloudUploadIcon color="primary" fontSize="large" />
                                                             </IconButton>
                                                         }
@@ -287,11 +298,12 @@ class AgregarFormatoImpresion extends Component {
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">
                                     <input type="file" id="image" accept="image/*" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo una imagen")}else { this.setState({image: e.target.files})}}}  style={{display: "none"}} />
-                                        <TextField variant="outlined" margin="dense"
+                                        <TextField variant="outlined" size="small"
                                                    className="form-control"
                                                    type="text"
                                                    disabled={true}
                                                    label="Archivo Imagen"
+                                                   fullWidth
                                                    value={this.state.image.length !== 0 ? this.state.image[0].name : ""}
                                                    name={"nombreImagen"}
                                                    InputProps={{
@@ -303,7 +315,7 @@ class AgregarFormatoImpresion extends Component {
                                                              disabled={this.props.id>0}
                                                              onClick={() => document.getElementById("image").click()}
                                                              edge="end"
-                                                         >
+                                                             size="large">
                                                              <CloudUploadIcon color="primary" fontSize="large" />
                                                          </IconButton>
                                                      }

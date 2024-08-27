@@ -11,18 +11,33 @@ import {
     Box,
     Typography,
     Tooltip
-} from '@material-ui/core';
-import IconButton from "@material-ui/core/IconButton";
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import {makeStyles} from "@material-ui/core/styles";
-import EditIcon from '@material-ui/icons/Edit';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+} from '@mui/material';
+import IconButton from "@mui/material/IconButton";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+
+const PREFIX = 'TableCortesCaja';
+
+const classes = {
+    root: `${PREFIX}-root`
+};
+
+const StyledTableContainer = styled(TableContainer)({
+    [`& .${classes.root}`]: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+});
 
 const TableCortesCaja = ({ data, onRowClick }) => {
     const useRowStyles = makeStyles({
-        root: {
+        [`& .${classes.root}`]: {
             '& > *': {
                 borderBottom: 'unset',
             },
@@ -101,7 +116,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                         {row.folioCorte}
                     </TableCell>
                     <TableCell>{row.fechaCorte}</TableCell>
-                    <TableCell/>
+                    <TableCell>{row.nombrePersona}</TableCell>
                     <TableCell align="right">{row.total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -146,7 +161,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
     }
 
     return (
-        <TableContainer component={Paper}>
+        <StyledTableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -154,7 +169,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                         <TableCell/>
                         <TableCell>Id Corte</TableCell>
                         <TableCell >FECHA DE CORTE</TableCell>
-                        <TableCell/>
+                        <TableCell>Operador/Usuario</TableCell>
                         <TableCell align="right">TOTAL CORTE</TableCell>
                     </TableRow>
                 </TableHead>
@@ -177,7 +192,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>
+        </StyledTableContainer>
     );
 };
 

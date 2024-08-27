@@ -3,21 +3,35 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import {Checkbox, FormControlLabel, MenuItem, TextField, Tooltip} from "@material-ui/core";
+import {Checkbox, FormControlLabel, MenuItem, TextField, Tooltip} from "@mui/material";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
-import {makeStyles} from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
+import { styled } from "@mui/material/styles";
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from "@mui/material/Grid";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
-import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import $ from "jquery";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { confirmAlert } from "react-confirm-alert";
+const PREFIX = 'TipoCobro';
+
+const classes = {
+    disabled: `${PREFIX}-disabled`
+};
+
+const Root = styled('div')({
+    [`& .${classes.disabled}`]: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+});
+
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -29,16 +43,8 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-const styles = {
-    disabled: {
-        pointerEvents: "none",
-        cursor: "default",
-    }
-};
-const useStyles = makeStyles(styles);
-
 function TipoCobro() {
-    const classes = useStyles();
+
     const [data, setData] = React.useState([])
     const [dataTipoPago, setDataTipoPago] = React.useState([])
     const [state, setState] = React.useState({
@@ -131,7 +137,7 @@ function TipoCobro() {
             field: "",
             renderCell: (row) => {
                 return (
-                    <div>
+                    <Root>
                         <Tooltip title="Modificar">
                             <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoCobro))} className="btn btn-default btn-xs"
                             disabled={!validarDerecho(9101351)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
@@ -158,8 +164,8 @@ function TipoCobro() {
                             disabled={!validarDerecho(9101352)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
-                    </div>
-                )
+                    </Root>
+                );
             }
         },
         {
@@ -362,10 +368,12 @@ function TipoCobro() {
                                             density="compact"
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdTipoCobro}
-                                            onRowSelected={(row) => {
+                                            onRowSelectionModelChange={(newModel)=>{
+                                                if(newModel.length<1)
+                                                    return
                                                 setState({
                                                     ...state,
-                                                    idTipoCobro: row.data.m_nIdTipoCobro
+                                                    idTipoCobro: data.find(i=>i.m_nIdTipoCobro==newModel[0])
                                                 })
                                             }}
                                         />
@@ -383,7 +391,7 @@ function TipoCobro() {
                                                 <div className="form-content">
                                                     <Grid container spacing={1} style={{margin:'20px'}}>
                                                         <Grid item xs={12} sm={2}>
-                                                            <TextField variant="outlined" margin="dense" label="Código"
+                                                            <TextField variant="outlined" fullWidth size="small" label="Código"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="number"
@@ -394,7 +402,7 @@ function TipoCobro() {
                                                             />
                                                         </Grid>
                                                         <Grid item xs={12} sm={2}>
-                                                            <TextField variant="outlined" margin="dense" label="Descripción"
+                                                            <TextField variant="outlined" fullWidth size="small" label="Descripción"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
@@ -406,7 +414,7 @@ function TipoCobro() {
                                                             />
                                                         </Grid>
                                                         <Grid item xs={12} sm={2}>
-                                                            <TextField variant="outlined" margin="dense" label="Tipo de pago por defecto"
+                                                            <TextField variant="outlined" fullWidth size="small" label="Tipo de pago por defecto"
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        required={true}
