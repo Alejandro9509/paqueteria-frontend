@@ -189,36 +189,18 @@ function DialogCreateRemDes(props) {
     };
 
     const validacionesAgregar = () => {
+        let valid = true
         obtenerRemitentesDestinatariosNombre(state.nombre).then((respuesta) =>{
             if(respuesta.data.total > 0){
                 showError("Ya se encuentra registrado un remitente/destnatario con ese nombre.")
-                return false;
+                valid = false;
             }
         })
         if(!state.nombre || !state.RFC || !state.codigoPostal.m_sCP || !state.calle || !state.contacto || !state.correo || !state.telefono){
             showSuccess("Faltan campos por llenar");
-            return false;
+            valid =  false;
         }
-        /*console.log(state.codigoPostal)
-        if(state.codigoPostal.m_sCP && !state.codigoPostal.m_nIdCP){
-            obtenerCodigoPostalPorCodigo(state.codigoPostal.m_sCP).then((response) => {
-                console.log(response.data)
-                if(response.data.length > 0) {
-                    let nuevoCodigo = {
-                        idCP: response.data[0].m_nIdCP,
-                        m_sCP: state.codigoPostal.m_sCP
-                    }
-                    setState((state) => {
-                        return {
-                            ...state,
-                            codigoPostal: nuevoCodigo
-                        };
-                    });
-                    //estadoId = dataEstados.find(i => i.m_sAbreviacion === response.data[0].m_nIdEstado) //.m_nIdEstado
-                }
-            })
-        }*/
-        return true;
+        return valid;
     }
 
     const handleAgregar = () => {
