@@ -153,6 +153,9 @@ function DialogCreateRemDes(props) {
     /**Se llama al seleccionar una opcion del autocomplete del dialog seleccionar código postal*/
     const handleChangeAutocomplete = (input, newValue) => {
         if(input=="codigoPostal"){
+            if (newValue?.value?.m_nIdCP === undefined || newValue?.value?.m_nIdCP?.length === 0){
+                return
+            }
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
                 (zonaOperativa ) => {
                     setState((state) => ({
@@ -178,7 +181,7 @@ function DialogCreateRemDes(props) {
 
     /** Se llama al presionar el input del dialogo para seleccionar código postal*/
     const handleClickCodigosPostalesInput = (input) => {
-        if (state.codigoPostal?.m_sCP.length > 0) {
+        if (state.codigoPostal?.m_sCP?.length > 0) {
             obtenerCodigoPostalPorCodigo(state.codigoPostal?.m_sCP).then(({ data }) => {
                 setDataCodigosPostales(data);
             });
@@ -406,7 +409,9 @@ function DialogCreateRemDes(props) {
                             </Grid>
                             <Grid item xs={4}>
                                 <IconButton aria-label="Buscar código"
-                                            onClick={() => setState({...state, openCodigos: true})}>
+                                            onClick={() => setState({...state, openCodigos: true})}
+                                            disabled={!(state?.codigoPostal?.m_sCP?.length > 0)}
+                                >
                                     <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                                     Seleccionar código
                                 </IconButton>
