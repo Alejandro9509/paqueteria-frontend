@@ -153,6 +153,9 @@ function DialogCreateRemDes(props) {
     /**Se llama al seleccionar una opcion del autocomplete del dialog seleccionar código postal*/
     const handleChangeAutocomplete = (input, newValue) => {
         if(input=="codigoPostal"){
+            if (newValue?.value?.m_nIdCP === undefined || newValue?.value?.m_nIdCP?.length === 0){
+                return
+            }
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
                 (zonaOperativa ) => {
                     setState((state) => ({
@@ -178,7 +181,7 @@ function DialogCreateRemDes(props) {
 
     /** Se llama al presionar el input del dialogo para seleccionar código postal*/
     const handleClickCodigosPostalesInput = (input) => {
-        if (state.codigoPostal?.m_sCP.length > 0) {
+        if (state.codigoPostal?.m_sCP?.length > 0) {
             obtenerCodigoPostalPorCodigo(state.codigoPostal?.m_sCP).then(({ data }) => {
                 setDataCodigosPostales(data);
             });
@@ -186,36 +189,18 @@ function DialogCreateRemDes(props) {
     };
 
     const validacionesAgregar = () => {
+        let valid = true
         obtenerRemitentesDestinatariosNombre(state.nombre).then((respuesta) =>{
             if(respuesta.data.total > 0){
                 showError("Ya se encuentra registrado un remitente/destnatario con ese nombre.")
-                return false;
+                valid = false;
             }
         })
         if(!state.nombre || !state.RFC || !state.codigoPostal.m_sCP || !state.calle || !state.contacto || !state.correo || !state.telefono){
             showSuccess("Faltan campos por llenar");
-            return false;
+            valid =  false;
         }
-        /*console.log(state.codigoPostal)
-        if(state.codigoPostal.m_sCP && !state.codigoPostal.m_nIdCP){
-            obtenerCodigoPostalPorCodigo(state.codigoPostal.m_sCP).then((response) => {
-                console.log(response.data)
-                if(response.data.length > 0) {
-                    let nuevoCodigo = {
-                        idCP: response.data[0].m_nIdCP,
-                        m_sCP: state.codigoPostal.m_sCP
-                    }
-                    setState((state) => {
-                        return {
-                            ...state,
-                            codigoPostal: nuevoCodigo
-                        };
-                    });
-                    //estadoId = dataEstados.find(i => i.m_sAbreviacion === response.data[0].m_nIdEstado) //.m_nIdEstado
-                }
-            })
-        }*/
-        return true;
+        return valid;
     }
 
     const handleAgregar = () => {
@@ -406,7 +391,9 @@ function DialogCreateRemDes(props) {
                             </Grid>
                             <Grid item xs={4}>
                                 <IconButton aria-label="Buscar código"
-                                            onClick={() => setState({...state, openCodigos: true})}>
+                                            onClick={() => setState({...state, openCodigos: true})}
+                                            disabled={!(state?.codigoPostal?.m_sCP?.length > 0)}
+                                >
                                     <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                                     Seleccionar código
                                 </IconButton>
