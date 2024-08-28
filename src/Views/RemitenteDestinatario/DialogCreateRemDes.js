@@ -190,12 +190,6 @@ function DialogCreateRemDes(props) {
 
     const validacionesAgregar = () => {
         let valid = true
-        obtenerRemitentesDestinatariosNombre(state.nombre).then((respuesta) =>{
-            if(respuesta.data.total > 0){
-                showError("Ya se encuentra registrado un remitente/destnatario con ese nombre.")
-                valid = false;
-            }
-        })
         if(!state.nombre || !state.RFC || !state.codigoPostal.m_sCP || !state.calle || !state.contacto || !state.correo || !state.telefono){
             showSuccess("Faltan campos por llenar");
             valid =  false;
@@ -231,13 +225,21 @@ function DialogCreateRemDes(props) {
                 equivalencia: state.equivalencia
             };
             console.log(params);
-            agregarRemitenteDestinatario(params).then((respuesta) => {
-                showSuccess("Creado con número: "+respuesta.data);
-                createVisible(false);
-            }).catch((err) => {
-                console.log(err);
-                showSuccess(err.response.data);
-            });
+            obtenerRemitentesDestinatariosNombre(state.nombre).then((respuesta) =>{
+                if(respuesta.data.total > 0){
+                    showError("Ya se encuentra registrado un remitente/destnatario con ese nombre.")
+                } else {
+                    agregarRemitenteDestinatario(params).then((respuesta) => {
+                        showSuccess("Creado con número: "+respuesta.data);
+                        createVisible(false);
+                    }).catch((err) => {
+                        console.log(err);
+                        showSuccess(err.response.data);
+                    });
+                }
+
+            })
+
         }
     }
 
