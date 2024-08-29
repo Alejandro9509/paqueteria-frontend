@@ -301,10 +301,10 @@ function DialogCreateRemDes(props) {
                 <div className="widget-header">
                     <h2>Nuevo Remitente/Destinatario</h2>
                 </div>
-                <div>
-                    <h3>Form Values in Real Time:</h3>
-                    <pre>{JSON.stringify(state, null, 2)}</pre>
-                </div>
+                {/*<div>*/}
+                {/*    <h3>Form Values in Real Time:</h3>*/}
+                {/*    <pre>{JSON.stringify(state, null, 2)}</pre>*/}
+                {/*</div>*/}
                 <div className="widget-container">
                     <div className="widget-content">
                         <Grid container spacing={2} >
