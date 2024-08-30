@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import {
-    Button,
     Dialog,
     DialogActions,
     DialogContent,
@@ -9,18 +8,18 @@ import {
     InputLabel,
     TextField,
     Select,
-    Grid, MenuItem
+    Grid, DialogTitle
 } from "@mui/material";
-import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
-import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import { makeStyles } from "@mui/styles";
+import {obtenerRemitentesDestinatariosNombre, agregarRemitenteDestinatario} from "../../Util/Contexts/RemitenteDestinatarioContext";
+import { makeStyles } from '@mui/styles';
 import Autocomplete from "@mui/lab/Autocomplete";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
-import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
-import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
+import { obtenerCodigoPostalPorCodigo } from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerAllEstados} from "../../Util/Contexts/EstadosContext";
+import { IconButton } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 const useStyles = makeStyles({
     root: {
@@ -45,21 +44,19 @@ function showSuccess(mensaje) {
         timeout: "3000",
     }).show();
 }
-let rowSelect
 
-/*function FormControl(props: {
-    fullWidth: boolean,
-    margin: string,
-    variant: string,
-    required: boolean,
-    children: ReactNode
-}) {
-    return null;
-}*/
+function showError(mensaje) {
+    new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
 
 function DialogCreateRemDes(props) {
     const classes = useStyles();
-    let {createVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
+    let { createVisible } = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
     const [dataMunicipios, setDataMunicipios] = React.useState([]);
@@ -69,47 +66,31 @@ function DialogCreateRemDes(props) {
         alias: "",
         nombre: "",
         RFC: "",
-        domicilio: "",
         calle: "",
         numeroInt: "",
         numeroExt: "",
         colonia: "",
-        estado: 11,
-        estadoTexto: "",
-        paisTexto: "",
-        municipio: 20,
-        municipioTexto: "",
+        estado: '',
+        idMunicipio: '',
+        municipio: '',
         codigoPostal: "",
         correo: "",
         telefono: "",
         contacto: "",
-        destino: "",
-        origen:"",
-        latitud:"",
-        longitud:"",
         zonaOperativa: "",
-        zonaTarifa: "",
         clientePaga: {},
         cliente:"",
         numero: 0,
         equivalencia: 0,
-        openDialog: false
+        openDialog: false,
+        openCodigos: false
     });
 //----------------------------->Hooks useState <----------------------------------------------------------------------
     const [pagina, setPagina] = React.useState(0);
-    const [busqueda, setBusqueda] = React.useState("");
     const [dataCodigosPostales, setDataCodigosPostales] = React.useState([]);
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
     useEffect(() => {
         getAllEstados();
-        obtenerMunicipiosByIdEstado(11).then(({ data }) => {
-            console.log(data);
-            setDataMunicipios(data);
-        });
-        obtenerCodigosPostalesPorEstadoMunicipio(11, 20).then(({ data }) => {
-            console.log(data);
-            setDataCodigosPostales(data);
-        });
     }, [pagina])
 
 //--------------------------->Funciones<----------------------------------------------------------------------
@@ -127,6 +108,7 @@ function DialogCreateRemDes(props) {
                 openDialog: false
             }
         });
+        console.log(state.clientePaga);
     }
 
     const dialogVisible = (isVisible) => {
@@ -153,78 +135,164 @@ function DialogCreateRemDes(props) {
         }
     };
 
+    const handleChangeCodigoPostal = (event) => {
+        event.preventDefault();
+        let nuevoCodigo = {
+            idCP: state.codigoPostal.idCP,
+            m_sCP: event.target.value,
+            m_sColonia: ""
+        }
+        setState((state) => {
+            return {
+                ...state,
+                codigoPostal: nuevoCodigo,
+            };
+        });
+    };
+
+    /**Se llama al seleccionar una opcion del autocomplete del dialog seleccionar código postal*/
     const handleChangeAutocomplete = (input, newValue) => {
         if(input=="codigoPostal"){
+            if (newValue?.m_nIdCP === undefined || newValue?.m_nIdCP?.length === 0){
+                return
+            }
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
-                ( zonaOperativa ) => {
-                    obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
-                        ( zonaTarifa ) => {
-                            // if(zonaOperativa.data.length == 0){
-                            //     showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
-                            // }
-                            setState((state) => ({
-                                ...state,
-                                zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-                                zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
-                            }));
-                        }
-                    );
+                (zonaOperativa ) => {
+                    setState((state) => ({
+                        ...state,
+                        zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                        openCodigos: false,
+                        codigoPostal: newValue,
+                        estado: newValue.m_nIdEstado,
+                        idMunicipio: newValue.m_nIdMunicipio,
+                        municipio: newValue.m_sMunicipio,
+                        colonia: newValue.m_sColonia
+                    }));
+                    obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({ data }) => {
+                            setDataMunicipios(data);
+                    });
+                    // obtenerCodigosPostalesPorEstadoMunicipio(11, 20).then(({ data }) => {
+                    //     setDataCodigosPostales(data);
+                    // });
                 }
             );
         }
-
-        setState(() => ({
-            ...state,
-            [input]: newValue,
-        }));
     };
 
+    /** Se llama al presionar el input del dialogo para seleccionar código postal*/
     const handleClickCodigosPostalesInput = (input) => {
-        obtenerCodigosPostalesPorEstadoMunicipio(state.estado, state.municipio).then(({ data }) => {
-            setDataCodigosPostales(data);
-        });
+        if (state.codigoPostal?.m_sCP?.length > 0) {
+            obtenerCodigoPostalPorCodigo(state.codigoPostal?.m_sCP).then(({ data }) => {
+                setDataCodigosPostales(data);
+            });
+        }
     };
+
+    const validacionesAgregar = () => {
+        let valid = true
+        if(!state.nombre || !state.RFC || !state.codigoPostal.m_sCP || !state.calle || !state.contacto || !state.correo || !state.telefono){
+            showSuccess("Faltan campos por llenar");
+            valid =  false;
+        }
+        return valid;
+    }
 
     const handleAgregar = () => {
-        const params = {
-            idCliente: state.clientePaga.m_nIdCliente ? state.clientePaga.m_nIdCliente : null,
-            nombre: state.nombre,
-            rfc: state.RFC,
-            activo: true,
-            calle: state.calle,
-            noExterior: state.numeroExt,
-            noInterior: state.numeroInt,
-            colonia: state.colonia,
-            localidad: state.colonia,
-            municipio: state.municipio,
-            idEstado: state.estado,
-            creadoPor: localStorage.getItem("UsuarioId"),
-            idCP: state.codigoPostal.m_nIdCP,
-            codigoPostal: state.codigoPostal.m_sCP,
-            idSucursal: localStorage.getItem("Sucursal") || 0,
-            contacto: state.contacto,
-            correoElectronico: state.correo,
-            telefono: state.telefono,
-            noRegistroIdentidadFiscal: state.RFC,
-            alias: state.nombre,
-            numero: state.numero,
-            equivalencia: state.equivalencia
-        };
-        agregarRemitenteDestinatario(params).then((respuesta) => {
-            showSuccess("Creado con número: "+respuesta.data);
-            createVisible(false);
-        }).catch((err) => {
-            console.log(err);
-            showSuccess(err.response.data);
-        });
+        if(validacionesAgregar()){
+            const params = {
+                idCliente: state.clientePaga.id,
+                nombre: state.nombre,
+                rfc: state.RFC,
+                activo: true,
+                calle: state.calle,
+                noExterior: state.numeroExt,
+                noInterior: state.numeroInt,
+                colonia: state.colonia,
+                localidad: state.colonia,
+                idMunicipio: state.idMunicipio,
+                municipio: state.municipio,
+                idEstado: state.estado,
+                creadoPor: localStorage.getItem("UsuarioId"),
+                idCP: state.codigoPostal.m_nIdCP,
+                codigoPostal: state.codigoPostal.m_sCP,
+                idSucursal: localStorage.getItem("Sucursal") || 0,
+                contacto: state.contacto,
+                correoElectronico: state.correo,
+                telefono: state.telefono,
+                noRegistroIdentidadFiscal: state.RFC,
+                alias: state.nombre,
+                numero: state.numero,
+                equivalencia: state.equivalencia
+            };
+            console.log(params);
+            obtenerRemitentesDestinatariosNombre(state.nombre).then((respuesta) =>{
+                if(respuesta.data.total > 0){
+                    showError("Ya se encuentra registrado un remitente/destnatario con ese nombre.")
+                } else {
+                    agregarRemitenteDestinatario(params).then((respuesta) => {
+                        showSuccess("Creado con número: "+respuesta.data);
+                        createVisible(false);
+                    }).catch((err) => {
+                        console.log(err);
+                        showSuccess(err.response.data);
+                    });
+                }
+
+            })
+
+        }
     }
 
 //----------------------------------------------Renderizado-------------------------------------------------
     return (
         <div>
-            <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}>
+            <Dialog fullWidth open={state.openCodigos} onClose={() => setState({...state, openCodigos: false})}>
+                <DialogTitle>Seleccionar código postal</DialogTitle>
                 <DialogContent>
-                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                    <p>
+                        <span>Se muestran los códigos pertenecientes al municipio seleccionado</span>
+                        <br/>
+                    </p>
+
+                    <div style={{backgroundColor: '#FFFFFF'}}>
+                        <Autocomplete
+                                freeSolo
+                                onChange={(event, newValue) =>
+                                    handleChangeAutocomplete("codigoPostal", newValue)
+                                }
+                                value={state.codigoPostal}
+                                name="codigoPostal"
+                                disableClearable
+                                forcePopupIcon={false}
+                                options={dataCodigosPostales}
+                                getOptionLabel={(option) => option ? `${option.m_sCP} - ${option.m_sColonia}` : ""}
+                                style={{ transform: "translate(14px, 10px) scale(1) !important" }}
+                                renderInput={(params) => (
+                                    <div>
+                                        <TextField
+                                            label="Código Postal"
+                                            size="small"
+                                            variant="outlined"
+                                            onClick={(e) =>
+                                                handleClickCodigosPostalesInput("codigoPostal")
+                                            }
+                                            required
+                                            {...params}
+                                        />
+                                    </div>
+                                )}
+                        />
+                    </div>
+                </DialogContent>
+                <DialogActions style={{justifyContent: "rigth"}}>
+                    <button onClick={() => {setState({...state, openCodigos: false})}} className="btn btn-secondary secondary-btn">
+                        Cerrar
+                    </button>
+                </DialogActions>
+            </Dialog>
+            <Dialog fullWidth open={state.openDialog} onClose={() => setState({...state, openDialog: false})}>
+                <DialogContent>
+                    <div style={{backgroundColor: '#FFFFFF'}}>
                         <DialogTableClientes dialogVisible={dialogVisible} handlePatrocinadorSelected={handleClienteSelected}/>
                     </div>
                 </DialogContent>
@@ -233,44 +301,19 @@ function DialogCreateRemDes(props) {
                 <div className="widget-header">
                     <h2>Nuevo Remitente/Destinatario</h2>
                 </div>
+                {/*<div>*/}
+                {/*    <h3>Form Values in Real Time:</h3>*/}
+                {/*    <pre>{JSON.stringify(state, null, 2)}</pre>*/}
+                {/*</div>*/}
                 <div className="widget-container">
                     <div className="widget-content">
-                        <Grid container rowSpacing={2} columnSpacing={{ xs: 2, sm: 2, md: 3 }}>
-                            {/*<Grid item xs={4}>
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="number"
-                                        label="Número"
-                                        value={state.numero}
-                                        name="numero"
-                                    />
-                                </div>
-                            </Grid>*/}
+                        <Grid container spacing={2} >
 
-                            {/*<Grid item xs={4}>
+                            <Grid item xs={3}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        type="number"
-                                        label="No. equivalencia"
-                                        value={state.equivalencia}
-                                        name="equivalencia"
-                                    />
-                                </div>
-                            </Grid>*/}
-
-                            <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -285,11 +328,11 @@ function DialogCreateRemDes(props) {
                                 </div>
                             </Grid>
 
-                            <Grid item xs={6}>
+                            <Grid item xs={9}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -302,12 +345,13 @@ function DialogCreateRemDes(props) {
                                 </div>
                             </Grid>
 
-                            <Grid item xs={8}>
+                            <Grid item xs={12}>
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
                                         label="Cliente"
-                                        margin="dense"
+                                        size="small"
+                                        fullWidth
                                         value={state.clientePaga.m_sNombreFiscal}
                                         placeholder={"Cliente"}
                                         InputLabelProps={{shrink: true}}
@@ -315,64 +359,50 @@ function DialogCreateRemDes(props) {
                                         className="form-control"
                                         type="text"
                                         name="cliente"
-                                        fullWidth
                                         onClick={() => {
-                                                setState({
-                                                    ...state,
-                                                    openDialog: true
-                                                })
-                                            }
-                                        }
+                                            setState({
+                                                ...state,
+                                                openDialog: true
+                                            })
+                                        }}
                                     />
                                 </div>
                             </Grid>
-                        </Grid>
+                            <Grid item xs={12}>
+                                <div className="col-md-12">
+                                    <p>Domicilio fiscal</p>
+                                </div>
+                            </Grid>
 
-                        <div className="col-md-12">
-                            <br/>
-                            <span>Domicilio fiscal</span>
-                        </div>
 
-                        <Grid container rowSpacing={2} columnSpacing={{xs: 2, sm: 2, md: 3}}>
                             <Grid item xs={8}>
                                 <div className="input">
-                                    <Autocomplete
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                            handleChangeAutocomplete("codigoPostal", newValue)
-                                        }
-                                        value={state.codigoPostal}
+                                    <TextField
+                                        label="Código Postal"
+                                        size="small"
+                                        variant="outlined"
+                                        onChange={handleChangeCodigoPostal}
+                                        className="form-control"
+                                        type="text"
+                                        required
+                                        value={state.codigoPostal.m_sCP}
                                         name="codigoPostal"
                                         fullWidth
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataCodigosPostales}
-                                        getOptionLabel={(option) =>
-                                            option ? `${option.m_sCP} - ${option.m_sColonia}` : ""
-                                        }
-                                        style={{
-                                            transform: "translate(14px, 10px) scale(1) !important",
-                                        }}
-                                        renderInput={(params) => (
-                                            <div>
-                                                <TextField
-                                                    label="Código Postal"
-                                                    margin="dense"
-                                                    variant="outlined"
-                                                    onClick={(e) =>
-                                                        handleClickCodigosPostalesInput("codigoPostal")
-                                                    }
-                                                    required
-                                                    {...params}
-                                                />
-                                            </div>
-                                        )}
                                     />
                                 </div>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <IconButton aria-label="Buscar código"
+                                            onClick={() => setState({...state, openCodigos: true})}
+                                            disabled={!(state?.codigoPostal?.m_sCP?.length > 0)}
+                                >
+                                    <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                                    Seleccionar código
+                                </IconButton>
                             </Grid>
 
                             <Grid item xs={6}>
-                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                <FormControl fullWidth variant="outlined" size="small" required>
                                     <InputLabel id="idEstadoLabel">Estado</InputLabel>
                                     <Select
                                         fullWidth
@@ -382,13 +412,12 @@ function DialogCreateRemDes(props) {
                                         value={state.estado}
                                         onChange={handleChange}
                                         name="estado"
-                                        defaultValue={11}
-                                        InputLabelProps={{shrink: true}}
+                                        disabled
                                     >
                                         {dataEstados.map((estado) => (
-                                            <MenuItem key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
+                                            <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
                                                 {estado.m_sEstado}
-                                            </MenuItem>
+                                            </option>
                                         ))}
                                     </Select>
                                 </FormControl>
@@ -399,7 +428,7 @@ function DialogCreateRemDes(props) {
                                     className="input select"
                                     fullWidth
                                     variant="outlined"
-                                    margin="dense"
+                                    size="small"
                                     required
                                 >
                                     <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
@@ -408,20 +437,19 @@ function DialogCreateRemDes(props) {
                                         labelId={"idMunicipioLabel"}
                                         label={"Municipio"}
                                         className="form-control"
-                                        value={state.municipio}
+                                        value={state.idMunicipio}
                                         onChange={handleChange}
-                                        name="municipio"
+                                        name="idMunicipio"
                                         InputProps={{name: "municipio"}}
-                                        defaultValue={20}
-                                        InputLabelProps={{shrink: true}}
+                                        disabled
                                     >
                                         {dataMunicipios.map((municipio) => (
-                                            <MenuItem
+                                            <option
                                                 key={municipio.m_sCodigoMunicipio}
                                                 value={municipio.m_sCodigoMunicipio}
                                             >
                                                 {municipio.m_sMunicipio}
-                                            </MenuItem>
+                                            </option>
                                         ))}
                                     </Select>
                                 </FormControl>
@@ -431,7 +459,7 @@ function DialogCreateRemDes(props) {
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -439,6 +467,7 @@ function DialogCreateRemDes(props) {
                                         label="Colonia / Localidad"
                                         value={state.colonia}
                                         name="colonia"
+                                        disabled
                                         fullWidth
                                     />
                                 </div>
@@ -448,7 +477,7 @@ function DialogCreateRemDes(props) {
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -465,7 +494,7 @@ function DialogCreateRemDes(props) {
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -481,7 +510,7 @@ function DialogCreateRemDes(props) {
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -497,7 +526,7 @@ function DialogCreateRemDes(props) {
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -514,7 +543,7 @@ function DialogCreateRemDes(props) {
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         onChange={handleChange}
                                         className="form-control"
                                         type="text"
@@ -532,7 +561,7 @@ function DialogCreateRemDes(props) {
                                 <div className="input">
                                     <TextField
                                         variant="outlined"
-                                        margin="dense"
+                                        size="small"
                                         label="Correo Electrónico"
                                         onChange={handleChange}
                                         className="form-control"
@@ -546,107 +575,28 @@ function DialogCreateRemDes(props) {
                                 </div>
                             </Grid>
 
-                            {/* {props.mostrarZonas && (
-                            <div className="col-sm-12 col-md-12 unit">
-                                <div className="input">
-                                    <Autocomplete
-                                        value={state.zonaOperativa}
-                                        freeSolo
-                                        onChange={(event, newValue) =>
-                                            handleChangeAutocomplete("zonaOperativa", newValue)
-                                        }
-                                        id="zonaOperativa"
-                                        disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataZonasOperativas}
-                                        disabled={props.consulta || props.modificar || props.agregar}
-                                        getOptionLabel={(option) =>
-                                            option
-                                                ? `${option.m_sCodigoZona} - CP: ${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
-                                                : ""
-                                        }
-                                        variant="outlined"
-                                        name={"zonaOperativa"}
-                                        style={{
-                                            transform: "translate(14px, 10px) scale(1) !important",
-                                        }}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                variant="outlined"
-                                                label="Zona Operativa"
-                                                margin="dense"
-                                                required={
-                                                    !state.diferenteEntrega && !state.entregaEnSucursal
-                                                }
-                                                onClick={() => handleClickZona()}
-                                                {...params}
-                                            />
-                                        )}
-                                    />
-                                </div>
-                            </div>
-                        )}
-                        <div className="col-sm-12 col-md-12 unit">
-                            <div className="input">
-                                <Autocomplete
-                                    value={state.zonaTarifa}
-                                    freeSolo
-                                    // onChange={(event, newValue) =>
-                                    //     handleChangeAutocomplete("zonaTarifa", newValue)
-                                    // }
-                                    id="zonaTarifa"
-                                    disableClearable
-                                    forcePopupIcon={false}
-                                    options={dataZonasTarifa}
-                                    disabled={props.consulta || props.modificar || props.agregar}
-                                    getOptionLabel={(option) =>
-                                        option
-                                            ? option.m_sCodigoZona || "Código Postal sin zona asignada"
-                                            : ""
-                                    }
-                                    variant="outlined"
-                                    name={"zonaTarifa"}
-                                    style={{
-                                        transform: "translate(14px, 10px) scale(1) !important",
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            variant="outlined"
-                                            label="Zona Tarifa"
-                                            margin="dense"
-                                            required={
-                                                !state.diferenteEntrega && !state.entregaEnSucursal
-                                            }
-                                            onClick={handleClickZona}
-                                            {...params}
-                                        />
-                                    )}
-                                />
-                            </div>
-                        </div>*/}
                         </Grid>
-
 
                     </div>
                 </div>
             </div>
             <DialogActions style={{justifyContent: "rigth"}}>
-                <Button
+                <button
                     onClick={() => {
                         createVisible(false)
                     }}
                     className="btn btn-secondary secondary-btn"
                 >
                     Cerrar
-                </Button>
-                <Button
+                </button>
+                <button
                     onClick={() => {
                         handleAgregar();
                     }}
                     className="btn btn-primary primary-btn"
                 >
                     Guardar
-                </Button>
+                </button>
             </DialogActions>
         </div>
     );

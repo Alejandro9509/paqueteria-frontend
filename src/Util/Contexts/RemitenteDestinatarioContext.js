@@ -51,7 +51,6 @@ function actualizarRemitentesDestinatarios(){
 function agregarRemitenteDestinatario(params){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/Agregar`;
     let result;
-    console.log(params);
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
     );
@@ -63,6 +62,14 @@ function obtenerRemitentesDestinatariosId(id){
     trackPromise(
         result =  axios.get(url, { headers })
         );
+    return result
+}
+function obtenerRemitentesDestinatariosNombre(nombre){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetByName/${nombre}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
     return result
 }
 function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
@@ -93,7 +100,6 @@ function obtenerClientesPaginado(pagina,registros, busqueda){
         );
     return result
 }
-
 export {
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId,
@@ -102,5 +108,6 @@ export {
     obtenerRemitentesDestinatariosPaginado,
     obtenerClientesPaginado,
     actualizarCoordenadasRemitentesDestinatarios,
-    agregarRemitenteDestinatario
+    agregarRemitenteDestinatario,
+    obtenerRemitentesDestinatariosNombre
 }
