@@ -1049,7 +1049,7 @@ function Viajes() {
             headerName: "Folio Fiscal sustituido",
             field: "m_nIdOrigen",
             width: 300,
-            valueFormatter: row => row.m_sFolioFiscalUUIDSustituido || row.m_sUltimoFolioFiscalUUIDSustituido || " "
+            valueFormatter: row => row.m_sFolioFiscalUUIDSustituido == "" ?  row.m_sUltimoFolioFiscalUUIDSustituido : (row.m_sFolioFiscalUUIDSustituido || "")
         },
         // {
         //     headerName: "Liq",
