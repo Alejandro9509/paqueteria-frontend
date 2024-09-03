@@ -7,7 +7,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
+    DialogTitle, Fab,
     FormControl,
     Grid,
     InputLabel,
@@ -999,7 +999,7 @@ export default function CrearTarifaRangos(props) {
                     </div>
                 </Paper>
                 <br/>
-                <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"} disabled={props.disabled}>
+                <Button sx={{position:'fixed', bottom:'10px', width:'96%'}} fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"} disabled={props.disabled}>
                     Guardar
                 </Button>
 

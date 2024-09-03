@@ -270,6 +270,24 @@ class DetalleParadas extends Component {
             }
         })
     }
+    obtenerPDFCFDIOpcion1(id,esRecoleccion, folio){
+         if (esRecoleccion){
+             obtenerReporteCFDIRecoleccion(id).then(({data}) => {
+                 console.log(data)
+                 let pdfWindow = window.open("");
+                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                 pdfWindow.document.body.style.margin = "0px";
+                 pdfWindow.document.title = "CFDI_ " + folio;
+             })
+         }else{
+             obtenerReporteCFDIGuia(id).then(({data}) => {
+                 let pdfWindow = window.open("");
+                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                 pdfWindow.document.body.style.margin = "0px";
+                 pdfWindow.document.title = "CFDI_ " + folio;
+             })
+         }
+    }
     obtenerPDFCFDI(id,esRecoleccion, folio){
 
         if(esRecoleccion){
@@ -1264,7 +1282,7 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() =>
-                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
+                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)//g
                                                                                                                 }
                                                                                                                 aria-label="Timbrar SAT"
                                                                                                                 size="large">
@@ -1293,11 +1311,23 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
-                                                                                                            <IconButton aria-label="PDF TASLADO" size="large">
+                                                                                                            <IconButton aria-label="PDF TRASLADO Opción 1" size="large">
                                                                                                                 <Tooltip
-                                                                                                                    title={"Descargar PDF"}>
+                                                                                                                    title={"Descargar PDF Opción 1"}>
                                                                                                                     <PictureAsPdfIcon
-                                                                                                                        onClick={() => this.obtenerPDFCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
+                                                                                                                        onClick={() => this.obtenerPDFCFDIOpcion1(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        {
+                                                                                                            !r.m_bUnidadPermisionario && g.m_bTimbrado &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="PDF TASLADO Opción 2">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Descargar PDF Opción 2"}>
+                                                                                                                    <PictureAsPdfIcon
+                                                                                                                        onClick={() => this.obtenerPDFCFDI(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>

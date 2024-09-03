@@ -338,7 +338,7 @@ class FiltersMap extends Component {
     }
     reasignarOperador(unidad) {
         obtenerOperadoresPorSucursal(this.state.sucursalSeleccionada?.m_nIdSucursal).then(({data}) => {
-            const operadoresDisponibles = data.filter(operador => operador.ocupado === false)
+            const operadoresDisponibles = data
             if(data.filter((op)=>!op.ocupado).length==0)
                 showSuccess("No se encontraron operadores disponibles")
             this.setState({

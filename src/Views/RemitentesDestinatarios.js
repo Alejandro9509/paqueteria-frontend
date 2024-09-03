@@ -542,7 +542,6 @@ function RemitenteDestinatario(props) {
   }
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
-    console.log(row);
       if(!row.m_nIdCP){
         showSuccess("La dirección seleccionada contiene datos que no coinciden con los catálogos del SAT, favor de validar la dirección en Tráfico - Catálogos - Remitentes/ Destinatarios.")
         return
@@ -571,12 +570,12 @@ function RemitenteDestinatario(props) {
                 municipio: row.m_nIdMunicipio || "",
                 correo: row.m_sCorreoElectronico || "",
                 telefono: row.m_sTelefono || 0,
-                  contacto: row.m_sContacto || row.m_sNombre,
+                contacto: row.m_sContacto || row.m_sNombre,
                 calle: row.m_sCalle || "No especificado",
                 municipioTexto: row.m_sMunicipio || "No especificado",
                 numeroExt: row.m_sNoExterior || 0,
                 numeroInt: row.m_sNoInterior || 0,
-                  colonia: row.m_sColonia || row.m_sLocalidad || "No especificado",
+                colonia: row.m_sColonia || row.m_sLocalidad || "No especificado",
                 latitud: row.m_sLatitud,
                 longitud: row.m_sLongitud,
                 origen: zonaOperativa.data.length !== 0 ? {
@@ -603,7 +602,7 @@ function RemitenteDestinatario(props) {
             })
       });
       promise.then((zonaOperativa)=> {
-        console.log(zonaOperativa)
+
         if(props.destinatario){
           props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false,zonaOperativa.data[0].m_nIdSucursal)
         }

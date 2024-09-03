@@ -54,10 +54,10 @@ import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {getAddressFormated, getCurrentDate} from "../../Util/Util";
 import moment from "moment";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
 import {cambiarOperadorUnidad} from "../../Util/Contexts/UnidadesContext"; // Import css
 import {reasignarOperador} from "../../Util/Contexts/OperadoresContext";
-import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import ListaUbicaciones from "./ListaUbicaciones"; // Import css
 
@@ -115,15 +115,14 @@ class UltimaMilla extends Component {
             closeFiltersMapDialogs: false,
             closeResumenParadas:false,
             openDialogGenerarRutaError: false,
-            operadorSeleccionado: null,
-            listadoOperadores:[],
-            idOperador:0,
-            operadores: [],
-            unidad: null,
             showConfirmarUbicacion: false,
             showListaUbicaciones: false,
+            operadores: [],
+            unidad: null,
             paquetesSinCoord: [],
             titulo: "",
+            listadoOperadores:[],
+            idOperador:0,
             entregaEnSucursal: false,
         }
         this.generarRuta = this.generarRuta.bind(this)

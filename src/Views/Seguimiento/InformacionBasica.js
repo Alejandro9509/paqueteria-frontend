@@ -45,51 +45,51 @@ class InformacionBasica extends Component {
                         <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus Pago: <Typography>{data.m_sTipoCobro}</Typography></Typography>
                     </Grid>
 
-                    <Grid item xs={3}>
-                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Valor declarado: <Typography>${data.m_xValorDeclarado}</Typography></Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Recibió: <Typography>{data.m_sReceptor=='null'?'No Aplica':data.m_sReceptor}</Typography> </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Entregó Guía: <Typography>{data.operadorEntrega?data.operadorEntrega:'No Aplica'}</Typography> </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Factura: <Typography>{data.folioFactura!='NA'?data.folioFactura:'No Aplica'}</Typography> </Typography>
-                    </Grid>
-                    <Grid item xs={9}>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus Factura: <Typography>{data.estatusFactura!='NA'?data.estatusFactura:'No Aplica'}</Typography> </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <FormControlLabel disabled style={{padding:"0px !important"}}
-                                          control={<Checkbox
-                                              checked={!data.m_bEntregaSucursal}
-                                              name="tieneEntregaDomicilio"/>}
-                                          label="Tiene entrega a domicilio"/>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <FormControlLabel disabled style={{padding:"0px !important"}}
-                                          control={<Checkbox
-                                              checked={data.m_bRecoleccionConCita}
-                                              name="tieneCita"/>}
-                                          label="Tiene cita para recolección"/>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <FormControlLabel disabled style={{padding:"0px !important"}}
-                                          control={<Checkbox
-                                              checked={data.m_bEmbarqueConCita}
-                                              name="tieneCita"/>}
-                                          label="Tiene cita para entrega"/>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <FormControlLabel disabled style={{padding:"0px !important"}}
-                                          control={<Checkbox
-                                              checked={data.m_bEntregaSucursal}
-                                              name="tieneEntreaSucursal"/>}
-                                          label="Tiene entrega en sucursal"/>
-                    </Grid>
+                <Grid item xs={3}>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Valor declarado: <Typography>${data.m_xValorDeclarado}</Typography></Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Recibió: <Typography>{data.m_sReceptor=='null'?'No Aplica':data.m_sReceptor}</Typography> </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Entregó Guía: <Typography>{data.operadorEntrega?data.operadorEntrega:'No Aplica'}</Typography> </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Factura: <Typography>{data.folioFactura!='NA'?data.folioFactura:'No Aplica'}</Typography> </Typography>
+                </Grid>
+                <Grid item xs={9}>
+                </Grid>
+                <Grid item xs={3}>
+                    <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Estatus Factura: <Typography>{data.estatusFactura!='NA'?data.estatusFactura:'No Aplica'}</Typography> </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                    <FormControlLabel disabled style={{padding:"0px !important"}}
+                                      control={<Checkbox
+                                          checked={!data.m_bEntregaSucursal}
+                                          name="tieneEntregaDomicilio"/>}
+                                      label="Tiene entrega a domicilio"/>
+                </Grid>
+                <Grid item xs={3}>
+                    <FormControlLabel disabled style={{padding:"0px !important"}}
+                                      control={<Checkbox
+                                          checked={data.m_bRecoleccionConCita}
+                                          name="tieneCita"/>}
+                                      label="Tiene cita para recolección"/>
+                </Grid>
+                <Grid item xs={3}>
+                    <FormControlLabel disabled style={{padding:"0px !important"}}
+                                      control={<Checkbox
+                                          checked={data.m_bEmbarqueConCita}
+                                          name="tieneCita"/>}
+                                      label="Tiene cita para entrega"/>
+                </Grid>
+                <Grid item xs={3}>
+                    <FormControlLabel disabled style={{padding:"0px !important"}}
+                                      control={<Checkbox
+                                          checked={data.m_bEntregaSucursal}
+                                          name="tieneEntreaSucursal"/>}
+                                      label="Tiene entrega en sucursal"/>
+                </Grid>
 
 
 

@@ -6,10 +6,10 @@ const headers = API_HEADERS
 
 
 function modificarEmbarques(id, params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Modificar/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Embarques/Modificar/` + id;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url,  params, { headers })
         );
     return result
 }
@@ -28,7 +28,7 @@ function agregarEmbarques( params){
     let result;
     console.log()
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, params, { headers })
         );
     return result
 }

@@ -135,6 +135,7 @@ function ParametrosConfiguracion() {
         imprimirEtiquetasIndividuales:false,
         horasLimiteEntregasUltimaMilla: 23,
         porcentualSeguroDefecto:0,
+        cobroPorcentual: false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -251,6 +252,7 @@ function ParametrosConfiguracion() {
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
                     cobrarConceptoCarga: respuesta.data.CobrarConceptoCarga,
                     cobrarConceptoDescargaa: respuesta.data.CobrarConceptoDescarga,
+                    cobroPorcentual: respuesta.data.CobroPorcentual,
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
@@ -980,6 +982,21 @@ function ParametrosConfiguracion() {
                                                     >
                                                     </TextField>
                                                 </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Cobro porcentual</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5} display="flex">
+                                                <Checkbox
+                                                    checked={configuraciones.cobroPorcentual}
+                                                    color="primary"
+                                                    disabled
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="cobroPorcentual"
+                                                />
                                             </Box>
                                         </Box>
                                         { configuraciones.tipoTarifa == 2 &&

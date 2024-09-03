@@ -35,10 +35,11 @@ import DialogTextView from "./DialogTextView";
 import GrupoViajeForaneo from "./GrupoViajeForaneo";
 import {getRandomId} from "../../Util/Util";
 import AddIcon from "@mui/icons-material/AddBox";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 
 
 export default function ViajeForaneo(props) {
-
+    const [mostrarPorcentaje, setMostrarPorcentaje] = useState(true)
     const [state, setState] = useState({
         idViaje: props.viaje.idViaje || getRandomId(),
         idOrigen: props.viaje.idOrigen || null,
@@ -142,6 +143,11 @@ export default function ViajeForaneo(props) {
     useEffect(value => {
         props.handleChangeViajeForaneo(state)
     }, [state])
+    useEffect(value => {
+        obtenerParametrosConfiguracion().then(({data}) => {
+            setMostrarPorcentaje(data.CobroPorcentual)
+        })
+    }, [])
 
     const filtrarTiposCalculoViajeForaneo =
         state.idTipoMedida === 1 ?
@@ -218,7 +224,10 @@ export default function ViajeForaneo(props) {
                         >
                             <MenuItem key={1} value={1}>Peso</MenuItem>
                             <MenuItem key={2} value={2}>Pieza</MenuItem>
-                            <MenuItem key={3} value={3}>Porcentaje</MenuItem>
+                            {
+                                mostrarPorcentaje &&
+                                <MenuItem key={3} value={3}>Porcentaje</MenuItem>
+                            }
                         </TextField>
                     </Grid>
                     <Grid item xs={3}>

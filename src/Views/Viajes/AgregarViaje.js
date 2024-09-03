@@ -213,7 +213,7 @@ class AgregarViaje extends Component {
     }
 
     componentWillMount() {
-       
+
        this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
@@ -921,33 +921,37 @@ class AgregarViaje extends Component {
 
     }
 
-    cubicarViaje(arrayInformesAsignados){
-        const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
-        console.log('Los paquetes', paquetes)
-        const params = {
-            idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
-            idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
-            paquetes: paquetes.map(p => ({
-                alto: p.m_xAlto,
-                ancho: p.m_xAncho,
-                largo: p.m_xLargo,
-                peso: p.m_xPeso,
-                cantidad: p.ctd
-            }))
+    cubicarViaje(arrayInformesAsignados, eliminar = false){
+        if (!eliminar) {
+            const paquetes = arrayInformesAsignados.reduce((array1, a) => array1.concat(a.m_arrClsProGuia.reduce((array, i) => array.concat(i.m_arrClsDetalle), [])), []);
+            const params = {
+                idRemolque1: this.state.IdRemolque1?.m_nIdUnidad ?? null,
+                idRemolque2: this.state.IdRemolque2?.m_nIdUnidad ?? null,
+                paquetes: paquetes.map(p => ({
+                    alto: p.m_xAlto,
+                    ancho: p.m_xAncho,
+                    largo: p.m_xLargo,
+                    peso: p.m_xPeso,
+                    cantidad: p.ctd
+                }))
+            }
+            cubicarGuia(params).then(({data}) => {
+                this.setState({utilizacion: data.utilizacion.toFixed(0)})
+            }).catch(e => {
+                this.setState({utilizacion: 0})
+                if (!eliminar) {
+                    showError(e.response?.data)
+                }
+
+            })
         }
-        cubicarGuia(params).then(({data}) => {
-            this.setState({utilizacion: data.utilizacion.toFixed(0)})
-        }).catch(e => {
-            this.setState({utilizacion: 0})
-            showError(e.response?.data)
-        })
     }
 
 
     handleEliminarInforme(id) {
         var dataInformesAsignados = [...this.state.dataInformesAsignados]
         dataInformesAsignados.splice(dataInformesAsignados.findIndex(i => i.m_nIdInforme === id), 1)
-        this.cubicarViaje(dataInformesAsignados)
+        this.cubicarViaje(dataInformesAsignados, true)
         this.setState({dataInformesAsignados: dataInformesAsignados})
     }
 
@@ -2120,7 +2124,7 @@ class AgregarViaje extends Component {
                                     </div>
 
                                     <br/>
-                                    <ProgressBarCubicaje value={this.state.utilizacion}>{this.state.utilizacion > 100 ? `Capacidad máxima superada` : `Espacio de carga usado: ${this.state.utilizacion}%`}</ProgressBarCubicaje>
+                                    <ProgressBarCubicaje value={this.state.utilizacion}>Espacio de carga usado: {this.state.utilizacion}%</ProgressBarCubicaje>
                                 </div>
 
                                 {/*<div className={"row"}>

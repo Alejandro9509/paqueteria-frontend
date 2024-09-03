@@ -955,7 +955,16 @@ function Viajes() {
                         }
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
-                            <Tooltip title="Descargar PDF">
+                            <Tooltip title="Descargar PDF Opción 1">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (descargarPDFOpcion1(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
+                                    className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
+
+                            </Tooltip>
+                        }
+                        {
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
+                            <Tooltip title="Descargar PDF opción 2">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
                                     className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
@@ -977,7 +986,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Cancelar Timbrado SAT">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (showCancelarCFDI(row))}><i className="zmdi zmdi-card-off"
+                                   onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off"
                                                                                   style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -1049,7 +1058,10 @@ function Viajes() {
             headerName: "Folio Fiscal sustituido",
             field: "m_nIdOrigen",
             width: 300,
-            valueFormatter: row => row.m_sFolioFiscalUUIDSustituido || row.m_sUltimoFolioFiscalUUIDSustituido || " "
+            renderCell: row => {
+                console.log(row)
+                return row.row.m_sFolioFiscalUUIDSustituido == "" ?  row.row.m_sUltimoFolioFiscalUUIDSustituido : (row.row.m_sFolioFiscalUUIDSustituido || "")
+            }
         },
         // {
         //     headerName: "Liq",
@@ -1765,7 +1777,7 @@ function Viajes() {
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
+                                                            <TextField variant="outlined" size="small"
                                                                        label="Folio Viaje"
                                                                        className="form-control"
                                                                        type="text"

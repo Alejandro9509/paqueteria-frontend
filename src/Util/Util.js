@@ -355,6 +355,7 @@ export function readExcel(FORMAT,file, esRecoleccion){
 
         fileReader.onload = (e) => {
             const bufferArray = e.target.result;
+
             const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
 
             //SE OBTIENEN LAS HOJAS DEL EXCEL
@@ -393,7 +394,6 @@ export function readExcel(FORMAT,file, esRecoleccion){
                 descripcion: item[FORMAT.paquetes.descripcionPaquete],
                 observaciones: item[FORMAT.paquetes.observacionesPaquete] || ""
             }))
-            console.log(dataComplementosSat[0])
             const arrayComplementos = dataComplementosSat.map((item) => ({
                 numeroEmbarque: item[FORMAT.numeroEmbarque],
                 cantidad: item[FORMAT.complementosSat.cantidadComplemento],

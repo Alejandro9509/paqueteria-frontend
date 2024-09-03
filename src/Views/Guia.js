@@ -1840,7 +1840,6 @@ function Guia(props) {
                                             showSuccess('Hubo un error al imprimir. Intente de nuevo.')
                                             break
                                         }
-
                                     }
                                 }
                             }
