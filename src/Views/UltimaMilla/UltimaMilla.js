@@ -509,7 +509,7 @@ class UltimaMilla extends Component {
                         <DialogContent>
                             <form onSubmit={this.reasignarParada}>
                                 <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" size="small">
+                                    <FormControl fullWidth variant="outlined" size="small" sx={{ marginTop: 1 }}>
                                         <InputLabel id="sucursalListadoLabel">Operador</InputLabel>
                                         <Select
                                             labelId="sucursalListadoLabel"
