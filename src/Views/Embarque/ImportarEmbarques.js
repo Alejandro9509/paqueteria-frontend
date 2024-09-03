@@ -198,7 +198,6 @@ function ImportarEmbarques(props) {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
         setState(state => {
             return {
                 ...state,
