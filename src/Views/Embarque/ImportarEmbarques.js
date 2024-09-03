@@ -52,6 +52,7 @@ function ImportarEmbarques(props) {
         dataSucursal: [],
         embarques: [],
         cliente: null,
+        tienePlantilla: false,
         embarqueSelect: null,
         showConfirmarUbicacion: false
     })
@@ -202,6 +203,7 @@ function ImportarEmbarques(props) {
             return {
                 ...state,
                 cliente: row,
+                tienePlantilla: row.m_bTienePlantilla,
                 /*idTipoSeguro: row.data.m_nIdTipoSeguro !== 0 ? row.data.m_nIdTipoSeguro : 5,
                 porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
                 aplicaSeguro: row.data.m_bTieneSeguro,
@@ -222,6 +224,7 @@ function ImportarEmbarques(props) {
             dataSucursal: [],
             embarques: [],
             cliente: null,
+            tienePlantilla: false,
             embarqueSelect: null,
             showConfirmarUbicacion: false
         })
@@ -472,7 +475,7 @@ function ImportarEmbarques(props) {
                                                     style={{fontSize:'1em'}}
                                                     variant={"outlined"}
                                                     onClick={() => handleOnDescargarPlantillaClick()}
-                                                    disabled={!state.cliente}
+                                                    disabled={!state.tienePlantilla}
                                             >Descargar plantilla</Button>
                                         </Grid>
                                         <Grid item xs={1}>
