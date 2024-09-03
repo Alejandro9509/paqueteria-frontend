@@ -172,7 +172,8 @@ class AgregarViaje extends Component {
             openDialogUnidades: false,
             openDialogRemolques: false,
             openDialogDollys: false,
-            identificadorConvoyUnidad: ""
+            identificadorConvoyUnidad: "",
+            isTorton: false
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -1061,6 +1062,7 @@ class AgregarViaje extends Component {
             colorUnidad: data.ColorEstatus,
             kms: data.m_nOdometro,
             identificadorConvoyUnidad: data.IdentificadorConvoy,
+            isTorton: data.m_nIdTipoUnidad === 1,
             // horas: newValue.m_nHorasTrabajadasMotorNoGPS,
             aplicaRemolque: data.m_bAplicaRemolque
         })
@@ -1353,7 +1355,7 @@ class AgregarViaje extends Component {
                 }*/}
                 <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador?.m_nIdOperador} />
                 {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />*/}
-                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} />
+                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} isTorton={this.state.isTorton} />
                 <DialogDollys open={this.state.openDialogDollys} handleClose={this.handleCloseDialogDollys} handleAccept={this.handleAcceptDataDollys} idConvoy={this.state.identificadorConvoyUnidad} />
                 <Dialog
                     fullWidth={true}
