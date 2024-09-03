@@ -50,5 +50,13 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
     );
     return result
 }
+function obtenerCotizacionTarifario(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador/Agregar`;
+    let result;
 
-export {obtenerCotizacion}
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
+export {obtenerCotizacion,obtenerCotizacionTarifario}

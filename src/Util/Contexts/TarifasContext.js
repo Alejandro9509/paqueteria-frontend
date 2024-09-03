@@ -31,18 +31,18 @@ function eliminarTarifaRangos(id) {
     return result
 }
 const obtenerTarifasRangosFiltro =(folioTarifas) =>{
-  
+
     if (typeof folioTarifas == "undefined" || folioTarifas == ''){
-        
+
         folioTarifas = 0
     }
     const url =`${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetByFiltro/` +folioTarifas
-        
+
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
-        );
-        console.log(result)
+    );
+    console.log(result)
     return result
 }
 
@@ -57,6 +57,14 @@ function obtenerTarifasRangos() {
 
 function obtenerTarifaRangosById(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetById/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+function obtenerTarifaGeneral() {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetGeneral`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -109,4 +117,4 @@ function obtenerTarifaBy(id) {
     return result
 }
 
-export {modificarTarifa,eliminarTarifa,obtenerTarifasRangosFiltro,obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}
+export {modificarTarifa,obtenerTarifaGeneral,eliminarTarifa,obtenerTarifasRangosFiltro,obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}

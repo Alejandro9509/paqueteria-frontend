@@ -30,7 +30,7 @@ function BarraLateralDerecha() {
                   <SvgIcon
                     component={r.icon}
                     style={{
-                      height: "100%",
+                      height: "80%",
                       textAlign: "center",
                       width: "75%",
                     }}

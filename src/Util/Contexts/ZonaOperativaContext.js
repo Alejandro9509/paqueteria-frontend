@@ -82,6 +82,14 @@ function obtenerParametrosDestino(idGuia) {
     );
     return result
 }
+function obtenerColoniasCPs() {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetColoniasCPs`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
 function obtenerZonaOperativaByCodigoPostal(cp) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByCodigoPostal/` + cp;
@@ -92,4 +100,4 @@ function obtenerZonaOperativaByCodigoPostal(cp) {
     return result
 }
 
-export {obtenerZonaOperativaByCodigoPostal, obtenerParametrosDestino,obtenerZonaOperativaByIdCodigoPostal, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal, obtenerListadoZonaOperativaByOrigenDestino}
+export {obtenerZonaOperativaByCodigoPostal, obtenerColoniasCPs,obtenerParametrosDestino,obtenerZonaOperativaByIdCodigoPostal, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal, obtenerListadoZonaOperativaByOrigenDestino}
