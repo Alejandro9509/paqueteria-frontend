@@ -340,7 +340,7 @@ export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, indexPartida,paquetesTotale
 ^PW812
 ^LL0812
 ^LS0
-^FO0,0^GFA,03840,03840,00024,:Z64:
+^FO0,0^GFA,07680,07680,00040,:Z64:
 ${guia.m_sLogoEtiqueta}
 ^FT41,239^A0N,79,79^FB730,1,0,C^FH\\^FD${guia.m_nFolioGuia}^FS
 ^FT410,286^A0N,28,28^FH\^FD${guia.m_sSucursalorigen}^FS
