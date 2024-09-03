@@ -355,7 +355,6 @@ export function readExcel(FORMAT,file, esRecoleccion){
 
         fileReader.onload = (e) => {
             const bufferArray = e.target.result;
-
             const wb = XLSX.read(bufferArray, { type: "buffer",cellDates: true });
 
             //SE OBTIENEN LAS HOJAS DEL EXCEL
