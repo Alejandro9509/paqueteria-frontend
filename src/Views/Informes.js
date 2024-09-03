@@ -645,8 +645,6 @@ function Informes({history}) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    setTextoFiltro('')
-                    setFiltroFolio(false)
                     $.mostrarMensaje=false
                     handleShowListado()
                 })
@@ -663,8 +661,6 @@ function Informes({history}) {
                         console.log("Show")
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
-                        setTextoFiltro('')
-                        setFiltroFolio(false)
                         $.mostrarMensaje=false
                         handleShowListado()
                     }
@@ -842,8 +838,7 @@ function Informes({history}) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
                 usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
                 estatusCancelacion: respuesta.data.m_sEstatusInforme,
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
-                countGuias:respuesta.data.countGuias,
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
             });
 
             if (!respuesta.data.m_bSePuedeCancelar) {
@@ -860,40 +855,20 @@ function Informes({history}) {
         if (e) {
             e.preventDefault();
         }
-        if(state.motivoCancelacion?.trim()==""){
-            showSuccess("Favor de llenar campo de motivo")
-            return;
-        }
-        confirmAlert({
-            title: 'Este informe cuenta con '+state.countGuias+' guía(s)',
-            message: '¿Esta seguro de que quiere cancelar?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: async () => {
-                        let params = {
-                            motivoCancelacion: state.motivoCancelacion,
-                            usuarioCancelacion: localStorage.getItem("UsuarioId"),
-                            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
-                        };
-                        console.log(params)
-                        console.log(JSON.stringify(params))
-                        cancelarInformes(state.IdInforme, params).then((respuesta) => {
-                            console.log(respuesta.data);
-                            showSuccess(respuesta.data)
-                            setDetectar(false)
-                            $.mostrarMensaje=false
-                            handleShowListado()
-                        });
-                    }
-                },
-                {
-                    label: 'No',
-                    onClick: async () => {console.log(state)}
-                }
-            ]
+        let params = {
+            motivoCancelacion: state.motivoCancelacion,
+            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
+        };
+        console.log(params)
+        console.log(JSON.stringify(params))
+        cancelarInformes(state.IdInforme, params).then((respuesta) => {
+            console.log(respuesta.data);
+            showSuccess(respuesta.data)
+            setDetectar(false)
+            $.mostrarMensaje=false
+            handleShowListado()
         });
-
     };
 
     function getAllGuiasFrom(cubicar) {
@@ -1050,8 +1025,6 @@ function Informes({history}) {
         setDataParaAgregar()
         getEmptyState()
         setDetectar(false)
-        setTextoFiltro('')
-        setFiltroFolio(false)
         $.mostrarMensaje=false
         window.onbeforeunload={}
         $('.nav-tabs li ').removeClass('active');
@@ -1096,8 +1069,6 @@ function Informes({history}) {
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
-            setTextoFiltro('')
-            setFiltroFolio(false)
             setDataParaModificarConsultar(data, "Modificar")
         });
     }
@@ -1109,8 +1080,6 @@ function Informes({history}) {
             console.log(data.m_arrClsProGuia)
             data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
-            setTextoFiltro('')
-            setFiltroFolio(false)
             setDataParaModificarConsultar(data, "Consultar")
         });
     }
@@ -1865,9 +1834,7 @@ function Informes({history}) {
                                                                                 <Checkbox
                                                                                     name="selecionarGuias"
                                                                                     onClick={(e) => setDataGuias(dataGuias.map(d => {
-                                                                                        if ((filtroFolio?dataGuias.filter((g)=>g.m_nFolioGuia.includes(textoFiltro)):dataGuias).map(g => g.m_nIdGuia).includes(d.m_nIdGuia)){
-                                                                                            d.select = e.target.checked;
-                                                                                        }
+                                                                                        d.select = e.target.checked;
                                                                                         return d;
                                                                                     }))}
                                                                                     color="primary"
