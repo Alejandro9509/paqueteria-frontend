@@ -19,7 +19,7 @@ import { Dialog, DialogContent, Grid } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { obtenerCiudadId } from "../Util/Contexts/CiudadesContext";
 import DialogTableRemDes from "./RemitenteDestinatario/DialogTableRemDes";
-import {tr} from "date-fns/locale";
+import DialogCreateRemDes from "./RemitenteDestinatario/DialogCreateRemDes";
 function showSuccess(mensaje) {
   new Noty({
     type: "information",
@@ -75,6 +75,7 @@ function RemitenteDestinatario(props) {
     latitud: "",
     longitud: "",
     openDialog: false,
+    createDialog: false
   });
 
   useEffect(
@@ -130,6 +131,7 @@ function RemitenteDestinatario(props) {
     latitud: "",
     longitud: "",
     openDialog: false,
+    createDialog: false
   })
   },[props.limpiarRemDes])
 
@@ -480,22 +482,21 @@ function RemitenteDestinatario(props) {
 
   const handleChangeAutocomplete = (input, newValue) => {
     props.seCalculaTarifa()
-if(input=="codigoPostal"){
-  obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
-    ( zonaOperativa ) => {
-      obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
-          ( zonaTarifa ) => {
-            if(zonaOperativa.data.length == 0){
-              showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
-            }         
-            setState((state) => ({
-              ...state,
-              zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-              zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
-            }));
-          }
-      );
-
+    if(input=="codigoPostal"){
+      obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(
+        ( zonaOperativa ) => {
+          obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
+            ( zonaTarifa ) => {
+              if(zonaOperativa.data.length == 0){
+                showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
+              }
+              setState((state) => ({
+                ...state,
+                zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
+              }));
+            }
+          );
     }
 );
   
@@ -535,6 +536,10 @@ if(input=="codigoPostal"){
   const handleClickModal = (event) => {
     setState({ ...state, openDialog: true });
   };
+
+  const handleCrearRemitente = () => {
+    createVisible(true);
+  }
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
       if(!row.m_nIdCP){
@@ -582,6 +587,7 @@ if(input=="codigoPostal"){
                     m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino
                   } : null,
                   openDialog: false,
+                  createDialog: false,
                   zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
                   paisTexto: row.m_sPais
                 }));
@@ -633,6 +639,14 @@ if(input=="codigoPostal"){
       openDialog: isVisible,
     }));
   };
+
+  const createVisible = (isVisible) => {
+    setState(() => ({
+      ...state,
+      createDialog: isVisible,
+    }));
+  };
+
   return (
     <div className="widget-content">
 
@@ -643,13 +657,40 @@ if(input=="codigoPostal"){
           maxWidth="md"
         >
           <DialogContent>
-            <DialogTableRemDes
-              dialogVisible={dialogVisible}
-              openDialog={state.openDialog}
-              handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
-            />
+            {
+                state.createDialog === false &&
+                <DialogTableRemDes
+                  dialogVisible={dialogVisible}
+                  openDialog={state.openDialog}
+                  handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
+                  handleCrearRemitente={handleCrearRemitente}
+                />
+            }
+            {
+                state.createDialog === true &&
+                <DialogCreateRemDes
+                    createVisible={createVisible}
+                    openDialog={state.createDialog}
+                    // handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
+                    // handleCrearRemitente={handleCrearRemitente}
+                />
+            }
           </DialogContent>
         </Dialog>
+
+        {/*<Dialog open={state.createDialog}
+                onClose={() => setState({ ...state, createDialog: false })}
+                fullWidth
+                maxWidth="md">
+          <DialogContent>
+            <DialogCreateRemDes
+                createVisible={createVisible}
+                openDialog={state.createDialog}
+                // handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
+                // handleCrearRemitente={handleCrearRemitente}
+            />
+          </DialogContent>
+        </Dialog>*/}
 
       {
         props.componentePadre !== 'CANCELAR_SAT' &&

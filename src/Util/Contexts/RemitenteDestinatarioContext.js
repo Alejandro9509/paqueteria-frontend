@@ -48,12 +48,28 @@ function actualizarRemitentesDestinatarios(){
     );
     return result
 }
+function agregarRemitenteDestinatario(params){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/Agregar`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
 function obtenerRemitentesDestinatariosId(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
         );
+    return result
+}
+function obtenerRemitentesDestinatariosNombre(nombre){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetByName/${nombre}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
     return result
 }
 function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
@@ -91,5 +107,7 @@ export {
     actualizarRemitentesDestinatarios,
     obtenerRemitentesDestinatariosPaginado,
     obtenerClientesPaginado,
-    actualizarCoordenadasRemitentesDestinatarios
+    actualizarCoordenadasRemitentesDestinatarios,
+    agregarRemitenteDestinatario,
+    obtenerRemitentesDestinatariosNombre
 }

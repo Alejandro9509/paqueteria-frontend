@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Dialog, DialogActions, DialogContent, TextField} from "@mui/material";
+import {Button, Dialog, DialogActions, DialogContent, TextField} from "@mui/material";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from '@mui/material/styles';
 
 import makeStyles from '@mui/styles/makeStyles';
+import {validarDerecho} from "../../Util/Util";
 
 const PREFIX = 'DialogTableRemDes';
 
@@ -42,7 +43,7 @@ function showSuccess(mensaje) {
 let rowSelect
 function DialogTableRemDes(props) {
 
-    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
+    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario,handleCrearRemitente} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
@@ -65,9 +66,9 @@ const columns = [
 
 let registros=10
 //----------------------------->Hooks useState <----------------------------------------------------------------------
-const [rows, setRow] = React.useState([])
-const [pagina, setPagina] = React.useState(0);
-    const [busqueda, setBusqueda] = React.useState("");
+const [rows, setRow] = useState([])
+const [pagina, setPagina] = useState(0);
+    const [busqueda, setBusqueda] = useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
   cargarDesdeServidor(pagina,registros)
@@ -83,6 +84,7 @@ function cargarDesdeServidor(pagina,registros){
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
       <Root>
+          <DialogActions style={{justifyContent: "left"}}>
           <TextField
               variant="standard"
               value={busqueda}
@@ -108,6 +110,18 @@ function cargarDesdeServidor(pagina,registros){
               }}}
               style={{width:'60ch'}}
           />
+            <Button fullWidth
+                    color={"primary"}
+                    variant={"contained"}
+                    style={{width:'70ch'}}
+                    type="submit"
+                    disabled={!validarDerecho(9101470)}
+                    onClick={() => {
+                        handleCrearRemitente();
+                    }}>
+                Nuevo Remitente / Destinatario
+            </Button>
+        </DialogActions>
           <div className={classes.root} style={{height: "400px", padding: "5px"}}>
               <DataGrid
                   localeText={dataGridLocaleText}
