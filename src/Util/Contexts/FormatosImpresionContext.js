@@ -69,7 +69,6 @@ function obtenerFormatosImpresionId(id){
 }
 function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
-    console.log(sucursales)
     let result;
     trackPromise(
         result =  axios.post(url,Object.assign({}, {fechaInicial: fechaInicial, fechaFinal: fechaFinal, sucursales: sucursales.map(s => s.id).join(",")}), { headers})
