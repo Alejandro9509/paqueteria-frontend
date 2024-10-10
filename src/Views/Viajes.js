@@ -955,16 +955,7 @@ function Viajes() {
                         }
                         {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
-                            <Tooltip title="Descargar PDF Opción 1">
-                                <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDFOpcion1(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
-                                    className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
-
-                            </Tooltip>
-                        }
-                        {
-                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
-                            <Tooltip title="Descargar PDF opción 2">
+                            <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarPDF(state.idViaje,row.row.m_nIdInforme ,row.row.m_sFolioFiscalUUID))}><i
                                     className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>

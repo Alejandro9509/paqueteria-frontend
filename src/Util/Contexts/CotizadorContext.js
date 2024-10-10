@@ -51,7 +51,7 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
     return result
 }
 function obtenerCotizacionTarifario(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador//Busqueda`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador/Busqueda`;
     let result;
 
     trackPromise(

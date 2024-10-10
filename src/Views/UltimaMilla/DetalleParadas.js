@@ -230,7 +230,7 @@ class DetalleParadas extends Component {
     }
     descargarXMLCFDI(id,esRecoleccion, folio) {
         let fechaHoraActual=new Date()
-        let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+(fechaHoraActual.getMonth()+1).toString().padStart(2,'0')+'-'+fechaHoraActual.getDate().toString().padStart(2,'0'))
+        let paramFecha=(fechaHoraActual.getFullYear().toString()+'-'+fechaHoraActual.getMonth().toString().padStart(2,'0')+'-'+fechaHoraActual.getDay().toString().padStart(2,'0'))
         let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
         obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then(({data}) => {
 
@@ -269,24 +269,6 @@ class DetalleParadas extends Component {
                 showError(error.response.data)
             }
         })
-    }
-    obtenerPDFCFDIOpcion1(id,esRecoleccion, folio){
-         if (esRecoleccion){
-             obtenerReporteCFDIRecoleccion(id).then(({data}) => {
-                 console.log(data)
-                 let pdfWindow = window.open("");
-                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                 pdfWindow.document.body.style.margin = "0px";
-                 pdfWindow.document.title = "CFDI_ " + folio;
-             })
-         }else{
-             obtenerReporteCFDIGuia(id).then(({data}) => {
-                 let pdfWindow = window.open("");
-                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                 pdfWindow.document.body.style.margin = "0px";
-                 pdfWindow.document.title = "CFDI_ " + folio;
-             })
-         }
     }
     obtenerPDFCFDI(id,esRecoleccion, folio){
 
@@ -1282,7 +1264,7 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101451)}
                                                                                                                 onClick={() =>
-                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)//g
+                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
                                                                                                                 }
                                                                                                                 aria-label="Timbrar SAT"
                                                                                                                 size="large">
@@ -1311,23 +1293,11 @@ class DetalleParadas extends Component {
                                                                                                         }
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
-                                                                                                            <IconButton aria-label="PDF TRASLADO Opción 1" size="large">
+                                                                                                            <IconButton aria-label="PDF TASLADO" size="large">
                                                                                                                 <Tooltip
-                                                                                                                    title={"Descargar PDF Opción 1"}>
+                                                                                                                    title={"Descargar PDF"}>
                                                                                                                     <PictureAsPdfIcon
-                                                                                                                        onClick={() => this.obtenerPDFCFDIOpcion1(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
-                                                                                                                        fontSize="default"/>
-                                                                                                                </Tooltip>
-                                                                                                            </IconButton>
-                                                                                                        }
-                                                                                                        {
-                                                                                                            !r.m_bUnidadPermisionario && g.m_bTimbrado &&
-                                                                                                            <IconButton
-                                                                                                                aria-label="PDF TASLADO Opción 2">
-                                                                                                                <Tooltip
-                                                                                                                    title={"Descargar PDF Opción 2"}>
-                                                                                                                    <PictureAsPdfIcon
-                                                                                                                        onClick={() => this.obtenerPDFCFDI(g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
+                                                                                                                        onClick={() => this.obtenerPDFCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
