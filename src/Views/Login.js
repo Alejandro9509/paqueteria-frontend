@@ -41,7 +41,7 @@ function Login() {
     //const pass = sha512($("#password").val());
     const pass = $("#password").val();
 
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLoginWeb/'${user}'/'${pass}' `;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${user}'/'${pass}' `;
     axios.get(url, { headers: {...headers, RFC: rfc} }).then(respuesta => {
       try {
         //debugger;
