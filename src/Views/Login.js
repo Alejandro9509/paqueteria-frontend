@@ -16,6 +16,7 @@ import { API_HEADERS } from "../Constants";
 
 
 import Noty from 'noty';
+import {showError} from "../Util/GlobalFunctions";
 const headers = API_HEADERS
 function showSuccess(mensaje) {
   new Noty({
@@ -42,9 +43,9 @@ function Login() {
     const pass = $("#password").val();
 
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${user}'/'${pass}' `;
-    axios.get(url, { headers: {...headers, RFC: rfc} }).then(respuesta => {
-      try {
-        //debugger;
+    try {
+      axios.get(url, { headers: {...headers, RFC: rfc} }).then(respuesta => {
+        console.log(respuesta)
         if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
           localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
           localStorage.setItem("accessToken", true);
@@ -61,11 +62,18 @@ function Login() {
         else {
           showSuccess("Usuario/Contraseña inválida");
         }
-      } catch {
-        showSuccess(respuesta.data);
-      }
-    });
-
+      }).catch(function (error) {
+        if (error.response) {
+          showError(error.response.data);
+        } else if (error.request) {
+          showError(error.request);
+        } else {
+          showError(error.message);
+        }
+      });
+    } catch (error){
+      console.log(error);
+    }
   }
 
   return (
