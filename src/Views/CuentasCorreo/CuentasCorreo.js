@@ -9,7 +9,7 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import {validarDerecho} from "../../Util/Util"
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogTitle, MenuItem} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -74,7 +74,6 @@ class CuentasCorreo extends Component {
         }
         if (this.state.edit) {
             modificarCuentasCorreo(this.state.idCuenta, params).then(respuesta => {
-                console.log(respuesta)
                 showSuccess(`Modificacion exitosa`)
                 this.props.closeDialog()
             }).catch(err => {
@@ -108,7 +107,6 @@ class CuentasCorreo extends Component {
         });
 
         if (value === 1){
-            console.log(this.state.cuentaEnviarViajes)
             let cuenta = this.state.cuentaEnviarViajes
             this.setState({
                 idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,
@@ -122,7 +120,6 @@ class CuentasCorreo extends Component {
         }
 
         if (value === 2){
-            console.log(this.state.cuentaEnviarTracking)
             let cuenta = this.state.cuentaEnviarTracking
             this.setState({
                 idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,
@@ -135,7 +132,6 @@ class CuentasCorreo extends Component {
             })
         }
         if (value === 3){
-            console.log(this.state.cuentaEnviarFacturacion)
             let cuenta = this.state.cuentaEnviarFacturacion
             this.setState({
                 idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,
@@ -155,7 +151,6 @@ class CuentasCorreo extends Component {
 
     consultarPorUsuario () {
         obtenerCuentasCorreo().then(respuesta => {
-            console.log(respuesta.data)
             let info = respuesta.data
             let cuentaEnviarViajes = info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 1) : []
             let cuentaEnviarTracking =info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 2) : []
@@ -191,12 +186,12 @@ class CuentasCorreo extends Component {
                                     label="Tipo de Cuenta"
                                 >
                                     {this.state.dataTipoCuenta.map((tipoCuenta) => (
-                                        <option
+                                        <MenuItem
                                             key={tipoCuenta.id}
                                             value={tipoCuenta.id}
                                         >
                                             {tipoCuenta.name}
-                                        </option>
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
@@ -280,12 +275,12 @@ class CuentasCorreo extends Component {
                                     label="Seguridad"
                                 >
                                     {this.state.dataSeguridad.map((seguridad) => (
-                                        <option
+                                        <MenuItem
                                             key={seguridad.id}
                                             value={seguridad.id}
                                         >
                                             {seguridad.name}
-                                        </option>
+                                        </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
