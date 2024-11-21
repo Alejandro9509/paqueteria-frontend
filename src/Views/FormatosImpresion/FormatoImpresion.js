@@ -214,9 +214,12 @@ class FormatoImpresion extends Component {
 
     getAllData() {
         obtenerFormatosImpresion().then(respuesta => {
-            let formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='')
-
-            console.log(formatos)
+            let formatos=[];
+            if(typeof(respuesta.data) === "string"){
+                showSuccess(respuesta.data)
+            }else{
+                formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='');
+            }
             this.setState({ data: formatos, agregar: "Agregar" })
         });
     }
