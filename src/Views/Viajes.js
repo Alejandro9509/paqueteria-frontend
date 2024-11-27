@@ -331,11 +331,19 @@ function Viajes() {
 
             if (respuesta.data.m_bSePuedeCancelar === 0) {
                 showSuccess("Este viaje no se puede cancelar.");
+                $(window).unbind();
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+                $('#Cancelar').removeClass('in show');
+                $('#Cancelar').removeClass('active');
+            }else{
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(3).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Cancelar').addClass('in show');
             }
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(3).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Cancelar').addClass('in show');
         });
     }
     const clearData = () => {
@@ -491,28 +499,26 @@ function Viajes() {
 
 
     useEffect(value => {
-       //console.log("Entro")
         if(viajeSeleccionado){
-            let rutaActiva = true
+            let rutaActiva = true;
             viajeSeleccionado.m_arrTrayectos.map((p, index) => {
-                console.log(viajeSeleccionado)
-
-                if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {
-                    p.deshabilitado = false
-                } else if ((!p.m_nIdSalida || p.m_bSalidaCancelada) && rutaActiva) {
-                    p.deshabilitado = false
-                    rutaActiva = false
-                } else if (p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva) {
-                    p.deshabilitado = false
-                    rutaActiva = false
-                } else {
-                    p.deshabilitado = true
+                if(viajeSeleccionado.m_sEstatus === "Cancelado" || viajeSeleccionado.m_nIdEstatusViaje == 10){
+                    p.deshabilitado = true;
+                }else{
+                    if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {
+                        p.deshabilitado = false
+                    } else if ((!p.m_nIdSalida || p.m_bSalidaCancelada) && rutaActiva) {
+                        p.deshabilitado = false
+                        rutaActiva = false
+                    } else if (p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva) {
+                        p.deshabilitado = false
+                        rutaActiva = false
+                    } else {
+                        p.deshabilitado = true
+                    }
                 }
-                console.log(p.deshabilitado)
                 //console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
             })
-
-            //console.log(viajeSeleccionado.m_arrTrayectos)
         }
     }, [viajeSeleccionado]);
 
