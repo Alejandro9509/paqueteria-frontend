@@ -618,11 +618,6 @@ function Guia(props) {
             width: 200
         },
         {
-            headerName: "Tipo de cobro inicial",
-            field: "m_sTipoCobroInicial",
-            width: 200
-        },
-        {
             headerName: "Fecha última milla",
             field: "m_sFechaUltimaMilla",
             width: 200
