@@ -85,7 +85,7 @@ export default function TarifasRangos(props) {
                 headerName: "Acciones",
                 sortable: false, filterable: false,
                 field: "",
-                minWidth: 250,
+                minWidth: 100,
                 renderCell: (row) => {
                     return (
                         <div>
