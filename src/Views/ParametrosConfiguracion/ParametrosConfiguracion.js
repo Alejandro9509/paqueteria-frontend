@@ -5,7 +5,7 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import {
     Box,
     Button,
-    Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
+    Checkbox,
     FormControl, Grid,
     InputLabel, MenuItem,
     Paper,
@@ -19,8 +19,6 @@ import {
     obtenerEstatusRecoleccion,
     obtenerEstatusEmbarque,
     obtenerEstatusGuia,
-    obtenerEstatusInforme,
-    obtenerEstatusViaje
 } from "../../Util/Contexts/EstatusContext";
 import {validarDerecho} from "../../Util/Util"
 import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
@@ -40,7 +38,6 @@ import {EditorState, ContentState, convertToRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
-import {FilePond} from "react-filepond";
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
 import DialogTiposDocumentoSucursal from "./DialogTiposDocumentoSucursal";
@@ -472,8 +469,8 @@ function ParametrosConfiguracion() {
             <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
 
             <header className="topbar clearfix">
-                <Cabecera titulo="Parametros Configuración">
-                    <div className="page-header">
+                <Cabecera titulo={"Parametros de\nConfiguración"}>
+                <div className="page-header">
                         <ul className="list-page-breadcrumb">
                             <li>
                                 <a href="/Catalogos" className="color-mapeo">
@@ -495,17 +492,17 @@ function ParametrosConfiguracion() {
                         value={tabIndex}
                         indicatorColor="primary"
                         textColor="primary"
-                        variant="fullWidth"
+                        //variant="fullWidth"
                         onChange={handleTab}
                         centered
                     >
-                        <Tab style={{fontSize:"1em"}} label="General" value="0"/>
-                        <Tab style={{fontSize:"1em"}} label="Embarque" value="1"/>
-                        <Tab style={{fontSize:"1em"}}label="Recolección" value="2"/>
-                        <Tab style={{fontSize:"1em"}} label="Guía" value="3"/>
-                        <Tab style={{fontSize:"1em"}} label="Tarifas" value="4"/>
-                        <Tab style={{fontSize:"1em"}} label="Correos" value="5"/>
-                        <Tab style={{fontSize:"1em"}} label="Facturación" value="6"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} size={"medium"} label="General" value="0"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Embarque" value="1"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Recolección" value="2"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Guía" value="3"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Tarifas" value="4"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Correos" value="5"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Facturación" value="6"/>
                     </Tabs>
 
                 </Paper>

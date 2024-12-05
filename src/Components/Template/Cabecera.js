@@ -91,13 +91,12 @@ function Cabecera({ titulo, children }) {
             
             <Hidden smDown implementation="css">
                 <div className="topbar-left pull-left" style={{ backgroundColor: "#F9A03E", height: "60px" }}>
-                    <div style={{ margin: "auto", marginLeft: "0px" }}>
-                        <h2 style={{ position: "absolute",marginLeft:"75px" }}>{titulo}</h2>
+                    <div className={"widget-container"} style={{ margin: "auto", marginLeft: "70px", marginTop:"25px", display:"flex", alignItems: "center"}}>
+                        <h2 style={{ position: "absolute", alignContent:"center", whiteSpace: "pre-wrap"}}>{titulo}</h2>
                     </div>
-
                 </div>
             </Hidden>
-         
+
            <div className="user-profile clearfix" style={{flexGrow:1}}>
             <div className="admin-user-info" >
                                 <ul style={{ listStyleType: "none"}}>
