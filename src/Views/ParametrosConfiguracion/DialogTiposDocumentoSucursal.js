@@ -43,6 +43,7 @@ export default function DialogTiposDocumentoSucursal(props) {
                         Selecciona el tipo de documento con el que se creará el viaje en el ERP. <br/>
                         En caso de que no se despliegue un listado verifique en el sistema ERP que la sucursal actual tiene documentos asignados. El documento puede ser cambiado en cualquier momento desde parámetros de configuración.
                     </DialogContentText>
+                    <br/>
                     <TextField
                         autoFocus
                         margin="dense"

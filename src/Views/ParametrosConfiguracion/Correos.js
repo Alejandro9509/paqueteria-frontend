@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Paper, Tab, Tabs} from "@mui/material";
 import {TabContext, TabPanel} from "@mui/lab";
 import {TOOLBAR_OPTIONS} from "../../Constants";
-import {EditorState} from "draft-js";
 import { Editor } from 'react-draft-wysiwyg';
-import htmlToDraft from 'html-to-draftjs';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css"
-import {parserOptions} from "react-bootbox/.eslintrc";
 
 class Correos extends Component {
     constructor(props) {
@@ -21,7 +17,6 @@ class Correos extends Component {
         this.onChangeTab = this.onChangeTab.bind(this)
         this.onContentStateChange = this.onContentStateChange.bind(this)
     }
-
 
     onChangeTab(event, newValue){
         event.preventDefault()
@@ -48,8 +43,8 @@ class Correos extends Component {
                     style={{borderRight: `1px solid black`}}
                     onChange={this.onChangeTab}
                 >
-                    <Tab label="CFDI Traslada Intermedio" value="0"/>
-                    <Tab label="CFDI Traslada Primera/Ultima Milla" value="1"/>
+                    <Tab label="CFDI Traslada Intermedio" value="0" style={{fontSize: '1em'}}/>
+                    <Tab label="CFDI Traslada Primera/Ultima Milla" value="1" style={{fontSize: '1em'}}/>
 
                 </Tabs>
                 <TabPanel value="0">
