@@ -1,40 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
     Button,
-    Card,
-    Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
     Grid,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     MenuItem,
     Paper,
     TextField,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Typography from "@mui/material/Typography";
-import RangosTarifa from "./RangosTarifa";
-import DialogCheckbox from "./DialogCheckbox";
-import {dataGridLocaleText} from "../../Constants";
-import CardHeader from "@mui/material/CardHeader";
-import Divider from "@mui/material/Divider";
-import DialogTransferList from "./DialogTransferList";
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
-import DialogTextView from "./DialogTextView";
-import GrupoViajeForaneo from "./GrupoViajeForaneo";
 import {getRandomId} from "../../Util/Util";
-import AddIcon from "@mui/icons-material/AddBox";
 import DestinosTarifa from "./DestinosTarifa";
 import ProductosPrecios from "./ProductosPrecios";
 
@@ -56,7 +29,6 @@ export default function Region(props) {
         //Aqui pues el nombre de la variable ya es muy explicita
         dataDestinosSeleccionados: props.viaje.destinos || [],
     })
-
 
     const handleChangeViajeForaneo = (event) => {
         setState({
@@ -88,6 +60,7 @@ export default function Region(props) {
             dataProductosSeleccionados: productosSeleccionados
         })
     }
+
     return(
         <div>
             <Paper variant={"outlined"} style={{padding: '10px', marginTop: '10px'}}>
@@ -128,8 +101,8 @@ export default function Region(props) {
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}
-                                disabled={props.disabled} style={{backgroundColor: '#FFD7D7'}} variant={"contained"}
-                                startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
+                                disabled={props.disabled} style={{backgroundColor: '#FFD7D7', color: 'black', fontSize:"1em"}}
+                                variant={"contained"} startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
                             Eliminar viaje
                         </Button>
                     </Grid>
@@ -175,7 +148,6 @@ export default function Region(props) {
                         mostrarTotal={false}
                     />
                 </div>
-
             </Paper>
         </div>
     )

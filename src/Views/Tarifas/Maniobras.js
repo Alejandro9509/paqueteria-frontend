@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import DialogoNuevoRango from "./DialogoNuevoRango";
 import {Button, Grid} from "@mui/material";
 import RangosTarifa from "./RangosTarifa";
@@ -12,18 +12,12 @@ import AddIcon from "@mui/icons-material/AddBox";
  * unidadesMedidaListado = array de unidades de medida
  * */
 export default function Maniobras(props){
-    /*const [state, setState] = useState({
-        rangos: props.rangos || []
-    })*/
+
     const [dialogRangos, setDialogRangos] = useState({
         showDialog: false,
         selection: null,
         isEdit: false
     })
-
-    /*useEffect(value => {
-        props.handleChangeManiobras(state.rangos)
-    }, [state, props])*/
 
     const handleShowDialogRangos = (show) => {
         if (show){
@@ -49,11 +43,7 @@ export default function Maniobras(props){
         }else{
             props.rangos.forEach(i => newRangos.push(i))
             newRangos.push(rango)
-        }/*
-        setState({
-            ...state,
-            rangos: newRangos
-        })*/
+        }
         props.handleChangeManiobras(newRangos)
 
         setDialogRangos({
@@ -66,15 +56,6 @@ export default function Maniobras(props){
     }
 
     const handleOnDeleteRow = (row) => {
-        /*console.log(row)
-        console.log(prop.rangos)
-        console.log(prop.rangos.filter(i => i.id !== row.id))
-        let newRangos = []
-
-        setState({
-            ...state,
-            rangos: prop.rangos.filter(i => i.id !== row.id)
-        })*/
         props.handleChangeManiobras(props.rangos.filter(i => i.id !== row.id))
     }
 
@@ -119,7 +100,7 @@ export default function Maniobras(props){
                     />
                 </Grid>
                 <Grid item xs={2}>
-                    <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
+                    <Button fullWidth variant={"contained"} style={{fontSize:"1em"}} color={"primary"} onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
                         <AddIcon fontSize={'large'} />
                         &nbsp;&nbsp;Agregar Rangos
                     </Button>

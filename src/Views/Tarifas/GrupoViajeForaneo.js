@@ -41,6 +41,7 @@ export default function GrupoViajeForaneo(props){
             }
         ]
     })
+
     const handleShowDialogZonas = (show) => {
         if (show){
             console.log(state.idDestino)
@@ -59,6 +60,7 @@ export default function GrupoViajeForaneo(props){
             props.handleShowDialogZonas(false)
         }
     }
+
     const handleConfirmZonas = (zonasSeleccion) => {
         let zonas = []
         zonasSeleccion.forEach(i => {
@@ -81,6 +83,7 @@ export default function GrupoViajeForaneo(props){
         selection: null,
         isEdit: false
     })
+
     const handleShowDialogRangos = (show) => {
         if (show){
             setDialogRangos({
@@ -96,6 +99,7 @@ export default function GrupoViajeForaneo(props){
             })
         }
     }
+
     const handleConfirmRangos = (rango) => {
         let newRangos = []
         if (dialogRangos.isEdit){
@@ -124,6 +128,7 @@ export default function GrupoViajeForaneo(props){
         selection: null,
         isEdit: false
     })
+
     const handleShowDialogPorcentaje = (show) => {
         if (show){
             setDialogPorcentaje({
@@ -139,6 +144,7 @@ export default function GrupoViajeForaneo(props){
             })
         }
     }
+
     const handleConfirmPorcentaje = (rango) => {
         let newRangos = []
         if (dialogPorcentaje.isEdit){
@@ -166,6 +172,7 @@ export default function GrupoViajeForaneo(props){
         showDialog: false,
         selection: [],
     })
+
     const handleShowDialogProductos = (show) => {
         if (show){
             setDialogProdutos({
@@ -181,6 +188,7 @@ export default function GrupoViajeForaneo(props){
             })
         }
     }
+
     const handleConfirmProductos = (productosSeleccion) => {
         setState({
             ...state,
@@ -298,12 +306,12 @@ export default function GrupoViajeForaneo(props){
             <SimpleAccordion titulo={props.grupo.nombre} onDeleteGrupo={handleOnDeleteGrupo} onEditGrupo={handleOnEditGrupo} disabled={props.disabled}>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
+                        <Button fullWidth variant={"contained"} style={{fontSize:"1em"}} color={"primary"} onClick={handleShowDialogZonas}>
                             {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={6}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
+                        <Button fullWidth variant={"contained"} style={{fontSize:"1em"}} color={"primary"} onClick={handleShowDialogProductos}>
                             {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>
@@ -326,7 +334,7 @@ export default function GrupoViajeForaneo(props){
                                 &nbsp;&nbsp;Agregar Porcentaje
                             </Button>)
                                 :
-                            (<Button fullWidth variant={"contained"} color={"primary"}
+                            (<Button fullWidth variant={"contained"} color={"primary"} style={{fontSize:"1em"}}
                                     onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'}/>
                                 &nbsp;&nbsp;Agregar Rangos

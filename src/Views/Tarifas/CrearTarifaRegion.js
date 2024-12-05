@@ -5,17 +5,11 @@ import {obtenerClientePublicoGeneral, obtenerClienteTieneConvenio} from "../../U
 import {
     Dialog,
     DialogContent,
-    FormControl,
     Grid,
-    InputLabel,
-    MenuItem,
     Paper,
-    Select,
     TextField
 } from "@mui/material";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import DestinosTarifa from "./DestinosTarifa";
-import ProductosPrecios from "./ProductosPrecios";
 import Button from "@mui/material/Button";
 import Noty from "noty";
 import Region from "./Region";
@@ -221,7 +215,10 @@ function CrearTarifaRegion(props) {
                             <h4>Agregando Tarifas</h4>
                         </Grid>
                         <Grid item xs={2}>
-                            <Button fullWidth color={"primary"} variant={"contained"} onClick={handleOnAgregarViaje}>Agregar viaje</Button>
+                            <Button fullWidth color={"primary"} variant={"contained"} style={{fontSize:".9em"}}
+                                    onClick={handleOnAgregarViaje}>
+                                Agregar viaje
+                            </Button>
                         </Grid>
                         <Grid item xs={3}>
                             <TextField
