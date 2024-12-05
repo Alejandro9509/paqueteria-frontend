@@ -153,6 +153,7 @@ function CrearConceptoSAT(props) {
         }
         props.onChangeData(0, event)
     }
+
     const selectClase = (row) => {
         props.onChangeData(state.complementoSAT, row)
     }
@@ -265,6 +266,7 @@ function CrearConceptoSAT(props) {
         }
        /*  } */
     }
+
     useEffect(() => {
         cargarDesdeServidor(pagina.page,numRegistros)
     }, [pagina,state.busqueda,state.catalogo])
@@ -273,7 +275,8 @@ function CrearConceptoSAT(props) {
         if (e.key === " ") {
           e.preventDefault();
         }
-      }
+    }
+
     const handleChangeSpecial = (e) => {
         /* if(e.target.name == "claveUnidad"){ */
             const value = e.target.value;
@@ -415,30 +418,26 @@ function CrearConceptoSAT(props) {
 
     return(
         <div>
-
-                <Dialog
-                    open={state.openDialog}
-                    fullWidth
-                    maxWidth="xl"
-                    onClose={() => setState({...state,openDialog: false, catalogo: ""})}
-                >
-                    <DialogTitle>{state.titulo}</DialogTitle>
-                    <DialogContent>
-
-                            <ClavesCFDI
-                                selectClase={selectClase}
-                                closeDialog={closeDialog}
-                                dataSAT={state.dataSat}
-                                catalogo={state.catalogo}
-                                setPagina={setPagina}
-                                setBusqueda={(value) => setState({...state, busqueda: value})}
-                                cancel ={props.resetComplemento}
-                                // isProducto={this.state.isProducto}
-                            />
-
-
-                    </DialogContent>
-                </Dialog>
+            <Dialog
+                open={state.openDialog}
+                fullWidth
+                maxWidth="xl"
+                onClose={() => setState({...state,openDialog: false, catalogo: ""})}
+            >
+                <DialogTitle>{state.titulo}</DialogTitle>
+                <DialogContent>
+                    <ClavesCFDI
+                        selectClase={selectClase}
+                        closeDialog={closeDialog}
+                        dataSAT={state.dataSat}
+                        catalogo={state.catalogo}
+                        setPagina={setPagina}
+                        setBusqueda={(value) => setState({...state, busqueda: value})}
+                        cancel ={props.resetComplemento}
+                        // isProducto={this.state.isProducto}
+                    />
+                </DialogContent>
+            </Dialog>
             <form className="j-forms" onSubmit={e => {e.preventDefault(); e.stopPropagation()}}>
                 <div className="form-content">
                     <div className="main-container" style={{margin: "0px", padding: "0px"}}>
@@ -540,7 +539,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     fullWidth
                                     className="btn btn-primary primary-btn"
-                                    style={{margin: "0px"}}
+                                    style={{margin: "0px", fontSize: "1em"}}
                                     onClick={() => cargarDesdeServidor(pagina.page,20,1)  /* handleClickBuscarClaveSat(1) *//* setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"}) */}
                                     //disabled= {disableSeleccionar.disableProducto}
                                     >
@@ -595,7 +594,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     fullWidth
                                     className="btn btn-primary primary-btn"
-                                    style={{margin: "0px"}}
+                                    style={{margin: "0px", fontSize: "1em"}}
                                     onClick={() => cargarDesdeServidor(pagina.page,20,2) /* setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida"}) */ /* handleClickBuscarClaveSat(2) */}
                                     //disabled= {disableSeleccionar.disableUnidad}
                                 >
@@ -675,9 +674,8 @@ function CrearConceptoSAT(props) {
                                 <Button
                                     type="button"
                                     fullWidth
-                                    fullWidth
                                     className="btn btn-primary primary-btn"
-                                    style={{margin: "0px"}}
+                                    style={{margin: "0px", fontSize: "1em"}}
                                     //disabled= {disableSeleccionar.disableMaterialPeligroso}
                                     name="materialPeligrosoSAT"
                                     onClick={() => cargarDesdeServidor(pagina.page,20,5) /* setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"}) */}>
@@ -743,7 +741,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     fullWidth
                                     className="btn btn-primary primary-btn"
-                                    style={{margin: "0px"}}
+                                    style={{margin: "0px", fontSize: "1em"}}
                                     //disabled= {disableSeleccionar.disableEmbalaje}
                                     name={"embalajeSAT"}
                                     onClick={() => cargarDesdeServidor(pagina.page,20,3) /* setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"}) */}>
@@ -793,7 +791,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     fullWidth
                                     className="btn btn-primary primary-btn"
-                                    style={{margin: "0px"}}
+                                    style={{margin: "0px", fontSize: "1em"}}
                                     //disabled= {disableSeleccionar.disableFraccion}
                                     name="fraccionSAT"
                                     onClick={() => cargarDesdeServidor(pagina.page,20,4) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}>
@@ -838,7 +836,7 @@ function CrearConceptoSAT(props) {
                                         fullWidth
                                         className="btn btn-primary primary-btn"
                                         name={"sectorCOFEPRIS"}
-                                        style={{margin: "0px"}}
+                                        style={{margin: "0px", fontSize: "1em"}}
                                         //disabled= {disableSeleccionar.disableFraccion}
                                         onClick={() => cargarDesdeServidor(pagina.page,20,9) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                     >
@@ -1038,7 +1036,7 @@ function CrearConceptoSAT(props) {
                                             type="button"
                                             fullWidth
                                             className="btn btn-primary primary-btn"
-                                            style={{margin: "0px"}}
+                                            style={{margin: "0px", fontSize: "1em"}}
                                             //disabled= {disableSeleccionar.disableFraccion}
                                             onClick={() => cargarDesdeServidor(pagina.page,20,6) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                             >
@@ -1080,7 +1078,7 @@ function CrearConceptoSAT(props) {
                                             type="button"
                                             fullWidth
                                             className="btn btn-primary primary-btn"
-                                            style={{margin: "0px"}}
+                                            style={{margin: "0px", fontSize: "1em"}}
                                             //disabled= {disableSeleccionar.disableFraccion}
                                             onClick={() => cargarDesdeServidor(pagina.page,20,8) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                         >
