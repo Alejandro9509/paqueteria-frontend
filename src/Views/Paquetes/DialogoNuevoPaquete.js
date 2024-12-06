@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Noty from 'noty';
 import {
@@ -14,20 +13,12 @@ import {
     Grid,
     InputLabel,
     MenuItem,
-    Radio,
-    RadioGroup,
     Select
 } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
-import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import {obtenerProductos, obtenerProductosByConvenioCliente} from "../../Util/Contexts/ProductosContext";
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -36,6 +27,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 export default function DialogoNuevoPaquete(props) {
     const [open, setOpen] = React.useState(false);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
@@ -238,8 +230,6 @@ export default function DialogoNuevoPaquete(props) {
 
         if(event.target.name == "m_nCantidad"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
-                console.log("numero"+Number(event.target.value))
-                console.log("valida si es numero"+isNaN(Number(event.target.value)))
                 if(Number(event.target.value)<=0){
                         setErrores(errores=>{
                             return{
@@ -669,7 +659,8 @@ export default function DialogoNuevoPaquete(props) {
     return (
         <div>
             {!props.disabled &&
-                <Button variant="contained" size="x-large" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
+                <Button variant="contained" size="x-large" color="primary" onClick={handleClickOpen}
+                        style={{float: 'left', fontSize: "1em"}} disabled={props.disabled}>
                     Agregar paquete
                 </Button>
             }

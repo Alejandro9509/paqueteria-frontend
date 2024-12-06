@@ -1,32 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, Select} from "@mui/material";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from "@mui/material/TextField";
+import React, {useState} from "react";
+import { Button } from '@mui/material';
 import IconButton from "@mui/material/IconButton";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from "@mui/icons-material/Save";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import {
-    obtenerProductoById,
-    obtenerProductos,
-    obtenerProductosByConvenioCliente
-} from "../../Util/Contexts/ProductosContext";
-import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
-import axios from "axios";
-import Recoleccion from "../Recoleccion";
 import {API_HEADERS} from "../../Constants"
-import {
-    obtenerSATEmbalajes,
-    obtenerSATServicios,
-    obtenerSATUnidades,
-} from "../../Util/Contexts/ConceptosFacturacionContext";
 import DialogoNuevoPaquete from "./DialogoNuevoPaquete";
 import { confirmAlert } from "react-confirm-alert";
+
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -37,6 +20,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 const TARIFA_POR_RANGOS = 2
 const TARIFA_POR_REGION = 3
 
@@ -48,7 +32,6 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
         const handleDeleteClick = (event) => {
             event.stopPropagation();
             let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
-            console.log(row)
             if (row){
                 confirmAlert({
                     title: 'Confirmar Eliminar',
@@ -205,12 +188,14 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
     })
     const [seleccionable, setSeleccionable] = useState(false)
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+
     let groupBy = function(xs, key) {
         return xs.reduce(function(rv, x) {
             (rv[x[key]] = rv[x[key]] || []).push(x);
             return rv;
         }, {});
     };
+
     let groupByArray = function (xs, key) {
         return xs.reduce(function (rv, x) {
             let v = key instanceof Function ? key(x) : x[key];
@@ -226,8 +211,6 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
 
 
     const addPaquetev2 = (data) => {
-
-        console.log(data)
         let paq = data
         /*if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
@@ -265,9 +248,7 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
             }
         }else{//aqui solo agrega el paquete
             arraynew=dataPaquetes
-            console.log(dataPaquetes)
             //dataPaquetes.push(paq)
-            console.log(paq)
             arraynew=[...arraynew,paq]
             /*dataPaquetes.forEach(item => {
                 console.log(item)
@@ -301,16 +282,19 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
             }
         })
     }
+
     const removerSeleccion=()=>{
         let paquetesFiltrados=dataPaquetes
-        rowSelectionModel.forEach(id=>{
-            paquetesFiltrados=paquetesFiltrados.filter((paq)=>paq.m_nIdPaquete!=id)
+        rowSelectionModel.forEach(id => {
+            paquetesFiltrados=paquetesFiltrados.filter((paq)=>paq.m_nIdPaquete !== id) //m_nIdPaquete
         })
         setDataPaquetes(paquetesFiltrados)
         setRowSelectionModel([])
         setSeleccionable(false)
     }
+
     const pesoTotalKgPaquete = (paquete) => parseFloat(paquete.m_rPeso) * parseFloat(paquete.m_nCantidad)
+
     const pesoTotalVolPaquete = (paquete) => parseFloat(paquete.m_nCantidad) * parseFloat(paquete.m_rLargo) * parseFloat(paquete.m_rAncho) * parseFloat(paquete.m_rAlto) * factorConversion
 
     const pesoFinalPorProducto = (paquetes) =>
@@ -320,43 +304,58 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
             paquetes.reduce((previousValue, currentValue) => previousValue + pesoTotalKgPaquete(currentValue),0)
     return(
         <div>
-            <div className="row">
-                <DialogoNuevoPaquete
-                    disabled={disabled || !cliente.m_nIdCliente}
-                    agregar={addPaquetev2}
-                    paquete={paquete}
-                    resetPaquete={resetPaquete}
-                    cliente={cliente}
-                    limpiarProducto={limpiarProducto}
-                />
-            </div>
+            <DialogoNuevoPaquete
+                disabled={disabled || !cliente.m_nIdCliente}
+                agregar={addPaquetev2}
+                paquete={paquete}
+                resetPaquete={resetPaquete}
+                cliente={cliente}
+                limpiarProducto={limpiarProducto}
+            />
             <div className="widget-container">
                 <div className="widget-content">
-                    <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
-                    setRowSelectionModel([])}
-                    } className="btn btn-secondary" style={{visibility:dataPaquetes.length>0 && !disabled?'visible':'hidden',color:"white",marginLeft:"80%"}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
+                    <div align={"right"}>
+                        <Button onClick={() =>
+                            confirmAlert({
+                                    title: 'Confirmación',
+                                    message: '¿Desea eliminar los paquetes seleccionados?',
+                                    buttons: [
+                                        {
+                                            label: 'Sí',
+                                            onClick: async () => removerSeleccion()
+                                        },
+                                        {
+                                            label: 'No',
+                                        }
+                                    ]
+                                }
+                            )} className="btn btn-primary"
+                            style={{
+                                visibility: seleccionable ? 'visible' : 'hidden',
+                                color: "white",
+                                fontSize: "1em"
+                            }}>
+                            Borrar Selección
+                        </Button>
+                        {(dataPaquetes.length > 0 && !disabled) &&
+                            <Button onClick={() => {
+                                setSeleccionable(seleccionable ? false : true)
+                                setRowSelectionModel([])
+                            }} className="btn btn-secondary"
+                                    style={{color: "white", marginLeft: "1%", marginRight: "2%", fontSize: "1em"}}>
+                                {seleccionable ? 'Cancelar' : 'Seleccionar para Borrar'}
+                            </Button>
+                        }
 
-                        <Button onClick={()=>confirmAlert({
-                        title: 'Confirmación',
-                        message: '¿Desea eliminar los paquetes seleccionados?',
-                        buttons: [
-                            {
-                                label: 'Sí',
-                                onClick: async () => removerSeleccion()
-                            },
-                            {
-                                label: 'No',
-                            }
-                        ]
-                    })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%"}}>Borrar Selección</Button>
+                    </div>
 
                     {
                         dataPaquetes.length !== 0 &&
                         (
-                            <div className="row" >
+                            <div className="row">
                                 <DataGrid
-                                    onSelectionModelChange={(e) => {
-                                        setRowSelectionModel(e.selectionModel);
+                                    onRowSelectionModelChange={(e) => {
+                                        setRowSelectionModel(e);
                                     }}
                                     selectionModel={rowSelectionModel}
                                     localeText={dataGridLocaleText}
@@ -383,7 +382,6 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
                             </div>
                         ))
                     }
-
                 </div>
             </div>
         </div>

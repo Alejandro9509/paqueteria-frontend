@@ -404,7 +404,6 @@ function Recoleccion() {
             latitudR: data.latitud,
             longitudR: data.longitud
         })
-        //  console.log(data.zonaOperativa)
     };
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -600,9 +599,7 @@ function Recoleccion() {
     const history = useHistory()
 
     useEffect(value => {
-
         if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
-            // console.log('tipo Unidad select: ', state.tipoUnidad)
             getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
         }
     }, [state.tipoUnidad])
@@ -616,15 +613,12 @@ function Recoleccion() {
             window.location.replace("login");
             return;
         }
-
         getDataParaListado()
-
     }, []);
 
     const getDataParaListado = () => {
         getAllSucursales();
         getAllEstatusRecoleccion()
-
     }
 
     const getDataParaEditar = (operacion) => {
@@ -652,9 +646,8 @@ function Recoleccion() {
                         porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                     }
                 })
-
-
-            }    setConfiguraciones((config) => {
+            }
+            setConfiguraciones((config) => {
                 return {
                     ...config,
                     estatusRecoleccion: respuesta.data.EstatusRecoleccion,
@@ -753,7 +746,6 @@ function Recoleccion() {
             && dato !== ''
             && dato !== 0
             && dato !== "0";
-
     }
 
     const esRecoleccionValido = () => {
@@ -904,6 +896,7 @@ function Recoleccion() {
         valid = true
         return valid;
     }
+
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
         setDetectar(false)
@@ -1097,7 +1090,6 @@ function Recoleccion() {
                 m_c_Descuento: item.descuento
             }))
             params.m_nIdCotizacion = state.idCotizacion
-            //    console.log(params)
             if (state.idRecoleccion != 0) {
                 modificarRecoleccion(state.idRecoleccion, params)
                     .then((respuesta) => {
@@ -1112,7 +1104,6 @@ function Recoleccion() {
                         showSuccess(err.response.data);
                     });
             } else {
-                console.log("ENTRO")
                 confirmAlert({
                     title: 'Confirmación',
                     message: '¿Desea crear esta recolección?',
@@ -1122,11 +1113,8 @@ function Recoleccion() {
                             onClick: ()=>{
                                 agregarRecoleccion(params)
                                     .then((respuesta) => {
-                                        //   console.log(respuesta.data);
-                                        //    showSuccess(respuesta.data);
                                         showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                         limpiarInputsAgregar()
-                                      //  setDetectar(false)
                                         confirmAlert({
                                             title: 'Confirmación',
                                             message: '¿Desea crear otra recolección?',
@@ -1149,7 +1137,6 @@ function Recoleccion() {
 
                                     })
                                     .catch((err) => {
-                                        //   console.log(err);
                                         showSuccess(err.response.data);
                                     });
                             }
@@ -1227,10 +1214,8 @@ function Recoleccion() {
     };
 
     function handleSubmission() {
-        //  console.log(selectedFile)
         var reader = new FileReader();
         reader.onload = function () {
-            //   console.log(reader.result)
         }.bind(this);
         reader.readAsText(selectedFile);
         setState(state => {
@@ -1245,7 +1230,6 @@ function Recoleccion() {
         var derecho;
         validarPermisos(state)
             .then((respuesta) => {
-                //showSuccess(respuesta.data)
                 derecho = respuesta.data;
                 if (derecho == false) {
                     showSuccess("El usuario no tiene derechos para realizar el proceso");
@@ -1370,11 +1354,11 @@ function Recoleccion() {
                 return {
                     ...entregaDD,
                     zonaOperativa: data
-
                 }
             })
         })
     }
+
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
@@ -1463,7 +1447,6 @@ function Recoleccion() {
             mostrarDatosEntregaDD(respuesta)
         }
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
-            //  console.log("Tiene seguro"+data.m_bTieneSeguro)
             setState(state => {
                 return {
                     ...state,
@@ -1526,7 +1509,6 @@ function Recoleccion() {
 
             }
         });
-
         // mostrarCotizadorRec(true)
     }
 
@@ -1557,7 +1539,6 @@ function Recoleccion() {
 
     function handleShowSalidaLlegada(type) {
         obtenerRecoleccionId(state.idRecoleccion).then((respuesta) => {
-            // console.log(respuesta.data);
             setState({
                 ...state,
                 sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
@@ -1604,8 +1585,6 @@ function Recoleccion() {
    
     useEffect(() => {
         if( detectarModificaciones){
-            console.log("disprosio")
-           // console.log(remitente)
             window.onbeforeunload = confirmExit
            
         }
@@ -1663,8 +1642,6 @@ function Recoleccion() {
                     $('.nav-tabs li').eq(2).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Cancelar').addClass('in show');}
-
-
             })
         });
     }
@@ -1785,7 +1762,6 @@ function Recoleccion() {
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then(({data}) => {
-            console.log(data)
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
             pdfWindow.document.body.style.margin = "0px";
@@ -1836,7 +1812,6 @@ function Recoleccion() {
     //setea si la entrega es en diferente direccion a la del destinatario
     const handleEntregaCheckboxChange = (event) => {
         // event.preventDefault();
-        console.log("ENTRA CHECKBOX")
         setRepetirConceptos(true)
         setState({
             ...state,
@@ -2105,7 +2080,6 @@ function Recoleccion() {
 
     function generarReporte(row){
         // setSeleccion(row)
-        // console.log(row)
         // setOpenDialog(true)
        /* obtenerRecoleccionReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
@@ -2116,7 +2090,6 @@ function Recoleccion() {
         obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.RECOLECCION).then((respuesta) => {
             // setDataReportes(data)
             imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -2126,7 +2099,6 @@ function Recoleccion() {
     }
 
     // const handleOnChangeReporte = (data) => {
-    //     console.log(data)
     //     setState({
     //         ...state,
     //         reporteSeleccionado: data
@@ -2134,8 +2106,6 @@ function Recoleccion() {
     // }
     // const handleGenerarReporte=(e)=>{
     //     e.preventDefault()
-    //     console.log(state.reporteSeleccionado)
-    //     console.log(seleccion)
     //
     //     if (state.reporteSeleccionado.length === 0) {
     //         showError("Es necesario seleccionar al menos un reporte")
@@ -2143,7 +2113,6 @@ function Recoleccion() {
     //     }
     //
     //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
-    //         console.log(data)
     //         let pdfWindow = window.open("");
     //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
     //         pdfWindow.document.body.style.margin = "0px";
@@ -2203,7 +2172,6 @@ function Recoleccion() {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                     setData(respuesta.data);
-                    console.log(respuesta.data)
                 })
             })
 
@@ -2305,7 +2273,6 @@ function Recoleccion() {
             } else {
                 setDataTipoUnidad(respuesta.data)
             }
-            //  console.log("tipos unidades listado: ", respuesta.data)
             // getAllUnidades(1);
         });
     }
@@ -2313,7 +2280,6 @@ function Recoleccion() {
     function getAllUnidades(id) {
 
         obtenerUnidadesTipo(id).then((respuesta) => {
-            // console.log('unidades listado: ', respuesta);
             setDataUnidad(respuesta.data);
         });
     }
@@ -2328,9 +2294,7 @@ function Recoleccion() {
         var files = e.target.files,
             f = files[0];
         var reader = new FileReader();
-        // console.log(e.target.files);
         reader.onload = function (e) {
-            //  console.log("Nothing Happened");
             var data = e.target.result;
             let readedData = XLSX.read(data, {type: "binary"});
             const wsname = readedData.SheetNames[0];
@@ -2338,7 +2302,6 @@ function Recoleccion() {
 
             /* Convert array to json*/
             const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
-            //  console.log("dataParse : " + dataParse);
             setFileUploaded(dataParse);
         };
         reader.readAsBinaryString(f);
@@ -2962,7 +2925,6 @@ function Recoleccion() {
     }
 
     const handleListPaquetesChange = (newList) => {
-        console.log("ENTRA PAQUETES")
         setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
@@ -2994,7 +2956,6 @@ function Recoleccion() {
     }
 
     const handleChangeCita = (data) => {
-        console.log(data)
         setState({
             ...state,
             fechaCita: data.fechaCita,
@@ -3641,7 +3602,7 @@ function Recoleccion() {
 
                         <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
-                                <div className="form-content">
+                                <div className="form-content" >
                                     {/*<div
                                         className="wizard-breadcrumb number-style"
                                         style={{
@@ -3667,7 +3628,7 @@ function Recoleccion() {
                                         </div>
                                     </div>*/}
 
-                                    <div className="widget-wrap2" id="informacionGeneral">
+                                    <div className="widget-wrap" id="informacionGeneral">
                                         <div className="widget-header">
                                             <h2>Información General</h2>
                                         </div>
