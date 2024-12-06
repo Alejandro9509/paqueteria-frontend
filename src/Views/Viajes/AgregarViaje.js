@@ -1542,7 +1542,6 @@ class AgregarViaje extends Component {
                                                 <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                 <Select
                                                     labelId="idSucursalAgregarLabel"
-                                                    className="form-control"
                                                     value={this.state.idSucursalAgregar}
                                                     onChange={this.handleChange}
                                                     id="idSucursalAgregar"
@@ -1567,7 +1566,6 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
-                                                       className="form-control"
                                                        type="text"
                                                        label="Folio Viaje"
                                                        value={this.state.folioViaje}
@@ -1582,7 +1580,6 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
-                                                       className="form-control"
                                                        type="text"
                                                        disabled={this.props.consult ||  this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
                                                        required
@@ -1605,7 +1602,6 @@ class AgregarViaje extends Component {
                                                        InputLabelProps={{shrink: true,}}
                                                        disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
                                                        value={this.state.fechaHoraRegistro}
-                                                       className="form-control"
                                                        id="fechaHoraRegistro"
                                                        type="datetime-local"
                                                        name="fechaHoraRegistro"
@@ -1620,7 +1616,6 @@ class AgregarViaje extends Component {
                                                 <InputLabel id="idEstatusAgregarLabel">Estatus Viaje</InputLabel>
                                                 <Select
                                                     labelId="idEstatusAgregarLabel"
-                                                    className="form-control"
                                                     value={this.state.estatusListado}
                                                     onChange={this.handleChange}
                                                     id="estatusListado"
@@ -1649,7 +1644,6 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
-                                                       className="form-control"
                                                        type="text"
                                                        disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
                                                        label="Candado Oficial"
@@ -1664,7 +1658,6 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <TextField variant="outlined" size="small"
                                                        onChange={this.handleChange}
-                                                       className="form-control"
                                                        type="text"
                                                        disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
                                                        label="Identificador"
@@ -1958,11 +1951,9 @@ class AgregarViaje extends Component {
                                         <Grid item xs={2}>
                                             <div className="input">
                                                 <TextField variant="outlined" size="small"
-                                                           className="form-control"
                                                            type="text"
                                                            disabled
                                                            label="Placas Int"
-
                                                            value={this.state.placasRemolque1}
                                                            name="placasRemolque1"
                                                 />
@@ -1971,7 +1962,6 @@ class AgregarViaje extends Component {
                                         <Grid item xs={3}>
                                             <div className="input">
                                                 <TextField variant="outlined" size="small"
-                                                           className="form-control"
                                                            type="text"
                                                            label="Estatus"
                                                            disabled
@@ -2023,7 +2013,6 @@ class AgregarViaje extends Component {
                                             <div className="input">
                                                 <TextField variant="outlined" size="small"
                                                            disabled
-                                                           className="form-control"
                                                            type="text"
                                                            label="Placas Int"
                                                            value={this.state.placasRemolque2}
@@ -2035,7 +2024,6 @@ class AgregarViaje extends Component {
                                             <div className="input">
                                                 <TextField variant="outlined" size="small"
                                                            disabled
-                                                           className="form-control"
                                                            type="text"
                                                            label="Estatus"
                                                            style={{backgroundColor: this.state.colorRemolque2 ? `#${this.state.colorRemolque2}` : "white"}}
@@ -2084,7 +2072,6 @@ class AgregarViaje extends Component {
                                         <Grid item xs={2}>
                                             <div className="input">
                                                 <TextField variant="outlined" size="small"
-                                                           className="form-control"
                                                            type="text"
                                                            disabled
                                                            label="Placas Int"
@@ -2105,14 +2092,17 @@ class AgregarViaje extends Component {
                                     {
 
                                         (!this.props.consult && this.props.modificar) &&
-                                        <Button variant="contained" color="primary" disabled={this.props.viajeSeleccionado.m_arrTrayectos.some(p=>
-                                            (p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado))} fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        <Button variant="contained" color="primary" style={{fontSize: "1em"}}
+                                                disabled={this.props.viajeSeleccionado.m_arrTrayectos.some(p=>
+                                                    (p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado))}
+                                                fullWidth onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
                                         </Button>
                                     }
                                     {
                                         (!this.props.consult && !this.props.modificar) &&
-                                        <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        <Button variant="contained" color="primary" style={{fontSize: "1em"}} fullWidth
+                                                onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
                                         </Button>
                                     }
