@@ -478,7 +478,7 @@ function TiposServicio() {
                             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101315)? "":classes.disabled} onClick={() => handleShowAgregar()}>
+                            <a className= {validarDerecho(9101315)? "":"hide"} onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

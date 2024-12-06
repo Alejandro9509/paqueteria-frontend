@@ -367,8 +367,8 @@ function Guia(props) {
         reporteSeleccionado:{},
         imprimirEtiquetasIndividuales: false,
         paquetesGuiaEtiquetasIndividuales: [],
-        clientePaga: ''
-
+        clientePaga: '',
+        cambioCobro: false
     })
     // const [openDialog, setOpenDialog] = useState(false)
     // const [dataReportes, setDataReportes] = useState([])
@@ -2983,7 +2983,7 @@ function Guia(props) {
                             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101456)? "":classes.disabled} onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101456) ? "" : "hide"} onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -2995,8 +2995,11 @@ function Guia(props) {
                         </li>*/}
 
                         <li>
-                            <a className={(state.idGuia !== 0 && state.cambioCobro) && validarDerecho(3900001) ? "" : classes.disabled}
-                               onClick={() => setState({...state, openTipoCobro: true})}>
+                            <a className={((state.idGuia !== 0) && state.cambioCobro && validarDerecho(3900001)) ? "" : "hide"}
+                               onClick={() => {
+                                   setState({...state, openTipoCobro: true})
+                               }
+                            }>
                                 <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                             </a>
                         </li>

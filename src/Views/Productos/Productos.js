@@ -383,7 +383,7 @@ function Productos() {
               <a d onClick={handleShowListado}><i className={"fa fa-list"} /> Listado</a>
             </li>
             <li>
-              <a className= {validarDerecho(9101388)? "":classes.disabled} onClick={handleShowAgregar}><i className={"fa fa-plus-circle"} /> {state.agregar}</a>
+              <a className= {validarDerecho(9101388)? "":"hide"} onClick={handleShowAgregar}><i className={"fa fa-plus-circle"} /> {state.agregar}</a>
             </li>
           </ul>
 
