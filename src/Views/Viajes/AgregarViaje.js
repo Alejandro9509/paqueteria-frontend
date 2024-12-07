@@ -1,10 +1,6 @@
 import React, {Component} from "react";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import axios from "axios";
-import PageviewIcon from "@mui/icons-material/Pageview";
 import {
     Button,
     Checkbox,
@@ -16,40 +12,27 @@ import {
     Tooltip
 } from "@mui/material";
 import {getCurrentDateTime} from "../../Util/Util"
-import TableCiudades from "./TableCiudades";
-import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
-import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@mui/x-data-grid";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
-import Historial from "./Historial";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerCodigoPostal} from "../../Util/Contexts/CodigoPostalContext";
-import AsignarOperadorUnidad from "./AsignarOperadorUnidad";
 import {
-    cancelarEmbarque,
-    eliminarEmbarques,
-    obtenerEmbarquesId,
-    obtenerUltimoFolioEmbarques,
-    obtenerEmbarqueCancelado,
     agregarViaje,
-    modificarEmbarques,
-    obtenerEmbarquesFiltro,
-    obtenerEmbarques, modificarViaje
+    modificarViaje
 } from "../../Util/Contexts/ViajesContext";
 import $ from "jquery";
-import {ContactsOutlined} from "@mui/icons-material";
 import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesContext";
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
-import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
+import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
+import {obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
-import {cubicarGuia, validarEliminarGuia} from "../../Util/Contexts/GuiaContext";
+import {cubicarGuia} from "../../Util/Contexts/GuiaContext";
 import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 import DialogUnidades from "./DialogUnidades";
 import DialogRemolques from "./DialogRemolques";
@@ -1409,7 +1392,7 @@ class AgregarViaje extends Component {
                 </Dialog>
                 <Dialog
                     fullWidth={true}
-                    maxWidth={'xl'}
+                    maxWidth={'l'}
                     open={this.state.openDialogInformes}
                     onClose={this.handleShowDialog}
                     aria-labelledby="max-width-dialog-title"

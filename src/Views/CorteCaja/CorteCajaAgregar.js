@@ -12,7 +12,7 @@ import {
     adaptV4Theme,
 } from "@mui/material";
 import Noty from "noty";
-import {agregarCorte, modificarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
+import {agregarCorte, modificarCorte} from "../../Util/Contexts/CorteCajaContext";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 import {createTheme} from "@mui/material/styles";
 import DialogGuias from "./DialogGuias";
@@ -293,7 +293,6 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                                 type="date"
                                 onChange={(e) => handleChange('fechaRegistro', e.target.value) }
                                 value={filtros.fechaRegistro}
-                                className={"form-control"}
                                 InputLabelProps={{shrink: true,}}
                                 required
                                 disabled={disaled}
@@ -306,7 +305,6 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                                 label="Hora de registro"
                                 type="time"
                                 value={filtros.horaRegistro}
-                                className={"form-control"}
                                 disabled={true}
                                 InputLabelProps={{shrink: true,}}
                                 inputProps={{step: 300,}}
@@ -346,6 +344,7 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                         <Button
                             onClick={handleDescartarGuias}
                             color={"primary"}
+                            style={{fontSize:"1em"}}
                             disabled={disaled}>
                             Descartar Guias
                         </Button>
@@ -353,6 +352,7 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                             onClick={handleOpenDialogGuias}
                             variant={"contained"}
                             color={"primary"}
+                            style={{fontSize:"1em"}}
                             disabled={disaled}>
                             Agregar Guias
                         </Button>
@@ -370,6 +370,7 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                             onClick={handleGuardar}
                             variant={"contained"}
                             color={"primary"}
+                            style={{fontSize:"1em"}}
                             disabled={disaled}>
                             Guardar
                         </Button>

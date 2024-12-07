@@ -7,42 +7,72 @@ class RemitenteDestinatario extends Component {
         super(props);
     }
 
-
     componentDidMount() {
-
     }
 
     render() {
-         const {data} = this.props
+        const {data} = this.props
         return (
             <Grid container direction="row" >
                 <Grid item sm={12} md={6}>
                     <Grid container spacing={1}  >
                         <Grid item md={12}>
-                            <Typography variant={"h5"} style={{alignItems: "center", width:"100%"}}>Remitente </Typography>
+                            <Typography variant={"h4"} style={{alignItems: "center", width:"100%", fontWeight:"bold"}}>
+                                Remitente
+                            </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Nombre: <Typography>{data.m_sNombreRemitente}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Nombre:
+                                <Typography>
+                                    {data.m_sNombreRemitente}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Contacto: <Typography>{data.m_sContactoRemitente}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Contacto:
+                                <Typography>
+                                    {data.m_sContactoRemitente}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Dirección: <Typography>{data.m_sDomicilioRemitente}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Dirección:
+                                <Typography>
+                                    {data.m_sDomicilioRemitente}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Teléfono: <Typography>{data.m_sTelefonoRemitente}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Teléfono:
+                                <Typography>
+                                    {data.m_sTelefonoRemitente}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         {
                             data.m_bAplicaRecoleccion && data.m_bRecoleccionDiferenteDomicilio &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Recolección en: <Typography>{data.m_sDomicilioDetalleRecoleccion }</Typography></Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                    Recolección en:
+                                    <Typography>
+                                        {data.m_sDomicilioDetalleRecoleccion }
+                                    </Typography>
+                                </Typography>
                             </Grid>
                         }
                         {
                             data.m_bRecoleccionConCita &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Cita: <Typography>{data.m_sFechaRecoleccionCita} {data.m_sHoraCitarRecoleccionMinima}-{data.m_sHoraCitaRecoleccionMaxima}</Typography></Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                    Cita:
+                                    <Typography>
+                                        {data.m_sFechaRecoleccionCita} {data.m_sHoraCitarRecoleccionMinima}-{data.m_sHoraCitaRecoleccionMaxima}
+                                    </Typography>
+                                </Typography>
                             </Grid>
                         }
                     </Grid>
@@ -50,33 +80,64 @@ class RemitenteDestinatario extends Component {
                 <Grid item sm={12} md={6}>
                     <Grid container spacing={1}  >
                         <Grid item md={12}>
-                            <Typography variant={"h5"}  style={{ alignItems: "center", width:"100%"}}>Destinatario </Typography>
+                            <Typography variant={"h4"} style={{ alignItems: "center", width:"100%", fontWeight:"bold"}}>
+                                Destinatario
+                            </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Nombre: <Typography>{data.m_sNombreDestinatario}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Nombre:
+                                <Typography>
+                                    {data.m_sNombreDestinatario}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Contacto: <Typography>{data.m_sContactoDestinatario}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Contacto:
+                                <Typography>
+                                    {data.m_sContactoDestinatario}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Dirección: <Typography>{data.m_sDomicilioDestinatario}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Dirección:
+                                <Typography>
+                                    {data.m_sDomicilioDestinatario}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Teléfono: <Typography>{data.m_sTelefonoDestinatario}</Typography></Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                Teléfono:
+                                <Typography>
+                                    {data.m_sTelefonoDestinatario}
+                                </Typography>
+                            </Typography>
                         </Grid>
                         {
                             data.m_bEmbarqueConCita &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Cita: <Typography>{data.m_sFechaEmbarqueCita} {data.m_sHoraEmbarqueCitaMinima}-{data.m_sHoraEmbarqueCitaMaxima}</Typography></Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                    Cita:
+                                    <Typography>
+                                        {data.m_sFechaEmbarqueCita} {data.m_sHoraEmbarqueCitaMinima}-{data.m_sHoraEmbarqueCitaMaxima}
+                                    </Typography>
+                                </Typography>
                             </Grid>
                         }
                         {
                             (data.m_bEntregaSucursal || !data.m_bEntregaMismoDomicilio) &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Entrega: <Typography>{data.m_bEntregaSucursal ? ("Sucursal " + data.m_sSucursalEntrega) : !data.m_bEntregaMismoDomicilio ? data.m_sDomicilioDetalleEntrega : "" }</Typography></Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
+                                    Entrega:
+                                    <Typography>
+                                        {data.m_bEntregaSucursal ? ("Sucursal " + data.m_sSucursalEntrega) : !data.m_bEntregaMismoDomicilio ? data.m_sDomicilioDetalleEntrega : "" }
+                                    </Typography>
+                                </Typography>
                             </Grid>
                         }
-
                     </Grid>
                 </Grid>
             </Grid>
