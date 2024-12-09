@@ -22,6 +22,7 @@ import { styled } from "@mui/material/styles";
 import * as XLSX from 'xlsx';
 import $ from 'jquery';
 import {getUniqueListBy, validarDerecho} from "../Util/Util";
+import barcode from "../Util/jquery-barcode";///////////////SI SE OCUPA ESTA LIBRERIA
 import {DataGrid} from '@mui/x-data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import EnvioCorreoDialogo from "../Views/SAT/EnvioCorreoDialogo";
