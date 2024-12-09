@@ -441,8 +441,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
             m_nIdEstatusCorte: state.idEstatus==2 ? 3 : 1,
             m_arrGuias: dataGuias
         }
-        console.log(params)
-        console.log(JSON.stringify(params))
 
         if (state.idCorte === 0){
             agregarCorte(params).then((respuesta) =>{
@@ -479,8 +477,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
             m_nIdEstatusCorte: 2,
             m_arrGuias: dataGuias
         }
-        console.log(params)
-        console.log(JSON.stringify(params))
 
         if (state.idCorte === 0){
             agregarCorte(params).then((respuesta) =>{

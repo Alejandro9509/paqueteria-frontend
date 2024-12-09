@@ -116,7 +116,6 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         "/" +
         idCliente;
     let result;
-    console.log('url filtro: ', url)
     trackPromise(
         result =  axios.get(url, { headers })
         );

@@ -42,7 +42,6 @@ const obtenerTarifasRangosFiltro =(folioTarifas) =>{
     trackPromise(
         result =  axios.get(url, { headers })
     );
-    console.log(result)
     return result
 }
 

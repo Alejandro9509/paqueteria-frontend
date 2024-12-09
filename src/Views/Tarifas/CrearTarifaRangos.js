@@ -239,7 +239,6 @@ export default function CrearTarifaRangos(props) {
         e.preventDefault()
 
         var viajeLocal = [...viajesLocalesListado]
-        console.log(viajeLocal)
         viajeLocal.push({
             idViaje: getRandomId(),
             idSucursal: null,

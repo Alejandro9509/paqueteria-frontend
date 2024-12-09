@@ -153,8 +153,6 @@ function ActualizarDireccion(props){
         params.datosAdicionales =  entregaDD.datosAdicionales || ""
         // params.m_sLatitudD =  entregaDD.latitud
         // params.m_sLongitudD =  entregaDD.longitud
-        console.log(params)
-        console.log(JSON.stringify(params))
         params.m_nIdGuia = props.guia.m_nIdGuia
         props.onSubmit(params)
 

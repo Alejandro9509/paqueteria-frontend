@@ -83,12 +83,9 @@ function Embalaje() {
             "m_sCreadoPor": state.CreadoPor,
             "m_nModificadoPor": state.ModificadoPor
         }
-        console.log(params)
       
         if (state.IdEmbalaje != 0) {
-            console.log('Entra a modificar')
             modificarEmbalajes(state.IdEmbalaje, params).then(respuesta => {
-                console.log("modificar"+JSON.stringify(respuesta))
                 showSuccess(respuesta.data)
                 getAllData()
                 $('.nav-tabs li ').removeClass('active');

@@ -185,7 +185,6 @@ export default function TarifasRangos(props) {
 
     const handleShowConsultar = (idTarifa) => {
         obtenerTarifaRangosById(idTarifa).then(respuesta => {
-            console.log(respuesta.data)
             setDataParaConsultar(respuesta.data)
             setState(state => {
                 return {
@@ -207,7 +206,6 @@ export default function TarifasRangos(props) {
 
     const handleShowModificar = (idTarifa) => {
         obtenerTarifaRangosById(idTarifa).then(respuesta => {
-            console.log(respuesta.data)
             setState(state =>{
                 return {
                     ...state,
@@ -369,7 +367,6 @@ export default function TarifasRangos(props) {
 
     const handleAgregarTarifa = (params) => {
         agregarTarifaRangos(params).then(respuesta => {
-            console.log(respuesta.data)
             if (respuesta.data.Estatus){
                 if (props.convenio){
                     showSuccess("Se guardó el convenio con éxito");
@@ -387,7 +384,6 @@ export default function TarifasRangos(props) {
     }
     const handleModificarTarifa = (params) => {
         modificarTarifaRangos(params.idTarifa,params).then(respuesta => {
-            console.log(respuesta.data)
             if (respuesta.data.Estatus){
                 if (props.convenio){
                     showSuccess("Se guardó el convenio con éxito");

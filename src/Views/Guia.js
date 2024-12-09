@@ -1,22 +1,15 @@
-import React, {useEffect, useState, useMemo} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {getCurrentDateTime,getCurrentTime,getCurrentDate,mesString} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
-import IconButton from "@mui/material/IconButton";
-import RestartAltIcon from '@mui/icons-material/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import {
-    Tab,
-    Tabs,
-    Box,
     InputAdornment,
     Button,
     Grid,
     FormControlLabel,
     Checkbox,
-    Accordion,
-    AccordionSummary,
     Typography,
     Chip,
     List,
@@ -25,40 +18,23 @@ import {
     ListItemText,
     MenuItem
 } from '@mui/material';
-import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
-import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
-import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
-import Carousel, {propTypes} from "re-carousel";
-import IndicatorDots from "../Util/Dots";
-import Buttons from "../Util/CarruselButtons";
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import * as XLSX from 'xlsx';
-import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
-import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Util";
-import Barra from "../Util/jquery-barcode"
+import {getUniqueListBy, validarDerecho} from "../Util/Util";
 import {DataGrid} from '@mui/x-data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EnvioCorreoDialogo from "../Views/SAT/EnvioCorreoDialogo";
 
-import {
-    obtenerZonaTarifaByIdCodigoPostal,
-  } from "../Util/Contexts/ZonaTarifaContext";
 import Noty from 'noty';
 import {
     Dialog,
     DialogActions,
     DialogContent,
-    AccordionDetails,
     DialogTitle,
     FormControl,
     InputLabel,
     Select,
-    Step,
-    StepLabel,
-    Stepper,
     TextField,
     Tooltip
 } from "@mui/material";
@@ -67,32 +43,23 @@ import {
     dataGridLocaleText,
     TICKET_ZEBRA_TEMPLATE, TICKET_ZEBRA_TEMPLATE_NOT_QR
 } from "../Constants";
-import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
-import {obtenerEmbarquesId, obtenerEmbarqueMoneda, obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
+import {obtenerEmbarquesId, obtenerEmbarqueMoneda} from "../Util/Contexts/EmbarquesContext";
 import {
-    ultimoFolioGuia,
     eliminarGuia,
     obtenerGuiaId,
     cancelarGuia,
     obtenerGuiasFiltro,
-    obtenerGuia,
     modificarGuia,
     agregarGuia,
     subirImagenEvidencia,
-    imprimirGuia,
-    obtenerGuiaReporte,
     entregaOcurreGuia,
     cambiarTipoCobro,
-    cambiarEstatusGuia,
     obtenerValidacionGuia,
     asignarTrayectos,
     validarEliminarGuia,
-    obtenerGuiaReporteEtiqueta,
     validarCancelarGuia,
-    obtenerGuiaReporteEtiquetaParcial,
     enviarCorreoGuia,
-    obtenerGuiaReporteEtiquetaGuiaRangos,
     obtenerPaquetesGuia, validarRangosEtiqueta
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
@@ -100,22 +67,16 @@ import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {
-    obtenerConceptosDefectoListado,
     obtenerConceptosFacturacion
 } from "../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {obtenerTipoServicio} from "../Util/Contexts/TipoServiciosContext";
-import {obtenerImpuestosTipo} from "../Util/Contexts/ImpuestosContext";
 import {
     imprimirFormatoGuiaMoroleon,
     imprimirFormatosId, imprimirFormatosIdIdTipoReporte,
-    obtenerFormatosImpresion,
     obtenerFormatosImpresionProceso
 } from "../Util/Contexts/FormatosImpresionContext";
-import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
-import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 import {confirmAlert} from "react-confirm-alert";
-import ConceptosFacturacion from "./Tarifas/ConceptosFacturacion";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
@@ -130,10 +91,8 @@ import {
 } from "../Util/Contexts/ParametrosConfiguracionContext";
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
-import ImprimirEtiquetas from "./Guia/ImprimirEtiquetas";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import Evidencias from "./Evidencias";
-import {obtenerTiposDocumentoSucursal} from "../Util/Contexts/TipoDocumentosContext";
 import DialogTiposDocumentoSucursal from "./ParametrosConfiguracion/DialogTiposDocumentoSucursal";
 import EmailIcon from '@mui/icons-material/Email';
 import DialogImpresion from "./Guia/DialogImpresion";
@@ -661,20 +620,17 @@ function Guia(props) {
             return
         }
         //FILTRAR COLUMNS Y OBTENER TAMBIEN EL FIELD ATRAVES DE checked
-       let arrayFiltrado =  checked.map(col=>{
+        let arrayFiltrado =  checked.map(col=>{
             return columns.filter(columna=>columna.headerName==col)[0]
-
         })
 
         let campos = arrayFiltrado.map(f=>f.field)
 
         let datosfiltrados =  data.map(datos=>{
-
-        return Object.keys(datos).
-        filter((key) => campos.some(c=>c==key)).
-        reduce((cur, key) => {
-            let llave = arrayFiltrado.filter(f=>f.field==key)[0].headerName
-            return Object.assign(cur, { [llave]: datos[key] })}, {});
+            return Object.keys(datos).filter((key) => campos.some(c=>c==key)).reduce((cur, key) => {
+                let llave = arrayFiltrado.filter(f=>f.field==key)[0].headerName
+                return Object.assign(cur, { [llave]: datos[key] })
+            }, {});
         })
 
         const worksheet = XLSX.utils.json_to_sheet(datosfiltrados);
@@ -687,11 +643,11 @@ function Guia(props) {
         var fmt = '$0.00';
         //BUSCAR INDEX DE LAS COLUMNAS Y SACAR EL INDEX DEL TOTAL
         var range = XLSX.utils.decode_range(ws['!ref']);
-        console.log("range s r "+range.s.c)
-        console.log("range e r"+range.e.c)
+        // console.log("range s r "+range.s.c)
+        // console.log("range e r"+range.e.c)
         for(var i = range.s.c; i <= range.e.c; ++i) {
             var ref = XLSX.utils.encode_cell({r:0, c:i});
-            console.log("ref: "+ws[ref].v)
+            // console.log("ref: "+ws[ref].v)
             if(ws[ref].v=="Total" || ws[ref].v=="Valor declarado"){
                 for(var j = range.s.r + 1; j <= range.e.r; ++j) {
                     var ref = XLSX.utils.encode_cell({r:j, c:i});
@@ -702,10 +658,8 @@ function Guia(props) {
             }
 
         }
-
         XLSX.utils.sheet_add_aoa(worksheet, [], { origin: "A1" });
         XLSX.writeFile(workbook, "Guias.xlsx");
-
       };
 
     const [checked, setChecked] = React.useState(columns.filter(col=>col.headerName!="Acciones").map(col=>col.headerName));
@@ -780,7 +734,6 @@ function Guia(props) {
             "m_sObservaciones": state.observaciones
         }
         //  console.log(state)
-        console.log(JSON.stringify(params))
         // SE REVISA QUE HAYA DOCUMENTO POR DEFECTO DEFINIDO PARA LA SUCURSAL
         /*await consultarDocumentoTimbradoSucursal(state.idSucursalAgregar).then(async ({data}) => {
             if (data.idTipoDocumento > 0) {
@@ -1194,7 +1147,6 @@ function Guia(props) {
     //Muestra la pestaña de cancelar
     function handleShowCancelar(event) {
         event.preventDefault()
-        console.log(state.folioInforme)
         validarCancelarGuia(state.idGuia).then((respuesta)=>{
         if(respuesta.data.sePuedeCancelar){
           limpiarCamposAgregar()

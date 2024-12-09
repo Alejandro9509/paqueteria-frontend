@@ -21,7 +21,6 @@ function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
                     showSuccess('No hay unidades disponibles asignadas a este operador. Seleccione manualmente')
                     handleClose();
                 }
-                console.log(respuesta.data);
                 setListadoUnidades(respuesta.data)
             }).catch((e) => {
                 console.log(e.toString())

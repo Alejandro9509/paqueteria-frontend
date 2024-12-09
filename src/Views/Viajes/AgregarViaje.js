@@ -215,9 +215,8 @@ class AgregarViaje extends Component {
             if($.primerClick===true)
             {
         $(window).bind('beforeunload',this.confirmExit);
-        console.log("disproporcionado")}}
+        }}
         if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
-             console.log(this.props.select)
              obtenerTrayectosByRuta(this.props.select.m_nIdRuta).then(({data}) => {
                 this.setState(state => {
                     return {
@@ -563,7 +562,6 @@ class AgregarViaje extends Component {
 
     handleSelectCP(id, dobleClick, e) {
         debugger
-        console.log("le pique x2")
         /*clearTimeout(timer);
         if (e.detail === 1) {
             timer = setTimeout(() => {
@@ -939,7 +937,6 @@ class AgregarViaje extends Component {
     }
 
     handleChangeAutocomplete = (input, value) => {
-        console.log(JSON.stringify(value))
         if(value?.m_bEsPermisionario){
             console.log("entra a validar")
             this.setState(state => {
@@ -993,7 +990,6 @@ class AgregarViaje extends Component {
         informeAsignar.m_nDestinoSeleccionado = this.state.destinoSeleccionado.IdDestino
         informeAsignar.m_sDestinoSeleccionado =  this.state.destinoSeleccionado.Destino
         arrayInformesAsignados.push(informeAsignar)
-        console.log(arrayInformesAsignados)
         this.setState({dataInformesAsignados: arrayInformesAsignados, openDestino: false})
         showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
     }

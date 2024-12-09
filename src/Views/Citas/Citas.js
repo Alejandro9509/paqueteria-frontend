@@ -21,7 +21,6 @@ export default function Citas(props){
             return;
           }
         const { dataPadreConsulta: respuesta } = props;
-        console.log(respuesta)
         setState({
             ...state,
             fechaCita: respuesta.data.m_sFechaCita,

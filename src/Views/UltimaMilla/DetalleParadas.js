@@ -611,7 +611,6 @@ class DetalleParadas extends Component {
                 return
             }
             imprimirFormatosIdIdTipoReporte(data[data.length-1].m_nIdFormato, dataParada.m_nIdParadaUltimaMilla).then((respuesta) => {
-                console.log(respuesta.data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -628,15 +627,12 @@ class DetalleParadas extends Component {
         })*/
     }
    handleOnChangeReporte (data) {
-        console.log(data)
         this.setState({
             reporteSeleccionado: data
         })
     }
     handleGenerarReporte(e){
         e.preventDefault()
-        console.log(this.state.reporteSeleccionado)
-        console.log(this.state.seleccion)
 
         if (this.state.reporteSeleccionado.length === 0) {
             showError("Es necesario seleccionar al menos un reporte")
@@ -644,7 +640,6 @@ class DetalleParadas extends Component {
         }
         if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
             imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.seleccion.m_nIdParadaUltimaMilla).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -653,7 +648,6 @@ class DetalleParadas extends Component {
         }
         else if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
             imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -662,7 +656,6 @@ class DetalleParadas extends Component {
         }
         else{
             imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -1197,7 +1190,6 @@ class DetalleParadas extends Component {
                                                                                                             (false) &&
                                                                                                             <IconButton
                                                                                                                 onClick={() => {
-                                                                                                                    console.log(JSON.stringify(g))
                                                                                                                     this.openPaquetesParciales(tour, g)
                                                                                                                 }}
                                                                                                                 aria-label="reorder"

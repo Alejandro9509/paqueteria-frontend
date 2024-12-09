@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, IconButton, TextField, Tooltip } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import Cabecera from "../../Components/Template/Cabecera";
 import RestartAltIcon from "@mui/icons-material/Refresh";
@@ -198,7 +198,7 @@ function Seguros() {
                         <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    <div style={{marginLeft:"55%"}}>
+                                    <div style={{marginLeft:"1%"}}>
                                         <TextField
                                             id={"search_client"}
                                             name={"search_client"}

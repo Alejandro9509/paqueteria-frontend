@@ -145,7 +145,6 @@ class CrearTarifa extends Component {
         if (this.props.edit){
             const { todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion } = this.state
             const { select } = this.props
-            console.log(select)
             select.m_arrArConceptos.forEach( element =>{
                 let ivaTraslada = []
                 let ivaRetiene = []

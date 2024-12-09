@@ -153,7 +153,6 @@ class ConceptosAdicionales extends Component {
             });
         }
 
-        console.log(dobleClick);
     }
 
     calcularImpuestos(traslada, retiene, importe) {

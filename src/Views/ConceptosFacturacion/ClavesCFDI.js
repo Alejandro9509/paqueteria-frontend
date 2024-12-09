@@ -83,7 +83,6 @@ class ClavesCFDI extends Component {
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
 
         if (prevProps.catalogo !== this.props.catalogo || this.props.dataSAT.length !==  prevProps.dataSAT.length){
-            console.log("diferente")
             this.setState({
                 row:this.props.dataSAT,
                 rowFilter: this.props.dataSAT

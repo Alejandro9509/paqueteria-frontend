@@ -93,7 +93,6 @@ class ConceptosAdicionales extends Component {
     getAllConceptos() {
         obtenerConceptosFacturacion().then(respuesta => {
             this.setState({ conceptos: respuesta.data })
-            console.log('conceptos facturacion', respuesta.data)
         });
     }
     
@@ -140,7 +139,6 @@ class ConceptosAdicionales extends Component {
             });
         }
 
-        console.log(dobleClick);
     }
 
     calcularImpuestos(traslada, retiene, importe) {

@@ -14,7 +14,6 @@ function ActualizarDiponibilidadEquipo(props) {
     const [estatusEquipoListado, setEstatusEquipoListado] = React.useState([]);
 
     const handleEstatus = (event) => {
-        console.log(event.target.value);
         // setIdEstatus(event.target.value);
         setEquipo({
             ...equipo,

@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
 import axios from "axios";
-import SvgIcon from "@mui/material/SvgIcon";
-import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
-import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@mui/x-data-grid';
 import $ from "jquery";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
-import { toBase64 } from '../../Util/GlobalFunctions';
 import {
     agregarFormatosImpresion,
     modificarFormatosImpresion,
@@ -130,9 +124,6 @@ class FormatoImpresion extends Component {
         }).catch(err => {
             showSuccess(err)
         });
-        // }).catch(err => {
-        //     showSuccess(err)
-        // });
     }
     handleModificar(id){
         console.log (id)
@@ -153,7 +144,6 @@ class FormatoImpresion extends Component {
 
     async handleAceptar(id,data) {
         //let file = await toBase64(data.file[0])
-        console.log(data)
         var image = null
         if (data.image.length != 0) {
             image = data.image[0]
@@ -168,8 +158,6 @@ class FormatoImpresion extends Component {
             fecha: dateStartString,
             modificadoEl:data.modificadoEl
         }
-
-        console.log(params)
         if(this.state.agregar==="Agregar"){
             agregarFormatosImpresion(params,data.file[0],image).then(respuesta => {
 
@@ -203,9 +191,6 @@ class FormatoImpresion extends Component {
                 showSuccess(err)
             });
         }
-
-
-
     }
 
     cambiarPantalla(id) {
@@ -214,9 +199,12 @@ class FormatoImpresion extends Component {
 
     getAllData() {
         obtenerFormatosImpresion().then(respuesta => {
-            let formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='')
-
-            console.log(formatos)
+            let formatos=[];
+            if(typeof(respuesta.data) === "string"){
+                showSuccess(respuesta.data)
+            }else{
+                formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='');
+            }
             this.setState({ data: formatos, agregar: "Agregar" })
         });
     }

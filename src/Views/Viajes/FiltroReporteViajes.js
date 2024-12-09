@@ -67,7 +67,6 @@ class FiltroReporteViajes extends Component {
                 return
             }
             imprimirFormatosId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal,this.state.sucursalesSeleccionadas).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo)+"'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -103,8 +102,6 @@ class FiltroReporteViajes extends Component {
         }
         else{
             imprimirFormatosECCId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal, this.state.cliente.m_nIdCliente).then(({data}) => {
-
-                console.log(data)
                 var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
                 var a = document.createElement('a');
                 a.href = mediaType+encodeURI(data.m_sArchivo);

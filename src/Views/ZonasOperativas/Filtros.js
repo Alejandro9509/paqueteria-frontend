@@ -10,7 +10,6 @@ import {
 } from "../../Util/Contexts/ZonaOperativaContext";
 
 
-
 function Filtros(props) {
     const [filtros, setFiltros] = useState({
         cp:""
@@ -38,7 +37,6 @@ function Filtros(props) {
     const filtrar = () => {
             if (filtros.cp.length > 0){
                 obtenerZonaOperativaByCodigoPostal(filtros.cp).then(respuesta => {
-                    console.log(respuesta)
                     props.listaResultados(respuesta.data)
                 })
             }else{
@@ -51,36 +49,32 @@ function Filtros(props) {
     return (
         <div>
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
-                <Grid container item={6}>
-                    <Grid item xs={3}>
-                        <TextField variant="outlined" size="small"
-                                   onChange={handleChangeFiltros}
-                                   onKeyDown={handleChangeFiltros}
-                                   className="form-control"
-                                   type="text"
-                                   label="Código Postal"
-                                   id="cp"
-                                   name="cp"
-                                   value={filtros.cp}
-                        />
-                    </Grid>  
-                    <Grid item xs={3}>
-                        <IconButton
-                            aria-label="delete"
-                            onClick={() => {
-                                resetFiltros()
-                            }}
-                            size="large">
-                            <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                            Limpiar filtro
-                        </IconButton>
-         
-                        <IconButton aria-label="delete" onClick={() => filtrar()} size="large">
-                            <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                            Buscar
-                        </IconButton>
-                        </Grid>
-             
+                <Grid item xs={3}>
+                    <TextField variant="outlined" size="small"
+                               onChange={handleChangeFiltros}
+                               onKeyDown={handleChangeFiltros}
+                               type="text"
+                               label="Código Postal"
+                               id="cp"
+                               name="cp"
+                               value={filtros.cp}
+                    />
+                </Grid>
+                <Grid item xs={3}>
+                    <IconButton
+                        aria-label="delete"
+                        onClick={() => {
+                            resetFiltros()
+                        }}
+                        size="large">
+                        <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                        Limpiar filtro
+                    </IconButton>
+
+                    <IconButton aria-label="delete" onClick={() => filtrar()} size="large">
+                        <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                        Buscar
+                    </IconButton>
                 </Grid>
             </Grid>
         </div>

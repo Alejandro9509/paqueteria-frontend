@@ -213,7 +213,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     }
 
     const addPaquetev2 = (data) => {
-        console.log(data)
         let paq = data
         /*if (validarPaquetes(paq)){
 
@@ -246,7 +245,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     const handleEditConcepto = (data) =>{
         if(!disabled){
             // onChangeList(dataPaquetes.filter((i) => i.id != data.id))
-            console.log(data)
             setConcepto(data)
         }
 
@@ -345,7 +343,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     const handleConceptoClick = (event, newValue) => {
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
-            console.log(newValue)
             if (respuesta.data.length > 0){
                 setConcepto(concepto =>{
                     return {

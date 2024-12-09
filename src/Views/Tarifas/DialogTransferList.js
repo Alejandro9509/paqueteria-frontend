@@ -87,7 +87,6 @@ export default function DialogTransferList(props) {
         if (search.length === 0 ){
             setDataFiltered(props.rows)
         }else{
-            console.log(props.rows)
             setDataFiltered(props.rows.filter(i => i.numeroDescripcion.toUpperCase().includes(search.toUpperCase())))
         }
     }

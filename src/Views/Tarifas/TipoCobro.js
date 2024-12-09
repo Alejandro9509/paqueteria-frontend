@@ -61,7 +61,6 @@ class TipoCobro extends Component {
             "CreadoPor": localStorage.getItem("UsuarioId"),
             "ModificadoPor": localStorage.getItem("UsuarioId")
         }
-        console.log(params)
         agregarTipoCobro(params).then(respuesta => {
             showSuccess(respuesta.data)
             this.getAllTipos();

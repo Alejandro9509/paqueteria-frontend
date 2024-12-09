@@ -32,7 +32,6 @@ class DatosEntregaRecoleccion extends Component {
 
 
     generarReporte(guia) {
-        console.log(guia)
         if ( !guia.m_bEsRecoleccion ){
             obtenerGuiaReporte(guia.m_nId).then(({data}) => {
                 let pdfWindow = window.open("");
@@ -60,7 +59,6 @@ class DatosEntregaRecoleccion extends Component {
         if(this.state.imagenesCargadas)
             return
             obtenerImagenEvidencia(this.props.data.m_nId,this.props.data.m_bEsRecoleccion).then(respuesta=>{
-                console.log(respuesta.data)
                 this.setState({
                     imagenesEvidencia:respuesta.data?respuesta.data:[],
 

@@ -178,8 +178,6 @@ function CambiarEstatus(props){
         }
         params.m_nIdEstatusGuia = state.idEstatusGuia
 
-        console.log(params)
-        console.log(JSON.stringify(params))
         params.m_nIdGuia = props.guia.m_nIdGuia
 
         cambiarEstatusGuia(params).then(({data}) => {

@@ -270,7 +270,6 @@ async function packBins(remolque1, remolque2, guias) {
 async function obtenerEmbarque(id) {
     const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
     var location = await axios.get(url, {headers})
-    console.log(location)
     return location.data.m_arrPaquetes
 }
 
@@ -425,7 +424,6 @@ export function readExcel(FORMAT,file, esRecoleccion){
                 datosMaquilador: item[FORMAT.complementosSat.datosMaquilador],
                 usoAutorizado: item[FORMAT.complementosSat.usoAutorizado],
             }))
-            console.log(arrayComplementos)
 
             //VALIDACIONES DE GUIAS
             const newArray = data.map(function(item,index){
@@ -530,8 +528,6 @@ export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
 
             //SE FILTRAN PARA SOLO OBTENER LAS QUE TIENEN NUMERO DE EMBARQUE AGREGADO
             const data = XLSX.utils.sheet_to_json(wsGuias, {range:0}).filter(item => item[FORMAT.numeroEmbarque] > 0);
-            console.log(data)
-            console.log(arrayUniqueByKey(data,FORMAT.numeroEmbarque))
             const embarquesUnicos = arrayUniqueByKey(data,FORMAT.numeroEmbarque)
 
             //VALIDACIONES DE GUIAS

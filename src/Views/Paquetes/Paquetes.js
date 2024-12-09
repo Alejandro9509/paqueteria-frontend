@@ -251,7 +251,6 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
             //dataPaquetes.push(paq)
             arraynew=[...arraynew,paq]
             /*dataPaquetes.forEach(item => {
-                console.log(item)
                 arraynew.push(item)
             })*/
             seCalculaTarifa()

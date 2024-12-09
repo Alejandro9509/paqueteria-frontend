@@ -27,7 +27,6 @@ class TourUltimaMilla extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
 
         if (this.props.data.m_arrClsProGuia.length !== prevProps.data.m_arrClsProGuia.length) {
-            console.log("Ciclo")
             this.getRoute()
         }
     }

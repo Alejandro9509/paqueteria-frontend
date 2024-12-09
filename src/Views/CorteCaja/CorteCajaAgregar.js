@@ -193,7 +193,6 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
             showSuccess("No se puede seleccionar operador y usuario.");
             return false;
         } else if (idOperador > 0 || idUsuario > 0) {
-            console.log("Válido.");
             return true;
         } else {
             showSuccess("Seleccione operador o usuario.");
@@ -223,8 +222,6 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                 "m_nTotal": i.total
             }))
         }
-        console.log(params)
-        console.log(JSON.stringify(params))
         if (disaled){
             return;
         }

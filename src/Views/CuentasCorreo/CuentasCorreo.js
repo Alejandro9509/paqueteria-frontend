@@ -74,7 +74,6 @@ class CuentasCorreo extends Component {
         }
         if (this.state.edit) {
             modificarCuentasCorreo(this.state.idCuenta, params).then(respuesta => {
-                console.log(respuesta)
                 showSuccess(`Modificacion exitosa`)
                 this.props.closeDialog()
             }).catch(err => {
@@ -108,7 +107,6 @@ class CuentasCorreo extends Component {
         });
 
         if (value === 1){
-            console.log(this.state.cuentaEnviarViajes)
             let cuenta = this.state.cuentaEnviarViajes
             this.setState({
                 idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,
@@ -122,7 +120,6 @@ class CuentasCorreo extends Component {
         }
 
         if (value === 2){
-            console.log(this.state.cuentaEnviarTracking)
             let cuenta = this.state.cuentaEnviarTracking
             this.setState({
                 idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,

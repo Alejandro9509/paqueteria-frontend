@@ -22,10 +22,7 @@ class ReportesViajes extends Component {
         obtenerFormatosImpresionProceso(42).then(({data}) => {
             obtenerFormatosImpresionProceso(43).then((data2) => {
                 obtenerFormatosImpresionProceso(44).then((data3) => {
-                    console.log(data2.data)
-                    console.log(data3.data)
                     let datas=data.concat(data2.data,data3.data)
-                    console.log(datas)
                     this.setState({
                         reportes: datas,
                         pantalla: 1

@@ -72,7 +72,6 @@ class TipoServicio extends Component {
             "DiasHabiles": this.state.DiasHabiles,
             "Costo": this.state.Costo,
         }
-        console.log(params)
         agregarTipoServicio(params).then(respuesta => {
             showSuccess(respuesta.data)
             this.handleClose();

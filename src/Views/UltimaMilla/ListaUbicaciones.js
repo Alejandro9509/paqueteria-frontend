@@ -175,7 +175,6 @@ export default class ListaUbicaciones extends Component {
     }
 
     selectPaquete = (paquete) =>{
-        console.log(paquete);
         this.selectDatosPaquete(paquete);
         this.mostrarDialogoMapa(true);
     }
@@ -199,7 +198,6 @@ export default class ListaUbicaciones extends Component {
                 showConfirmarUbicacion: false,
                 listado: listadoTemporal
             });
-            console.log(this.state.listado[paqueteIndex]);
         });
     }
 

@@ -56,10 +56,8 @@ function Filtros(props) {
                 setFiltros(filtros=>{
                     return {
                         ...filtros,
-
                     }
                 });
-
                 obtenerTarifasRangosFiltro(0).then((respuesta) => {
                     props.actualizarTarifas(respuesta.data);
                 })
@@ -78,7 +76,7 @@ function Filtros(props) {
                                    onKeyDown={handleChangeFiltros}
                                    className="form-control"
                                    type="text"
-                                   label="Folio"
+                                   label="Cliente"
                                    id="folio"
                                    name="folio"
                                    value={filtros.folio}
