@@ -1,15 +1,10 @@
-import React, {useState, useEffect} from "react";
-import Noty from "noty";
+import React, {useEffect} from "react";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {DialogActions, TextField} from "@mui/material";
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import SearchIcon from "@mui/icons-material/Search";
 import {styled} from '@mui/material/styles';
-
-
-import makeStyles from '@mui/styles/makeStyles';
-
 
 const PREFIX = 'DialogTableClientes';
 
@@ -27,19 +22,9 @@ const Root = styled('div')({
 });
 
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
-function showSuccess(mensaje) {
-    new Noty({
-        type: "information",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000",
-    }).show();
-}
-
-let rowSelect
+let rowSelect;
 
 function DialogTableClientes(props) {
-
     let {dialogVisible, handlePatrocinadorSelected} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
@@ -79,7 +64,6 @@ function DialogTableClientes(props) {
             setRowCount(respuesta.data.total)
         })
     }
-
 //----------------------------------------------Renderizado-------------------------------------------------
     return (
         (<Root>

@@ -10,23 +10,16 @@ import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturac
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import ViajeLocal from "../Tarifas/ViajeLocal";
 import {
-    obtenerListadoZonaOperativaBySucursal,
     obtenerColoniasCPs,
-    obtenerListadoZonaOperativaByOrigenDestino
 } from "../../Util/Contexts/ZonaOperativaContext";
-import {obtenerTarifaRangosById, obtenerTarifaGeneral} from "../../Util/Contexts/TarifasContext";
-import {getRandomId} from "../../Util/Util";
 import {obtenerParametrosConfiguracion} from '../../Util/Contexts/ParametrosConfiguracionContext'
 import Autocomplete from "@mui/lab/Autocomplete";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ViajeForaneo from "../Tarifas/ViajeForaneo";
 import ListItem from "@mui/material/ListItem";
 import List from "@mui/material/List";
-import ListItemText from "@mui/material/ListItemText";
-import {Label, RemoveCircle} from "@mui/icons-material";
+import {RemoveCircle} from "@mui/icons-material";
 import {obtenerCotizacionTarifario} from "../../Util/Contexts/CotizadorContext";
 
 function BuscarTarifa() {
@@ -70,6 +63,7 @@ function BuscarTarifa() {
             setSucursalesListado(respuesta.data)
         })
     }
+
     const getAllColoniasCPs = () => {
         if (listadoColoniasCPs.length > 0) {
             return
@@ -87,6 +81,7 @@ function BuscarTarifa() {
             setConceptosListado(respuesta.data)
         })
     }
+
     const getAllTiposCalculo = () => {
         if (tiposCalculoListado.length > 0) {
             return
@@ -95,6 +90,7 @@ function BuscarTarifa() {
             setTiposCalculoListado(respuesta.data)
         })
     }
+
     const getAllUnidadesMedida = () => {
         if (unidadesMedidaListado.length > 0) {
             return
@@ -103,6 +99,7 @@ function BuscarTarifa() {
             setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38 || i.IdUnidadMedida === 55))
         })
     }
+
     const getOrigenesDestinos = () => {
         if (origenesDestinosListado.length > 0) {
             return
@@ -111,6 +108,7 @@ function BuscarTarifa() {
             setOrigenesDestinosListado(respuesta.data)
         })
     }
+
     const getAllProductos = () => {
         if (productosListado.length > 0) {
             return
@@ -134,7 +132,6 @@ function BuscarTarifa() {
         })
     }
 
-
     useEffect(() => {
         getAllSucursales()
         getAllTiposCalculo()
@@ -154,7 +151,6 @@ function BuscarTarifa() {
             })
 
         })
-
     }, []);
 
     function getCotizacionProducto(prod) {
@@ -197,9 +193,11 @@ function BuscarTarifa() {
             }).then(() => resolve)
         })
     }
+
     function agregarComasNumero(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+
     function determinarConceptosAplicados() {
         return new Promise((resolve) => {
 
@@ -210,8 +208,8 @@ function BuscarTarifa() {
             })
         })
     }
-    async function handleCotizar() {
 
+    async function handleCotizar() {
         try {
             await new Promise((resolve) => {
                 setConceptosResult([], resolve());
@@ -223,7 +221,6 @@ function BuscarTarifa() {
                 const llamarCotizacion = await getCotizacionProducto(prod);
             })
             setProductosCotizados(JSON.parse(JSON.stringify(filtrosProductos)))
-
         } catch (error) {
             console.error("Error:", error);
         }
@@ -264,15 +261,15 @@ function BuscarTarifa() {
                                                 direccionOrigen: valorOrigen ? valorOrigen : null,
                                                 ciudadOrigen: valorOrigen ? valorOrigen.IdOrigenDestino : -1
                                             })
-                                        }}
-                                                labelId='sucLabel' label=''>
-                                            <MenuItem value={-1}>{'SIN ESPECIFICAR'}</MenuItem>
+                                        }} labelId='sucLabel' label=''>
+                                            <MenuItem value={-1}>
+                                                {'SIN ESPECIFICAR'}
+                                            </MenuItem>
                                             {sucursalesListado.map(suc => {
                                                 return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
                                             })}
                                         </Select>
                                     </FormControl>
-
                                 </Grid>
                                 <Grid item sm={2}>
                                     <Autocomplete
@@ -344,7 +341,6 @@ function BuscarTarifa() {
                                                 onChange={(e) => {
                                                     let IdCPSuc=sucursalesListado.find((s)=>s.m_nIdSucursal==e.target.value)?.m_nIdCodigoPostal
                                                     let valorDestino=listadoColoniasCPs.find((cp)=>cp.IdCodigoPostal==IdCPSuc)
-
                                                     setFiltrosBusqueda({
                                                         ...filtrosBusqueda,
                                                         sucDestino: e.target.value,
@@ -395,7 +391,6 @@ function BuscarTarifa() {
                                             </div>
                                         )}
                                     />
-
                                 </Grid>
                                 <Grid item sm={2}>
                                     <FormControl disabled fullWidth variant='outlined' size='small'>
@@ -412,7 +407,6 @@ function BuscarTarifa() {
                                             })}
                                         </Select>
                                     </FormControl>
-
                                 </Grid>
                             </Grid>
                             <Grid item sm={12} spacing={1}>
@@ -448,7 +442,6 @@ function BuscarTarifa() {
                                                                             ...newArr
                                                                         ]
                                                                     })
-                                                                    //setFiltrosProductos(newArr)
                                                                 }}
                                                                 forcePopupIcon={false}
                                                                 options={productosListado}
@@ -580,12 +573,8 @@ function BuscarTarifa() {
                                                         :
                                                         <ExpandMoreIcon fontSize='default'/>
                                                     }
-
                                                 </IconButton>
-
                                             </Grid>
-
-
                                         </Grid>
                                         <div className='PM hide'>
                                             {
@@ -729,12 +718,8 @@ function BuscarTarifa() {
                                                     :
                                                     <ExpandMoreIcon fontSize='default'/>
                                                 }
-
                                             </IconButton>
-
                                         </Grid>
-
-
                                     </Grid>
                                     <div className='UM hide'>
                                         {
@@ -876,12 +861,8 @@ function BuscarTarifa() {
                                                     :
                                                     <ExpandMoreIcon fontSize='default'/>
                                                 }
-
                                             </IconButton>
-
                                         </Grid>
-
-
                                     </Grid>
                                     <div className='MM hide'>
                                         {
@@ -999,12 +980,8 @@ function BuscarTarifa() {
                                         }
                                     </div>
                                 </Paper>
-
                             </Grid>
-
                         </Grid>
-
-
                     </div>
                 </div>
             </section>

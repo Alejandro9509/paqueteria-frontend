@@ -1,20 +1,10 @@
-import React, {Component, useEffect, useState} from "react";
-import PropTypes from "prop-types";
-import axios from "axios";
+import React, {useEffect, useState} from "react";
 import {
     Checkbox,
-    CircularProgress,
     FormControl,
     FormControlLabel,
     Grid,
-    List,
-    ListItem,
-    MenuItem,
-    OutlinedInput,
-    Select,
     TextField,
-    ThemeProvider,
-    StyledEngineProvider,
 } from "@mui/material";
 import {
     Button,
@@ -22,24 +12,14 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Tooltip,
 } from "@mui/material";
 import ClavesCFDI from "./ClavesCFDI";
 import Noty from 'noty';
-import { obtenerImpuestos } from "../../Util/Contexts/ImpuestosContext";
 import {
-    obtenerSATEmbalajes, obtenerSATPaginado,
-    obtenerSATServicios,
-    obtenerSATUnidades,obtenerSATListado,obtenerSATBusqueda
+    obtenerSATPaginado,
+    obtenerSATBusqueda
 } from "../../Util/Contexts/ConceptosFacturacionContext";
-import { Autocomplete } from '@mui/material';
-import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
-import {API_HEADERS} from "../../Constants";
-import {obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
-import { ContactSupportOutlined } from "@mui/icons-material";
-import InputLabel from "@mui/material/InputLabel";
 var numRegistros = 20
-
 
 function showSuccess(mensaje) {
     new Noty({
@@ -162,6 +142,7 @@ function CrearConceptoSAT(props) {
         setState({ ...state, openDialog: false, catalogo: "",busqueda:"" });
         setPagina(0)
     }
+
     const cancelDialog = () => {
         props.onChangeData(0)
         setState({ ...state, openDialog: false, catalogo: "" });
@@ -434,7 +415,6 @@ function CrearConceptoSAT(props) {
                         setPagina={setPagina}
                         setBusqueda={(value) => setState({...state, busqueda: value})}
                         cancel ={props.resetComplemento}
-                        // isProducto={this.state.isProducto}
                     />
                 </DialogContent>
             </Dialog>
@@ -596,7 +576,6 @@ function CrearConceptoSAT(props) {
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px", fontSize: "1em"}}
                                     onClick={() => cargarDesdeServidor(pagina.page,20,2) /* setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida"}) */ /* handleClickBuscarClaveSat(2) */}
-                                    //disabled= {disableSeleccionar.disableUnidad}
                                 >
                                     Seleccionar
                                 </Button>
@@ -676,7 +655,6 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px", fontSize: "1em"}}
-                                    //disabled= {disableSeleccionar.disableMaterialPeligroso}
                                     name="materialPeligrosoSAT"
                                     onClick={() => cargarDesdeServidor(pagina.page,20,5) /* setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"}) */}>
                                     Seleccionar
@@ -742,7 +720,6 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px", fontSize: "1em"}}
-                                    //disabled= {disableSeleccionar.disableEmbalaje}
                                     name={"embalajeSAT"}
                                     onClick={() => cargarDesdeServidor(pagina.page,20,3) /* setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"}) */}>
                                     Seleccionar
@@ -792,7 +769,6 @@ function CrearConceptoSAT(props) {
                                     fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px", fontSize: "1em"}}
-                                    //disabled= {disableSeleccionar.disableFraccion}
                                     name="fraccionSAT"
                                     onClick={() => cargarDesdeServidor(pagina.page,20,4) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}>
                                     Seleccionar
@@ -908,7 +884,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -930,7 +905,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -952,30 +926,29 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
                             {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
                                 <Grid item sm={4}>
                                     <FormControl className="input select" fullWidth variant="outlined">
-                                    <TextField
-                                        variant="outlined"
-                                        type="date"
-                                        fullWidth
-                                        id={"c1c2c3e"}
-                                        label={"Fecha de Caducidad"}
-                                        value={props.dataComplemento.fechaCaducidad}
-                                        InputLabelProps={{shrink: true,}}
-                                        onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
-                                            return {
-                                                ...props.dataComplemento,
-                                                fechaCaducidad:e.target.value,
-                                            }
-                                        });}}
-                                    >
-
-                                    </TextField></FormControl>
+                                        <TextField
+                                            variant="outlined"
+                                            type="date"
+                                            fullWidth
+                                            id={"c1c2c3e"}
+                                            label={"Fecha de Caducidad"}
+                                            value={props.dataComplemento.fechaCaducidad}
+                                            InputLabelProps={{shrink: true,}}
+                                            onChange={(e)=>{props.setDataComplemento(dataComplemento =>{
+                                                return {
+                                                    ...props.dataComplemento,
+                                                    fechaCaducidad:e.target.value,
+                                                }
+                                            });}}
+                                        >
+                                        </TextField>
+                                    </FormControl>
                                 </Grid>
                             }
                             {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
@@ -997,8 +970,8 @@ function CrearConceptoSAT(props) {
                                                 }
                                             });}}
                                         >
-
-                                        </TextField></FormControl>
+                                        </TextField>
+                                    </FormControl>
                                 </Grid>
                             }
                             {(props.dataComplemento.sectorCOFEPRIS>=1 && props.dataComplemento.sectorCOFEPRIS<=3) &&
@@ -1037,7 +1010,6 @@ function CrearConceptoSAT(props) {
                                             fullWidth
                                             className="btn btn-primary primary-btn"
                                             style={{margin: "0px", fontSize: "1em"}}
-                                            //disabled= {disableSeleccionar.disableFraccion}
                                             onClick={() => cargarDesdeServidor(pagina.page,20,6) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                             >
                                             Seleccionar
@@ -1079,7 +1051,6 @@ function CrearConceptoSAT(props) {
                                             fullWidth
                                             className="btn btn-primary primary-btn"
                                             style={{margin: "0px", fontSize: "1em"}}
-                                            //disabled= {disableSeleccionar.disableFraccion}
                                             onClick={() => cargarDesdeServidor(pagina.page,20,8) /* setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"}) */}
                                         >
                                             Seleccionar
@@ -1105,7 +1076,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -1127,7 +1097,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -1149,7 +1118,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -1172,7 +1140,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -1195,7 +1162,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -1218,7 +1184,6 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
@@ -1241,34 +1206,32 @@ function CrearConceptoSAT(props) {
                                             }
                                         });}}
                                     >
-
                                     </TextField>
                                 </Grid>
                             }
-
                         </Grid>
                         }
                     </div>
                 </div>
                 {props.children}
 
-            <DialogActions>
-                <Button
-                    onClick={() => props.dialogVisible(false)}
-                    style={{marginRight: "20px"}}
-                    color={"secondary"}
-                >
-                    Cancelar
-                </Button>
-                <Button
-                     //type={"submit"}
-                    onClick={() => props.handleAceptar(state)}
-                    color={"primary"}
-                >
-                    Aceptar
-                </Button>
-            </DialogActions>
-        </form>
+                <DialogActions>
+                    <Button
+                        onClick={() => props.dialogVisible(false)}
+                        style={{marginRight: "20px"}}
+                        color={"secondary"}
+                    >
+                        Cancelar
+                    </Button>
+                    <Button
+                         //type={"submit"}
+                        onClick={() => props.handleAceptar(state)}
+                        color={"primary"}
+                    >
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </form>
         </div>
     )
 }
