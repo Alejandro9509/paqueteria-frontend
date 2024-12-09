@@ -3515,7 +3515,7 @@ function Recoleccion() {
 
                         <li>
                             <a className={(state.idRecoleccion === 0 || !validarDerecho(9101420)) ? classes.disabled : ""} onClick={handleShowCancelar}>
-                                <i className="zmdi zmdi-print"/> Cancelar
+                                <i className="fa fa-ban"/> Cancelar
                             </a>
                         </li>
 
