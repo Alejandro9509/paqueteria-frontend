@@ -211,7 +211,6 @@ function ComplementosSAT(props) {
         const handleOpenClick = (event) => {
             event.stopPropagation();
             resetDataComplemento()
-           console.log("fila"+JSON.stringify(row))
             obtenerSATPaginado(1, 0,"c_ClaveUnidad", row.claveUnidad).then((respuesta) => {
               row.UnidadSAT = respuesta.data[0].m_sDescripcion   
                 obtenerSATPaginado(1, 0,"c_ClaveProdServCP", row.claveProducto).then((respuesta) => {
@@ -256,7 +255,6 @@ function ComplementosSAT(props) {
                   }) 
          
             })
-            console.log(row);
         };
 
         return (
@@ -547,7 +545,6 @@ function ComplementosSAT(props) {
     }
 
     const handleAceptar = (data)=>{
-        console.log(dataComplemento)
         if(parseFloat(dataComplemento.cantidad) <=0){
             showSuccess("La cantidad debe ser mayor a cero.")
             return
@@ -700,7 +697,6 @@ function ComplementosSAT(props) {
         });
 
         promise.then(async (d) => {
-            console.log(d);
             const newArray = d.map(item => (
                 {
                     id: Math.floor(Math.random() * 10000),
@@ -714,7 +710,6 @@ function ComplementosSAT(props) {
                     descripcionEmbalajeSAT: item['Es material peligroso'] === "SI" && item['Descripción embalaje'] ? item['Descripción embalaje'] : '',
                     claveFraccion: item['Es material peligroso'] === "SI" && item['Clave Fraccion'] ? item['Clave Fraccion'].toString() : ''
                 }))
-            console.log(newArray)
             let hayErrores = false
             let completeErrorMessage = ''
             for (let i = 0; i < newArray.length; i++) {

@@ -1,13 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
     Button,
     Dialog,
-    DialogActions,
     DialogContent,
-    DialogTitle, Fab,
+    DialogTitle,
     FormControl,
     Grid,
     InputLabel,
@@ -19,40 +15,27 @@ import {
     Select,
     TextField,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
 import Typography from "@mui/material/Typography";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
-    obtenerConceptosFacturacion,
-    obtenerImpuestosByConceptosFacturacion
+    obtenerConceptosFacturacion
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     obtenerListadoZonaOperativaByOrigenDestino,
     obtenerListadoZonaOperativaBySucursal
 } from "../../Util/Contexts/ZonaOperativaContext";
-import {dataGridLocaleText} from "../../Constants";
-import SvgIcon from "@mui/material/SvgIcon";
-import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
-import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
-import {getCurrentDate, getRandomId, getUniqueListBy} from "../../Util/Util";
-import DialogCheckbox from "./DialogCheckbox";
+import {getCurrentDate, getRandomId} from "../../Util/Util";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
-import axios from "axios";
-import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
 import ViajeLocal from "./ViajeLocal";
-import RangosTarifa from "./RangosTarifa";
 import Maniobras from "./Maniobras";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import AddIcon from '@mui/icons-material/AddBox';
 import Noty from "noty";
-import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
+import {obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {
     obtenerClientePublicoGeneral,
@@ -106,6 +89,7 @@ export default function CrearTarifaRangos(props) {
             setSucursalesListado(respuesta.data)
         })
     }
+
     const getAllConceptos = () => {
         if (conceptosListado.length > 0){
             return
@@ -114,6 +98,7 @@ export default function CrearTarifaRangos(props) {
             setConceptosListado(respuesta.data)
         })
     }
+
     const getAllTiposCalculo = () => {
         if (tiposCalculoListado.length > 0){
             return
@@ -122,6 +107,7 @@ export default function CrearTarifaRangos(props) {
             setTiposCalculoListado(respuesta.data)
         })
     }
+
     const getAllUnidadesMedida = () => {
         if (unidadesMedidaListado.length > 0){
             return
@@ -130,6 +116,7 @@ export default function CrearTarifaRangos(props) {
             setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38 || i.IdUnidadMedida === 55))
         })
     }
+
     const getOrigenesDestinos = () => {
         if (origenesDestinosListado.length > 0){
             return
@@ -138,6 +125,7 @@ export default function CrearTarifaRangos(props) {
             setOrigenesDestinosListado(respuesta.data)
         })
     }
+
     const getAllProductos = () => {
         if (productosListado.length > 0){
             return
@@ -154,6 +142,7 @@ export default function CrearTarifaRangos(props) {
             setProductosListado(productosList.filter(i => i.m_bActivo))
         })
     }
+
     const getClienteGenerico = () => {
         obtenerClientePublicoGeneral().then(respuesta => {
             setState({
@@ -197,7 +186,6 @@ export default function CrearTarifaRangos(props) {
                 }
             })
         }
-
     }
 
     const handleOnChange = (event) => {
@@ -205,7 +193,6 @@ export default function CrearTarifaRangos(props) {
             ...state,
             [event.target.name]: event.target.value,
         })
-
     }
 
     const handleChangeViajeLocal = (viaje) => {
@@ -226,6 +213,7 @@ export default function CrearTarifaRangos(props) {
         })
         setViajesLocalesListado(newViajes)
     }
+
     const handleChangeManiobras = (maniobras) => {
         setManiobrasTarifa(maniobras)
     }
@@ -251,7 +239,6 @@ export default function CrearTarifaRangos(props) {
         e.preventDefault()
 
         var viajeLocal = [...viajesLocalesListado]
-        console.log(viajeLocal)
         viajeLocal.push({
             idViaje: getRandomId(),
             idSucursal: null,
@@ -289,6 +276,7 @@ export default function CrearTarifaRangos(props) {
     }
 
     const [showDialogZonas, setShowDialogZonas] = useState(false)
+
     const handleShowDialogZonas = (show) => {
         setShowDialogZonas(show)
     }
@@ -362,6 +350,7 @@ export default function CrearTarifaRangos(props) {
     const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38)
 
     const filtrarUnidadesMedidaManiobras = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
+
     const filtrarTiposCalculoManiobras = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
 
     const validaSucursalYConceptoViajeLocal = () => {
@@ -391,8 +380,6 @@ export default function CrearTarifaRangos(props) {
     const validaVigencia = () => {
         return state.vigencia !== null
     }
-
-
 
     const handleGuardarTarifa = (event) => {
         if (!validaCliente()){
@@ -529,15 +516,12 @@ export default function CrearTarifaRangos(props) {
             maniobras: maniobrasChidas,
             viajesForaneos: viajesForaneosListado,
         }
-        console.log(params)
-        console.log(JSON.stringify(params))
 
         if (state.idTarifa === 0){
             props.agregarTarifa(params)
         }else{
             props.modificarTarifa(params)
         }
-
     }
 
     const handleShowDialogTarifas = () => {
@@ -545,6 +529,7 @@ export default function CrearTarifaRangos(props) {
         setState({...state, showDialogTarifas: true})
 
     }
+
     const handleCloseDialogTarifas = (value) => {
         setState(state => {
             return {...state, showDialogTarifas: false}
@@ -556,9 +541,7 @@ export default function CrearTarifaRangos(props) {
                 setManiobrasTarifa(selection?.maniobras)
                 setViajesForaneosListado(selection?.viajesForaneos)
             })
-
         }
-
     }
 
     const setDataParaConsultar = (data) => {
@@ -650,7 +633,6 @@ export default function CrearTarifaRangos(props) {
         }
 
         return tarifa
-
     }
 
     return (
@@ -733,7 +715,8 @@ export default function CrearTarifaRangos(props) {
                             </Grid>
                         }
                         <Grid item xs={2}>
-                            <Button size={"large"} style={{fontSize:".9em"}} fullWidth onClick={handleShowDialogTarifas} variant={"outlined"} disabled={props.disabled} color={"primary"}
+                            <Button size={"large"} style={{fontSize:".9em"}} fullWidth onClick={handleShowDialogTarifas}
+                                    variant={"outlined"} disabled={props.disabled} color={"primary"}
                             >Importar tarifa existente</Button>
                         </Grid>
 
@@ -752,9 +735,9 @@ export default function CrearTarifaRangos(props) {
                                 className='btn-secondary'
                                 size="large">
                                 {showPMUM?
-                                    <ExpandLess fontSize='default'/>
+                                    <ExpandLess fontSize='medium'/>
                                 :
-                                    <ExpandMoreIcon fontSize='default'/>
+                                    <ExpandMoreIcon fontSize='medium'/>
                                 }
 
                             </IconButton>
@@ -763,7 +746,9 @@ export default function CrearTarifaRangos(props) {
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="sucLabel">Sucursal</InputLabel>
-                            <Select value={filtroPMUM.sucursal} onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})} labelId='sucLabel' label=''>
+                            <Select value={filtroPMUM.sucursal}
+                                    onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})}
+                                    label='Sucursal' InputLabelProps={{shrink: true}}>
                                 <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
                                 {sucursalesListado.map(suc=>{
                                     return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
@@ -774,8 +759,10 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={2}>
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
-                                    id="conceptoLabel">Concepto</InputLabel>
-                                <Select value={filtroPMUM.concepto} onChange={(e)=>setFiltroPMUM({...filtroPMUM,concepto: e.target.value})} labelId='conceptoLabel' label=''>
+                                    id="conceptoLabel" >Concepto</InputLabel>
+                                <Select value={filtroPMUM.concepto}
+                                        onChange={(e)=>setFiltroPMUM({...filtroPMUM,concepto: e.target.value})}
+                                        label='Concepto' InputLabelProps={{shrink: true}}>
                                     <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
                                     {filtrarConceptosViajeLocal.map(item=>{
                                         return <MenuItem value={item.m_nIdConceptosFacturacion}>{item.m_sConcepto}</MenuItem>
@@ -826,7 +813,8 @@ export default function CrearTarifaRangos(props) {
                             </Tooltip>
                         </Grid>
                         <Grid item xs={2}>
-                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal} disabled={props.disabled}>
+                            <Button fullWidth variant={"contained"} color={"primary"} style={{fontSize:".9em"}}
+                                    onClick={handleOnAgregarViajeLocal} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
                                 &nbsp;&nbsp;Agregar viaje
                             </Button>
@@ -856,21 +844,27 @@ export default function CrearTarifaRangos(props) {
                     </div>
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
-                    <Typography variant="h3" component="h2">
-                        Maniobras
-                        <IconButton
-                            style={{marginLeft:'10.5%'}}
-                            onClick={()=> {setShowManiobras(showManiobras?false:true); document.querySelector('.MAN').classList.toggle('hide')}}
-                            className='btn-secondary'
-                            size="large">
-                            {showManiobras?
-                                <ExpandLess fontSize='default'/>
-                                :
-                                <ExpandMoreIcon fontSize='default'/>
-                            }
+                    <Grid container spacing={1}>
+                        <Grid item xs={2}>
+                            <Typography variant="h3" component="h2" >
+                                Maniobras
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton
+                                style={{marginLeft:'10.5%', fontSize:".9em"}}
+                                onClick={()=> {setShowManiobras(showManiobras?false:true); document.querySelector('.MAN').classList.toggle('hide')}}
+                                className='btn-secondary'
+                                size="large">
+                                {showManiobras?
+                                    <ExpandLess fontSize='medium'/>
+                                    :
+                                    <ExpandMoreIcon fontSize='medium'/>
+                                }
 
-                        </IconButton>
-                    </Typography>
+                            </IconButton>
+                        </Grid>
+                    </Grid>
                     <div className='MAN hide'>
                     <Maniobras
                         handleChangeManiobras={handleChangeManiobras}
@@ -882,8 +876,8 @@ export default function CrearTarifaRangos(props) {
                     />
                     </div>
                 </Paper>
-                <Paper style={{padding: '20px'}}>
-                    <Grid container spacing={2}>
+                <Paper style={{padding: '20px', marginBottom: '10px'}}>
+                    <Grid container spacing={1}>
                         <Grid item xs={2}>
                             <Typography variant="h3" component="h2">
                                 Milla Intermedia
@@ -891,13 +885,14 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                         <Grid item xs={1}>
                             <IconButton
+                                style={{fontSize:".9em"}}
                                 onClick={()=> {setShowMM(showMM?false:true); document.querySelector('.MM').classList.toggle('hide')}}
                                 className='btn-secondary'
                                 size="large">
                                 {showMM?
-                                    <ExpandLess fontSize='default'/>
+                                    <ExpandLess fontSize='medium'/>
                                     :
-                                    <ExpandMoreIcon fontSize='default'/>
+                                    <ExpandMoreIcon fontSize='medium'/>
                                 }
 
                             </IconButton>
@@ -906,7 +901,9 @@ export default function CrearTarifaRangos(props) {
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="origenLbl">Origen</InputLabel>
-                                <Select value={filtroMM.origen} onChange={(e)=>setFiltroMM({...filtroMM,origen: e.target.value})} labelId='origenLbl' label=''>
+                                <Select value={filtroMM.origen}
+                                        onChange={(e)=>setFiltroMM({...filtroMM,origen: e.target.value})}
+                                        label='Origen' InputLabelProps={{shrink: true}}>
                                     <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
                                     {origenesDestinosListado.map(item=>{
                                         return <MenuItem value={item.m_nIdCiudad}>{item.m_sCiudad}</MenuItem>
@@ -918,7 +915,9 @@ export default function CrearTarifaRangos(props) {
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="destLabel">Destino</InputLabel>
-                                <Select value={filtroMM.destino} onChange={(e)=>setFiltroMM({...filtroMM,destino: e.target.value})} labelId='destLabel' label=''>
+                                <Select value={filtroMM.destino}
+                                        onChange={(e)=>setFiltroMM({...filtroMM,destino: e.target.value})}
+                                        label='Destino' InputLabelProps={{shrink: true}}>
                                     <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
                                     {origenesDestinosListado.map(item=>{
                                         return <MenuItem value={item.m_nIdCiudad}>{item.m_sCiudad}</MenuItem>
@@ -969,7 +968,8 @@ export default function CrearTarifaRangos(props) {
                             </Tooltip>
                         </Grid>
                         <Grid item xs={2}>
-                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo} disabled={props.disabled}>
+                            <Button fullWidth variant={"contained"} color={"primary"} style={{fontSize:".9em"}}
+                                    onClick={handleOnAgregarViajeForaneo} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
                                 &nbsp;&nbsp;Agregar viaje
                             </Button>
@@ -1022,7 +1022,9 @@ function DialogSelectList(props) {
     };
 
     const [search, setSearch] = useState("")
+
     const [dataFiltered, setDataFiltered] = useState(props.rows)
+
     const handleOnChangeSearch = (event) => {
         setSearch(event.target.value)
     }

@@ -114,7 +114,6 @@ export default function DialogoNuevoConcepto(props) {
 
     const handleAceptar = (e) => {
         e.preventDefault()
-        console.log((concepto.importe<=0)) 
         
         if(concepto.concepto == null){
         setErrores(errores=>{
@@ -158,7 +157,6 @@ export default function DialogoNuevoConcepto(props) {
       
         if (concepto.concepto !== null && concepto.importe>=0){
             handleClose()
-            console.log(concepto)
             props.agregarConcepto(concepto)
             resetPaquete()
         }

@@ -236,7 +236,7 @@ function Productos() {
       m_nNoProducto: form.IdProducto,
       m_bPredeterminado: form.predeterminado
     };
-    console.log(params)
+
      if (form.IdProducto != 0) {
       if(params.m_nIdEmbalaje == ""){
         showSuccess("Seleccionar Embalaje")

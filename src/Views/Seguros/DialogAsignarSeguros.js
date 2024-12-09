@@ -121,6 +121,7 @@ function DialogAsignarSeguros(props) {
                     <TextField variant="outlined" margin="dense"
                                className="form-control"
                                type="number"
+                               size="small"
                                required
                                fullWidth
                                disabled={!state.aplicaSeguro}
@@ -143,6 +144,7 @@ function DialogAsignarSeguros(props) {
 
                         <TextField variant="outlined" margin="dense"
                                    className="form-control"
+                                   size="small"
                                    type="text"
                                    required
                                    fullWidth
@@ -163,6 +165,7 @@ function DialogAsignarSeguros(props) {
                     <Grid item xs={6}>
                         <TextField variant="outlined" margin="dense"
                                    className="form-control"
+                                   size="small"
                                    type="text"
                                    required
                                    fullWidth

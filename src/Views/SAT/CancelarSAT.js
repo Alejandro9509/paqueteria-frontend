@@ -414,7 +414,6 @@ export function RecoleccionResumen(props) {
         }
         obtenerZonaOperativaByCodigoPostal(row.data.m_sCodigoPostal).then(
             ( zonaOperativa ) => {
-                console.log(JSON.stringify(zonaOperativa))
                 if(props.destinatario){
                     props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
                 }
@@ -531,7 +530,6 @@ export function RecoleccionResumen(props) {
             status.message = "No hay tipo de seguro"
             return status
         }
-        console.log(params.m_xPorcentajeSeguro)
         if (!(params.m_xPorcentajeSeguro >= 0)){
             status.valid = false
             status.message = "No hay porcentaje de seguro"
@@ -687,7 +685,6 @@ export function RecoleccionResumen(props) {
                 showSuccess(status.message)
                 return
             }
-            // console.log(JSON.stringify(params))
             props.onSubmitData(params)
         }catch (err){
             showSuccess("Hubo un error al procesar la informacion intente más tarde")

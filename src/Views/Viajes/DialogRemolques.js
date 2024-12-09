@@ -29,7 +29,6 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy, isTorton }
                         handleClose()
                     }
                     const remolques = respuesta.data.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28);
-                    console.log(respuesta.data);
                     setListadoRemolques(remolques)
                 }).catch((e) => {
                     console.log(e.toString())

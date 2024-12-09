@@ -11,8 +11,6 @@ async function obtenerFechaInicio(){
     trackPromise(
         result =  axios.get(url, { headers })
         );
-        console.log(result)
-
     return result
 }
 
@@ -22,8 +20,6 @@ async function obtenerFechaFinal(){
     trackPromise(
         result =  axios.get(url, { headers })
         );
-
-        console.log(result)
     return result
 }
 
@@ -33,8 +29,6 @@ function validarDerecho(idUsuario,idPrivilegio,idTipo){
     trackPromise(
         result =  axios.get(url, { headers })
         );
-
-        console.log(result)
     return result
 }
 

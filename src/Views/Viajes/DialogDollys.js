@@ -25,7 +25,6 @@ function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
                         showSuccess('No hay dollys que pertenezcan al mismo Convoy')
                         handleClose()
                     }
-                    console.log(respuesta.data);
                     // Filtra los Dollys
                     const dollys = respuesta.data.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28);
                     setListadoDollys(dollys)

@@ -118,9 +118,7 @@ function DialogTableClientes(props) {
                         rows={rows}
                         getRowId={((row) => row.m_nIdCliente)}
                         onRowSelectionModelChange={(newRowSelectionModel, e) => {
-                            console.log(newRowSelectionModel)
                             rowSelect = rows.find(i => i.m_nIdCliente === newRowSelectionModel[0])
-                            console.log(rowSelect)
                         }}
                         page={pagina}
                         pagination

@@ -1,16 +1,9 @@
-import React, {useEffect, useState, useMemo} from "react";
-import DataTable from 'react-data-table-component';
-import DataTableExtensions from "react-data-table-component-extensions";
-import axios from "axios";
+import React, {useEffect, useState} from "react";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import ExportCSV from '../Components/Template/Export';
-import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
-import {useTable, useFilters, useSortBy} from 'react-table'
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import {DataGrid} from '@mui/x-data-grid';
 import Noty from 'noty';
 import AgregarViaje from "./Viajes/AgregarViaje";
@@ -18,7 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
-import {API_HEADERS, dataGridLocaleText} from "../Constants";
+import {dataGridLocaleText} from "../Constants";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
 import {
@@ -35,9 +28,7 @@ import {
     ListItemText, Link, Chip, Grid, MenuItem
 } from "@mui/material";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
-import Historial from "./Viajes/Historial";
 import {confirmAlert} from "react-confirm-alert";
-import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
 import AsignarOperador from "./Viajes/AsignarOperador";
@@ -45,11 +36,9 @@ import {
     agregarViajeSalida,
     agregarViajeLlegada,
     obetenerViajeId,
-    obtenerViajes,
     obtenerXML,
     obtenerViajesByFiltro,
     obtenerCFDI,
-    obtenerReporteCFDI,
     obtenerReporteCFDIViaje,
     cancelarViaje,
     validarSalidaParada,
@@ -60,30 +49,23 @@ import {
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
-    cancelarInformes,
-    obtenerInformeFiltro, obtenerInformesId,
-    obtenerInformesPorViaje,
     obtenerXMLCFDI
 } from "../Util/Contexts/InformesContext";
-import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
-import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
+import {obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import Filtros from "./Filtros/Filtros";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasContext";
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import GetAppIcon from '@mui/icons-material/GetApp';
 import CancelarSAT from "./SAT/CancelarSAT";
 import {cancelarInformeCFDI, enviarCorreoCFDIViaje, obtenerClavesByInforme} from "../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
-import { RowingSharp } from "@mui/icons-material";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { obtenerTrayectosByRuta } from "../Util/Contexts/RutasContext";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {
-    imprimirFormatosIdIdTipoReporte, imprimirFormatosIdTimbradoViajes,
+    imprimirFormatosIdTimbradoViajes,
     obtenerFormatosImpresionProceso
 } from "../Util/Contexts/FormatosImpresionContext";
 import {GridColDef} from "@mui/x-data-grid";
@@ -180,11 +162,8 @@ function Viajes() {
         });
     }
 
-
-
     function handleEliminar(id,idEstatus) {
         var derecho;
-        console.log(`id estatus ${idEstatus}`)
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
 
@@ -198,7 +177,6 @@ function Viajes() {
                 return
             }
 
-
             confirmAlert({
                 title: 'Confirmar Eliminar',
                 message: '¿Está seguro de eliminar viaje?',
@@ -206,14 +184,12 @@ function Viajes() {
                     {
                         label: 'Sí',
                         onClick: () => {
-
-                          eliminarViaje(id,idEstatus).then(respuesta => {
-                                   showSuccess(respuesta.data)
-                                  getAllData();
-                                }).catch(err => {
-                                  showSuccess(err)
-                                 })
-
+                            eliminarViaje(id,idEstatus).then(respuesta => {
+                                showSuccess(respuesta.data)
+                                getAllData();
+                            }).catch(err => {
+                                showSuccess(err)
+                            })
                         }
                     },
                     {
@@ -224,8 +200,6 @@ function Viajes() {
         }).catch(err => {
             showSuccess(err)
         });
-
-
     }
 
     function handleShowModificar(id) {
@@ -240,7 +214,6 @@ function Viajes() {
         $('#Agregar').addClass('in show');
 
         obetenerViajeId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState(state => {
                 return {
                     ...state,
@@ -274,6 +247,7 @@ function Viajes() {
             })
         });
     }
+
     function handleShowReportes() {
         clearData()
         $('.nav-tabs li ').removeClass('active');
@@ -288,6 +262,7 @@ function Viajes() {
             }
         })
     }
+
     function handleShowAgregar() {
         clearData()
         setState(state => {
@@ -346,6 +321,7 @@ function Viajes() {
             }
         });
     }
+
     const clearData = () => {
         setState(state => {
             return {
@@ -360,6 +336,7 @@ function Viajes() {
             }
         })
     }
+
     const getCurrentDateTime = () => {
         let fechaHoraActual=new Date();
         return fechaHoraActual.toISOString().split('T')[0] + "T" + fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0');
@@ -372,6 +349,7 @@ function Viajes() {
             [event.target.id]: event.target.value,
         });
     };
+
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -523,8 +501,6 @@ function Viajes() {
         }
     }, [viajeSeleccionado]);
 
-
-
     function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
@@ -574,19 +550,16 @@ function Viajes() {
 
     }
     function descargarXMLCFDITimbrado(id, folio,xml) {
-            var filename = folio+".xml";
-            var pom = document.createElement('a');
-            var bb = new Blob([xml], {type: 'text/plain'});
-            pom.setAttribute('href', window.URL.createObjectURL(bb));
-            pom.setAttribute('download', filename);
+        var filename = folio+".xml";
+        var pom = document.createElement('a');
+        var bb = new Blob([xml], {type: 'text/plain'});
+        pom.setAttribute('href', window.URL.createObjectURL(bb));
+        pom.setAttribute('download', filename);
 
-            pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
-            pom.draggable = true;
-            pom.classList.add('dragout');
-
-            pom.click();
-
-
+        pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+        pom.draggable = true;
+        pom.classList.add('dragout');
+        pom.click();
     }
     function descargarPDFOpcion1(id,idInforme,folio) {
         obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
@@ -612,8 +585,6 @@ function Viajes() {
             m_sFolioInforme:folio
         })
         setOpenDialog(true)
-
-
         /*obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
             try{
                 const link = document.createElement('a');
@@ -658,7 +629,6 @@ function Viajes() {
     }
 
     const handleOnChangeReporte = (data) => {
-        console.log(data)
         setState({
             ...state,
             reporteSeleccionado: data
@@ -667,8 +637,6 @@ function Viajes() {
 
     const handleGenerarReporte=(e)=>{
         e.preventDefault()
-        console.log(state.reporteSeleccionado)
-        console.log(seleccion)
 
         if (state.reporteSeleccionado.length === 0) {
             showError("Es necesario seleccionar al menos un reporte")
@@ -676,7 +644,6 @@ function Viajes() {
         }
 
         imprimirFormatosIdTimbradoViajes(state.reporteSeleccionado,seleccion.m_nIdViaje, seleccion.m_nIdInforme).then(({data}) => {
-            console.log(data)
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
@@ -726,8 +693,6 @@ function Viajes() {
         }).catch(error=>{
             showError(error.response.data)
         })
-
-
     }
 
     function showCancelarCFDI(informe){
@@ -735,6 +700,7 @@ function Viajes() {
             return {...state,openCancelarSAT: true, informe: informe}
         })
     }
+
     function cancelarCFDI( data) {
         obtenerParametrosConfiguracion().then(respuesta => {
             let titulo;
@@ -865,8 +831,6 @@ function Viajes() {
         showDetalleGuias: false,
     });
 
-
-
     const showActualizarDispEquipo = (equipo) => {
         setEquipoSelected(equipo)
         setEventOptions({...eventOptions, showDispEquipoDialog: true});
@@ -893,7 +857,7 @@ function Viajes() {
                 })), folioInforme)
             })
             .catch(e => {
-                console.log('mamó')
+                console.log(e)
             })
 
     };
@@ -913,7 +877,6 @@ function Viajes() {
 
 
     /**DETALLE DE PARADAS*/
-
     const columnsParadas:GridColDef=[
         {
             headerName: "Acciones",
@@ -989,9 +952,6 @@ function Viajes() {
 
                             </Tooltip>
                         }
-
-
-
                     </div>
                 )
             }
@@ -1067,6 +1027,7 @@ function Viajes() {
         //     width: 80,
         // }, */
     ]
+
     const [paradasListado, setParadasListado] = React.useState([]);
 
     const [paradaData, setParadaData] = React.useState();
@@ -1081,11 +1042,13 @@ function Viajes() {
             setParadasListado(respuesta.data);
         });
     }
+
     const showCancelarDialog = (data) => {
         setParadaData(data);
         setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
     }
+
     const showSalidaDialog = (e,data) => {
         e.preventDefault()
         obtenerParametrosConfiguracion().then(parametros => {
@@ -1147,8 +1110,6 @@ function Viajes() {
     }
 
     function updateSalida(data) {
-
-
         //e.preventDefault();
         var params = {
             //m_dFecha: state.fechaHoraRegistro.split("T")[0],
@@ -1168,11 +1129,7 @@ function Viajes() {
             m_sMotivoRetraso: data.motivoRetraso,
             m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
             m_nIdCiudadDestino: paradaData.m_nIdDestino,
-
-
             m_nIdRuta: paradaData.m_nIdViajeTrayecto,
-
-
             // m_nIdEstatusViaje: this.state.estatusListado,
             // m_nIdSucursal : this.state.idSucursalAgregar,
             // m_sCandadoOficial : this.state.candadoOficial,
@@ -1181,10 +1138,7 @@ function Viajes() {
             // m_sNumViajeCliente : this.state.viajeCliente,
             // CreadoPor : this.state.CreadoPor,
             // m_arrInformes : this.state.dataInformes
-
         }
-
-        console.log(params)
 
         agregarViajeSalida(params)
             .then((respuesta) => {
@@ -1225,7 +1179,6 @@ function Viajes() {
             m_tHoraLlegada: data.horaLlegada,
             m_nTipoCambio: data.tipoDeCambioOrigen
         }
-        console.log(params)
 
         agregarViajeLlegada(params)
             .then((respuesta) => {
@@ -1255,11 +1208,6 @@ function Viajes() {
             ...eventOptions,
             showAsignarOperadorDialog: false
         })
-    }
-
-    function submitOperadorUnidad(data) {
-        console.log("Llamar servicio operador unidad");
-        console.log(data);
     }
 
     const setDataListado = (listado) => {

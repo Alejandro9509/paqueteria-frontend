@@ -184,8 +184,6 @@ function TarifasRegion(props){
                 productos: v.dataProductosSeleccionados
             })) || []
         }
-        console.log(JSON.stringify(params))
-        console.log(params)
         if (state.selected?.m_nIdTarifa > 0) {
             modificarTarifa(state.selected.m_nIdTarifa, params).then(respuesta => {
                 if (respuesta.data.Estatus){

@@ -206,7 +206,6 @@ export default function ConceptosFacturacion(props) {
     const handleConceptoClick = (event, newValue) => {
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
-            console.log(newValue)
             if (respuesta.data.length > 0){
                 setConcepto(concepto =>{
                     return {
@@ -228,13 +227,11 @@ export default function ConceptosFacturacion(props) {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        console.log(concepto)
         props.agregarConcepto(concepto)
         resetConcepto()
     }
 
     const removeConcepto = (item) => {
-        console.log(concepto)
         props.eliminarConcepto(item)
     }
 

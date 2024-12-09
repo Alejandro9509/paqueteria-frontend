@@ -74,7 +74,6 @@ class UnidadesList extends Component {
     }
 
     getAllUnidades() {
-        console.log(this.props.paquetes)
         const params = {
             guias: this.props.paquetes.filter(p => !p.m_bEsRecoleccion).map(p => ({m_nIdGuia: p.m_nId}))
         }

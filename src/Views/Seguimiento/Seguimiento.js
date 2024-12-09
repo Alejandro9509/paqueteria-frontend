@@ -4,11 +4,8 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import {
     Box,
     Button,
-    Checkbox,
     createFilterOptions,
     FormControlLabel,
-    FormGroup,
-    FormLabel,
     Grid,
     Radio,
     RadioGroup,
@@ -78,7 +75,6 @@ class Seguimiento extends Component {
 
     handleChage(e){
         e.preventDefault()
-        console.log(e.target.name)
         this.setState({
             [e.target.name] : e.target.value
         })
@@ -109,6 +105,7 @@ class Seguimiento extends Component {
             
         })
     }
+
     handleClickCloseDialogoEvidenciaRecoleccion(openDialog){
         this.setState({
             setOpenDialogEvidenciasRecoleccion: openDialog
@@ -133,11 +130,9 @@ class Seguimiento extends Component {
                 setOpenDialogEvidenciasEntrega: openDialog
             })
         }
-
     }
+
     render() {
-
-
         moment.locale("es");
         return (
             <div>
@@ -175,8 +170,7 @@ class Seguimiento extends Component {
                 <section className="main-container">
                     <div className="container-fluid">
                         <div className="widget-wrap">
-
-                            <div className="widget-content">
+                            <div className="widget-content" style={{marginBottom:"1%"}}>
                                 <Grid container alignItems={"center"} justifyContent={"flex-start"}>
 
                                     <Grid item>
@@ -260,30 +254,33 @@ class Seguimiento extends Component {
                                         </RadioGroup>
                                     </Grid>
                                     <Grid item>
-                                        <Button size={"small"} color={"primary"} onClick={this.buscarAction} variant={"contained"}>Buscar</Button>
+                                        <Button size={"small"} color={"primary"} onClick={this.buscarAction}
+                                                variant={"contained"} style={{fontSize:"1em"}}>
+                                            Buscar
+                                        </Button>
                                     </Grid>
                                 </Grid>
                             </div>
-
                             {
                                 Object.keys(this.state.data).length !== 0 &&
-                                <div style={{padding: "10px"}}>
+                                <div style={{padding: "10px", borderStyle: "solid", borderWidth: "1px", borderRadius: "10px", marginBottom: "4px"}}>
                                     <InformacionBasica data={this.state.data}/>
                                 </div>
                             }
                             {
                                 Object.keys(this.state.data).length !== 0 &&
-                                <div style={{padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
+                                <div style={{padding: "5px", borderStyle: "solid", borderWidth: "1px", borderRadius: "10px"}}>
                                     <RemitenteDestinatario data={this.state.data}/>
                                 </div>
                             }
                             {
                                 Object.keys(this.state.data).length !== 0 &&
                                 <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                                    <Typography variant={"h4"} align={"center"}>Paquetes y Sobres</Typography>
+                                    <Typography variant={"h4"} align={"center"} style={{marginBottom: "-30px", fontWeight:"bold"}}>
+                                        Paquetes y Sobres
+                                    </Typography>
                                     <Paquetes
                                         dataPaquetes={this.state.data.paquetes}
-                                        onChangeList={() => console.log("")}
                                         disabled={true}
                                     />
                                 </div>
@@ -306,88 +303,52 @@ class Seguimiento extends Component {
                                             })) : []} format="hh:mm a"/>
 
                                         </div>
-                                      <div>
-                                        <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                                         <Grid container spacing={3}>
-                                         <Grid item md={12}>
-                                            <Typography variant={"h4"} align={"center"}>Evidencias</Typography>
-                                         </Grid>
-                                         
-                                         <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
-                                         <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column" textAlign="center" alignItems="center">
-                                        <Typography variant={"h4"} style={{marginBottom:"10px"}}>Recolección</Typography>
-                                             <Grid item md={12}>
-                                                 Entregó: {this.state.data.m_sReceptorRecoleccion}
-                                                 <Button fullWidth variant="text" color="primary" onClick={() => this.handleClickOpenDialogoEvidencia(true, true)}>
-                                                     Ver evidencias de recolección
-                                                 </Button>
-                                             </Grid>
-                                        {/*{
-                                        this.state.imagenesEvidenciaRecoleccion.length == 0?
-                                         <Typography variant={"h5"} style={{margin:"20%"}}>No hay evidencias</Typography>:
-                                        this.state.imagenesEvidenciaRecoleccion.length != 0 &&
-                                        <Grid item md={6}>
-                                           <div id="divRecoleccion">
-                                            
-                                            {this.state.imagenesEvidenciaRecoleccion.reverse().map( (img,index)=>(
-                                                        <img style={{width: "180px", height: "180px",margin: "0 0 0 -10px",marginBottom:"10px",outline:"solid 1px black"}}
-                                                         src={`data:image/jpeg;base64,${img.m_sImagen}`} key={index} />))
-                                            }
-                                               Entregó: {this.state.data.m_sReceptorRecoleccion}
-                                              </div>   
-                                                                          
-                                        </Grid>
-                                           }*/}
-                                        
-                                         </Box>
-                                            
-                                         </Grid>
-                                         <Grid item md={12}>
-                                             <Box display="flex" p={1} bgcolor="background.paper" flexDirection="column"
-                                                  alignItems="center" textAlign="center">
-                                                 <Typography variant={"h4"}
-                                                             style={{marginBottom: "10px"}}>Entrega</Typography>
-                                                 <Grid item md={6}>
-                                                     Entregó: {this.state.data.operadorEntrega}
-                                                     <br/>
-                                                     Recibió: {this.state.data.m_sReceptorGuia}
-                                                     <Button fullWidth variant="text" color="primary"
-                                                             onClick={() => this.handleClickOpenDialogoEvidencia(true, false)}>
-                                                         Ver evidencias de entrega
-                                                     </Button>
-                                                 </Grid>
-                                                 {/*{
-                                                     this.state.imagenesEvidenciaEmbarque.length == 0 ?
-                                                         <Typography variant={"h5"}>No hay evidencias</Typography> :
+                                        <div>
+                                            <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",
+                                                borderWidth: "1px",borderRadius: "10px"}}>
+                                                <Grid container spacing={3}>
+                                                    <Grid item md={12}>
+                                                        <Typography variant={"h4"} align={"center"}>
+                                                            Evidencias
+                                                        </Typography>
+                                                    </Grid>
 
-                                                         <Grid item md={6}>
-
-                                                             <div id="divEmbarque">
-                                                                 {this.state.imagenesEvidenciaEmbarque.reverse().map((img, index) => (
-                                                                     <img style={{
-                                                                         width: "180px",
-                                                                         height: "180px",
-                                                                         margin: "0 0 0 -10px",
-                                                                         marginBottom: "10px",
-                                                                         outline: "solid 1px black"
-                                                                     }}
-                                                                          src={`data:image/jpeg;base64,${img.m_sImagen}`}
-                                                                          key={index}/>))
-                                                                 }
-                                                                 Recibió: {this.state.data.m_sReceptorGuia}
-                                                             </div>
-
-                                                         </Grid>
-
-                                                 }*/}
-                                             </Box>
-                                         </Grid>
-                                       
-                                         
-                                            </Grid>
+                                                    <Grid item md={6}  style={{borderRight: "dotted 2px rgb(249, 160, 62)"}}>
+                                                        <Box display="flex" p={1} bgcolor="background.paper"
+                                                             flexDirection="column" textAlign="center" alignItems="center">
+                                                            <Typography variant={"h4"} style={{marginBottom:"10px"}}>
+                                                                Recolección
+                                                            </Typography>
+                                                            <Grid item md={12}>
+                                                                Entregó: {this.state.data.m_sReceptorRecoleccion}
+                                                                <Button fullWidth variant="text" color="primary"
+                                                                        onClick={() => this.handleClickOpenDialogoEvidencia(true, true)}>
+                                                                    Ver evidencias de recolección
+                                                                </Button>
+                                                            </Grid>
+                                                        </Box>
+                                                    </Grid>
+                                                    <Grid item md={12}>
+                                                        <Box display="flex" p={1} bgcolor="background.paper"
+                                                             flexDirection="column" alignItems="center" textAlign="center">
+                                                            <Typography variant={"h4"}
+                                                                 style={{marginBottom: "10px"}}>
+                                                                Entrega
+                                                            </Typography>
+                                                            <Grid item md={6}>
+                                                                Entregó: {this.state.data.operadorEntrega}
+                                                                <br/>
+                                                                Recibió: {this.state.data.m_sReceptorGuia}
+                                                                <Button fullWidth variant="text" color="primary"
+                                                                     onClick={() => this.handleClickOpenDialogoEvidencia(true, false)}>
+                                                                    Ver evidencias de entrega
+                                                                </Button>
+                                                            </Grid>
+                                                        </Box>
+                                                    </Grid>
+                                                </Grid>
+                                            </div>
                                         </div>
-                                        </div>
-                                        
                                     </Grid>
                                     <Grid item md={6}>
                                         <div style={{
@@ -403,14 +364,10 @@ class Seguimiento extends Component {
                                                 dataPaquetes={this.state.data.conceptos}
                                                 conceptosBase={[]}
                                             />
-
                                         </div>
                                     </Grid>
                                 </Grid>
-
                             }
-
-
                         </div>
                     </div>
                 </section>

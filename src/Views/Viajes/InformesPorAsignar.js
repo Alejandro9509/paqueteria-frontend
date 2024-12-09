@@ -21,7 +21,7 @@ class InformesPorAsignar extends Component {
                     rows={this.props.dataInformesAsignados}
                     columns={this.props.columns}
                     density="compact"
-                    getRowId={(row) => { console.log(row); return row.m_nIdInforme}}
+                    getRowId={(row) => { return row.m_nIdInforme}}
 
                 />
             </div>

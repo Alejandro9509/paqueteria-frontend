@@ -4025,7 +4025,6 @@ function Embarque(props) {
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" size="small"
-                                                                           className="form-control"
                                                                            type="number"
                                                                            required
                                                                            disabled={state.agregar === "Consultar" || !state.aplicaSeguro || state.embarqueConGuia}
@@ -4056,7 +4055,6 @@ function Embarque(props) {
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" size="small"
-                                                                           className="form-control"
                                                                            type="number"
                                                                            required
                                                                            disabled={(state.agregar === "Consultar") || (configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro) || state.embarqueConGuia}
@@ -4106,7 +4104,6 @@ function Embarque(props) {
                                                                 <StyledEngineProvider injectFirst>
                                                                     <ThemeProvider theme={theme}>
                                                                         <FormControlLabel
-
                                                                             control={
                                                                                 <Switch
                                                                                     checked={state.validarTimbrado ?? false}
@@ -4135,7 +4132,6 @@ function Embarque(props) {
                                                                     <InputLabel>Tipo de servicio</InputLabel>
                                                                     <Select
                                                                         label="Tipo de servicio"
-                                                                        className="form-control"
                                                                         onChange={handleChange}
                                                                         name="tipoTimbrado"
                                                                         required

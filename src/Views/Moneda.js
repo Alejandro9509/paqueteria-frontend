@@ -112,7 +112,6 @@ function Moneda() {
             }
             eliminarMonedas(id).then(respuesta => {
                 showSuccess(respuesta.data)
-                console.log(JSON.stringify(respuesta))
                 getAllData();
                // window.location.reload();
             }).catch(err => {
@@ -191,7 +190,6 @@ function Moneda() {
     }
 
     const handleChange = event => {
-        console.log(event.target.value)
         setState({
             ...state,
             [event.target.id]: event.target.value

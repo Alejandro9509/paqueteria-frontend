@@ -74,8 +74,6 @@ function ImportarEmbarques(props) {
             descargarPlantillaImportarEmbarque(state.cliente.m_nIdCliente).then(response => {
                 // create file link in browser's memory
                 let file = new Blob([response.data],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
-                console.log(file)
-                console.log(response.data)
                 const href = URL.createObjectURL(file);
 
                 // create "a" HTML element with href to file & click
@@ -106,10 +104,7 @@ function ImportarEmbarques(props) {
                     let params = {
                         embarques: resultado
                     }
-                    console.log(resultado)
-                    console.log(params)
                     validarEmbarquesImportados(params).then(respuesta => {
-                        console.log(respuesta.data)
                         if(typeof respuesta.data==="string"){
                             showSuccess(respuesta.data)
                         }
@@ -137,10 +132,7 @@ function ImportarEmbarques(props) {
                     let params = {
                         embarques: resultado
                     }
-                    console.log(resultado)
-                    console.log(params)
                     validarEmbarquesImportados(params).then(respuesta => {
-                        console.log(respuesta.data)
                         setState({
                             ...state,
                             embarques: respuesta.data
@@ -179,8 +171,6 @@ function ImportarEmbarques(props) {
                 embarque.conceptosFacturacion = embarque.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion!==true)
             })
 
-            console.log(params)
-            console.log(JSON.stringify(params))
             // return
             agregarEmbarquesImportados(params).then(respuesta => {
                 showSuccess(respuesta.data)

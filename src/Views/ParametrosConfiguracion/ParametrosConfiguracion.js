@@ -5,7 +5,7 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import {
     Box,
     Button,
-    Checkbox, Dialog, DialogActions, DialogContent, DialogTitle,
+    Checkbox,
     FormControl, Grid,
     InputLabel, MenuItem,
     Paper,
@@ -19,8 +19,6 @@ import {
     obtenerEstatusRecoleccion,
     obtenerEstatusEmbarque,
     obtenerEstatusGuia,
-    obtenerEstatusInforme,
-    obtenerEstatusViaje
 } from "../../Util/Contexts/EstatusContext";
 import {validarDerecho} from "../../Util/Util"
 import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
@@ -40,7 +38,6 @@ import {EditorState, ContentState, convertToRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
-import {FilePond} from "react-filepond";
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css'
 import DialogTiposDocumentoSucursal from "./DialogTiposDocumentoSucursal";
@@ -472,8 +469,8 @@ function ParametrosConfiguracion() {
             <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
 
             <header className="topbar clearfix">
-                <Cabecera titulo="Parametros Configuración">
-                    <div className="page-header">
+                <Cabecera titulo={"Parámetros de\nConfiguración"}>
+                <div className="page-header">
                         <ul className="list-page-breadcrumb">
                             <li>
                                 <a href="/Catalogos" className="color-mapeo">
@@ -490,24 +487,22 @@ function ParametrosConfiguracion() {
             </aside>
             <TabContext value={tabIndex}>
                 <Paper square>
-
                     <Tabs
                         value={tabIndex}
                         indicatorColor="primary"
                         textColor="primary"
-                        variant="fullWidth"
+                        //variant="fullWidth"
                         onChange={handleTab}
                         centered
                     >
-                        <Tab style={{fontSize:"1em"}} label="General" value="0"/>
-                        <Tab style={{fontSize:"1em"}} label="Embarque" value="1"/>
-                        <Tab style={{fontSize:"1em"}}label="Recolección" value="2"/>
-                        <Tab style={{fontSize:"1em"}} label="Guía" value="3"/>
-                        <Tab style={{fontSize:"1em"}} label="Tarifas" value="4"/>
-                        <Tab style={{fontSize:"1em"}} label="Correos" value="5"/>
-                        <Tab style={{fontSize:"1em"}} label="Facturación" value="6"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} size={"medium"} label="General" value="0"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Embarque" value="1"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Recolección" value="2"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Guía" value="3"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Tarifas" value="4"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Correos" value="5"/>
+                        <Tab style={{fontSize:"1em", width: "9%"}} label="Facturación" value="6"/>
                     </Tabs>
-
                 </Paper>
                 <section className="main-container">
                     <div className="container-fluid">
@@ -552,15 +547,14 @@ function ParametrosConfiguracion() {
 
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
-                                            style={{width: "100px"}}
+                                            style={{width: "100px", fontSize:"1em"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
                                 </Box>
-                            </Box></TabPanel>
+                            </Box>
+                        </TabPanel>
                         <TabPanel value="1">
-
-
                             <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                  flexDirection="column">
                                 <Box width="40%" p={1} my={0.5} display="flex">
@@ -572,13 +566,13 @@ function ParametrosConfiguracion() {
                                             <InputLabel id="idEmbarqueLabel">Estatus</InputLabel>
                                             <Select
                                                 labelId="estatusEmbarqueLabel"
-                                                className="form-control"
                                                 required
                                                 onChange={handleChange}
                                                 value={configuraciones.estatusEmbarque}
                                                 label="Estatus"
                                                 id="estatusEmbarque"
                                                 name="estatusEmbarque"
+                                                InputLabelProps={{shrink: true}}
                                             >
                                                 {dataEstatusEmbarque.map((estatus) => (
                                                     <MenuItem key={estatus.m_nIdEstatusEmbarque}
@@ -596,14 +590,12 @@ function ParametrosConfiguracion() {
                                         <div className={classes.subtitulo}>Moneda predeterminada</div>
                                     </Box>
                                     <Box width="60%" p={1} my={0.5}>
-                                        <FormControl fullWidth variant="outlined"
-                                                     size="small">
+                                        <FormControl fullWidth variant="outlined" size="small">
                                             <InputLabel id="idMonedaLabel">Moneda</InputLabel>
                                             <Select
                                                 labelId={"idMonedaLabel"}
                                                 label={"Moneda"}
                                                 name="monedaPredeterminadaEmbarque"
-                                                className="form-control"
                                                 required
                                                 onChange={handleChange}
                                                 value={configuraciones.monedaPredeterminadaEmbarque}
@@ -611,6 +603,7 @@ function ParametrosConfiguracion() {
                                                 InputProps={{
                                                     name: "monedaPredeterminadaEmbarque"
                                                 }}
+                                                InputLabelProps={{shrink: true}}
                                             >
                                                 {dataMonedaEmbarque.map((moneda) => (
                                                     <MenuItem
@@ -622,7 +615,6 @@ function ParametrosConfiguracion() {
                                                 ))}
                                             </Select>
                                         </FormControl>
-
                                     </Box>
                                 </Box>
                                 <Box width="40%" p={1} my={0.5} display="flex">
@@ -630,7 +622,6 @@ function ParametrosConfiguracion() {
                                         <div className={classes.subtitulo}>Tipo de cambio por defecto</div>
                                     </Box>
                                     <Box width="60%" p={1} my={0.5}>
-
                                         <FormControl fullWidth
                                                      variant="outlined"
                                                      required
@@ -640,11 +631,11 @@ function ParametrosConfiguracion() {
                                             <Select
                                                 labelId="tipoCambioLabel"
                                                 label="Tipo de Cambio"
-                                                className="form-control"
                                                 name="tipoCambioEmbarque"
                                                 value={configuraciones.tipoCambioEmbarque}
                                                 id="tipoCambioEmbarque"
                                                 onChange={handleChange}
+                                                InputLabelProps={{shrink: true}}
                                             >
                                                 {dataTipoCambioEmbarque.map((cambio) => (
                                                     <MenuItem
@@ -672,11 +663,11 @@ function ParametrosConfiguracion() {
                                             <Select
                                                 labelId="tipoCambioLabel"
                                                 label="Tipo de Cobro"
-                                                className="form-control"
                                                 name="tipoCobro"
                                                 value={configuraciones.tipoCobro}
                                                 id="tipoCobro"
                                                 onChange={handleChange}
+                                                InputLabelProps={{shrink: true}}
                                             >
                                                 {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((cambio) => (
                                                     <MenuItem
@@ -793,22 +784,20 @@ function ParametrosConfiguracion() {
                                         </Button>
                                     </Box>
                                 </Box>*/}
-
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101408)} variant="contained" color="primary"
-                                            style={{width: "100px"}}
+                                            style={{width: "100px", fontSize:"1em"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
                                 </Box>
                             </Box>
-
-
                         </TabPanel>
                         <TabPanel value="2">
-                            <Box p={1}>
+                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                 flexDirection="column">
                                 <Box display="flex" p={1} my={0.5} flexDirection="column">
-                                    <h2 className={classes.subtitulo}>Recolección</h2>
+                                    {/*<h2 className={classes.subtitulo}>Recolección</h2>*/}
                                     <Box width="40%" p={1} my={0.5} display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Estatus por defecto</div>
@@ -818,13 +807,13 @@ function ParametrosConfiguracion() {
                                                 <InputLabel id="idRecoleccionLabel">Estatus</InputLabel>
                                                 <Select
                                                     labelId="estatusRecoleccionLabel"
-                                                    className="form-control"
                                                     required
                                                     value={configuraciones.estatusRecoleccion}
                                                     label="Estatus"
                                                     id="estatusRecoleccion"
                                                     name="estatusRecoleccion"
                                                     onChange={handleChange}
+                                                    InputLabelProps={{shrink: true}}
                                                 >
                                                     {dataEstatusRecoleccion.map((estatus) => (
                                                         <MenuItem key={estatus.m_nIdEstatusRecoleccion}
@@ -840,17 +829,19 @@ function ParametrosConfiguracion() {
                                 </Box>
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
-                                            style={{width: "100px"}}
+                                            style={{width: "120px", fontSize:"1em"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
                                 </Box>
-                            </Box></TabPanel>
+                            </Box>
+                        </TabPanel>
                         <TabPanel value="3">
-                            <Box p={1}>
+                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                 flexDirection="column">
                                 <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                      flexDirection="column">
-                                    <h2 className={classes.subtitulo}>Guías</h2>
+                                    {/*<h2 className={classes.subtitulo}>Guías</h2>*/}
                                     <Box width="40%" p={1} my={0.5} display="flex">
                                         <Box width="40%" p={1} my={0.5}>
                                             <div className={classes.subtitulo}>Estatus por defecto</div>
@@ -860,13 +851,13 @@ function ParametrosConfiguracion() {
                                                 <InputLabel id="idGuiaLabel">Estatus</InputLabel>
                                                 <Select
                                                     labelId="estatusGuiaLabel"
-                                                    className="form-control"
                                                     required
                                                     value={configuraciones.estatusGuia}
                                                     label="Estatus"
                                                     id="estatusGuia"
                                                     name="estatusGuia"
                                                     onChange={handleChange}
+                                                    InputLabelProps={{shrink: true}}
                                                 >
                                                     {dataEstatusGuia.map((estatus) => (
                                                         <MenuItem key={estatus.m_nIdEstatusGuia}
@@ -926,7 +917,7 @@ function ParametrosConfiguracion() {
                                 </Box>
                                 <Box margin={"0 auto"}>
                                     <Button disabled={!validarDerecho(9101410)} variant="contained" color="primary"
-                                            style={{width: "100px"}}
+                                            style={{width: "100px", fontSize: "1em"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
@@ -934,341 +925,336 @@ function ParametrosConfiguracion() {
                             </Box>
                         </TabPanel>
                         <TabPanel value="4">
-                            <Box p={1}>
-                                <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
-                                     flexDirection="column">
-                                    <h2 className={classes.subtitulo}>Tarifas</h2>
-                                    <Box display="flex" flexDirection="column">
+                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                 flexDirection="column">
+                                {/*<h2 className={classes.subtitulo}>Tarifas</h2>*/}
+                                <Box display="flex" flexDirection="column">
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Tipo de tarifa por defecto</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined"
+                                                         size="small" required>
+                                                <InputLabel> Tipo de Tarifa</InputLabel>
+                                                <Select
+                                                    label="Tipo de Tarifa"
+                                                    name="tipoTarifa"
+                                                    read="true"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.tipoTarifa}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    {/*<MenuItem value="1">Por peso o volumen</MenuItem>*/}
+                                                    <MenuItem value="2">Por rango</MenuItem>
+                                                    <MenuItem value="3">Por región</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Porcentual de Seguro por Defecto</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined"
+                                                         size="small" required>
+                                                <TextField
+                                                    variant={'outlined'}
+                                                    type={'number'}
+                                                    native
+                                                    label='Porcentual de Seguro por Defecto'
+                                                    name="porcentualSeguroDefecto"
+                                                    read="true"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.porcentualSeguroDefecto}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                </TextField>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Cobro porcentual</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5} display="flex">
+                                            <Checkbox
+                                                checked={configuraciones.cobroPorcentual}
+                                                color="primary"
+                                                disabled
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="cobroPorcentual"
+                                            />
+                                        </Box>
+                                    </Box>
+                                    { configuraciones.tipoTarifa == 2 &&
                                         <Box width="40%" display="flex">
                                             <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Tipo de tarifa por defecto</div>
+                                                <div className={classes.subtitulo}>Factor de conversión</div>
                                             </Box>
                                             <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined"
-                                                             size="small" required>
-                                                    <InputLabel> Tipo de Tarifa</InputLabel>
-                                                    <Select
-                                                        label="Tipo de Tarifa"
-                                                        className="form-control"
-                                                        name="tipoTarifa"
-                                                        read="true"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.tipoTarifa}
-                                                    >
-                                                        {/*<MenuItem value="1">Por peso o volumen</MenuItem>*/}
-                                                        <MenuItem value="2">Por rango</MenuItem>
-                                                        <MenuItem value="3">Por región</MenuItem>
-                                                    </Select>
-                                                </FormControl>
+                                                <Typography variant={'h4'}>
+                                                    {configuraciones.factorConversion}
+                                                </Typography>
                                             </Box>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Porcentual de Seguro por Defecto</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined"
-                                                             size="small" required>
-                                                    <TextField
-                                                        variant={'outlined'}
-                                                        type={'number'}
-                                                        native
-                                                        label='Porcentual de Seguro por Defecto'
-                                                        className="form-control"
-                                                        name="porcentualSeguroDefecto"
-                                                        read="true"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.porcentualSeguroDefecto}
-                                                    >
-                                                    </TextField>
-                                                </FormControl>
-                                            </Box>
+                                    }
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Cobro de cita</div>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Cobro porcentual</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5} display="flex">
-                                                <Checkbox
-                                                    checked={configuraciones.cobroPorcentual}
-                                                    color="primary"
-                                                    disabled
-                                                    style={{transform: "scale(2)"}}
-                                                    inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="cobroPorcentual"
-                                                />
-                                            </Box>
-                                        </Box>
-                                        { configuraciones.tipoTarifa == 2 &&
-                                            <Box width="40%" display="flex">
-                                                <Box width="40%" p={1} my={0.5}>
-                                                    <div className={classes.subtitulo}>Factor de conversión</div>
-                                                </Box>
-                                                <Box width="60%" p={1} my={0.5}>
-                                                    <Typography variant={'h4'}>
-                                                        {configuraciones.factorConversion}
-                                                    </Typography>
-                                                </Box>
-                                            </Box>
-                                        }
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Cobro de cita</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5} display="flex">
-                                                <Checkbox
-                                                    checked={configuraciones.cobrarCita}
-                                                    onChange={handleChecked}
-                                                    color="primary"
-                                                    style={{transform: "scale(2)"}}
-                                                    inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="cobrarCita"
-                                                />
-                                                <TextField variant="outlined" size="small"
-                                                           label="Costo($) "
-                                                           className="form-control"
-                                                           type="text"
-                                                           disabled={!configuraciones.cobrarCita}
-                                                           onChange={handleChange}
-                                                           value={configuraciones.costoCita}
-                                                           name="costoCita"
-                                                           placeholder="$"
-                                                />
+                                        <Box width="60%" p={1} my={0.5} display="flex">
+                                            <Checkbox
+                                                checked={configuraciones.cobrarCita}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="cobrarCita"
+                                            />
+                                            <TextField variant="outlined" size="small"
+                                                       label="Costo($) "
+                                                       type="text"
+                                                       disabled={!configuraciones.cobrarCita}
+                                                       onChange={handleChange}
+                                                       value={configuraciones.costoCita}
+                                                       name="costoCita"
+                                                       placeholder="$"
+                                                       InputLabelProps={{shrink: true}}
+                                            />
 
 
-                                            </Box>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Cobrar concepto Carga</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <Checkbox
-                                                    checked={configuraciones.cobrarConceptoCarga}
-                                                    onChange={handleChecked}
-                                                    color="primary"
-                                                    style={{transform: "scale(2)"}}
-                                                    inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="cobrarConceptoCarga"
-                                                    disabled={configuraciones.cobrarCargaDescargaDisabled}
-                                                />
-                                            </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Cobrar concepto Carga</div>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Cobrar concepto Descarga</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <Checkbox
-                                                    checked={configuraciones.cobrarConceptoDescarga}
-                                                    onChange={handleChecked}
-                                                    color="primary"
-                                                    style={{transform: "scale(2)"}}
-                                                    inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="cobrarConceptoDescarga"
-                                                    disabled={configuraciones.cobrarCargaDescargaDisabled}
-                                                />
-                                            </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.cobrarConceptoCarga}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="cobrarConceptoCarga"
+                                                disabled={configuraciones.cobrarCargaDescargaDisabled}
+                                            />
                                         </Box>
-                                        {/*Conceptos*/}
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Concepto de flete</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" size="small" required>
-                                                    <InputLabel
-                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
-                                                    <Select
-                                                        className="form-control"
-                                                        name="idConceptoFlete"
-                                                        read="true"
-                                                        label="Seleccionar"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.idConceptoFlete}
-                                                    >
-                                                        <MenuItem aria-label="None" value=""/>
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoFlete')).map(i => (
-                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Cobrar concepto Descarga</div>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Concepto de carga</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" size="small"
-                                                             required={configuraciones.cobrarConceptoCarga}>
-                                                    <InputLabel
-                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
-                                                    <Select
-                                                        className="form-control"
-                                                        name="idConceptoCarga"
-                                                        read="true"
-                                                        label="Seleccionar"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.idConceptoCarga}
-                                                    >
-                                                        <MenuItem aria-label="None" value=""/>
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCarga')).map(i => (
-                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.cobrarConceptoDescarga}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="cobrarConceptoDescarga"
+                                                disabled={configuraciones.cobrarCargaDescargaDisabled}
+                                            />
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Concepto de descarga</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" size="small"
-                                                             required={configuraciones.cobrarConceptoDescarga}>
-                                                    <InputLabel
-                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
-                                                    <Select
-                                                        className="form-control"
-                                                        name="idConceptoDescarga"
-                                                        read="true"
-                                                        label="Seleccionar"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.idConceptoDescarga}
-                                                    >
-                                                        <MenuItem aria-label="None" value=""/>
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoDescarga')).map(i => (
-                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
+                                    </Box>
+                                    {/*Conceptos*/}
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de flete</div>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Concepto de recolección</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" size="small" required>
-                                                    <InputLabel
-                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
-                                                    <Select
-                                                        className="form-control"
-                                                        name="idConceptoRecoleccion"
-                                                        read="true"
-                                                        label="Seleccionar"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.idConceptoRecoleccion}
-                                                    >
-                                                        <MenuItem aria-label="None" value=""/>
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoRecoleccion')).map(i => (
-                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small" required>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoFlete"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoFlete}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoFlete')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Concepto de entrega</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" size="small" required>
-                                                    <InputLabel
-                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
-                                                    <Select
-                                                        className="form-control"
-                                                        name="idConceptoEntrega"
-                                                        read="true"
-                                                        label="Seleccionar"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.idConceptoEntrega}
-                                                    >
-                                                        <MenuItem aria-label="None" value=""/>
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoEntrega')).map(i => (
-                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de carga</div>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Concepto de seguro</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" size="small" required>
-                                                    <InputLabel
-                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
-                                                    <Select
-                                                        className="form-control"
-                                                        name="idConceptoSeguro"
-                                                        read="true"
-                                                        label="Seleccionar"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.idConceptoSeguro}
-                                                    >
-                                                        <MenuItem aria-label="None" value=""/>
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoSeguro')).map(i => (
-                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small"
+                                                         required={configuraciones.cobrarConceptoCarga}>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoCarga"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoCarga}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCarga')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         </Box>
-                                        <Box width="40%" display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Concepto de cita</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" size="small"
-                                                             required={configuraciones.cobrarCita}>
-                                                    <InputLabel
-                                                        htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
-                                                    <Select
-                                                        className="form-control"
-                                                        name="idConceptoCita"
-                                                        read="true"
-                                                        label="Seleccionar"
-                                                        onChange={handleChange}
-                                                        value={configuraciones.idConceptoCita}
-                                                    >
-                                                        <MenuItem aria-label="None" value=""/>
-                                                        {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCita')).map(i => (
-                                                            <MenuItem key={i.m_nIdConceptosFacturacion}
-                                                                    value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de descarga</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small"
+                                                         required={configuraciones.cobrarConceptoDescarga}>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoDescarga"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoDescarga}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoDescarga')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de recolección</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small" required>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoRecoleccion"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoRecoleccion}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoRecoleccion')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de entrega</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small" required>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoEntrega"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoEntrega}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoEntrega')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de seguro</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small" required>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoSeguro"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoSeguro}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoSeguro')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de cita</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small"
+                                                         required={configuraciones.cobrarCita}>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoCita"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoCita}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoCita')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         </Box>
                                     </Box>
                                 </Box>
+                                <Box margin={"0 auto"}>
+                                    <Button disabled={!validarDerecho(9101411)} variant="contained" color="primary"
+                                            style={{width: "100px", fontSize: "1em"}}
+                                            onClick={onSubmit}>
+                                        Modificar
+                                    </Button>
+                                </Box>
                             </Box>
-
-                            <Box margin={"0 auto"}>
-                                <Button disabled={!validarDerecho(9101411)} variant="contained" color="primary"
-                                        style={{width: "100px"}}
-                                        onClick={onSubmit}>
-                                    Modificar
-                                </Button>
-                            </Box>
-
                         </TabPanel>
-
                         <TabPanel value="5">
                             <Correos
                                 data={[configuraciones.correoFacturaViaje, configuraciones.correoFacturaUltimaMilla]}
                                 modficarCorreo={modificarCorreo}>
                                 <Button disabled={!validarDerecho(9101412)} variant="contained" color="primary"
-                                        style={{width: "100px"}}
+                                        style={{width: "100px", fontSize: "1em"}}
                                         onClick={onSubmit}>
                                     Modificar
                                 </Button>
@@ -1278,17 +1264,17 @@ function ParametrosConfiguracion() {
                             <Box display="flex" p={1} my={0.5} bgcolor="background.paper">
                                 <Grid container spacing={1}>
                                     <Grid item sm={2} xs={12}>
-                                        <FormControl size="small" variant="outlined" fullWidth>
+                                        <FormControl size="small" variant="outlined" fullWidth margin={"normal"}>
                                             <InputLabel id="idComplementoLabel">Tipo de servicio</InputLabel>
                                             <Select
                                                 labelId="idComplementoLabel"
-                                                className="form-control"
                                                 required
                                                 value={configuraciones.tipoTimbrado}
                                                 label="Tipo de servicio"
                                                 id="tipoTimbrado"
                                                 name="tipoTimbrado"
                                                 onChange={handleChange}
+                                                InputLabelProps={{shrink: true}}
                                             >
                                                 <MenuItem key={"1"}
                                                           value={1}
@@ -1304,9 +1290,11 @@ function ParametrosConfiguracion() {
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <div style={{display:"grid", gridTemplateColumns: "repeat(1, 1fr)",width:"400px",margin:"10px",gap: "10px",border:"1px solid #ccc",borderRadius:"20px"}}>
-                                            <Box display="flex">
-                                                <Box width="66%"  my={0.5}>
+                                        <div style={{display:"grid", gridTemplateColumns: "repeat(1, 1fr)",
+                                            width:"400px", margin:"10px", gap: "10px", border:"1px solid #ccc", marginLeft: "1px",
+                                            borderRadius:"10px"}}>
+                                            <Box display="flex" style={{ marginLeft: "10px"}}>
+                                                <Box width="66%"  my={1.5}>
                                                     <div className={classes.subtitulo}>Validar facturas de ingreso</div>
                                                 </Box>
                                                 <Box width="34%" p={1} my={0.5}>
@@ -1321,7 +1309,7 @@ function ParametrosConfiguracion() {
                                                     />
                                                 </Box>
                                             </Box>
-                                            <Box  display="flex">
+                                            <Box display="flex" style={{ marginLeft: "10px"}}>
                                                 <Box width="66%" my={0.5}>
                                                     <div className={classes.subtitulo}>Permitir modificar este valor en Embarque</div>
                                                 </Box>
@@ -1360,13 +1348,12 @@ function ParametrosConfiguracion() {
                                         <DataGridTiposDocumentoSucursal rows={configuraciones.documentos} handleEditRow={handleShowEditTipoDocumento}/>
                                     </Grid>
                                     <Grid container item xs={12} justifyContent="center" >
-                                        <Box margin={"0 auto"}>
-                                            <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
-                                                    style={{width: "100px"}}
-                                                    onClick={onSubmit}>
-                                                Modificar
-                                            </Button>
-                                        </Box>
+                                        <Button disabled={!validarDerecho(9101409)} variant="contained"
+                                                color="primary"
+                                                style={{width: "100px", marginBottom: "5px", fontSize: "1em"}}
+                                                onClick={onSubmit}>
+                                            Modificar
+                                        </Button>
                                     </Grid>
                                 </Grid >
                             </Box>
@@ -1412,7 +1399,7 @@ function DataGridTiposDocumentoSucursal(props) {
         },
     ];
     return (
-        <div style={{height: 400,width: '50%',marginLeft:"20px",marginBottom:"30px"}}>
+        <div style={{height: 400, width: '35%',marginLeft:"20px",marginBottom:"30px"}}>
             <DataGrid
                 rows={props.rows}
                 columns={columns}
