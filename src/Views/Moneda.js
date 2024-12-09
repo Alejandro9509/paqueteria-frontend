@@ -320,7 +320,7 @@ function Moneda() {
                             </a>
                         </li>
                         <li>
-                            <a className={validarDerecho(9101268)?"":classes.disabled}  data-toggle="tab" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101268)?"":"hide"}  data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

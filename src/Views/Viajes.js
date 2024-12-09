@@ -1548,7 +1548,7 @@ function Viajes() {
                             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101444)? "":classes.disabled} onClick={handleShowReportes}>
+                            <a className= {validarDerecho(9101444)? "":"hide"} onClick={handleShowReportes}>
                                 <i className="fa fa-print"/> Reportes
                             </a>
                         </li>
