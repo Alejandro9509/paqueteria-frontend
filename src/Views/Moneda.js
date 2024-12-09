@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import { DataGrid } from '@mui/x-data-grid';
 
 import Noty from 'noty';
@@ -64,7 +61,6 @@ function Moneda() {
     })
 
     const handleAceptar = (e) => {
-
         e.preventDefault()
         var params = {
 
@@ -76,7 +72,6 @@ function Moneda() {
             "m_nCreadoPor": parseInt(state.CreadoPor),
             "m_nModificadoPor": parseInt(state.ModificadoPor)
         }
-        console.log(params)
         if (state.idMoneda != 0) {
             modificarMonedas(state.idMoneda, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -131,7 +126,6 @@ function Moneda() {
 
     function handleShowModificar(id) {
         obtenerMonedasId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -142,12 +136,15 @@ function Moneda() {
                 abreviacion: respuesta.data.m_sAbreviacion,
             })
         });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+        $('#Listado').removeClass('in show');
     }
+
     function handleShowConsultar(id) {
         obtenerMonedasId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -158,7 +155,11 @@ function Moneda() {
                 abreviacion: respuesta.data.m_sAbreviacion,
             })
         });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+        $('#Listado').removeClass('in show');
 
     }
 
@@ -172,8 +173,21 @@ function Moneda() {
             simbolo: "",
             abreviacion: "",
         })
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+        $('#Listado').removeClass('in show');
 
+    }
+
+    function limpiarCampos(event) {
+        event.stopPropagation();
+        setState({ ...state, agregar: "Agregar" });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
     }
 
     const handleChange = event => {
@@ -183,7 +197,6 @@ function Moneda() {
             [event.target.id]: event.target.value
         });
     };
-
 
     const columns = React.useMemo(() => [
         {
@@ -273,9 +286,6 @@ function Moneda() {
         //    'access-control-allow-origin': '*'
     }
 
-    
-
-
     return (
         <div >
 
@@ -302,15 +312,12 @@ function Moneda() {
 
             {/*Page Container Start Here*/}
             <section className="main-container">
-
                 <div className="container-fluid">
-
-
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
                             <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                                 <i className="fa fa-list" /> Listado
-            </a>
+                            </a>
                         </li>
                         <li>
                             <a className={validarDerecho(9101268)?"":classes.disabled}  data-toggle="tab" onClick={handleShowAgregar}>
@@ -320,7 +327,7 @@ function Moneda() {
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
+                        <div className="widget-wrap" id="Listado" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
@@ -423,28 +430,30 @@ function Moneda() {
                                                 <br></br>
 
                                                 <div className="form-footer col-md-12">
-                                    <Grid container spacing={1}>
-                                        <Grid item xs>
-                                        <Button fullWidth href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
-                                                    >
-                                                      CANCELAR
-                                        </Button>
-                                        </Grid>
-                                        <Grid item xs>
-                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">GUARDAR MONEDA</Button>
-                                        </Grid>
-                                    </Grid>
-                                </div>
+                                                    <Grid container spacing={1}>
+                                                        <Grid item xs>
+                                                            <Button fullWidth onClick={(event) => {limpiarCampos(event)}}
+                                                                    role="tab" data-toggle="tab"
+                                                                    className="btn btn-secondary secondary-btn">
+                                                                CANCELAR
+                                                            </Button>
+                                                        </Grid>
+                                                        <Grid item xs>
+                                                            <Button fullWidth type="submit"
+                                                                    className="btn btn-primary primary-btn">
+                                                                GUARDAR MONEDA
+                                                            </Button>
+                                                        </Grid>
+                                                    </Grid>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
             </section>
             {/*Page Container End Here*/}
 
@@ -452,7 +461,6 @@ function Moneda() {
             <aside className="rightbar">
                 <BarraLateralDerecha />
             </aside>
-
         </div>
 
     );
