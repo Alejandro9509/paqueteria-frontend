@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import {
     Box,
     Button,
-    Checkbox, FormControlLabel, FormGroup, FormLabel, Grid, Radio, RadioGroup, TextField, Typography
+    Checkbox,
+    createFilterOptions,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    Grid,
+    Radio,
+    RadioGroup,
+    TextField,
+    Typography
 } from "@mui/material";
-import InformacionBasico from "./InformacionBasica";
 import InformacionBasica from "./InformacionBasica";
 import RemitenteDestinatario from "./RemitenteDestinatario";
 import Paquetes from "../Paquetes/Paquetes";
@@ -29,6 +36,12 @@ const events = [
     {ts: "2017-09-16T12:21:46.587Z", text: 'Clicked Cart'},
     {ts: "2017-09-16T12:20:46.587Z", text: 'Clicked Checkout'},
 ];
+
+const OPTIONS_LIMIT = 100;
+const filterOptions = createFilterOptions({
+    limit: OPTIONS_LIMIT
+});
+
 class Seguimiento extends Component {
     constructor(props) {
         super(props);
@@ -203,6 +216,8 @@ class Seguimiento extends Component {
                                                     });
                                                 }}
                                                 options={this.state.foliosAutocomplete}
+                                                filterOptions={filterOptions}
+                                                getOptionLabel={(option) => option}
                                                 renderInput={(params) => (
                                                     <TextField
                                                         {...params}
