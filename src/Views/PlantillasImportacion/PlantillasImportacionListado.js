@@ -2,7 +2,6 @@ import {dataGridLocaleText} from "../../Constants";
 import {DataGrid} from '@mui/x-data-grid';
 import React, {useState} from "react";
 import {Tooltip} from "@mui/material";
-import {validarDerecho} from "../../Util/Util";
 
 export default function PlantillasImportacionListado(props){
     const columns = React.useMemo(() => [
@@ -43,8 +42,7 @@ export default function PlantillasImportacionListado(props){
         }
 
     ]);
-    const [state,setState] = useState({
-    })
+
     return(
         <div>
             <div className="widget-wrap">
@@ -57,7 +55,6 @@ export default function PlantillasImportacionListado(props){
                             density="compact"
                             pageSize={Math.floor((window.innerHeight - 310) / 30)}
                             getRowId={(row) => row.idPlantilla}
-
                         />
                     </div>
                 </div>

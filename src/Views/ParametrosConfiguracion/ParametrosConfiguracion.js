@@ -28,7 +28,6 @@ import {
     modificarParametrosConfiguracion
 } from "../../Util/Contexts/ParametrosConfiguracionContext";
 import { styled } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import {TabContext, TabPanel} from "@mui/lab";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
@@ -66,7 +65,6 @@ function showSuccess(mensaje) {
 }
 
 function ParametrosConfiguracion() {
-
 
     //--------------------------------------------------VARIABLES--------------------------------------------------------
     const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
@@ -310,7 +308,6 @@ function ParametrosConfiguracion() {
     //--------------------------------------------------SERVICIOS--------------------------------------------------------
     async function getAllEstatusRecoleccion() {
         obtenerEstatusRecoleccion().then((respuesta) => {
-
             setEstatusRecoleccion(respuesta.data);
         });
     }
@@ -445,12 +442,10 @@ function ParametrosConfiguracion() {
                     idTipoDocumento: 0,
                     documento: 'SIN DEFINIR'
                 }
-
             })
         }catch (e) {
             console.log(e)
         }
-
     }
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
@@ -464,9 +459,11 @@ function ParametrosConfiguracion() {
         getAllEstatusGuia()
         getConceptosFacturacion()
     }, [])
+
     return (
         <Root>
-            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento} value={dialogTipoDocumento.seleccion}/>
+            <DialogTiposDocumentoSucursal open={dialogTipoDocumento.open} onClose={handleOnCloseDialogTipoDocumento}
+                                          value={dialogTipoDocumento.seleccion}/>
 
             <header className="topbar clearfix">
                 <Cabecera titulo={"Parámetros de\nConfiguración"}>
@@ -546,9 +543,8 @@ function ParametrosConfiguracion() {
                                 </Box>
 
                                 <Box margin={"0 auto"}>
-                                    <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary"
-                                            style={{width: "100px", fontSize:"1em"}}
-                                            onClick={onSubmit}>
+                                    <Button disabled={!validarDerecho(9101409)} variant="contained"
+                                            style={{width: "100px", fontSize:"1em"}} color="primary" onClick={onSubmit}>
                                         Modificar
                                     </Button>
                                 </Box>
@@ -1357,11 +1353,9 @@ function ParametrosConfiguracion() {
                                     </Grid>
                                 </Grid >
                             </Box>
-
                         </TabPanel>
                     </div>
                 </section>
-
             </TabContext>
         </Root>
     );
@@ -1414,7 +1408,5 @@ function DataGridTiposDocumentoSucursal(props) {
         </div>
     );
 }
-
-
 
 export default ParametrosConfiguracion;

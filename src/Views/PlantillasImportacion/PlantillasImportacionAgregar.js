@@ -10,7 +10,7 @@ import {
     TextField,
     Tooltip
 } from "@mui/material";
-import {showSuccess, validarDerecho} from "../../Util/Util";
+import {showSuccess} from "../../Util/Util";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {FilePond} from "react-filepond";
 import {agregarPlantillaImportacion, modificarPlantillaImportacion} from "../../Util/Contexts/PlantillasContext";
@@ -230,7 +230,6 @@ export default function PlantillasImportacionAgregar(props){
     },[props.value])
 
     const handlePatrocinadorSelected = (row) => {
-        console.log("Entro")
         setState(state => {
             return {
                 ...state,
@@ -246,7 +245,6 @@ export default function PlantillasImportacionAgregar(props){
 
     const handleOnSubmit = async () => {
         try {
-
             let params = {
                 "idPlantilla": state.idPlantilla,
                 "idCliente": state.cliente.idCliente,
@@ -357,7 +355,6 @@ export default function PlantillasImportacionAgregar(props){
                 }).catch(err => {
                     showSuccess(err.response.data.message)
                 })
-
             }else{
                 modificarPlantillaImportacion(state.idPlantilla,params).then(respuesta => {
                     showSuccess(respuesta.data.message)
@@ -366,9 +363,7 @@ export default function PlantillasImportacionAgregar(props){
                 }).catch(err => {
                     showSuccess(err.response.data.message)
                 })
-
             }
-
         }catch (e){
             console.log(e)
             showSuccess("Adjunte el archivo de la plantilla base para el cliente.")
@@ -409,7 +404,8 @@ export default function PlantillasImportacionAgregar(props){
                             <Grid item xs={12} sm={3}>
                                 <FormControl component="fieldset">
                                     <FormLabel >Tipo de plantilla</FormLabel>
-                                    <RadioGroup row aria-label="gender" name="idTipoPlantilla" value={state.idTipoPlantilla} onChange={handleOnChange}>
+                                    <RadioGroup row aria-label="gender" name="idTipoPlantilla"
+                                                value={state.idTipoPlantilla} onChange={handleOnChange}>
                                         <FormControlLabel value={"1"} control={<Radio />} label="Segmentada" />
                                         <FormControlLabel value={"2"} control={<Radio />} label="Lineal" />
                                     </RadioGroup>
@@ -1168,102 +1164,102 @@ export default function PlantillasImportacionAgregar(props){
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Clave de Sector COFEPRIS"
-                                                   size="small"
-                                                   name="claveSectorCofepris"
-                                                   value={state.claveSectorCofepris}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Clave de Sector COFEPRIS"
+                                           size="small"
+                                           name="claveSectorCofepris"
+                                           value={state.claveSectorCofepris}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Nombre de Ingrediente Activo"
-                                                   size="small"
-                                                   name="nombreIngredienteActivo"
-                                                   value={state.nombreIngredienteActivo}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Nombre de Ingrediente Activo"
+                                           size="small"
+                                           name="nombreIngredienteActivo"
+                                           value={state.nombreIngredienteActivo}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Nombre Químico"
-                                                   size="small"
-                                                   name="nombreQuimico"
-                                                   value={state.nombreQuimico}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Nombre Químico"
+                                           size="small"
+                                           name="nombreQuimico"
+                                           value={state.nombreQuimico}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Denominación Genérica"
-                                                   size="small"
-                                                   name="denominacionGenericaProd"
-                                                   value={state.denominacionGenericaProd}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Denominación Genérica"
+                                           size="small"
+                                           name="denominacionGenericaProd"
+                                           value={state.denominacionGenericaProd}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Denominación Distintiva"
-                                                   size="small"
-                                                   name="denominacionDistintivaProd"
-                                                   value={state.denominacionDistintivaProd}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Denominación Distintiva"
+                                           size="small"
+                                           name="denominacionDistintivaProd"
+                                           value={state.denominacionDistintivaProd}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Fabricante"
-                                                   size="small"
-                                                   name="fabricante"
-                                                   value={state.fabricante}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Fabricante"
+                                           size="small"
+                                           name="fabricante"
+                                           value={state.fabricante}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Fecha de Caducidad (dd/MM/AAAA o AAAA-MM-dd)"
-                                                   size="small"
-                                                   name="fechaCaducidad"
-                                                   value={state.fechaCaducidad}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Fecha de Caducidad (dd/MM/AAAA o AAAA-MM-dd)"
+                                           size="small"
+                                           name="fechaCaducidad"
+                                           value={state.fechaCaducidad}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Lote de Medicamento"
-                                                   size="small"
-                                                   name="loteMedicamento"
-                                                   value={state.loteMedicamento}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Lote de Medicamento"
+                                           size="small"
+                                           name="loteMedicamento"
+                                           value={state.loteMedicamento}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Clave de Forma Farmacéutica"
-                                                   size="small"
-                                                   name="formaFarmaceutica"
-                                                   value={state.formaFarmaceutica}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Clave de Forma Farmacéutica"
+                                           size="small"
+                                           name="formaFarmaceutica"
+                                           value={state.formaFarmaceutica}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
                                         <TextField
-                                                   variant="outlined"
-                                                   label="Clave de Condición Especial de Transporte"
-                                                   size="small"
-                                                   name="condicionesEspTransp"
-                                                   value={state.condicionesEspTransp}
-                                                   onChange={handleOnChange}
+                                           variant="outlined"
+                                           label="Clave de Condición Especial de Transporte"
+                                           size="small"
+                                           name="condicionesEspTransp"
+                                           value={state.condicionesEspTransp}
+                                           onChange={handleOnChange}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={grid.COMPLEMENTOS}>
@@ -1344,7 +1340,6 @@ export default function PlantillasImportacionAgregar(props){
                         <PlantillaLineal value={state} onChange={handleOnChange}/>
                     }
 
-
                     <Grid container spacing={1}>
                         <Grid item xs>
                             <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
@@ -1383,6 +1378,7 @@ function PlantillaLineal(props) {
         PAQUETES: 2,
         COMPLEMENTOS: 3,
     }
+
     const STYLES = {
         padding: '10px',
         paddingLeft:'20px',
@@ -1392,6 +1388,7 @@ function PlantillaLineal(props) {
     const handleOnChange = (event) => {
         props.onChange(event)
     }
+
     return(
         <div>
             <section id={"identificacion"} style={STYLES}>
