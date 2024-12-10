@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useMemo} from "react";
-import {Dialog, DialogActions, DialogContent, Grid,MenuItem} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {Dialog, DialogContent, Grid,MenuItem} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,8 +11,9 @@ import {obtenerEmbarquesFiltro} from "../../Util/Contexts/EmbarquesContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
     obtenerEstatusEmbarque,
-    obtenerEstatusGuia, obtenerEstatusInforme,
-    obtenerEstatusRecoleccion, obtenerEstatusViaje
+    obtenerEstatusGuia,
+    obtenerEstatusRecoleccion,
+    obtenerEstatusViaje
 } from "../../Util/Contexts/EstatusContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../../Util/Contexts/UtileriasContext";
@@ -20,11 +21,6 @@ import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 import {obtenerInformeFiltro} from "../../Util/Contexts/InformesContext";
 import {obtenerViajesByFiltro} from "../../Util/Contexts/ViajesContext";
-import InputAdornment from "@mui/material/InputAdornment";
-import DialogTableRemDes from "../RemitenteDestinatario/DialogTableRemDes";
-import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
-import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
-import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 
 function Filtros(props) {
@@ -162,7 +158,6 @@ function Filtros(props) {
                 })
             }
         }
-
     }
 
     async function getAllSucursales() {
@@ -172,6 +167,7 @@ function Filtros(props) {
             setDataSucursal(respuesta.data);
         });
     }
+
     async function getAllEstatus() {
         if (dataEstatus.length > 0)
             return
@@ -196,8 +192,8 @@ function Filtros(props) {
                 setEstatus(respuesta.data);
             });
         }
-
     }
+
     async function getAllCiudades() {
         if (dataCiudad.length > 0)
             return
@@ -240,7 +236,6 @@ function Filtros(props) {
                 }
             })
         })
-
     }
 
 

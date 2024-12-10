@@ -25,7 +25,6 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-
 class FormatoImpresion extends Component {
     constructor(props) {
         super(props);
@@ -118,15 +117,14 @@ class FormatoImpresion extends Component {
 
         const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id + `/${this.state.ModificadoPor}`;
         axios.delete(url, { headers }).then(respuesta => {
-            console.log(respuesta);
             showSuccess(respuesta.data)
             this.getAllData();
         }).catch(err => {
             showSuccess(err)
         });
     }
+
     handleModificar(id){
-        console.log (id)
         this.setState(state => {
             return {
                 ...state,
@@ -143,7 +141,6 @@ class FormatoImpresion extends Component {
     }
 
     async handleAceptar(id,data) {
-        //let file = await toBase64(data.file[0])
         var image = null
         if (data.image.length != 0) {
             image = data.image[0]
@@ -254,8 +251,6 @@ class FormatoImpresion extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
-
-
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
                                 <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar",id:0 }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
@@ -267,10 +262,8 @@ class FormatoImpresion extends Component {
                                     <i className="fa fa-plus-circle" /> {this.state.agregar}
                                 </a>
                             </li>
-
                             {/**<button className="topbar-right pull-right">Boton</button>*/}
                         </ul>
-
 
                         <div
                             className="row tab-content"
@@ -290,8 +283,7 @@ class FormatoImpresion extends Component {
                                                     onRowSelectionModelChange={(newModel)=>{
                                                         if(newModel.length<1)
                                                             return
-                                                        let row=data.find(i=>i.m_nIdFormato==newModel[0])
-                                                        console.log(data.find(i=>i.m_nIdFormato==newModel[0]))
+                                                        let row = data.find(i=>i.m_nIdFormato==newModel[0]);
                                                         this.setState(state => {
                                                             return {
                                                                 ...state,
@@ -311,9 +303,9 @@ class FormatoImpresion extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla === 2 &&
-                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose } id={this.state.id}/>
+                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar}
+                                                             onClose={this.handleClose } id={this.state.id}/>
                                 }
-
                             </div>
 
                         </div>

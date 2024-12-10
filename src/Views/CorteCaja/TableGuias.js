@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox } from '@mui/material';
 
 const TableGuias = ({ data, handleSelection, selectedRows2, disabled, sumarTotalSeleccion }) => {
@@ -12,8 +12,6 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled, sumarTotal
         } else {
             newSelectedRows = selectedRows2.filter(rowId => rowId.idGuia !== id.idGuia);
         }
-
-        // setSelectedRows(newSelectedRows);
         handleSelection(newSelectedRows);
     };
 
@@ -23,7 +21,6 @@ const TableGuias = ({ data, handleSelection, selectedRows2, disabled, sumarTotal
             return selectedRows2.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
         } else {
             return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
-
         }
     }
 

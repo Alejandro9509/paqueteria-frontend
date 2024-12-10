@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Cabecera from '../../Components/Template/Cabecera';
-import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
-import axios from "axios";
-import SvgIcon from "@mui/material/SvgIcon";
-import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
-import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import {validarDerecho} from "../../Util/Util"
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -20,8 +12,6 @@ import {
     obtenerCuentasCorreo,
 } from '../../Util/Contexts/CuentasCorreoContext';
 window.jQuery = window.$ = $;
-
-
 
 function showSuccess(mensaje){
     new Noty({
@@ -89,7 +79,6 @@ class CuentasCorreo extends Component {
                 showSuccess(err)
             });
         }
-
     }
 
     handleChange = (event) => {
@@ -132,7 +121,6 @@ class CuentasCorreo extends Component {
             })
         }
         if (value === 3){
-            console.log(this.state.cuentaEnviarFacturacion)
             let cuenta = this.state.cuentaEnviarFacturacion
             this.setState({
                 idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,
@@ -152,7 +140,6 @@ class CuentasCorreo extends Component {
 
     consultarPorUsuario () {
         obtenerCuentasCorreo().then(respuesta => {
-            console.log(respuesta.data)
             let info = respuesta.data
             let cuentaEnviarViajes = info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 1) : []
             let cuentaEnviarTracking =info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 2) : []
@@ -214,7 +201,6 @@ class CuentasCorreo extends Component {
                             />
                         </div>
                     </div>
-
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <div className="input">

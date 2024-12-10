@@ -47,7 +47,6 @@ function Filtros(props) {
         obtenerTarifasRangosFiltro(filtros.folio).then(respuesta => {
             props.actualizarTarifas(respuesta.data);
         })
-
     }
 
     async function getAllListado(){
@@ -64,7 +63,6 @@ function Filtros(props) {
             })
         })
     }
-
 
     return (
         <div>
@@ -104,7 +102,6 @@ function Filtros(props) {
                         </IconButton>
                     </Grid>
                 </Grid>
-
             </Grid>
         </div>
     );

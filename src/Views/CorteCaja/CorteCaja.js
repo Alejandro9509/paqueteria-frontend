@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import $ from "jquery";
@@ -17,7 +17,6 @@ import {
 
 window.jQuery = window.$ = $;
 
-
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -26,6 +25,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 function showError(mensaje) {
     new Noty({
         type: "error",
@@ -34,9 +34,11 @@ function showError(mensaje) {
         timeout: "3000",
     }).show();
 }
+
 const FORMATOS_IMPRESION = {
     CORTE_CAJA: 219
 }
+
 function CorteCaja() {
     const [listaCortes, setListaCortes] = useState([])
     const [corteSeleccionado, setCorteSeleccionado] = useState(null)
@@ -63,13 +65,11 @@ function CorteCaja() {
 
     const getAllCortes = () => {
         obtenerCortes().then(({data}) => {
-
             setListaCortes(data)
             setFiltros({
                 ...filtros,
                 fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
             })
-
         })
     }
 
@@ -94,6 +94,7 @@ function CorteCaja() {
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
     }
+
     const handleShowAgregar = (event) => {
         event.stopPropagation()
         // limpiarInputsAgregar()
@@ -108,7 +109,6 @@ function CorteCaja() {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-
     }
 
     const resetFiltros = () => {
@@ -122,7 +122,6 @@ function CorteCaja() {
 
     const handleRowClick = (selectedItem, action) => {
         if (action === 'MODIFICAR') {
-            // handleOpenDialog()
             obtenerCorteId(selectedItem.idCorte)
                 .then(({data}) => {
                     setState(state => {
@@ -142,7 +141,6 @@ function CorteCaja() {
                 })
         }
         if (action === 'CONSULTAR') {
-            // handleOpenDialog()
             obtenerCorteId(selectedItem.idCorte)
                 .then(({data}) => {
                     setState(state => {
@@ -195,65 +193,64 @@ function CorteCaja() {
         handleShowListado(null)
     }
 
-        return (
-            <div>
-                <header className="topbar clearfix">
-                    <Cabecera titulo="Corte Caja">
-                        <div className="page-header">
-                            <ul className="list-page-breadcrumb">
-                                <li className="active-page">Corte Caja</li>
-                            </ul>
-                        </div>
-                    </Cabecera>
-                </header>
-                {/*Leftbar Start Here*/}
-                <aside className="iconic-leftbar">
-                    <BarraLateralIzquierda/>
-                </aside>
-                {/*Leftbar End Here*/}
-                <section className={"main-container"}>
-                    <div className={"content-fluid"}>
-                        <ul className={"nav navStatica nav-tabs"}>
-                            <li className={"active"}>
-                                <a data-toggle={"tab"} onClick={handleShowListado}>
-                                    <i className={"fa fa-list"}/> Listado
-                                </a>
-                            </li>
-
-                            <li>
-                                <a data-toggle="tab" onClick={handleShowAgregar}>
-                                    <i className="fa fa-plus-circle"/> {state.agregar}
-                                </a>
-                            </li>
-                            {/*<li>
-                                <a  onClick={handleShowImprimir}>
-                                    <i className="fa fa-print" /> Imprimir
-                                </a>
-                            </li>*/}
+    return (
+        <div>
+            <header className="topbar clearfix">
+                <Cabecera titulo="Corte Caja">
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li className="active-page">Corte Caja</li>
                         </ul>
+                    </div>
+                </Cabecera>
+            </header>
+            {/*Leftbar Start Here*/}
+            <aside className="iconic-leftbar">
+                <BarraLateralIzquierda/>
+            </aside>
+            {/*Leftbar End Here*/}
+            <section className={"main-container"}>
+                <div className={"content-fluid"}>
+                    <ul className={"nav navStatica nav-tabs"}>
+                        <li className={"active"}>
+                            <a data-toggle={"tab"} onClick={handleShowListado}>
+                                <i className={"fa fa-list"}/> Listado
+                            </a>
+                        </li>
 
-                    <div className={"row"} className={"tab-content"}>
-                        <div id="Listado" className="tab-pane fade in show">
-                            <CorteCajaListado
-                                onRowClick={handleRowClick}
-                                value={{listadoCortes : listaCortes}}
-                            />
-                        </div>
+                        <li>
+                            <a data-toggle="tab" onClick={handleShowAgregar}>
+                                <i className="fa fa-plus-circle"/> {state.agregar}
+                            </a>
+                        </li>
+                        {/*<li>
+                            <a  onClick={handleShowImprimir}>
+                                <i className="fa fa-print" /> Imprimir
+                            </a>
+                        </li>*/}
+                    </ul>
 
-                        <div id="Agregar" className="tab-pane fade">
-                            <CorteCajaAgregar
-                                value={corteSeleccionado}
-                                disaled={consult}
-                                setDisabled={(value) => setConsult(value)}
-                                onSaveSuccess={handleOnSaveSuccess}
-                            />
-                        </div>
+                <div className={"row"} className={"tab-content"}>
+                    <div id="Listado" className="tab-pane fade in show">
+                        <CorteCajaListado
+                            onRowClick={handleRowClick}
+                            value={{listadoCortes : listaCortes}}
+                        />
+                    </div>
+
+                    <div id="Agregar" className="tab-pane fade">
+                        <CorteCajaAgregar
+                            value={corteSeleccionado}
+                            disaled={consult}
+                            setDisabled={(value) => setConsult(value)}
+                            onSaveSuccess={handleOnSaveSuccess}
+                        />
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+    </div>
     )
 }
-
 
 export default CorteCaja;

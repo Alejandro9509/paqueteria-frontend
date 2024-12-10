@@ -314,7 +314,9 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                                         control={
                                             <Switch
                                                 checked={filtros.busquedaPorUsuario}
-                                                onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                                onChange={(event) =>
+                                                    handleChange('busquedaPorUsuario', event.target.checked)
+                                                }
                                                 color="primary"
                                                 disabled={disaled}
                                             />
