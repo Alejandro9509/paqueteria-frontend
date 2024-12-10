@@ -1,6 +1,7 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
+
 const headers = API_HEADERS
 
 
@@ -31,7 +32,6 @@ function eliminarZonaOperativa(id, idEliminadoPor) {
     return result
 }
 
-
 function obtenerListadoZonaOperativa() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListado`;
     let result;
@@ -40,6 +40,7 @@ function obtenerListadoZonaOperativa() {
     );
     return result
 }
+
 function obtenerListadoZonaOperativaBySucursal(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListadoBySucursal/${id}`;
     let result;
@@ -48,6 +49,7 @@ function obtenerListadoZonaOperativaBySucursal(id) {
     );
     return result
 }
+
 function obtenerListadoZonaOperativaByOrigenDestino(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdOrigenDestino/${id}`;
     let result;
@@ -65,6 +67,7 @@ function obtenerByIdZonaOperativa(id) {
     );
     return result
 }
+
 //Se va mandar el codigo postal porque surgio la necesidad
 function obtenerZonaOperativaByIdCodigoPostal(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdCodigoPostal/` + id;
@@ -74,6 +77,7 @@ function obtenerZonaOperativaByIdCodigoPostal(id) {
     );
     return result
 }
+
 function obtenerParametrosDestino(idGuia) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetDatosUbicacionDestinatario/` + idGuia;
     let result;
@@ -82,6 +86,7 @@ function obtenerParametrosDestino(idGuia) {
     );
     return result
 }
+
 function obtenerColoniasCPs() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetColoniasCPs`;
     let result;
@@ -100,4 +105,16 @@ function obtenerZonaOperativaByCodigoPostal(cp) {
     return result
 }
 
-export {obtenerZonaOperativaByCodigoPostal, obtenerColoniasCPs,obtenerParametrosDestino,obtenerZonaOperativaByIdCodigoPostal, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal, obtenerListadoZonaOperativaByOrigenDestino}
+export {
+    obtenerZonaOperativaByCodigoPostal,
+    obtenerColoniasCPs,
+    obtenerParametrosDestino,
+    obtenerZonaOperativaByIdCodigoPostal,
+    modificarZonaOperativa,
+    obtenerByIdZonaOperativa,
+    obtenerListadoZonaOperativa,
+    eliminarZonaOperativa,
+    agregarZonaOperativa,
+    obtenerListadoZonaOperativaBySucursal,
+    obtenerListadoZonaOperativaByOrigenDestino
+}
