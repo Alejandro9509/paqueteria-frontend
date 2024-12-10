@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import logo from '../../iconos/LogoGM.png';
-import axios from "axios";
 
 import { styled } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import {List, ListItem, ListItemText, Collapse, Button, Paper} from '@mui/material';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import {API_HEADERS} from "../../Constants";
+import {Paper} from '@mui/material';
 import {obtenerInformeFolioTipo} from "../../Util/Contexts/SeguimientoContext";
 import TrackingEmail from "./TrackingEmail";
 const PREFIX = 'Tracking';
@@ -20,11 +15,7 @@ const classes = {
     collapseArrow: `${PREFIX}-collapseArrow`
 };
 
-const Root = styled('div')((
-    {
-        theme
-    }
-) => ({
+const Root = styled('div')(({theme}) => ({
     [`& .${classes.root}`]: {
       width: '100%',
       maxWidth: 360,
@@ -65,9 +56,6 @@ const headers = {
 };
 
 export default function Tracking(...props){
-    // console.log(entrega);
-
-
     const [guia, setGuia] = useState({})
 
     useEffect(value =>{
@@ -80,8 +68,6 @@ export default function Tracking(...props){
         obtenerInformeFolioTipo(id, 5, headers).then(({data}) => {
             setGuia(data)
         })
-
-
     }
 
     return (
@@ -92,7 +78,6 @@ export default function Tracking(...props){
             <div className="widget-wrap" style={{margin:10}}>
                 <Paper elevation={1} style={{height:"100%"}}>
                     <TrackingEmail data={guia}/>
-
                 </Paper>
             </div>
         </Root>
