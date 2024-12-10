@@ -235,7 +235,6 @@ function ParametrosConfiguracion() {
 
     async function getParametrosConfiguracion() {
         obtenerParametrosConfiguracion().then(respuesta => {
-            console.log(respuesta)
             setConfiguraciones((config) => {
                 return {
                     ...config,

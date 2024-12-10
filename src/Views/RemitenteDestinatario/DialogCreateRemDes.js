@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Noty from "noty";
 import {
     Dialog,
@@ -36,7 +36,6 @@ const useStyles = makeStyles({
 });
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
 function showSuccess(mensaje) {
-
     new Noty({
         type: "information",
         layout: "topCenter",
@@ -108,7 +107,6 @@ function DialogCreateRemDes(props) {
                 openDialog: false
             }
         });
-        console.log(state.clientePaga);
     }
 
     const dialogVisible = (isVisible) => {
@@ -224,7 +222,6 @@ function DialogCreateRemDes(props) {
                 numero: state.numero,
                 equivalencia: state.equivalencia
             };
-            console.log(params);
             obtenerRemitentesDestinatariosNombre(state.nombre).then((respuesta) =>{
                 if(respuesta.data.total > 0){
                     showError("Ya se encuentra registrado un remitente/destnatario con ese nombre.")
@@ -237,9 +234,7 @@ function DialogCreateRemDes(props) {
                         showSuccess(err.response.data);
                     });
                 }
-
             })
-
         }
     }
 
@@ -256,31 +251,31 @@ function DialogCreateRemDes(props) {
 
                     <div style={{backgroundColor: '#FFFFFF'}}>
                         <Autocomplete
-                                freeSolo
-                                onChange={(event, newValue) =>
-                                    handleChangeAutocomplete("codigoPostal", newValue)
-                                }
-                                value={state.codigoPostal}
-                                name="codigoPostal"
-                                disableClearable
-                                forcePopupIcon={false}
-                                options={dataCodigosPostales}
-                                getOptionLabel={(option) => option ? `${option.m_sCP} - ${option.m_sColonia}` : ""}
-                                style={{ transform: "translate(14px, 10px) scale(1) !important" }}
-                                renderInput={(params) => (
-                                    <div>
-                                        <TextField
-                                            label="Código Postal"
-                                            size="small"
-                                            variant="outlined"
-                                            onClick={(e) =>
-                                                handleClickCodigosPostalesInput("codigoPostal")
-                                            }
-                                            required
-                                            {...params}
-                                        />
-                                    </div>
-                                )}
+                            freeSolo
+                            onChange={(event, newValue) =>
+                                handleChangeAutocomplete("codigoPostal", newValue)
+                            }
+                            value={state.codigoPostal}
+                            name="codigoPostal"
+                            disableClearable
+                            forcePopupIcon={false}
+                            options={dataCodigosPostales}
+                            getOptionLabel={(option) => option ? `${option.m_sCP} - ${option.m_sColonia}` : ""}
+                            style={{ transform: "translate(14px, 10px) scale(1) !important" }}
+                            renderInput={(params) => (
+                                <div>
+                                    <TextField
+                                        label="Código Postal"
+                                        size="small"
+                                        variant="outlined"
+                                        onClick={(e) =>
+                                            handleClickCodigosPostalesInput("codigoPostal")
+                                        }
+                                        required
+                                        {...params}
+                                    />
+                                </div>
+                            )}
                         />
                     </div>
                 </DialogContent>
@@ -308,7 +303,6 @@ function DialogCreateRemDes(props) {
                 <div className="widget-container">
                     <div className="widget-content">
                         <Grid container spacing={2} >
-
                             <Grid item xs={3}>
                                 <div className="input">
                                     <TextField
@@ -327,7 +321,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={9}>
                                 <div className="input">
                                     <TextField
@@ -344,7 +337,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={12}>
                                 <div className="input">
                                     <TextField
@@ -373,8 +365,6 @@ function DialogCreateRemDes(props) {
                                     <p>Domicilio fiscal</p>
                                 </div>
                             </Grid>
-
-
                             <Grid item xs={8}>
                                 <div className="input">
                                     <TextField
@@ -400,7 +390,6 @@ function DialogCreateRemDes(props) {
                                     Seleccionar código
                                 </IconButton>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <FormControl fullWidth variant="outlined" size="small" required>
                                     <InputLabel id="idEstadoLabel">Estado</InputLabel>
@@ -422,7 +411,6 @@ function DialogCreateRemDes(props) {
                                     </Select>
                                 </FormControl>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <FormControl
                                     className="input select"
@@ -454,7 +442,6 @@ function DialogCreateRemDes(props) {
                                     </Select>
                                 </FormControl>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField
@@ -472,7 +459,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField
@@ -489,7 +475,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={3}>
                                 <div className="input">
                                     <TextField
@@ -505,7 +490,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={3}>
                                 <div className="input">
                                     <TextField
@@ -521,7 +505,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField
@@ -538,7 +521,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField
@@ -556,7 +538,6 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField
@@ -574,9 +555,7 @@ function DialogCreateRemDes(props) {
                                     />
                                 </div>
                             </Grid>
-
                         </Grid>
-
                     </div>
                 </div>
             </div>
