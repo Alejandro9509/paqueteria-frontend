@@ -25,38 +25,38 @@ function BarraLateralDerecha() {
                 (
                     <li  className="boton-de-menu">
                         <Link component="a" to={r.path}>
-                        <i>
-                            <SvgIcon
-                                component={r.icon}
-                                style={{
-                                  height: "100%",
-                                  textAlign: "center",
-                                  width: "75%",
-                                }}
-                                viewBox="0 0 45 45"
-                            />
-                        </i>
-                        <span className="list-label">{r.name}</span>
+                            <i>
+                                <SvgIcon
+                                    component={r.icon}
+                                    style={{
+                                      height: "100%",
+                                      textAlign: "center",
+                                      width: "75%",
+                                    }}
+                                    viewBox="0 0 45 45"
+                                />
+                            </i>
+                            <span className="list-label">{r.name}</span>
                         </Link>
                     </li>
                 ) :
                 (
-                <li  className="boton-de-menu">
-                    <Link component="a" target={"_blank"} to={r.path}>
-                        <i>
-                            <SvgIcon
-                                component={r.icon}
-                                style={{
-                                height: "100%",
-                                textAlign: "center",
-                                width: "70%",
-                                }}
-                                viewBox="0 0 40 40"
-                            />
-                        </i>
-                        <span className="list-label">{r.name}</span>
-                    </Link>
-                </li>
+                    <li  className="boton-de-menu">
+                        <Link component="a" target={"_blank"} to={r.path}>
+                            <i>
+                                <SvgIcon
+                                    component={r.icon}
+                                    style={{
+                                    height: "100%",
+                                    textAlign: "center",
+                                    width: "70%",
+                                    }}
+                                    viewBox="0 0 40 40"
+                                />
+                            </i>
+                            <span className="list-label">{r.name}</span>
+                        </Link>
+                    </li>
                 )
             })}
         </ul>

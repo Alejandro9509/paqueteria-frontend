@@ -11,7 +11,7 @@ import {
     adaptV4Theme,
 } from '@mui/material';
 import DialogOperadores from "./DialogOperador";
-import {getCurrentDate, getCurrentTime, validarDerecho} from "../../Util/Util";
+import {getCurrentDate} from "../../Util/Util";
 import DialogUsuarios from "./DialogUsuarios";
 import {createTheme} from "@mui/material/styles";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
@@ -61,7 +61,6 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
             }
         }
     }));
-
 
     const handleReportClick = () => {
         onReportClick()
@@ -152,7 +151,9 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                                     control={
                                         <Switch
                                             checked={value.busquedaPorUsuario}
-                                            onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                            onChange={(event) =>
+                                                handleChange('busquedaPorUsuario', event.target.checked)
+                                            }
                                             color="primary"
                                         />
                                     }

@@ -3,7 +3,6 @@ import {ACCESS_TOKEN, USER_ID_SESSION, USER_ROLES} from '../../Constants';
 import IdleTimer from "react-idle-timer";
 import {IdleTimeOutModal} from "../../Components/Login/IdleTimeOutModal";
 
-
 export const AplicationContext = React.createContext();
 export const AplicationConsumer = AplicationContext.Consumer;
 
@@ -22,7 +21,6 @@ export class AplicationProvider extends Component{
         this.handleOnActive = this.handleOnActive.bind(this)
         this.handleOnIdle = this.handleOnIdle.bind(this)
     }
-
 
     render() {
         return (
@@ -50,12 +48,11 @@ export class AplicationProvider extends Component{
                         debounce={250}
                     />
                 }
-
-
                 {this.props.children}
             </AplicationContext.Provider>
         );
     }
+
     handleClose() {
         this.setState({showModal: false})
     }
@@ -65,6 +62,7 @@ export class AplicationProvider extends Component{
         this.setState({showModal: false})
         // this.props.history.push('/')
     }
+
     handleOnActive (event) {
         this.setState({isTimedOut: false})
     }
@@ -80,7 +78,6 @@ export class AplicationProvider extends Component{
             this.setState({isTimedOut: true})
         }
     }
-
 
 }
 

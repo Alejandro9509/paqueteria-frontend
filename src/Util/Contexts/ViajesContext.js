@@ -31,10 +31,7 @@ function agregarViajeSalida( params){
         result =  axios.post(url, Object.assign({}, params), { headers })
         );
     return result
-
-    }
-
-    
+}
     
 function agregarViajeLlegada( params){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarLlegada`;
@@ -53,6 +50,7 @@ function obtenerViajes(){
     );
     return result
 }
+
 function obtenerViajesByFiltro(fechaInicial, fechaFinal, estatusListado, folio,Origen,Destino, operador) {
     if (folio == '') {
         folio = 0
@@ -81,6 +79,7 @@ function obtenerXML(id){
     );
     return result
 }
+
 function obtenerCFDI(id,sustituir){
     const url = `${process.env.REACT_APP_API_URL}/Guias/GetCFDITraslada/${id}/${sustituir ? 1 : 0}`;
     let result;
@@ -89,6 +88,7 @@ function obtenerCFDI(id,sustituir){
     );
     return result
 }
+
 function validarCFDI(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetValidacionCFDITraslada/${id}`;
     let result;
@@ -97,6 +97,7 @@ function validarCFDI(id){
     );
     return result
 }
+
 function obtenerReporteCFDI(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDI/${id}`;
     let result;
@@ -114,6 +115,7 @@ function obtenerReporteCFDI(id){
     );
     return result
 }*/
+
 function obtenerReporteCFDIViaje(id, idInforme){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}/${idInforme}`;
     let result;
@@ -184,7 +186,22 @@ function eliminarViaje(idViaje,idEstatus){
     return result
 }
 
-
-
-export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,cancelarTrayecto,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarViaje,validarSalidaParada,eliminarViaje,validarCFDI}
+export {
+    obtenerViajesByFiltro,
+    agregarViaje,
+    agregarViajeSalida,
+    agregarViajeLlegada,
+    obetenerViajeId,
+    modificarViaje,
+    cancelarTrayecto,
+    obtenerViajes,
+    obtenerViajesEstatus,
+    obtenerXML,
+    obtenerCFDI,
+    obtenerReporteCFDI,
+    obtenerReporteCFDIViaje,
+    cancelarViaje,
+    validarSalidaParada,
+    eliminarViaje,
+    validarCFDI
+}

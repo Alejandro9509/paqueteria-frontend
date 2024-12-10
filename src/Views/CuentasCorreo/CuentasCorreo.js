@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Cabecera from '../../Components/Template/Cabecera';
-import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
-import axios from "axios";
-import SvgIcon from "@mui/material/SvgIcon";
-import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
-import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import {validarDerecho} from "../../Util/Util"
-import {Dialog, DialogActions, DialogContent, DialogTitle, MenuItem} from "@mui/material";
+import {MenuItem} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
@@ -20,8 +13,6 @@ import {
     obtenerCuentasCorreo,
 } from '../../Util/Contexts/CuentasCorreoContext';
 window.jQuery = window.$ = $;
-
-
 
 function showSuccess(mensaje){
     new Noty({
@@ -89,7 +80,6 @@ class CuentasCorreo extends Component {
                 showSuccess(err)
             });
         }
-
     }
 
     handleChange = (event) => {
@@ -212,7 +202,6 @@ class CuentasCorreo extends Component {
                             />
                         </div>
                     </div>
-
 
                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                         <div className="input">

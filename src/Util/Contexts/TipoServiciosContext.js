@@ -50,4 +50,10 @@ function obtenerTipoServicioId(id) {
     return result
 }
 
-export { modificarTipoServicio, agregarTipoServicio, eliminarTipoServicio, obtenerTipoServicioId, obtenerTipoServicio }
+export {
+    modificarTipoServicio,
+    agregarTipoServicio,
+    eliminarTipoServicio,
+    obtenerTipoServicioId,
+    obtenerTipoServicio
+}

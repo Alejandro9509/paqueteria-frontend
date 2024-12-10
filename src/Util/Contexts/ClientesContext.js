@@ -13,6 +13,7 @@ function obtenerCliente(){
         );
     return result
 }
+
 function obtenerClientePaginado(pagina,registros,busqueda){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
     let result;
@@ -21,6 +22,7 @@ function obtenerClientePaginado(pagina,registros,busqueda){
         );
     return result
 }
+
 function obtenerClienteId(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetById/${id}`;
     let result;
@@ -48,4 +50,10 @@ function obtenerClienteTieneConvenio(idCliente, idTipoTarifa){
     return result
 }
 
-export {obtenerClienteTieneConvenio, obtenerCliente, obtenerClienteId, obtenerClientePaginado,obtenerClientePublicoGeneral}
+export {
+    obtenerClienteTieneConvenio,
+    obtenerCliente,
+    obtenerClienteId,
+    obtenerClientePaginado,
+    obtenerClientePublicoGeneral
+}

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
+
 const headers = API_HEADERS
 
 
@@ -22,4 +23,4 @@ function getListado(){
     return result
 }
 
-export {validarPermisos,getListado}
+export {validarPermisos, getListado}

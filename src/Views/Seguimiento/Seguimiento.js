@@ -69,8 +69,9 @@ class Seguimiento extends Component {
                         .concat(res.data.recolecciones)
                         .concat(res.data.guias),
                 });
-            })
-            .catch((err) => {});
+            }).catch((err) => {
+                console.log(e)
+            });
     }
 
     handleChage(e){
@@ -110,14 +111,12 @@ class Seguimiento extends Component {
         this.setState({
             setOpenDialogEvidenciasRecoleccion: openDialog
         })
-
     }
 
     handleClickCloseDialogoEvidenciaEntrega(openDialog){
         this.setState({
             setOpenDialogEvidenciasEntrega: openDialog
         })
-
     }
 
     handleClickOpenDialogoEvidencia(openDialog, esRecoleccion){
@@ -174,12 +173,13 @@ class Seguimiento extends Component {
                                 <Grid container alignItems={"center"} justifyContent={"flex-start"}>
 
                                     <Grid item>
-                                        <Typography style={{display: "flex", alignItems: "center"}}>Folio
-                                            seguimiento: {/* <input type={"text"}
+                                        <Typography style={{display: "flex", alignItems: "center"}}>
+                                            Folio seguimiento: {/* <input type={"text"}
                                                                     style={{width: "50%", height:"20px"}}
                                                                     onChange={this.handleChage}
                                                                     value={this.state.folioBusqueda}
-                                                                    name={"folioBusqueda"}/> */}</Typography>
+                                                                    name={"folioBusqueda"}/> */}
+                                        </Typography>
                                     </Grid>
                                     <Grid item>
                                         {/* <input type={"text"}
@@ -224,7 +224,8 @@ class Seguimiento extends Component {
                                         </div>
                                     </Grid>
                                     <Grid item>
-                                        <RadioGroup row aria-label="position" onChange={this.handleChage} name="tipoBusqueda" value={this.state.tipoBusqueda} defaultValue="top">
+                                        <RadioGroup row aria-label="position" onChange={this.handleChage}
+                                                    name="tipoBusqueda" value={this.state.tipoBusqueda} defaultValue="top">
                                             <FormControlLabel
                                                 value="1"
                                                 control={<Radio color="primary"/>}
@@ -285,7 +286,6 @@ class Seguimiento extends Component {
                                     />
                                 </div>
                             }
-
                             {
                                 Object.keys(this.state.data).length !== 0 &&
                                 <Grid container alignItems={"stretch"} justifyContent={"flex-start"} spacing={1} style={{margin:"0px"}}>

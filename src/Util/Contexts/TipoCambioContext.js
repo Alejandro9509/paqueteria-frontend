@@ -4,6 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
+
 function obtenerTipoCambio() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCambio/GetListado`;
     let result;

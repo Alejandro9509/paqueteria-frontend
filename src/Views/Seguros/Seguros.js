@@ -11,6 +11,7 @@ import { obtenerClientesPaginado } from '../../Util/Contexts/RemitenteDestinatar
 import DialogAsignarSeguros from './DialogAsignarSeguros';
 import axios from "axios";
 import {API_HEADERS} from "../../Constants";
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -52,40 +53,39 @@ function Seguros() {
                     </div>
                 );
             }
+        },
+        {
+          headerName: "No. Cliente",
+          field: "m_nNumeroCliente",
+          width: 100,
+        },
+        {
+          headerName: "Nombre",
+          field: "m_sNombreFiscal",
+            width: 350,
+        },
+        {
+            headerName: "Tipo de seguro",
+            field: "m_sTipoSeguro",
+            renderCell: (row) => {
+                return (
+                    <>
+                        { row.row.m_sTipoSeguro}
+                    </>
+                )
             },
-            {
-              headerName: "No. Cliente",
-              field: "m_nNumeroCliente",
-              width: 100,
-            },
-            {
-              headerName: "Nombre",
-              field: "m_sNombreFiscal",
-                width: 350,
-            },
-            {
-                headerName: "Tipo de seguro",
-                field: "m_sTipoSeguro",
-                renderCell: (row) => {
-                    return (
-                        <>
-                            { row.row.m_sTipoSeguro}
-                        </>
-                    )
-                },
-                width: 250,
-              },
-            {
-                headerName: "Aseguradora",
-                field: "m_sAseguradora",
-                width: 250,
-              },
-            {
-                headerName: "Póliza",
-                field: "m_sPoliza",
-                width: 250,
-              }
-
+            width: 250,
+        },
+        {
+            headerName: "Aseguradora",
+            field: "m_sAseguradora",
+            width: 250,
+        },
+        {
+            headerName: "Póliza",
+            field: "m_sPoliza",
+            width: 250,
+        }
     ]);
 
     function openDialog(row){

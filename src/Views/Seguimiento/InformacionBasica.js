@@ -6,9 +6,7 @@ class InformacionBasica extends Component {
         super(props);
     }
 
-
     componentDidMount() {
-
     }
 
     render() {

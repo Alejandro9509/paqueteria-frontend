@@ -13,6 +13,7 @@ function modificarRecoleccion(id, params) {
         );
     return result
 }
+
 function modificarRecoleccionSAT(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ModificarSAT`;
     let result;
@@ -31,7 +32,6 @@ function obtenerRecoleccionReporte(id) {
     return result
 }
 
-
 function agregarRecoleccion(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Agregar`;
     let result;
@@ -49,6 +49,7 @@ function cancelarRecoleccion(id, params) {
         );
     return result
 }
+
 function actualizarCoordenadasRecoleccion(idRecoleccion, latitud, longitud) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ActualizarCoordenadas/${idRecoleccion}/${latitud}/${longitud}`;
     let result;
@@ -122,4 +123,16 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
     return result
 }
 
-export {modificarRecoleccionSAT, actualizarCoordenadasRecoleccion, modificarRecoleccion, agregarRecoleccion, obtenerRecoleccionReporte, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, obtenerRecoleccionFiltro }
+export {
+    modificarRecoleccionSAT,
+    actualizarCoordenadasRecoleccion,
+    modificarRecoleccion,
+    agregarRecoleccion,
+    obtenerRecoleccionReporte,
+    eliminarRecoleccion,
+    obtenerRecoleccionId,
+    obtenerRecoleccion,
+    obtenerRecoleccionCancelada,
+    cancelarRecoleccion,
+    obtenerRecoleccionFiltro
+}

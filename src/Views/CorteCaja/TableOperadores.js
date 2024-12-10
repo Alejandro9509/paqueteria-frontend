@@ -15,6 +15,7 @@ export default function TableOperadores({ data, handleSelection }) {
         setSelectedRow(row);
         handleSelection(row); // Llama a la función handleSelection pasando el registro seleccionado
     };
+
     const [filtro, setFiltro] = useState('');
 
     const handleChangeFiltro = (event) => {
@@ -24,6 +25,7 @@ export default function TableOperadores({ data, handleSelection }) {
     const datosFiltrados = data.filter((objeto) => {
         return (objeto.m_nNumeroOperador + ' ' + objeto.m_sNombreCompleto).toLowerCase().includes(filtro.toLowerCase());
     });
+
     return (
         <div>
             <TextField label="Filtrar por nombre o número" value={filtro} onChange={handleChangeFiltro}

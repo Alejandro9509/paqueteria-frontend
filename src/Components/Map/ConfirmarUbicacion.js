@@ -1,5 +1,4 @@
 import React, {Component, useMemo, useRef} from 'react';
-import PropTypes from 'prop-types';
 import {
     Box,
     Button,
@@ -11,22 +10,18 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
-import {MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents} from "react-leaflet";
+import {MapContainer, TileLayer, useMapEvents} from "react-leaflet";
 import {LocationMarker} from "../../Views/DisplayMapClass";
-import {obtenerUbicacion} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/marker.png";
 import SearchIcon from "@mui/icons-material/Search";
 import {
     searchLocationAddress,
     searchAdressWithCoordinates,
-    searchLocationGuia,
     searchLocationGuiav2
 } from "../../Util/Contexts/UltimaMillaContext";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import {getAddressFormated} from "../../Util/Util";
 
 class ConfirmarUbicacion extends Component {
     constructor(props) {
@@ -62,7 +57,6 @@ class ConfirmarUbicacion extends Component {
             })
             this.state.map.setView([data.y, data.x], 18)
         })
-
     }
 
     cargarMapa(map) {
@@ -85,11 +79,7 @@ class ConfirmarUbicacion extends Component {
         .openOn(this.state.map);
 
         searchAdressWithCoordinates(5,6)
-        this.setState({
-            coordenadas: posicion
-        })
-     
-          
+        this.setState({coordenadas: posicion})
     }
 
     confirmarUbicacion(e) {
@@ -105,9 +95,7 @@ class ConfirmarUbicacion extends Component {
             null,
             this.props.direccion.direccionCompleta,
         ).then(data => {
-            this.setState({
-                coordenadas: {lat: data.y, lng: data.x}
-            })
+            this.setState({coordenadas: {lat: data.y, lng: data.x}})
             this.state.map.setView([data.y, data.x], 18)
         })
     }
@@ -115,12 +103,8 @@ class ConfirmarUbicacion extends Component {
     buscarDireccion(e) {
         e.preventDefault()
         searchLocationAddress(this.state.busqueda).then(data => {
-
-            this.setState({
-                coordenadas: {lat: data.y, lng: data.x}
-            })
+            this.setState({coordenadas: {lat: data.y, lng: data.x}})
             this.state.map.setView([data.y, data.x], 18)
-            
         })
     }
 
@@ -152,8 +136,9 @@ class ConfirmarUbicacion extends Component {
                     <Grid container>
                         {!this.props.ultimaMilla &&
                             <Grid item sm={12}>
-                                <Typography
-                                    variant={"h2"}>{this.props.remitente ? "Remitente:" : "Destinatario:"} {this.props.direccion.nombreLugar}</Typography>
+                                <Typography variant={"h2"}>
+                                    {this.props.remitente ? "Remitente:" : "Destinatario:"} {this.props.direccion.nombreLugar}
+                                </Typography>
                             </Grid>
                         }
                         <Grid item sm={12}>
@@ -161,14 +146,13 @@ class ConfirmarUbicacion extends Component {
                                 variant={"h3"}>Dirección:{`${this.props.direccion.direccionCompleta}`}
                             </Typography>
                         </Grid>
-
                         <br/>
                         <br/>
                         <Grid item sm={12}> 
-                        <Typography variant={"h4"}>{(this.state.coordenadas.lat==0 && this.state.coordenadas.lng==0)?"No hay coordenadas seleccionadas":(`Latitud: ${this.state.coordenadas.lat}   Longitud: ${this.state.coordenadas.lng}`)}</Typography>
+                            <Typography variant={"h4"}>
+                                {(this.state.coordenadas.lat==0 && this.state.coordenadas.lng==0)?"No hay coordenadas seleccionadas":(`Latitud: ${this.state.coordenadas.lat}   Longitud: ${this.state.coordenadas.lng}`)}
+                            </Typography>
                         </Grid>
-                   
-
                     </Grid>
                     <br/>
                     <Grid item sm={12}>
@@ -199,24 +183,22 @@ class ConfirmarUbicacion extends Component {
                                   scrollWheelZoom={false} whenCreated={m => this.cargarMapa(m)}>
                         <TileLayer style={{width: "100%", height: "500px"}}
                                    url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
-                                   token={process.env.REACT_APP_HERE_API_TOEKN}
-                        />
+                                   token={process.env.REACT_APP_HERE_API_TOEKN}/>
 
                         <MapEvents cambiarCordenadas={this.cambiarCordenadas}/>
                         {
-
                             this.state.coordenadas &&
                             <LocationMarker markerId={"ubicacion-lugar"} position={this.state.coordenadas}
                                             info={this.props.direccion} label={""} draggable={true}
                                             cambiarUbicacion={this.cambiarCordenadas}>
-
                             </LocationMarker>
                         }
                     </MapContainer>
                 </DialogContent>
                 <DialogActions>
-                    <Button fullWidth variant={"contained"} color={"primary"}
-                            onClick={(e) => this.confirmarUbicacion(e)}>Confirmar</Button>
+                    <Button fullWidth variant={"contained"} color={"primary"} onClick={(e) => this.confirmarUbicacion(e)}>
+                        Confirmar
+                    </Button>
                 </DialogActions>
             </Dialog>
         );

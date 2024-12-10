@@ -76,6 +76,7 @@ function obtenerSATServicios(){
     );
     return result
 }
+
 function obtenerSATPaginado(registros, pagina, catalogo, busqueda){
 
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/GetListadoPaginado/${registros}/${pagina}`;
@@ -104,6 +105,7 @@ function obtenerSATListado(catalogo,busqueda){
     );
     return result
 }
+
 function obtenerSATBusqueda(catalogo,busqueda){
 
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/Busqueda/${catalogo}/${busqueda}`;
@@ -114,4 +116,17 @@ function obtenerSATBusqueda(catalogo,busqueda){
     return result
 }
 
-export {obtenerSATFraccionArancelaria,obtenerSATMaterialPeligroso, obtenerSATPaginado,obtenerSATEmbalajes,obtenerSATServicios,obtenerSATUnidades,obtenerImpuestosByConceptosFacturacion, obtenerConceptosFacturacion,  obtenerConceptosFacturacionManiobra, obtenerConceptosDefectoListado,obtenerSATListado,obtenerSATBusqueda}
+export {
+    obtenerSATFraccionArancelaria,
+    obtenerSATMaterialPeligroso,
+    obtenerSATPaginado,
+    obtenerSATEmbalajes,
+    obtenerSATServicios,
+    obtenerSATUnidades,
+    obtenerImpuestosByConceptosFacturacion,
+    obtenerConceptosFacturacion,
+    obtenerConceptosFacturacionManiobra,
+    obtenerConceptosDefectoListado,
+    obtenerSATListado,
+    obtenerSATBusqueda
+}

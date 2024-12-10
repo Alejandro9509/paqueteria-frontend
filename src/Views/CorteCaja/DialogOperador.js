@@ -4,7 +4,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle
 } from '@mui/material';
 import TableOperadores from "./TableOperadores";
@@ -35,6 +34,7 @@ function DialogOperadores({ open, handleClose, handleAccept }) {
     const handleRowSelection = (row) => {
         setSelectedRow(row);
     };
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>

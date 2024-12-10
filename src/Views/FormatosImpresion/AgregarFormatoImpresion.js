@@ -1,19 +1,9 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import Cabecera from '../../Components/Template/Cabecera';
-import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
 import axios from "axios";
-import SvgIcon from "@mui/material/SvgIcon";
-import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
-import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import {
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     Grid,
     IconButton,
     InputAdornment,
@@ -26,7 +16,6 @@ import TextField from "@mui/material/TextField";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
     obtenerFormatosImpresionId,
-    obtenerFormatosImpresionProceso
 } from "../../Util/Contexts/FormatosImpresionContext";
 
 window.jQuery = window.$ = $;
@@ -43,7 +32,6 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-
 class AgregarFormatoImpresion extends Component {
 
     constructor(props) {
@@ -56,18 +44,14 @@ class AgregarFormatoImpresion extends Component {
             image: [],
             modificadoEl:""
         }
-
         this.handleChange = this.handleChange.bind(this);
         this.getAllTipoDocumento = this.getAllTipoDocumento.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
 
-
     componentDidMount() {
-        console.log(this.props.id)
         if(this.props.id>0){
             obtenerFormatosImpresionId(this.props.id).then(respuesta => {
-                console.log(respuesta.data[0])
                 this.setState({
                     formato:respuesta.data[0].m_sFormato,
                     idTipoProcesoAgregar:respuesta.data[0].m_nTipoProceso,
@@ -84,17 +68,12 @@ class AgregarFormatoImpresion extends Component {
         this.getAllTipoDocumento()
     }
 
-
-
-  
-
     getAllTipoDocumento() {
         const url = `${process.env.REACT_APP_API_URL}/TipoDocumento/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
             this.setState({dataTipoDocumento: respuesta.data})
         });
     }
-
 
     onSubmit(event) {
         event.preventDefault()
@@ -103,7 +82,6 @@ class AgregarFormatoImpresion extends Component {
 
     handleChange = (event) => {
         event.preventDefault();
-        console.log(event.target.value)
         this.setState({
             [event.target.name]: event.target.value,
         });
@@ -116,7 +94,6 @@ class AgregarFormatoImpresion extends Component {
                     <div className="widget-wrap">
                         <div className="widget-content">
                             <div className="row">
-
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input">
                                     <TextField variant="outlined" size="small"
@@ -254,17 +231,20 @@ class AgregarFormatoImpresion extends Component {
                                         </FormControl>
                                     </label>
                                 </div>
-
                             </div>
 
                             <div className="row">
-
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input">
-                                    <input type="file" id="file" accept=".WDE, .wde" onChange={(e) => {
-                                        if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo un archivo")}else { this.setState({file: e.target.files})}}} style={{display: "none"}
-                                    } />
-                                    <TextField variant="outlined" size="small"
+                                    <input type="file" id="file" accept=".WDE, .wde"
+                                           onChange={(e) => {
+                                                if(e.target.files.length > 1) {
+                                                    showSuccess("Debe adjuntar solo un archivo")
+                                                }else {
+                                                    this.setState({file: e.target.files})
+                                                }
+                                           }} style={{display: "none"}}/>
+                                        <TextField variant="outlined" size="small"
                                                    onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
@@ -276,28 +256,32 @@ class AgregarFormatoImpresion extends Component {
                                                    name={"file"}
                                                    InputProps={{
                                                        endAdornment:
-                                                    <InputAdornment position="end">
-
-                                                        {
-                                                            this.props.id===0 &&
-                                                            <IconButton
-                                                                onClick={() => document.getElementById("file").click()}
-                                                                edge="end"
-                                                                size="large">
-                                                                <CloudUploadIcon color="primary" fontSize="large" />
-                                                            </IconButton>
-                                                        }
-
-                                                    </InputAdornment>
-                                                  
-                                                }}
+                                                           <InputAdornment position="end">
+                                                                {
+                                                                    this.props.id===0 &&
+                                                                    <IconButton
+                                                                        onClick={() => document.getElementById("file").click()}
+                                                                        edge="end"
+                                                                        size="large">
+                                                                        <CloudUploadIcon color="primary" fontSize="large" />
+                                                                    </IconButton>
+                                                                }
+                                                           </InputAdornment>
+                                                       }}
                                         />
                                     </label>
                                 </div>
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">
-                                    <input type="file" id="image" accept="image/*" onChange={(e) => {if(e.target.files.length > 1) { showSuccess("Debe adjuntar solo una imagen")}else { this.setState({image: e.target.files})}}}  style={{display: "none"}} />
+                                    <input type="file" id="image" accept="image/*" onChange={(e) =>
+                                    {
+                                        if(e.target.files.length > 1) {
+                                            showSuccess("Debe adjuntar solo una imagen")
+                                        }else {
+                                            this.setState({image: e.target.files})
+                                        }
+                                    }}  style={{display: "none"}} />
                                         <TextField variant="outlined" size="small"
                                                    className="form-control"
                                                    type="text"
@@ -319,9 +303,7 @@ class AgregarFormatoImpresion extends Component {
                                                              <CloudUploadIcon color="primary" fontSize="large" />
                                                          </IconButton>
                                                      }
-
                                                  </InputAdornment>
-                                               
                                              }}
                                         />
                                     </div>
@@ -332,21 +314,19 @@ class AgregarFormatoImpresion extends Component {
                             {/*<div className="row" >*/}
                             {/*    <InputLabel> *Estos folios son internos para llevar una administración de los comprobantes fiscales, ya que el folio digital se obtiene al momento de hacer un timbre y son 36 dígitos" </InputLabel>*/}
                             {/*</div>*/}
-
           
                             <div className="form-footer ol-md-12">
-                                    <Grid container spacing={1}>
-                                        <Grid item xs>
-                                        <Button fullWidth className="btn btn-secondary secondary-btn"
-                                            onClick={this.props.onClose}>Cancelar
-                                        </Button>
-                                        </Grid>
-                                        <Grid item xs>
-                                        <Button fullWidth className="btn btn-primary primary-btn" type={"submit"}>Aceptar</Button>
-                                        </Grid>
+                                <Grid container spacing={1}>
+                                    <Grid item xs>
+                                    <Button fullWidth className="btn btn-secondary secondary-btn"
+                                        onClick={this.props.onClose}>Cancelar
+                                    </Button>
                                     </Grid>
-                                </div>
-
+                                    <Grid item xs>
+                                    <Button fullWidth className="btn btn-primary primary-btn" type={"submit"}>Aceptar</Button>
+                                    </Grid>
+                                </Grid>
+                            </div>
                         </div>
                     </div>
                 </div>

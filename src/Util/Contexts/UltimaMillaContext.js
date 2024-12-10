@@ -1,13 +1,10 @@
-import {arrayPonts} from "../Data";
-import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
-import Tour from "../../Views/UltimaMilla/Tour";
+import {trackPromise} from "react-promise-tracker";
 import moment from "moment";
 import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
 import {getAddressFormated} from "../Util";
 
 const headers = API_HEADERS
-
 
 
 const Depot = (id, x, y, startDate, finishDate) => ({
@@ -26,7 +23,6 @@ const Depot = (id, x, y, startDate, finishDate) => ({
         "end": finishDate
     }]
 })
-
 
 async function convertData(trucks, guias) {
     var array = []
@@ -91,17 +87,16 @@ async function obtenerGuiasUbicacion(paquetes) {
                 lat: location.y,
                 lng: location.x,
                 index: i
-            })
+            });
         } else {
             guias.push({
                 ...g,
                 lat: g.m_sLatitud,
                 lng: g.m_sLongitud,
                 index: i
-            })
+            });
         }
     }
-    ;
     return guias
 }
 
@@ -182,7 +177,7 @@ function apiPoint(x, y) {
             "considerAlternativeNearByRoads": false
         }
     })
-};
+}
 
 function calcularRuta(points, sucursal) {
     var result;
@@ -190,13 +185,10 @@ function calcularRuta(points, sucursal) {
         result = new Promise((resolve, reject) => {
             axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${sucursal.lat},${sucursal.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
                 resolve(data)
-
             })
-
         })
     )
-    return result
-
+    return result;
 }
 
 function calcularRutaUltimaMilla(points, sucursal, camion) {
@@ -205,13 +197,10 @@ function calcularRutaUltimaMilla(points, sucursal, camion) {
         result = new Promise((resolve, reject) => {
             axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${camion.lat},${camion.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
                 resolve(data)
-
             })
-
         })
     )
     return result
-
 }
 
 async function searchLocationAddress(address) {
@@ -226,7 +215,6 @@ async function searchLocationAddress(address) {
     } else {
         return {x: 0.0, y: 0.0}
     }
-
 }
 
 async function searchLocationGuia(city, address, postalCode) {
@@ -298,7 +286,6 @@ function searchLocationWeb(city, address, subdistrict, number, code) {
                     }
                 }
             })
-
         })
     )
     return result
@@ -631,6 +618,24 @@ function obtenerGuiaRecoleccionPorFolio(folio){
     );
     return result
 }
+
+function ordenarGuiasPorRuta(tour, guias) {
+    var result = []
+    tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").forEach((item, index) => {
+        var found = false;
+        guias = guias.filter(function (guia, index) {
+            if (!found && guia.index == parseInt(item.jobId.replace('job_',''))) {
+                guia.orden = index + 1
+                result.push(guia);
+                found = true;
+                return false;
+            } else
+                return true;
+        })
+    })
+    return result
+}
+
 export {
     cancelarRuta,
     obtenerXMLPermisionario,
@@ -665,22 +670,4 @@ export {
     obtenerPaquetesParciales,
     agregarPaquetesParciales,
     obtenerGuiaRecoleccionPorFolio
-}
-
-
-function ordenarGuiasPorRuta(tour, guias) {
-    var result = []
-    tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").forEach((item, index) => {
-        var found = false;
-        guias = guias.filter(function (guia, index) {
-            if (!found && guia.index == parseInt(item.jobId.replace('job_',''))) {
-                guia.orden = index + 1
-                result.push(guia);
-                found = true;
-                return false;
-            } else
-                return true;
-        })
-    })
-    return result
 }

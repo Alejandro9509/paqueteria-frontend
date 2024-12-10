@@ -5,7 +5,6 @@ import moment from "moment";
 const headers = API_HEADERS
 
 
-
 function obtenerMensajes(id,fecha){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/Chat/Operador`;
     let result;

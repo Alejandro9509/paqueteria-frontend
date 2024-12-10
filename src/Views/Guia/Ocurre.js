@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     Button,
     Checkbox,
@@ -18,6 +17,7 @@ import {numberToMoneyFormatt} from "../../Util/Util";
 import $ from 'jquery';
 window.jQuery = window.$ = $;
 $.array=[]
+
 function doThis(event){
     var picFile = event.target;
     var output = document.getElementById("result");
@@ -34,6 +34,7 @@ function doThis(event){
         "title='" + picFile.name + "'/>";
     output.insertBefore(div, null);
 }
+
 class MyComponent extends Component {
     constructor(props) {
         super(props);
@@ -78,23 +79,22 @@ class MyComponent extends Component {
                         picReader.addEventListener("load", doThis);
                         //Read the image
                         picReader.readAsDataURL(file);
-
                     }
                 });
             } else {
-                console.log("Su navegador no soporta File API");
             }
     }
 
     componentDidUpdate(){
-        console.log("Se refresca el componente Ocurre")
     }
+
     handleFechaOcurre(event) {
         event.preventDefault()
         this.setState({
             fechaOcurre: event.target.value,
         })
     }
+
     handleFechaPago(event) {
         event.preventDefault()
         this.setState({
@@ -116,6 +116,7 @@ class MyComponent extends Component {
             [event.target.name]: event.target.value
         })
     }
+
     handleChangeChecked(event){
         this.setState({
             [event.target.name]: event.target.checked
@@ -124,14 +125,10 @@ class MyComponent extends Component {
 
     render() {
         return (
-            <form onSubmit={(e) => {e.preventDefault();
-                this.setState(state => {
-                    return {
-                        ...state,
-                        dataImagenesEvidencia:$.array
-                    }
-                })
-            this.props.handleEntregaOcurre(this.state,$.array)
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                this.setState(state => {return {...state, dataImagenesEvidencia:$.array}});
+                this.props.handleEntregaOcurre(this.state,$.array)
             }}>
                 <DialogTitle>Registrar entrega ocurre</DialogTitle>
                 <DialogContent>
@@ -166,7 +163,6 @@ class MyComponent extends Component {
                                 required={this.props.showDialogOcurre}
                             />
                         </Grid>
-                        {/*<Grid item xs={2}/>*/}
                         <Grid item xs={12}>
                             <FormControl fullWidth variant="outlined" size="small">
                                 <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
@@ -218,7 +214,6 @@ class MyComponent extends Component {
                                 <output style={{textAlign:"center"}} id={"result"} ></output>
                             </FormControl>
                         </Grid>
-                        {/*<Grid item xs={2}/>*/}
                         <Grid item xs={12}>
                             <FormControl fullWidth variant="outlined" size="small">
                                 <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
@@ -247,7 +242,6 @@ class MyComponent extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/*<Grid item xs={2}/>*/}
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined" label="Comentarios"
@@ -353,8 +347,6 @@ class MyComponent extends Component {
                             Aceptar
                         </Button>
                     </DialogActions>
-
-
                 </DialogContent>
             </form>
         );

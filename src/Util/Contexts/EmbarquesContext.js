@@ -137,4 +137,18 @@ function agregarEmbarquesImportados(params){
     return result
 }
 
-export {modificarEmbarques, agregarEmbarques, obtenerEmbarqueReporte, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda, validarEmbarquesImportados,agregarEmbarquesImportados}
+export {
+    modificarEmbarques,
+    agregarEmbarques,
+    obtenerEmbarqueReporte,
+    eliminarEmbarques,
+    obtenerEmbarques,
+    obtenerEmbarquesId,
+    obtenerUltimoFolioEmbarques,
+    cancelarEmbarque,
+    obtenerEmbarqueCancelado,
+    obtenerEmbarquesFiltro,
+    obtenerEmbarqueMoneda,
+    validarEmbarquesImportados,
+    agregarEmbarquesImportados
+}

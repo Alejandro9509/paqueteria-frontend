@@ -301,6 +301,7 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
             paquetes.reduce((previousValue, currentValue) => previousValue + (pesoTotalKgPaquete(currentValue) > pesoTotalVolPaquete(currentValue) ? pesoTotalKgPaquete(currentValue) : pesoTotalVolPaquete(currentValue)),0)
             :
             paquetes.reduce((previousValue, currentValue) => previousValue + pesoTotalKgPaquete(currentValue),0)
+
     return(
         <div>
             <DialogoNuevoPaquete

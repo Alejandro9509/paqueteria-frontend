@@ -22,4 +22,4 @@ function obtenerAllEstados() {
     return result
 }
 
-export {obtenerAllEstados, obtenerEstadosPais }
+export {obtenerAllEstados, obtenerEstadosPais}

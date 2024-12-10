@@ -7,8 +7,6 @@ import moment from "moment";
 import Noty from "noty";
 import {es} from "date-fns/locale";
 
-
-
 const headers = API_HEADERS
 
 export function showSuccess(mensaje) {

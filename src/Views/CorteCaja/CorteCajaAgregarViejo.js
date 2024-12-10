@@ -1,6 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import Cabecera from "../../Components/Template/Cabecera";
-import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import TextField from "@mui/material/TextField";
 import {
     Button,
@@ -9,29 +7,19 @@ import {
     DialogContent,
     FormControl,
     FormControlLabel,
-    FormGroup,
-    FormLabel,
     Grid,
     InputLabel,
     MenuItem,
-    Radio,
-    RadioGroup,
     Select,
     Switch,
     ThemeProvider,
     StyledEngineProvider,
-    Tooltip,
     adaptV4Theme,
 } from "@mui/material";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import Autocomplete from '@mui/material/Autocomplete';
-import IconButton from "@mui/material/IconButton";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import InputAdornment from "@mui/material/InputAdornment";
-import PageviewIcon from "@mui/icons-material/Pageview";
 import {obtenerCiudades, obtenerCiudadId} from "../../Util/Contexts/CiudadesContext";
 import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
 import {obtenerGuiaId, obtenerGuiasFiltro, obtenerGuiasFiltroCorteCaja} from "../../Util/Contexts/GuiaContext";
@@ -337,10 +325,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         }
     };
 
-    /*const handleCloseDialog = () => {
-        setShowDialog(false)
-    }*/
-
     const handleGuiasSeleccionadas = (event) => {
         setGuiasSeleccionadas(event.selectionModel)
     };
@@ -547,6 +531,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
 
         handleCloseDialog();
     };
+
     return (
         <div>
             <Dialog
@@ -640,7 +625,9 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                                         control={
                                                             <Switch
                                                                 checked={filtros.busquedaPorUsuario}
-                                                                onChange={(event) => handleChange('busquedaPorUsuario', event.target.checked)}
+                                                                onChange={(event) =>
+                                                                    handleChange('busquedaPorUsuario', event.target.checked)
+                                                                }
                                                                 color="primary"
                                                             />
                                                         }
@@ -810,7 +797,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                                             Guardar sin cerrar
                                                         </button>
                                                     </Grid>
-
                                                 </Grid>
                                             </div>
                                         </div>

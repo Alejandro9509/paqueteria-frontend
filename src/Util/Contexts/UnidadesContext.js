@@ -22,6 +22,7 @@ function obtenerRemolques() {
     );
     return result
 }
+
 function obtenerUnidadesInforme() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoInformes`;
     let result;
@@ -30,6 +31,7 @@ function obtenerUnidadesInforme() {
     );
     return result
 }
+
 function obtenerUnidadesUltimaMilla(id, params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoUltimaMilla/${id}`;
     let result;
@@ -38,6 +40,7 @@ function obtenerUnidadesUltimaMilla(id, params) {
     );
     return result
 }
+
 function obtenerUnidadesId(id) {
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     let result;
@@ -92,4 +95,15 @@ function obtenerUnidadesConvoy(id) {
     return result
 }
 
-export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, obtenerUnidadesId, obtenerUnidades, obtenerUnidadesTipo, obtenerEstatusUnidadeId, obtenerUnidadesOperador, obtenerUnidadesConvoy }
+export {
+    obtenerRemolques,
+    cambiarOperadorUnidad,
+    obtenerUnidadesInforme,
+    obtenerUnidadesUltimaMilla,
+    obtenerUnidadesId,
+    obtenerUnidades,
+    obtenerUnidadesTipo,
+    obtenerEstatusUnidadeId,
+    obtenerUnidadesOperador,
+    obtenerUnidadesConvoy
+}

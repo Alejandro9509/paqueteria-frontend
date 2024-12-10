@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import {MenuItem, TextField, Tooltip} from "@mui/material";
+import {MenuItem, TextField} from "@mui/material";
 import {
     obtenerRutasByOrigenDestinoCliente,
     obtenerRutasByOrigenDestinoPublicoGeneral, obtenerRutasId,
@@ -106,9 +106,8 @@ export default function SeleccionarRuta(props){
 
             })
         }
-
-
     }
+
     const getTrayectosByRuta = (idRuta) => {
         obtenerTrayectosByRuta(idRuta).then(({data}) => {
             setDataTrayectos(data)

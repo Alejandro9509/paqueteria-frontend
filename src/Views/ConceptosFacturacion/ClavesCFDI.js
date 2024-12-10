@@ -1,15 +1,7 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import axios from "axios";
 import {
-    FormControl,
-    MenuItem,
-    InputLabel,
-    ListItem,
     TextField,
-    Select,
     Button,
-    IconButton,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { dataGridLocaleText } from "../../Constants";
@@ -73,15 +65,13 @@ class ClavesCFDI extends Component {
     }
 
     componentDidMount() {
-            this.setState({
-                row:this.props.dataSAT,
-                rowFilter: this.props.dataSAT
-            })
-
+        this.setState({
+            row:this.props.dataSAT,
+            rowFilter: this.props.dataSAT
+        })
     }
 
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
-
         if (prevProps.catalogo !== this.props.catalogo || this.props.dataSAT.length !==  prevProps.dataSAT.length){
             this.setState({
                 row:this.props.dataSAT,
@@ -105,16 +95,14 @@ class ClavesCFDI extends Component {
             });
         } else {
             array.splice(
-                array.findIndex(
-                    (a) => a.m_nIdImpuesto === this.state.impuestos[index].m_nIdImpuesto
-                ),
-                1
+                 array.findIndex((a) => a.m_nIdImpuesto === this.state.impuestos[index].m_nIdImpuesto), 1
             );
             this.setState({
                 impuestosSeleccionadosTraslado: array,
             });
         }
     }
+
     handleChangeChecboxTrasladoPredeterminado(event, index) {
         this.setState({
             predeterminadoSeleccionadosTraslado: event.target.checked
@@ -122,11 +110,10 @@ class ClavesCFDI extends Component {
                 : {},
         });
     }
+
     handleChangeChecboxRetencionPredeterminado(event, index) {
         this.setState({
-            predeterminadoSeleccionadosRetencion: event.target.checked
-                ? this.state.impuestosRetencion[index]
-                : {},
+            predeterminadoSeleccionadosRetencion: event.target.checked ? this.state.impuestosRetencion[index] : {},
         });
     }
 
@@ -139,13 +126,7 @@ class ClavesCFDI extends Component {
             });
         } else {
             array.splice(
-                array.findIndex(
-                    (a) =>
-                        a.m_nIdImpuesto ===
-                        this.state.impuestosRetencion[index].m_nIdImpuesto
-                ),
-                1
-            );
+                array.findIndex((a) => a.m_nIdImpuesto === this.state.impuestosRetencion[index].m_nIdImpuesto), 1);
             this.setState({
                 impuestosSeleccionadosRetencion: array,
             });
@@ -154,27 +135,13 @@ class ClavesCFDI extends Component {
 
     onSubmit(event) {
         event.preventDefault();
-        console.log("hola");
         this.props.onSubmit(this.state);
     }
 
     requestSearch = (searchValue) => {
-            this.setState({
-                searchText:searchValue
-            })
-        /*const filteredRows = this.state.row.filter((row) => {
-
-                if (row.m_sClaveSAT.includes(searchValue) || row.m_sDescripcion.includes(searchValue)) {
-                    return true
-                }else {
-                    return false
-                }
-        });
-
         this.setState({
-            rowFilter:filteredRows,
             searchText:searchValue
-        })*/
+        })
     };
 
     componentWillReceiveProps(props) {
@@ -187,13 +154,17 @@ class ClavesCFDI extends Component {
     cancelar = () => {
         if(this.props.catalogo == "c_ClaveProdServCP"){
             this.props.cancel(1)
-        }else if (this.props.catalogo == "c_ClaveUnidad"){
+        }
+        else if (this.props.catalogo == "c_ClaveUnidad"){
             this.props.cancel(2)
-        }else if (this.props.catalogo == "c_MaterialPeligroso"){
+        }
+        else if (this.props.catalogo == "c_MaterialPeligroso"){
             this.props.cancel(3)
-        }else if (this.props.catalogo == "c_TipoEmbalaje"){
+        }
+        else if (this.props.catalogo == "c_TipoEmbalaje"){
             this.props.cancel(4)
-        }else if(this.props.catalogo == "c_FraccionArancelaria"){
+        }
+        else if(this.props.catalogo == "c_FraccionArancelaria"){
             this.props.cancel(5)
         }
         else if(this.props.catalogo == "c_FormaFarmaceutica"){
@@ -213,8 +184,7 @@ class ClavesCFDI extends Component {
             <div>
                 <div
                     className="row"
-                    style={{ height: "400px", width: "100%" }}
-                >
+                    style={{ height: "400px", width: "100%" }}>
                     <div style={{display:"flex",justifyContent:"space-between"}}>
                         <TextField
                             variant="standard"
@@ -240,15 +210,13 @@ class ClavesCFDI extends Component {
                             variant="contained"
                             onClick={()=> this.cancelar()}
                             color="primary"
-                            style={{marginRight:"10px"}}
-                        >
+                            style={{marginRight:"10px"}}>
                             Cancelar
                         </Button>
                         <Button
                             variant="contained"
                             onClick={this.props.closeDialog}
-                            color="primary"
-                        >
+                            color="primary">
                             Seleccionar
                         </Button>
                         </div>
@@ -261,7 +229,6 @@ class ClavesCFDI extends Component {
                             paginationMode="server"
                             autoPageSize
                             onPaginationModelChange={(newPaginationModel)=>{
-                                console.log(newPaginationModel)
                                 this.props.setPagina(newPaginationModel)
                             }}
                             pagination
@@ -269,14 +236,10 @@ class ClavesCFDI extends Component {
                             rowCount={100000}
                             getRowId={ ((row)=> row.m_sClaveSAT)}
                             onRowSelectionModelChange={(newRowSelectionModel,e) => {
-                                //console.log(this.props.dataSAT.find(i=>i.m_nNumeroCliente==newRowSelectionModel[0]))
-                                console.log(this.props.dataSAT)
-                                console.log(newRowSelectionModel)
                                 this.props.selectClase(this.props.dataSAT.find(i=>i.m_sClaveSAT==newRowSelectionModel[0]))
                             }}
                         />
                     </div>
-
                 </div>
             </div>
         );

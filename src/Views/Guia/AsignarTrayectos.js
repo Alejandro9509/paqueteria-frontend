@@ -1,18 +1,15 @@
-import React, {Component, useState} from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import {
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
-    InputLabel, Select,
     Typography
 } from "@mui/material";
 
 function MyComponent(props){
-    const [state, setState] = useState({})
+
     return (
         <Dialog open={props.open} onClose={() => props.close()} maxWidth={"sm"} fullWidth>
             <DialogTitle>
@@ -25,8 +22,6 @@ function MyComponent(props){
                         `¿Desea asignar los trayectos a la guia ${props.dataGuia.m_nFolioGuia}?`
                         }
                     </Typography>
-
-
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => props.close()}>
@@ -37,7 +32,6 @@ function MyComponent(props){
                     </Button>
                 </DialogActions>
             </form>
-
         </Dialog>
     );
 }

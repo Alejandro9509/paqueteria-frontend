@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import Noty from "noty";
 import {dataGridLocaleText} from "../../Constants";
-import {Dialog, DialogActions, DialogContent, Grid, MenuItem, TextField} from "@mui/material";
+import {DialogActions, Grid, MenuItem, TextField} from "@mui/material";
 import axios from "axios";
 import InputAdornment from "@mui/material/InputAdornment";
 import {trackPromise} from "react-promise-tracker";
@@ -41,6 +41,7 @@ function DialogAsignarSeguros(props) {
             valorDeclarado: 0
         });
     }
+
     const handleChangePorcentajeSeguro = (event) => {
         event.preventDefault();
         setState({
@@ -78,14 +79,12 @@ function DialogAsignarSeguros(props) {
         return result
     }
 
-
     return (
         <div>
             <Grid container spacing={2} style={{marginBottom: '10px'}}>
                 <Grid item xs={12}>
                     Asignar Seguro
                 </Grid>
-
                 <Grid item xs={6}>
                     <div className="input">
                         <TextField
@@ -135,13 +134,10 @@ function DialogAsignarSeguros(props) {
                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
                                }}
                     />
-
-
                 </Grid>
                 {
                     state.idTipoSeguro === 1 &&
                     <Grid item xs={6}>
-
                         <TextField variant="outlined" margin="dense"
                                    className="form-control"
                                    size="small"
@@ -157,7 +153,6 @@ function DialogAsignarSeguros(props) {
                                    id="aseguradora"
                                    name="aseguradora"
                         />
-
                     </Grid>
                 }
                 {
@@ -178,12 +173,8 @@ function DialogAsignarSeguros(props) {
                                    id="poliza"
                                    name="poliza"
                         />
-
-
                     </Grid>
                 }
-
-
             </Grid>
 
             <DialogActions style={{justifyContent: "rigth"}}>

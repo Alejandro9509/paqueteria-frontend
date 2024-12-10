@@ -24,15 +24,12 @@ export function confirmarEtiquetasAdicionalesDialog() {
                     label: 'Sí',
                     onClick: () => {
                         resolve(true)
-
                     }
                 },
                 {
                     label: 'No',
                     onClick: () => {
                         reject(false)
-
-
                     }
                 }
             ]

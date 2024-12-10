@@ -2,8 +2,8 @@ import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
 
-
 const headers = API_HEADERS
+
 
 async function obtenerFechaInicio(){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Utilerias/GetFechaInicio`;
@@ -41,4 +41,9 @@ function descargarPlantillaImportarEmbarque(idCliente){
     return result
 }
 
-export {obtenerFechaInicio, obtenerFechaFinal,validarDerecho,descargarPlantillaImportarEmbarque}
+export {
+    obtenerFechaInicio,
+    obtenerFechaFinal,
+    validarDerecho,
+    descargarPlantillaImportarEmbarque
+}
