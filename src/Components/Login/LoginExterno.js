@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Redirect} from "react-router-dom";
 import axios from "axios";
 import Noty from "noty";
@@ -18,7 +17,6 @@ class MyComponent extends Component {
     }
 
     componentWillMount() {
-
     }
 
     getUrlParameter(name) {
@@ -66,7 +64,6 @@ class MyComponent extends Component {
                     if (desencriptar) {
                         this.trylogin(false)
                     } else {
-                        console.log('else', respuesta)
                         showSuccess(respuesta.data);
                     }
                 }
@@ -74,7 +71,6 @@ class MyComponent extends Component {
                 if (desencriptar) {
                     this.trylogin(false)
                 } else {
-                    console.log('catch', respuesta)
                     showSuccess(respuesta.data);
                 }
             }
