@@ -44,7 +44,7 @@ class MyComponent extends Component {
                 </DialogTitle>
                 <form onSubmit={(e) => {e.preventDefault(); this.props.submit(this.state.tipoCobro)}}>
                     <DialogContent>
-                        <label className="input select" style={{width: "100%"}}>
+                        <label className="input select" style={{width: "97%"}}>
                             <FormControl fullWidth
                                          variant="outlined"
                                          margin="small">
