@@ -76,4 +76,13 @@ function obtenerCortesGeneralReporte(fecha) {
     return result
 }
 
-export { obtenerCorteReporte,obtenerCortesGeneralReporte,obtenerCortesByFiltros,modificarCorte, obtenerCorteId, obtenerCortes, eliminarCorte, agregarCorte}
+export {
+    obtenerCorteReporte,
+    obtenerCortesGeneralReporte,
+    obtenerCortesByFiltros,
+    modificarCorte,
+    obtenerCorteId,
+    obtenerCortes,
+    eliminarCorte,
+    agregarCorte
+}

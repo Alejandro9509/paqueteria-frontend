@@ -6,7 +6,6 @@ const headers = API_HEADERS
 const headersMultipart = API_MULTIPART_HEADERS;
 
 
-
 function agregarFormatosImpresion( params, file, image){
     var bodyFormData = new FormData();
 
@@ -59,6 +58,7 @@ function obtenerFormatosImpresionProceso(id){
     );
     return result
 }
+
 function obtenerFormatosImpresionId(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/${id}`;
     let result;
@@ -67,6 +67,7 @@ function obtenerFormatosImpresionId(id){
     );
     return result
 }
+
 function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -75,6 +76,7 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
         );
     return result
 }
+
 function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -83,6 +85,7 @@ function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
     );
     return result
 }
+
 function imprimirFormatosIdInforme(id,idTipoReporte,esPDF){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -91,6 +94,7 @@ function imprimirFormatosIdInforme(id,idTipoReporte,esPDF){
     );
     return result
 }
+
 function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -99,6 +103,7 @@ function imprimirFormatosECCId(id, fechaInicial, fechaFinal, idCliente){
     );
     return result
 }
+
 function imprimirFormatosIdTimbradoViajes(id,idViaje,idInforme){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -107,6 +112,7 @@ function imprimirFormatosIdTimbradoViajes(id,idViaje,idInforme){
     );
     return result
 }
+
 function imprimirFormatosIdCorteCajaGeneral(id,fechaRegistro,horaRegistro){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -115,6 +121,7 @@ function imprimirFormatosIdCorteCajaGeneral(id,fechaRegistro,horaRegistro){
     );
     return result
 }
+
 function imprimirFormatoGuiaMoroleon(id,idTipoReporte,anio,dia,mes,firma){
     const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     let result;
@@ -130,4 +137,17 @@ function imprimirFormatoGuiaMoroleon(id,idTipoReporte,anio,dia,mes,firma){
     return result
 }
 
-export {agregarFormatosImpresion, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso,imprimirFormatosECCId,imprimirFormatosIdIdTipoReporte,imprimirFormatosIdTimbradoViajes,imprimirFormatosIdCorteCajaGeneral,imprimirFormatosIdInforme,modificarFormatosImpresion,obtenerFormatosImpresionId,imprimirFormatoGuiaMoroleon}
+export {
+    agregarFormatosImpresion,
+    obtenerFormatosImpresion,
+    imprimirFormatosId,
+    obtenerFormatosImpresionProceso,
+    imprimirFormatosECCId,
+    imprimirFormatosIdIdTipoReporte,
+    imprimirFormatosIdTimbradoViajes,
+    imprimirFormatosIdCorteCajaGeneral,
+    imprimirFormatosIdInforme,
+    modificarFormatosImpresion,
+    obtenerFormatosImpresionId,
+    imprimirFormatoGuiaMoroleon
+}

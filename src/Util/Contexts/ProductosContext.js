@@ -22,6 +22,7 @@ function obtenerProductos(){
     );
     return result
 }
+
 function obtenerProductosByConvenioCliente(idCliente){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/GetByConvenioCliente/${idCliente}`;
     let result;
@@ -57,4 +58,12 @@ function eliminarProducto(idProducto){
         );
     return result
 }
-export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto,obtenerProductosByConvenioCliente,eliminarProducto}
+
+export {
+    obtenerProductoById,
+    obtenerProductos,
+    modificarProducto,
+    agregarProducto,
+    obtenerProductosByConvenioCliente,
+    eliminarProducto
+}

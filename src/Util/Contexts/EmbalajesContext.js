@@ -31,6 +31,7 @@ function eliminarEmbalajes(id, idEliminadoPor){
         );
     return result
 }
+
 function validarEliminarEmbalajes(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/ValidarEliminar/${id}`;
     let result;
@@ -58,4 +59,11 @@ function obtenerEmbalajesId(id){
     return result
 }
 
-export {modificarEmbalajes, agregarEmbalajes, eliminarEmbalajes, obtenerEmbalajes, obtenerEmbalajesId,validarEliminarEmbalajes}
+export {
+    modificarEmbalajes,
+    agregarEmbalajes,
+    eliminarEmbalajes,
+    obtenerEmbalajes,
+    obtenerEmbalajesId,
+    validarEliminarEmbalajes
+}

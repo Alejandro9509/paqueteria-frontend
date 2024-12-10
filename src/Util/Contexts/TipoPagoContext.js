@@ -5,7 +5,6 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
 
-
 function obtenerTiposPago() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/TiposPago/GetListado`;
     let result;

@@ -4,6 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
+
 function obtenerOperadores() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Operadores/GetListado`;
     let result;
@@ -12,6 +13,7 @@ function obtenerOperadores() {
         );
     return result
 }
+
 function reasignarOperador(idParadaFuente, idOperador) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ReasignarOperador/${idParadaFuente}/${idOperador}`;
     let result;
@@ -20,6 +22,7 @@ function reasignarOperador(idParadaFuente, idOperador) {
     );
     return result
 }
+
 function obtenerOperadoresId(id) {
     const url =
             `${process.env.REACT_APP_API_URL}/Operador/GetById/` +
@@ -40,4 +43,9 @@ function obtenerOperadoresPorSucursal(idSucursal) {
     return result
 }
 
-export { obtenerOperadoresId, reasignarOperador,obtenerOperadores, obtenerOperadoresPorSucursal }
+export {
+    obtenerOperadoresId,
+    reasignarOperador,
+    obtenerOperadores,
+    obtenerOperadoresPorSucursal
+}

@@ -31,6 +31,7 @@ function agregarGuia(params) {
         );
     return result
 }
+
 function cubicarGuia(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar`;
     let result;
@@ -39,6 +40,7 @@ function cubicarGuia(params) {
         );
     return result
 }
+
 function cubicarGuiaInforme(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar/Informe`;
     let result;
@@ -56,6 +58,7 @@ function eliminarGuia(id, idEliminadoPor) {
         );
     return result
 }
+
 function validarEliminarGuia(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarEliminar/${id}`;
     let result;
@@ -91,6 +94,7 @@ function obtenerGuia() {
         );
     return result
 }
+
 function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetUltimaMilla`;
     let result;
@@ -130,6 +134,7 @@ function cambiarEstatusGuia(params) {
     );
     return result
 }
+
 function cambiarEstatusGuiaSAT(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/CambiarEstatusGuiaSAT`;
     let result;
@@ -175,6 +180,7 @@ function obtenerGuiaPendientes(idOrigen, idDestino, tipoTimbrado) {
         );
     return result
 }
+
 function obtenerGuiaReporte(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Guia/${id}`;
     let result;
@@ -183,6 +189,7 @@ function obtenerGuiaReporte(id) {
     );
     return result
 }
+
 function obtenerGuiaReporteEtiqueta(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuia/${id}`;
     let result;
@@ -191,6 +198,7 @@ function obtenerGuiaReporteEtiqueta(id) {
     );
     return result
 }
+
 function validarRangosEtiqueta(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/ValidarRangosEtiqueta`;
     let result;
@@ -200,6 +208,7 @@ function validarRangosEtiqueta(params) {
     );
     return result
 }
+
 function obtenerGuiaReporteEtiquetaGuiaRangos(idImpresion) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuiaRangos/${idImpresion}`;
     let result;
@@ -209,6 +218,7 @@ function obtenerGuiaReporteEtiquetaGuiaRangos(idImpresion) {
     );
     return result
 }
+
 function ultimoFolioGuia() {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetUltimoFolio`;
     let result;
@@ -280,7 +290,6 @@ function obtenerGuiasFiltroCorteCaja(busquedaPorUsuario, idOperador, idUsuario, 
 }
 
 function obtenerGuiasFiltroCorteCajaVIEJO(fecha, destino, idMoneda, idTipoPago) {
-
     const url =
         `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja/` +
         fecha +
@@ -333,6 +342,7 @@ function obtenerPaquetesGuia(idGuia) {
     );
     return result
 }
+
 function subirImagenEvidencia(imagen,IdGuia,ImagenNombreArchivo,Descripcion,esRec,TipoArchivo) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/SubirImagen`;
     let result;
@@ -346,6 +356,36 @@ function subirImagenEvidencia(imagen,IdGuia,ImagenNombreArchivo,Descripcion,esRe
     return result
 }
 
-export {cubicarGuiaInforme, cubicarGuia, cambiarEstatusGuiaSAT,actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
-    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
-    obtenerGuiaUltimaMilla, subirImagenEvidencia,reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia,obtenerBancos,obtenerGuiaReporteEtiquetaGuiaRangos,enviarCorreoGuia,obtenerPaquetesGuia,validarRangosEtiqueta}
+export {
+    cubicarGuiaInforme,
+    cubicarGuia,
+    cambiarEstatusGuiaSAT,
+    actualizarCoordenadasGuia,
+    cambiarEstatusGuia,
+    obtenerGuiasFiltroCorteCaja,
+    entregaOcurreGuia,
+    modificarGuia,
+    agregarGuia,
+    eliminarGuia,
+    obtenerGuiaId,
+    obtenerGuia,
+    ultimoFolioGuia,
+    cancelarGuia,
+    obtenerGuiasFiltro,
+    obtenerGuiaPendientes,
+    imprimirGuia,
+    obtenerGuiaReporteEtiqueta,
+    obtenerGuiaUltimaMilla,
+    subirImagenEvidencia,reasignarGuia,
+    obtenerGuiaReporte,
+    cambiarTipoCobro,
+    obtenerValidacionGuia,
+    asignarTrayectos,
+    validarEliminarGuia,
+    validarCancelarGuia,
+    obtenerBancos,
+    obtenerGuiaReporteEtiquetaGuiaRangos,
+    enviarCorreoGuia,
+    obtenerPaquetesGuia,
+    validarRangosEtiqueta
+}
