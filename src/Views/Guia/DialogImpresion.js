@@ -43,6 +43,7 @@ export default function DialogImpresion({ open, handleClose, handleAccept, paque
     const handleDataChange = (list) => {
         setListadoPaquetes(list);
     };
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>
@@ -85,22 +86,14 @@ function TablePrint({ data, handleDataChange }) {
             }
             if (event.target.name === 'rangoInicio'){
                 if (parseInt(event.target.value) < 0){
-                    // console.log('Cantidad fuera del rango válido')
-                    // console.log('value: ' + parseInt(event.target.value))
                     return;
                 }
                 if (parseInt(event.target.value) > parseInt(selection.rangoFin)){
-                    // console.log('Cantidad fuera del rango válido')
-                    // console.log('value: ' + parseInt(event.target.value))
-                    // console.log('Comparing:' + parseInt(selection.rangoFin))
                     return;
                 }
             }
             if (event.target.name === 'rangoFin'){
                 if (parseInt(event.target.value) < parseInt(selection.rangoInicio)){
-                    // console.log('Cantidad fuera del rango válido')
-                    // console.log('value: ' + parseInt(event.target.value))
-                    // console.log('Comparing:' + parseInt(selection.rangoInicio))
                     return;
                 }
                 // if (parseInt(event.target.value) > parseInt(selection.cantidad)){
@@ -116,7 +109,6 @@ function TablePrint({ data, handleDataChange }) {
             newData[indexItemToChange] = itemToChange
             handleDataChange(newData)
         }catch (e) {
-            // console.log('mamó')
             console.log(e)
         }
 
@@ -127,7 +119,7 @@ function TablePrint({ data, handleDataChange }) {
             {/*           variant="outlined" margin={"dense"}/>*/}
             {/*<br/>*/}
             {/*<br/>*/}
-            <TableContainer/* component={Paper}*/ style={{ height: '400px' }}>
+            <TableContainer style={{ height: '400px' }}>
                 <Table size="small" stickyHeader>
                     <TableHead>
                         <TableRow>
@@ -148,14 +140,21 @@ function TablePrint({ data, handleDataChange }) {
                                 <TableCell>{item.producto}</TableCell>
                                 <TableCell>{item.embalaje}</TableCell>
                                 <TableCell>{item.descripcion}</TableCell>
-                                <TableCell><TextField type="number" value={item.rangoInicio} onChange={(e) => handleChangeRango(e, item)} name={'rangoInicio'} variant="outlined" margin={"dense"}/></TableCell>
-                                <TableCell><TextField type="number" value={item.rangoFin} onChange={(e) => handleChangeRango(e, item)} name={'rangoFin'} variant="outlined" margin={"dense"}/></TableCell>
+                                <TableCell>
+                                    <TextField type="number" value={item.rangoInicio} onChange={(e) =>
+                                        handleChangeRango(e, item)
+                                    } name={'rangoInicio'} variant="outlined" margin={"dense"}/>
+                                </TableCell>
+                                <TableCell>
+                                    <TextField type="number" value={item.rangoFin} onChange={(e) =>
+                                        handleChangeRango(e, item)
+                                    } name={'rangoFin'} variant="outlined" margin={"dense"}/>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
         </div>
-
     );
 }

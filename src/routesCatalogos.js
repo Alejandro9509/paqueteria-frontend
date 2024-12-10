@@ -30,7 +30,7 @@ import {ReactComponent as PConfiguracionIcon} from './iconos/Catalogos/Icono Par
 import {ReactComponent as TCobreIcon} from './iconos/Catalogos/Icono Tipos de Cobro/icono_tipo_cobro.svg';
 import {ReactComponent as TarifasIcon} from './iconos/Catalogos/Icono Tarifas/icono_tarifas.svg';
 import {ReactComponent as ConveniosIcon} from './iconos/Catalogos/Icono Convenios/icono_convenios.svg';
-import {ReactComponent as PCorreosIcon} from './iconos/Catalogos/Icono Plantilla Correo/IconoPlantillaCorreoNaranja.svg';
+//import {ReactComponent as PCorreosIcon} from './iconos/Catalogos/Icono Plantilla Correo/IconoPlantillaCorreoNaranja.svg';
 import {ReactComponent as ProductosIcon} from './iconos/Catalogos/Icono Productos/IconoProductos.svg';
 import ZonaOperativa from "./Views/ZonasOperativas/ZonaOperativa";
 import {validarDerecho} from "./Util/Util";
@@ -123,13 +123,13 @@ const catalogRoutes = [
         component: ParametrosConfiguracionPage,
         visible: validarDerecho(9101202)
     },
-    {
-        path: "/PlantillaCorreo",
-        name: "Plantilla de Correo",
-        icon: <PCorreosIcon/>,
-        component: PlantillaCorreo,
-        visible: validarDerecho(9101383)
-    },
+    // {
+    //     path: "/PlantillaCorreo",
+    //     name: "Plantilla de Correo",
+    //     icon: <PCorreosIcon/>,
+    //     component: PlantillaCorreo,
+    //     visible: validarDerecho(9101383)
+    // },
     {
         path: "/Productos",
         name: "Productos",

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     Button,
     Dialog,
@@ -25,6 +24,7 @@ class MyComponent extends Component {
     componentWillMount() {
         this.getAllDataTipoCobro()
     }
+
     getAllDataTipoCobro() {
         if (this.state.dataTipoCobro.length > 0) {
             return
@@ -65,7 +65,6 @@ class MyComponent extends Component {
                                     fullWidth
                                     value={this.state.tipoCobro}
                                     >
-
                                     <MenuItem value="0">
                                         Seleccionar
                                     </MenuItem>

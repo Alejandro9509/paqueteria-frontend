@@ -1,5 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
 import {
     Button,
     Dialog,
@@ -12,14 +11,12 @@ import {
 } from "@mui/material";
 import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
-import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {cambiarEstatusGuia} from "../../Util/Contexts/GuiaContext";
 import Noty from "noty";
 import {getAddressFormated} from "../../Util/Util";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import TextField from "@mui/material/TextField";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
-
 
 function showSuccess(mensaje) {
     new Noty({
@@ -187,8 +184,6 @@ function CambiarEstatus(props){
         }).catch(err => {
             showSuccess(err.response?.data)
         })
-
-
     }
 
     const obtenerDatosDireccion = (esRecoleccion) => {
@@ -250,17 +245,21 @@ function CambiarEstatus(props){
                                     direccion={obtenerDatosDireccion(false)}
                 />
             }
-            <Dialog open={props.open} onClose={() => {
-                resetData()
-            props.close()
-        }} maxWidth={"md"} fullWidth>
-            <DialogTitle>
-                <Typography variant={"h3"}>Cambiar Tipo de Entrega</Typography>
-            </DialogTitle>
+            <Dialog open={props.open} maxWidth={"md"} fullWidth onClose={() => {
+                resetData();
+                props.close();
+            }}>
+                <DialogTitle>
+                    <Typography variant={"h3"}>Cambiar Tipo de Entrega</Typography>
+                </DialogTitle>
                 <DialogContent>
-                    <Typography variant={"caption"}>Al cambiar a estatus "Completado" se habilitará la guía para realizar entrega ocurre.</Typography>
+                    <Typography variant={"caption"}>
+                        Al cambiar a estatus "Completado" se habilitará la guía para realizar entrega ocurre.
+                    </Typography>
                     <br/>
-                    <Typography variant={"caption"}>Al cambiar a estatus "Ultima Milla" se habilitará la guía para realizar entrega a domicilio.</Typography>
+                    <Typography variant={"caption"}>
+                        Al cambiar a estatus "Ultima Milla" se habilitará la guía para realizar entrega a domicilio.
+                    </Typography>
                     <br/>
                     <br/>
                     <label className="input select" style={{width: "100%"}}>
@@ -317,46 +316,44 @@ function CambiarEstatus(props){
                     }
                     {
                         state.idEstatusGuia === 7 &&
-                            <div>
-
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12} sm={6}>
-                                        <label className="input select" style={{width: "100%"}}>
-                                            <FormControl fullWidth variant="outlined" >
-                                                <InputLabel id="idSucursalEntrega">Sucursal de Entrega</InputLabel>
-                                                <Select
-                                                    labelId={"idSucursalEntrega"}
-                                                    label="Sucursal de Entrega"
-                                                    className="form-control"
-                                                    onChange={handleChangeSucursalEntrega}
-                                                    value={state.idSucursalEntrega}
-                                                    id="idSucursalEntrega"
-                                                    name="idSucursalEntrega"
-                                                    inputProps={{ name: "idSucursalEntrega" }}
-                                                    fullWidth
-                                                >
-                                                    {dataSucursales.map((sucursal) => (
-                                                        <MenuItem key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal} >
-                                                            {sucursal.m_sSucursal}
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                        </label>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField variant="outlined"
-                                                   size="small"
-                                                   className="form-control"
-                                                   type="text"
-                                                   label="Zona operativa"
-                                                   value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
-                                                   disabled
-                                        />
-                                    </Grid>
-
+                        <div>
+                            <Grid container spacing={1}>
+                                <Grid item xs={12} sm={6}>
+                                    <label className="input select" style={{width: "100%"}}>
+                                        <FormControl fullWidth variant="outlined" >
+                                            <InputLabel id="idSucursalEntrega">Sucursal de Entrega</InputLabel>
+                                            <Select
+                                                labelId={"idSucursalEntrega"}
+                                                label="Sucursal de Entrega"
+                                                className="form-control"
+                                                onChange={handleChangeSucursalEntrega}
+                                                value={state.idSucursalEntrega}
+                                                id="idSucursalEntrega"
+                                                name="idSucursalEntrega"
+                                                inputProps={{ name: "idSucursalEntrega" }}
+                                                fullWidth
+                                            >
+                                                {dataSucursales.map((sucursal) => (
+                                                    <MenuItem key={sucursal.m_nIdSucursal} value={sucursal.m_nIdSucursal} >
+                                                        {sucursal.m_sSucursal}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </label>
                                 </Grid>
-                            </div>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField variant="outlined"
+                                               size="small"
+                                               className="form-control"
+                                               type="text"
+                                               label="Zona operativa"
+                                               value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
+                                               disabled
+                                    />
+                                </Grid>
+                            </Grid>
+                        </div>
                     }
                 </DialogContent>
                 <DialogActions>
@@ -370,9 +367,7 @@ function CambiarEstatus(props){
                         Aceptar
                     </Button>
                 </DialogActions>
-
-
-        </Dialog>
+            </Dialog>
         </>
     );
 }
