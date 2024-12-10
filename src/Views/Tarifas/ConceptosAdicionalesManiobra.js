@@ -1,5 +1,4 @@
-import React, { Component, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import axios from "axios";
 import { Dialog, DialogActions, DialogContent, FormControl, IconButton, InputAdornment, InputLabel, Select, TextField } from '@mui/material';
 import PageviewIcon from "@mui/icons-material/Pageview";
@@ -52,7 +51,6 @@ class ConceptosAdicionales extends Component {
             agregadoDesde: 1,
             tiposCalculo:[],
             tipoMedida: 0,
-
         }
         this.getAllConceptos = this.getAllConceptos.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -66,7 +64,6 @@ class ConceptosAdicionales extends Component {
     }
 
     componentWillMount() {
-
     }
 
     componentDidMount() {
@@ -84,28 +81,6 @@ class ConceptosAdicionales extends Component {
 
     getAllConceptos() {
         obtenerConceptosFacturacionManiobra().then(respuesta => {
-            /*if (this.props.conceptosAdicionales.length == 0){
-                if (this.props.edit) {
-                    this.props.select.m_arrArConceptos.forEach(element => {
-                        this.props.removeConcepto(element)
-                    })
-                    this.props.select.m_arrArConceptos.forEach(element => {
-                        this.props.addConcepto({
-                            concepto: respuesta.data.find(c => c.m_nIdConceptosFacturacion === element.m_nIdConceptosFacturacion),
-                            importe: element.m_cImporte,
-                            traslada: element.m_nIdImpuestoTraslada,
-                            importeIVA: element.m_cImporteIva,
-                            retiene: element.m_nIdImpuestoRetiene,
-                            importeRet: element.m_cImporteRetiene,
-                            nombreConcepto: element.m_sConcepto,
-                            rangoMinimo: element.m_xnRangoMinimo,
-                            rangoMaximo: element.m_xnRangoMaximo,
-                            agregadoDesde: element.m_nIdAgregadoDesde
-                        })
-                    })
-                }
-            }*/
-
             this.setState({ conceptos: respuesta.data })
         });
     }
@@ -132,9 +107,7 @@ class ConceptosAdicionales extends Component {
         }
     }
 
-
     componentWillUnmount() {
-
     }
 
     handleSelectCP(id, dobleClick, e) {
@@ -152,7 +125,6 @@ class ConceptosAdicionales extends Component {
                 openDialog: false
             });
         }
-
     }
 
     calcularImpuestos(traslada, retiene, importe) {
@@ -227,7 +199,6 @@ class ConceptosAdicionales extends Component {
                 importeIVA: newValue.m_cImporteIva
             })
         });
-
     }
 
     render() {
@@ -243,19 +214,27 @@ class ConceptosAdicionales extends Component {
 
                                 </div>
 
-                                {this.state.conceptos.length != 0 ? <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state} select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion} columns={this.state.columnsConceptos} data={this.state.conceptos} identificadorModal={this.state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-
+                                {this.state.conceptos.length != 0 ?
+                                    <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state}
+                                                    select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion}
+                                                    columns={this.state.columnsConceptos} data={this.state.conceptos}
+                                                    identificadorModal={this.state.identificadorModal} />
+                                    :
+                                    <div>No se encontró ningún registro</div>
+                                }
                                 <DialogActions style={{ justifyContent: "left" }}>
-
-                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
+                                    <button onClick={() => this.setState({ openDialog: false })}
+                                            className="btn btn-primary primary-btn">
+                                        Aceptar
+                                    </button>
+                                    <button onClick={() => this.setState({ openDialog: false })}
+                                            className="btn btn-secondary secondary-btn">
+                                        Cerrar
+                                    </button>
                                 </DialogActions>
                             </div>
                         }
                     </DialogContent>
-
                 </Dialog>
                 {
                     !this.props.consult &&
@@ -330,7 +309,6 @@ class ConceptosAdicionales extends Component {
                                 />
                             </div>
                         </div>
-
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
                             <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
@@ -353,7 +331,6 @@ class ConceptosAdicionales extends Component {
                             </label>
                         </div>
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
                                     onChange={this.handleChange}
@@ -367,7 +344,6 @@ class ConceptosAdicionales extends Component {
                             </div>
                         </div>
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
                                     onChange={this.handleChange}
@@ -380,9 +356,7 @@ class ConceptosAdicionales extends Component {
                                 />
                             </div>
                         </div>
-
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
                                     onChange={this.handleChange}
@@ -397,7 +371,6 @@ class ConceptosAdicionales extends Component {
                                 />
                             </div>
                         </div>
-
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
                             <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
@@ -430,7 +403,6 @@ class ConceptosAdicionales extends Component {
                             </label>
                         </div>
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
                                     onChange={this.handleChange}
@@ -477,9 +449,7 @@ class ConceptosAdicionales extends Component {
                                 </FormControl>
                             </label>
                         </div>
-
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
                                     onChange={this.handleChange}
@@ -517,7 +487,6 @@ class ConceptosAdicionales extends Component {
                                 </FormControl>
                             </label>
                         </div>
-
                         <div className="col-md-12 col-sm-12" style={{ padding: "0px", textAlign: "right" }}>
                             <IconButton onClick={this.onSubmit} style={{ padding: "0px" }} size="large">
                                 <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
@@ -546,16 +515,36 @@ class ConceptosAdicionales extends Component {
                                 {
                                     this.props.conceptosAdicionales.map((c, index) => (
                                         <tr onClick={(e) => this.handleRowClick(e, index, c)}>
-                                            <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
-                                            <td style={{ textAlign: "left" }}>{c.tipoMedida == 1 ? "Kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "Piezas" : ""}</td>
-                                            <td style={{ textAlign: "left" }}>{c.rangoMinimo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}</td>
-                                            <td style={{ textAlign: "left" }}>{c.rangoMaximo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}</td>
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>
-                                            <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>
-                                            <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
-                                            <td style={{ textAlign: "left" }}>{c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : c.tipoCalculo == 3 ? "Producto" : ""}</td>
+                                            <td style={{ textAlign: "left" }}>
+                                                {c.nombreConcepto}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                {c.tipoMedida == 1 ? "Kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "Piezas" : ""}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                {c.rangoMinimo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                {c.rangoMaximo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                ${parseFloat(c.importe).toFixed(2)}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                {this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                ${parseFloat(c.importeIVA).toFixed(2)}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                {this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                ${parseFloat(c.importeRet).toFixed(2)}
+                                            </td>
+                                            <td style={{ textAlign: "left" }}>
+                                                {c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : c.tipoCalculo == 3 ? "Producto" : ""}
+                                            </td>
                                             {
                                                 !this.props.consult &&
                                                 <td>
@@ -574,37 +563,56 @@ class ConceptosAdicionales extends Component {
                                 }
                             </table>
                         }
-
                     </div>
                     <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
 
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
-                            <div style={{ margin: "5px", padding: "5px" }}>Subtotal</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
+                            <div style={{ margin: "5px", padding: "5px" }}>
+                                Subtotal
+                            </div>
+                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white",
+                                backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray",
+                                minWidth: "230px", textAlign: "right" }}>
+                                ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}
+                            </div>
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
-
-                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}>  {this.props.ivaTraslada.map(t => (<div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br /></div>))} {this.props.ivaRetiene.map(t => (<div>{`${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br /></div>))} </div>
+                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white",
+                                backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray",
+                                minWidth: "230px", textAlign: "right" }}>
+                                {
+                                    this.props.ivaTraslada.map(t => (
+                                        <div>
+                                            {`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""}`}
+                                            ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}
+                                            <br />
+                                        </div>))
+                                }
+                                {
+                                    this.props.ivaRetiene.map(t => (
+                                        <div>{`${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}
+                                            ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}
+                                            <br />
+                                        </div>))
+                                }
+                            </div>
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
                             <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         );
     }
 }
 
 ConceptosAdicionales.propTypes = {
-
 };
 
 export default ConceptosAdicionales;
 
-function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-}) {
+function DefaultColumnFilter({column: { filterValue, preFilteredRows, setFilter }}) {
     const count = preFilteredRows.length;
     const [showResults, setShowResults] = React.useState(false)
     const onClick = () => setShowResults(!showResults)
@@ -648,11 +656,7 @@ function TableConceptos({ columns, data, select, handleSelectCP }) {
         prepareRow,
         state,
     } = useTable(
-        {
-            columns,
-            data,
-            defaultColumn,
-        },
+        {columns, data, defaultColumn},
         useFilters,
         useSortBy
     );
@@ -696,7 +700,9 @@ function TableConceptos({ columns, data, select, handleSelectCP }) {
                         (row, i) => {
                             prepareRow(row);
                             return (
-                                <tr style={{ backgroundColor: row.original.m_nIdConceptosFacturacion === select ? "orange" : "white" }} {...row.getRowProps()} onClick={(event) => handleSelectCP(row.original, false, event)} onDoubleClick={(event) => handleSelectCP(row.original, true, event)}>
+                                <tr style={{ backgroundColor: row.original.m_nIdConceptosFacturacion === select ? "orange" : "white" }}
+                                    {...row.getRowProps()} onClick={(event) => handleSelectCP(row.original, false, event)}
+                                    onDoubleClick={(event) => handleSelectCP(row.original, true, event)}>
                                     {row.cells.map(cell => {
                                         return (
                                             <td {...cell.getCellProps()}>{cell.render('Cell')}</td>

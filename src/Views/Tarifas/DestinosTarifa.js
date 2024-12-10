@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { styled } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import Card from '@mui/material/Card';

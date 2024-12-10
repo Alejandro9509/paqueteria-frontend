@@ -71,6 +71,7 @@ export default function Maniobras(props){
     const handleChangeRangosViaje = (newRangos) => {
         props.handleChangeManiobras(newRangos)
     }
+
     return(
         <div>
             {
@@ -100,7 +101,8 @@ export default function Maniobras(props){
                     />
                 </Grid>
                 <Grid item xs={2}>
-                    <Button fullWidth variant={"contained"} style={{fontSize:"1em"}} color={"primary"} onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
+                    <Button fullWidth variant={"contained"} style={{fontSize:"1em"}} color={"primary"}
+                            onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
                         <AddIcon fontSize={'large'} />
                         &nbsp;&nbsp;Agregar Rangos
                     </Button>

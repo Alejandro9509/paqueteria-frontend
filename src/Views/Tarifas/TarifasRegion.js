@@ -7,12 +7,7 @@ import {
     obtenerTarifasByTipo
 } from "../../Util/Contexts/TarifasContext";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
-import axios from "axios";
-import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {Tooltip} from "@mui/material";
-import Cabecera from "../../Components/Template/Cabecera";
-import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import TarifasRangos from "./TarifasRangos";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import CrearTarifaRegion from "./CrearTarifaRegion";
@@ -257,8 +252,6 @@ function TarifasRegion(props){
                 })
             })
         }
-
-
     }
 
     /**Se definen las columnas que se van a mostrar en el listado de tarifas*/
@@ -315,19 +308,21 @@ function TarifasRegion(props){
 
                             </Tooltip>
                             <Tooltip title="Eliminar">
-                                <a href="#" className="btn btn-default btn-xs" onClick={() =>   confirmAlert({
-                                                        title: 'Confirmar Eliminar',
-                                                        message: '¿Está seguro de eliminar tarifa?',
-                                                        buttons: [
-                                                            {
-                                                                label: 'Si',
-                                                                onClick: () =>  handleEliminar(row.row.m_nIdTarifa)
-                                                            },
-                                                            {
-                                                                label: 'No',
-                                                            }
-                                                        ]
-                                                    })}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a href="#" className="btn btn-default btn-xs" onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: '¿Está seguro de eliminar tarifa?',
+                                    buttons: [
+                                        {
+                                            label: 'Si',
+                                            onClick: () =>  handleEliminar(row.row.m_nIdTarifa)
+                                        },
+                                        {
+                                            label: 'No',
+                                        }
+                                    ]
+                                })}>
+                                    <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                                </a>
                             </Tooltip>
 
                         </div>
@@ -375,12 +370,8 @@ function TarifasRegion(props){
                             <i className="fa fa-times-circle"/> Imprimir
                         </a>
                     </li>
-
-
-
                     {/**<button className="topbar-right pull-right">Boton</button>*/}
                 </ul>
-
 
                 <div className="row" className="tab-content" style={{ paddingLeft: "-15px" }}>
                     <div id="Listado" className="tab-pane fade in show">
@@ -405,7 +396,6 @@ function TarifasRegion(props){
                             </div>
                         </div>
                     </div>
-
                     <div id="Agregar" className="tab-pane fade">
                         {
                             state.pantalla == 2 &&
@@ -418,12 +408,10 @@ function TarifasRegion(props){
                         }
 
                     </div>
-
                 </div>
             </div>
         </section>
     )
 }
-
 
 export default TarifasRegion;

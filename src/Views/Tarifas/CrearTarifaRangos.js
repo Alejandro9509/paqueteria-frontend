@@ -280,6 +280,7 @@ export default function CrearTarifaRangos(props) {
     const handleShowDialogZonas = (show) => {
         setShowDialogZonas(show)
     }
+
     const handleOnRequestZonasBySucursal = (idSucursal) => {
         obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
             setZonasListado(respuesta.data)
@@ -320,6 +321,7 @@ export default function CrearTarifaRangos(props) {
         })
         return zonasDisponibles
     }
+
     /**Filtra los productos para que solo queden los que no se han usado en otro viaje local con la misma sucursal, concepto y zona*/
     const filtrarProductosViajeLocal = (viaje) => {
         let productosDisponibles = []
@@ -525,9 +527,7 @@ export default function CrearTarifaRangos(props) {
     }
 
     const handleShowDialogTarifas = () => {
-
         setState({...state, showDialogTarifas: true})
-
     }
 
     const handleCloseDialogTarifas = (value) => {
@@ -631,7 +631,6 @@ export default function CrearTarifaRangos(props) {
             maniobras: maniobras,
             viajesForaneos: viajesForaneos
         }
-
         return tarifa
     }
 
@@ -731,7 +730,10 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                         <Grid item xs={1}>
                             <IconButton
-                                onClick={()=> {setShowPMUM(showPMUM?false:true); document.querySelector('.PMUM').classList.toggle('hide')}}
+                                onClick={()=> {
+                                    setShowPMUM(showPMUM?false:true);
+                                    document.querySelector('.PMUM').classList.toggle('hide')
+                                }}
                                 className='btn-secondary'
                                 size="large">
                                 {showPMUM?
@@ -744,16 +746,17 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                         <Grid item xs={2}>
                             <FormControl fullWidth variant='outlined' size="small">
-                                <InputLabel
-                                    id="sucLabel">Sucursal</InputLabel>
-                            <Select value={filtroPMUM.sucursal}
-                                    onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})}
-                                    label='Sucursal' InputLabelProps={{shrink: true}}>
-                                <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
-                                {sucursalesListado.map(suc=>{
-                                    return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
-                                })}
-                            </Select>
+                                <InputLabel id="sucLabel">
+                                    Sucursal
+                                </InputLabel>
+                                <Select value={filtroPMUM.sucursal}
+                                        onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})}
+                                        label='Sucursal' InputLabelProps={{shrink: true}}>
+                                    <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
+                                    {sucursalesListado.map(suc=>{
+                                        return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
+                                    })}
+                                </Select>
                             </FormControl>
                             </Grid>
                         <Grid item xs={2}>
@@ -822,23 +825,27 @@ export default function CrearTarifaRangos(props) {
                     </Grid>
                     <div className='PMUM hide'>
                     {
-                        (filtroPMUM.activo?viajesLocalesListado.filter(v=>(filtroPMUM.sucursal!=-1?v.idSucursal==filtroPMUM.sucursal:true) && (filtroPMUM.concepto!=-1?v.idConcepto==filtroPMUM.concepto:true) && v.productos.filter(prod=>(filtroPMUM.producto!=null?prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto:true)).length>0) :viajesLocalesListado).map((viaje) =>
-                            <ViajeLocal
-                                key={viaje.idViaje}
-                                viaje={viaje}
-                                sucursalesListado={sucursalesListado}
-                                handleChangeViajeLocal={handleChangeViajeLocal}
-                                conceptosListado={filtrarConceptosViajeLocal}
-                                tiposCalculoListado={tiposCalculoListado}
-                                unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
-                                handleDeleteViajeLocal={handleDeleteViajeLocal}
-                                zonasListado={zonasListado}
-                                onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
-                                productosListado={filtrarProductosViajeLocal(viaje)}
-                                disabled={props.disabled}
-                                showDialogZonas={showDialogZonas}
-                                handleShowDialogZonas={handleShowDialogZonas}
-                            />
+                        (filtroPMUM.activo ?
+                            viajesLocalesListado.filter(v=>(filtroPMUM.sucursal!=-1?v.idSucursal==filtroPMUM.sucursal:true)
+                                && (filtroPMUM.concepto!=-1?v.idConcepto==filtroPMUM.concepto:true)
+                                && v.productos.filter(prod=>(filtroPMUM.producto!=null?prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto:true)).length>0)
+                            : viajesLocalesListado).map((viaje) =>
+                                <ViajeLocal
+                                    key={viaje.idViaje}
+                                    viaje={viaje}
+                                    sucursalesListado={sucursalesListado}
+                                    handleChangeViajeLocal={handleChangeViajeLocal}
+                                    conceptosListado={filtrarConceptosViajeLocal}
+                                    tiposCalculoListado={tiposCalculoListado}
+                                    unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
+                                    handleDeleteViajeLocal={handleDeleteViajeLocal}
+                                    zonasListado={zonasListado}
+                                    onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
+                                    productosListado={filtrarProductosViajeLocal(viaje)}
+                                    disabled={props.disabled}
+                                    showDialogZonas={showDialogZonas}
+                                    handleShowDialogZonas={handleShowDialogZonas}
+                                />
                         )
                     }
                     </div>
@@ -853,7 +860,10 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={1}>
                             <IconButton
                                 style={{marginLeft:'10.5%', fontSize:".9em"}}
-                                onClick={()=> {setShowManiobras(showManiobras?false:true); document.querySelector('.MAN').classList.toggle('hide')}}
+                                onClick={()=> {
+                                    setShowManiobras(showManiobras?false:true);
+                                    document.querySelector('.MAN').classList.toggle('hide')
+                                }}
                                 className='btn-secondary'
                                 size="large">
                                 {showManiobras?
@@ -861,19 +871,18 @@ export default function CrearTarifaRangos(props) {
                                     :
                                     <ExpandMoreIcon fontSize='medium'/>
                                 }
-
                             </IconButton>
                         </Grid>
                     </Grid>
                     <div className='MAN hide'>
-                    <Maniobras
-                        handleChangeManiobras={handleChangeManiobras}
-                        conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
-                        tiposCalculoListado={filtrarTiposCalculoManiobras}
-                        unidadesMedidaListado={filtrarUnidadesMedidaManiobras}
-                        rangos={maniobrasTarifa}
-                        disabled={props.disabled}
-                    />
+                        <Maniobras
+                            handleChangeManiobras={handleChangeManiobras}
+                            conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
+                            tiposCalculoListado={filtrarTiposCalculoManiobras}
+                            unidadesMedidaListado={filtrarUnidadesMedidaManiobras}
+                            rangos={maniobrasTarifa}
+                            disabled={props.disabled}
+                        />
                     </div>
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
@@ -886,7 +895,10 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={1}>
                             <IconButton
                                 style={{fontSize:".9em"}}
-                                onClick={()=> {setShowMM(showMM?false:true); document.querySelector('.MM').classList.toggle('hide')}}
+                                onClick={()=> {
+                                    setShowMM(showMM?false:true);
+                                    document.querySelector('.MM').classList.toggle('hide')
+                                }}
                                 className='btn-secondary'
                                 size="large">
                                 {showMM?
@@ -894,7 +906,6 @@ export default function CrearTarifaRangos(props) {
                                     :
                                     <ExpandMoreIcon fontSize='medium'/>
                                 }
-
                             </IconButton>
                         </Grid>
                         <Grid item xs={2}>
@@ -977,33 +988,37 @@ export default function CrearTarifaRangos(props) {
                     </Grid>
                     <div className='MM hide'>
                     {
-                        (filtroMM.activo? viajesForaneosListado.filter(v=>(filtroMM.origen!=-1?v.idOrigen==filtroMM.origen:true) && (filtroMM.destino!=-1?v.idDestino==filtroMM.destino:true) && (filtroMM.producto!=null? (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto  ).length>0 ).length>0 ) :true) ) :viajesForaneosListado).map((viaje) =>
-                            <ViajeForaneo
-                                key={viaje.idViaje}
-                                viaje={viaje}
-                                origenesDestinosListado={origenesDestinosListado}
-                                handleChangeViajeForaneo={handleChangeViajeForaneo}
-                                tiposCalculoListado={tiposCalculoListado}
-                                unidadesMedidaListado={unidadesMedidaListado}
-                                handleDeleteViajeForaneo={handleDeleteViajeForaneo}
-                                zonasListado={zonasListado}
-                                onRequestZonasByDestino={handleOnRequestZonasByDestino}
-                                productosListado={productosListado}
-                                disabled={props.disabled}
-                                showDialogZonas={showDialogZonas}
-                                handleShowDialogZonas={handleShowDialogZonas}
-                            />
+                        (filtroMM.activo
+                            ? viajesForaneosListado.filter(v=>(filtroMM.origen!=-1?v.idOrigen==filtroMM.origen:true)
+                                && (filtroMM.destino!=-1?v.idDestino==filtroMM.destino:true)
+                                && (filtroMM.producto!=null? (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto  ).length>0 ).length>0 ) :true) )
+                            :
+                            viajesForaneosListado).map((viaje) =>
+                                <ViajeForaneo
+                                    key={viaje.idViaje}
+                                    viaje={viaje}
+                                    origenesDestinosListado={origenesDestinosListado}
+                                    handleChangeViajeForaneo={handleChangeViajeForaneo}
+                                    tiposCalculoListado={tiposCalculoListado}
+                                    unidadesMedidaListado={unidadesMedidaListado}
+                                    handleDeleteViajeForaneo={handleDeleteViajeForaneo}
+                                    zonasListado={zonasListado}
+                                    onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                                    productosListado={productosListado}
+                                    disabled={props.disabled}
+                                    showDialogZonas={showDialogZonas}
+                                    handleShowDialogZonas={handleShowDialogZonas}
+                                />
                         )
                     }
                     </div>
                 </Paper>
                 <br/>
-                <Button sx={{position:'fixed', bottom:'10px', width:'96%'}} fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"} disabled={props.disabled}>
+                <Button sx={{position:'fixed', bottom:'10px', width:'96%'}} fullWidth variant={"contained"}
+                        onClick={handleGuardarTarifa} color={"primary"} disabled={props.disabled}>
                     Guardar
                 </Button>
-
             </div>
-
         </div>
     );
 }
@@ -1065,7 +1080,6 @@ function DialogSelectList(props) {
                     ))}
                 </List>
             </DialogContent>
-
         </Dialog>
     );
 }

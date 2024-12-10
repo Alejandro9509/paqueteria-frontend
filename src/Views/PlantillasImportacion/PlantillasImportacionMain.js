@@ -79,7 +79,7 @@ export default function PlantillasImportacionMain(){
     return (
         <div>
             <header className="topbar clearfix">
-                <Cabecera titulo="Plantilla de importacion de embarques">
+                <Cabecera titulo={"Plantilla de importacion\nde embarques"}>
                 </Cabecera>
             </header>
 

@@ -89,7 +89,6 @@ function CrearTarifaRegion(props) {
                     }
                 })
             }
-
         });
     }
 
@@ -110,7 +109,6 @@ function CrearTarifaRegion(props) {
             ...state,
             [event.target.name]: event.target.value
         });
-
     }
 
     const handlePatrocinadorSelected = (row) => {
@@ -134,7 +132,6 @@ function CrearTarifaRegion(props) {
                 showDialogClientes: false
             }
         })
-
     }
 
     const handleDialogVisible = (isVisible) => {
@@ -207,9 +204,11 @@ function CrearTarifaRegion(props) {
                     </div>
                 </DialogContent>
             </Dialog>
-            <form className="j-forms" onSubmit={onSubmit} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+            <form className="j-forms" onSubmit={onSubmit} onKeyDown={e => {
+                if (e.code === 13){
+                    e.preventDefault()
+                }}}>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
-
                     <Grid container spacing={2}>
                         <Grid item xs={10}>
                             <h4>Agregando Tarifas</h4>
@@ -238,7 +237,6 @@ function CrearTarifaRegion(props) {
                                 disabled={props.disabled || !props.convenio}
                             />
                         </Grid>
-
                     </Grid>
                     {
                         state.viajes.map(viaje => (
@@ -261,7 +259,6 @@ function CrearTarifaRegion(props) {
             </form>
         </div>
     )
-
 }
 
 export default CrearTarifaRegion;

@@ -1,34 +1,13 @@
-import React, {Component, useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
-import axios from "axios";
+import React, {useEffect, useState} from 'react';
 import {
-    Dialog,
-    DialogActions,
-    DialogContent,
-    FormControl,
     Grid,
     IconButton,
-    InputAdornment,
-    InputLabel,
-    Select,
     TextField
 } from '@mui/material';
-import PageviewIcon from "@mui/icons-material/Pageview";
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import Autocomplete from '@mui/material/Autocomplete';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {
-    useTable,
-    useFilters,
-    useAsyncDebounce,
-    useSortBy,
-} from "react-table";
-import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
-
-
-
-let timer;
 
 function not(a, b) {
     return a.filter((value) => value !== b);
@@ -62,7 +41,6 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
             })
         });
     }
-
 
     const getProductosNoSeleccionados = () => {
         let productosDisponibles =[]
@@ -129,6 +107,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
             setDataProducto(concepto)
         }
     }
+
     return (
         <div>
             {
@@ -140,7 +119,9 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                 value={dataProducto.producto}
                                 freeSolo
                                 fullWidth
-                                onChange={(event, newValue) => { handleChangeAutocomplete("producto", newValue)}}
+                                onChange={(event, newValue) => {
+                                    handleChangeAutocomplete("producto", newValue)
+                                }}
                                 id="producto"
                                 disableClearable
                                 forcePopupIcon={false}
@@ -196,10 +177,6 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                             <AddBoxIcon style={{fill: "green", fontSize: "xx-large"}}/>
                         </IconButton>
                     </Grid>
-                    {/*<Grid item></Grid>*/}
-
-
-
                 </Grid>
             }
 
@@ -242,16 +219,12 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                                 </IconButton>
                                             </td>
                                         }
-
                                     </tr>
                                 ))
                             }
                         </table>
                     }
-
                 </div>
-
-
             </div>
             {
                 mostrarTotal &&
@@ -306,12 +279,13 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                 borderColor: "gray",
                                 minWidth: "230px",
                                 textAlign: "right"
-                            }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                            }}>
+                                ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}
+                            </div>
                         </div>
                     </div>
                 </div>
             }
-
         </div>
     );
 }

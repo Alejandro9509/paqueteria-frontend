@@ -75,7 +75,6 @@ export default function ViajeLocal(props) {
                 [event.target.name]: event.target.value
             })
         }
-
     }
 
     const handleChangeRangosViaje = (newRangos) => {
@@ -153,7 +152,6 @@ export default function ViajeLocal(props) {
             showDialogZonas: false,
             selection: []
         })
-
     }
 
     const handleConfirmRangos = (rango) => {
@@ -189,7 +187,6 @@ export default function ViajeLocal(props) {
             showDialog: false,
             selection: []
         })
-
     }
 
     const handleOnDeleteRow = (row) => {
@@ -324,20 +321,22 @@ export default function ViajeLocal(props) {
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} style={{fontSize:"1em"}} color={"primary"}
-                                onClick={()=>handleShowDialogZonas(true)} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
+                                onClick={()=>handleShowDialogZonas(true)}
+                                disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
                             {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} style={{fontSize:"1em"}} color={"primary"}
-                                onClick={handleShowDialogProductos} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
+                                onClick={handleShowDialogProductos}
+                                disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
                             {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)} disabled={props.disabled}
-                                style={{backgroundColor: '#FFD7D7', color: 'black', fontSize:"1em"}} variant={"contained"}
-                                startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
+                                style={{backgroundColor: '#FFD7D7', color: 'black', fontSize:"1em"}}
+                                variant={"contained"} startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
                             Eliminar Viaje
                         </Button>
                     </Grid>
@@ -357,8 +356,9 @@ export default function ViajeLocal(props) {
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <Button fullWidth variant={"contained"} color={"primary"} style={{fontSize:"1em"}}
-                                                onClick={() => handleShowDialogRangos(props.viaje, true)} disabled={props.disabled}>
+                                        <Button fullWidth variant={"contained"} color={"primary"}
+                                                onClick={() => handleShowDialogRangos(props.viaje, true)}
+                                                disabled={props.disabled} style={{fontSize:"1em"}}>
                                             <AddIcon fontSize={'large'} />
                                             &nbsp;&nbsp;Agregar Rangos
                                         </Button>

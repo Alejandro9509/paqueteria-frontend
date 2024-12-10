@@ -369,14 +369,12 @@ function SimpleAccordion(props) {
                                 <DeleteIcon fontSize={'large'}/>
                             </IconButton>
                         </Grid>
-
                     </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
                     {props.children}
                 </AccordionDetails>
             </Accordion>
-
         </div>
     );
 }

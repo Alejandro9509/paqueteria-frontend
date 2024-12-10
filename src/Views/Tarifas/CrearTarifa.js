@@ -1,8 +1,5 @@
 import React, {Component, useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
-import axios from "axios";
 import {
-    AppBar,
     Box,
     FormControl,
     InputLabel,
@@ -10,8 +7,6 @@ import {
     Tab,
     Tabs,
     TextField,
-    Typography,
-    Checkbox,
     DialogContent, Dialog, Grid, MenuItem, Paper
 } from '@mui/material';
 import ConceptosAdicionales from './ConceptosAdicionales';
@@ -19,9 +14,7 @@ import ConceptosAdicionalesManiobra from './ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesRecoleccion from './ConceptosAdicionalesRecoleccion';
 import TipoCobro from './TipoCobro';
 import TipoServicio from './TipoServicio';
-import SvgIcon from "@mui/material/SvgIcon";
 import { getUniqueListBy } from '../../Util/Util';
-import { PowerInputSharp } from '@mui/icons-material';
 import { obtenerCiudades } from '../../Util/Contexts/CiudadesContext';
 import ProductosTarifa from "./ProductosTarifa";
 import DestinosTarifa from "./DestinosTarifa";
@@ -135,9 +128,7 @@ class CrearTarifa extends Component {
         const newArrayConceptos = conceptosEntrega.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
         let newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))*/
 
-
         // this.setState({ conceptosEntrega: data })
-
         this.setState({dataConceptos: data})
     }
 
@@ -183,7 +174,6 @@ class CrearTarifa extends Component {
     }
 
     componentWillMount() {
-
     }
 
     a11yProps(index) {
@@ -256,7 +246,6 @@ class CrearTarifa extends Component {
                 this.setState({disabled: false})
             }
         }
-
     }
 
     handleChangeTipoTarifa({target}){
@@ -287,7 +276,6 @@ class CrearTarifa extends Component {
                 dataDestinosSeleccionados: []
             })
         }
-
     }
 
     //Metodo agregar para listado de conceptos entrega
@@ -327,7 +315,6 @@ class CrearTarifa extends Component {
             conceptosRecoleccion.push(concept)
             this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }
-
     }
 
     filtrarConceptoAdicional(c, item){
@@ -352,6 +339,7 @@ class CrearTarifa extends Component {
             && c.tipoCalculo == item.tipoCalculo
         return !valid
     }
+
     //Metodo remover para listado de conceptos adicionales
     removeConceptoAdicional(item) {
         const { conceptosAdicionales, todosConceptos } = this.state
@@ -359,6 +347,7 @@ class CrearTarifa extends Component {
         const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicional(c, item))
         this.setState({ conceptosAdicionales: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
+
     //Metodo remover para listado de conceptos de maniobra
     removeConceptoManiobra(item) {
         const { conceptosManiobra, todosConceptos } = this.state
@@ -366,6 +355,7 @@ class CrearTarifa extends Component {
         const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
         this.setState({ conceptosManiobra: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
+
     //Metodo remover para listado de conceptos entrega
     removeConceptoEntrega(item) {
         const { conceptosEntrega, todosConceptos } = this.state
@@ -373,6 +363,7 @@ class CrearTarifa extends Component {
         const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
         this.setState({ conceptosEntrega: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
+
     //Metodo remover para listado de conceptos recoleccion
     removeConceptoRecoleccion(item) {
         const { conceptosRecoleccion, todosConceptos } = this.state
@@ -402,7 +393,6 @@ class CrearTarifa extends Component {
     }
 
     componentWillUnmount() {
-
     }
 
     handleTabChange(event, newValue) {
@@ -431,7 +421,6 @@ class CrearTarifa extends Component {
                 tiposCobroSeleccionado: array
             });
         }
-
     }
 
     handleChangeChecboxTiposServicio(event, index, arrayTipos, all) {
@@ -458,7 +447,6 @@ class CrearTarifa extends Component {
                 tiposServicioSeleccionado: array
             });
         }
-
     }
 
     getAllProductos(){
@@ -499,8 +487,9 @@ class CrearTarifa extends Component {
     }
 
     render() {
-        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, todosConceptos,
-            dataProductosTemp,dataProductosSeleccionados,dataDestinosTemp,dataDestinosSeleccionados, porRegion, porPesoOVolumen } = this.state
+        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion,
+            todosConceptos, dataProductosTemp,dataProductosSeleccionados,dataDestinosTemp,dataDestinosSeleccionados,
+            porRegion, porPesoOVolumen } = this.state;
         let { consult, edit } = this.props
 
         return (
@@ -600,39 +589,38 @@ class CrearTarifa extends Component {
                                         </div>
                                         {!porRegion &&
                                             <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                            <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
-                                                    <InputLabel id="destinoLabel">Destino (Bodega)</InputLabel>
-                                                    <Select
-                                                        native
-                                                        className="form-control"
-                                                        label="Destino (Bodega)"
-                                                        disabled={this.props.consult}
-                                                        labelId="destinoLabel"
-                                                        value={this.state.destino}
-                                                        onChange={this.handleChange}
-                                                        name="destino"
-                                                    >
-                                                        <option
-                                                            key={"0"}
-                                                            value={"0"}
+                                                <label className="input select" style={{ width: "100%" }}>
+                                                    <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
+                                                        <InputLabel id="destinoLabel">Destino (Bodega)</InputLabel>
+                                                        <Select
+                                                            native
+                                                            className="form-control"
+                                                            label="Destino (Bodega)"
+                                                            disabled={this.props.consult}
+                                                            labelId="destinoLabel"
+                                                            value={this.state.destino}
+                                                            onChange={this.handleChange}
+                                                            name="destino"
                                                         >
-                                                            Seleccionar
-                                                        </option>
-                                                        {this.state.ciudades.map((ciudad) => (
                                                             <option
-                                                                key={ciudad.m_nIdCiudad}
-                                                                value={ciudad.m_nIdCiudad}
+                                                                key={"0"}
+                                                                value={"0"}
                                                             >
-                                                                {ciudad.m_sCiudad}
+                                                                Seleccionar
                                                             </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </label>
-                                        </div>
+                                                            {this.state.ciudades.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </label>
+                                            </div>
                                         }
-
 
                                         <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
                                             <label className="checkbox">
@@ -770,39 +758,39 @@ class CrearTarifa extends Component {
                                             </div>
                                         }
                                         {(porPesoOVolumen || porRegion) &&
-                                        <div>
-                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-                                                <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               onChange={this.handleChange}
-                                                               className="form-control"
-                                                               type="number"
-                                                               required={porPesoOVolumen || porRegion}
-                                                               label="Flete Minimo"
-                                                               step="1"
-                                                               disabled={this.props.consult}
-                                                               value={this.state.precioFlete}
-                                                               name="precioFlete"
-                                                    />
+                                            <div>
+                                                <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   onChange={this.handleChange}
+                                                                   className="form-control"
+                                                                   type="number"
+                                                                   required={porPesoOVolumen || porRegion}
+                                                                   label="Flete Minimo"
+                                                                   step="1"
+                                                                   disabled={this.props.consult}
+                                                                   value={this.state.precioFlete}
+                                                                   name="precioFlete"
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                                <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
 
-                                                <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               onChange={this.handleChange}
-                                                               className="form-control"
-                                                               type="number"
-                                                               label="Precio Minimo"
-                                                               required={porPesoOVolumen || porRegion}
-                                                               disabled={this.props.consult}
-                                                               step="2"
-                                                               value={this.state.precioMinimo}
-                                                               name="precioMinimo"
-                                                    />
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   onChange={this.handleChange}
+                                                                   className="form-control"
+                                                                   type="number"
+                                                                   label="Precio Minimo"
+                                                                   required={porPesoOVolumen || porRegion}
+                                                                   disabled={this.props.consult}
+                                                                   step="2"
+                                                                   value={this.state.precioMinimo}
+                                                                   name="precioMinimo"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
                                         }
                                         {porPesoOVolumen &&
                                             <div>
@@ -827,13 +815,13 @@ class CrearTarifa extends Component {
                                                                     Selecciona
                                                                 </option>
                                                                 {this.state.impuestos.filter(i => i.m_nTIpoImpuesto === 1).map((impuesto) => (
-                                                                        <option
-                                                                            key={impuesto.m_nIdImpuesto}
-                                                                            value={impuesto.m_nIdImpuesto}
-                                                                        >
-                                                                            {impuesto.m_sImpuesto}
-                                                                        </option>
-                                                                    ))}
+                                                                    <option
+                                                                        key={impuesto.m_nIdImpuesto}
+                                                                        value={impuesto.m_nIdImpuesto}
+                                                                    >
+                                                                        {impuesto.m_sImpuesto}
+                                                                    </option>
+                                                                ))}
                                                             </Select>
                                                         </FormControl>
                                                     </label>
@@ -851,20 +839,17 @@ class CrearTarifa extends Component {
                                                                 name="retiene"
                                                                 value={this.state.retiene}
                                                             >
-                                                                <option
-                                                                    key={0}
-                                                                    value={""}
-                                                                >
+                                                                <option key={0} value={""}>
                                                                     Selecciona
                                                                 </option>
                                                                 {this.state.impuestos.filter(i => i.m_nTIpoImpuesto === 0).map((impuesto) => (
-                                                                        <option
-                                                                            key={impuesto.m_nIdImpuesto}
-                                                                            value={impuesto.m_nIdImpuesto}
-                                                                        >
-                                                                            {impuesto.m_sImpuesto}
-                                                                        </option>
-                                                                    ))}
+                                                                    <option
+                                                                        key={impuesto.m_nIdImpuesto}
+                                                                        value={impuesto.m_nIdImpuesto}
+                                                                    >
+                                                                        {impuesto.m_sImpuesto}
+                                                                    </option>
+                                                                ))}
                                                             </Select>
                                                         </FormControl>
                                                     </label>
@@ -894,7 +879,6 @@ class CrearTarifa extends Component {
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -966,14 +950,11 @@ class CrearTarifa extends Component {
                                                     eliminarConcepto={this.removeConceptoManiobra}
                                                     // conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
                                                 />
-
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
                                                 {/*<ConceptosAdicionalesEntrega consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosEntrega} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoEntrega} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>*/}
-
                                                 {/*</ConceptosAdicionalesEntrega>*/}
-
                                                 <ConceptosFacturacion
                                                     consulta={consult}
                                                     dataList={conceptosEntrega}
@@ -1000,7 +981,6 @@ class CrearTarifa extends Component {
                                                     actualizarProductos={this.actualizarProductos}
                                                     consult={consult}
                                                 />
-
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={4}>
                                                 <TipoCobro consult={consult}
@@ -1240,7 +1220,6 @@ function CrearTarifav2(props) {
             ...state,
             showDialogClientes: false,
         }))
-
     }
 
     const actualizarDestinos = (todosDestinos, destinosSeleccionados) => {
@@ -1288,7 +1267,11 @@ function CrearTarifav2(props) {
                     </div>
                 </DialogContent>
             </Dialog>
-            <form className="j-forms" onSubmit={onSubmit} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+            <form className="j-forms" onSubmit={onSubmit} onKeyDown={e => {
+                if (e.code === 13){
+                    e.preventDefault()
+                }
+            }}>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
                     <Grid container spacing={2}>
