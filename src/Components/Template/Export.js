@@ -16,7 +16,12 @@ function ExportCSV ({csvData, fileName}) {
     }
 
     return (
-        <a data-toggle="tab" onClick={(e) => exportToCSV(csvData,fileName)} href="#ExportarXLS"><i className="zmdi zmdi-print"/>    Exportar</a>
+        <a data-toggle="tab" onClick={(e) =>
+            exportToCSV(csvData,fileName)
+        } href="#ExportarXLS">
+            <i className="zmdi zmdi-print"/>
+            Exportar
+        </a>
     )
 }
 

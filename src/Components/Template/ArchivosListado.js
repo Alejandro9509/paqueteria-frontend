@@ -7,7 +7,7 @@ export default function ArchivosListado(props) {
         <section className="main-container">
             <div className="container-fluid">
                 <div className="widget-wrap">
-                    {archivos.map( (file) =>(
+                    {archivos.map((file) => (
                         <Button
                             variant={'outlined'}
                             href={file.file} target={'_blank'}
@@ -15,9 +15,7 @@ export default function ArchivosListado(props) {
                             size={"large"}>
                             {file.name}
                         </Button>
-                    ))
-                    }
-
+                    ))}
                 </div>
             </div>
         </section>
