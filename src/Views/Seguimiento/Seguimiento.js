@@ -70,7 +70,7 @@ class Seguimiento extends Component {
                         .concat(res.data.guias),
                 });
             }).catch((err) => {
-                console.log(e)
+                console.log(err)
             });
     }
 
