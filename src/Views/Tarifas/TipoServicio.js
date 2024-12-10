@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import axios from "axios";
 import Noty from 'noty';
-import { List, ListItem, Popover, TextField } from '@mui/material';
-import { TrafficOutlined } from '@mui/icons-material';
+import { Popover, TextField } from '@mui/material';
 import { agregarTipoServicio, obtenerTipoServicio } from '../../Util/Contexts/TipoServiciosContext';
 import Button from "@mui/material/Button";
 
@@ -83,15 +80,14 @@ class TipoServicio extends Component {
 
 
     }
+
     handleClose() {
         this.setState({ anchorEl: null });
     }
+
     handleClick(event) {
         this.setState({ anchorEl: event.currentTarget });
     }
-
-
-
 
     render() {
         const open = Boolean(this.state.anchorEl);
@@ -176,8 +172,6 @@ class TipoServicio extends Component {
                                                 />
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div className="col-sm-12 col-md-12 unit">
                                         <Button data-toggle="tab" className="btn btn-secondary secondary-btn"
@@ -189,16 +183,16 @@ class TipoServicio extends Component {
                                 </div>
                             </Popover>
                         </th>
-
                     </tr>
                 </thead>
                 <tr>
                     <th>
                         <label className="checkbox">
-                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.tiposServicio, true)} checked={this.props.all} />
+                            <input disabled={this.props.consult} type="checkbox"
+                                   onChange={(event) => this.props.handleChange(event, 0, this.state.tiposServicio, true)}
+                                   checked={this.props.all} />
                             <i />
                         </label>
-
                     </th>
                     <th>Código</th>
                     <th>Descripción</th>
@@ -209,14 +203,15 @@ class TipoServicio extends Component {
                             <tr key={i.m_nIdTipoServicio}>
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
-                                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposServicio, false)} checked={this.props.tiposServicioSeleccionado.find(t => t.m_nIdTipoServicio === i.m_nIdTipoServicio) != null} />
+                                        <input disabled={this.props.consult} type="checkbox"
+                                               onChange={(event) => this.props.handleChange(event, index, this.state.tiposServicio, false)}
+                                               checked={this.props.tiposServicioSeleccionado.find(t => t.m_nIdTipoServicio === i.m_nIdTipoServicio) != null} />
                                         <i />
                                     </label>
                                 </td>
                                 <td>{i.m_nIdTipoServicio}</td>
                                 <td><strong>{i.m_sDescripcion}</strong></td>
                             </tr>
-
                         )
                     })
                 }

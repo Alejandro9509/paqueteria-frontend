@@ -1,16 +1,6 @@
 import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField,Grid} from "@mui/material";
-import {dataGridLocaleText} from "../../Constants";
-import Noty from "noty";
 
-function showSuccess(mensaje) {
-    new Noty({
-        type: "information",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000"
-    }).show()
-}
 export default function DialogoNuevoPorcentaje(props) {
     /** Props
      * handleShowDialog() - Controla si se abre o cierra el dialogo.
@@ -107,8 +97,8 @@ export default function DialogoNuevoPorcentaje(props) {
         if (validarData()){
             props.handleOnConfirmData(rango)
         }
-
     }
+
     const handleOnDataChange = (event) => {
         if (event.target.name === 'idUnidadMedida'){
             setRango({
@@ -182,9 +172,7 @@ export default function DialogoNuevoPorcentaje(props) {
                 <Button onClick={handleConfirmSelection} color="primary" autoFocus>
                     Aceptar
                 </Button>
-
             </DialogActions>
         </Dialog>
     )
-
 }

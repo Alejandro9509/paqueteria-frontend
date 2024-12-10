@@ -23,9 +23,11 @@ export default function DialogCheckbox(props) {
     const handleShowDialog = () => {
         props.handleShowDialog(false)
     }
+
     const handleConfirmSelection = () => {
         props.handleOnConfirmSelection(selection)
     }
+
     const handleOnSelectionChange = (event) => {
         setSelection(event.selectionModel)
     }
@@ -63,7 +65,6 @@ export default function DialogCheckbox(props) {
                 <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}>
                     Aceptar
                 </Button>
-
             </DialogActions>
         </Dialog>
     )

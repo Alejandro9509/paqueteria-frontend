@@ -4,13 +4,9 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Radio, RadioGroup, Select} from "@mui/material";
+import {FormControl, Grid, InputLabel, Select} from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import {validarDerecho} from "../../Util/Util";
@@ -51,6 +47,7 @@ export default function DialogoNuevoConcepto(props) {
         errorTexto:'',
         errorTextoImporte:''
     })
+
     const resetPaquete = () =>{
         setConcepto(concepto => {
             return {
@@ -116,59 +113,28 @@ export default function DialogoNuevoConcepto(props) {
         e.preventDefault()
         
         if(concepto.concepto == null){
-        setErrores(errores=>{
-            return{
-                ...errores,
-            errorConcepto:true,
-            errorTexto:'Falta elegir concepto' 
-            }
-          
-        })
-       }else{
-        setErrores(errores=>{
-            return {
-                ...errores,
-                errorConcepto:false
-            }
-            
-        })
-        
-       }
-       
-       if(parseFloat(concepto.importe)<0){
-        setErrores(errores=>{
-            return{
-                ...errores,
-            errorImporte:true,
-            errorTextoImporte:'El importe debe ser igual o mayor a 0'
-            }
-           
-        })
-       }else{
-        setErrores(errores=>{
-            return{
-                ...errores,
-                errorImporte:false
-            }
-          
-        })
-        
-       }
-      
+            setErrores(errores=>{return{...errores, errorConcepto:true, errorTexto:'Falta elegir concepto'}})
+        }else{
+            setErrores(errores=>{return {...errores, errorConcepto:false}})
+        }
+
+        if(parseFloat(concepto.importe)<0){
+            setErrores(errores=>{return{...errores, errorImporte:true, errorTextoImporte:'El importe debe ser igual o mayor a 0'}})
+        } else{
+            setErrores(errores=>{return{...errores, errorImporte:false}})
+        }
+
         if (concepto.concepto !== null && concepto.importe>=0){
             handleClose()
             props.agregarConcepto(concepto)
             resetPaquete()
         }
-
     }
 
     const handleCancelar = () => {
         resetPaquete()
         handleClose()
     }
-
-
 
     useEffect(value => {
         if (state.impuestos.length === 0 ){
@@ -223,17 +189,11 @@ export default function DialogoNuevoConcepto(props) {
                         ...errores,
                         errorImporte:true,
                         errorTextoImporte:"El importe debe ser mayor o igual a 0"
-
                     }
-                 })
-                 
-        }else{
-            setErrores(errores=>{
-                return{ 
-                    ...errores,
-                    errorImporte:false}
-             })
-        }
+                })
+            }else{
+                setErrores(errores=>{return{...errores, errorImporte:false}})
+            }
             calcularImpuestos(concepto.traslada, concepto.retiene, event.target.value)
         } else if (event.target.name === "traslada") {
             calcularImpuestos(event.target.value, concepto.retiene, concepto.importe)
@@ -297,7 +257,8 @@ export default function DialogoNuevoConcepto(props) {
         <div>
             {
                 !props.disabled &&
-                <Button disabled={props.esRec?!validarDerecho(9101505):!validarDerecho(9101500)} variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
+                <Button disabled={props.esRec?!validarDerecho(9101505):!validarDerecho(9101500)}
+                        variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
                     Agregar concepto
                 </Button>
             }
@@ -448,10 +409,7 @@ export default function DialogoNuevoConcepto(props) {
                                            name="descuento"
                                 />
                             </Grid>
-
-
                         </Grid>
-
                     </DialogContent>
                     <DialogActions>
                         <Button  onClick={handleCancelar} color="primary">

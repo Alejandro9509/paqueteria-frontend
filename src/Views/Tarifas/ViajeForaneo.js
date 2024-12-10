@@ -281,7 +281,6 @@ export default function ViajeForaneo(props) {
                         )
                     }
                 </div>
-
             </Paper>
         </div>
     )

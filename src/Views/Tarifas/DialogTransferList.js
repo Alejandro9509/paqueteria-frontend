@@ -91,7 +91,6 @@ export default function DialogTransferList(props) {
         }
     }
 
-
     return (
         <Dialog
             fullWidth={true}
@@ -112,7 +111,8 @@ export default function DialogTransferList(props) {
                         />
                     </Grid>
                     <Grid item xs={1}>
-                        <Button onClick={handleSearch} color="primary" variant={"contained"} fullWidth style={{fontSize: '.9em'}}>
+                        <Button onClick={handleSearch} color="primary" variant={"contained"} fullWidth
+                                style={{fontSize: '.9em'}}>
                             Buscar
                         </Button>
                     </Grid>
@@ -128,7 +128,8 @@ export default function DialogTransferList(props) {
                 <Button onClick={handleShowDialog} color="primary" style={{fontSize: '.9em'}}>
                     Cancelar
                 </Button>
-                <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled} style={{fontSize: '.9em'}}>
+                <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}
+                        style={{fontSize: '.9em'}}>
                     Aceptar
                 </Button>
 
@@ -155,7 +156,6 @@ function TransferList(props) {
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(props.leftList);
     const [right, setRight] = React.useState(props.rightList);
-
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
 
@@ -168,7 +168,6 @@ function TransferList(props) {
         } else {
             newChecked.splice(currentIndex, 1);
         }
-
         setChecked(newChecked);
     };
 
@@ -201,7 +200,7 @@ function TransferList(props) {
     useEffect(value => {
         setLeft(not(props.leftList, props.rightList));
     }, [props.leftList])
-//height: '30vw'
+
     const customList = (title, items) => (
         <Card style={{display: 'block', height: '30vw', overflow: 'auto'}} fullHeight={true}>
             <CardHeader
@@ -224,7 +223,8 @@ function TransferList(props) {
                     const labelId = `transfer-list-all-item-${value}-label`;
 
                     return (
-                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={props.disabled}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)}
+                                  disabled={props.disabled}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}

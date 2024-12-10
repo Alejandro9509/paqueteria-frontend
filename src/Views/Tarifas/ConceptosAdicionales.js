@@ -1,5 +1,4 @@
-import React, { Component, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import axios from "axios";
 import {
     Dialog,
@@ -116,11 +115,9 @@ class ConceptosAdicionales extends Component {
                 this.setState({ conceptos: listadoConceptosAlternativos })
             }
         }*/
-
     }
 
     componentWillUnmount() {
-
     }
 
     handleSelectCP(id, dobleClick, e) {
@@ -138,7 +135,6 @@ class ConceptosAdicionales extends Component {
                 openDialog: false
             });
         }
-
     }
 
     calcularImpuestos(traslada, retiene, importe) {
@@ -157,7 +153,6 @@ class ConceptosAdicionales extends Component {
         if (event.keyCode == 13){
             this.calcularImpuestos(this.state.traslada, this.state.retiene, this.state.importe - (this.state.importe * (this.state.descuento/100)))
         }
-
     }
 
     onSubmit(event) {
@@ -230,19 +225,26 @@ class ConceptosAdicionales extends Component {
 
                                 </div>
 
-                                {this.state.conceptos.length != 0 ? <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state} select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion} columns={this.state.columnsConceptos} data={this.state.conceptos} identificadorModal={this.state.identificadorModal} /> : <div>No se encontró ningún registro</div>}
-
-
+                                {this.state.conceptos.length != 0 ?
+                                    <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state}
+                                                    select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion}
+                                                    columns={this.state.columnsConceptos} data={this.state.conceptos}
+                                                    identificadorModal={this.state.identificadorModal} />
+                                    :
+                                    <div>No se encontró ningún registro</div>}
                                 <DialogActions style={{ justifyContent: "left" }}>
-
-                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-primary primary-btn">Aceptar</button>
-                                    <button onClick={() => this.setState({ openDialog: false })} className="btn btn-secondary secondary-btn">Cerrar</button>
-
+                                    <button onClick={() => this.setState({ openDialog: false })}
+                                            className="btn btn-primary primary-btn">
+                                        Aceptar
+                                    </button>
+                                    <button onClick={() => this.setState({ openDialog: false })}
+                                            className="btn btn-secondary secondary-btn">
+                                        Cerrar
+                                    </button>
                                 </DialogActions>
                             </div>
                         }
                     </DialogContent>
-
                 </Dialog>
                 {
                     !this.props.consult &&
@@ -458,35 +460,8 @@ class ConceptosAdicionales extends Component {
                                 </IconButton>
                             </Grid>
                         </Grid>
-                        {/*<div className="col-md-3 col-sm-6" style={{ padding: "5px" }}>
-
-
-                        </div>
-                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
-
-                        </div>
-                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
-
-                        </div>
-                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
-
-
-                        </div>
-                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
-
-                        </div>
-
-                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
-
-
-                        </div>
-                        <div className="col-md-1 col-sm-6" style={{ padding: "0px" }}>
-
-                        </div>*/}
                     </div>
                 }
-
                 <div className="row">
                     <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                         {
@@ -534,7 +509,6 @@ class ConceptosAdicionales extends Component {
                                 }
                             </table>
                         }
-
                     </div>
                     {!this.props.porRegion &&
                         <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
@@ -560,14 +534,11 @@ class ConceptosAdicionales extends Component {
 }
 
 ConceptosAdicionales.propTypes = {
-
 };
 
 export default ConceptosAdicionales;
 
-function DefaultColumnFilter({
-    column: { filterValue, preFilteredRows, setFilter },
-}) {
+function DefaultColumnFilter({column: { filterValue, preFilteredRows, setFilter } }) {
     const count = preFilteredRows.length;
     const [showResults, setShowResults] = React.useState(false)
     const onClick = () => setShowResults(!showResults)

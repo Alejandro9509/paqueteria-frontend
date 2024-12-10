@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import $ from "jquery";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
@@ -7,7 +7,6 @@ import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
-import axios from "axios";
 import Filtros from "../Filtros/FiltrosConvenios"
 import CrearTarifaRangos from "./CrearTarifaRangos";
 import {validarDerecho} from "../../Util/Util"
@@ -150,12 +149,7 @@ export default function TarifasRangos(props) {
                 },
             },
         )
-        setState(state => {
-            return {
-                ...state,
-                columns: columns
-            }
-        })
+        setState(state => {return {...state, columns: columns}})
     }
 
     const handleShowListado = (event) => {
@@ -197,7 +191,6 @@ export default function TarifasRangos(props) {
             });
         })
 
-
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -216,7 +209,6 @@ export default function TarifasRangos(props) {
                 }
             });
         })
-
 
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -361,8 +353,6 @@ export default function TarifasRangos(props) {
                 })
             })
         }
-
-
     }
 
     const handleAgregarTarifa = (params) => {
@@ -421,7 +411,8 @@ export default function TarifasRangos(props) {
                         </a>
                     </li>
                     <li >
-                        <a className= {(validarDerecho(9101347) && !props.convenio) || (validarDerecho(9101395) && props.convenio)? "":classes.disabled} onClick={(event) => handleShowAgregar()}>
+                        <a className= {(validarDerecho(9101347) && !props.convenio) || (validarDerecho(9101395) && props.convenio)? "":classes.disabled}
+                           onClick={(event) => handleShowAgregar()}>
                             <i className="fa fa-plus-circle"/> {state.agregar}
                         </a>
                     </li>
@@ -469,9 +460,7 @@ export default function TarifasRangos(props) {
                                         tarifasListado={props.convenio ? state.tarifas : filtrarTarifas}
                                     />
                         }
-
                     </div>
-
                 </div>
             </div>
         </Root>
