@@ -5,16 +5,15 @@ import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerEstadosPais} from "../../Util/Contexts/EstadosContext";
 import CPTransferList from "./CPTransferList";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
-import {obtenerCodigosPostalesPorEstadoMunicipio,obtenerCodigosPostalesPorEstadoMunicipioDisponibles} from "../../Util/Contexts/CodigoPostalContext";
+import {obtenerCodigosPostalesPorEstadoMunicipioDisponibles} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
-import { Autocomplete } from '@mui/material';
 import Button from "@mui/material/Button";
-import { CheckBox } from "@mui/icons-material";
 import { showSuccess } from "../../Util/Util";
 
 function not(a, b) {
     return a.filter((value) => b.find(v => v.m_nIdCP == value.m_nIdCP) === undefined);
 }
+
 
 function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo}) {
     const [state, setState] = useState({
@@ -41,7 +40,6 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     }, [])
 
     useEffect( value => {
-        console.log(seleccion)
         setState(state => {
             return {
                 idZona: seleccion.m_nIdZona ? seleccion.m_nIdZona : 0,
@@ -67,7 +65,6 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     },[state.idEstado])
 
     useEffect(value =>{
-        console.log(state)
         if (state.idPais){
             getEstadosByIdPais(state.idPais)
         }
@@ -87,14 +84,12 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                 setDataSucursal(respuesta.data);
             });
         }
-
     }
 
     const getAllCiudades = () => {
         obtenerCiudades().then((respuesta) => {
             setDataCiudades(respuesta.data);
         });
-
     }
 
     const getEstadosByIdPais = (idPais) => {
@@ -207,9 +202,9 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                     <Grid item xs={2}>
                         {
                             tarifa ? (
-                                <FormControl className="input select" fullWidth variant="outlined" size="small" required>
-                                    <InputLabel
-                                        id="idSucursalLabel">Destino</InputLabel>
+                                <FormControl className="input select" fullWidth variant="outlined" size="small"
+                                             required>
+                                    <InputLabel id="idSucursalLabel">Destino</InputLabel>
                                     <Select
                                         fullWidth
                                         labelId="idSucursalLabel"
@@ -233,8 +228,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                                 </FormControl>
                             ) : (
                                 <FormControl className="input select" fullWidth variant="outlined" size="small">
-                                    <InputLabel
-                                        id="idSucursalLabel">Sucursal</InputLabel>
+                                    <InputLabel id="idSucursalLabel">Sucursal</InputLabel>
                                     <Select
                                         fullWidth
                                         labelId="idSucursalLabel"
@@ -263,8 +257,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className="input select" fullWidth variant="outlined" size="small" required>
-                            <InputLabel
-                                id="idOrigenDestino">Origen/Destino</InputLabel>
+                            <InputLabel id="idOrigenDestino">Origen/Destino</InputLabel>
                             <Select
                                 fullWidth
                                 label="Origen/Destino"
@@ -288,8 +281,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className="input select" fullWidth variant="outlined" size="small" required>
-                            <InputLabel
-                                id="idPaisLabel">País</InputLabel>
+                            <InputLabel id="idPaisLabel">País</InputLabel>
                             <Select
                                 fullWidth
                                 labelId="idPaisLabel"
@@ -312,8 +304,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className="input select" fullWidth variant="outlined" size="small" required>
-                            <InputLabel
-                                id="idEstadoLabel">Estado</InputLabel>
+                            <InputLabel id="idEstadoLabel">Estado</InputLabel>
                             <Select
                                 fullWidth
                                 labelId="idEstadoLabel"
@@ -363,27 +354,25 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                    <FormControl className="input select" fullWidth variant="outlined" size="small">
-                    <div className="row" style={{display:"flex",justifyContent:"space-evenly",marginLeft:"-60px"}}>
-
-
-                    <label className="checkbox">
-                                                                                No aplican entregas
-                   
-                    </label> <input
-                                                                                onChange={handleCheck}
-                                                                                type="checkbox"
-                                                                                checked={state.aplicaEntrega}
-                                                                                style={{ height: "20px",left:"150px",top:"1px"}}
-                                                                                name="aplicaEntrega"
-                                                                                id="aplicaEntrega"
-                                                                            />
-                                                                     
-                    </div>
-                    </FormControl>
+                        <FormControl className="input select" fullWidth variant="outlined" size="small">
+                            <div className="row" style={{display:"flex",justifyContent:"space-evenly",marginLeft:"-60px"}}>
+                                <label className="checkbox">
+                                    No aplican entregas
+                                </label>
+                                <input
+                                    onChange={handleCheck}
+                                    type="checkbox"
+                                    checked={state.aplicaEntrega}
+                                    style={{ height: "20px",left:"150px",top:"1px"}}
+                                    name="aplicaEntrega"
+                                    id="aplicaEntrega"
+                                />
+                            </div>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <Button fullWidth type={"button"} className="btn btn-primary primary-btn" onClick={handleGetCPS} disabled={consult}>
+                        <Button fullWidth type={"button"} className="btn btn-primary primary-btn" onClick={handleGetCPS}
+                                disabled={consult}>
                             Buscar Códigos Postales
                         </Button>
                     </Grid>
@@ -397,7 +386,6 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                     consult={consult}
                 />
             </div>
-
         </div>
     )
 }

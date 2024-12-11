@@ -14,15 +14,15 @@ export default function DefaultColumnFilter({column: { filterValue, preFilteredR
         </span>
             <br></br>
             <span style={{ display: "block" }}>
-          <input
-              className="form-control"
-              type={showResults ? "" : "hidden"}
-              value={filterValue || ""}
-              onChange={(e) => {
-                  setFilter(e.target.value || undefined);
-              }}
-              placeholder={`Buscar ${count} registros...`}
-          />
+            <input
+                className="form-control"
+                type={showResults ? "" : "hidden"}
+                value={filterValue || ""}
+                onChange={(e) => {
+                setFilter(e.target.value || undefined);
+                }}
+                placeholder={`Buscar ${count} registros...`}
+            />
         </span>
         </div>
     );

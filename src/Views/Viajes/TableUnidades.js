@@ -1,9 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@mui/material";
 
+
 export default function TableUnidades({ data, handleSelection }) {
     const [selectedRow, setSelectedRow] = useState(null);
     const textFieldRef = useRef(null);
+    const [filtro, setFiltro] = useState('');
+    const filteredData = data.filter(item => item.m_sDescripcion.toLowerCase().includes(filtro.toLowerCase()));
 
     useEffect(() => {
         if (data.length > 0) {
@@ -15,13 +18,10 @@ export default function TableUnidades({ data, handleSelection }) {
         setSelectedRow(row);
         handleSelection(row);
     };
-    const [filtro, setFiltro] = useState('');
 
     const handleChangeFiltro = (event) => {
         setFiltro(event.target.value);
     };
-
-    const filteredData = data.filter(item => item.m_sDescripcion.toLowerCase().includes(filtro.toLowerCase()));
 
     return (
         <div>
@@ -49,16 +49,23 @@ export default function TableUnidades({ data, handleSelection }) {
                                     pointerEvents: item.m_bDeshabilitado ? "none" : "auto"
                                 }}
                             >
-                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }} align="center" >{item.m_sCodigo}</TableCell>
-                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>{item.m_sDescripcion}</TableCell>
-                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>{item.m_sTipoUnidad}</TableCell>
-                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>{item.EstatusUnidad}</TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }} align="center">
+                                    {item.m_sCodigo}
+                                </TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>
+                                    {item.m_sDescripcion}
+                                </TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>
+                                    {item.m_sTipoUnidad}
+                                </TableCell>
+                                <TableCell style={{ color: item.m_bDeshabilitado ? "#888" : "inherit" }}>
+                                    {item.EstatusUnidad}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
         </div>
-
     );
 }

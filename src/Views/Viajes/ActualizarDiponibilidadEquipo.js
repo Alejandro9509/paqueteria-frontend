@@ -28,7 +28,6 @@ function ActualizarDiponibilidadEquipo(props) {
         })
     }
 
-
     function getEstatusEquipoListado(){
         setEstatusEquipoListado([
             {
@@ -49,10 +48,11 @@ function ActualizarDiponibilidadEquipo(props) {
             }
         ]);
     }
-     function onSubmit(event){
+
+    function onSubmit(event){
         event.preventDefault();
         props.onSubmit(equipo)
-     }
+    }
 
     return(
         <form onSubmit={onSubmit}>
@@ -109,7 +109,6 @@ function ActualizarDiponibilidadEquipo(props) {
         </div>
             {props.children}
         </form>
-
     )
 }
 

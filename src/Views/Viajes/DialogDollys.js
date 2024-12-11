@@ -10,6 +10,7 @@ import TableDollys from "./TableDollys";
 import { obtenerUnidadesConvoy } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
 
+
 function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
     const [selectedRow, setSelectedRow] = useState(null);
     const [listadoDollys, setListadoDollys] = useState([]);
@@ -45,6 +46,7 @@ function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
     const handleRowSelection = (row) => {
         setSelectedRow(row);
     };
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>

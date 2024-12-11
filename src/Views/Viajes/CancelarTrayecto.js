@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Dialog, DialogContent, DialogTitle, TextField} from "@mui/material";
 import Grid from "@mui/material/Grid";
+
 
 const getCurrentDateTime = () => {
     let fechaHoraActual=new Date();
@@ -23,10 +23,10 @@ class CancelarTrayecto extends Component {
         this.onSubmit = this.onSubmit.bind(this)
     }
 
-
     componentDidMount() {
 
     }
+
     onSubmit(e){
         e.preventDefault()
         this.props.onSubmit(this.state)
@@ -82,9 +82,7 @@ class CancelarTrayecto extends Component {
                                 />
                             </Grid>
                         </Grid>
-                        {
-                            this.props.children
-                        }
+                        {this.props.children}
                     </form>
                 </DialogContent>
             </Dialog>
