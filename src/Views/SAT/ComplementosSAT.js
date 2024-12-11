@@ -868,26 +868,39 @@ function ComplementosSAT(props) {
             {
                 props.dataList.length !== 0 &&
                 <div className="widget-container">
-                    <div className="widget-content">
-                        <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
-                            setRowSelectionModel([])}
-                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',color:"white",marginLeft:"73%",fontSize:12}}>
-                            {seleccionable?'Cancelar':'Seleccionar para Borrar'}
-                        </Button>
-                        <Button onClick={()=>confirmAlert({
-                            title: 'Confirmación',
-                            message: '¿Desea eliminar los complementos seleccionados?',
-                            buttons: [
-                                {
-                                    label: 'Sí',
-                                    onClick: async () => removerSeleccion()
-                                },
-                                {
-                                    label: 'No',
-                                }
-                            ]
-                        })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%",fontSize:12}}>
+                    <div className="widget-content" align={"right"}>
+                        <Button onClick={()=>
+                            confirmAlert({
+                                title: 'Confirmación',
+                                message: '¿Desea eliminar los complementos seleccionados?',
+                                buttons: [
+                                    {
+                                        label: 'Sí',
+                                        onClick: async () => removerSeleccion()
+                                    },
+                                    {
+                                        label: 'No',
+                                    }
+                                ]
+                            })} className="btn btn-primary"
+                                style={{
+                                    visibility: seleccionable ? 'visible' : 'hidden',
+                                    color: "white",
+                                    fontSize: "1em"
+                                }}>
                             Borrar Selección
+                        </Button>
+                        <Button onClick={()=>{
+                            setSeleccionable(seleccionable?false:true)
+                            setRowSelectionModel([])
+                        }} className="btn btn-secondary"
+                                style={{
+                                    visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',
+                                    color:"white",
+                                    marginLeft: "1%",
+                                    marginRight: "2%",
+                                    fontSize:"1em"}}>
+                            {seleccionable?'Cancelar':'Seleccionar para Borrar'}
                         </Button>
                         <div className="row" style={{ height: 200}}>
                             <DataGrid
