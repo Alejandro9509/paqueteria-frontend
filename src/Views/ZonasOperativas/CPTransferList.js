@@ -1,15 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import React, {useEffect} from 'react';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import { Paper, Typography} from "@mui/material";
 
 
@@ -80,7 +76,6 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
         onChange(leftt, rightt)
     };
 
-
     const customList = (items) => (
         <Paper style={{ width: '100%', height: 500, overflow: 'auto' }}>
             <List dense component="div" role="list">
@@ -118,7 +113,12 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
         <div align={'center'}>                
             <Grid container spacing={2} justifyContent="center" alignItems="center">
                 
-                <Grid item xs={5}><Typography variant="h3" component="h2"> Códigos postales disponibles para relacionar</Typography>{customList(left)}</Grid>
+                <Grid item xs={5}>
+                    <Typography variant="h3" component="h2">
+                        Códigos postales disponibles para relacionar
+                    </Typography>
+                    {customList(left)}
+                </Grid>
                 <Grid item xs={1}>
                     <Grid container direction="column" alignItems="center">
                         <Button
@@ -163,10 +163,13 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid item xs={5}><Typography variant="h3" component="h2">Códigos postales ya relacionados a la zona</Typography>{customList(right)}</Grid>
-
+                <Grid item xs={5}>
+                    <Typography variant="h3" component="h2">
+                        Códigos postales ya relacionados a la zona
+                    </Typography>
+                    {customList(right)}
+                </Grid>
             </Grid>
         </div>
-
     );
 }
