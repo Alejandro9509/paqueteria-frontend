@@ -1,34 +1,19 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     TableBody,
     Table,
     TableContainer,
-    Paper,
     TableHead,
     TableCell,
     TableRow,
     Checkbox,
     TableSortLabel,
-    Grid,
-    Link,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Button,
+    Link
 } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
-import {obtenerUnidades, obtenerUnidadesUltimaMilla} from "../../Util/Contexts/UnidadesContext";
-import { alpha, styled } from "@mui/material/styles";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
+import {obtenerUnidadesUltimaMilla} from "../../Util/Contexts/UnidadesContext";
+import { styled } from "@mui/material/styles";
 import {confirmAlert} from "react-confirm-alert";
 import Tooltip from "@mui/material/Tooltip";
-import {showSuccess} from "../../Util/Util";
-import AgregarRemolques from "./AgregarRemolques";
 import ProgressBarCubicaje from "../Viajes/ProgressBarCubicaje";
 
 const PREFIX = 'UnidadesList';
@@ -37,11 +22,7 @@ const classes = {
     visuallyHidden: `${PREFIX}-visuallyHidden`
 };
 
-const Root = styled('div')((
-    {
-        theme
-    }
-) => ({
+const Root = styled('div')(({theme}) => ({
     [`& .${classes.visuallyHidden}`]: {
         border: 0,
         clip: 'rect(0 0 0 0)',
@@ -106,7 +87,6 @@ class UnidadesList extends Component {
         return stabilizedThis.map((el) => el[0]);
     }
 
-
     handleRequestSort(event, property) {
         const isAsc = this.state.orderBy === property && this.state.order === 'asc';
         this.setState({
@@ -126,7 +106,6 @@ class UnidadesList extends Component {
         }
         this.props.selectUnidades([])
     };
-
 
     solicitarRemolques(row) {
         const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
@@ -172,78 +151,81 @@ class UnidadesList extends Component {
         //const {classes} = this.props;
         const isSelected = (row) => this.props.unidadesSeleccionadas.find(u => u.m_nIdUnidad === row) != null;
 
-
         return (
             <Root style={{height: "400px", overflow: "auto"}}>
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    {/*<TableCell padding="checkbox">
-                                        <Checkbox
-                                            indeterminate={this.props.unidadesSeleccionadas.length > 0 && this.props.unidadesSeleccionadas.length < this.state.unidades.length}
-                                            checked={this.state.unidades.length > 0 && this.props.unidadesSeleccionadas.length === this.state.unidades.length}
-                                            onChange={this.handleSelectAllClickevent}
-                                            inputProps={{'aria-label': 'select all desserts'}}
-                                        />
-                                    </TableCell>*/}
-                                    <TableCell padding="checkbox"></TableCell>
-                                    <TableCell
-                                        sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
-                                        align="left">
-                                        <TableSortLabel
-                                            active={this.state.orderBy === "m_sDescripcion"}
-                                            direction={this.state.orderBy === "m_sDescripcion" ? this.state.order : 'asc'}
-                                            onClick={(event) => this.createSortHandler("m_sDescripcion", event)}
-                                        >
-                                            Unidad
-                                            {this.state.orderBy === "m_sDescripcion" ? (
-                                                <span className={classes.visuallyHidden}>
-                                                {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                            </span>) : null}
-                                        </TableSortLabel>
-
-                                    </TableCell>
-                                    <TableCell
-                                        sortDirection={this.state.orderBy === "m_sTipoUnidad" ? this.state.order : false}
-                                        align="left">Tipo Unidad</TableCell>
-                                    <TableCell
-                                        align="left">Ocupación</TableCell>
-                                    <TableCell
-                                        sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
-                                        align="left">Repartidor</TableCell>
-                                    <TableCell sortDirection={this.state.orderBy === "m_sPlacas" ? this.state.order : false}
-                                               align="left">Placa</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.stableSort(this.state.unidades, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
-                                    const isItemSelected = isSelected(u.m_nIdUnidad);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
-                                    return (<TableRow>
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    onClick={(event) => this.solicitarRemolques(u)}
-                                                    checked={isItemSelected}
-                                                    disabled={!u.m_nIdOperador}
-                                                    inputProps={{'aria-labelledby': labelId}}
-                                                />
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {/*<TableCell padding="checkbox">
+                                    <Checkbox
+                                        indeterminate={this.props.unidadesSeleccionadas.length > 0 && this.props.unidadesSeleccionadas.length < this.state.unidades.length}
+                                        checked={this.state.unidades.length > 0 && this.props.unidadesSeleccionadas.length === this.state.unidades.length}
+                                        onChange={this.handleSelectAllClickevent}
+                                        inputProps={{'aria-label': 'select all desserts'}}
+                                    />
+                                </TableCell>*/}
+                                <TableCell padding="checkbox"></TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
+                                    align="left">
+                                    <TableSortLabel
+                                        active={this.state.orderBy === "m_sDescripcion"}
+                                        direction={this.state.orderBy === "m_sDescripcion" ? this.state.order : 'asc'}
+                                        onClick={(event) => this.createSortHandler("m_sDescripcion", event)}
+                                    >
+                                        Unidad
+                                        {this.state.orderBy === "m_sDescripcion" ? (
+                                            <span className={classes.visuallyHidden}>
+                                            {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        </span>) : null}
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sTipoUnidad" ? this.state.order : false}
+                                    align="left">Tipo Unidad</TableCell>
+                                <TableCell
+                                    align="left">Ocupación</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
+                                    align="left">Repartidor</TableCell>
+                                <TableCell sortDirection={this.state.orderBy === "m_sPlacas" ? this.state.order : false}
+                                           align="left">Placa</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.stableSort(this.state.unidades, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
+                                const isItemSelected = isSelected(u.m_nIdUnidad);
+                                const labelId = `enhanced-table-checkbox-${index}`;
+                                return (
+                                    <TableRow>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                onClick={(event) => this.solicitarRemolques(u)}
+                                                checked={isItemSelected}
+                                                disabled={!u.m_nIdOperador}
+                                                inputProps={{'aria-labelledby': labelId}}
+                                            />
+                                        </TableCell>
+                                        <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
+                                        <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
+                                    <TableCell align="left"><ProgressBarCubicaje
+                                        value={u.utilizacion || 0}>{u.utilizacion?.toFixed(0) || 0}%</ProgressBarCubicaje></TableCell>
+                                        <Tooltip title={u.ocupado?"En Ruta":""}>
+                                            <TableCell align="left">
+                                                {<Link style={{cursor: "pointer",color:u.ocupado?"gray":''}}
+                                                       onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}
+                                                </Link>}
                                             </TableCell>
-                                            <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
-
-                                            <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
-                                        <TableCell align="left"><ProgressBarCubicaje
-                                            value={u.utilizacion || 0}>{u.utilizacion?.toFixed(0) || 0}%</ProgressBarCubicaje></TableCell>
-                                            <Tooltip title={u.ocupado?"En Ruta":""}>
-                                            <TableCell align="left">{<Link style={{cursor: "pointer",color:u.ocupado?"gray":''}}
-                                                                           onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell></Tooltip>
-                                            <TableCell align="left">{u.m_sPlacas}</TableCell>
-                                        </TableRow>)
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Root>
+                                        </Tooltip>
+                                        <TableCell align="left">{u.m_sPlacas}</TableCell>
+                                    </TableRow>
+                                )
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Root>
         );
     }
 }

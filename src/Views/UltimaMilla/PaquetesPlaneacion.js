@@ -1,29 +1,31 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import {
     Button,
-    Checkbox, Dialog, DialogActions, FormControl, FormControlLabel, FormLabel,
-    Grid, InputLabel, Radio, RadioGroup, Select,
-    Table, TableBody,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    InputLabel,
+    Radio,
+    RadioGroup,
+    Select,
+    Table,
+    TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, TableSortLabel,
-    TextField,
+    TableRow,
+    TableSortLabel,
     Typography
 } from "@mui/material";
-import {obtenerInformes, obtenerInformesEstatus, obtenerInformesId} from "../../Util/Contexts/InformesContext";
-import {obtenerViajes, obtenerViajesEstatus} from "../../Util/Contexts/ViajesContext";
-import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
-import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {
     obtenerPaquetesInforme,
     obtenerPaquetesUnidadOperador,
     obtenerPaquetesViaje
 } from "../../Util/Contexts/UltimaMillaContext";
-
-
 
 class PaquetesPlaneacion extends Component {
     constructor(props) {
@@ -146,11 +148,13 @@ class PaquetesPlaneacion extends Component {
             this.setState({paquetes: data, idInforme: value})
         })
     }
+
     handleViaje(value){
         obtenerPaquetesViaje(value, this.props.zonasIds).then(({data}) => {
             this.setState({paquetes: data, idViaje: value})
         })
     }
+
     handleUnidadOperador(idUnidad, idOperador){
         obtenerPaquetesUnidadOperador(idUnidad, idOperador, this.props.zonasIds).then(({data}) => {
             this.setState({paquetes: data, idOperador: idOperador, idUnidad: idUnidad})
@@ -160,7 +164,6 @@ class PaquetesPlaneacion extends Component {
     render() {
         const {classes} = this.props;
         const isSelected = (row) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row) != null;
-
 
         return (
             <Dialog open={this.props.open} fullWidth maxWidth={"lg"} onClose={this.props.close}>
@@ -254,10 +257,8 @@ class PaquetesPlaneacion extends Component {
                         <Grid container spacing={2} style={{padding: "10px"}} alignItems={"center"}>
                             <Grid item sm={12} md={6}>
                                 <label className="label">
-                                    <FormControl fullWidth variant="outlined"
-                                                 margin="dense">
-                                        <InputLabel id="idEmbarqueLabel">Folio
-                                            Informe</InputLabel>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="idEmbarqueLabel">Folio Informe</InputLabel>
                                         <Select
                                             native
                                             labelId="idEmbarqueLabel"
@@ -267,8 +268,7 @@ class PaquetesPlaneacion extends Component {
                                             onChange={event => (this.handleInforme(event.target.value))}
                                             id="idEmbarque"
                                             read="true"
-                                            value={this.state.idInforme}
-                                        >
+                                            value={this.state.idInforme}>
                                             <option value="0">
                                                 Seleccionar
                                             </option>
@@ -293,10 +293,8 @@ class PaquetesPlaneacion extends Component {
                         <Grid container spacing={2} style={{padding: "10px"}} alignItems={"center"}>
                             <Grid item sm={12} md={6}>
                                 <label className="label">
-                                    <FormControl fullWidth variant="outlined"
-                                                 margin="dense">
-                                        <InputLabel id="idEmbarqueLabel">Folio
-                                            Viaje</InputLabel>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="idEmbarqueLabel">Folio Viaje</InputLabel>
                                         <Select
                                             native
                                             labelId="idEmbarqueLabel"
@@ -327,7 +325,6 @@ class PaquetesPlaneacion extends Component {
                             </Grid>
                         </Grid>
                     }
-
                     {
                         this.state.tipoBusqueda === "3" &&
                         <Grid container spacing={2} style={{padding: "10px"}} alignItems={"center"}>
@@ -401,7 +398,6 @@ class PaquetesPlaneacion extends Component {
                     }
                     <Table>
                         <TableHead>
-
                             <TableRow>
                                 <TableCell padding="checkbox">
                                     <Checkbox
@@ -430,47 +426,65 @@ class PaquetesPlaneacion extends Component {
                                 </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                    align="left">Tipo</TableCell>
+                                    align="left">
+                                    Tipo
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                    align="left">Volumen</TableCell>
-
+                                    align="left">
+                                    Volumen
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                    align="left">Tipo de cobro</TableCell>
+                                    align="left">
+                                    Tipo de cobro
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                    align="left">Zona</TableCell>
+                                    align="left">
+                                    Zona
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                    align="left">Cliente</TableCell>
+                                    align="left">
+                                    Cliente
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_bClienteBloqueado" ? this.state.order : false}
-                                    align="left">Estatus cliente</TableCell>
+                                    align="left">
+                                    Estatus cliente
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
-                                    align="left">Domicilio</TableCell>
+                                    align="left">
+                                    Domicilio
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
-                                    align="left">Flete</TableCell>
-
+                                    align="left">
+                                    Flete
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
-                                    align="left">Ventana de entrega</TableCell>
+                                    align="left">
+                                    Ventana de entrega
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false}
-                                    align="left">Fecha</TableCell>
-
+                                    align="left">
+                                    Fecha
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
-                                    align="left">Estatus</TableCell>
+                                    align="left">
+                                    Estatus
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {
                                 this.stableSort(this.state.paquetes, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
                                     const isItemSelected = isSelected(u.m_nId);
-                                    console.log(isItemSelected)
                                     const labelId = `enhanced-table-checkbox-${index}`;
                                     return (
                                         <TableRow>
@@ -481,26 +495,41 @@ class PaquetesPlaneacion extends Component {
                                                     inputProps={{'aria-labelledby': labelId}}
                                                 />
                                             </TableCell>
-                                            <TableCell align="left">{u.m_sFolio}</TableCell>
-                                            <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
-                                            <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_xVolumen, 0)}</TableCell>
-                                            <TableCell align="left">{u.m_sTipoCobro}</TableCell>
-                                            <TableCell align="left">{u.m_sZona}</TableCell>
-                                            <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
-                                                align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
-                                            <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
-                                            <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente : u.m_sDomicilioDestinatario}</TableCell>
-                                            <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? "N/A" : u.m_nImporteFlete}</TableCell>
-                                            <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}</TableCell>
-                                            <TableCell align="left">{u.m_dFechaRegistro}</TableCell>
-                                            <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? u.m_sEstatusRecoleccion : u.m_sEstatusEmbarque}</TableCell>
+                                            <TableCell align="left">
+                                                {u.m_sFolio}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_bEsRecoleccion ? "Recolección" : "Entrega"}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_xVolumen, 0)}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_sTipoCobro}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_sZona}
+                                            </TableCell>
+                                            <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}} align="left">
+                                                {u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_bEsRecoleccion ? u.m_sDomicilioRemitente : u.m_sDomicilioDestinatario}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_bEsRecoleccion ? "N/A" : u.m_nImporteFlete}</TableCell>
+                                            <TableCell align="left">
+                                                {u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_dFechaRegistro}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                {u.m_bEsRecoleccion ? u.m_sEstatusRecoleccion : u.m_sEstatusEmbarque}
+                                            </TableCell>
                                         </TableRow>
                                     )
                                 })

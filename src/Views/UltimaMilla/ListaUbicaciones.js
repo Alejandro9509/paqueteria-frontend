@@ -1,23 +1,21 @@
-import React, {Component, useMemo, useRef} from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import {
-    Box,
     Button,
-    Checkbox, Chip,
     Dialog,
     DialogActions,
-    DialogContent,
     DialogTitle,
-    Grid,
-    makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
-    TextField, Tooltip,
-    Typography
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TableSortLabel
 } from "@mui/material";
 import {
-    actualizarCoordenadasRemitentesDestinatarios,
-    obtenerUbicacion
+    actualizarCoordenadasRemitentesDestinatarios
 } from "../../Util/Contexts/RemitenteDestinatarioContext";
-import {getAddressFormated, showSuccess, validarDerecho} from "../../Util/Util";
+import {getAddressFormated, showSuccess} from "../../Util/Util";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 
 export default class ListaUbicaciones extends Component {
@@ -208,7 +206,6 @@ export default class ListaUbicaciones extends Component {
                     Guias sin ubicación de entrega
                 </DialogTitle>
                 <TableContainer className={"j-forms"} style={{height:"300px"}}>
-
                     <Table>
                         <TableHead>
                             <TableRow>

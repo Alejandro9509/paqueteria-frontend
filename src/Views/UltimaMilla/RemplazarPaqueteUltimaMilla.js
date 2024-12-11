@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
@@ -72,21 +71,18 @@ class RemplazarPaqueteUltimaMilla extends Component {
 
 
     handlePaquetesSeleccionadas = (e) => {
-        console.log(e)
         this.setState({
             idsPaquetesSeleccionadas: e.selectionModel,
         })
     }
 
     componentDidMount() {
-
     }
 
     onSubmitData(e){
         e.preventDefault()
         this.props.onSubmit(this.props.data.filter(g => this.state.idsPaquetesSeleccionadas.includes(g.m_sFolio) ))
     }
-
 
     render() {
 

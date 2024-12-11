@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { styled } from '@mui/material/styles';
-import PropTypes from 'prop-types';
 import {
     Button,
     Checkbox,
@@ -8,13 +7,8 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
     TableRow,
     Typography,
@@ -26,17 +20,14 @@ import {
     obtenerPaquetesParciales,
     obtenerPaquetesPorParada
 } from "../../Util/Contexts/UltimaMillaContext";
+
 const PREFIX = 'PaquetesParcialesGuia';
 
 const classes = {
     table: `${PREFIX}-table`
 };
 
-const StyledDialog = styled(Dialog)((
-    {
-        theme
-    }
-) => ({
+const StyledDialog = styled(Dialog)(({theme}) => ({
     [`& .${classes.table}`]: {
         maxWidth: 650,
       }
@@ -50,6 +41,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 class PaquetesParcialesGuia extends Component{
     constructor(props){
         super(props);
@@ -62,6 +54,7 @@ class PaquetesParcialesGuia extends Component{
         this.handleToggle = this.handleToggle.bind(this)
         this.onSubmitData = this.onSubmitData.bind(this)    
     }
+
     componentDidMount() {
         obtenerPaquetesPorParada(this.props.guia.m_nId).then(({data}) => {
             let paquetesConIndex = []
@@ -91,18 +84,15 @@ class PaquetesParcialesGuia extends Component{
                     paquetes:paquetesConIndex
                 })
             })
-
-
         })
     }
+
     handleToggle(value) {
         const currentIndex = this.state.idsPaquetesSeleccionadas.findIndex(p => (p.idPaquete+p.noIndex) === (value.idPaquete+value.noIndex));
         const nuevoChecado = [...this.state.idsPaquetesSeleccionadas];
         if (currentIndex === -1) {
-            console.log("nuevo valor")
             nuevoChecado.push(value);
         } else {
-            console.log("viejo valor")
             nuevoChecado.splice(currentIndex, 1);
         }
         this.setState({idsPaquetesSeleccionadas: nuevoChecado});
@@ -132,7 +122,11 @@ class PaquetesParcialesGuia extends Component{
                 onClose={this.props.close}
                 aria-labelledby="max-width-dialog-title"
             >
-                <DialogTitle><Typography variant={"h4"}>Seleccionar Paquete</Typography> </DialogTitle>
+                <DialogTitle>
+                    <Typography variant={"h4"}>
+                        Seleccionar Paquete
+                    </Typography>
+                </DialogTitle>
                 <DialogContent>
                     <div style={{display: 'flex', height: '300px'}}>
 
@@ -141,18 +135,13 @@ class PaquetesParcialesGuia extends Component{
                             <TableHead>
                                 <TableRow>
                                     <TableCell padding="checkbox">
-                                        <Checkbox
-                                            checked={0}
-                                            onChange={() => console.log("")}
-                                        />
+                                        <Checkbox checked={0}/>
                                     </TableCell>
                                     <TableCell align="right">Paquete</TableCell>
                                     <TableCell align="right">Identificador&nbsp;</TableCell>
                                     {/*<TableCell align="right">Embalaje&nbsp;</TableCell>*/}
                                 </TableRow>
                             </TableHead>
-
-
                             <TableBody id="rows">
                                 {this.state.paquetes.map((pq) => {
                                         return (
@@ -174,7 +163,6 @@ class PaquetesParcialesGuia extends Component{
                                 )}
                             </TableBody>
                         </Table>
-
                     </div>
                 </DialogContent>
                 <DialogActions>
@@ -184,7 +172,6 @@ class PaquetesParcialesGuia extends Component{
                     <Button onClick={this.onSubmitData} color="primary" autoFocus>
                         Aceptar
                     </Button>
-
                 </DialogActions>
             </StyledDialog>
         );

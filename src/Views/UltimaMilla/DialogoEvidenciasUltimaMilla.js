@@ -41,13 +41,13 @@ export default function DialogoEvidenciasUltimaMilla(props) {
                     <h4>Firma</h4>
                     {
                         props.imagenes.filter(i => parseInt(i.m_nTipoArchivo) === 2).length > 0 ?
-                        <Grid item md={12}>
-                            <div align={"center"}>
-                                <img src={`data:image/jpeg;base64,${props.imagenes.find(i => parseInt(i.m_nTipoArchivo) === 2).m_sImagen}`}
-                                     alt={''}
-                                     style={{width: "560px", height: "380px",marginBottom:"10px",paddingRight:"15px" ,display: "block"}}/>
-                            </div>
-                        </Grid>
+                            <Grid item md={12}>
+                                <div align={"center"}>
+                                    <img src={`data:image/jpeg;base64,${props.imagenes.find(i => parseInt(i.m_nTipoArchivo) === 2).m_sImagen}`}
+                                         alt={''}
+                                         style={{width: "560px", height: "380px",marginBottom:"10px",paddingRight:"15px" ,display: "block"}}/>
+                                </div>
+                            </Grid>
                             :
                             <span>No se adjuntó firma</span>
                     }
@@ -56,15 +56,14 @@ export default function DialogoEvidenciasUltimaMilla(props) {
                         props.imagenes.filter(i => parseInt(i.m_nTipoArchivo) === 1 || parseInt(i.m_nTipoArchivo) === 3).length > 0 ?
                             props.imagenes.filter(i => parseInt(i.m_nTipoArchivo) === 1 || parseInt(i.m_nTipoArchivo) === 3).map((item) => (
                                 <Grid item md={12}>
-
                                     <div style={{position: "relative"}}>
-                                        <Button variant={"contained"} color={"primary"} onClick={() => handleDownloadImage(item.m_sImagen)} style={{position: "absolute"}}>
+                                        <Button variant={"contained"} color={"primary"}
+                                                onClick={() => handleDownloadImage(item.m_sImagen)}
+                                                style={{position: "absolute"}}>
                                             <DownloadIcon fontSize={'large'} />
                                         </Button>
                                         <img style={{width: "560px", height: "380px",paddingBottom:"20px",paddingRight:"15px" ,display: "block"}}
                                              src={`data:image/jpeg;base64,${item.m_sImagen}`} alt={''}/>
-
-
                                     </div>
                                 </Grid>
                             ))

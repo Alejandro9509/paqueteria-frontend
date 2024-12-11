@@ -1,24 +1,18 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     TableBody,
     Table,
     TableContainer,
-    Paper,
     TableHead,
     TableCell,
     TableRow,
     Checkbox,
     TableSortLabel,
     Typography,
-    Grid,
     TextField,
 } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
-import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
-import { alpha, styled } from "@mui/material/styles";
-import {obtenerGuia, obtenerGuiasFiltro, obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
-import {arrayGuias} from "../../Util/Data";
+import { styled } from "@mui/material/styles";
+import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 
 const PREFIX = 'PaquetesList';
 
@@ -26,11 +20,7 @@ const classes = {
     visuallyHidden: `${PREFIX}-visuallyHidden`
 };
 
-const Root = styled('div')((
-    {
-        theme
-    }
-) => ({
+const Root = styled('div')(({theme}) => ({
     [`& .${classes.visuallyHidden}`]: {
         border: 0,
         clip: 'rect(0 0 0 0)',
@@ -141,8 +131,6 @@ class PaquetesList extends Component {
         });
     };
 
-
-
     render() {
         const {classes} = this.props;
         const isSelected = (row, esRecoleccion) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row && u.m_bEsRecoleccion === esRecoleccion) != null;
@@ -229,55 +217,70 @@ class PaquetesList extends Component {
                                         inputProps={{'aria-label': 'select all desserts'}}
                                     />
                                 </TableCell>
-                                <TableCell
-                                    sortDirection={this.state.orderBy === "m_sFolio" ? this.state.order : false}
+                                <TableCell sortDirection={this.state.orderBy === "m_sFolio" ? this.state.order : false}
                                     align="left">
                                     <TableSortLabel
                                         active={this.state.orderBy === "m_sFolio"}
                                         direction={this.state.orderBy === "m_sFolio" ? this.state.order : 'asc'}
-                                        onClick={(event) => this.createSortHandler("m_sFolio", event)}
-                                    >
+                                        onClick={(event) => this.createSortHandler("m_sFolio", event)}>
                                         Folio
-                                        {this.state.orderBy === "m_sFolio" ? (
-                                            <span className={classes.visuallyHidden}>
-                                            {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                        </span>
-                                        ) : null}
+                                        {
+                                            this.state.orderBy === "m_sFolio" ? (
+                                                    <span className={classes.visuallyHidden}>
+                                                        {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                                    </span>
+                                            ) : null
+                                        }
                                     </TableSortLabel>
-
                                 </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                    align="left">Tipo</TableCell>
+                                    align="left">Tipo
+                                </TableCell>
                                 {/*<TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Volumen</TableCell>*/}
 
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                    align="left">Tipo de cobro</TableCell>
+                                    align="left">
+                                    Tipo de cobro
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sZona" ? this.state.order : false}
-                                    align="left">Zona</TableCell>
+                                    align="left">
+                                    Zona
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                    align="left">Cliente</TableCell>
+                                    align="left">
+                                    Cliente
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_bClienteBloqueado" ? this.state.order : false}
-                                    align="left">Estatus cliente</TableCell>
+                                    align="left">
+                                    Estatus cliente
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
-                                    align="left">Domicilio</TableCell>
-
+                                    align="left">
+                                    Domicilio
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
-                                    align="left">Ventana de entrega</TableCell>
-                                <TableCell sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false}
-                                           align="left">Fecha</TableCell>
-
+                                    align="left">
+                                    Ventana de entrega
+                                </TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false}
+                                    align="left">
+                                    Fecha
+                                </TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
-                                    align="left">Estatus</TableCell>
+                                    align="left">
+                                    Estatus
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
