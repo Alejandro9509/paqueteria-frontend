@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Polyline} from "react-leaflet";
 import {calcularRuta} from "../../Util/Contexts/UltimaMillaContext";
 
@@ -13,14 +12,12 @@ class Rutas extends Component {
     }
 
     componentWillMount() {
-
     }
 
     componentDidMount() {
         this.getRoute()
     }
     componentWillUnmount() {
-
     }
 
     getRoute(){
@@ -31,15 +28,12 @@ class Rutas extends Component {
             })
             this.setState({ polygon: polygon})
         })
-
     }
 
     render() {
         const blackOptions = { color: '#d3f461' }
         return (
-
-                    <Polyline pathOptions={blackOptions} positions={this.state.polygon} />
-
+            <Polyline pathOptions={blackOptions} positions={this.state.polygon} />
         );
     }
 }

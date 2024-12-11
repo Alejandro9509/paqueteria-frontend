@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     IconButton,
     Grid,
     List,
     ListItem,
-    ListItemIcon,
     ListItemText,
     Collapse,
     Typography,
@@ -29,6 +27,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 class Mensajes extends Component {
     constructor(props) {
         super(props);
@@ -59,8 +58,6 @@ class Mensajes extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
-        console.log(document.getElementById("listMessage"))
         if(document.getElementById("listMessage")){
             document.getElementById("listMessage").scrollTo(0,document.getElementById("listMessage").scrollHeight)
         }
@@ -73,7 +70,6 @@ class Mensajes extends Component {
         } else {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla.filter(u => u.m_sNombreOperador.toLowerCase().includes(this.state.searchText.toLowerCase()))})
         }
-
     }
 
     openChat(index) {
@@ -92,9 +88,6 @@ class Mensajes extends Component {
              },5000)
              this.setState({idIntervalo:intervalo})
         }
-     
-
-
     }
 
     enviarMensaje() {
@@ -108,9 +101,7 @@ class Mensajes extends Component {
         }
     }
 
-
     render() {
-
         return (
             <div className={"j-form"}>
                 {
@@ -275,20 +266,16 @@ class Mensajes extends Component {
                                                                         >
                                                                             Enviar
                                                                         </Button>
-
-
                                                                     </InputAdornment>
                                                                 ),
                                                             }}
                                                         />
                                                     </div>
-
                                                 </Collapse>
                                             </div>
                                         )
                                     })
                                 }
-
                             </List>
                         </div>
 

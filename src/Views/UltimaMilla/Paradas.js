@@ -2,18 +2,8 @@ import React, {Component} from 'react';
 import "./ParadasStyle.css"
 import {ReactComponent as BanderaIcono} from "../../iconos/Mapa/flagIcon.svg";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
-import Noty from "noty";
 import DatosEntregaRecoleccion from "./DatosEntregaRecoleccion"
 import {Dialog, DialogContent} from "@mui/material";
-
-function showSuccess(mensaje) {
-    new Noty({
-        type: "information",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000"
-    }).show()
-}
 
 class Paradas extends Component {
     constructor(props) {
@@ -25,7 +15,6 @@ class Paradas extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
     }
 
     handleOpenDatos(){
@@ -36,7 +25,6 @@ class Paradas extends Component {
 
     render() {
         return (
-
             <div className="progress" >
                 {
                     this.props.ultimaMilla ? (
@@ -47,7 +35,7 @@ class Paradas extends Component {
                                         <div className="pointBarPass"
                                              onClick={()=> {
                                                 this.handleOpenDatos()
-                                                }}
+                                             }}
                                              style={{
                                                  left: `${((index+1) / this.props.tour.m_arrClsProGuia.length) * 90}%`,
                                                  color: this.props.color
@@ -60,7 +48,6 @@ class Paradas extends Component {
                                                         </DialogContent>
                                                 </Dialog>
                                                 }
-                                                
                                             {index+1}
                                         </div>
                                     )
@@ -82,7 +69,6 @@ class Paradas extends Component {
                                     }}/>
                             </div>
                         </div>
-
                     ) : (
                         <div>
                             {
@@ -98,16 +84,10 @@ class Paradas extends Component {
                                     )
                                 })
                             }
-
                         </div>
                     )
                 }
-
-                <div className="pointBarFlag"
-                     style={{
-                         left: `100%`
-
-                     }}>
+                <div className="pointBarFlag" style={{left: `100%`}}>
                     <BanderaIcono style={{fill: this.props.color}}/>
                 </div>
                 <div className="progress-bar" style={{width: "100%", backgroundColor: this.props.color}}/>

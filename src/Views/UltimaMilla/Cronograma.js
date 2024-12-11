@@ -3,18 +3,14 @@ import SwipeableBottomSheet from 'react-swipeable-bottom-sheet';
 import {
     Box,
     Chip,
-    Divider,
     Grid,
-    Step,
-    StepLabel, Stepper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, Typography
+    TableRow
 } from "@mui/material"
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import moment from "moment";
@@ -44,7 +40,6 @@ class Cronograma extends Component {
     }
 
     componentWillMount() {
-
     }
 
     componentDidMount() {
@@ -53,12 +48,10 @@ class Cronograma extends Component {
                 ...this.state,
                 ParaUltimaMilla: {u}
             })
-            console.log(u)
         })
     }
 
     componentWillUnmount() {
-
     }
 
 
@@ -79,12 +72,10 @@ class Cronograma extends Component {
                             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                         }}
                         label={"Cronograma"}
-
                         onClick={() => this.setState({openDetail: true})}
                         variant="outlined"
                     />
                 }
-
                 {
                     this.state.openDetail &&
                     <SwipeableBottomSheet overflowHeight={window.innerHeight / 4}
@@ -122,7 +113,6 @@ class Cronograma extends Component {
                                 backgroundColor: "white",
                                 boxShadow: "rgb(0 0 0 / 16%) 0px -6px 5px"
                             }}>
-
                                 <Grid container direction={"row"} justifyContent={"center"} alignItems="baseline">
                                     <div align={"center"}
                                          style={{
@@ -166,8 +156,6 @@ class Cronograma extends Component {
                                                             var filterEstatus = tour.m_arrClsProGuia.filter(g =>g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3)
                                                             var color = tour.color
                                                             var min = 20, sec = 10;
-                                                            console.log(filterEstatus)
-                                                            //console.log(filterEstatus[0].m_nEstatusUlimaMilla)
                                                             return (
                                                                 <TableRow key={index}>
                                                                     <TableCell style={{borderBottom: "none"}}
@@ -194,7 +182,6 @@ class Cronograma extends Component {
                                                                                                 obtenerOperadores().then((operadoresListado)=>{
                                                                                                     this.props.selectGuiaReasignar(u.m_nIdParadaUltimaMilla, u.m_nIdOperador,operadoresListado.data.filter(op=>op.idSucursal==this.props.tour.m_nIdSucursalReceptora))
                                                                                                 })
-
                                                                                             }else{
                                                                                                 showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
                                                                                             }
@@ -220,9 +207,7 @@ class Cronograma extends Component {
                                                                             backgroundColor: filterEstatus.length === 0 ?  "#06B100" : "#F9A03E",
                                                                             borderRadius: "10px"
                                                                         }}>{
-
                                                                             filterEstatus.length === 0 ? "Completado" :  filterEstatus[0].m_sEstatusUltimaMilla
-
                                                                         }
                                                                         </div>
                                                                     </TableCell>
@@ -235,12 +220,12 @@ class Cronograma extends Component {
                                                                     }}
                                                                                width={"50%"}>
                                                                         <div style={{position: "relative"}}>
-                                                                            <Paradas selectGuiaReasignar={this.props.selectGuiaReasignar} color={color} tour={tour} ultimaMilla={true}>
-
-
+                                                                            <Paradas selectGuiaReasignar={this.props.selectGuiaReasignar}
+                                                                                     color={color}
+                                                                                     tour={tour}
+                                                                                     ultimaMilla={true}>
                                                                             </Paradas>
                                                                         </div>
-
                                                                     </TableCell>
                                                                 </TableRow>
                                                             );
@@ -255,7 +240,6 @@ class Cronograma extends Component {
                         </div>
                     </SwipeableBottomSheet>
                 }
-
             </div>
         );
     }

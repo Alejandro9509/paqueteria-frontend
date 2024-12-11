@@ -1,15 +1,7 @@
-import React, {Component, useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import Cabecera from "../../Components/Template/Cabecera";
-import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {MapContainer, Polyline, Popup, TileLayer, Marker} from "react-leaflet";
-import {arrayGuias, arrayPonts} from "../../Util/Data";
+import {MapContainer, TileLayer, Marker} from "react-leaflet";
 import {
-    Chip,
-    IconButton,
-    List,
-    ListItem,
-    ListSubheader,
     Dialog,
     DialogContent,
     DialogActions,
@@ -18,9 +10,6 @@ import {
     MenuItem,
     DialogContentText,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
-import FaceIcon from "@mui/icons-material/Face";
-import Tooltip from "@mui/material/Tooltip";
 import FiltersMap from "./FiltersMap";
 import Cronograma from "./Cronograma";
 import {
@@ -28,19 +17,12 @@ import {
     obtenerGuiasUbicacion,
     randomColor,
     searchLocationWeb,
-    generarRuta,
     agregarRuta,
     searchLocationAddress,
     obtenerUltimaMillaFecha,
-    validarUnidadesSeleccionadas,
-    validarUnidadOcupada, obtenerUltimaMillaFechaImagenes
 } from "../../Util/Contexts/UltimaMillaContext";
-import {actualizarCoordenadasRemitentesDestinatarios} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
-import MessageIcon from "@mui/icons-material/Message";
-import {ReactComponent as FullscreenIcono} from "../../iconos/Mapa/fullscreen.svg";
-import {ReactComponent as FullscreenExitIcono} from "../../iconos/Mapa/fullscreen-exit.svg";
 import DetalleParadas from "./DetalleParadas";
 import Noty from "noty";
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -48,19 +30,12 @@ import TourUltimaMilla from "./TourUltimaMilla";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
-import Buttons from "../../Util/CarruselButtons";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
-import {forEach} from "react-bootstrap/ElementChildren";
-import {getAddressFormated, getCurrentDate} from "../../Util/Util";
 import moment from "moment";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
-import {obtenerOperadoresPorSucursal} from "../../Util/Contexts/OperadoresContext";
-import {cambiarOperadorUnidad} from "../../Util/Contexts/UnidadesContext"; // Import css
 import {reasignarOperador} from "../../Util/Contexts/OperadoresContext";
-import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import ListaUbicaciones from "./ListaUbicaciones"; // Import css
-
 
 function showSuccess(mensaje) {
     new Noty({
@@ -70,6 +45,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 function showGuiaSinCoordenadas(mensaje) {
     new Noty({
         type: "information",
@@ -78,6 +54,7 @@ function showGuiaSinCoordenadas(mensaje) {
         timeout: "10000"
     }).show()
 }
+
 const MarkerIcon = new L.Icon({
     iconUrl: MarkerImage,
     iconRetinaUrl: MarkerImage,
@@ -90,7 +67,6 @@ const MarkerIcon = new L.Icon({
 });
 
 var actualizar = true
-
 
 class UltimaMilla extends Component {
     constructor(props) {
@@ -161,6 +137,7 @@ class UltimaMilla extends Component {
         this.mostrarDialogoListado(false);
         //this.generarRuta(filtrosTemp);
     }
+
     componentDidMount() {
     }
 
@@ -194,7 +171,7 @@ class UltimaMilla extends Component {
                     }
                 }
             }
-          const filtered=data
+            const filtered=data
             /*obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas).then((respuesta) => {
                 //imagenes
                 let rutaConImagenes
@@ -251,7 +228,6 @@ class UltimaMilla extends Component {
                 this.state.map.setView([data.y, data.x], 14)
             }
         })
-
     }
 
     refreshFilterUltimaMilla(date, idSucursal, zonas, tipoBusqueda) {
@@ -276,7 +252,6 @@ class UltimaMilla extends Component {
         if (this.state.ultimaMilla) {
             if (this.state.tour) { 
                 // console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
-
              /*   validarUnidadesSeleccionadas(Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad))).then(respuesta=>{
                     if(respuesta.data.sePuedeSeleccionar){
                         showSuccess("se puede seleccionar")
@@ -310,7 +285,6 @@ class UltimaMilla extends Component {
 
     async generarRuta(data) {
         this.setState({tour: null})
-        console.log(this.state);
         if (data.paquetesSeleccionadas.length !== 0 && data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
             let unidadYaAsignada = false
@@ -338,12 +312,10 @@ class UltimaMilla extends Component {
                     }
                 })
                 guias.forEach((guia) => {
-                    //console.log(guia)
                     if(guia.m_sLatitud === "0" || guia.m_sLongitud === "0"){
                         guiasSinLoc.push(guia);
                     }
                 })
-                console.log(paqSinLoc);
                 if(paqSinLoc.length > 0){
                     this.setState({
                         showListaUbicaciones: true,
@@ -353,12 +325,10 @@ class UltimaMilla extends Component {
                     this.mostrarDialogoListado(true);
                     return
                 }
-
                 await obtenerParametrosConfiguracion().then((respuesta) => {
                     data.finishDate = moment(new Date()).add(respuesta.data.HorasLimiteEntregasUltimaMilla, 'hours').format('YYYY-MM-DDTHH:mm')
                 })
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
-                    console.log('results', results)
                     if (results) {
                         if (results.unassigned?.length > 0){
                             results.unassigned?.forEach(i => {
@@ -369,7 +339,6 @@ class UltimaMilla extends Component {
                                     this.setState({showListaUbicaciones: true, paquetesSinCoord: paqSinLoc})
                                     this.mostrarDialogoMapa(true);
                                     //i.reasons[0].descripcion = `El registro con folio ${guias[index].m_sFolio} no cuenta con coordenadas.`
-
                                 }else{
                                     i.reasons[0].descripcion = `No se pudo agregar a la ruta el registro ${guias[index].m_sFolio}.`
                                 }
@@ -384,7 +353,6 @@ class UltimaMilla extends Component {
                     showSuccess("Hubo un error al generar la ruta. Intente más tarde.")
                 })
             }
-
         }
     }
 
@@ -419,7 +387,6 @@ class UltimaMilla extends Component {
         this.setState({openDialog: true, paradaFuente: idParadaFuente, idOperador: idOperador,listadoOperadores:listadoOperadores})
     }
 
-
     reasignarParada(event) {
         event.preventDefault()
         reasignarOperador(this.state.paradaFuente, this.state.idOperador).then((data) => {
@@ -427,8 +394,6 @@ class UltimaMilla extends Component {
             this.setState({openDialog: false, paradaFuente: 0, idGuia: 0})
             this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
         })
-
-
     }
 
     changeFiltersMapDialogsState(isVisible){
@@ -438,7 +403,6 @@ class UltimaMilla extends Component {
     }
 
     closeResumenParada(isVisible){
-        // console.log("linea is visible"+isVisible)
         this.setState({
             closeResumenParadas:isVisible
         })
@@ -502,9 +466,9 @@ class UltimaMilla extends Component {
                 {
                     this.state.openDialog &&
                     <Dialog fullWidth
-                            maxWidth={"sm"} open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
+                            maxWidth={"sm"} open={this.state.openDialog}
+                            onClose={() => this.setState({openDialog: false})}>
                         <DialogTitle>Reasignar Paquete</DialogTitle>
-
                         <DialogContent>
                             <form onSubmit={this.reasignarParada}>
                                 <label className="input select" style={{width: "100%"}}>
@@ -518,25 +482,23 @@ class UltimaMilla extends Component {
                                             fullWidth
                                             value={this.state.idOperador}
                                             onChange={(event) => {
-
                                                 let valorUM=this.state.ultimaMilla
-
                                                 let valorParada=this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(i=>i.m_nIdParadaUltimaMilla==this.state.paradaFuente)
                                                 valorParada.m_nIdOperador=event.target.value
                                                 let indexParada=valorUM.m_arrClsParadaUltimaMilla.findIndex(i=>i==valorParada)
                                                 valorUM.m_arrClsParadaUltimaMilla[indexParada]=valorParada
                                                 this.setState({
-                                                    ...this.state,ultimaMilla:valorUM,idOperador:valorParada.m_nIdOperador
+                                                    ...this.state,
+                                                    ultimaMilla:valorUM,
+                                                    idOperador:valorParada.m_nIdOperador
                                                 })
-                                            }
-                                            }
+                                            }}
                                             id="formatoSeleccionado"
                                             name="formatoSeleccionado"
                                         >
                                             {this.state.listadoOperadores.map((op) => (
                                                 <MenuItem disabled={!op.operadorDisponible}
-                                                          value={op.m_nIdOperador}
-                                                >
+                                                          value={op.m_nIdOperador}>
                                                     {op.m_sNombreCompleto}
                                                 </MenuItem>
                                             ))}
@@ -581,11 +543,11 @@ class UltimaMilla extends Component {
                 {
                     this.state.showListaUbicaciones &&
                     <ListaUbicaciones
-                                        open={this.state.showListaUbicaciones}
-                                        paquetes={this.state.paquetesSinCoord}
-                                        onClose={this.cerrarListadoUbicaciones}
-                                        handleAceptar={this.handleAceptar}
-                                        cerrarListadoUbicaciones={this.cerrarListadoUbicaciones}
+                        open={this.state.showListaUbicaciones}
+                        paquetes={this.state.paquetesSinCoord}
+                        onClose={this.cerrarListadoUbicaciones}
+                        handleAceptar={this.handleAceptar}
+                        cerrarListadoUbicaciones={this.cerrarListadoUbicaciones}
                     />
                 }
                 <section>
@@ -628,7 +590,6 @@ class UltimaMilla extends Component {
                                         <TourUltimaMilla data={t} sucursal={this.state}/>
                                     )
                                 }
-
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.cronogramaFullscreen) &&
                                     <Cronograma selectGuiaReasignar={this.selectGuiaReasignar}
@@ -670,16 +631,10 @@ class UltimaMilla extends Component {
                                 {/*            <FullscreenIcono style={{fill: "#F9A03E"}}/>}*/}
                                 {/*    </IconButton>*/}
                                 {/*}*/}
-
-
                             </MapContainer>
                         </div>
-
                     </div>
-
-
                 </section>
-
             </div>
         );
     }

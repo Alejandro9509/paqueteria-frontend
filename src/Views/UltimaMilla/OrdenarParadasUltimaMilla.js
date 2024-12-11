@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     Button,
     Dialog,
@@ -10,8 +9,7 @@ import {
     List,
     ListItemIcon,
     ListItemText,
-    Typography,
-    ListItemSecondaryAction
+    Typography
 } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
@@ -61,7 +59,6 @@ class OrdenarParadasUltimaMilla extends Component {
         this.setState({items: array, openRemplazar: false})
     }
 
-
     openSeleccionarPaquetes() {
         obtenerGuiaUltimaMilla(this.props.zonasIds, this.props.tipoServicio).then(({data}) => {
 
@@ -93,7 +90,8 @@ class OrdenarParadasUltimaMilla extends Component {
             <div>
                 {
                     this.state.openRemplazar &&
-                    <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} onSubmit={this.onSubmitPaquetesSeleccionados}
+                    <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar}
+                                                 onSubmit={this.onSubmitPaquetesSeleccionados}
                                                  close={() => this.setState({openRemplazar: false})}
                                                  data={this.state.paquetes} multiples={true}/>
                 }
@@ -105,18 +103,21 @@ class OrdenarParadasUltimaMilla extends Component {
                     onClose={this.props.close}
                     aria-labelledby="max-width-dialog-title"
                 >
-                    <DialogTitle><Typography variant={"h4"}>Paquetes - {this.state.paradaSeleccionada.m_snNombreOperador} </Typography></DialogTitle>
+                    <DialogTitle>
+                        <Typography variant={"h4"}>
+                            Paquetes - {this.state.paradaSeleccionada.m_snNombreOperador}
+                        </Typography>
+                    </DialogTitle>
                     <DialogContent>
                         <div align={"right"} style={{width: "100%"}}>
                             <Button variant={"contained"} color={"primary"}
                                     onClick={() => this.openSeleccionarPaquetes()}
-                                    disabled={this.props.deshabilidarAgregar}
-                            >Agregar Paquetes</Button>
-
+                                    disabled={this.props.deshabilidarAgregar}>
+                                Agregar Paquetes
+                            </Button>
                         </div>
 
                         <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
-
                             {items.map((value, index) => {
                                 return (
                                 <SortableItem  disabled={value.m_nEstatusUlimaMilla !== 1}
@@ -137,7 +138,6 @@ class OrdenarParadasUltimaMilla extends Component {
                         <Button onClick={this.onSubmitData} color="primary" autoFocus>
                             Aceptar
                         </Button>
-
                     </DialogActions>
                 </Dialog>
             </div>
