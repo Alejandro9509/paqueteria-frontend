@@ -26,6 +26,7 @@ export default function AsignarOperador(props){
     useEffect( value => {
         getUnidadesListado();
     }, []);
+
     const columnUnidades = [
         {
             headerName: "Tipo Unidad",
@@ -144,7 +145,6 @@ export default function AsignarOperador(props){
                             getRowId={(row) => row.m_nIdUnidad}
                         />
                     </div>
-
                 </Grid>
                 <Grid item xs={4}>
                     <div style={{height: 400}}>

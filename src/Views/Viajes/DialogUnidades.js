@@ -10,6 +10,7 @@ import TableUnidades from "./TableUnidades";
 import { obtenerUnidadesOperador } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
 
+
 function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
     const [selectedRow, setSelectedRow] = useState(null);
     const [listadoUnidades, setListadoUnidades] = useState([]);
@@ -38,6 +39,7 @@ function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
     const handleRowSelection = (row) => {
         setSelectedRow(row);
     };
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>

@@ -1,9 +1,7 @@
 import React from "react";
 import { styled } from '@mui/material/styles';
 import { Typography } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
 import LinearProgress from "@mui/material/LinearProgress";
-
 
 
 export default function ProgressBarCubicaje({value,children}) {
@@ -16,11 +14,7 @@ export default function ProgressBarCubicaje({value,children}) {
         bar: `${PREFIX}-bar`
     };
 
-    const Root = styled('div')((
-        {
-            theme
-        }
-    ) => ({
+    const Root = styled('div')(({theme}) => ({
         [`& .${classes.root}`]: {
             height: 10,
             borderRadius: 5,
@@ -35,7 +29,9 @@ export default function ProgressBarCubicaje({value,children}) {
             backgroundColor: value > 90 ? value > 100 ? '#ec3f3f' : '#3bd331' : '#1a90ff',
         }
     }));
+
     const BorderLinearProgress = LinearProgress;
+
     return (
         <Root>
             <Typography variant={'h5'}>{children}</Typography>

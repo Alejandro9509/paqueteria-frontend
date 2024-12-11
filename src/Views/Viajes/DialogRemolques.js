@@ -4,12 +4,12 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle
 } from '@mui/material';
 import TableRemolques from "./TableRemolques";
 import { obtenerUnidadesConvoy } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
+
 
 function DialogRemolques({ open, handleClose, handleAccept, idConvoy, isTorton }) {
     const [selectedRow, setSelectedRow] = useState(null);
@@ -47,6 +47,7 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy, isTorton }
     const handleRowSelection = (row) => {
         setSelectedRow(row);
     };
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>

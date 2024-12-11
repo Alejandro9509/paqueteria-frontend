@@ -1,9 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField} from "@mui/material";
 
+
 export default function TableDollys({ data, handleSelection }) {
     const [selectedRow, setSelectedRow] = useState(null);
     const textFieldRef = useRef(null);
+    const [filtro, setFiltro] = useState('');
+    const filteredData = data.filter(item => item.m_sDescripcion.toLowerCase().includes(filtro.toLowerCase()));
 
     useEffect(() => {
         if (data.length > 0) {
@@ -15,13 +18,10 @@ export default function TableDollys({ data, handleSelection }) {
         setSelectedRow(row);
         handleSelection(row);
     };
-    const [filtro, setFiltro] = useState('');
 
     const handleChangeFiltro = (event) => {
         setFiltro(event.target.value);
     };
-
-    const filteredData = data.filter(item => item.m_sDescripcion.toLowerCase().includes(filtro.toLowerCase()));
 
     return (
         <div>
@@ -56,6 +56,5 @@ export default function TableDollys({ data, handleSelection }) {
                 </Table>
             </TableContainer>
         </div>
-
     );
 }

@@ -1,11 +1,10 @@
 import React from 'react';
-import {FormControl, MenuItem, OutlinedInput, TextField} from "@mui/material";
+import {MenuItem, TextField} from "@mui/material";
 import { styled } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import InputAdornment from '@mui/material/InputAdornment';
-import clsx from 'clsx';
 import Grid from '@mui/material/Grid';
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
+
 
 const PREFIX = 'LlegadaParadas';
 
@@ -36,7 +35,6 @@ const Root = styled('form')(() => ({
 }));
 
 export default function LlegadaParadas(props){
-
 
     const [data, setData] = React.useState({
         sucursal: props.viaje.m_sSucursal,
@@ -106,7 +104,6 @@ export default function LlegadaParadas(props){
             tipoDeCambioOrigen: e.target.value
         });
     }
-
 
     const handleChangeMillas = (e) => {
         setData({
@@ -215,80 +212,70 @@ export default function LlegadaParadas(props){
             {/*<div className={classes.root}></div>*/}
             
             <Grid container spacing={2}>
-           <ul style={{width:"100%",display:"flex",flexWrap:"wrap",listStyle:"none",padding:"5px"}}>
+                <ul style={{width:"100%",display:"flex",flexWrap:"wrap",listStyle:"none",padding:"5px"}}>
                     <li style={{margin:"5px",minWidth:"16%"}}>
-                    <TextField
-                        id={"sucursal"}
-                        margin={"dense"}
-                        disabled
-                        label={"Sucursal"}
-                        variant={"outlined"}
-                        InputProps={{readOnly: true}}
-                        value={data.sucursal}
-                    />
-              
-                </li>
-                <li style={{margin:"5px",minWidth:"10%"}}>
-           
-                    <TextField
-                        id={"viaje"}
-                        margin={"dense"}
-                        label={"Viaje"}
-                        InputProps={{readOnly: true}}
-                        disabled
-                        variant={"outlined"}
-                        value={data.viaje}/>
-         
-                </li>
-                <li style={{margin:"5px",minWidth:"16%"}}>
-            
-                    <TextField
-                        id={"documento"}
-                        margin={"dense"}
-                        label={"Documento"}
-                        InputProps={{readOnly: true}}
-                        disabled
-                        variant={"outlined"}
-                        value={data.documento}/>
-        
-                </li>
-                <li style={{margin:"5px",minWidth:"8%"}}>
-           
-                    <TextField
-                        id={"numViajeCliente"}
-                        margin={"dense"}
-                        label={"Núm. Viaje cliente"}
-                        InputProps={{readOnly: true}}
-                        disabled
-                        variant={"outlined"}
-                        value={data.numViajeCliente}/>
-         
-                </li>
-                <li style={{margin:"5px",minWidth:"16%"}}>
-       
-                    <TextField
-                        id={"fecha"}
-                        margin={"dense"}
-                        label={"Fecha"}
-                        InputProps={{readOnly: true}}
-                        disabled
-                        variant={"outlined"}
-                        value={data.fecha}/>
-            
-                </li>
-                <li style={{margin:"5px",minWidth:"16%"}}>
-               
-                    <TextField
-                        id={"hora"}
-                        margin={"dense"}
-                        label={"Hora"}
-                        InputProps={{readOnly: true}}
-                        disabled
-                        variant={"outlined"}
-                        value={data.hora}/>
-          
-                </li>
+                        <TextField
+                            id={"sucursal"}
+                            margin={"dense"}
+                            disabled
+                            label={"Sucursal"}
+                            variant={"outlined"}
+                            InputProps={{readOnly: true}}
+                            value={data.sucursal}
+                        />
+                    </li>
+                    <li style={{margin:"5px",minWidth:"10%"}}>
+                        <TextField
+                            id={"viaje"}
+                            margin={"dense"}
+                            label={"Viaje"}
+                            InputProps={{readOnly: true}}
+                            disabled
+                            variant={"outlined"}
+                            value={data.viaje}/>
+                    </li>
+                    <li style={{margin:"5px",minWidth:"16%"}}>
+                        <TextField
+                            id={"documento"}
+                            margin={"dense"}
+                            label={"Documento"}
+                            InputProps={{readOnly: true}}
+                            disabled
+                            variant={"outlined"}
+                            value={data.documento}/>
+                    </li>
+                    <li style={{margin:"5px",minWidth:"8%"}}>
+                        <TextField
+                            id={"numViajeCliente"}
+                            margin={"dense"}
+                            label={"Núm. Viaje cliente"}
+                            InputProps={{readOnly: true}}
+                            disabled
+                            variant={"outlined"}
+                            value={data.numViajeCliente}/>
+                    </li>
+                    <li style={{margin:"5px",minWidth:"16%"}}>
+                        <TextField
+                            id={"fecha"}
+                            margin={"dense"}
+                            label={"Fecha"}
+                            InputProps={{readOnly: true}}
+                            disabled
+                            variant={"outlined"}
+                            value={data.fecha}/>
+                    </li>
+                    <li style={{margin:"5px",minWidth:"16%"}}>
+                        <TextField
+                            id={"hora"}
+                            margin={"dense"}
+                            label={"Hora"}
+                            InputProps={{readOnly: true}}
+                            disabled
+                            variant={"outlined"}
+                            value={data.hora}/>
+                    </li>
                 </ul>
+
                 <Grid item xs={5}>
                     <TextField
                         id={"origen"}

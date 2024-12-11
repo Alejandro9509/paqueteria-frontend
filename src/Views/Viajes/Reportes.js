@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {ButtonBase, Grid, Paper, Typography} from "@mui/material";
-import {obtenerFormatosImpresion, obtenerFormatosImpresionProceso} from "../../Util/Contexts/FormatosImpresionContext";
+import {obtenerFormatosImpresionProceso} from "../../Util/Contexts/FormatosImpresionContext";
 import FiltroReporteViajes from "./FiltroReporteViajes";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 
@@ -16,7 +15,6 @@ class ReportesViajes extends Component {
         }
         this.abrirPantalla = this.abrirPantalla.bind(this)
     }
-
 
     componentDidMount() {
         obtenerFormatosImpresionProceso(42).then(({data}) => {
@@ -62,11 +60,11 @@ class ReportesViajes extends Component {
                             }
                         </Grid>
                     }
-                    <FiltroReporteViajes origenesDestinos={this.state.origenesdestinos} visible={ this.state.pantalla === 2} select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
-
-
-
-
+                    <FiltroReporteViajes
+                        origenesDestinos={this.state.origenesdestinos}
+                        visible={ this.state.pantalla === 2}
+                        select={this.state.reporteSeleccionado}
+                        abrirPantalla={this.abrirPantalla}/>
                 </div>
             </div>
         );

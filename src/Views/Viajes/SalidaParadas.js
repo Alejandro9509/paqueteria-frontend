@@ -1,9 +1,8 @@
 import React from 'react';
 import {Grid, MenuItem, TextField} from "@mui/material";
 import { styled } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import InputAdornment from "@mui/material/InputAdornment";
 import {getCurrentDate, getCurrentTime} from "../../Util/Util";
+
 
 const PREFIX = 'SalidaParadas';
 
@@ -224,8 +223,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={4}/>
-
-
                 <Grid item xs={5}>
                     <TextField
                         id={"remolqueUno"}
@@ -237,7 +234,6 @@ export default function SalidaParadas(props){
                         value={data.remolqueUno}
                     />
                 </Grid>
-
                 <Grid item xs={2}>
                     <TextField
                         id="estatusRemolqueUno"
@@ -253,7 +249,6 @@ export default function SalidaParadas(props){
                     </TextField>
                 </Grid>
                 <Grid item xs={1}/>
-
                 <Grid item xs={5}>
                     <TextField
                         id={"remolqueDos"}
@@ -280,7 +275,6 @@ export default function SalidaParadas(props){
                     </TextField>
                 </Grid>
                 <Grid item xs={1}/>
-
                 <Grid item xs={5}>
                     <TextField
                         id={"dolly"}
@@ -293,7 +287,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={7}/>
-
                 <Grid item xs={5}>
                     <TextField
                         id={"origen"}
@@ -306,7 +299,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={7}/>
-
                 <Grid item xs={5}>
                     <TextField
                         id={"destino"}
@@ -319,7 +311,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={7}/>
-
                 <Grid item xs={5}>
                     <TextField
                         id={"operador"}
@@ -332,7 +323,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={7}/>
-
                 <Grid item xs={5}>
                     <TextField
                         id={"unidad"}
@@ -356,7 +346,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={4}/>
-
                 <Grid item xs={3}>
                     <TextField
                         id={"fechaSalida"}
@@ -383,7 +372,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={7}/>
-
                 <Grid item xs={4}>
                     <TextField
                         id={"estatus"}
@@ -410,7 +398,6 @@ export default function SalidaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={3}/>
-
             </Grid>
             {props.children}
         </Root>
