@@ -1182,6 +1182,15 @@ export default function CrearTarifaRangos(props) {
                                     pageSize={20}
                                     getRowId={(row) => row.idViaje}
                                     autoHeight={true}
+                                    getRowClassName={(params) => {
+                                        return (params.row.idTipoMedida === null || params.row.idOrigen === null ||
+                                            params.row.idDestino === null) ? "highlight" : "";
+                                    }}
+                                    sx={{
+                                        ".highlight": {
+                                            bgcolor: "#87de9e"
+                                        },
+                                    }}
                                     onRowSelectionModelChange={(newModel)=>{
                                         if(newModel.length<1)
                                             return;
