@@ -111,41 +111,57 @@ export default function CrearTarifaRangos(props) {
     const [viajesNuevos, setViajesNuevos] = useState([]);
     const [showNuevos, setShowNuevos] = useState(true);
     const [openForaneo, setOpenForaneo] = useState(false);
+    const [viajeForaneo, setViajeForaneo] = useState({});
 
     const columnasForaneos = React.useMemo(() => [
         {
             headerName: "Origen",
             field: "idOrigen",
-            width: 100,
+            width: 150,
+            flex: 1,
             valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
         },
         {
             headerName: "Destino",
             field: "idDestino",
-            width: 100,
+            width: 150,
+            flex: 1,
             valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
         },
         {
             headerName: "Tipo Medida",
             field: "idTipoMedida",
             width: 100,
-            valueFormatter: ({ value }) => value===1 ? "Peso" : "Pieza",
+            flex: 1,
+            valueFormatter: ({ value }) => {
+                switch (value){
+                    case 1: return "Peso";
+                    case 2: return "Pieza";
+                    case 3: return "Porcentaje";
+                    default: return "";
+                }
+            }
         },
         {
             headerName: "Flete mínimo",
             field: "fleteMinimo",
             width: 100,
+            flex: 1,
         },
         {
             headerName: "Acciones",
-            sortable: false, filterable: false, width: 100,
+            sortable: false,
+            filterable: false,
+            width: 100,
             field: "",
+            align: 'center',
+            flex: 1,
             renderCell: (row) => {
                 return (
                     <div>
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
                             <a onClick={() => {handleShowModificar()}} className="btn btn-default btn-xs">
-                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
+                                <i className="fa fa-external-link" style={{color: "#F9A03E"}}/>
                             </a>
                         </Tooltip>
                         {/*<Tooltip title="Consultar" disabled={!validarDerecho(9101426)}>*/}
@@ -383,7 +399,7 @@ export default function CrearTarifaRangos(props) {
     }
 
     const handleShowModificar = () => {
-        console.log(state.idForaneo)
+        setOpenForaneo(true)
     }
 
     /**Valida que el concepto recibido sea uno de los configurados(en parametros de configuracion) como recoleccion o entrega*/
@@ -767,6 +783,36 @@ export default function CrearTarifaRangos(props) {
                 onClose={handleCloseDialogTarifas}
                 rows={props.tarifasListado}
             />
+            <Dialog open={openForaneo} onClose={() => setOpenForaneo(false)} fullWidth maxWidth="lg">
+                <DialogTitle>
+                    Viaje Milla Intermedia
+                </DialogTitle>
+                <DialogContent>
+                    <ViajeForaneo
+                        key={state.idForaneo}
+                        viaje={viajeForaneo}
+                        origenesDestinosListado={origenesDestinosListado}
+                        handleChangeViajeForaneo={handleChangeViajeForaneo}
+                        tiposCalculoListado={tiposCalculoListado}
+                        unidadesMedidaListado={unidadesMedidaListado}
+                        handleDeleteViajeForaneo={handleDeleteViajeForaneo}
+                        zonasListado={zonasListado}
+                        onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                        productosListado={productosListado}
+                        disabled={props.disabled}
+                        showDialogZonas={showDialogZonas}
+                        handleShowDialogZonas={handleShowDialogZonas}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenForaneo(false)}>
+                        Cerrar ventana
+                    </Button>
+                    {/*<Button type={"submit"} onClick={() => props.close()} color={"primary"}>*/}
+                    {/*    Asignar*/}
+                    {/*</Button>*/}
+                </DialogActions>
+            </Dialog>
             <div>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
@@ -1125,7 +1171,7 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                     </Grid>
                     <div className='MM hide'>
-                        {/*<div align={"center"} style={{textAlign: "center"}}>
+                        <div align={"center"} style={{marginLeft: "15%", width:"60%"}} >
                             {
                                 viajesForaneosListado &&
                                 <DataGrid
@@ -1135,15 +1181,17 @@ export default function CrearTarifaRangos(props) {
                                     pagination
                                     pageSize={20}
                                     getRowId={(row) => row.idViaje}
+                                    autoHeight={true}
                                     onRowSelectionModelChange={(newModel)=>{
                                         if(newModel.length<1)
                                             return;
                                         setState({...state, idForaneo: newModel[0]});
+                                        setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === newModel[0]));
                                     }}
                                 />
                             }
-                        </div>*/}
-                    {
+                        </div>
+                    {/*
                         (
                             filtroMM.activo ?
                                 viajesForaneosListado.filter(v => (
@@ -1171,7 +1219,7 @@ export default function CrearTarifaRangos(props) {
                                 showDialogZonas={showDialogZonas}
                                 handleShowDialogZonas={handleShowDialogZonas}
                             />
-                        )
+                        )*/
                     }
                     </div>
                 </Paper>
