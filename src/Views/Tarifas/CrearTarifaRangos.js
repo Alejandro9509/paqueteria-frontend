@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
     Button,
+    createFilterOptions,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle, Fab,
-    FormControl,
+    FormControl, FormControlLabel,
     Grid,
     InputLabel,
     List,
@@ -16,7 +17,7 @@ import {
     ListItemText,
     MenuItem,
     Paper,
-    Select,
+    Select, Switch,
     TextField,
 } from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
@@ -63,6 +64,8 @@ import {Clear, ExpandLess} from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from '@mui/material/Autocomplete';
 import Tooltip from "@mui/material/Tooltip";
+import {fil} from "date-fns/locale";
+import {StyledEngineProvider, ThemeProvider} from "@mui/material/styles";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -72,6 +75,11 @@ function showSuccess(mensaje) {
         timeout: "5000"
     }).show()
 }
+
+const OPTIONS_LIMIT = 20;
+const filterOptions = createFilterOptions({
+    limit: OPTIONS_LIMIT
+});
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -97,51 +105,35 @@ export default function CrearTarifaRangos(props) {
     const [filtroMM,setFiltroMM]=useState({activo:false,origen:-1,destino:-1,producto:null})
     const [showMM,setShowMM]=useState(false)
     const [showManiobras,setShowManiobras]=useState(false)
+    const [viajesNuevos, setViajesNuevos] = useState([]);
+    const [showNuevos, setShowNuevos] = useState(true);
 
     const getAllSucursales = () => {
-        if (sucursalesListado.length > 0){
-            return
-        }
         obtenerSucursales().then(respuesta => {
             setSucursalesListado(respuesta.data)
         })
     }
     const getAllConceptos = () => {
-        if (conceptosListado.length > 0){
-            return
-        }
         obtenerConceptosFacturacion().then(respuesta => {
             setConceptosListado(respuesta.data)
         })
     }
     const getAllTiposCalculo = () => {
-        if (tiposCalculoListado.length > 0){
-            return
-        }
         obtenerTiposCalculo().then(respuesta => {
             setTiposCalculoListado(respuesta.data)
         })
     }
     const getAllUnidadesMedida = () => {
-        if (unidadesMedidaListado.length > 0){
-            return
-        }
         obtenerUnidadesMedida().then(respuesta => {
             setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38 || i.IdUnidadMedida === 55))
         })
     }
     const getOrigenesDestinos = () => {
-        if (origenesDestinosListado.length > 0){
-            return
-        }
         obtenerCiudades().then(respuesta => {
             setOrigenesDestinosListado(respuesta.data)
         })
     }
     const getAllProductos = () => {
-        if (productosListado.length > 0){
-            return
-        }
         obtenerProductos().then(respuestas => {
             let productosList = respuestas.data.map(p => ({
                 m_nIdProducto: p.m_nIdProducto,
@@ -250,32 +242,41 @@ export default function CrearTarifaRangos(props) {
     const handleOnAgregarViajeLocal = (e) => {
         e.preventDefault()
 
+        const idGenerated = getRandomId();
         var viajeLocal = [...viajesLocalesListado]
-        console.log(viajeLocal)
+        var viajes = [...viajesNuevos]
+
         viajeLocal.push({
-            idViaje: getRandomId(),
+            idViaje: idGenerated,
             idSucursal: null,
             zonas: [],
             idConcepto: null,
             rangos: [],
             productos: []
         })
-        setViajesLocalesListado(viajeLocal)
+        viajes.push(idGenerated);
+        setViajesNuevos(viajes);
+        setViajesLocalesListado(viajeLocal);
     }
 
     const handleDeleteViajeLocal = (viaje) => {
         setViajesLocalesListado(viajesLocalesListado.filter(i => i.idViaje !== viaje.idViaje))
+        setViajesNuevos(viajesNuevos.filter(i => i !== viaje.idViaje))
     }
 
     const handleOnAgregarViajeForaneo = () => {
+        const idGenerated = getRandomId();
         var viajeForaneo = [...viajesForaneosListado]
+        var viajes = [...viajesNuevos]
         viajeForaneo.push({
-            idViaje: getRandomId(),
+            idViaje: idGenerated,
             idOrigen: null,
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
         })
+        viajes.push(idGenerated);
+        setViajesNuevos(viajes);
         setViajesForaneosListado(viajeForaneo)
     }
 
@@ -736,6 +737,24 @@ export default function CrearTarifaRangos(props) {
                             <Button size={"large"} style={{fontSize:".9em"}} fullWidth onClick={handleShowDialogTarifas} variant={"outlined"} disabled={props.disabled} color={"primary"}
                             >Importar tarifa existente</Button>
                         </Grid>
+                        <Grid item xs>
+                            <label className="input select">
+                                <StyledEngineProvider injectFirst>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={showNuevos}
+                                                onChange={(e) => setShowNuevos(e.target.checked)}
+                                                disabled={props.disabled}
+                                                name="mostrarNuevos"
+                                                color="primary"
+                                            />
+                                        }
+                                        label="Mostrar siempre viajes recién creados"
+                                    />
+                                </StyledEngineProvider>
+                            </label>
+                        </Grid>
 
                     </Grid>
                 </Paper>
@@ -763,11 +782,21 @@ export default function CrearTarifaRangos(props) {
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="sucLabel">Sucursal</InputLabel>
-                            <Select value={filtroPMUM.sucursal} onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})} labelId='sucLabel' label=''>
+                            <Select value={filtroPMUM.sucursal}
+                                    onChange={(e)=>{
+                                        //setSucursalesListado(sucursalesListado.filter(i => i.m_nIdSucursal === e.target.value))
+                                        setFiltroPMUM({...filtroPMUM, sucursal: e.target.value})
+                                    }}
+                                    //onClick={(e) => getAllSucursales()}
+                                    labelId='sucLabel'
+                                    label=''>
                                 <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
-                                {sucursalesListado.map(suc=>{
-                                    return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
-                                })}
+                                {
+                                    sucursalesListado &&
+                                    sucursalesListado.map(suc=>{
+                                        return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
+                                    })
+                                }
                             </Select>
                             </FormControl>
                             </Grid>
@@ -775,11 +804,21 @@ export default function CrearTarifaRangos(props) {
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
                                     id="conceptoLabel">Concepto</InputLabel>
-                                <Select value={filtroPMUM.concepto} onChange={(e)=>setFiltroPMUM({...filtroPMUM,concepto: e.target.value})} labelId='conceptoLabel' label=''>
+                                <Select value={filtroPMUM.concepto}
+                                        onChange={(e)=>{
+                                            //setConceptosListado(conceptosListado.filter(i => i.m_nIdConceptosFacturacion === e.target.value));
+                                            setFiltroPMUM({...filtroPMUM,concepto: e.target.value})
+                                        }}
+                                        labelId='conceptoLabel'
+                                        //onClick={(e) => {getAllConceptos();}}
+                                        label=''>
                                     <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
-                                    {filtrarConceptosViajeLocal.map(item=>{
-                                        return <MenuItem value={item.m_nIdConceptosFacturacion}>{item.m_sConcepto}</MenuItem>
-                                    })}
+                                    {
+                                        conceptosListado &&
+                                        filtrarConceptosViajeLocal.map(item=>{
+                                            return <MenuItem value={item.m_nIdConceptosFacturacion}>{item.m_sConcepto}</MenuItem>
+                                        })
+                                    }
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -788,10 +827,15 @@ export default function CrearTarifaRangos(props) {
                                 freeSolo
                                 size="small"
                                 value={filtroPMUM.producto}
-                                onChange={(e,newValue)=>setFiltroPMUM({...filtroPMUM,producto: newValue})}
+                                onChange={(e,newValue)=>{
+                                    /*getAllProductos();
+                                    setProductosListado(productosListado.filter(i => i.m_nIdConceptosFacturacion === e.target.value));*/
+                                    setFiltroPMUM({...filtroPMUM,producto: newValue})
+                                }}
                                 id="PMUM_Productos"
                                 forcePopupIcon={false}
                                 options={productosListado}
+                                filterOptions={filterOptions}
                                 getOptionLabel={(option) =>
                                     option.numeroDescripcion
                                 }
@@ -815,7 +859,9 @@ export default function CrearTarifaRangos(props) {
                             />
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:true})} size="large">
+                            <IconButton onClick={()=> {
+                                setFiltroPMUM({...filtroPMUM, activo: true})
+                            }} size="large">
                                 <SearchIcon size="small" fontSize='large'/>
                             </IconButton>
                             /
@@ -834,7 +880,15 @@ export default function CrearTarifaRangos(props) {
                     </Grid>
                     <div className='PMUM hide'>
                     {
-                        (filtroPMUM.activo?viajesLocalesListado.filter(v=>(filtroPMUM.sucursal!=-1?v.idSucursal==filtroPMUM.sucursal:true) && (filtroPMUM.concepto!=-1?v.idConcepto==filtroPMUM.concepto:true) && v.productos.filter(prod=>(filtroPMUM.producto!=null?prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto:true)).length>0) :viajesLocalesListado).map((viaje) =>
+                        (filtroPMUM.activo ?
+                            viajesLocalesListado.filter(v =>
+                                (
+                                (filtroPMUM.sucursal!=-1 ? v.idSucursal==filtroPMUM.sucursal : true)
+                                && (filtroPMUM.concepto!=-1 ? v.idConcepto==filtroPMUM.concepto : true)
+                                && v.productos.filter(prod=>(filtroPMUM.producto!=null ? prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto : true)).length > 0
+                                )
+                                || (showNuevos && viajesNuevos.includes(v.idViaje)) ) //No vamos a filtrar los viajes nuevos
+                            : viajesLocalesListado).map((viaje) =>
                             <ViajeLocal
                                 key={viaje.idViaje}
                                 viaje={viaje}
@@ -977,7 +1031,18 @@ export default function CrearTarifaRangos(props) {
                     </Grid>
                     <div className='MM hide'>
                     {
-                        (filtroMM.activo? viajesForaneosListado.filter(v=>(filtroMM.origen!=-1?v.idOrigen==filtroMM.origen:true) && (filtroMM.destino!=-1?v.idDestino==filtroMM.destino:true) && (filtroMM.producto!=null? (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto  ).length>0 ).length>0 ) :true) ) :viajesForaneosListado).map((viaje) =>
+                        (
+                            filtroMM.activo ?
+                                viajesForaneosListado.filter(v => (
+                                (filtroMM.origen!=-1 ? v.idOrigen==filtroMM.origen : true) &&
+                                (filtroMM.destino!=-1 ? v.idDestino==filtroMM.destino : true) &&
+                                (filtroMM.producto!=null ?
+                                    (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto ).length > 0).length > 0)
+                                    :
+                                    true
+                                )
+                                ) || (showNuevos && viajesNuevos.includes(v.idViaje)) )
+                            : viajesForaneosListado).map((viaje) =>
                             <ViajeForaneo
                                 key={viaje.idViaje}
                                 viaje={viaje}
