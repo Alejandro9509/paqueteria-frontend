@@ -36,7 +36,7 @@ import {dataGridLocaleText} from "../../Constants";
 import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
-import {getCurrentDate, getRandomId, getUniqueListBy} from "../../Util/Util";
+import {getCurrentDate, getRandomId, getUniqueListBy, validarDerecho} from "../../Util/Util";
 import DialogCheckbox from "./DialogCheckbox";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
 import IconButton from "@mui/material/IconButton";
@@ -66,6 +66,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Tooltip from "@mui/material/Tooltip";
 import {fil} from "date-fns/locale";
 import {StyledEngineProvider, ThemeProvider} from "@mui/material/styles";
+import {DataGrid} from "@mui/x-data-grid";
+import {confirmAlert} from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -88,7 +90,8 @@ export default function CrearTarifaRangos(props) {
         cuotaMensual: props.selection?.cuotaMensual || null,
         cliente: props.selection?.cliente || null,
         showDialogClientes: false,
-        showDialogTarifas: false
+        showDialogTarifas: false,
+        idForaneo: 0
     })
     const [viajesLocalesListado, setViajesLocalesListado] = useState(props.selection?.viajesLocales || [])
     const [maniobrasTarifa,setManiobrasTarifa] = useState(props.selection?.maniobras || [])
@@ -107,6 +110,78 @@ export default function CrearTarifaRangos(props) {
     const [showManiobras,setShowManiobras]=useState(false)
     const [viajesNuevos, setViajesNuevos] = useState([]);
     const [showNuevos, setShowNuevos] = useState(true);
+    const [openForaneo, setOpenForaneo] = useState(false);
+
+    const columnasForaneos = React.useMemo(() => [
+        {
+            headerName: "Origen",
+            field: "idOrigen",
+            width: 100,
+            valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
+        },
+        {
+            headerName: "Destino",
+            field: "idDestino",
+            width: 100,
+            valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
+        },
+        {
+            headerName: "Tipo Medida",
+            field: "idTipoMedida",
+            width: 100,
+            valueFormatter: ({ value }) => value===1 ? "Peso" : "Pieza",
+        },
+        {
+            headerName: "Flete mínimo",
+            field: "fleteMinimo",
+            width: 100,
+        },
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false, width: 100,
+            field: "",
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
+                            <a onClick={() => {handleShowModificar()}} className="btn btn-default btn-xs">
+                                <i className="fa fa-pencil-square-o" style={{color: "#F9A03E"}}/>
+                            </a>
+                        </Tooltip>
+                        {/*<Tooltip title="Consultar" disabled={!validarDerecho(9101426)}>*/}
+                        {/*    <a*/}
+                        {/*        className="btn btn-default btn-xs"*/}
+                        {/*        onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}*/}
+                        {/*    >*/}
+                        {/*        <i className="fa fa-eye" style={{color: "#F9A03E"}}/>*/}
+                        {/*    </a>*/}
+                        {/*</Tooltip>*/}
+                        {/*<Tooltip title="Eliminar" disabled={!validarDerecho(9101424)}>*/}
+                        {/*    <a*/}
+                        {/*        href="#"*/}
+                        {/*        className="btn btn-default btn-xs"*/}
+                        {/*        onClick={() => confirmAlert({*/}
+                        {/*            title: 'Confirmar Eliminar',*/}
+                        {/*            message: '¿Está seguro de eliminar Embarque?',*/}
+                        {/*            buttons: [*/}
+                        {/*                {*/}
+                        {/*                    label: 'Si',*/}
+                        {/*                    onClick: () => handleEliminar(row.row)*/}
+                        {/*                },*/}
+                        {/*                {*/}
+                        {/*                    label: 'No',*/}
+                        {/*                }*/}
+                        {/*            ]*/}
+                        {/*        })}*/}
+                        {/*    >*/}
+                        {/*        <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>*/}
+                        {/*    </a>*/}
+                        {/*</Tooltip>*/}
+                    </div>
+                );
+            },
+        }
+    ]);
 
     const getAllSucursales = () => {
         obtenerSucursales().then(respuesta => {
@@ -305,6 +380,10 @@ export default function CrearTarifaRangos(props) {
             setZonasListado(respuesta.data)
             setShowDialogZonas(true)
         })
+    }
+
+    const handleShowModificar = () => {
+        console.log(state.idForaneo)
     }
 
     /**Valida que el concepto recibido sea uno de los configurados(en parametros de configuracion) como recoleccion o entrega*/
@@ -652,6 +731,22 @@ export default function CrearTarifaRangos(props) {
 
         return tarifa
 
+    }
+
+    const getRows = () => {
+        if(filtroMM.activo){
+            return viajesForaneosListado.filter(v => (
+                        (filtroMM.origen!=-1 ? v.idOrigen==filtroMM.origen : true) &&
+                        (filtroMM.destino!=-1 ? v.idDestino==filtroMM.destino : true) &&
+                        (filtroMM.producto!=null ?
+                            (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto ).length > 0).length > 0)
+                            :
+                            true
+                        )
+                    ) || (showNuevos && viajesNuevos.includes(v.idViaje)) )
+        }else{
+            return viajesForaneosListado;
+        }
     }
 
     return (
@@ -1030,6 +1125,24 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                     </Grid>
                     <div className='MM hide'>
+                        {/*<div align={"center"} style={{textAlign: "center"}}>
+                            {
+                                viajesForaneosListado &&
+                                <DataGrid
+                                    columns={columnasForaneos}
+                                    rows={getRows()}
+                                    locateText={dataGridLocaleText}
+                                    pagination
+                                    pageSize={20}
+                                    getRowId={(row) => row.idViaje}
+                                    onRowSelectionModelChange={(newModel)=>{
+                                        if(newModel.length<1)
+                                            return;
+                                        setState({...state, idForaneo: newModel[0]});
+                                    }}
+                                />
+                            }
+                        </div>*/}
                     {
                         (
                             filtroMM.activo ?
