@@ -159,40 +159,32 @@ export default function CrearTarifaRangos(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
+                        <Tooltip title={props.disabled ? "Consultar" : "Modificar"}>
                             <a onClick={() => {handleShowModificar()}} className="btn btn-default btn-xs">
                                 <i className="fa fa-external-link" style={{color: "#F9A03E"}}/>
                             </a>
                         </Tooltip>
-                        {/*<Tooltip title="Consultar" disabled={!validarDerecho(9101426)}>*/}
-                        {/*    <a*/}
-                        {/*        className="btn btn-default btn-xs"*/}
-                        {/*        onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}*/}
-                        {/*    >*/}
-                        {/*        <i className="fa fa-eye" style={{color: "#F9A03E"}}/>*/}
-                        {/*    </a>*/}
-                        {/*</Tooltip>*/}
-                        {/*<Tooltip title="Eliminar" disabled={!validarDerecho(9101424)}>*/}
-                        {/*    <a*/}
-                        {/*        href="#"*/}
-                        {/*        className="btn btn-default btn-xs"*/}
-                        {/*        onClick={() => confirmAlert({*/}
-                        {/*            title: 'Confirmar Eliminar',*/}
-                        {/*            message: '¿Está seguro de eliminar Embarque?',*/}
-                        {/*            buttons: [*/}
-                        {/*                {*/}
-                        {/*                    label: 'Si',*/}
-                        {/*                    onClick: () => handleEliminar(row.row)*/}
-                        {/*                },*/}
-                        {/*                {*/}
-                        {/*                    label: 'No',*/}
-                        {/*                }*/}
-                        {/*            ]*/}
-                        {/*        })}*/}
-                        {/*    >*/}
-                        {/*        <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>*/}
-                        {/*    </a>*/}
-                        {/*</Tooltip>*/}
+                        <Tooltip title="Eliminar" disabled={props.disabled}>
+                            <a
+                                href="#"
+                                className="btn btn-default btn-xs"
+                                onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: '¿Está seguro de eliminar el registro?',
+                                    buttons: [
+                                        {
+                                            label: 'Si',
+                                            onClick: () => handleDeleteViajeForaneo(viajeForaneo)
+                                        },
+                                        {
+                                            label: 'No',
+                                        }
+                                    ]
+                                })}
+                            >
+                                <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
+                            </a>
+                        </Tooltip>
                     </div>
                 );
             },
@@ -313,6 +305,11 @@ export default function CrearTarifaRangos(props) {
         setManiobrasTarifa(maniobras)
     }
 
+    /**
+     * Debido a que la ventana de visualización de viaje foráneo se encuentra de forma exterior se guardan los datos
+     * del viaje modificado en la ventana en este componente en paralelo, esto para que cuando este componente quiera
+     * guardar los datos modificados ya se tengan estos viajes en el state 'viajeForaneo'
+     * */
     const handleChangeViajeForaneo = (viaje) => {
         let newViajes = []
         viajesForaneosListado.forEach(i => {
@@ -328,6 +325,24 @@ export default function CrearTarifaRangos(props) {
             }
         })
         setViajesForaneosListado(newViajes)
+    }
+
+    const submmitViajeForaneo = () => {
+        let newViajes = []
+        viajesForaneosListado.forEach(i => {
+            newViajes.push(i)
+        })
+        newViajes.forEach(i => {
+            if (i.idViaje === viajeForaneo.idViaje ){
+                i.idOrigen = viajeForaneo.idOrigen
+                i.idTipoMedida = viajeForaneo.idTipoMedida
+                i.fleteMinimo = viajeForaneo.fleteMinimo
+                i.idDestino = viajeForaneo.idDestino
+                i.grupos = viajeForaneo.grupos
+            }
+        })
+        setViajesForaneosListado(newViajes);
+        setOpenForaneo(false);
     }
 
     const handleOnAgregarViajeLocal = (e) => {
@@ -378,7 +393,7 @@ export default function CrearTarifaRangos(props) {
             idDestino: null,
             grupos: [],
         });
-        setOpenForaneo(true);
+        //setOpenForaneo(true);
     }
 
     const handleDeleteViajeForaneo = (viaje) => {
@@ -815,11 +830,15 @@ export default function CrearTarifaRangos(props) {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenForaneo(false)} style={{fontSize: '1em'}}>
-                        Cerrar ventana
+                    <Button onClick={() => {
+                        setOpenForaneo(false);
+                        setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === state.idForaneo));
+                    }} style={{fontSize: '1em'}}>
+                        Cerrar
                     </Button>
-                    {/*<Button type={"submit"} onClick={() => props.close()} color={"primary"}>*/}
-                    {/*    Asignar*/}
+                    {/*<Button onClick={() => submmitViajeForaneo()}*/}
+                    {/*        color={"primary"} style={{fontSize: '1em'}}>*/}
+                    {/*    Guardar*/}
                     {/*</Button>*/}
                 </DialogActions>
             </Dialog>

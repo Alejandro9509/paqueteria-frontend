@@ -143,10 +143,30 @@ export default function ViajeForaneo(props) {
     useEffect(value => {
         props.handleChangeViajeForaneo(state)
     }, [state])
+
+    // const handleChange = (event) => {
+    //     setState(data => {
+    //         return {
+    //             ...state,
+    //             [event.target.name]: event.target.value,
+    //         }
+    //     });
+    // }
+
     useEffect(value => {
         obtenerParametrosConfiguracion().then(({data}) => {
             setMostrarPorcentaje(data.CobroPorcentual)
         })
+        if(props.viaje.idViaje !== 0){
+            setState({
+                idViaje: props.viaje.idViaje,
+                idOrigen: props.viaje.idOrigen,
+                idTipoMedida: props.viaje.idTipoMedida,
+                idDestino: props.viaje.idDestino,
+                fleteMinimo: props.viaje.fleteMinimo,
+                grupos: props.viaje.grupos
+            })
+        }
     }, [])
 
     const filtrarTiposCalculoViajeForaneo =
@@ -194,8 +214,9 @@ export default function ViajeForaneo(props) {
                             id="idOrigen"
                             select
                             label="Origen"
-                            value={props.viaje.idOrigen}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.idOrigen}
+                            InputLabelProps={{shrink: true}}
+                            onChange={handleChangeViajeForaneo}//{(event) => (handleChange(event))}
                             name="idOrigen"
                             variant="outlined"
                             size="small"
@@ -214,8 +235,9 @@ export default function ViajeForaneo(props) {
                             id="idTipoMedida"
                             select
                             label="Tipo medida"
-                            value={props.viaje.idTipoMedida}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.idTipoMedida}
+                            InputLabelProps={{shrink: true}}
+                            onChange={handleChangeViajeForaneo}//{(event) => (handleChange(event))}
                             name="idTipoMedida"
                             variant="outlined"
                             size="small"
@@ -235,8 +257,9 @@ export default function ViajeForaneo(props) {
                             id="idDestino"
                             select
                             label="Destino"
-                            value={props.viaje.idDestino}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.idDestino}
+                            InputLabelProps={{shrink: true}}
+                            onChange={handleChangeViajeForaneo}//{(event) => (handleChange(event))}
                             name="idDestino"
                             variant="outlined"
                             size="small"
@@ -251,25 +274,13 @@ export default function ViajeForaneo(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
-                            <AddIcon fontSize={'large'} />
-                            &nbsp;&nbsp;Agregar grupo
-                        </Button>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}
-                                disabled={props.disabled} style={{backgroundColor: '#FFD7D7'}} variant={"contained"}
-                                startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
-                            Eliminar viaje
-                        </Button>
-                    </Grid>
-                    <Grid item xs={2}>
                         <TextField
                             id="fleteMinimo"
                             inputMode={"decimal"}
                             label="Flete Mínimo"
-                            value={props.viaje.fleteMinimo}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.fleteMinimo}
+                            InputLabelProps={{shrink: true}}
+                            onChange={handleChangeViajeForaneo}//{(event) => (handleChange(event))}
                             name="fleteMinimo"
                             variant="outlined"
                             size="small"
@@ -277,6 +288,19 @@ export default function ViajeForaneo(props) {
                             disabled={props.disabled}
                         />
                     </Grid>
+                    <Grid item xs={2}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
+                            <AddIcon fontSize={'large'} />
+                            &nbsp;&nbsp;Agregar grupo
+                        </Button>
+                    </Grid>
+                    {/*<Grid item xs={2}>*/}
+                    {/*    <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}*/}
+                    {/*            disabled={props.disabled} style={{backgroundColor: '#FFD7D7'}} variant={"contained"}*/}
+                    {/*            startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>*/}
+                    {/*        Eliminar viaje*/}
+                    {/*    </Button>*/}
+                    {/*</Grid>*/}
                     <Grid item xs={3}>
                         <Typography variant={"h5"} color={"error"}>*La validación de flete mínimo no se aplicará si se deja en 0.</Typography>
                     </Grid>

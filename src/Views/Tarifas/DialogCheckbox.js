@@ -49,7 +49,8 @@ export default function DialogCheckbox(props) {
                         getRowId={(row) => row[props.rowId]}
                         checkboxSelection
                         onRowSelectionModelChange={(newModel)=>{
-                            setSelection(newModel)
+                            if(!props.disabled)
+                                setSelection(newModel)
                         }}
                         rowSelectionModel={selection}
                         disableSelectionOnClick={props.disabled}
