@@ -393,7 +393,7 @@ export default function CrearTarifaRangos(props) {
             idDestino: null,
             grupos: [],
         });
-        //setOpenForaneo(true);
+        setOpenForaneo(true);
     }
 
     const handleDeleteViajeForaneo = (viaje) => {
