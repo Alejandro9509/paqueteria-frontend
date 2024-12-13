@@ -178,7 +178,7 @@ export default function ViajeForaneo(props) {
 
     return(
         <div>
-            <Paper variant={"outlined"} style={{padding: '10px', marginTop: '10px'}}>
+            <Paper variant={"outlined"} style={{padding: '5px', marginTop: '10px'}}>
                 {
                     dialogGrupo.showDialog &&
                     <DialogTextView
@@ -281,7 +281,7 @@ export default function ViajeForaneo(props) {
                         <Typography variant={"h5"} color={"error"}>*La validación de flete mínimo no se aplicará si se deja en 0.</Typography>
                     </Grid>
                 </Grid>
-                <div style={{height: '200px', overflow: 'scroll'}}>
+                <div style={{height: '200px', overflow: 'scroll', minHeight: '500px'}}>
                     {
                         state.grupos.map((grupo) =>
                             <GrupoViajeForaneo

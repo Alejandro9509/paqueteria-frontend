@@ -369,6 +369,16 @@ export default function CrearTarifaRangos(props) {
         viajes.push(idGenerated);
         setViajesNuevos(viajes);
         setViajesForaneosListado(viajeForaneo)
+
+        setState({...state, idForaneo: idGenerated});
+        setViajeForaneo({
+            idViaje: idGenerated,
+            idOrigen: null,
+            idTipoMedida: null,
+            idDestino: null,
+            grupos: [],
+        });
+        setOpenForaneo(true);
     }
 
     const handleDeleteViajeForaneo = (viaje) => {
@@ -783,11 +793,11 @@ export default function CrearTarifaRangos(props) {
                 onClose={handleCloseDialogTarifas}
                 rows={props.tarifasListado}
             />
-            <Dialog open={openForaneo} onClose={() => setOpenForaneo(false)} fullWidth maxWidth="lg">
+            <Dialog open={openForaneo} onClose={() => setOpenForaneo(false)} fullWidth maxWidth="100%">
                 <DialogTitle>
                     Viaje Milla Intermedia
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent style={{minHeight: '500px'}}>
                     <ViajeForaneo
                         key={state.idForaneo}
                         viaje={viajeForaneo}
@@ -805,7 +815,7 @@ export default function CrearTarifaRangos(props) {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenForaneo(false)}>
+                    <Button onClick={() => setOpenForaneo(false)} style={{fontSize: '1em'}}>
                         Cerrar ventana
                     </Button>
                     {/*<Button type={"submit"} onClick={() => props.close()} color={"primary"}>*/}
