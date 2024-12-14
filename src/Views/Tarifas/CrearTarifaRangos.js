@@ -311,7 +311,7 @@ export default function CrearTarifaRangos(props) {
      * guardar los datos modificados ya se tengan estos viajes en el state 'viajeForaneo'
      * */
     const handleChangeViajeForaneo = (viaje) => {
-        let newViajes = []
+        /*let newViajes = []
         viajesForaneosListado.forEach(i => {
             newViajes.push(i)
         })
@@ -324,7 +324,11 @@ export default function CrearTarifaRangos(props) {
                 i.grupos = viaje.grupos
             }
         })
-        setViajesForaneosListado(newViajes)
+        setViajesForaneosListado(newViajes)*/
+        console.log(viaje);
+        console.log(viajeForaneo)
+        console.log(viajesForaneosListado)
+        setViajeForaneo(viaje);
     }
 
     const submmitViajeForaneo = () => {
@@ -836,10 +840,10 @@ export default function CrearTarifaRangos(props) {
                     }} style={{fontSize: '1em'}}>
                         Cerrar
                     </Button>
-                    {/*<Button onClick={() => submmitViajeForaneo()}*/}
-                    {/*        color={"primary"} style={{fontSize: '1em'}}>*/}
-                    {/*    Guardar*/}
-                    {/*</Button>*/}
+                    <Button onClick={() => submmitViajeForaneo()}
+                            color={"primary"} style={{fontSize: '1em'}}>
+                        Guardar
+                    </Button>
                 </DialogActions>
             </Dialog>
             <div>
@@ -1224,7 +1228,13 @@ export default function CrearTarifaRangos(props) {
                                         if(newModel.length<1)
                                             return;
                                         setState({...state, idForaneo: newModel[0]});
-                                        setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === newModel[0]));
+
+                                        const copia = [...viajesForaneosListado]
+                                        const modificable = copia.map((item) => ({...item}));
+                                        const target = modificable.find(i => i.idViaje === newModel[0]);
+                                        //console.log(target);//target.map((item) => ({...item}));
+                                        let viaje = (({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}) => ({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}))(target);
+                                        setViajeForaneo(viaje);
                                     }}
                                 />
                             }
