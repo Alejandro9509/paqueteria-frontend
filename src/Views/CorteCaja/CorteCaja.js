@@ -67,7 +67,7 @@ function CorteCaja() {
             setListaCortes(data)
             setFiltros({
                 ...filtros,
-                fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
+                fechaRegistro: (new Date().toISOString().split('T')[0]),
             })
 
         })

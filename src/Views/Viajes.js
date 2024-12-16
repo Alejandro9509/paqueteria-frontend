@@ -361,8 +361,9 @@ function Viajes() {
         })
     }
     const getCurrentDateTime = () => {
-        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
-        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+        let fechaHoraActual=new Date();
+        return fechaHoraActual.toISOString().split('T')[0] + "T" + fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0');
+        //`${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
     }
 
     const handleChange = (event) => {
