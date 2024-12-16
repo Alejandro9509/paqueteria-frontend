@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { styled } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import Card from '@mui/material/Card';
@@ -21,11 +20,7 @@ const classes = {
     button: `${PREFIX}-button`
 };
 
-const StyledGrid = styled(Grid)((
-    {
-        theme
-    }
-) => ({
+const StyledGrid = styled(Grid)(({theme}) => ({
     [`&.${classes.root}`]: {
         margin: 'auto',
     },
@@ -64,7 +59,6 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
     const [left, setLeft] = React.useState(productos);
     const [right, setRight] = React.useState(productosSeleccionados);
     // const [localConsult, setConsult] = useState(consult)
-
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
 
@@ -82,7 +76,6 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
         } else {
             newChecked.splice(currentIndex, 1);
         }
-
         setChecked(newChecked);
     };
 
@@ -135,7 +128,8 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                 {items.map((value) => {
                     const labelId = `transfer-list-all-item-${value}-label`;
                     return (
-                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button
+                                  onClick={handleToggle(value)} disabled={consult}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}

@@ -1,11 +1,9 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import StarIcon from '@mui/icons-material/Star';
 import "../../App.css"
 import { ReactComponent as KeepLeftArrow } from '../../iconos/Mapa/svg/001-left arrow.svg';
 import { ReactComponent as ChangeArrow } from '../../iconos/Mapa/svg/012-change.svg';
@@ -37,13 +35,10 @@ const StyledList = styled(List)((
 }));
 
 export default function NavigationList(props) {
-
-
     return (
         <StyledList component="nav" className={classes.root} aria-label="navication">
             {
-
-props.indications && props.indications.map(i => {
+                props.indications && props.indications.map(i => {
                     return (
                         <ListItem >
                             <ListItemIcon>
@@ -54,7 +49,6 @@ props.indications && props.indications.map(i => {
                                         component={KeepLeftArrow}
                                         viewBox="0 0 50 50"
                                     />
-
                                 }
                                 {
                                     (i.maneuverType == "CHANGE" || i.maneuverType == "CHANGE_LEFT" || i.maneuverType == "CHANGE_RIGHT") &&
@@ -63,7 +57,6 @@ props.indications && props.indications.map(i => {
                                         component={ChangeArrow}
                                         viewBox="0 0 60 60"
                                     />
-
                                 }
                                 {
                                     (i.maneuverType == "TURN_LEFT" || i.maneuverType == "TURN_SHARP_LEFT" || i.maneuverType == "START_LEFT" || i.maneuverType == "TURN_HALF_LEFT") &&
@@ -73,7 +66,6 @@ props.indications && props.indications.map(i => {
                                         viewBox="0 0 60 60"
                                     />
                                 }
-
                                 {
                                     (i.maneuverType == "CONTINUE" || i.maneuverType == "KEEP_STRAIGHT" || i.maneuverType == "START" || i.maneuverType == "ENTER" || i.maneuverType == "EXIT") &&
                                     <SvgIcon
@@ -81,9 +73,7 @@ props.indications && props.indications.map(i => {
                                         component={UpArrow}
                                         viewBox="0 0 60 60"
                                     />
-
                                 }
-
                                 {
                                     (i.maneuverType == "TURN_RIGHT" || i.maneuverType == "TURN_SHARP_RIGHT" || i.maneuverType == "START_RIGHT" || i.maneuverType == "KEEP_RIGHT" || i.maneuverType == "ENTER_RIGHT" || i.maneuverType == "EXIT_RIGHT" || i.maneuverType == "TURN_HALF_RIGHT") &&
                                     <SvgIcon
@@ -91,9 +81,7 @@ props.indications && props.indications.map(i => {
                                         component={TurnRightArrow}
                                         viewBox="0 0 60 60"
                                     />
-
                                 }
-
                                 {
                                     (i.maneuverType == "TAKE_ROUNDABOUT_LEFT" || i.maneuverType == "TAKE_ROUNDABOUT_RIGHT") &&
                                     <SvgIcon
@@ -101,7 +89,6 @@ props.indications && props.indications.map(i => {
                                         component={RoundaboutArrow}
                                         viewBox="0 0 60 60"
                                     />
-
                                 }
                                 {
                                     (i.maneuverType == "MAKE_U_TURN") &&
@@ -110,16 +97,13 @@ props.indications && props.indications.map(i => {
                                         component={TurnUArrow}
                                         viewBox="0 0 60 60"
                                     />
-
                                 }
-
                             </ListItemIcon>
                             <ListItemText primary={i.directionDescription} />
                         </ListItem>
                     )
                 })
             }
-
         </StyledList>
     );
 }

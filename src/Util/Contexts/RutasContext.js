@@ -4,6 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
+
 function obtenerRutas() {
     const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
     let result;
@@ -12,6 +13,7 @@ function obtenerRutas() {
     );
     return result
 }
+
 function obtenerRutasId(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetById/${id}`;
     let result;
@@ -29,6 +31,7 @@ function obtenerRutasByOrigenDestinoCliente(idCliente, idOrigen, idDestino) {
     );
     return result
 }
+
 function obtenerRutasByOrigenDestinoPublicoGeneral(idOrigen, idDestino) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetByOrigenDestino/${idOrigen}/${idDestino}`;
     let result;
@@ -37,6 +40,7 @@ function obtenerRutasByOrigenDestinoPublicoGeneral(idOrigen, idDestino) {
     );
     return result
 }
+
 function obtenerTrayectosByRuta(idRuta) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetTrayectosRuta/${idRuta}`;
     let result;
@@ -46,4 +50,10 @@ function obtenerTrayectosByRuta(idRuta) {
     return result
 }
 
-export { obtenerRutasId, obtenerRutas, obtenerRutasByOrigenDestinoCliente,obtenerTrayectosByRuta,obtenerRutasByOrigenDestinoPublicoGeneral }
+export {
+    obtenerRutasId,
+    obtenerRutas,
+    obtenerRutasByOrigenDestinoCliente,
+    obtenerTrayectosByRuta,
+    obtenerRutasByOrigenDestinoPublicoGeneral
+}

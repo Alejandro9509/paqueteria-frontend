@@ -49,4 +49,10 @@ function obtenerTipoCobroId(id) {
     return result
 }
 
-export { modificarTipoCobro, agregarTipoCobro, eliminarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro }
+export {
+    modificarTipoCobro,
+    agregarTipoCobro,
+    eliminarTipoCobro,
+    obtenerTipoCobroId,
+    obtenerTipoCobro
+}

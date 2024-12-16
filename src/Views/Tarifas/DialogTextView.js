@@ -43,6 +43,7 @@ export default function DialogTextView(props) {
         }
         return valid
     }
+
     const handleConfirmSelection = (event) => {
         if (validarData()){
             if (event.code === 'Enter'){
@@ -96,10 +97,8 @@ export default function DialogTextView(props) {
                     <Button type={"submit"} onClick={handleConfirmSelection} color="primary" autoFocus>
                         Aceptar
                     </Button>
-
                 </DialogActions>
             </form>
-
         </Dialog>
     )
 

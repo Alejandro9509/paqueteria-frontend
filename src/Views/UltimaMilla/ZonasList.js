@@ -1,25 +1,19 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     TableBody,
     Table,
     TableContainer,
-    Paper,
     TableHead,
     TableCell,
     TableRow,
     Checkbox,
     TableSortLabel,
-    InputBase,
     InputAdornment,
     TextField,
 } from "@mui/material";
-import withStyles from '@mui/styles/withStyles';
 import { alpha, styled } from "@mui/material/styles";
-import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
 import SearchIcon from "@mui/icons-material/Search";
 import {
-    obtenerListadoZonaOperativa,
     obtenerListadoZonaOperativaBySucursal
 } from "../../Util/Contexts/ZonaOperativaContext";
 
@@ -33,11 +27,7 @@ const classes = {
     inputInput: `${PREFIX}-inputInput`
 };
 
-const StyledTableContainer = styled(TableContainer)((
-    {
-        theme
-    }
-) => ({
+const StyledTableContainer = styled(TableContainer)(({theme}) => ({
     [`& .${classes.visuallyHidden}`]: {
         border: 0,
         clip: 'rect(0 0 0 0)',
@@ -165,6 +155,7 @@ class ZonasList extends Component {
         }
         this.props.selectZona([])
     };
+
     handleClick(event, row) {
         const selectedIndex = this.props.zonasSeleccionadas.map(u => u.m_nIdZona).indexOf(row.m_nIdZona);
         let newSelected = [];
@@ -191,7 +182,6 @@ class ZonasList extends Component {
         }else {
             this.setState({zonasFiltradas: this.state.zonas.filter( u => u.m_sDescripcion.toLowerCase().includes(this.state.searchText.toLowerCase()))})
         }
-
     }
 
     render() {

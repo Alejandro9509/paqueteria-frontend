@@ -1,8 +1,8 @@
-import React, {Component, useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import $ from "jquery";
 import Noty from "noty";
 import {
-    obtenerCortesByFiltros, obtenerCortesGeneralReporte
+    obtenerCortesByFiltros
 } from "../../Util/Contexts/CorteCajaContext";
 import TableCortesCaja from "./TableCortesCaja";
 import Filtros from "./Filtros";
@@ -24,6 +24,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 function showError(mensaje) {
     new Noty({
         type: "error",
@@ -32,9 +33,11 @@ function showError(mensaje) {
         timeout: "3000",
     }).show();
 }
+
 const FORMATOS_IMPRESION = {
     CORTE_CAJA_GENERAL: 220
 }
+
 function CorteCajaListado({onRowClick, value}){
     const [listaCortes, setListaCortes] = useState([])
     const [filtros, setFiltros] = useState({
@@ -115,9 +118,10 @@ function CorteCajaListado({onRowClick, value}){
         })
     };
 
-   function totalSum(items) {
+    function totalSum(items) {
         return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
     }
+
     function sumarTotalPorPersona(items) {
         const sumByPerson = {};
 
@@ -207,7 +211,6 @@ function CorteCajaListado({onRowClick, value}){
     };
 
     function exportarAExcel(jsonData) {
-
         // Crear una hoja de cálculo nueva
         var workbook = XLSX.utils.book_new();
 
@@ -221,9 +224,10 @@ function CorteCajaListado({onRowClick, value}){
         XLSX.writeFile(workbook, 'CORTES_CAJA.xlsx');
     }
 
-        return(
+    return(
         <div>
-            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick} onReportClick={handleReportGeneralClick} onExcelClick={handleExcelClick}/>
+            <Filtros value={filtros} onChange={handleChangeFiltros} onFiltrarClick={handleFiltrarClick}
+                     onReportClick={handleReportGeneralClick} onExcelClick={handleExcelClick}/>
             <TableCortesCaja data={listaCortes} onRowClick={handleRowClick}/>
         </div>
     )

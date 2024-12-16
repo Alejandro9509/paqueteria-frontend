@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Noty from 'noty';
 import {
@@ -14,20 +13,12 @@ import {
     Grid,
     InputLabel,
     MenuItem,
-    Radio,
-    RadioGroup,
     Select
 } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
-import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/Delete";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import {obtenerProductos, obtenerProductosByConvenioCliente} from "../../Util/Contexts/ProductosContext";
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -36,6 +27,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 export default function DialogoNuevoPaquete(props) {
     const [open, setOpen] = React.useState(false);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
@@ -238,177 +230,180 @@ export default function DialogoNuevoPaquete(props) {
 
         if(event.target.name == "m_nCantidad"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
-                console.log("numero"+Number(event.target.value))
-                console.log("valida si es numero"+isNaN(Number(event.target.value)))
                 if(Number(event.target.value)<=0){
-                        setErrores(errores=>{
-                            return{
-                                ...errores,
-                             errorCantidad:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-
-                            }
-                         })
+                    setErrores(errores=>{
+                        return{
+                            ...errores,
+                            errorCantidad:true,
+                            errorTexto:"Ingrese un numero mayor a 0"
+                        }
+                    })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorCantidad:true,
-                         errorTexto:"Ingrese solo digitos"
+                            errorCantidad:true,
+                            errorTexto:"Ingrese solo digitos"
                         }
-                     })
+                    })
                 }else{
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorCantidad:false}
-                     })
+                            errorCantidad:false
+                        }
+                    })
                 }
             }else{
                 setErrores(errores=>{
                     return{
                         ...errores,
-                     errorCantidad:false}
-                 })
+                        errorCantidad:false
+                    }
+                })
             }
-
-        }else
+        }
 
         if(event.target.name == "m_rLargo"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
-                        setErrores(errores=>{
-                            return{
-                                ...errores,
-                             errorLargo:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-
-                            }
-                         })
-
+                    setErrores(errores=>{
+                        return{
+                            ...errores,
+                            errorLargo:true,
+                            errorTexto:"Ingrese un numero mayor a 0"
+                        }
+                    })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorLargo:true,
-                         errorTexto:"Ingrese solo digitos"
+                            errorLargo:true,
+                            errorTexto:"Ingrese solo digitos"
                         }
-                     })
+                    })
                 }else{
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorLargo:false}
-                     })
+                            errorLargo:false
+                        }
+                    })
                 }
             }else{
                 setErrores(errores=>{
                     return{
                         ...errores,
-                     errorLargo:false}
-                 })
+                        errorLargo:false}
+                })
             }
-        }else
+        }
+
         if(event.target.name == "m_rAlto"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
-                        setErrores(errores=>{
-                            return{
-                                ...errores,
-                             errorAlto:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-
-                            }
-                         })
+                    setErrores(errores=>{
+                        return{
+                            ...errores,
+                            errorAlto:true,
+                            errorTexto:"Ingrese un numero mayor a 0"
+                        }
+                    })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorAlto:true,
-                         errorTexto:"Ingrese solo digitos"
+                            errorAlto:true,
+                            errorTexto:"Ingrese solo digitos"
                         }
-                     })
+                    })
                 }else{
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorAlto:false}
-                     })
+                            errorAlto:false
+                        }
+                    })
                 }
             }else{
                 setErrores(errores=>{
                     return{
                         ...errores,
-                     errorAlto:false}
-                 })
+                        errorAlto:false
+                    }
+                })
             }
-        }else
+        }
+
         if(event.target.name == "m_rAncho"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
-                        setErrores(errores=>{
-                            return{
-                                ...errores,
-                             errorAncho:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-
-                            }
-                         })
+                    setErrores(errores=>{
+                        return{
+                            ...errores,
+                            errorAncho:true,
+                            errorTexto:"Ingrese un numero mayor a 0"
+                        }
+                    })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorAncho:true,
-                         errorTexto:"Ingrese solo digitos"
+                            errorAncho:true,
+                            errorTexto:"Ingrese solo digitos"
                         }
-                     })
+                    })
                 }else{
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorAncho:false}
-                     })
+                            errorAncho:false
+                        }
+                    })
                 }
             }else{
                 setErrores(errores=>{
                     return{
                         ...errores,
-                     errorAncho:false}
-                 })
+                        errorAncho:false
+                    }
+                })
             }
-        }else
+        }
+
         if(event.target.name == "m_rPeso"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
-                        setErrores(errores=>{
-                            return{
-                                ...errores,
-                             errorPeso:true,
-                             errorTexto:"Ingrese un numero mayor a 0"
-
-                            }
-                         })
+                    setErrores(errores=>{
+                        return{
+                            ...errores,
+                            errorPeso:true,
+                            errorTexto:"Ingrese un numero mayor a 0"
+                        }
+                    })
                 }else if(isNaN(Number(event.target.value))){
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorPeso:true,
-                         errorTexto:"Ingrese solo digitos"
+                            errorPeso:true,
+                            errorTexto:"Ingrese solo digitos"
                         }
-                     })
+                    })
                 }else{
                     setErrores(errores=>{
                         return{
                             ...errores,
-                         errorPeso:false}
-                     })
+                            errorPeso:false
+                        }
+                    })
                 }
             }else{
                 setErrores(errores=>{
                     return{
                         ...errores,
-                     errorPeso:false}
-                 })
+                        errorPeso:false
+                    }
+                })
             }
         }
 
@@ -424,11 +419,12 @@ export default function DialogoNuevoPaquete(props) {
                 m_rVolumen:paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho,
             }
         })
+
         if (event.target.name == "m_nIdTipoEmbalaje"){
             setPaquete(paquete => {
                 return {
                     ...paquete,
-                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == event.target.value).m_sNombre,
+                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == event.target.value).m_sNombre
                 }
             })
         }
@@ -436,7 +432,7 @@ export default function DialogoNuevoPaquete(props) {
             setPaquete(paquete => {
                 return {
                     ...paquete,
-                    m_sTipo: event.target.value == 1 ? "Sobre" : "Paquete",
+                    m_sTipo: event.target.value == 1 ? "Sobre" : "Paquete"
                 }
             })
         }
@@ -489,7 +485,6 @@ export default function DialogoNuevoPaquete(props) {
                     }
                 })
             }
-
 
             if (newValue?.m_xAlto !== undefined || newValue?.m_xAlto !== null) {//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if (Number(newValue.m_xAlto) <= 0) {
@@ -561,7 +556,6 @@ export default function DialogoNuevoPaquete(props) {
                 })
             }
 
-
             if (newValue?.m_xPeso !== undefined || newValue?.m_xPeso !== null) {//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if (Number(newValue.m_xPeso) <= 0) {
                     setErrores(errores => {
@@ -596,7 +590,6 @@ export default function DialogoNuevoPaquete(props) {
                     }
                 })
             }
-
 
             setPaquete(paquete => {
                 return {
@@ -669,7 +662,8 @@ export default function DialogoNuevoPaquete(props) {
     return (
         <div>
             {!props.disabled &&
-                <Button variant="contained" size="x-large" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
+                <Button variant="contained" size="x-large" color="primary" onClick={handleClickOpen}
+                        style={{float: 'left', fontSize: "1em"}} disabled={props.disabled}>
                     Agregar paquete
                 </Button>
             }
@@ -682,9 +676,7 @@ export default function DialogoNuevoPaquete(props) {
                 e.preventDefault()}
                 }}>
                     <DialogContent>
-
                         <Grid container spacing={1}>
-
                             <Grid item xs={12}>
                                 <label className="input select" style={{width: "100%"}}>
                                     <FormControl fullWidth variant="outlined" size="small" required>
@@ -710,172 +702,172 @@ export default function DialogoNuevoPaquete(props) {
                                 </label>
                             </Grid>
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={12}>
-                                <div className="input">
-                                    <Autocomplete
-                                        size="small"
-                                        value={paquete.producto}
-                                        freeSolo
-                                        required
-                                        onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                        onInputChange={(event, newInputValue) => handleChangeInputProductov2(event, newInputValue)}
-                                        forcePopupIcon={false}
-                                        options={dataProductos}
-                                        disabled={props.disabled}
-                                        getOptionLabel={(option) => (option.m_nIdProducto ? `${option.m_nIdProducto}-${option.m_sDescripcion}` : '')}
-                                        variant="outlined"
-                                        name={"producto"}
-                                        style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                        renderInput={(params) =>
-                                            <TextField
-                                                variant="outlined"
-                                                label="Producto"
-                                                required
-                                                size="small"
-                                                onClick={handleClickProducto}
-                                                {...params}
-                                                error={errores.nameInput === 'producto'}
-                                                helperText={errores.errorTexto}
-                                            />
-                                        }
-                                    />
-                                </div>
-                            </Grid>
+                                <Grid item xs={12}>
+                                    <div className="input">
+                                        <Autocomplete
+                                            size="small"
+                                            value={paquete.producto}
+                                            freeSolo
+                                            required
+                                            onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
+                                            onInputChange={(event, newInputValue) => handleChangeInputProductov2(event, newInputValue)}
+                                            forcePopupIcon={false}
+                                            options={dataProductos}
+                                            disabled={props.disabled}
+                                            getOptionLabel={(option) => (option.m_nIdProducto ? `${option.m_nIdProducto}-${option.m_sDescripcion}` : '')}
+                                            variant="outlined"
+                                            name={"producto"}
+                                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                            renderInput={(params) =>
+                                                <TextField
+                                                    variant="outlined"
+                                                    label="Producto"
+                                                    required
+                                                    size="small"
+                                                    onClick={handleClickProducto}
+                                                    {...params}
+                                                    error={errores.nameInput === 'producto'}
+                                                    helperText={errores.errorTexto}
+                                                />
+                                            }
+                                        />
+                                    </div>
+                                </Grid>
                             }
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" size="small"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               type="number"
-                                               label="Cantidad"
-                                               required
-                                               value={paquete.m_nCantidad}
-                                               disabled={props.disabled || errores.nameInput === 'producto' }
-                                               placeholder="Cantidad"
-                                               name="m_nCantidad"
-                                               helperText={errores.errorCantidad?errores.errorTexto:""}
-                                               error={errores.errorCantidad}
-                                    />
-                                </div>
-                            </Grid>
+                                <Grid item xs={6}>
+                                    <div className="input">
+                                        <TextField variant="outlined" size="small"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   type="number"
+                                                   label="Cantidad"
+                                                   required
+                                                   value={paquete.m_nCantidad}
+                                                   disabled={props.disabled || errores.nameInput === 'producto' }
+                                                   placeholder="Cantidad"
+                                                   name="m_nCantidad"
+                                                   helperText={errores.errorCantidad?errores.errorTexto:""}
+                                                   error={errores.errorCantidad}
+                                        />
+                                    </div>
+                                </Grid>
                             }
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" size="small"
-                                               label="Embalaje"
-                                               labelId="m_nIdTipoEmbalajeLabel"
-                                               value={paquete.m_nIdTipoEmbalaje}
-                                               required
-                                               disabled={props.disabled || errores.nameInput === 'producto'}
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               id="m_nIdTipoEmbalaje"
-                                               name="m_nIdTipoEmbalaje"
-                                               select
-                                    >
-                                        {dataEmbalaje.map((embalaje) => (
-                                            <MenuItem key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
-                                                {embalaje.m_sNombre}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </div>
-                                {/*<label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" size="small">
-                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
+                                <Grid item xs={6}>
+                                    <div className="input">
+                                        <TextField variant="outlined" size="small"
+                                                   label="Embalaje"
+                                                   labelId="m_nIdTipoEmbalajeLabel"
+                                                   value={paquete.m_nIdTipoEmbalaje}
+                                                   required
+                                                   disabled={props.disabled || errores.nameInput === 'producto'}
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   id="m_nIdTipoEmbalaje"
+                                                   name="m_nIdTipoEmbalaje"
+                                                   select
+                                        >
+                                            {dataEmbalaje.map((embalaje) => (
+                                                <MenuItem key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                                                    {embalaje.m_sNombre}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </div>
+                                    {/*<label className="input select" style={{width: "100%"}}>
+                                        <FormControl fullWidth variant="outlined" size="small">
+                                            <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
 
-                                    </FormControl>
-                                </label>*/}
-                            </Grid>
+                                        </FormControl>
+                                    </label>*/}
+                                </Grid>
                             }
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={6}>
-                                <div className="input">
+                                <Grid item xs={6}>
+                                    <div className="input">
+                                        <TextField variant="outlined" size="small"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   type="text"
+                                                   label="Peso"
+                                                   required
+                                                   value={paquete.m_rPeso}
+                                                   disabled={props.disabled || errores.nameInput === 'producto'}
+                                                   placeholder="kg"
+                                                   name="m_rPeso"
+                                                   helperText={errores.errorPeso?errores.errorTexto:""}
+                                                   error={errores.errorPeso}
+                                        />
+                                    </div>
+                                </Grid>
+                            }
+                            {parseInt(paquete.m_nIdTipo) !== 1 &&
+                                <Grid item xs={6}>
+                                    <div className="input">
                                     <TextField variant="outlined" size="small"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               type="text"
-                                               label="Peso"
-                                               required
-                                               value={paquete.m_rPeso}
-                                               disabled={props.disabled || errores.nameInput === 'producto'}
-                                               placeholder="kg"
-                                               name="m_rPeso"
-                                               helperText={errores.errorPeso?errores.errorTexto:""}
-                                               error={errores.errorPeso}
-                                    />
-                                </div>
-                            </Grid>
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   type="text"
+                                                   label="Largo"
+                                                   required
+                                                   value={paquete.m_rLargo}
+                                                   disabled={props.disabled || errores.nameInput === 'producto'}
+                                                   placeholder="cms"
+                                                   name="m_rLargo"
+                                                   helperText={errores.errorLargo?errores.errorTexto:""}
+                                                   error={errores.errorLargo}
+                                        />
+                                    </div>
+                                </Grid>
                             }
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={6}>
-                                <div className="input">
-                                <TextField variant="outlined" size="small"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               type="text"
-                                               label="Largo"
-                                               required
-                                               value={paquete.m_rLargo}
-                                               disabled={props.disabled || errores.nameInput === 'producto'}
-                                               placeholder="cms"
-                                               name="m_rLargo"
-                                               helperText={errores.errorLargo?errores.errorTexto:""}
-                                               error={errores.errorLargo}
-                                    />
-                                </div>
-                            </Grid>
+                                <Grid item xs={6}>
+                                    <div className="input">
+                                        <TextField variant="outlined" size="small"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   type="text"
+                                                   required
+                                                   label="Ancho"
+                                                   value={paquete.m_rAncho}
+                                                   disabled={props.disabled || errores.nameInput === 'producto'}
+                                                   placeholder="cms"
+                                                   name="m_rAncho"
+                                                   helperText={errores.errorAncho?errores.errorTexto:""}
+                                                   error={errores.errorAncho}
+                                        />
+                                    </div>
+                                </Grid>
                             }
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" size="small"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               type="text"
-                                               required
-                                               label="Ancho"
-                                               value={paquete.m_rAncho}
-                                               disabled={props.disabled || errores.nameInput === 'producto'}
-                                               placeholder="cms"
-                                               name="m_rAncho"
-                                               helperText={errores.errorAncho?errores.errorTexto:""}
-                                               error={errores.errorAncho}
-                                    />
-                                </div>
-                            </Grid>
+                                <Grid item xs={6}>
+                                    <div className="input">
+                                        <TextField variant="outlined" size="small"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   type="text"
+                                                   value={paquete.m_rAlto}
+                                                   label="Alto"
+                                                   required
+                                                   disabled={props.disabled || errores.nameInput === 'producto'}
+                                                   placeholder="cms"
+                                                   name="m_rAlto"
+                                                   helperText={errores.errorAlto?errores.errorTexto:""}
+                                                   error={errores.errorAlto}
+                                        />
+                                    </div>
+                                </Grid>
                             }
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" size="small"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               type="text"
-                                               value={paquete.m_rAlto}
-                                               label="Alto"
-                                               required
-                                               disabled={props.disabled || errores.nameInput === 'producto'}
-                                               placeholder="cms"
-                                               name="m_rAlto"
-                                               helperText={errores.errorAlto?errores.errorTexto:""}
-                                               error={errores.errorAlto}
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={12}>
-                                <div className="input">
-                                    <TextField fullWidth variant="outlined" size="small"
-                                        // onChange={(event) => handleChangePaquete(event, index)}
-                                               className="form-control"
-                                               type="text"
-                                               value={paquete.m_rVolumen}
-                                               label="Volumen"
-                                               disabled
-                                               placeholder="cm3"
-                                               name="m_rVolumen"
-                                    />
-                                </div>
-                            </Grid>
+                                <Grid item xs={12}>
+                                    <div className="input">
+                                        <TextField fullWidth variant="outlined" size="small"
+                                            // onChange={(event) => handleChangePaquete(event, index)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   value={paquete.m_rVolumen}
+                                                   label="Volumen"
+                                                   disabled
+                                                   placeholder="cm3"
+                                                   name="m_rVolumen"
+                                        />
+                                    </div>
+                                </Grid>
                             }
                             <Grid item xs={12}>
                                 <div className="input">
@@ -894,20 +886,20 @@ export default function DialogoNuevoPaquete(props) {
                             </Grid>
 
                             {parseInt(paquete.m_nIdTipo) !== 1 &&
-                            <Grid item xs={12}>
-                                <div className="input">
-                                    <TextField fullWidth variant="outlined" size="small"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               label="Observaciones"
-                                               value={paquete.m_sObservaciones}
-                                               disabled={props.disabled || !paquete.producto}
-                                               placeholder="Observaciones"
-                                               name="m_sObservaciones"
-                                    />
-                                </div>
-                            </Grid>
+                                <Grid item xs={12}>
+                                    <div className="input">
+                                        <TextField fullWidth variant="outlined" size="small"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   label="Observaciones"
+                                                   value={paquete.m_sObservaciones}
+                                                   disabled={props.disabled || !paquete.producto}
+                                                   placeholder="Observaciones"
+                                                   name="m_sObservaciones"
+                                        />
+                                    </div>
+                                </Grid>
                             }
                             <Grid item xs={12}>
                                 <FormControlLabel
@@ -924,10 +916,8 @@ export default function DialogoNuevoPaquete(props) {
                                     label="Agregar más paquetes"
                                     labelPlacement="end"
                                 />
-
                             </Grid>
                         </Grid>
-
                     </DialogContent>
                     <DialogActions>
                         <Button  onClick={handleCancelar} color="primary">

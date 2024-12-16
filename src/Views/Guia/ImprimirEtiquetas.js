@@ -8,9 +8,8 @@ import {
     Slider,
     Checkbox,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { styled } from '@mui/material/styles';
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Tabs from '@mui/material/Tabs';
@@ -60,10 +59,9 @@ const Root = styled('div')((
 }));
 
 export default function ImprimirEtiquetas(props) {
-
-
     const [value, setValue] = React.useState(0);
     const [Paquetes, setPaquetes] = React.useState([])
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -74,6 +72,7 @@ export default function ImprimirEtiquetas(props) {
         nuevoChecado[currentIndex].checked = event.target.checked
         setPaquetes(nuevoChecado);
     };
+
     const imprimirTodasEtiquetas = (value) => {
         let arrayAux = props.detallesPaquetesEtiquetas.map((paquetes) => {
             return {
@@ -178,17 +177,13 @@ export default function ImprimirEtiquetas(props) {
                                                     disabled={!paquete.checked}
                                                     max={paquete.m_nCantidad}
                                                 />
-
                                             </TableCell>
                                         </TableRow>
-
                                     </TableBody>
                                 </Table>
-
                             </TabPanel>
                         );
                     })}
-
                 </Root>
             </DialogContent>
             <DialogActions>

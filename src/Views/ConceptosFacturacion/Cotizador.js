@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import ConceptosFacturacionGuias from "../Tarifas/ConceptosFacturacionGuias";
 import {obtenerCotizacion} from "../../Util/Contexts/CotizadorContext";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
@@ -19,6 +18,7 @@ function showSuccess(mensaje) {
         timeout: "3000",
     }).show();
 }
+
 const esDatoValido = (dato) => {
     return dato
         && dato !== ''
@@ -26,6 +26,7 @@ const esDatoValido = (dato) => {
         && dato !== "0";
 
 }
+
 class Cotizador extends Component {
     constructor(props) {
         super(props);
@@ -173,7 +174,6 @@ class Cotizador extends Component {
 
     handleChangeListConceptos(newList) {
         this.props.onChangeConceptosList(newList)
-        // this.setState({conceptos: newList})
     }
 
     handleShowDialogError(show){
@@ -219,9 +219,7 @@ class Cotizador extends Component {
                                         </IconButton>
                                     }
                                 </h2>
-
                             </div>
-
                             {
                                 this.props.embarque.mostrarCotizador &&
                                 <ConceptosFacturacionGuias
@@ -261,9 +259,6 @@ export default Cotizador;
 
 function AlertDialog(props) {
 
-    const handleClickOpen = () => {
-    };
-
     const handleClose = () => {
         props.setShowDialogError(false);
     };
@@ -298,9 +293,6 @@ function AlertDialog(props) {
 }
 
 function AlertDialogJustificaciones(props) {
-
-    const handleClickOpen = () => {
-    };
 
     const handleClose = () => {
         props.setShowDialogJustificacion(false);

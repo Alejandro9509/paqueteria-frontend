@@ -14,8 +14,6 @@ function obtenerCodigoPostalCiudad(id){
     return result
 }
 
-
-
 function obtenerCodigoPostal(){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetListado` ;
     let result;
@@ -24,6 +22,7 @@ function obtenerCodigoPostal(){
         );
     return result
 }
+
 function obtenerCodigoPostalEstado(idEstado){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorEstado/` + idEstado;
     let result;
@@ -68,6 +67,7 @@ function obtenerCodigosPostalesPorEstadoMunicipio(estado, municipio){
     );
     return result
 }
+
 function obtenerCodigosPostalesPorEstadoMunicipioDisponibles(estado, municipio){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByEstadoMunicipioDisponible/${estado}/${municipio}`;
     let result;
@@ -76,4 +76,13 @@ function obtenerCodigosPostalesPorEstadoMunicipioDisponibles(estado, municipio){
     );
     return result
 }
-export {obtenerCodigosPostalesPorEstadoMunicipio, obtenerCodigoPostalId, obtenerCodigoPostalPorCodigo, obtenerCodigoPostalCiudad, obtenerCodigoPostal, obtenerCodigoPostalEstado, obtenerCodigosPostalesPorCiudad,obtenerCodigosPostalesPorEstadoMunicipioDisponibles}
+export {
+    obtenerCodigosPostalesPorEstadoMunicipio,
+    obtenerCodigoPostalId,
+    obtenerCodigoPostalPorCodigo,
+    obtenerCodigoPostalCiudad,
+    obtenerCodigoPostal,
+    obtenerCodigoPostalEstado,
+    obtenerCodigosPostalesPorCiudad,
+    obtenerCodigosPostalesPorEstadoMunicipioDisponibles
+}

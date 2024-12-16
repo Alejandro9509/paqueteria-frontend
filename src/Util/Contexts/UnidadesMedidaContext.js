@@ -4,6 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
+
 function obtenerUnidadesMedida() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/UnidadesMedida/GetListado`;
     let result;
@@ -12,4 +13,5 @@ function obtenerUnidadesMedida() {
         );
     return result
 }
+
 export {obtenerUnidadesMedida}

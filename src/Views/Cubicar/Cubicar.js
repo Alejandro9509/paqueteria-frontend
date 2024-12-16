@@ -10,7 +10,6 @@ import {getRandomId} from "../../Util/Util";
 class Cubicar extends Component {
     constructor(props) {
         super(props);
-        // console.log(props.espacio)
         this.state = {data: props.data}
 
     }

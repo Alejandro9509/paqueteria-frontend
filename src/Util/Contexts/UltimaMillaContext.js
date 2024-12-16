@@ -1,13 +1,10 @@
-import {arrayPonts} from "../Data";
-import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
-import Tour from "../../Views/UltimaMilla/Tour";
+import {trackPromise} from "react-promise-tracker";
 import moment from "moment";
 import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
 import {getAddressFormated} from "../Util";
 
 const headers = API_HEADERS
-
 
 
 const Depot = (id, x, y, startDate, finishDate) => ({
@@ -26,7 +23,6 @@ const Depot = (id, x, y, startDate, finishDate) => ({
         "end": finishDate
     }]
 })
-
 
 async function convertData(trucks, guias) {
     var array = []
@@ -84,27 +80,23 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        //console.log("Inicio de validación")
         if (g.m_sLatitud.length === 0) {
-            //console.log("Se buscara la dirección")
             var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen : g.m_sCiudadDestino, g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario, g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente : g.m_sCodigoPostalDestinatario)
             guias.push({
                 ...g,
                 lat: location.y,
                 lng: location.x,
                 index: i
-            })
+            });
         } else {
-            //console.log("Dirección ya obtenida")
             guias.push({
                 ...g,
                 lat: g.m_sLatitud,
                 lng: g.m_sLongitud,
                 index: i
-            })
+            });
         }
     }
-    ;
     return guias
 }
 
@@ -185,38 +177,30 @@ function apiPoint(x, y) {
             "considerAlternativeNearByRoads": false
         }
     })
-};
+}
 
 function calcularRuta(points, sucursal) {
     var result;
-    console.log(points.map(p => `&via=${p.lat},${p.lng}`).join(''))
     trackPromise(
         result = new Promise((resolve, reject) => {
             axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${sucursal.lat},${sucursal.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
                 resolve(data)
-
             })
-
         })
     )
-    return result
-
+    return result;
 }
 
 function calcularRutaUltimaMilla(points, sucursal, camion) {
     var result;
-    console.log(points.map(p => `&via=${p.lat},${p.lng}`).join(''))
     trackPromise(
         result = new Promise((resolve, reject) => {
             axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${camion.lat},${camion.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`).join('')}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}`, {}).then(({data}) => {
                 resolve(data)
-
             })
-
         })
     )
     return result
-
 }
 
 async function searchLocationAddress(address) {
@@ -231,7 +215,6 @@ async function searchLocationAddress(address) {
     } else {
         return {x: 0.0, y: 0.0}
     }
-
 }
 
 async function searchLocationGuia(city, address, postalCode) {
@@ -267,7 +250,6 @@ async function searchLocationGuiav2(calle, numeroExterior, numeroInterior, colon
 
 function searchAdressWithCoordinates(x, y) {
 
-    console.log("searching...")
 }
 
 function searchLocationWeb(city, address, subdistrict, number, code) {
@@ -304,7 +286,6 @@ function searchLocationWeb(city, address, subdistrict, number, code) {
                     }
                 }
             })
-
         })
     )
     return result
@@ -341,11 +322,8 @@ function agregarRuta(idUltimaMilla, tour, data,hora) {
     }
     tour.unidades.forEach((u) => {
         var tempTour = tour.tour.tours.find(t => t.typeId === ("vehicle" + u.m_nIdUnidad))
-        console.log(tour)
-        console.log(tempTour)
         var guias = tour.paquetes.filter((p, index) => tempTour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").map(a => parseInt(a.jobId.replace('job_',''))).includes(p.index))
         guias = ordenarGuiasPorRuta(tempTour, guias)
-        console.log(guias)
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
@@ -375,7 +353,6 @@ function agregarRuta(idUltimaMilla, tour, data,hora) {
     data.zonasSeleccionada.forEach((z) => {
         ultimaMillaObject.arrZonas.push({m_nIdZona: z.m_nIdZona})
     })
-    console.log(ultimaMillaObject)
     trackPromise(
         result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
@@ -424,8 +401,6 @@ async function ordenarParada(idParada, guias, guiasDescartadas) {
         esRecoleccion: g.m_bEsRecoleccion,
         idParadaGuia: g.m_nIdParadaGuia
     }))
-    console.log(JSON.stringify({ m_nIdParadaUltimaMilla: idParada, guias: paquetes,guiasDescartadasDeRuta: paquetesDescartados }))
-    console.log({ m_nIdParadaUltimaMilla: idParada, guias: paquetes,guiasDescartadasDeRuta: paquetesDescartados })
     trackPromise(
         result = axios.put(url, Object.assign({}, {
             m_nIdParadaUltimaMilla: idParada,
@@ -643,6 +618,24 @@ function obtenerGuiaRecoleccionPorFolio(folio){
     );
     return result
 }
+
+function ordenarGuiasPorRuta(tour, guias) {
+    var result = []
+    tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").forEach((item, index) => {
+        var found = false;
+        guias = guias.filter(function (guia, index) {
+            if (!found && guia.index == parseInt(item.jobId.replace('job_',''))) {
+                guia.orden = index + 1
+                result.push(guia);
+                found = true;
+                return false;
+            } else
+                return true;
+        })
+    })
+    return result
+}
+
 export {
     cancelarRuta,
     obtenerXMLPermisionario,
@@ -677,22 +670,4 @@ export {
     obtenerPaquetesParciales,
     agregarPaquetesParciales,
     obtenerGuiaRecoleccionPorFolio
-}
-
-
-function ordenarGuiasPorRuta(tour, guias) {
-    var result = []
-    tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").forEach((item, index) => {
-        var found = false;
-        guias = guias.filter(function (guia, index) {
-            if (!found && guia.index == parseInt(item.jobId.replace('job_',''))) {
-                guia.orden = index + 1
-                result.push(guia);
-                found = true;
-                return false;
-            } else
-                return true;
-        })
-    })
-    return result
 }

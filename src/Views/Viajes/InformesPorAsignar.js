@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {dataGridLocaleText} from "../../Constants";
 import {DataGrid} from "@mui/x-data-grid";
 
@@ -7,11 +6,6 @@ class InformesPorAsignar extends Component {
     constructor(props) {
         super(props);
     }
-
-
-
-
-
 
     render() {
         return (
@@ -21,8 +15,7 @@ class InformesPorAsignar extends Component {
                     rows={this.props.dataInformesAsignados}
                     columns={this.props.columns}
                     density="compact"
-                    getRowId={(row) => { console.log(row); return row.m_nIdInforme}}
-
+                    getRowId={(row) => { return row.m_nIdInforme}}
                 />
             </div>
         );

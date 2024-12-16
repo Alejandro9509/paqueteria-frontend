@@ -7,8 +7,6 @@ import {
     DialogContentText,
     DialogTitle
 } from '@mui/material';
-import TableOperadores from "./TableOperadores";
-import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {showSuccess} from "../../Util/Util";
 import TableGuias from "./TableGuias";
 import {obtenerGuiasFiltroCorteCaja} from "../../Util/Contexts/GuiaContext";
@@ -41,7 +39,7 @@ function DialogGuias({ open, handleClose, handleAccept, filtros,idsRowsHiden }) 
     };
 
     const handleRowSelection = (selectedRows) => {
-        // Haz algo con los registros seleccionados
+        // Guarda los registros seleccionados
         setListadoSeleccion(selectedRows)
     };
     return (

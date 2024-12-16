@@ -1,37 +1,21 @@
-import React, {Component, useEffect, useMemo, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {
-    Dialog,
-    DialogActions,
-    DialogContent,
     FormControl,
     Grid,
     IconButton,
-    InputAdornment,
     InputLabel,
     Select,
     TextField, Tooltip
 } from '@mui/material';
-import PageviewIcon from "@mui/icons-material/Pageview";
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import Autocomplete from '@mui/material/Autocomplete';
-import CancelIcon from '@mui/icons-material/Cancel';
 import {
-    useTable,
-    useFilters,
-    useAsyncDebounce,
-    useSortBy,
-} from "react-table";
-import {
-    obtenerConceptosFacturacion,
     obtenerImpuestosByConceptosFacturacion
 } from '../../Util/Contexts/ConceptosFacturacionContext';
-import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import {getUniqueListBy} from "../../Util/Util";
 import {DataGrid} from "@mui/x-data-grid";
-import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -206,7 +190,6 @@ export default function ConceptosFacturacion(props) {
     const handleConceptoClick = (event, newValue) => {
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
-            console.log(newValue)
             if (respuesta.data.length > 0){
                 setConcepto(concepto =>{
                     return {
@@ -228,13 +211,11 @@ export default function ConceptosFacturacion(props) {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        console.log(concepto)
         props.agregarConcepto(concepto)
         resetConcepto()
     }
 
     const removeConcepto = (item) => {
-        console.log(concepto)
         props.eliminarConcepto(item)
     }
 
@@ -575,7 +556,6 @@ export default function ConceptosFacturacion(props) {
                         </div>
                     </Grid>
                     }
-
                     {!(props.mostrarTipoCalculo === false) &&
                         <Grid item xs={2}>
                             <label className="input select" style={{width: "100%"}}>
@@ -602,7 +582,6 @@ export default function ConceptosFacturacion(props) {
                         </label>
                         </Grid>
                     }
-
                     {props.mostrarDescuento &&
                         <Grid item xs={2}>
                             <div className="input">
@@ -632,7 +611,6 @@ export default function ConceptosFacturacion(props) {
             </div>
 
             <div className="row">
-
                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                     <div className="row" style={{ height: '100%'}}>
                         <DataGrid
@@ -646,7 +624,6 @@ export default function ConceptosFacturacion(props) {
                             // onRowSelected={(row) => handleRowClick(row.data)}
                         />
                     </div>
-
                 </div>
                 {
                     props.mostrarTotales &&
@@ -681,17 +658,22 @@ export default function ConceptosFacturacion(props) {
                                 minWidth: "230px",
                                 textAlign: "right"
                             }}>  {props.ivaTraslada.map(t => (
-                                <div>{`${state.impuestos.length !== 0 ? 
+                                <div>
+                                    {`${state.impuestos.length !== 0 ? 
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? 
                                         state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : 
                                         "" : 
-                                    ""} `} ${parseFloat(props.dataList.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
+                                    ""} `}
+                                    ${parseFloat(props.dataList.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}
+                                    <br/>
                                 </div>))} {props.ivaRetiene.map(t => (
                                 <div>{`${state.impuestos.length !== 0 ? 
                                     `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? 
                                         state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : 
                                         ""}` : 
-                                    ""} `} ${parseFloat(props.dataList.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
+                                    ""} `}
+                                    ${parseFloat(props.dataList.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}
+                                    <br/>
                                 </div>))} </div>
                         </div>
                         <div className="col-md-12 col-sm-12"
@@ -715,8 +697,6 @@ export default function ConceptosFacturacion(props) {
                         </div>
                     </div>
                 }
-
-
             </div>
 
         </div>

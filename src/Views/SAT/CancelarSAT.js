@@ -23,7 +23,6 @@ import Noty from "noty";
 import RemitentesDestinatarios from "../RemitentesDestinatarios";
 import {da} from "date-fns/locale";
 import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
-import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {cambiarEstatusGuiaSAT} from "../../Util/Contexts/GuiaContext";
 import Cotizador from "../ConceptosFacturacion/Cotizador";
 import ActualizarDireccion from "../Guia/ActualizarDireccion";
@@ -87,6 +86,7 @@ class CancelarSAT extends Component {
             }
         }
     };
+
     onSubmit(e){
         e.preventDefault()
         const data = this.state
@@ -98,33 +98,33 @@ class CancelarSAT extends Component {
 
     /**Obtienen objeto con datos nuevos de recoleccion*/
     handleOnSaveDataRecoleccion(data){
-    modificarRecoleccionSAT(data).then(respuesta => {
-    showSuccess(respuesta.data)
-                                    this.setState({openDialogRecoleccion: false})
-                        }).catch(err => {
-                            showSuccess(err.response?.data)
-                        })
+        modificarRecoleccionSAT(data).then(respuesta => {
+            showSuccess(respuesta.data)
+            this.setState({openDialogRecoleccion: false})
+        }).catch(err => {
+            showSuccess(err.response?.data)
+        })
         this.setState({openDialogRecoleccion: false})
     }
 
     handleOnCancelEditRecoleccion(){
-
         this.setState({openDialogRecoleccion: false})
     }
 
     /**Obtienen objeto con datos nuevos de guia*/
     handleOnSaveDataGuia(data){
         cambiarEstatusGuiaSAT(data).then(respuesta => {
-        showSuccess(respuesta.data)
-                            this.setState({openDialogDireccion: false})
-                }).catch(err => {
-                    showSuccess(err.response?.data)
-                })
+            showSuccess(respuesta.data)
+            this.setState({openDialogDireccion: false})
+        }).catch(err => {
+            showSuccess(err.response?.data)
+        })
     }
 
     handleOnCancelEditGuia(){
         this.setState({openDialogDireccion: false})
     }
+
     render() {
         return (
             <div>
@@ -138,13 +138,16 @@ class CancelarSAT extends Component {
                         />
                     </DialogContent>
                 </Dialog>
-                <ActualizarDireccion onSubmit={this.handleOnSaveDataGuia}
-                                open={this.state.openDialogDireccion}
-                                close={this.handleOnCancelEditGuia}
-                                idGuia={this.state.idGuia? this.state.idGuia : 0}
+                <ActualizarDireccion
+                    onSubmit={this.handleOnSaveDataGuia}
+                    open={this.state.openDialogDireccion}
+                    close={this.handleOnCancelEditGuia}
+                    idGuia={this.state.idGuia? this.state.idGuia : 0}
                 />
                 <Dialog open={this.props.open} onClose={() => this.props.close()} fullWidth maxWidth={"md"}>
-                    <DialogTitle><Typography variant={"h3"}>Cancelar SAT - {this.props.data.folioCancelar}</Typography></DialogTitle>
+                    <DialogTitle>
+                        <Typography variant={"h3"}>Cancelar SAT - {this.props.data.folioCancelar}</Typography>
+                    </DialogTitle>
                     <DialogContent>
                         <Typography>Folio: {this.props.data.m_sFolio}</Typography>
                         <br/>
@@ -177,7 +180,6 @@ class CancelarSAT extends Component {
                                     </Select>
                                 </FormControl>
                             </label>
-
                             <br/>
                             {
                                 this.state.idCancelacionSAT === "01" &&
@@ -292,6 +294,7 @@ export function RecoleccionResumen(props) {
         mostrarCotizador: true,
         zonaOperativa: { m_nIdZona:0 }
     })
+
     useEffect(() => {
         if (props.idRecoleccion > 0){
             obtenerRecoleccionId(props.idRecoleccion).then((respuesta) => {
@@ -336,7 +339,6 @@ export function RecoleccionResumen(props) {
                 // showSuccess(err.response.data)
             });
         }
-
     },[props.idRecoleccion])
 
     useEffect(() => {
@@ -361,7 +363,6 @@ export function RecoleccionResumen(props) {
                 }
             })
         })
-
     },[])
 
     const handlePatrocinadorSelected = (row) => {
@@ -396,7 +397,6 @@ export function RecoleccionResumen(props) {
                 }
             });
         }
-
     }
 
     const handleListPaquetesChange = (newList) => {
@@ -414,7 +414,6 @@ export function RecoleccionResumen(props) {
         }
         obtenerZonaOperativaByCodigoPostal(row.data.m_sCodigoPostal).then(
             ( zonaOperativa ) => {
-                console.log(JSON.stringify(zonaOperativa))
                 if(props.destinatario){
                     props.soloEntregaSucursal(zonaOperativa.data.length!==0?zonaOperativa.data[0].m_bAplicaEntrega:false)
                 }
@@ -436,7 +435,6 @@ export function RecoleccionResumen(props) {
                 if (zonaOperativa.data.length === 0){
                     showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
                 }
-
             }
         );
     };
@@ -514,6 +512,7 @@ export function RecoleccionResumen(props) {
             }
         });
     }
+
     const validarDatos = (params) => {
         const status = {valid: true, message: ""}
         if (!params.m_nIdRecoleccion > 0){
@@ -531,7 +530,6 @@ export function RecoleccionResumen(props) {
             status.message = "No hay tipo de seguro"
             return status
         }
-        console.log(params.m_xPorcentajeSeguro)
         if (!(params.m_xPorcentajeSeguro >= 0)){
             status.valid = false
             status.message = "No hay porcentaje de seguro"
@@ -687,7 +685,6 @@ export function RecoleccionResumen(props) {
                 showSuccess(status.message)
                 return
             }
-            // console.log(JSON.stringify(params))
             props.onSubmitData(params)
         }catch (err){
             showSuccess("Hubo un error al procesar la informacion intente más tarde")
@@ -696,10 +693,12 @@ export function RecoleccionResumen(props) {
 
     return(
         <div>
-            <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} fullWidth maxWidth="md">
+            <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})}
+                    fullWidth maxWidth="md">
                 <DialogContent>
-                    <DialogTableClientes dialogVisible={(isVisible) => { setState({ ...state,openDialog: isVisible })}}
-                                         handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    <DialogTableClientes dialogVisible={(isVisible) => {
+                        setState({ ...state,openDialog: isVisible })
+                    }} handlePatrocinadorSelected={handlePatrocinadorSelected}/>
                 </DialogContent>
             </Dialog>
             <Dialog
@@ -710,8 +709,9 @@ export function RecoleccionResumen(props) {
             >
                 <DialogContent>
                     <DialogTableRemDes
-                        dialogVisible={(isVisible) => { setState({ ...state,openDialogRemitentes: isVisible })}}
-                        openDialog={state.openDialogRemitentes}
+                        dialogVisible={(isVisible) => {
+                            setState({ ...state,openDialogRemitentes: isVisible })
+                        }} openDialog={state.openDialogRemitentes}
                         handleChangeAutoCompleteRemitenteDestinatario={handleChangeAutoCompleteRemitenteDestinatario}
                     />
                 </DialogContent>
@@ -847,7 +847,6 @@ export function RecoleccionResumen(props) {
                     dataEstados={[]}
                 />
             </section>
-
             <section id={"recoleccionDiferenteDomicilio"}>
                 <div style={{width:'70%'}}>
                     <label className="checkbox">
@@ -863,7 +862,6 @@ export function RecoleccionResumen(props) {
                         Recolección en Diferente Domicilio
                     </label>
                 </div>
-
                 {data.diferenteRecoleccion &&
                     <div className="widget-wrap" id="detallesRecoleccion">
                         <div>

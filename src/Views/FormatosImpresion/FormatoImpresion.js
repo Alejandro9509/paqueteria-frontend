@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
 import axios from "axios";
-import SvgIcon from "@mui/material/SvgIcon";
-import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
-import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@mui/x-data-grid';
 import $ from "jquery";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import AgregarFormatoImpresion from "./AgregarFormatoImpresion";
-import { toBase64 } from '../../Util/GlobalFunctions';
 import {
     agregarFormatosImpresion,
     modificarFormatosImpresion,
@@ -30,7 +24,6 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-
 
 class FormatoImpresion extends Component {
     constructor(props) {
@@ -124,18 +117,14 @@ class FormatoImpresion extends Component {
 
         const url = `${process.env.REACT_APP_API_URL}/Folios/Eliminar/` + id + `/${this.state.ModificadoPor}`;
         axios.delete(url, { headers }).then(respuesta => {
-            console.log(respuesta);
             showSuccess(respuesta.data)
             this.getAllData();
         }).catch(err => {
             showSuccess(err)
         });
-        // }).catch(err => {
-        //     showSuccess(err)
-        // });
     }
+
     handleModificar(id){
-        console.log (id)
         this.setState(state => {
             return {
                 ...state,
@@ -152,8 +141,6 @@ class FormatoImpresion extends Component {
     }
 
     async handleAceptar(id,data) {
-        //let file = await toBase64(data.file[0])
-        console.log(data)
         var image = null
         if (data.image.length != 0) {
             image = data.image[0]
@@ -168,8 +155,6 @@ class FormatoImpresion extends Component {
             fecha: dateStartString,
             modificadoEl:data.modificadoEl
         }
-
-        console.log(params)
         if(this.state.agregar==="Agregar"){
             agregarFormatosImpresion(params,data.file[0],image).then(respuesta => {
 
@@ -203,9 +188,6 @@ class FormatoImpresion extends Component {
                 showSuccess(err)
             });
         }
-
-
-
     }
 
     cambiarPantalla(id) {
@@ -214,9 +196,12 @@ class FormatoImpresion extends Component {
 
     getAllData() {
         obtenerFormatosImpresion().then(respuesta => {
-            let formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='')
-
-            console.log(formatos)
+            let formatos=[];
+            if(typeof(respuesta.data) === "string"){
+                showSuccess(respuesta.data)
+            }else{
+                formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='');
+            }
             this.setState({ data: formatos, agregar: "Agregar" })
         });
     }
@@ -266,8 +251,6 @@ class FormatoImpresion extends Component {
 
                 <section className="main-container">
                     <div className="container-fluid">
-
-
                         <ul className="nav navStatica nav-tabs">
                             <li className="active">
                                 <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar",id:0 }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
@@ -279,10 +262,8 @@ class FormatoImpresion extends Component {
                                     <i className="fa fa-plus-circle" /> {this.state.agregar}
                                 </a>
                             </li>
-
                             {/**<button className="topbar-right pull-right">Boton</button>*/}
                         </ul>
-
 
                         <div
                             className="row tab-content"
@@ -302,8 +283,7 @@ class FormatoImpresion extends Component {
                                                     onRowSelectionModelChange={(newModel)=>{
                                                         if(newModel.length<1)
                                                             return
-                                                        let row=data.find(i=>i.m_nIdFormato==newModel[0])
-                                                        console.log(data.find(i=>i.m_nIdFormato==newModel[0]))
+                                                        let row = data.find(i=>i.m_nIdFormato==newModel[0]);
                                                         this.setState(state => {
                                                             return {
                                                                 ...state,
@@ -323,9 +303,9 @@ class FormatoImpresion extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla === 2 &&
-                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar} onClose={this.handleClose } id={this.state.id}/>
+                                    <AgregarFormatoImpresion onSubmit={this.handleAceptar}
+                                                             onClose={this.handleClose } id={this.state.id}/>
                                 }
-
                             </div>
 
                         </div>

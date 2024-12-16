@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     IconButton,
     Grid,
     List,
     ListItem,
-    ListItemIcon,
     ListItemText,
     Collapse,
     Typography,
@@ -29,6 +27,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 class Mensajes extends Component {
     constructor(props) {
         super(props);
@@ -59,8 +58,6 @@ class Mensajes extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
-        console.log(document.getElementById("listMessage"))
         if(document.getElementById("listMessage")){
             document.getElementById("listMessage").scrollTo(0,document.getElementById("listMessage").scrollHeight)
         }
@@ -73,32 +70,24 @@ class Mensajes extends Component {
         } else {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla.filter(u => u.m_sNombreOperador.toLowerCase().includes(this.state.searchText.toLowerCase()))})
         }
-
     }
 
     openChat(index) {
-   console.log("index"+index)
         obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador,this.props.fecha).then(({data}) => {
             this.setState({indexOpen: index === this.state.indexOpen ? -1 : index, mensajes: data, newMessageText: ""})
         })
         var intervalo = 0;
         if( index === this.state.indexOpen){//se cierra
-              console.log(this.state.idIntervalo)
               clearInterval(this.state.idIntervalo)
         }else{
 
         intervalo = setInterval(()=>{
-            console.log("entra cada 5")
             obtenerMensajes(this.state.repartidoresFiltrados[index].m_nIdOperador,this.props.fecha).then(({data}) => {
                 this.setState({mensajes: data})
             })
              },5000)
-             console.log("dentro de"+intervalo)
              this.setState({idIntervalo:intervalo})
         }
-     
-
-
     }
 
     enviarMensaje() {
@@ -112,9 +101,7 @@ class Mensajes extends Component {
         }
     }
 
-
     render() {
-
         return (
             <div className={"j-form"}>
                 {
@@ -279,20 +266,16 @@ class Mensajes extends Component {
                                                                         >
                                                                             Enviar
                                                                         </Button>
-
-
                                                                     </InputAdornment>
                                                                 ),
                                                             }}
                                                         />
                                                     </div>
-
                                                 </Collapse>
                                             </div>
                                         )
                                     })
                                 }
-
                             </List>
                         </div>
 

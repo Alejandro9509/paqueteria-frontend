@@ -3,6 +3,8 @@ import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
+
+
 function obtenerParametrosConfiguracion() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/GetListado`;
     let result;
@@ -47,4 +49,9 @@ function validarRequiereDocumentoTimbrado(idSucursal) {
     );
     return result
 }
-export { obtenerParametrosConfiguracion,modificarParametrosConfiguracion,asignarTipoDocumento,validarRequiereDocumentoTimbrado }
+export {
+    obtenerParametrosConfiguracion,
+    modificarParametrosConfiguracion,
+    asignarTipoDocumento,
+    validarRequiereDocumentoTimbrado
+}

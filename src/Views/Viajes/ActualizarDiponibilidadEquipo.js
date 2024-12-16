@@ -14,7 +14,6 @@ function ActualizarDiponibilidadEquipo(props) {
     const [estatusEquipoListado, setEstatusEquipoListado] = React.useState([]);
 
     const handleEstatus = (event) => {
-        console.log(event.target.value);
         // setIdEstatus(event.target.value);
         setEquipo({
             ...equipo,
@@ -28,7 +27,6 @@ function ActualizarDiponibilidadEquipo(props) {
             origen: event.target.value,
         })
     }
-
 
     function getEstatusEquipoListado(){
         setEstatusEquipoListado([
@@ -50,10 +48,11 @@ function ActualizarDiponibilidadEquipo(props) {
             }
         ]);
     }
-     function onSubmit(event){
+
+    function onSubmit(event){
         event.preventDefault();
         props.onSubmit(equipo)
-     }
+    }
 
     return(
         <form onSubmit={onSubmit}>
@@ -110,7 +109,6 @@ function ActualizarDiponibilidadEquipo(props) {
         </div>
             {props.children}
         </form>
-
     )
 }
 

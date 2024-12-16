@@ -1,25 +1,21 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
-    Box,
     Button,
     Collapse,
-    Divider,
     Grid,
     IconButton,
     InputAdornment,
     List,
     ListItem,
     ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    TextField, ButtonGroup, Popover, Fade, Dialog, DialogContent, DialogTitle, DialogActions,
-    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip,MenuItem
+    TextField, ButtonGroup, Dialog, DialogContent, DialogTitle, DialogActions,
+    Typography, Tooltip, FormControl, InputLabel, Select, Chip,MenuItem
 } from "@mui/material";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import DescriptionIcon from '@mui/icons-material/Description';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import DeleteIcon from '@mui/icons-material/Delete';
-import ReorderIcon from '@mui/icons-material/Reorder';
 import CachedIcon from '@mui/icons-material/Cached';
 import {ReactComponent as ParadasIcono} from "../../iconos/Mapa/paradas.svg";
 import CloseIcon from "@mui/icons-material/Close";
@@ -30,10 +26,8 @@ import BlockIcon from '@mui/icons-material/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import PaquetesParcialesGuia from './PaquetesParcialesGuia';
 import OrdenarParadasUltimaMilla from "./OrdenarParadasUltimaMilla";
-import PaquetesList from "./PaquetesList";
 import GetAppIcon from '@mui/icons-material/GetApp';
 import DepartureBoardIcon from '@mui/icons-material/DepartureBoard';
-
 import {
     actualizarCoordenadasGuia,
     obtenerGuiaUltimaMilla
@@ -42,9 +36,8 @@ import {
     cancelarRuta,
     eliminarPaqueteUltimaMilla,
     obtenerCFDI,
-    obtenerReporteCFDIGuia,
-    obtenerReporteCFDIRecoleccion,
-    obtenerUltimaMillaReporte, obtenerXMLCFDI, obtenerXMLPermisionario,
+    obtenerXMLCFDI,
+    obtenerXMLPermisionario,
     ordenarParada,
     remplazarPaqueteUltimaMilla
 } from "../../Util/Contexts/UltimaMillaContext";
@@ -54,13 +47,10 @@ import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
 import CancelarSAT from "../SAT/CancelarSAT";
 import {
-    cancelarInformeCFDI,
     cancelarUltimaMillaCFDI,
-    enviarCorreoCFDIUltimaMilla,
-    enviarCorreoCFDIViaje
+    enviarCorreoCFDIUltimaMilla
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 import {getAddressFormated, validarDerecho} from "../../Util/Util";
@@ -71,7 +61,6 @@ import {
     obtenerFormatosImpresionProceso
 } from "../../Util/Contexts/FormatosImpresionContext";
 
-
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -80,6 +69,7 @@ function showError(mensaje) {
         timeout: "8000"
     }).show()
 }
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -88,6 +78,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 const REPORTE_INFORME_ULTIMAMILLA=1
 const REPORTE_CFDI_PRIMERA_MILLA=2
 const REPORTE_CFDI_ULTIMAMILLA=3
@@ -136,42 +127,39 @@ class DetalleParadas extends Component {
 
     }
     componentDidMount() {
-    /*    if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
-            obtenerFormatosImpresionProceso(215).then(({data}) => {
-                this.setState({
-                    dataReportes:data
+        /*    if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
+                obtenerFormatosImpresionProceso(215).then(({data}) => {
+                    this.setState({
+                        dataReportes:data
+                    })
                 })
-            })
-        }
-        if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
-            obtenerFormatosImpresionProceso(216).then(({data}) => {
-                this.setState({
-                    dataReportes:data
+            }
+            if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
+                obtenerFormatosImpresionProceso(216).then(({data}) => {
+                    this.setState({
+                        dataReportes:data
+                    })
                 })
-            })
-        }
-        if(this.state.tipoReporte===REPORTE_CFDI_ULTIMAMILLA){
-            obtenerFormatosImpresionProceso(217).then(({data}) => {
-                this.setState({
-                    dataReportes:data
+            }
+            if(this.state.tipoReporte===REPORTE_CFDI_ULTIMAMILLA){
+                obtenerFormatosImpresionProceso(217).then(({data}) => {
+                    this.setState({
+                        dataReportes:data
+                    })
                 })
-            })
-        }*/
-
+            }*/
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
-        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla
-            || this.props.tour.m_arrClsParadaUltimaMilla.filter((arr)=>!prevProps.tour.m_arrClsParadaUltimaMilla.includes(arr)).length>0) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla ||
+            this.props.tour.m_arrClsParadaUltimaMilla.filter((arr)=>!prevProps.tour.m_arrClsParadaUltimaMilla.includes(arr)).length>0)
+        {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
 
         if(this.props.closeResumenParadas!=prevProps.closeResumenParadas){//Cierra todas las ventanas
-            this.setState({
-                openDetail: false
-            })
-           }
+            this.setState({openDetail: false})
+        }
     }
 
     searchRepartidor(event) {
@@ -182,12 +170,10 @@ class DetalleParadas extends Component {
         } else {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla.filter(u => u.m_sNombreOperador.toLowerCase().includes(this.state.searchText.toLowerCase()))})
         }
-
     }
 
     openDetail(index) {
         this.setState({indexOpen: index === this.state.indexOpen ? -1 : index})
-
     }
 
     openRemplazarPaquete(tour, paquete) {
@@ -215,6 +201,7 @@ class DetalleParadas extends Component {
             ]
         });
     }
+
     obtenerXMLCFDITimbrado(xml, folio){
         var filename = folio+".xml";
         var pom = document.createElement('a');
@@ -228,12 +215,12 @@ class DetalleParadas extends Component {
 
         pom.click();
     }
+
     descargarXMLCFDI(id,esRecoleccion, folio) {
         let fechaHoraActual=new Date();
         let paramFecha=fechaHoraActual.toISOString().split('T')[0];
         let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
         obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then(({data}) => {
-
             var filename = folio+".xml";
             var pom = document.createElement('a');
             var bb = new Blob([data], {type: 'text/plain'});
@@ -251,6 +238,7 @@ class DetalleParadas extends Component {
             }
         })
     }
+
     descargarXMLCFDIPermisionario(id,esRecoleccion, folio) {
         obtenerXMLPermisionario(id,esRecoleccion, this.props.filtros.idSucursal).then(({data}) => {
             var filename = folio+".xml";
@@ -258,7 +246,6 @@ class DetalleParadas extends Component {
             var bb = new Blob([data], {type: 'text/plain'});
             pom.setAttribute('href', window.URL.createObjectURL(bb));
             pom.setAttribute('download', filename);
-
             pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
             pom.draggable = true;
             pom.classList.add('dragout');
@@ -270,8 +257,8 @@ class DetalleParadas extends Component {
             }
         })
     }
-    obtenerPDFCFDI(id,esRecoleccion, folio){
 
+    obtenerPDFCFDI(id,esRecoleccion, folio){
         if(esRecoleccion){
             this.setState({
                 idParada: id,
@@ -302,7 +289,6 @@ class DetalleParadas extends Component {
                 })
             })
         }
-
            /* if (esRecoleccion){
                 obtenerReporteCFDIRecoleccion(id).then(({data}) => {
                     console.log(data)
@@ -358,13 +344,9 @@ class DetalleParadas extends Component {
                 ]
             })
         })
-
-
-
-
     }
-    confirmUbicacionParada(id,esRecoleccion, data) {
 
+    confirmUbicacionParada(id,esRecoleccion, data) {
         /*const domicilioRecoleccion = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
         const domicilioEntrega = data.m_bEntregaDiferenteDomicilio ? data.m_sDomicilioDetalleEntrega : data.m_sDomicilioDestinatario
 
@@ -582,7 +564,6 @@ class DetalleParadas extends Component {
                                 }
                             })
                         }
-
                     }
                 },
                 {
@@ -593,6 +574,7 @@ class DetalleParadas extends Component {
 
 
     }
+
     generarReporte(e, dataParada) {
         e.preventDefault()
         // console.log('data: ' + dataParada.m_nIdParadaUltimaMilla)
@@ -611,7 +593,6 @@ class DetalleParadas extends Component {
                 return
             }
             imprimirFormatosIdIdTipoReporte(data[data.length-1].m_nIdFormato, dataParada.m_nIdParadaUltimaMilla).then((respuesta) => {
-                console.log(respuesta.data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(respuesta.data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -627,16 +608,13 @@ class DetalleParadas extends Component {
             pdfWindow.document.title = "Última Milla";
         })*/
     }
-   handleOnChangeReporte (data) {
-        console.log(data)
-        this.setState({
-            reporteSeleccionado: data
-        })
+
+    handleOnChangeReporte (data) {
+        this.setState({reporteSeleccionado: data})
     }
+
     handleGenerarReporte(e){
         e.preventDefault()
-        console.log(this.state.reporteSeleccionado)
-        console.log(this.state.seleccion)
 
         if (this.state.reporteSeleccionado.length === 0) {
             showError("Es necesario seleccionar al menos un reporte")
@@ -644,7 +622,6 @@ class DetalleParadas extends Component {
         }
         if(this.state.tipoReporte===REPORTE_INFORME_ULTIMAMILLA){
             imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.seleccion.m_nIdParadaUltimaMilla).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -653,7 +630,6 @@ class DetalleParadas extends Component {
         }
         else if(this.state.tipoReporte===REPORTE_CFDI_PRIMERA_MILLA){
             imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -662,7 +638,6 @@ class DetalleParadas extends Component {
         }
         else{
             imprimirFormatosIdIdTipoReporte(this.state.reporteSeleccionado, this.state.idParada).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -670,15 +645,16 @@ class DetalleParadas extends Component {
             })
         }
 
-
         this.setState({
             reporteSeleccionado: null,
             openDialog:false
         })
     }
+
     validarRutasCompletadas(tour){
         return tour.m_arrClsProGuia.some(g=> g.m_nEstatusUlimaMilla === 3)
     }
+
     cancelarRutaAccion(e, id) {
         e.preventDefault()
         e.stopPropagation()
@@ -698,7 +674,6 @@ class DetalleParadas extends Component {
                 }
             ]
         });
-
     }
 
     envioCorreoAction(data){
@@ -731,12 +706,14 @@ class DetalleParadas extends Component {
             ? (a, b) => this.descendingComparator(a, b, orderBy)
             : (a, b) => -this.descendingComparator(a, b, orderBy);
     }
+
     render() {
         var d = new Date();
         d.setHours(0,0,0,0);
         const todasParadas = this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva)
         const totalPaquetes = todasParadas.length === 0 ? 0 : todasParadas.map(a => a.m_arrClsProGuia.length).reduce((a, b) => a + b)
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia)) || []
+
         return (
             <div>
                 {
@@ -785,14 +762,12 @@ class DetalleParadas extends Component {
                                         </Grid>
                                     </Grid>
                                     <DialogActions>
-
                                         <button className="btn btn-secondary secondary-btn" onClick={() => {
                                            this.setState({
                                                 openDialog:false,
                                                 reporteSeleccionado: null
                                             })
-                                        }
-                                        }>
+                                        }}>
                                             Cancelar
                                         </button>
                                         <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>
@@ -806,15 +781,27 @@ class DetalleParadas extends Component {
                 }
                 {
                     this.state.openEnvioCorreo &&
-                    <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
+                    <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo}
+                                        close={()=> {
+                                            this.props.refresh();
+                                            this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);
+                                            this.setState({openEnvioCorreo:false});
+                                        }}/>
                 }
-                {this.state.openCancelarSAT &&
-                    <CancelarSAT ultimaMilla={true} open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
+                {
+                    this.state.openCancelarSAT &&
+                    <CancelarSAT ultimaMilla={true} open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI}
+                                 data={{
+                                     folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,
+                                     m_sFolio: this.state.paqueteSeleccionado.m_sFolio,
+                                     folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido ||
+                                         this.state.paqueteSeleccionado.m_sFolioFiscalUUID
                     }} close={() => this.setState({openCancelarSAT: false})}/>
                 }
                 {
                     this.state.showConfirmarUbicacion &&
-                    <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion} open={this.state.showConfirmarUbicacion}
+                    <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion}
+                                        open={this.state.showConfirmarUbicacion}
                                         titulo={this.state.titulo}
                                         remitente={this.state.recoleccion}
                                         ultimaMilla={true}
@@ -836,20 +823,21 @@ class DetalleParadas extends Component {
                     />
                 }
 
-                {(this.state.openRemplazar && this.state.paqueteSeleccionado) &&
-                <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
-                                             onSubmit={this.onSubmitRemplazarPaquete}
-                                             close={() => this.setState({openRemplazar: false})}
-                                             data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado?.m_sFolio)}/>
+                {
+                    (this.state.openRemplazar && this.state.paqueteSeleccionado) &&
+                    <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
+                                                 onSubmit={this.onSubmitRemplazarPaquete}
+                                                 close={() => this.setState({openRemplazar: false})}
+                                                 data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado?.m_sFolio)}/>
+                    }
 
-                }
-
-                {this.state.openParciales &&
-                <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
-                                             tour={this.state.tour}
-                                             guia={this.state.paqueteSeleccionado}
-                                             close={() => this.setState({openParciales: false})}
-                                             data={this.state.paquetes} />
+                {
+                    this.state.openParciales &&
+                    <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
+                                                 tour={this.state.tour}
+                                                 guia={this.state.paqueteSeleccionado}
+                                                 close={() => this.setState({openParciales: false})}
+                                                 data={this.state.paquetes} />
                 }
                 {
                     !this.state.openDetail &&
@@ -873,7 +861,6 @@ class DetalleParadas extends Component {
                         <ParadasIcono style={{fill: "white"}}/>
                     </IconButton>
                 }
-
                 {
                     this.state.openDetail &&
                     <div
@@ -949,7 +936,6 @@ class DetalleParadas extends Component {
                                         ]}
                                     />
                                 </div>
-
                             </Grid>
                             <Grid item md={6} sm={12}>
                                 <Grid container spacing={1} justifyContent={"space-between"}
@@ -961,8 +947,12 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100) || 0 }%</strong>
+                                            <strong>
+                                                Pendientes
+                                            </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes}
+                                            <strong>
+                                                {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100) || 0 }%
+                                            </strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -972,8 +962,12 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100) || 0}%</strong>
+                                            <strong>
+                                                Exitosas
+                                            </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes}
+                                            <strong>
+                                                {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100) || 0}%
+                                            </strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -983,8 +977,12 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100) || 0}%</strong>
+                                            <strong>
+                                                Fallidas
+                                            </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes}
+                                            <strong>
+                                                {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100) || 0}%
+                                            </strong>
                                         </div>
                                     </Grid>
                                 </Grid>
@@ -1018,32 +1016,34 @@ class DetalleParadas extends Component {
                                                               this.openDetail(index)
                                                           }}>
                                                     <ListItemText primary={
-                                                        <Grid container spacing={1} style={{width:"100%"}} alignItems={"center"}
-                                                              justifyContent={"space-between"}>
+                                                        <Grid container spacing={1} style={{width:"100%"}}
+                                                              alignItems={"center"} justifyContent={"space-between"}>
                                                             <Grid item sm={5}>
-                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} align={"left"}>{r.m_snNombreOperador}</Typography>
-                                                            </Grid>
-                                                            <Grid item sm={2}>
-
-                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} style={{display:"flex", alignItems:"center"}}><UnidadesIcon
-                                                                    style={{
-                                                                        fill: color,
-                                                                        paddingTop: "2px",
-                                                                        paddingRight: "4px",
-                                                                        paddingBottom: "2px",
-                                                                        width: "20px",
-                                                                        verticalAlign: "middle",display:"flex"
-                                                                    }}/>
-                                                                    {r.m_sPlacasUnidad}
+                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"}
+                                                                            align={"left"}>{r.m_snNombreOperador}
                                                                 </Typography>
-
                                                             </Grid>
                                                             <Grid item sm={2}>
-                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} >{tour.m_arrClsProGuia.length} Paradas</Typography>
-
+                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"}
+                                                                            style={{display:"flex", alignItems:"center"}}>
+                                                                    <UnidadesIcon
+                                                                        style={{
+                                                                            fill: color,
+                                                                            paddingTop: "2px",
+                                                                            paddingRight: "4px",
+                                                                            paddingBottom: "2px",
+                                                                            width: "20px",
+                                                                            verticalAlign: "middle",display:"flex"
+                                                                        }}/>
+                                                                        {r.m_sPlacasUnidad}
+                                                                </Typography>
                                                             </Grid>
-                                                            <Grid item sm={1}
-                                                            >
+                                                            <Grid item sm={2}>
+                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"}>
+                                                                    {tour.m_arrClsProGuia.length} Paradas
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item sm={1}>
                                                                 <Tooltip title="Reporte">
                                                                     <IconButton
                                                                         aria-label="file"
@@ -1053,19 +1053,18 @@ class DetalleParadas extends Component {
                                                                     </IconButton>
                                                                 </Tooltip>
                                                             </Grid>
-
                                                                 <Grid item sm={2}>
                                                                     {
                                                                         tour.m_bActiva &&
                                                                         <>
-                                                                    <IconButton
-                                                                        disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)}
-                                                                        aria-label="file"
-                                                                        onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}
-                                                                        size="large">
-                                                                        <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
-                                                                    </IconButton>
-                                                                    </>
+                                                                            <IconButton
+                                                                                disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)}
+                                                                                aria-label="file"
+                                                                                onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}
+                                                                                size="large">
+                                                                                <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
+                                                                            </IconButton>
+                                                                        </>
                                                                     }
                                                                     {
                                                                         !tour.m_bActiva &&
@@ -1091,8 +1090,6 @@ class DetalleParadas extends Component {
                                                         height: "100%",
                                                         overflow: "auto"
                                                     }}>
-
-
                                                         {
                                                             <Button
                                                                 disabled={!validarDerecho(9101447)}
@@ -1104,18 +1101,15 @@ class DetalleParadas extends Component {
                                                                     openOrdenarParadas: true
                                                                 })}>Ordenar Paradas</Button>
                                                         }
-
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",
                                                             height: "200px",
                                                             overflow: "auto"
                                                         }}>
-
                                                             <ListItem style={{
                                                                 borderRadius: "5px",
                                                                 padding: "5px",
                                                             }}>
-
                                                                 <TableContainer style={{
                                                                     height: "100%",
                                                                     padding: "0px",
@@ -1152,7 +1146,6 @@ class DetalleParadas extends Component {
                                                                                     align="center">Acciones</TableCell>
                                                                             </TableRow>
                                                                         </TableHead>
-
                                                                         <TableBody>
                                                                             {
                                                                                 tour.m_arrClsProGuia.map((g, index) => {
@@ -1185,34 +1178,30 @@ class DetalleParadas extends Component {
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
-
                                                                                                     <ButtonGroup
                                                                                                         size="small"
                                                                                                         disableElevation
                                                                                                         variant="contained"
                                                                                                         color="primary">
-                                                                                                        
                                                                                                         {
-                                                                                                            // !g.m_bTimbrado && g.m_nEstatusUlimaMilla === 1 && tour.m_bActiva &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla === 1 && tour.m_bActiva &&
                                                                                                             (false) &&
-                                                                                                            <IconButton
-                                                                                                                onClick={() => {
-                                                                                                                    console.log(JSON.stringify(g))
-                                                                                                                    this.openPaquetesParciales(tour, g)
-                                                                                                                }}
-                                                                                                                aria-label="reorder"
-                                                                                                                size="large">
-                                                                                                                <Tooltip
-                                                                                                                    title={"Entregas Parciales"}>
-                                                                                                                    <DepartureBoardIcon
+                                                                                                        <IconButton
+                                                                                                            onClick={() => {
+                                                                                                                this.openPaquetesParciales(tour, g)
+                                                                                                            }}
+                                                                                                            aria-label="reorder"
+                                                                                                            size="large">
+                                                                                                            <Tooltip
+                                                                                                                title={"Entregas Parciales"}>
+                                                                                                                <DepartureBoardIcon
 
-                                                                                                                        fontSize="default"/>
-                                                                                                                </Tooltip>
-                                                                                                            </IconButton>
+                                                                                                                    fontSize="default"/>
+                                                                                                            </Tooltip>
+                                                                                                        </IconButton>
                                                                                                         }
-                                                                                                        
                                                                                                         {
-                                                                                                            false &&
+                                                                                                            (false) &&
                                                                                                             <IconButton
                                                                                                                 disabled={!validarDerecho(9101449)}
                                                                                                                 onClick={() => this.openRemplazarPaquete(tour, g)}
@@ -1226,8 +1215,6 @@ class DetalleParadas extends Component {
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
-
-                                                                                                    
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
@@ -1237,13 +1224,10 @@ class DetalleParadas extends Component {
                                                                                                                 size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cambiar ubicación"}>
-                                                                                                                    <GpsFixedIcon
-
-                                                                                                                        fontSize="default"/>
+                                                                                                                    <GpsFixedIcon fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
-
                                                                                                         {
                                                                                                             r.m_bEsPermisionario && r.m_bUnidadPermisionario &&
                                                                                                             <IconButton
@@ -1253,9 +1237,7 @@ class DetalleParadas extends Component {
                                                                                                                 size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Permisionario"}>
-                                                                                                                    <GetAppIcon
-
-                                                                                                                        fontSize="default"/>
+                                                                                                                    <GetAppIcon fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
@@ -1270,9 +1252,7 @@ class DetalleParadas extends Component {
                                                                                                                 size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Generar CFDI Traslado"}>
-                                                                                                                    <DescriptionIcon
-
-                                                                                                                        fontSize="default"/>
+                                                                                                                    <DescriptionIcon fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
@@ -1285,9 +1265,7 @@ class DetalleParadas extends Component {
                                                                                                                 size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Traslado"}>
-                                                                                                                    <GetAppIcon
-
-                                                                                                                        fontSize="default"/>
+                                                                                                                    <GetAppIcon fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
@@ -1322,9 +1300,7 @@ class DetalleParadas extends Component {
                                                                                                                 size="large">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cancelar SAT"}>
-                                                                                                                    <BlockIcon
-
-                                                                                                                        fontSize="default"/>
+                                                                                                                    <BlockIcon fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
@@ -1343,8 +1319,6 @@ class DetalleParadas extends Component {
                                                                                                             </IconButton>
                                                                                                         }
 
-
-
                                                                                                     </ButtonGroup>
 
                                                                                             </TableCell>
@@ -1354,23 +1328,17 @@ class DetalleParadas extends Component {
                                                                             }
                                                                         </TableBody>
                                                                     </Table>
-
                                                                 </TableContainer>
                                                             </ListItem>
-
-
                                                         </List>
                                                     </div>
-
                                                 </Collapse>
                                             </div>
                                         );
                                     })
                                 }
-
                             </List>
                         </div>
-
                     </div>
                 }
             </div>

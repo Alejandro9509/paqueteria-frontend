@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {obtenerTiposDocumento, obtenerTiposDocumentoSucursal} from "../../Util/Contexts/TipoDocumentosContext";
+import {obtenerTiposDocumentoSucursal} from "../../Util/Contexts/TipoDocumentosContext";
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField} from "@mui/material";
 import DialogContentText from "@mui/material/DialogContentText";
 
@@ -12,6 +12,7 @@ export default function DialogTiposDocumentoSucursal(props) {
         }
 
     }, [props.value.idSucursal])
+
     async function getTiposDocumento() {
         obtenerTiposDocumentoSucursal(props.value.idSucursal).then(respuesta => {
             let array = respuesta.data.map(obj => ({
@@ -22,6 +23,7 @@ export default function DialogTiposDocumentoSucursal(props) {
             setDataTiposDocumento(array);
         });
     }
+
     const handleOnChangeSelection = (selection) => {
         let data = {
             idSucursal: props.value.idSucursal,
@@ -31,9 +33,11 @@ export default function DialogTiposDocumentoSucursal(props) {
         }
         props.onClose(data);
     };
+
     const handleClose = () => {
         props.onClose(props.value);
     };
+
     return (
         <div>
             <Dialog open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -43,6 +47,7 @@ export default function DialogTiposDocumentoSucursal(props) {
                         Selecciona el tipo de documento con el que se creará el viaje en el ERP. <br/>
                         En caso de que no se despliegue un listado verifique en el sistema ERP que la sucursal actual tiene documentos asignados. El documento puede ser cambiado en cualquier momento desde parámetros de configuración.
                     </DialogContentText>
+                    <br/>
                     <TextField
                         autoFocus
                         margin="dense"
@@ -51,7 +56,9 @@ export default function DialogTiposDocumentoSucursal(props) {
                         fullWidth
                         select
                         value={props.value.idTipoDocumento}
-                        onChange={(e) => handleOnChangeSelection(dataTiposDocumento.find(obj => obj.idDocumento === e.target.value))}
+                        onChange={(e) =>
+                            handleOnChangeSelection(dataTiposDocumento.find(obj => obj.idDocumento === e.target.value))
+                        }
                     >
                         {dataTiposDocumento.map(obj => (
                             <MenuItem key={obj.idDocumento} value={obj.idDocumento}>{obj.documento}</MenuItem>

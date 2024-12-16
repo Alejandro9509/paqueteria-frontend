@@ -10,6 +10,7 @@ import TableDollys from "./TableDollys";
 import { obtenerUnidadesConvoy } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
 
+
 function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
     const [selectedRow, setSelectedRow] = useState(null);
     const [listadoDollys, setListadoDollys] = useState([]);
@@ -25,7 +26,6 @@ function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
                         showSuccess('No hay dollys que pertenezcan al mismo Convoy')
                         handleClose()
                     }
-                    console.log(respuesta.data);
                     // Filtra los Dollys
                     const dollys = respuesta.data.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28);
                     setListadoDollys(dollys)
@@ -46,6 +46,7 @@ function DialogDollys({ open, handleClose, handleAccept, idConvoy }) {
     const handleRowSelection = (row) => {
         setSelectedRow(row);
     };
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>

@@ -40,6 +40,7 @@ function obtenerRemitentesDestinatarios(){
         );
     return result
 }
+
 function actualizarRemitentesDestinatarios(){
     const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ActualizarListado`;
     let result;
@@ -48,6 +49,7 @@ function actualizarRemitentesDestinatarios(){
     );
     return result
 }
+
 function agregarRemitenteDestinatario(params){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/Agregar`;
     let result;
@@ -56,6 +58,7 @@ function agregarRemitenteDestinatario(params){
     );
     return result
 }
+
 function obtenerRemitentesDestinatariosId(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetById/${id}`;
     let result;
@@ -64,6 +67,7 @@ function obtenerRemitentesDestinatariosId(id){
         );
     return result
 }
+
 function obtenerRemitentesDestinatariosNombre(nombre){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetByName/${nombre}`;
     let result;
@@ -72,6 +76,7 @@ function obtenerRemitentesDestinatariosNombre(nombre){
     );
     return result
 }
+
 function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Remitentes/GetListadoPaginado/${pagina}/${registros}`;
     let result;
@@ -100,6 +105,7 @@ function obtenerClientesPaginado(pagina,registros, busqueda){
         );
     return result
 }
+
 export {
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId,

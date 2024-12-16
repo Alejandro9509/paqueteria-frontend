@@ -4,6 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
+
 function cancelarInformeCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado ) {
     const url = `${process.env.REACT_APP_API_URL}/Informes/CancelarCFDITraslada/${id}`;
     let result;
@@ -12,6 +13,7 @@ function cancelarInformeCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado ) {
     );
     return result
 }
+
 function cancelarUltimaMillaCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado, esRecoleccion) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/CancelarCFDITraslada/${id}`;
     let result;
@@ -20,6 +22,7 @@ function cancelarUltimaMillaCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado
     );
     return result
 }
+
 function obtenerClavesCancelacionSAT( ) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesCancelacion`;
     let result;
@@ -28,6 +31,7 @@ function obtenerClavesCancelacionSAT( ) {
     );
     return result
 }
+
 function enviarCorreoCFDIViaje(id, correos, correoDefault, idViaje){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/${idViaje}/Informe/${id}/EnviarCorreoFactura`;
     let result;
@@ -36,6 +40,7 @@ function enviarCorreoCFDIViaje(id, correos, correoDefault, idViaje){
     );
     return result
 }
+
 function enviarCorreoCFDIUltimaMilla(id, correos, correoDefault, esRecoleccion){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/UltimaMilla/${id}/${esRecoleccion ? 1 : 0}/EnviarCorreoFactura`;
     let result;
@@ -44,6 +49,7 @@ function enviarCorreoCFDIUltimaMilla(id, correos, correoDefault, esRecoleccion){
     );
     return result
 }
+
 function obtenerClavesByInforme(idInforme) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesByInforme/${idInforme}`;
     let result;
@@ -52,6 +58,7 @@ function obtenerClavesByInforme(idInforme) {
     );
     return result
 }
+
 function validarComplementoSat(catalogoSat, claveSat) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ValidarComplemento/${catalogoSat}/${claveSat}`;
     let result;
@@ -60,4 +67,13 @@ function validarComplementoSat(catalogoSat, claveSat) {
     );
     return result
 }
-export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI,enviarCorreoCFDIViaje,enviarCorreoCFDIUltimaMilla,obtenerClavesByInforme,validarComplementoSat}
+
+export {
+    cancelarInformeCFDI,
+    obtenerClavesCancelacionSAT,
+    cancelarUltimaMillaCFDI,
+    enviarCorreoCFDIViaje,
+    enviarCorreoCFDIUltimaMilla,
+    obtenerClavesByInforme,
+    validarComplementoSat
+}

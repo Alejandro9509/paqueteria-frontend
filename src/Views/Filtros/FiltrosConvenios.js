@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useMemo} from "react";
-import {Dialog, DialogActions, DialogContent, Grid} from "@mui/material";
+import React, {useState} from "react";
+import {Grid} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import RestartAltIcon from "@mui/icons-material/Refresh";
@@ -12,18 +12,17 @@ function Filtros(props) {
     const [filtros, setFiltros] = useState({
         clientePaga:'',
     })
+
     const resetFiltros = () => {
         setFiltros(filtros =>{
             return {
                 ...filtros,
-
                 folio:'',
-
             }
         })
     }
+
     const handleChangeFiltros = (event) => {
-        console.log(event)
         const {target} = event
         setFiltros(filtros => {
             return {
@@ -45,12 +44,9 @@ function Filtros(props) {
     }
 
     const filtrar = () => {
-        console.log(filtros)
         obtenerTarifasRangosFiltro(filtros.folio).then(respuesta => {
-
             props.actualizarTarifas(respuesta.data);
         })
-
     }
 
     async function getAllListado(){
@@ -59,23 +55,17 @@ function Filtros(props) {
                 setFiltros(filtros=>{
                     return {
                         ...filtros,
-
                     }
                 });
-
-
                 obtenerTarifasRangosFiltro(0).then((respuesta) => {
                     props.actualizarTarifas(respuesta.data);
                 })
             })
         })
-
     }
-
 
     return (
         <div>
-
             <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container spacing={2} xs={3} item={6}>
                     <Grid item xs={12}>
@@ -84,41 +74,34 @@ function Filtros(props) {
                                    onKeyDown={handleChangeFiltros}
                                    className="form-control"
                                    type="text"
-                                   label="Folio"
+                                   label="Cliente"
                                    id="folio"
                                    name="folio"
                                    value={filtros.folio}
                         />
                     </Grid>
-
-
-
-
-
                 </Grid>
                 <Grid container spacing={2} xs={6} item={6}>
-
-
-                    <Grid item container xs={6}>
+                    <Grid item container xs={2}>
                         <IconButton
                             aria-label="delete"
                             onClick={() => {
                                 resetFiltros()
                                 getAllListado()
                             }}
+                            style={{fontSize: '1.2em'}}
                             size="large">
                             <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                            Limpiar filtros
+                                Limpiar filtros
                         </IconButton>
                     </Grid>
-                    <Grid item container xs={6}>
-                        <IconButton aria-label="delete" onClick={() => filtrar()} size="large">
+                    <Grid item container xs={2}>
+                        <IconButton aria-label="delete" onClick={() => filtrar()} size="large" style={{fontSize: '1.2em'}}>
                             <SearchIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Buscar
                         </IconButton>
                     </Grid>
                 </Grid>
-
             </Grid>
         </div>
     );

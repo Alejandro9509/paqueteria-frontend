@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {ButtonBase, Grid, Divider} from "@mui/material";
+import { Grid, Divider} from "@mui/material";
 import TextField from "@mui/material/TextField";
+
 
 class DetalleInforme extends Component {
     constructor(props) {
         super(props);
     }
-
 
     render() {
         return (
@@ -15,24 +14,18 @@ class DetalleInforme extends Component {
                 {
                     this.props.guias.map((value, index) => {
                         return (
-                            <div style={{
-                                width: "100%",
-                                borderRadius: "10px",
-                            }}>
+                            <div style={{width: "100%", borderRadius: "10px"}}>
                                 <Grid container spacing={2}>
-
                                     <Grid
                                         item
                                         sm={12}
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                    >
+                                        style={{width: "100%",}}>
                                         <Grid container spacing={2}>
                                             <Grid item sm={12} md={4}>
                                                 <div className="input">
-
-                                                    <TextField variant="outlined" margin="dense" label="Folio Guía"
+                                                    <TextField variant="outlined"
+                                                               margin="dense"
+                                                               label="Folio Guía"
                                                                value={value.m_nFolioGuia}
                                                                className="form-control"
                                                                type="text"
@@ -45,21 +38,20 @@ class DetalleInforme extends Component {
                                             <Grid item sm={12} md={4}>
                                                 <div className="input">
 
-                                                    <TextField variant="outlined" margin="dense" label="Estatus Guía"
+                                                    <TextField variant="outlined"
+                                                               margin="dense"
+                                                               label="Estatus Guía"
                                                                className="form-control"
                                                                type="text"
                                                                fullWidth
                                                                disabled="true"
-                                                               value={
-                                                                   value.m_sEstatusGuia
-                                                               }
+                                                               value={value.m_sEstatusGuia}
                                                                id={"estatus-" + index}
                                                     />
                                                 </div>
                                             </Grid>
                                             <Grid item sm={12} md={4}>
                                                 <div className="input">
-
                                                     <TextField variant="outlined" margin="dense" label="Total"
                                                                value={value.m_xTotal}
                                                                disabled="true"
@@ -72,7 +64,6 @@ class DetalleInforme extends Component {
                                             </Grid>
                                             <Grid item sm={12} md={6}>
                                                 <div className="input">
-
                                                     <TextField variant="outlined" margin="dense" label="Destino"
                                                                value={value.m_sCiudadDestino}
                                                                className="form-control"
@@ -85,7 +76,6 @@ class DetalleInforme extends Component {
                                             </Grid>
                                             <Grid item sm={12} md={6}>
                                                 <div className="input">
-
                                                     <TextField variant="outlined" margin="dense"
                                                                label="Tipo de Servicio"
                                                                disabled="true"
@@ -99,18 +89,13 @@ class DetalleInforme extends Component {
                                             </Grid>
                                             <Grid item sm={12} md={12}>
                                                 <div className="input">
-
                                                     <TextField variant="outlined" margin="dense" label="Observaciones"
                                                                disabled="true"
-                                                               value={
-                                                                   value.m_sObservaciones
-                                                               }
+                                                               value={value.m_sObservaciones}
                                                                className="form-control"
                                                                type="text"
                                                                fullWidth
-                                                               id={
-                                                                   "observacion-" + index
-                                                               }
+                                                               id={"observacion-" + index}
                                                     />
                                                 </div>
                                             </Grid>
@@ -124,9 +109,7 @@ class DetalleInforme extends Component {
                     })
                 }
 
-                {
-                    this.props.children
-                }
+                {this.props.children}
             </div>
         );
     }

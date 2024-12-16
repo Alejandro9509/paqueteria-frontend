@@ -1,19 +1,15 @@
 import React, {useEffect, useMemo, useState} from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {DataGrid, GridToolbar} from "@mui/x-data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import CorteCajaAgregar from "../CorteCaja/CorteCajaAgregar";
 import $ from "jquery";
 import {Tooltip} from "@mui/material";
 import {confirmAlert} from "react-confirm-alert";
-import {eliminarCorte, obtenerCortes} from "../../Util/Contexts/CorteCajaContext";
 import {validarDerecho} from "../../Util/Util"
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import {
-    agregarZonaOperativa, eliminarZonaOperativa,
-    modificarZonaOperativa, obtenerByIdZonaOperativa,
+    eliminarZonaOperativa,
     obtenerListadoZonaOperativa
 } from "../../Util/Contexts/ZonaOperativaContext";
 import ZonaAgregar from "./ZonaAgregar";
@@ -236,7 +232,8 @@ function ZonaOperativa() {
                         </li>
 
                         <li>
-                            <a className= {validarDerecho(9101397)? "":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101397)? "":classes.disabled} data-toggle="tab"
+                               onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -251,12 +248,7 @@ function ZonaOperativa() {
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    
-              
                                    <Filtros listaResultados={setListadoZonas}/>
-                                   
-                                 
-
                                     <div className={"row"} style={{height: state.height -250, width: '100%'}}>
                                         <DataGrid columns={columns} rows={listadoZonas}                                               
                                                   locateText={dataGridLocaleText}
@@ -283,8 +275,6 @@ function ZonaOperativa() {
                                         showListado={handleShowListado}
                                     />
                             }
-
-
                         </div>
                     </div>
                 </div>

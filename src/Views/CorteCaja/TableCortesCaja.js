@@ -43,6 +43,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
             },
         },
     });
+
     const ACTIONS = {
         MODIFICAR: 'MODIFICAR',
         CONSULTAR: 'CONSULTAR',
@@ -56,10 +57,10 @@ const TableCortesCaja = ({ data, onRowClick }) => {
     function totalSum(items) {
         return items.map(({ total }) => total).reduce((sum, i) => sum + i, 0);
     }
+
     const totalFinal = totalSum(data).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
 
     function sumarTotalPorPersona(items) {
-        console.log(data)
         const sumByPerson = {};
 
         items.forEach((item) => {
@@ -76,10 +77,9 @@ const TableCortesCaja = ({ data, onRowClick }) => {
 
             sumByPerson[idPersona].total += total;
         });
-        console.log(sumByPerson)
-        console.log(Object.values(sumByPerson))
         return Object.values(sumByPerson);
     }
+
     const sumByPerson = sumarTotalPorPersona(data);
 
     function Row(props) {

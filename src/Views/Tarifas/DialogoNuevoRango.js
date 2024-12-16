@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField} from "@mui/material";
-import {dataGridLocaleText} from "../../Constants";
 import Grid from "@mui/material/Grid";
 import Noty from "noty";
 
@@ -12,6 +11,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 export default function DialogoNuevoRango(props) {
     /** Props
      * handleShowDialog() - Controla si se abre o cierra el dialogo.
@@ -168,10 +168,8 @@ export default function DialogoNuevoRango(props) {
 
                     }
                 }
-
             })
         }
-
         return valid
     }
 
@@ -208,15 +206,16 @@ export default function DialogoNuevoRango(props) {
         if (conceptoUno.maximo >= conceptoDos.minimo && conceptoUno.maximo <= conceptoDos.maximo){
             ocupado = true
         }
-
         return ocupado
     }
+
     const handleConfirmSelection = () => {
         if (validarData()){
             props.handleOnConfirmData(rango)
         }
 
     }
+
     const handleOnDataChange = (event) => {
         if (event.target.name === 'idUnidadMedida'){
             setRango({
@@ -275,7 +274,8 @@ export default function DialogoNuevoRango(props) {
                                 helperText={errores.idConcepto ? errores.descripcionError : null}
                             >
                                 {props.conceptosListado.map((option) => (
-                                    <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>
+                                    <MenuItem key={option.m_nIdConceptosFacturacion}
+                                              value={option.m_nIdConceptosFacturacion}>
                                         {option.m_sConcepto}
                                     </MenuItem>
                                 ))}
@@ -379,5 +379,4 @@ export default function DialogoNuevoRango(props) {
             </DialogActions>
         </Dialog>
     )
-
 }

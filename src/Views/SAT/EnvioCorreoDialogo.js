@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {
     Button,
-    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, FormControlLabel,
+    DialogTitle,
     TextField,
     Typography
 } from "@mui/material";
@@ -25,7 +23,6 @@ class EnvioCorreoDialogo extends Component {
    componentDidMount() {
    }
 
-
    onSubmit(e){
         e.preventDefault()
        this.props.onSubmit(this.state)
@@ -39,14 +36,18 @@ class EnvioCorreoDialogo extends Component {
                     Se enviará un correo al cliente.
                     <form onSubmit={this.onSubmit}>
 
-                        <Typography style={{marginTop:"10px"}}> En caso que necesite agregar correos adicioneles ingreselos en el campo siguiente separados por una ",".</Typography>
+                        <Typography style={{marginTop:"10px"}}>
+                            En caso que necesite agregar correos adicioneles ingreselos en el campo siguiente separados por una ",".
+                        </Typography>
 
-                        <TextField type={"text"} onChange={(e) => this.setState({correos: e.target.value})} label={"Correos"} value={this.state.correos}/>
+                        <TextField type={"text"} value={this.state.correos} label={"Correos"} onChange={(e) =>
+                            this.setState({correos: e.target.value})
+                        }/>
 
-                    <DialogActions>
-                        <Button onClick={() => this.props.close()}>Cancelar </Button>
-                        <Button type={"submit"}>Aceptar</Button>
-                    </DialogActions>
+                        <DialogActions>
+                            <Button onClick={() => this.props.close()}>Cancelar </Button>
+                            <Button type={"submit"}>Aceptar</Button>
+                        </DialogActions>
                     </form>
                 </DialogContent>
             </Dialog>

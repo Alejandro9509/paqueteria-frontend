@@ -10,6 +10,7 @@ import TableUnidades from "./TableUnidades";
 import { obtenerUnidadesOperador } from "../../Util/Contexts/UnidadesContext";
 import {showSuccess} from "../../Util/Util";
 
+
 function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
     const [selectedRow, setSelectedRow] = useState(null);
     const [listadoUnidades, setListadoUnidades] = useState([]);
@@ -21,7 +22,6 @@ function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
                     showSuccess('No hay unidades disponibles asignadas a este operador. Seleccione manualmente')
                     handleClose();
                 }
-                console.log(respuesta.data);
                 setListadoUnidades(respuesta.data)
             }).catch((e) => {
                 console.log(e.toString())
@@ -39,6 +39,7 @@ function DialogUnidades({ open, handleClose, handleAccept, idOperador }) {
     const handleRowSelection = (row) => {
         setSelectedRow(row);
     };
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth={"md"}>

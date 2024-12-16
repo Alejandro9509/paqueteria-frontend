@@ -1,7 +1,6 @@
 import React, {useEffect} from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {Button, Grid, TextField} from "@mui/material";
 import $ from "jquery";
 import PlantillasImportacionListado from "./PlantillasImportacionListado";
 import {
@@ -12,6 +11,7 @@ import {
 import PlantillasImportacionAgregar from "./PlantillasImportacionAgregar";
 import {showSuccess} from "../../Util/Util";
 window.jQuery = window.$ = $;
+
 export default function PlantillasImportacionMain(){
     const TABS = {
         LISTADO: 0,
@@ -75,11 +75,11 @@ export default function PlantillasImportacionMain(){
     const handleOnSuccessSave = () => {
         handleChangeTab(TABS.LISTADO)
     }
+
     return (
         <div>
-
             <header className="topbar clearfix">
-                <Cabecera titulo="Plantilla de importacion de embarques">
+                <Cabecera titulo={"Plantilla de importacion\nde embarques"}>
                 </Cabecera>
             </header>
 
@@ -106,10 +106,7 @@ export default function PlantillasImportacionMain(){
                                 <i className="fa fa-plus-circle" /> Agregar
                             </a>
                         </li>
-
-
                     </ul>
-
                     <div className="row" className="tab-content">
                         <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <PlantillasImportacionListado
@@ -119,7 +116,6 @@ export default function PlantillasImportacionMain(){
                                 onModificarRowClick={handleOnConsultarRowClick}
                             />
                         </div>
-
                         <div className="widget-wrap" id="Agregar" className="tab-pane fade">
                             {
                                 <PlantillasImportacionAgregar
@@ -128,7 +124,6 @@ export default function PlantillasImportacionMain(){
                                 />
                             }
                         </div>
-
                     </div>
                 </div>
 

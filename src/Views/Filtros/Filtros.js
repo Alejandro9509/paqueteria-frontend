@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useMemo} from "react";
-import {Dialog, DialogActions, DialogContent, Grid,MenuItem} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {Dialog, DialogContent, Grid,MenuItem} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,8 +11,9 @@ import {obtenerEmbarquesFiltro} from "../../Util/Contexts/EmbarquesContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
     obtenerEstatusEmbarque,
-    obtenerEstatusGuia, obtenerEstatusInforme,
-    obtenerEstatusRecoleccion, obtenerEstatusViaje
+    obtenerEstatusGuia,
+    obtenerEstatusRecoleccion,
+    obtenerEstatusViaje
 } from "../../Util/Contexts/EstatusContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../../Util/Contexts/UtileriasContext";
@@ -20,11 +21,6 @@ import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 import {obtenerInformeFiltro} from "../../Util/Contexts/InformesContext";
 import {obtenerViajesByFiltro} from "../../Util/Contexts/ViajesContext";
-import InputAdornment from "@mui/material/InputAdornment";
-import DialogTableRemDes from "../RemitenteDestinatario/DialogTableRemDes";
-import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
-import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
-import {obtenerZonaTarifaByIdCodigoPostal} from "../../Util/Contexts/ZonaTarifaContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 
 function Filtros(props) {
@@ -129,7 +125,6 @@ function Filtros(props) {
             }else{
                 obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
-                    console.log(respuesta.data)
                 })
             }
         }else if (props.guia){
@@ -163,17 +158,16 @@ function Filtros(props) {
                 })
             }
         }
-
     }
 
     async function getAllSucursales() {
         if (dataSucursal.length > 0)
             return
         obtenerSucursales().then((respuesta) => {
-            console.log('sucursales: ', respuesta.data)
             setDataSucursal(respuesta.data);
         });
     }
+
     async function getAllEstatus() {
         if (dataEstatus.length > 0)
             return
@@ -198,8 +192,8 @@ function Filtros(props) {
                 setEstatus(respuesta.data);
             });
         }
-
     }
+
     async function getAllCiudades() {
         if (dataCiudad.length > 0)
             return
@@ -211,8 +205,6 @@ function Filtros(props) {
     async function getAllListado(){
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
-                console.log(respuestaUno.data[0].Fecha)
-                console.log(respuestaDos.data[0].Fecha)
                 setFiltros(filtros=>{
                     return {
                         ...filtros,
@@ -228,7 +220,6 @@ function Filtros(props) {
                 }else if (props.recoleccion){
                     obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
-                        console.log(respuesta.data)
                     })
                 }else if (props.guia){
                     obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
@@ -245,7 +236,6 @@ function Filtros(props) {
                 }
             })
         })
-
     }
 
 

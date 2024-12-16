@@ -4,6 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
+
 function agregarTarifaRangos(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Agregar`;
     let result;
@@ -30,6 +31,7 @@ function eliminarTarifaRangos(id) {
     );
     return result
 }
+
 const obtenerTarifasRangosFiltro =(folioTarifas) =>{
 
     if (typeof folioTarifas == "undefined" || folioTarifas == ''){
@@ -42,7 +44,6 @@ const obtenerTarifasRangosFiltro =(folioTarifas) =>{
     trackPromise(
         result =  axios.get(url, { headers })
     );
-    console.log(result)
     return result
 }
 
@@ -63,6 +64,7 @@ function obtenerTarifaRangosById(id) {
     );
     return result
 }
+
 function obtenerTarifaGeneral() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetGeneral`;
     let result;
@@ -117,4 +119,17 @@ function obtenerTarifaBy(id) {
     return result
 }
 
-export {modificarTarifa,obtenerTarifaGeneral,eliminarTarifa,obtenerTarifasRangosFiltro,obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}
+export {
+    modificarTarifa,
+    obtenerTarifaGeneral,
+    eliminarTarifa,
+    obtenerTarifasRangosFiltro,
+    obtenerTarifasByTipo,
+    agregarTarifa,
+    obtenerTarifaBy,
+    agregarTarifaRangos,
+    obtenerTarifasRangos,
+    obtenerTarifaRangosById,
+    modificarTarifaRangos,
+    eliminarTarifaRangos
+}

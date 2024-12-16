@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Divider, Grid, Typography} from "@mui/material";
 
 class PaquetesList extends Component {
@@ -8,10 +7,7 @@ class PaquetesList extends Component {
     }
 
     componentWillMount() {
-
     }
-
-
 
     render() {
         return (

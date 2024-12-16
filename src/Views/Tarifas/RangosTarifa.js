@@ -63,12 +63,11 @@ export default function RangosTarifa(props) {
                     }])
         } else {
             return ([
-                props.seccionPadre === 'MANIOBRAS' &&
                 {
                     headerName: "Maniobra",
                     field: "concepto",
                     width: 150,
-                }, props.rows[0]?.unidadMedida === 'PORCIENTO' &&
+                },
                 {
                     headerName: "Porcentaje",
                     field: "porcentaje",
@@ -145,6 +144,10 @@ export default function RangosTarifa(props) {
                     rows={props.rows}
                     hideFooter
                     getRowId={(row) => row.id}
+                    columnVisibilityModel={{
+                        concepto: (props.seccionPadre === 'MANIOBRAS'),
+                        porcentaje: (props.rows[0]?.unidadMedida === 'PORCIENTO'),
+                    }}
                     // onRowSelected={(row) => handleRowClick(row.data)}
                 />
             </div>

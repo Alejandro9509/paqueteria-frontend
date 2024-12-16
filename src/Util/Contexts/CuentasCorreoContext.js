@@ -32,4 +32,8 @@ function obtenerCuentasCorreo(){
     return result
 }
 
-export {modificarCuentasCorreo, agregarCuentasCorreo, obtenerCuentasCorreo}
+export {
+    modificarCuentasCorreo,
+    agregarCuentasCorreo,
+    obtenerCuentasCorreo
+}

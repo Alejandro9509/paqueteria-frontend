@@ -27,7 +27,6 @@ class TourUltimaMilla extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
 
         if (this.props.data.m_arrClsProGuia.length !== prevProps.data.m_arrClsProGuia.length) {
-            console.log("Ciclo")
             this.getRoute()
         }
     }
@@ -37,11 +36,9 @@ class TourUltimaMilla extends Component {
     }
 
     componentWillUnmount() {
-
     }
 
     getRoute() {
-
         var polygon = []
         var guias = this.props.data.m_arrClsProGuia.sort((a, b) => a.m_nUltimaMillaOrden - b.m_nUltimaMillaOrden)
         guias.forEach(g => {
@@ -72,7 +69,6 @@ class TourUltimaMilla extends Component {
     }
 
     generarReporte(guia) {
-        console.log(guia)
         if ( !guia.m_bEsRecoleccion ){
             obtenerGuiaReporte(guia.m_nId).then(({data}) => {
                 let pdfWindow = window.open("");
@@ -88,7 +84,6 @@ class TourUltimaMilla extends Component {
                 pdfWindow.document.title = "Recolección " + guia.m_sFolio;
             })
         }
-
     }
 
     handleClickCloseDialogoEvidencia(openDialog){
@@ -104,6 +99,7 @@ class TourUltimaMilla extends Component {
             guiaSeleccionada: guia
         })
     }
+
     handleOpenDatos(){
         this.setState({
             openDatos: true
@@ -121,26 +117,24 @@ class TourUltimaMilla extends Component {
                         imagenes={this.state.guiaSeleccionada.m_arrImagenes}
                     />
                 }
-
                 {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
                             return (
                                 <div>
-                                        <Marker key={index}
-                                        icon={<MarkerComponent color={this.props.data.color}
-                                                               index={g.m_nUltimaMillaOrden}/>}
-                                        position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
-                                    <Popup>
-                                            <DatosEntregaRecoleccion data={g} open={() => this.handleClickOpenDialogoEvidencia} isTour={true}/>
-                                    </Popup>
-                                </Marker>
+                                    <Marker key={index}
+                                            icon={<MarkerComponent color={this.props.data.color} index={g.m_nUltimaMillaOrden}/>}
+                                            position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
+                                        <Popup>
+                                            <DatosEntregaRecoleccion data={g}
+                                                                     open={() => this.handleClickOpenDialogoEvidencia}
+                                                                     isTour={true}/>
+                                        </Popup>
+                                    </Marker>
                                 </div>
-                                
                             )
                         }
                     )
                 }
-
                 {
                     this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0 &&
                     <Marker key={"truckPoint"}
@@ -156,12 +150,10 @@ class TourUltimaMilla extends Component {
                             position={[this.props.sucursal.lat, this.props.sucursal.lng]}>
                         <Popup>{this.props.data.m_snNombreOperador} - {this.props.data.m_sPlacasUnidad}</Popup>
                     </Marker>
-
                 }
                 {
                     this.state.polygon.length !== 0 &&
                     <Polyline pathOptions={blackOptions} positions={this.state.polygon}/>
-
                 }
             </div>
         );
@@ -175,7 +167,6 @@ export default TourUltimaMilla;
 class MarkerComponent extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props.color)
     }
 
     render() {

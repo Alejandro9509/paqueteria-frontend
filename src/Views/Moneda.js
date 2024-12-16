@@ -76,7 +76,6 @@ function Moneda() {
             "m_nCreadoPor": parseInt(state.CreadoPor),
             "m_nModificadoPor": parseInt(state.ModificadoPor)
         }
-        console.log(params)
         if (state.idMoneda != 0) {
             modificarMonedas(state.idMoneda, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -117,7 +116,6 @@ function Moneda() {
             }
             eliminarMonedas(id).then(respuesta => {
                 showSuccess(respuesta.data)
-                console.log(JSON.stringify(respuesta))
                 getAllData();
                // window.location.reload();
             }).catch(err => {
@@ -131,7 +129,6 @@ function Moneda() {
 
     function handleShowModificar(id) {
         obtenerMonedasId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -147,7 +144,6 @@ function Moneda() {
     }
     function handleShowConsultar(id) {
         obtenerMonedasId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -177,7 +173,6 @@ function Moneda() {
     }
 
     const handleChange = event => {
-        console.log(event.target.value)
         setState({
             ...state,
             [event.target.id]: event.target.value

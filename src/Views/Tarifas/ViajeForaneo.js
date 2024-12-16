@@ -1,36 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
     Button,
-    Card,
-    Checkbox,
-    Dialog,
-    DialogActions,
-    DialogContent,
     Grid,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     MenuItem,
     Paper,
     TextField,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
-import RangosTarifa from "./RangosTarifa";
-import DialogCheckbox from "./DialogCheckbox";
-import {dataGridLocaleText} from "../../Constants";
-import CardHeader from "@mui/material/CardHeader";
-import Divider from "@mui/material/Divider";
-import DialogTransferList from "./DialogTransferList";
 import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
 import DialogTextView from "./DialogTextView";
 import GrupoViajeForaneo from "./GrupoViajeForaneo";
 import {getRandomId} from "../../Util/Util";
@@ -113,7 +90,6 @@ export default function ViajeForaneo(props) {
             selection: grupo,
             isEdit: true
         })
-
     }
 
     const handleOnDeleteGrupo = (grupo) => {
@@ -143,6 +119,7 @@ export default function ViajeForaneo(props) {
     useEffect(value => {
         props.handleChangeViajeForaneo(state)
     }, [state])
+
     useEffect(value => {
         obtenerParametrosConfiguracion().then(({data}) => {
             setMostrarPorcentaje(data.CobroPorcentual)
@@ -251,15 +228,16 @@ export default function ViajeForaneo(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
+                        <Button fullWidth style={{fontSize:"1em"}} variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo}
+                                disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
                             <AddIcon fontSize={'large'} />
                             &nbsp;&nbsp;Agregar grupo
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}
-                                disabled={props.disabled} style={{backgroundColor: '#FFD7D7'}} variant={"contained"}
-                                startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
+                                disabled={props.disabled} style={{backgroundColor: '#FFD7D7', color: 'black', fontSize:"1em"}}
+                                variant={"contained"} startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
                             Eliminar viaje
                         </Button>
                     </Grid>
@@ -303,7 +281,6 @@ export default function ViajeForaneo(props) {
                         )
                     }
                 </div>
-
             </Paper>
         </div>
     )

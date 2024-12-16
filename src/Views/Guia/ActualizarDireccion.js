@@ -1,34 +1,15 @@
-import React, {Component, useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useState} from 'react';
 import {
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl, Grid,
-    InputLabel, MenuItem, Select,
     Typography
 } from "@mui/material";
 import DiferenteDomicilioForm from "../DiferenteDomicilio/DiferenteDomicilioForm";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
-import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
-import {cambiarEstatusGuiaSAT} from "../../Util/Contexts/GuiaContext";
-import Noty from "noty";
 import {getAddressFormated} from "../../Util/Util";
-import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import TextField from "@mui/material/TextField";
-import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
-
-
-function showSuccess(mensaje) {
-    new Noty({
-        type: "information",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000"
-    }).show()
-}
 
 export default ActualizarDireccion;
 
@@ -54,6 +35,7 @@ function ActualizarDireccion(props){
         latitud: '',
         longitud: ''
     })
+
     const [state, setState] = useState({
         idEstatusGuia:'',
         showConfirmarUbicacion: false,
@@ -153,13 +135,8 @@ function ActualizarDireccion(props){
         params.datosAdicionales =  entregaDD.datosAdicionales || ""
         // params.m_sLatitudD =  entregaDD.latitud
         // params.m_sLongitudD =  entregaDD.longitud
-        console.log(params)
-        console.log(JSON.stringify(params))
         params.m_nIdGuia = props.guia.m_nIdGuia
         props.onSubmit(params)
-
-
-
     }
 
     const obtenerDatosDireccion = (esRecoleccion) => {
@@ -237,7 +214,6 @@ function ActualizarDireccion(props){
                         Aceptar
                     </Button>
                 </DialogActions>
-
             </Dialog>
         </>
     );

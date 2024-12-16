@@ -237,7 +237,32 @@ const theme = createTheme(adaptV4Theme({
         MuiSwitch: {
             switchBase: {
                 // Controls default (unchecked) color for the thumb
-                color: "#ccc"
+                color: "#ccc",
+                "&.Mui-checked": {
+                    color: "#ccc",
+                    "& + .MuiSwitch-track": {
+                        opacity: 1,
+                        backgroundColor: "#575757",
+                    }
+                },
+                "&.Mui-disabled": {
+                    color: "#8f8f8f",
+                    "&.Mui-checked": {
+                        color: "#ccc",
+                        "& + .MuiSwitch-track": {
+                            opacity: 1,
+                            backgroundColor: "#bfbfbd",
+                        }
+                    },
+                    "& + .MuiSwitch-track": {
+                        opacity: 0.5,
+                        backgroundColor: "#ccc",
+                    }
+                }
+            },
+            thumb: {
+                boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
+                color: "#8f8f8f"
             },
             colorPrimary: {
                 "&$checked": {
@@ -248,12 +273,11 @@ const theme = createTheme(adaptV4Theme({
                         color: "rgb(249, 160, 62)"
                     }
                 },
-
             },
             track: {
                 // Controls default (unchecked) color for the track
                 opacity: 0.2,
-                backgroundColor: "#ccc",
+                backgroundColor: "#8f8f8f",
                 "$checked$checked + &": {
                     // Controls checked color for the track
                     opacity: 0.7,
@@ -4025,7 +4049,6 @@ function Embarque(props) {
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" size="small"
-                                                                           className="form-control"
                                                                            type="number"
                                                                            required
                                                                            disabled={state.agregar === "Consultar" || !state.aplicaSeguro || state.embarqueConGuia}
@@ -4056,7 +4079,6 @@ function Embarque(props) {
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" size="small"
-                                                                           className="form-control"
                                                                            type="number"
                                                                            required
                                                                            disabled={(state.agregar === "Consultar") || (configuraciones.fijarCapturaValorDeclarado ? false : !state.aplicaSeguro) || state.embarqueConGuia}
@@ -4106,7 +4128,6 @@ function Embarque(props) {
                                                                 <StyledEngineProvider injectFirst>
                                                                     <ThemeProvider theme={theme}>
                                                                         <FormControlLabel
-
                                                                             control={
                                                                                 <Switch
                                                                                     checked={state.validarTimbrado ?? false}
@@ -4116,7 +4137,6 @@ function Embarque(props) {
                                                                                             validarTimbrado: e.target.checked
                                                                                         })
                                                                                     })}
-
                                                                                     disabled={!configuraciones.modificarValorEmbarque}
                                                                                     name="validarTimbrado"
                                                                                     color="primary"
@@ -4135,7 +4155,6 @@ function Embarque(props) {
                                                                     <InputLabel>Tipo de servicio</InputLabel>
                                                                     <Select
                                                                         label="Tipo de servicio"
-                                                                        className="form-control"
                                                                         onChange={handleChange}
                                                                         name="tipoTimbrado"
                                                                         required

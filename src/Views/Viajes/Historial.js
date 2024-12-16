@@ -5,9 +5,9 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { DataGrid } from '@mui/x-data-grid' ;
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+
 
 const PREFIX = 'Historial';
 
@@ -40,6 +40,7 @@ const Root = styled('div')({
 });
 
 const data = []
+
 const types = [
     {
         id: 1,
@@ -64,12 +65,15 @@ export default function Historial(){
     const [selectedStartDate, setSelectedStartDate] = React.useState();
     const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [changeType, setChangeType] = React.useState(0);
+
     const handleStartDateChange = (date) => {
         setSelectedStartDate(date.target.value);
     };
+
     const handleEndDateChange = (date) =>{
         setSelectedEndDate(date.target.value);
     };
+
     const handleTypeChange = (event) =>{
         setChangeType(event.target.value);
     };
@@ -121,9 +125,7 @@ export default function Historial(){
                                     label="Fecha Inicial"
                                     variant="outlined"
                                     className="form-control"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
+                                    InputLabelProps={{shrink: true}}
                                     value={selectedStartDate}
                                     onChange={handleStartDateChange}
                                     id="fechaInicial"
@@ -139,9 +141,7 @@ export default function Historial(){
                                     label="Fecha Final"
                                     variant="outlined"
                                     className="form-control"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
+                                    InputLabelProps={{shrink: true}}
                                     value={selectedEndDate}
                                     onChange={handleEndDateChange}
                                     id="fechaFinal"/>
@@ -176,7 +176,8 @@ export default function Historial(){
             {conDatos() ? (
                 <Card className={classes.root}>
                     <CardContent className={classes.cardListContent}>
-                        <div className="row" style={{height: window.innerHeight - 250, width: '100%', padding: 0, margin: 0}}>
+                        <div className="row"
+                             style={{height: window.innerHeight - 250, width: '100%', padding: 0, margin: 0}}>
                 <DataGrid columns={columns} rows={data}/>
                         </div>
                     </CardContent>

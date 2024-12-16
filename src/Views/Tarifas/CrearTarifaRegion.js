@@ -5,17 +5,11 @@ import {obtenerClientePublicoGeneral, obtenerClienteTieneConvenio} from "../../U
 import {
     Dialog,
     DialogContent,
-    FormControl,
     Grid,
-    InputLabel,
-    MenuItem,
     Paper,
-    Select,
     TextField
 } from "@mui/material";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import DestinosTarifa from "./DestinosTarifa";
-import ProductosPrecios from "./ProductosPrecios";
 import Button from "@mui/material/Button";
 import Noty from "noty";
 import Region from "./Region";
@@ -95,7 +89,6 @@ function CrearTarifaRegion(props) {
                     }
                 })
             }
-
         });
     }
 
@@ -116,7 +109,6 @@ function CrearTarifaRegion(props) {
             ...state,
             [event.target.name]: event.target.value
         });
-
     }
 
     const handlePatrocinadorSelected = (row) => {
@@ -140,7 +132,6 @@ function CrearTarifaRegion(props) {
                 showDialogClientes: false
             }
         })
-
     }
 
     const handleDialogVisible = (isVisible) => {
@@ -213,15 +204,20 @@ function CrearTarifaRegion(props) {
                     </div>
                 </DialogContent>
             </Dialog>
-            <form className="j-forms" onSubmit={onSubmit} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+            <form className="j-forms" onSubmit={onSubmit} onKeyDown={e => {
+                if (e.code === 13){
+                    e.preventDefault()
+                }}}>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
-
                     <Grid container spacing={2}>
                         <Grid item xs={10}>
                             <h4>Agregando Tarifas</h4>
                         </Grid>
                         <Grid item xs={2}>
-                            <Button fullWidth color={"primary"} variant={"contained"} onClick={handleOnAgregarViaje}>Agregar viaje</Button>
+                            <Button fullWidth color={"primary"} variant={"contained"} style={{fontSize:".9em"}}
+                                    onClick={handleOnAgregarViaje}>
+                                Agregar viaje
+                            </Button>
                         </Grid>
                         <Grid item xs={3}>
                             <TextField
@@ -241,7 +237,6 @@ function CrearTarifaRegion(props) {
                                 disabled={props.disabled || !props.convenio}
                             />
                         </Grid>
-
                     </Grid>
                     {
                         state.viajes.map(viaje => (
@@ -264,7 +259,6 @@ function CrearTarifaRegion(props) {
             </form>
         </div>
     )
-
 }
 
 export default CrearTarifaRegion;

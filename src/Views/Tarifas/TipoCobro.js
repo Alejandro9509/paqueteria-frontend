@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import axios from "axios";
 import Noty from 'noty';
-import { List, ListItem, Popover, TextField, Typography } from '@mui/material';
-import { TrafficOutlined } from '@mui/icons-material';
+import { Popover, TextField } from '@mui/material';
 import { agregarTipoCobro, obtenerTipoCobro } from '../../Util/Contexts/TipoCobroContext';
 import {API_HEADERS} from "../../Constants";
 import Button from "@mui/material/Button";
 
 const headers = API_HEADERS
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -61,7 +59,6 @@ class TipoCobro extends Component {
             "CreadoPor": localStorage.getItem("UsuarioId"),
             "ModificadoPor": localStorage.getItem("UsuarioId")
         }
-        console.log(params)
         agregarTipoCobro(params).then(respuesta => {
             showSuccess(respuesta.data)
             this.getAllTipos();
@@ -69,8 +66,6 @@ class TipoCobro extends Component {
             console.log(err)
             showSuccess(err)
         });
-
-
     }
 
     componentWillUnmount() {
@@ -80,14 +75,15 @@ class TipoCobro extends Component {
     handleClose() {
         this.setState({ anchorEl: null });
     }
+
     handleClick(event) {
         this.setState({ anchorEl: event.currentTarget });
     }
 
     render() {
-
         const open = Boolean(this.state.anchorEl);
         const id = open ? 'simple-popover' : undefined;
+
         return (
             <table style={{ overflow: "scroll", width: "100%" }}>
                 <thead>
@@ -151,8 +147,11 @@ class TipoCobro extends Component {
                                     <div className="col-sm-12 col-md-12 unit">
                                         <Button data-toggle="tab" className="btn btn-secondary secondary-btn"
                                             onClick={this.handleClose}>
-                                            Cancelar</Button>
-                                        <Button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</Button>
+                                            Cancelar
+                                        </Button>
+                                        <Button onClick={this.handleAceptar} className="btn btn-primary primary-btn">
+                                            Aceptar
+                                        </Button>
                                     </div>
                                 </div>
                             </Popover>
@@ -163,8 +162,10 @@ class TipoCobro extends Component {
                 <tr>
                     <th>
                         <label className="checkbox">
-                            <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, 0, this.state.tiposCobro, true)} checked={this.props.all} />
-                            <i />
+                            <input disabled={this.props.consult} type="checkbox"
+                                   onChange={(event) => this.props.handleChange(event, 0, this.state.tiposCobro, true)}
+                                   checked={this.props.all} />
+                            <i/>
                         </label>
 
                     </th>
@@ -178,13 +179,12 @@ class TipoCobro extends Component {
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
                                         <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposCobro, false)} checked={this.props.tiposCobroSeleccionado.find(t => t.m_nIdTipoCobro === i.m_nIdTipoCobro) != null} />
-                                        <i />
+                                        <i/>
                                     </label>
                                 </td>
                                 <td>{i.m_nCodigo}</td>
                                 <td><strong>{i.m_sDescripcion}</strong></td>
                             </tr>
-
                         )
                     })
                 }

@@ -1,50 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {
-    Card, CardActionArea,
-    Checkbox,
-    FormControl,
-    FormControlLabel,
-    Grid,
-    InputLabel,
-    Paper,
-    Radio,
-    RadioGroup,
-    Select
-} from "@mui/material";
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import Noty from "noty";
-import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import axios from "axios";
 import {API_HEADERS} from "../../Constants"
 import {
-    obtenerImpuestosByConceptosFacturacion,
-    obtenerSATEmbalajes,
-    obtenerSATServicios,
-    obtenerSATUnidades,
+    obtenerImpuestosByConceptosFacturacion
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
 import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
 import {getUniqueListBy, validarDerecho} from "../../Util/Util";
 const headers = API_HEADERS
-
-function showSuccess(mensaje) {
-    new Noty({
-        type: "information",
-        layout: "topCenter",
-        text: mensaje,
-        timeout: "3000"
-    }).show()
-}
 
 function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,keys, conceptosBase=[],esRec,ivaRetiene, ivaTraslada}) {
 
@@ -130,6 +98,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         style: 'currency',
         currency: 'USD',
     });
+
     const [concepto, setConcepto] = useState({
         id:Math.floor(Math.random() * 10000),
         concepto: null,
@@ -148,6 +117,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         descuento: 0,
         agregadoDesde: keys
     })
+
     const [state, setState] = useState({
         impuestos: [],
         ivaTraslada: [],
@@ -213,7 +183,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     }
 
     const addPaquetev2 = (data) => {
-        console.log(data)
         let paq = data
         /*if (validarPaquetes(paq)){
 
@@ -239,17 +208,14 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             })
         }
         onChangeList(arraynew)
-
     }
 
     /**Reacciona al hacer clic en editar concepto*/
     const handleEditConcepto = (data) =>{
         if(!disabled){
             // onChangeList(dataPaquetes.filter((i) => i.id != data.id))
-            console.log(data)
             setConcepto(data)
         }
-
     }
 
     /**Reacciona al hacer clic en eliminar concepto*/
@@ -257,7 +223,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         if(!disabled){
             onChangeList(dataPaquetes.filter((i) => i.id != data.id))
         }
-
     }
 
     const calcularDescuento = (event) => {
@@ -276,7 +241,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             })
             onChangeList(dataPaquetes)
         }
-
     }
 
     const calcularImpuestos = (traslada, retiene, importe) => {
@@ -345,7 +309,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     const handleConceptoClick = (event, newValue) => {
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
-            console.log(newValue)
             if (respuesta.data.length > 0){
                 setConcepto(concepto =>{
                     return {
@@ -362,7 +325,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                 })
             }
         });
-
     }
 
     const round = (num) => {
@@ -386,7 +348,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             </div>
 
             <div className="row">
-
                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                     <div className="row" style={{ height: '100%'}}>
                         <DataGrid
@@ -400,10 +361,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             // onRowSelected={(row) => handleRowClick(row.data)}
                         />
                     </div>
-
                 </div>
                 <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
-
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
                         <div style={{margin: "5px", padding: "5px"}}>Subtotal</div>
@@ -417,7 +376,9 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}> ${round(parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0)))}</div>
+                        }}>
+                            ${round(parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0)))}
+                        </div>
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
@@ -432,7 +393,9 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}> ${round(parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)))}</div>
+                        }}>
+                            ${round(parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)))}
+                        </div>
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
@@ -447,7 +410,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}>  {getUniqueListBy(dataPaquetes, "traslada").map(t => (
+                        }}>
+                            {getUniqueListBy(dataPaquetes, "traslada").map(t => (
                             <div>{`${state.impuestos.length !== 0 ?
                                 state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.traslada)) ?
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.traslada)).m_sImpuesto :
@@ -460,7 +424,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.retiene)).m_sImpuesto :
                                     ""}` :
                                 ""} `} ${round(parseFloat(dataPaquetes.filter(c => c.retiene === t.retiene).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)))}<br/>
-                            </div>))} </div>
+                            </div>))}
+                        </div>
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
@@ -475,18 +440,17 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}> ${parseFloat(
+                        }}>
+                            ${parseFloat(
                             dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0)
                             + dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)
                             - dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
                             - dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)
-                        ).toFixed(2)}</div>
+                        ).toFixed(2)}
+                        </div>
                     </div>
                 </div>
-
-
             </div>
-
         </div>
     )
 }

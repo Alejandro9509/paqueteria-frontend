@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {Button, Dialog, DialogContent, Grid, Typography} from "@mui/material";
+import {Dialog, DialogContent, Grid, Typography} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import MultiSelect from "@kenshooui/react-multi-select";
 import {imprimirFormatosECCId, imprimirFormatosId} from "../../Util/Contexts/FormatosImpresionContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import Noty from "noty";
+
 
 function showError(mensaje) {
     new Noty({
@@ -23,8 +23,8 @@ function showSuccess(mensaje) {
         timeout: "5000"
     }).show()
 }
-class FiltroReporteViajes extends Component {
 
+class FiltroReporteViajes extends Component {
     constructor(props) {
         super(props);
         var today = new Date();
@@ -52,6 +52,7 @@ class FiltroReporteViajes extends Component {
             [event.target.name]: event.target.value,
         });
     };
+
     handleChangeSucursales(value) {
         this.setState({
             sucursalesSeleccionadas: value,
@@ -67,7 +68,6 @@ class FiltroReporteViajes extends Component {
                 return
             }
             imprimirFormatosId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal,this.state.sucursalesSeleccionadas).then(({data}) => {
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo)+"'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -99,12 +99,9 @@ class FiltroReporteViajes extends Component {
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = this.props.select.m_sFormato;*/
             })
-
         }
         else{
             imprimirFormatosECCId(this.props.select.m_nIdFormato, this.state.fechaInicial, this.state.fechaFinal, this.state.cliente.m_nIdCliente).then(({data}) => {
-
-                console.log(data)
                 var mediaType="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
                 var a = document.createElement('a');
                 a.href = mediaType+encodeURI(data.m_sArchivo);
@@ -113,7 +110,6 @@ class FiltroReporteViajes extends Component {
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
-
                 /*
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo)+"'/>");
@@ -122,6 +118,7 @@ class FiltroReporteViajes extends Component {
             })
         }
     }
+
     handleDialogVisible(isVisible) {
         this.setState({
             showDialogClientes: isVisible,
@@ -133,7 +130,6 @@ class FiltroReporteViajes extends Component {
             showDialogClientes: false,
             cliente: row
         }))
-
     }
 
     render() {
@@ -162,12 +158,8 @@ class FiltroReporteViajes extends Component {
                                         onChange={this.handleChange}
                                         className="form-control"
                                         type="date"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        inputProps={{
-                                            max:this.state.fechaFinal
-                                        }}
+                                        InputLabelProps={{shrink: true}}
+                                        inputProps={{max:this.state.fechaFinal}}
                                         fullWidth
                                         label="Fecha inicial"
                                         value={this.state.fechaInicial}
@@ -180,12 +172,8 @@ class FiltroReporteViajes extends Component {
                                         onChange={this.handleChange}
                                         className="form-control"
                                         type="date"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        inputProps={{
-                                            min:this.state.fechaInicial
-                                        }}
+                                        InputLabelProps={{shrink: true}}
+                                        inputProps={{min:this.state.fechaInicial}}
                                         fullWidth
                                         label="Fecha final"
                                         value={this.state.fechaFinal}
@@ -212,7 +200,6 @@ class FiltroReporteViajes extends Component {
                                         />
                                     </Grid>
                                 }
-
                                 {
                                     (this.props.select?.m_nTipoProceso !==43 || this.props.select?.m_nTipoProceso !==44) &&
                                     <Grid item xs={3}>
@@ -235,7 +222,6 @@ class FiltroReporteViajes extends Component {
                                     </Grid>
                                 }
 
-
                                 <Grid item md={12}>
                                     <button type={"submit"}
                                             className="btn btn-primary primary-btn">Imprimir
@@ -245,19 +231,15 @@ class FiltroReporteViajes extends Component {
                                         this.setState({
                                             cliente:null
                                         })
-                                    }
-
-                                    }
-                                            className="btn btn-secondary secondary-btn">Regresar
+                                    }} className="btn btn-secondary secondary-btn">
+                                        Regresar
                                     </button>
                                 </Grid>
                             </Grid>
                         </>
                     }
-
                 </form>
             </div>
-
         );
     }
 }

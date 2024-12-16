@@ -49,6 +49,7 @@ function obtenerEstatusInforme(){
         );
     return result
 }
+
 function obtenerEstatusRecoleccion(){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoRecoleccion`;
     let result;
@@ -58,4 +59,11 @@ function obtenerEstatusRecoleccion(){
     return result
 }
 
-export {obtenerEstatusViaje, obtenerEstatusDocumentos, obtenerEstatusEmbarque, obtenerEstatusGuia, obtenerEstatusInforme, obtenerEstatusRecoleccion}
+export {
+    obtenerEstatusViaje,
+    obtenerEstatusDocumentos,
+    obtenerEstatusEmbarque,
+    obtenerEstatusGuia,
+    obtenerEstatusInforme,
+    obtenerEstatusRecoleccion
+}

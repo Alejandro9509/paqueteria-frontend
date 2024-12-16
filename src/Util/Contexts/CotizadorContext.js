@@ -4,10 +4,10 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
+
 function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion, entregaDD, recoleccionDD) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador/Agregar`;
     let result;
-    console.log(entregaDD)
     let params = {
         idOrigen: remitente.origenRemitente.m_nIdCiudad,
         idDestino: destinatario.destinoDestinatario.m_nIdCiudad,
@@ -50,6 +50,7 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
     );
     return result
 }
+
 function obtenerCotizacionTarifario(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador/Busqueda`;
     let result;
@@ -59,4 +60,5 @@ function obtenerCotizacionTarifario(params) {
     );
     return result
 }
+
 export {obtenerCotizacion,obtenerCotizacionTarifario}

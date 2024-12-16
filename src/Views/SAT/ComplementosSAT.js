@@ -1,30 +1,24 @@
 import React, {useEffect, useState} from "react";
-import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Select} from "@mui/material";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from "@mui/material/TextField";
+import { Grid } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 import IconButton from "@mui/material/IconButton";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from "@mui/icons-material/Save";
 import PublishIcon from '@mui/icons-material/Publish';
 import {DataGrid} from "@mui/x-data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import GetAppIcon from '@mui/icons-material/GetApp';
 import ExcelFile from '../../Files/ImportarMateriales_Consolidado.xlsx'
 import * as XLSX from "xlsx";
 import {
-    obtenerSATEmbalajes, obtenerSATFraccionArancelaria, obtenerSATMaterialPeligroso, obtenerSATPaginado,
-    obtenerSATServicios,
-    obtenerSATUnidades,
+    obtenerSATPaginado
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import { confirmAlert } from "react-confirm-alert";
-import e from "cors";
 import { id } from "date-fns/locale";
 import {validarComplementoSat} from "../../Util/Contexts/SATContext";
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -71,16 +65,16 @@ function ComplementosSAT(props) {
         claveCondicionesEspeciales:'',
         condicionEspecial:'',
     })
+
     useEffect(() => {
-         if( detectarModificaciones){
-             window.onbeforeunload=confirmExit
-         }
-     }, [dataComplemento])
-     function confirmExit()
-     {
- 
-       return "show warning";
-     }
+        if( detectarModificaciones){
+            window.onbeforeunload=confirmExit
+        }
+    }, [dataComplemento])
+
+    function confirmExit() {
+        return "show warning";
+    }
 
     const resetDataComplemento = (catalogo) => {
         if(catalogo == 1){
@@ -189,9 +183,7 @@ function ComplementosSAT(props) {
 
     function RowMenuCell(propss) {
         const {row} = propss;
-
         const handleDeleteClick = (event) => {
-            
             event.stopPropagation();
             confirmAlert({
                 title: 'Confirmación',
@@ -203,17 +195,14 @@ function ComplementosSAT(props) {
                     label: 'No',
                     onClick: ()=>{return}
                 }
-            ]
-        });
-            
+            ]});
         };
 
         const handleOpenClick = (event) => {
             event.stopPropagation();
             resetDataComplemento()
-           console.log("fila"+JSON.stringify(row))
             obtenerSATPaginado(1, 0,"c_ClaveUnidad", row.claveUnidad).then((respuesta) => {
-              row.UnidadSAT = respuesta.data[0].m_sDescripcion   
+                row.UnidadSAT = respuesta.data[0].m_sDescripcion
                 obtenerSATPaginado(1, 0,"c_ClaveProdServCP", row.claveProducto).then((respuesta) => {
                     row.ProductoSAT = respuesta.data[0].m_sDescripcion
                     if(row.esPeligroso){
@@ -253,10 +242,8 @@ function ComplementosSAT(props) {
                         setDataComplemento(row);
                         setOpenDialog(true);
                     }
-                  }) 
-         
+                })
             })
-            console.log(row);
         };
 
         return (
@@ -547,7 +534,6 @@ function ComplementosSAT(props) {
     }
 
     const handleAceptar = (data)=>{
-        console.log(dataComplemento)
         if(parseFloat(dataComplemento.cantidad) <=0){
             showSuccess("La cantidad debe ser mayor a cero.")
             return
@@ -568,7 +554,6 @@ function ComplementosSAT(props) {
             showSuccess("Se requiere seleccionar material peligroso")
             return
         }
-
         if((!dataComplemento.embalajeSAT || !dataComplemento.claveEmbalaje) && dataComplemento.esPeligroso ){
             showSuccess("Se requiere seleccionar Embalaje")
             return
@@ -583,6 +568,7 @@ function ComplementosSAT(props) {
                     return;
             }
         }
+
         if (dataComplemento.id === 0){
             const item = dataComplemento
             item.id = Math.floor(Math.random() * 10000)
@@ -633,12 +619,11 @@ function ComplementosSAT(props) {
             props.onChangeList(arrayNew)
         }
 
-
         resetDataComplemento()
         showSuccess("Complemento Agregado.")
         dialogVisible(false)
-
     }
+
     function validarLlenadoTextBoxes(numSector){
         let flag=false
         let lista=document.querySelectorAll("[id*=c" + numSector + "]");
@@ -661,11 +646,10 @@ function ComplementosSAT(props) {
         if(flag){return false}
         else{return true}
     }
+
     function dialogVisible(isVisible){
         setOpenDialog(isVisible)
-
     }
-
 
     const handleOpenClick = (event) => {
         event.stopPropagation();
@@ -682,6 +666,7 @@ function ComplementosSAT(props) {
     const handleCleanExcel= (e)=>{
         e.target.value=null
     }
+
     async function readExcel(file){
         const promise = new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -700,7 +685,6 @@ function ComplementosSAT(props) {
         });
 
         promise.then(async (d) => {
-            console.log(d);
             const newArray = d.map(item => (
                 {
                     id: Math.floor(Math.random() * 10000),
@@ -714,22 +698,18 @@ function ComplementosSAT(props) {
                     descripcionEmbalajeSAT: item['Es material peligroso'] === "SI" && item['Descripción embalaje'] ? item['Descripción embalaje'] : '',
                     claveFraccion: item['Es material peligroso'] === "SI" && item['Clave Fraccion'] ? item['Clave Fraccion'].toString() : ''
                 }))
-            console.log(newArray)
             let hayErrores = false
             let completeErrorMessage = ''
             for (let i = 0; i < newArray.length; i++) {
                 if (newArray[i].cantidad === 0) {
-                    // showError(`Cantidad no válida en registro número '${i + 1}'.`)
                     completeErrorMessage += `Cantidad no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
                 }
                 if (newArray[i].peso === 0) {
-                    // showError(`Peso no válido en registro número '${i + 1}'.`)
                     completeErrorMessage += `Peso no válido en registro número '${i + 1}'.<br />`
                         hayErrores = true
                 }
                 if (newArray[i].claveProducto.length === 0) {
-                    // showError(`Clave de producto no válida en registro número '${i + 1}'.`)
                     completeErrorMessage += `Clave de producto no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
                 } else {
@@ -737,14 +717,12 @@ function ComplementosSAT(props) {
                         if (data.success) {
                             newArray[i].claveProducto = data.message
                         } else {
-                            // showError(`Clave de producto no válida en registro número '${i + 1}'. La clave no existe.`)
                             completeErrorMessage += `Clave de producto no válida en registro número '${i + 1}'. La clave no existe.<br />`
                             hayErrores = true
                         }
                     })
                 }
                 if (newArray[i].claveUnidad.length === 0) {
-                    // showError(`Clave de unidad no válida en registro número '${i + 1}'.`)
                     completeErrorMessage += `Clave de unidad no válida en registro número '${i + 1}'.<br />`
                     hayErrores = true
                 } else {
@@ -752,7 +730,6 @@ function ComplementosSAT(props) {
                         if (data.success) {
                             newArray[i].claveUnidad = data.message
                         } else {
-                            // showError(`Clave de unidad no válida en registro número '${i + 1}'. La clave no existe.`)
                             completeErrorMessage += `Clave de unidad no válida en registro número '${i + 1}'. La clave no existe.<br />`
                             hayErrores = true
                         }
@@ -760,7 +737,6 @@ function ComplementosSAT(props) {
                 }
                 if (newArray[i].esPeligroso === true) {
                     if (newArray[i].claveMaterialPeligroso.length === 0) {
-                        // showError(`Clave material peligroso no válida en registro número '${i + 1}'.`)
                         completeErrorMessage += `Clave material peligroso no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     } else {
@@ -768,14 +744,12 @@ function ComplementosSAT(props) {
                             if (data.success) {
                                 newArray[i].claveMaterialPeligroso = data.message
                             } else {
-                                // showError(`Clave material peligroso no válida en registro número '${i + 1}'. La clave no existe.`)
                                 completeErrorMessage += `Clave material peligroso no válida en registro número '${i + 1}'. La clave no existe.<br />`
                                 hayErrores = true
                             }
                         })
                     }
                     if (newArray[i].claveEmbalaje.length === 0) {
-                        // showError(`Clave Embalaje no válida en registro número '${i + 1}'.`)
                         completeErrorMessage += `Clave Embalaje no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     } else {
@@ -783,19 +757,16 @@ function ComplementosSAT(props) {
                             if (data.success) {
                                 newArray[i].claveEmbalaje = data.message
                             } else {
-                                // showError(`Clave Embalaje no válida en registro número '${i + 1}'. La clave no existe.`)
                                 completeErrorMessage += `Clave Embalaje no válida en registro número '${i + 1}'. La clave no existe.<br />`
                                 hayErrores = true
                             }
                         })
                     }
                     if (newArray[i].descripcionEmbalajeSAT.length === 0) {
-                        // showError(`Descripción embalaje no válida en registro número '${i + 1}'.`)
                         completeErrorMessage += `Descripción embalaje no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     }
                     if (newArray[i].claveFraccion.length === 0) {
-                        // showError(`Clave Fraccion no válida en registro número '${i + 1}'.`)
                         completeErrorMessage += `Clave Fraccion no válida en registro número '${i + 1}'.<br />`
                         hayErrores = true
                     } else {
@@ -803,7 +774,6 @@ function ComplementosSAT(props) {
                             if (data.success) {
                                 newArray[i].claveFraccion = data.message.toString()
                             } else {
-                                // showError(`Clave Fraccion no válida en registro número '${i + 1}'. La clave no existe.`)
                                 completeErrorMessage += `Clave Fraccion no válida en registro número '${i + 1}'. La clave no existe.<br />`
                                 hayErrores = true
                             }
@@ -813,7 +783,6 @@ function ComplementosSAT(props) {
             }
             if (hayErrores) {
                 completeErrorMessage += 'Favor de revisar el archivo.'
-                console.log(completeErrorMessage)
                 showError(completeErrorMessage)
                 return
             }
@@ -821,6 +790,7 @@ function ComplementosSAT(props) {
             // props.dataList.push(newArray)
         });
     };
+
     const removerSeleccion=()=>{
         let complementosFiltrados=props.dataList
         rowSelectionModel.forEach(id=>{
@@ -868,7 +838,8 @@ function ComplementosSAT(props) {
                 </Tooltip>
                 </Grid>
                 <Grid item xs={1}>
-                    <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} onClick={handleCleanExcel} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
+                    <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick}
+                           onClick={handleCleanExcel} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
                     <Tooltip title="Cargar Plantilla" >
                         <IconButton
@@ -885,11 +856,11 @@ function ComplementosSAT(props) {
                 </Grid>
                 <Grid item xs={1}>
                     <Tooltip title="Descargar Plantilla" >
-                    <Button style={{ padding: "0px" }} disabled={props.disabled}>
-                    <a href={ExcelFile} download="EstructuraComplementosSAT.xlsx">
-                        Descargar Plantilla
-                    </a> 
-                    </Button>
+                        <Button style={{ padding: "0px" }} disabled={props.disabled}>
+                            <a href={ExcelFile} download="EstructuraComplementosSAT.xlsx">
+                                Descargar Plantilla
+                            </a>
+                        </Button>
                     </Tooltip>
                 </Grid>
             </Grid>
@@ -897,23 +868,40 @@ function ComplementosSAT(props) {
             {
                 props.dataList.length !== 0 &&
                 <div className="widget-container">
-                    <div className="widget-content">
-                        <Button onClick={()=>{setSeleccionable(seleccionable?false:true)
-                            setRowSelectionModel([])}
-                        } className="btn btn-secondary" style={{visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',color:"white",marginLeft:"73%",fontSize:12}}>{seleccionable?'Cancelar':'Seleccionar para Borrar'}</Button>
-                        <Button onClick={()=>confirmAlert({
-                            title: 'Confirmación',
-                            message: '¿Desea eliminar los complementos seleccionados?',
-                            buttons: [
-                                {
-                                    label: 'Sí',
-                                    onClick: async () => removerSeleccion()
-                                },
-                                {
-                                    label: 'No',
-                                }
-                            ]
-                        })} className="btn btn-primary" style={{visibility:seleccionable?'visible':'hidden',color:"white",marginLeft:"1%",fontSize:12}}>Borrar Selección</Button>
+                    <div className="widget-content" align={"right"}>
+                        <Button onClick={()=>
+                            confirmAlert({
+                                title: 'Confirmación',
+                                message: '¿Desea eliminar los complementos seleccionados?',
+                                buttons: [
+                                    {
+                                        label: 'Sí',
+                                        onClick: async () => removerSeleccion()
+                                    },
+                                    {
+                                        label: 'No',
+                                    }
+                                ]
+                            })} className="btn btn-primary"
+                                style={{
+                                    visibility: seleccionable ? 'visible' : 'hidden',
+                                    color: "white",
+                                    fontSize: "1em"
+                                }}>
+                            Borrar Selección
+                        </Button>
+                        <Button onClick={()=>{
+                            setSeleccionable(seleccionable?false:true)
+                            setRowSelectionModel([])
+                        }} className="btn btn-secondary"
+                                style={{
+                                    visibility:props.dataList.length>0 && !props.disabled?'visible':'hidden',
+                                    color:"white",
+                                    marginLeft: "1%",
+                                    marginRight: "2%",
+                                    fontSize:"1em"}}>
+                            {seleccionable?'Cancelar':'Seleccionar para Borrar'}
+                        </Button>
                         <div className="row" style={{ height: 200}}>
                             <DataGrid
                                 localeText={dataGridLocaleText}
@@ -929,11 +917,9 @@ function ComplementosSAT(props) {
                                 getRowId={(row) => row.id}
                             />
                         </div>
-
                     </div>
                 </div>
             }
-
         </div>
     );
 }

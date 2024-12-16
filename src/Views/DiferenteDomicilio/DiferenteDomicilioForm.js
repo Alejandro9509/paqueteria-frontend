@@ -102,30 +102,30 @@ export default function DiferenteDomicilioForm(props){
                 });
         }
     }
-    const handleChangeAutocomplete = (input, newValue) => {
 
+    const handleChangeAutocomplete = (input, newValue) => {
         if (input === "codigoPostal" && newValue.m_nIdCP){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
                 if (data.length > 0){
                     if (data.length === 1){
                         if(data[0].m_bAplicaEntrega){
-                        showSuccess(`No aplican entregas en la zona operativa`)
-                        setState({
-                            ...state,
-                            [input]: null,
-                            zonaOperativa: null
-                        })
-                       }else{
-                        setState(state => {
-                            return {
+                            showSuccess(`No aplican entregas en la zona operativa`)
+                            setState({
+                                ...state,
+                                [input]: null,
+                                zonaOperativa: null
+                            })
+                        }else{
+                            setState(state => {
+                                return {
                                 ...state,
                                 [input]: newValue,
                                 zonaOperativa: data[0]
-                            }
-                        })
+                                }
+                            })
+                        }
+                        setDataZonasOperativas(data)
                     }
-                    setDataZonasOperativas(data)
-                }
                 }else{
                     setState(state => {
                         return{
@@ -160,7 +160,6 @@ export default function DiferenteDomicilioForm(props){
                     })
                 }
             })
-
         }
     }
 
@@ -189,6 +188,7 @@ export default function DiferenteDomicilioForm(props){
         }
 
     }, [props.value.idEstado])
+
     useEffect(()=>{
         if(props.guia)
             obtenerParametrosDestino(props.guia.id).then(({data})=>{
@@ -198,6 +198,7 @@ export default function DiferenteDomicilioForm(props){
                     m_sColonia:data[0].Colonia,m_nIdCP:data[0].IdCodigoPostal},estado:data[0].Estado,municipio:data[0].Municipio,domicilio:data[0].domicilio,zonaOperativa:{m_sCodigoZona:data[0].CodigoZona,m_nIdZona:data[0].IdZona}})
          })
     },props)
+
     return(
         <Grid container spacing={2}>
             <Grid item xs={3}>
@@ -315,7 +316,6 @@ export default function DiferenteDomicilioForm(props){
                     )}
                     onKeyDown={e => {
                         if (e.code === "Enter") {
-                            // console.log(e)
                             e.preventDefault()
                         }
                     }}

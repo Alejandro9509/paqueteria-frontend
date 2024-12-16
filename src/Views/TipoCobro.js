@@ -1,10 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { DataGrid } from '@mui/x-data-grid';
-
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import {Checkbox, FormControlLabel, MenuItem, TextField, Tooltip} from "@mui/material";
@@ -12,7 +10,6 @@ import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCob
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import Grid from "@mui/material/Grid";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
@@ -44,7 +41,6 @@ function showSuccess(mensaje) {
 }
 
 function TipoCobro() {
-
     const [data, setData] = React.useState([])
     const [dataTipoPago, setDataTipoPago] = React.useState([])
     const [state, setState] = React.useState({
@@ -71,7 +67,6 @@ function TipoCobro() {
             "creadoPor": state.CreadoPor,
             "modificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.idTipoCobro != 0) {
             modificarTipoCobro(state.idTipoCobro, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -96,13 +91,11 @@ function TipoCobro() {
         var derecho;
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
-
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
             eliminarTipoCobro(id, state.ModificadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
@@ -128,7 +121,6 @@ function TipoCobro() {
             [event.target.name]: event.target.checked
         });
     };
-
 
     const columns = React.useMemo(() => [
         {
@@ -347,7 +339,7 @@ function TipoCobro() {
                         <li className="active">
                             <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list" /> Listado
-            </a>
+                            </a>
                         </li>
                         <li>
                             <a onClick={(event) => handleShowAgregar(event)} className={validarDerecho(9101350) ? "" : classes.disabled} data-toggle="tab">
@@ -456,34 +448,29 @@ function TipoCobro() {
                                                             </Tooltip>
                                                         </Grid>
                                                         <Grid item xs={12} sm={9}/>
-
                                                     </Grid>
-
-
-
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer ol-md-12">
-                                    <Grid container spacing={1}>
-                                        <Grid item xs>
-                                        <Button fullWidth href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
-                                                    >
-                                                        CANCELAR
-                                        </Button>
-                                        </Grid>
-                                        <Grid item xs>
-                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">AGREGAR TIPO DE COBRO</Button>
-                                        </Grid>
-                                    </Grid>
-                                </div>
-
+                                                    <Grid container spacing={1}>
+                                                        <Grid item xs>
+                                                            <Button fullWidth href="#Listado" role="tab"
+                                                                    className="btn btn-secondary secondary-btn"
+                                                                    onClick={handleClickCancelar} data-toggle="tab">
+                                                                CANCELAR
+                                                            </Button>
+                                                        </Grid>
+                                                        <Grid item xs>
+                                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">AGREGAR TIPO DE COBRO</Button>
+                                                        </Grid>
+                                                    </Grid>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 

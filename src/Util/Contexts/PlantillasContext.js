@@ -3,6 +3,8 @@ import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
+
+
 function obtenerPlantillasImportacion() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetListado`;
     let result;
@@ -11,6 +13,7 @@ function obtenerPlantillasImportacion() {
     );
     return result
 }
+
 function obtenerPlantillasImportacionById(idPlantilla) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetById/${idPlantilla}`;
     let result;
@@ -19,6 +22,7 @@ function obtenerPlantillasImportacionById(idPlantilla) {
     );
     return result
 }
+
 function obtenerPlantillaImportacionByIdCliente(idCliente) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetByIdCliente/${idCliente}`;
     let result;
@@ -65,4 +69,12 @@ function obtenerNombrePlantillaImportacionByIdCliente(idCliente) {
     return result
 }
 
-export { obtenerPlantillasImportacion,agregarPlantillaImportacion,obtenerPlantillasImportacionById,modificarPlantillaImportacion,obtenerPlantillaImportacionByIdCliente,eliminarPlantillaImportacion,obtenerNombrePlantillaImportacionByIdCliente }
+export {
+    obtenerPlantillasImportacion,
+    agregarPlantillaImportacion,
+    obtenerPlantillasImportacionById,
+    modificarPlantillaImportacion,
+    obtenerPlantillaImportacionByIdCliente,
+    eliminarPlantillaImportacion,
+    obtenerNombrePlantillaImportacionByIdCliente
+}

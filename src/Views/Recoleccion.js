@@ -1,74 +1,46 @@
-import React, {useEffect, useState, useMemo, useCallback} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
-import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import ExportCSV from "../Components/Template/Export";
-import ExportPDF from "../Components/Template/ExportPDF";
-import Carousel from "re-carousel";
-import IndicatorDots from "../Util/Dots";
-import Buttons from "../Util/CarruselButtons";
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import * as XLSX from "xlsx";
-import useModal from "react-hooks-use-modal";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import ReplayIcon from '@mui/icons-material/Replay';
-import Autocomplete from '@mui/material/Autocomplete';
 import TextField from "@mui/material/TextField";
 import { DataGrid} from '@mui/x-data-grid';
 import InputAdornment from "@mui/material/InputAdornment";
-import LinearProgress from '@mui/material/LinearProgress';
 import SvgIcon from "@mui/material/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     useTable,
     useFilters,
-    useAsyncDebounce,
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getAddressFormated,getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../Util/Util"
-import {remove_array_element} from "../Util/Util";
+import {getAddressFormated, getCurrentDateTime, validarDerecho} from "../Util/Util"
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import RestartAltIcon from '@mui/icons-material/Refresh';
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import Noty from 'noty';
 import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button, Chip,
+    Button,
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
     FormControl,
-    FormControlLabel, Grid,
+    Grid,
     InputLabel, MenuItem,
     Select,
-    Step,
-    StepLabel,
-    Stepper,
-    Tooltip,
-    Typography
+    Tooltip
 } from "@mui/material";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
-import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
+import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {
-    obtenerCodigoPostal,
-    obtenerCodigoPostalCiudad, obtenerCodigoPostalEstado,
-    obtenerCodigoPostalId, obtenerCodigosPostalesPorCiudad, obtenerCodigosPostalesPorEstadoMunicipio
+    obtenerCodigosPostalesPorEstadoMunicipio
 } from "../Util/Contexts/CodigoPostalContext";
 import {
-    actualizarRemitentesDestinatarios,
-    obtenerRemitentesDestinatarios,
-    obtenerRemitentesDestinatariosId
+    obtenerRemitentesDestinatarios
 } from "../Util/Contexts/RemitenteDestinatarioContext";
 import {obtenerEmbalajes, obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import {obtenerEstatusRecoleccion} from "../Util/Contexts/EstatusContext";
@@ -81,43 +53,34 @@ import {
     cancelarRecoleccion,
     eliminarRecoleccion,
     obtenerRecoleccionId,
-    obtenerRecoleccionFiltro,
-    obtenerRecoleccion, obtenerRecoleccionReporte
+    obtenerRecoleccionFiltro
 } from "../Util/Contexts/RecoleccionContext";
-import {obtenerTipoUnidades, obtenerTipoUnidadesId} from "../Util/Contexts/TipoUnidadContext";
-import {obtenerUnidades, obtenerUnidadesId, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
+import {obtenerTipoUnidades} from "../Util/Contexts/TipoUnidadContext";
+import {obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {
-    obtenerFormatosImpresion,
     imprimirFormatosId,
     obtenerFormatosImpresionProceso, imprimirFormatosIdIdTipoReporte
 } from "../Util/Contexts/FormatosImpresionContext";
-import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
-import {forEach} from "react-bootstrap/ElementChildren";
-import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
+import {obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/Delete";
 import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
-import {obtenerAllEstados, obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
+import {obtenerAllEstados} from "../Util/Contexts/EstadosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
-import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
-import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 import Filtros from "./Filtros/Filtros";
 import Citas from "./Citas/Citas";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 import Evidencias from "./Evidencias";
-import DialogoEvidenciasUltimaMilla from "./UltimaMilla/DialogoEvidenciasUltimaMilla";
 import ImportarEmbarques from "./Embarque/ImportarEmbarques";
 
 const PREFIX = 'Recoleccion';
@@ -164,6 +127,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 function showError(mensaje) {
     new Noty({
         type: "error",
@@ -182,13 +146,14 @@ const TIPOS_SEGURO = {
     OBLIGATORIO: 4,
     SIN_ASIGNAR: 5
 }
+
 const FORMATOS_IMPRESION = {
     RECOLECCION: 210
 }
+
 function Recoleccion() {
 
     const today = new Date();
-
     const [detectarModificaciones,setDetectar]=React.useState(false)
     const [redirect, setRedirect] = React.useState(false);
     const [data, setData] = React.useState([]);
@@ -439,9 +404,7 @@ function Recoleccion() {
             latitudR: data.latitud,
             longitudR: data.longitud
         })
-        //  console.log(data.zonaOperativa)
     };
-
 
     const handleClickCodigosPostalesInput = (input) => {
         if (input === "codigoPostalRemitente"){
@@ -635,22 +598,11 @@ function Recoleccion() {
 
     const history = useHistory()
 
-    // useEffect(()=>{
-    //
-    //     obtenerFormatosImpresionProceso(210).then(({data}) => {
-    //         setDataReportes(data)
-    //     })
-    // }, [])
-
     useEffect(value => {
-
         if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
-            // console.log('tipo Unidad select: ', state.tipoUnidad)
             getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
         }
     }, [state.tipoUnidad])
-
-    
     
     useEffect((value) => {
         if (
@@ -661,15 +613,12 @@ function Recoleccion() {
             window.location.replace("login");
             return;
         }
-
         getDataParaListado()
-
     }, []);
 
     const getDataParaListado = () => {
         getAllSucursales();
         getAllEstatusRecoleccion()
-
     }
 
     const getDataParaEditar = (operacion) => {
@@ -682,7 +631,6 @@ function Recoleccion() {
         getAllEstados()
         getAllEstatusRecoleccion()
         getParametrosConfiguracion(operacion)
-
     }
 
     async function getParametrosConfiguracion(operacion) {
@@ -698,9 +646,8 @@ function Recoleccion() {
                         porcentualSeguroDefecto:respuesta.data.PorcentualSeguroDefecto
                     }
                 })
-
-
-            }    setConfiguraciones((config) => {
+            }
+            setConfiguraciones((config) => {
                 return {
                     ...config,
                     estatusRecoleccion: respuesta.data.EstatusRecoleccion,
@@ -724,6 +671,7 @@ function Recoleccion() {
             })
         })
     }
+
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
         if (dataRemitenteDestinatario.length === 0) {
@@ -736,7 +684,6 @@ function Recoleccion() {
     }
 
     const validarCoordenadas = (coordenadas) => {
-        console.log("coordenadas"+coordenadas)
         /**Si es modificacion*/
         if (state.idRecoleccion != 0){
             /**Si es recoleccion diferente domicilio y no hay coordenadas guardadas*/
@@ -793,12 +740,12 @@ function Recoleccion() {
             }
         })
     }
+
     const esDatoValido = (dato) => {
         return dato
             && dato !== ''
             && dato !== 0
             && dato !== "0";
-
     }
 
     const esRecoleccionValido = () => {
@@ -949,6 +896,7 @@ function Recoleccion() {
         valid = true
         return valid;
     }
+
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
         setDetectar(false)
@@ -1142,9 +1090,6 @@ function Recoleccion() {
                 m_c_Descuento: item.descuento
             }))
             params.m_nIdCotizacion = state.idCotizacion
-            //    console.log(params)
-            console.log(JSON.stringify(params))
-            console.log(coordenadas)
             if (state.idRecoleccion != 0) {
                 modificarRecoleccion(state.idRecoleccion, params)
                     .then((respuesta) => {
@@ -1159,7 +1104,6 @@ function Recoleccion() {
                         showSuccess(err.response.data);
                     });
             } else {
-                console.log("ENTRO")
                 confirmAlert({
                     title: 'Confirmación',
                     message: '¿Desea crear esta recolección?',
@@ -1169,11 +1113,8 @@ function Recoleccion() {
                             onClick: ()=>{
                                 agregarRecoleccion(params)
                                     .then((respuesta) => {
-                                        //   console.log(respuesta.data);
-                                        //    showSuccess(respuesta.data);
                                         showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                         limpiarInputsAgregar()
-                                      //  setDetectar(false)
                                         confirmAlert({
                                             title: 'Confirmación',
                                             message: '¿Desea crear otra recolección?',
@@ -1196,7 +1137,6 @@ function Recoleccion() {
 
                                     })
                                     .catch((err) => {
-                                        //   console.log(err);
                                         showSuccess(err.response.data);
                                     });
                             }
@@ -1274,10 +1214,8 @@ function Recoleccion() {
     };
 
     function handleSubmission() {
-        //  console.log(selectedFile)
         var reader = new FileReader();
         reader.onload = function () {
-            //   console.log(reader.result)
         }.bind(this);
         reader.readAsText(selectedFile);
         setState(state => {
@@ -1292,14 +1230,11 @@ function Recoleccion() {
         var derecho;
         validarPermisos(state)
             .then((respuesta) => {
-                //showSuccess(respuesta.data)
-
                 derecho = respuesta.data;
                 if (derecho == false) {
                     showSuccess("El usuario no tiene derechos para realizar el proceso");
                     return;
                 }
-
                 eliminarRecoleccion(id, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
@@ -1325,7 +1260,6 @@ function Recoleccion() {
                 $('.tab-content div ').removeClass('in show');
                 $('#Agregar').addClass('in show');
                 setTabActiva(1)
-                // console.log("Recoleccion: ", respuesta.data);
                 setState(state => {
                     return {
                         ...state,
@@ -1354,9 +1288,9 @@ function Recoleccion() {
                 }
             })
             setRecoleccionDataParaConsultaModificacion(respuesta,"Consultar")
-
         });
     }
+
     const [limpiarRemDes,setLimpiarRemDes] = React.useState()
 
     const mostrarDatosRecoleccionDD = (respuesta) => {
@@ -1420,11 +1354,11 @@ function Recoleccion() {
                 return {
                     ...entregaDD,
                     zonaOperativa: data
-
                 }
             })
         })
     }
+
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
@@ -1513,7 +1447,6 @@ function Recoleccion() {
             mostrarDatosEntregaDD(respuesta)
         }
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
-            //  console.log("Tiene seguro"+data.m_bTieneSeguro)
             setState(state => {
                 return {
                     ...state,
@@ -1576,9 +1509,9 @@ function Recoleccion() {
 
             }
         });
-
         // mostrarCotizadorRec(true)
     }
+
     useEffect(value => {
         let newTiposCobro = []
         if (state.entregaEnSucursal) {
@@ -1606,7 +1539,6 @@ function Recoleccion() {
 
     function handleShowSalidaLlegada(type) {
         obtenerRecoleccionId(state.idRecoleccion).then((respuesta) => {
-            // console.log(respuesta.data);
             setState({
                 ...state,
                 sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
@@ -1649,22 +1581,17 @@ function Recoleccion() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         setTabActiva(1)
-        
-
-
     }
    
     useEffect(() => {
         if( detectarModificaciones){
-            console.log("disprosio")
-           // console.log(remitente)
             window.onbeforeunload = confirmExit
            
         }
     }, [remitente,state,destinatario,dataComplementosSAT,dataPaquetes,recoleccionDD,entregaDD,dataConceptos])
+
     function confirmExit()
     {
-
       return "Are you sure you want to leave?"
     }
 
@@ -1715,13 +1642,8 @@ function Recoleccion() {
                     $('.nav-tabs li').eq(2).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Cancelar').addClass('in show');}
-
-
             })
         });
-
-
-
     }
 
     const handlePatrocinadorSelected = (row) => {
@@ -1840,7 +1762,6 @@ function Recoleccion() {
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then(({data}) => {
-            console.log(data)
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
             pdfWindow.document.body.style.margin = "0px";
@@ -1848,6 +1769,7 @@ function Recoleccion() {
         })
 
     }
+
     const handleChangeSucursalEntrega = (event) => {
         setState(state => {
             return {
@@ -1868,6 +1790,7 @@ function Recoleccion() {
             })
         })
     }
+
     //setea si la recoleccion es en diferente direccion a la del remitente
     const handleRecoleccionCheckboxChange = (event) => {
         // event.preventDefault();
@@ -1889,7 +1812,6 @@ function Recoleccion() {
     //setea si la entrega es en diferente direccion a la del destinatario
     const handleEntregaCheckboxChange = (event) => {
         // event.preventDefault();
-        console.log("ENTRA CHECKBOX")
         setRepetirConceptos(true)
         setState({
             ...state,
@@ -1897,6 +1819,7 @@ function Recoleccion() {
             entregaEnSucursal: false
         });
     };
+
     const handleEntregaEnSucursalCheckbox = (event) => {
         setRepetirConceptos(true)
         if(destinatario.idDestinatario === ''){//Evita que cambie de estatus el check de entrega en sucursal
@@ -1914,6 +1837,7 @@ function Recoleccion() {
             }
         })
     };
+
     const handleListComplementosSATChange = (newList) => {
         setDataComplementosSAT(newList)
     }
@@ -1930,35 +1854,26 @@ function Recoleccion() {
                         <Tooltip title="Modificar" disabled={!validarDerecho(9101415)}>
                             <a data-toggle="tab"
                                onClick={() =>
-                               { if(row.row.m_nIdEstatusRecoleccion==1 ||row.row.m_nIdEstatusRecoleccion==6){
-                                   handleShowModificar(row.row.m_nIdRecoleccion,row.row)
-                               }else{
-                                   showSuccess(`La recoleccion solo puede ser modificada en Estatus: Pendiente, Estatus Actual: ${row.row.m_sEstatusRecoleccion}`)
-                               }
-                               }
-
-
-
-
-
-
-
+                                   { if(row.row.m_nIdEstatusRecoleccion==1 ||row.row.m_nIdEstatusRecoleccion==6){
+                                           handleShowModificar(row.row.m_nIdRecoleccion,row.row)
+                                       }else{
+                                           showSuccess(`La recoleccion solo puede ser modificada en Estatus: Pendiente, Estatus Actual: ${row.row.m_sEstatusRecoleccion}`)
+                                       }
+                                   }
                                }
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
                         <Tooltip title="Consultar" disabled={!validarDerecho(9101419)}>
-                            <a className="btn btn-default btn-xs"
-                               onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
-                                                                                                  style={{color: "#F9A03E"}}/></a>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}>
+                                <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
+                            </a>
                         </Tooltip>
                         <Tooltip title="Reporte" disabled={!validarDerecho(9101418)}>
-                            <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row)}><i className="zmdi zmdi-file"
-                                                                                                                         style={{color: "#F9A03E"}}/></a>
-
+                            <a  className="btn btn-default btn-xs" onClick={() => generarReporte(row.row)}>
+                                <i className="zmdi zmdi-file" style={{color: "#F9A03E"}}/>
+                            </a>
                         </Tooltip>
-
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101416)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
@@ -1976,8 +1891,6 @@ function Recoleccion() {
                                })}><i className="zmdi zmdi-delete"
                                       style={{color: "#F30B0B"}}/></a>
                         </Tooltip>
-
-
                     </div>
                 )
             }
@@ -2155,6 +2068,7 @@ function Recoleccion() {
             accessor: "m_nIdTipoUnidad",
         }
     ]);
+
     // function generarReporteOpcion1(row){
     //     obtenerRecoleccionReporte(row.m_nIdRecoleccion).then(({data}) => {
     //         let pdfWindow = window.open("");
@@ -2163,9 +2077,9 @@ function Recoleccion() {
     //         pdfWindow.document.title = "Recolección " + row.m_sFolioRecoleccion;
     //     })
     // }
+
     function generarReporte(row){
         // setSeleccion(row)
-        // console.log(row)
         // setOpenDialog(true)
        /* obtenerRecoleccionReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
@@ -2176,7 +2090,6 @@ function Recoleccion() {
         obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.RECOLECCION).then((respuesta) => {
             // setDataReportes(data)
             imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
-                console.log(data)
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
                 pdfWindow.document.body.style.margin = "0px";
@@ -2184,8 +2097,8 @@ function Recoleccion() {
             })
         })
     }
+
     // const handleOnChangeReporte = (data) => {
-    //     console.log(data)
     //     setState({
     //         ...state,
     //         reporteSeleccionado: data
@@ -2193,8 +2106,6 @@ function Recoleccion() {
     // }
     // const handleGenerarReporte=(e)=>{
     //     e.preventDefault()
-    //     console.log(state.reporteSeleccionado)
-    //     console.log(seleccion)
     //
     //     if (state.reporteSeleccionado.length === 0) {
     //         showError("Es necesario seleccionar al menos un reporte")
@@ -2202,7 +2113,6 @@ function Recoleccion() {
     //     }
     //
     //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
-    //         console.log(data)
     //         let pdfWindow = window.open("");
     //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
     //         pdfWindow.document.body.style.margin = "0px";
@@ -2214,6 +2124,7 @@ function Recoleccion() {
     //     })
     //     setOpenDialog(false)
     // }
+
     const columnsUnidades = React.useMemo(() => [
         {
             Name: "Descripcion",
@@ -2261,7 +2172,6 @@ function Recoleccion() {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                     setData(respuesta.data);
-                    console.log(respuesta.data)
                 })
             })
 
@@ -2307,6 +2217,7 @@ function Recoleccion() {
             setDataTipoMoneda(respuesta.data);
         });
     }
+
     const actualizarConceptos = (list) => {
         setDataConceptos(list);
     }
@@ -2362,7 +2273,6 @@ function Recoleccion() {
             } else {
                 setDataTipoUnidad(respuesta.data)
             }
-            //  console.log("tipos unidades listado: ", respuesta.data)
             // getAllUnidades(1);
         });
     }
@@ -2370,7 +2280,6 @@ function Recoleccion() {
     function getAllUnidades(id) {
 
         obtenerUnidadesTipo(id).then((respuesta) => {
-            // console.log('unidades listado: ', respuesta);
             setDataUnidad(respuesta.data);
         });
     }
@@ -2385,9 +2294,7 @@ function Recoleccion() {
         var files = e.target.files,
             f = files[0];
         var reader = new FileReader();
-        // console.log(e.target.files);
         reader.onload = function (e) {
-            //  console.log("Nothing Happened");
             var data = e.target.result;
             let readedData = XLSX.read(data, {type: "binary"});
             const wsname = readedData.SheetNames[0];
@@ -2395,7 +2302,6 @@ function Recoleccion() {
 
             /* Convert array to json*/
             const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
-            //  console.log("dataParse : " + dataParse);
             setFileUploaded(dataParse);
         };
         reader.readAsBinaryString(f);
@@ -2431,7 +2337,6 @@ function Recoleccion() {
             </div>
         );
     }
-
 
     function TableCodigoPostal({columns, data, select, object}) {
         const defaultColumn = React.useMemo(
@@ -2964,8 +2869,6 @@ function Recoleccion() {
             },
             200
         );
-
-
     }
 
     if (redirect) {
@@ -3019,10 +2922,9 @@ function Recoleccion() {
                 }
             });
         }
-
     }
+
     const handleListPaquetesChange = (newList) => {
-        console.log("ENTRA PAQUETES")
         setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
@@ -3054,7 +2956,6 @@ function Recoleccion() {
     }
 
     const handleChangeCita = (data) => {
-        console.log(data)
         setState({
             ...state,
             fechaCita: data.fechaCita,
@@ -3096,6 +2997,7 @@ function Recoleccion() {
             }
         });
     }
+
     const handleOnChangeRecoleccionDD = (newValue) => {
         setRepetirConceptos(true)
         setRecoleccionDD(recoleccionDD => {
@@ -3117,6 +3019,7 @@ function Recoleccion() {
             }
         });
     }
+
     function esEntregaSucursal(aplicaEntrega,idSucursalDestinatario){
         if(aplicaEntrega){
             setRepetirConceptos(true)
@@ -3150,13 +3053,14 @@ function Recoleccion() {
                     entregaEnSucursal:false,
                     // deshabilitarDiferenteDomicilio:false
                 }
-            })}
-
-      }
+            })
+        }
+    }
 
     function validarErrores(errores) {
         setErrores(errores)
     }
+
     const obtenerDatosDireccion = (esRecoleccion) => {
         let esDiferenteDomicilio = state.diferenteRecoleccion
         if (esRecoleccion){
@@ -3217,6 +3121,7 @@ function Recoleccion() {
         $('.tab-content div ').removeClass('in show');
         $('#Importar').addClass('in show');
     }
+
     return (
         <div>
             {/*{*/}
@@ -3610,7 +3515,7 @@ function Recoleccion() {
 
                         <li>
                             <a className={(state.idRecoleccion === 0 || !validarDerecho(9101420)) ? classes.disabled : ""} onClick={handleShowCancelar}>
-                                <i className="zmdi zmdi-print"/> Cancelar
+                                <i className="fa fa-ban"/> Cancelar
                             </a>
                         </li>
 
@@ -3635,11 +3540,11 @@ function Recoleccion() {
                         </li>*/}
 
                         <li style={{float: "right"}}>
-                        <Button className={ state.idRecoleccion === 0 || (!validarDerecho(9101417) ) ? classes.disabled :""}  fullWidth color={"primary"} variant={"contained"} onClick={() => setRedirect(true)} >
-                                            Generar Embarque
-                                        </Button>
-
-                           
+                        <Button className={ state.idRecoleccion === 0 || (!validarDerecho(9101417) ) ? classes.disabled :""}
+                                fullWidth color={"primary"} style={{fontSize: "1em"}}
+                                variant={"contained"} onClick={() => setRedirect(true)}>
+                            Generar Embarque
+                        </Button>
                         </li>
 
                         {/**<button className="topbar-right pull-right">Boton</button>*/}
@@ -3697,7 +3602,7 @@ function Recoleccion() {
 
                         <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
-                                <div className="form-content">
+                                <div className="form-content" >
                                     {/*<div
                                         className="wizard-breadcrumb number-style"
                                         style={{
@@ -3723,7 +3628,7 @@ function Recoleccion() {
                                         </div>
                                     </div>*/}
 
-                                    <div className="widget-wrap2" id="informacionGeneral">
+                                    <div className="widget-wrap" id="informacionGeneral">
                                         <div className="widget-header">
                                             <h2>Información General</h2>
                                         </div>
@@ -4564,7 +4469,6 @@ function Recoleccion() {
                                         <div className="row">
                                             <form className="j-forms" onSubmit={handleCancelar}>
                                                 <div className="form-content">
-
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" size="small"
@@ -4890,8 +4794,6 @@ function Recoleccion() {
                                 </div>
                             </div>
                         </div>*/}
-
-
                     </div>
                 </div>
             </section>

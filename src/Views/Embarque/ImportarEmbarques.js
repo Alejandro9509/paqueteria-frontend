@@ -1,31 +1,37 @@
-import React, {Component, useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
 import {
-    Button, Collapse,
-    Dialog, DialogActions,
+    Button,
+    Collapse,
+    Dialog,
     DialogContent,
-    FormControl,
     Grid,
-    Input,
-    InputLabel, List, ListItem, ListItemIcon, ListItemText,
-    Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    TextField, Tooltip
+    List,
+    ListItem,
+    ListItemText,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Tooltip
 } from "@mui/material";
 
 import MenuItem from "@mui/material/MenuItem";
-import {importarProductos} from "../../Util/Contexts/ProductosContext";
 import {
     showSuccess,
     getCurrentDate,
     getCurrentTime,
-    readExcel, DEFAULT_FORMAT, readExcelPlantillaLineal, getAddressFormated, validarDerecho
+    readExcel,
+    readExcelPlantillaLineal,
+    getAddressFormated
 } from "../../Util/Util";
 import {FilePond} from "react-filepond";
 import 'filepond/dist/filepond.min.css';
 import {descargarPlantillaImportarEmbarque} from "../../Util/Contexts/UtileriasContext";
 import {ExpandLess} from "@mui/icons-material";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import {dataGridLocaleText} from "../../Constants";
 import {agregarEmbarquesImportados, validarEmbarquesImportados} from "../../Util/Contexts/EmbarquesContext";
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
@@ -41,7 +47,6 @@ function ImportarEmbarques(props) {
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusEmbarque: 0,
         estatusRecoleccion: 0,
-        // plantillaImportarEmbarquesNombreArchivo: ''
     })
     const [files, setFiles] = useState([])
     const [state, setState] = useState({
@@ -56,6 +61,7 @@ function ImportarEmbarques(props) {
         embarqueSelect: null,
         showConfirmarUbicacion: false
     })
+
     useEffect(() => {
         obtenerParametrosConfiguracion().then(respuesta => {
             setConfiguraciones({
@@ -74,8 +80,6 @@ function ImportarEmbarques(props) {
             descargarPlantillaImportarEmbarque(state.cliente.m_nIdCliente).then(response => {
                 // create file link in browser's memory
                 let file = new Blob([response.data],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
-                console.log(file)
-                console.log(response.data)
                 const href = URL.createObjectURL(file);
 
                 // create "a" HTML element with href to file & click
@@ -106,10 +110,7 @@ function ImportarEmbarques(props) {
                     let params = {
                         embarques: resultado
                     }
-                    console.log(resultado)
-                    console.log(params)
                     validarEmbarquesImportados(params).then(respuesta => {
-                        console.log(respuesta.data)
                         if(typeof respuesta.data==="string"){
                             showSuccess(respuesta.data)
                         }
@@ -120,12 +121,10 @@ function ImportarEmbarques(props) {
                             })
                         }
                     }).catch((error)=>{
-                        // showMessage(err,2000,"warning")
                         console.log('error al validar: ' + error)
                         showSuccess("Error al validar datos dados, intente de nuevo.")
                     })
                 }).catch((err)=>{
-                    // showMessage(err,2000,"warning")
                     console.log('error al importar' + err)
                     showSuccess("Error al leer datos dados, intente de nuevo.")
                 })
@@ -137,21 +136,16 @@ function ImportarEmbarques(props) {
                     let params = {
                         embarques: resultado
                     }
-                    console.log(resultado)
-                    console.log(params)
                     validarEmbarquesImportados(params).then(respuesta => {
-                        console.log(respuesta.data)
                         setState({
                             ...state,
                             embarques: respuesta.data
                         })
                     }).catch((error)=>{
-                        // showMessage(err,2000,"warning")
                         console.log('error al validar: ' + error)
                         showSuccess("Error al validar datos dados, intente de nuevo.")
                     })
                 }).catch((err)=>{
-                    // showMessage(err,2000,"warning")
                     console.log('error al importar' + err)
                     showSuccess("Error al leer datos dados, intente de nuevo.")
                 })
@@ -159,7 +153,6 @@ function ImportarEmbarques(props) {
         }).catch(err => {
             showSuccess(err.response.data.message)
         })
-
     }
 
     const handleOnClickAceptar = (e) => {
@@ -179,14 +172,11 @@ function ImportarEmbarques(props) {
                 embarque.conceptosFacturacion = embarque.conceptosFacturacion.filter(concepto => concepto.m_bJustificacion!==true)
             })
 
-            console.log(params)
-            console.log(JSON.stringify(params))
             // return
             agregarEmbarquesImportados(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleOnLimpiarClick()
             }).catch((error)=>{
-                // showMessage(err,2000,"warning")
                 console.log('error al agregar: ' + error)
                 showSuccess("Error al guardar información, intente de nuevo.")
             })
@@ -194,7 +184,6 @@ function ImportarEmbarques(props) {
             console.log('error al agregar: ' + err)
             showSuccess("Hubo un problema, intente de nuevo.")
         }
-
     }
 
     const handlePatrocinadorSelected = (row) => {
@@ -246,6 +235,7 @@ function ImportarEmbarques(props) {
         }
 
     }
+
     function SelectRuta(props) {
         return(
             <div>
@@ -487,7 +477,6 @@ function ImportarEmbarques(props) {
                                         </Grid>
                                         <Grid item xs={12}>Vista previa</Grid>
                                         <Grid item xs={12}>
-
                                             <List>
                                                 {
                                                     state.embarques.map((e, i) => {
@@ -568,10 +557,7 @@ function ImportarEmbarques(props) {
                                                                                                         </>
                                                                                                     }
                                                                                                 </>
-
                                                                                             }
-
-
                                                                                         </Grid>
                                                                                         <Grid item xs={6}>
                                                                                             Remitente: {e.data.nombreRemitente}<br/>
@@ -606,12 +592,11 @@ function ImportarEmbarques(props) {
                                                                                         </Grid>
                                                                                     </Grid>
                                                                                 </>
-                                                                                    :
-                                                                                    <>
-                                                                                        {e.message}
-                                                                                    </>
+                                                                                :
+                                                                                <>
+                                                                                    {e.message}
+                                                                                </>
                                                                             }
-
                                                                         </ListItem>
                                                                     </List>
                                                                 </Collapse>
@@ -634,7 +619,6 @@ function ImportarEmbarques(props) {
                                                 className="btn btn-secondary secondary-btn">Cancelar
                                         </Button>
                                     </Grid>
-
                                 </Grid>
                             </div>
                         </form>
@@ -656,60 +640,46 @@ function TablaImportadosPaquetes(props) {
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
                             Cantidad
                         </TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Descripcion</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Embalaje</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Largo</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Alto</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Ancho</TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Descripcion
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Embalaje
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Largo
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Alto
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Ancho
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {
                         props.data.map((item, index) => (
                             <TableRow key={index}>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.cantidad}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.descripcion}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.embalaje}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.largo}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.alto}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.ancho}
                                 </TableCell>
                             </TableRow>
@@ -717,7 +687,6 @@ function TablaImportadosPaquetes(props) {
                     }
                 </TableBody>
             </Table>
-
         </TableContainer>
     )
 }
@@ -732,82 +701,64 @@ function TablaImportadosComplementosSAT(props) {
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Cantidad</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Peso</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Producto/servicio</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Unidad medida</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Es material peligroso</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Material peligroso</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Embalaje</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Descripción embalaje</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Fracción arancelaria</TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Cantidad
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Peso
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Producto/servicio
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Unidad medida
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Es material peligroso
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Material peligroso
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Embalaje
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Descripción embalaje
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Fracción arancelaria
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {
                         props.data.map((item, index) => (
                             <TableRow key={index}>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.cantidad}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.peso}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {`${item.claveProductoServicio} - ${item.descripcionProductoServicio}`}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {`${item.claveUnidadMedida} - ${item.descripcionUnidadMedida}`}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.esMaterialPeligroso ? "Sí":"No"}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.esMaterialPeligroso ? `${item.claveMaterialPeligroso} - ${item.descripcionMaterialPeligroso}`: "No aplica"}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.esMaterialPeligroso ? `${item.claveEmbalaje} - ${item.descripcionSatEmbalaje}`: "No aplica"}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.esMaterialPeligroso ? `${item.descripcionEmbalaje}`: "No aplica"}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.esMaterialPeligroso ? `${item.claveFraccionArancelaria} - ${item.descripcionFraccionArancelaria}`: "No aplica"}
                                 </TableCell>
                             </TableRow>
@@ -815,7 +766,6 @@ function TablaImportadosComplementosSAT(props) {
                     }
                 </TableBody>
             </Table>
-
         </TableContainer>
     )
 }
@@ -830,42 +780,34 @@ function TablaImportadosCoceptosFacturacion(props) {
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Concepto</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Importe</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">IVA</TableCell>
-                        <TableCell
-                            style={{borderBottom: "none",fontWeight: "bold"}}
-                            align="left">Retencion</TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Concepto
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Importe
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            IVA
+                        </TableCell>
+                        <TableCell style={{borderBottom: "none",fontWeight: "bold"}} align="left">
+                            Retencion
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {
                         props.data.map((item, index) => (
                             <TableRow key={index}>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {item.m_sConcepto}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {`$${item.m_cImporte}`}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {`$${item.m_cImporteIva}`}
                                 </TableCell>
-                                <TableCell
-                                    style={{borderBottom: "none"}}
-                                    align="left">
+                                <TableCell style={{borderBottom: "none"}} align="left">
                                     {`$${item.m_cImporteRetiene}`}
                                 </TableCell>
                             </TableRow>
@@ -873,7 +815,6 @@ function TablaImportadosCoceptosFacturacion(props) {
                     }
                 </TableBody>
             </Table>
-
         </TableContainer>
     )
 }

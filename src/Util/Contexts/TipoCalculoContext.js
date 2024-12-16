@@ -3,6 +3,7 @@ import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
+
 function obtenerTiposCalculo() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCalculo/GetListado`;
     let result;
@@ -11,7 +12,5 @@ function obtenerTiposCalculo() {
         );
     return result
 }
-
-
 
 export { obtenerTiposCalculo}

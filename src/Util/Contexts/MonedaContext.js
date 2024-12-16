@@ -50,4 +50,10 @@ function obtenerMonedasId(id){
     return result
 }
 
-export {modificarMonedas, agregarMonedas, eliminarMonedas, obtenerMonedas, obtenerMonedasId}
+export {
+    modificarMonedas,
+    agregarMonedas,
+    eliminarMonedas,
+    obtenerMonedas,
+    obtenerMonedasId
+}

@@ -2,6 +2,7 @@ import React from "react";
 import {useFilters, useSortBy, useTable} from "react-table";
 import DefaultColumnFilter from "./DefaultColumnFilter";
 
+
 export default function TableCiudadesViajes({ data, select, func}) {
 
     const columns = React.useMemo(() => [
@@ -64,16 +65,16 @@ export default function TableCiudadesViajes({ data, select, func}) {
                                 {column.render("Name")}
                                 {/* Add a sort direction indicator */}
                                 <span>
-                      {column.isSorted ? (
-                          column.isSortedDesc ? (
-                              <i className="fa fa-caret-up" />
-                          ) : (
-                              <i className="fa fa-caret-down" />
-                          )
-                      ) : (
-                          ""
-                      )}
-                    </span>
+                                    {column.isSorted ? (
+                                        column.isSortedDesc ? (
+                                            <i className="fa fa-caret-up" />
+                                        ) : (
+                                            <i className="fa fa-caret-down" />
+                                        )
+                                    ) : (
+                                        ""
+                                    )}
+                                </span>
                                 <div>
                                     {column.canFilter ? column.render("Filter") : null}
                                 </div>
@@ -87,7 +88,9 @@ export default function TableCiudadesViajes({ data, select, func}) {
                     (row, i) => {
                         prepareRow(row);
                         return (
-                            <tr style={{ backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white" }} {...row.getRowProps()} onClick={func.bind(this, row.original, false)} onDoubleClick={func.bind(this, row.original, true)}>
+                            <tr style={{ backgroundColor: row.original.m_nIdCiudad === select ? "orange" : "white" }}
+                                {...row.getRowProps()} onClick={func.bind(this, row.original, false)}
+                                onDoubleClick={func.bind(this, row.original, true)}>
                                 {row.cells.map(cell => {
                                     return (
                                         <td {...cell.getCellProps()}>{cell.render('Cell')}</td>

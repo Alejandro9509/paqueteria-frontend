@@ -14,7 +14,6 @@ import {
     ListItemText,
     TextField,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
 import CardHeader from "@mui/material/CardHeader";
 import Divider from "@mui/material/Divider";
 
@@ -71,9 +70,11 @@ export default function DialogTransferList(props) {
     const handleShowDialog = () => {
         props.handleShowDialog(false)
     }
+
     const handleConfirmSelection = () => {
         props.handleOnConfirmSelection(selection)
     }
+
     const handleOnSelectionChange = (newSelection) => {
         setSelection(newSelection)
     }
@@ -86,17 +87,14 @@ export default function DialogTransferList(props) {
         if (search.length === 0 ){
             setDataFiltered(props.rows)
         }else{
-            console.log(props.rows)
             setDataFiltered(props.rows.filter(i => i.numeroDescripcion.toUpperCase().includes(search.toUpperCase())))
         }
     }
 
-
-
     return (
         <Dialog
             fullWidth={true}
-            maxWidth={'xl'}
+            maxWidth={'l'}
             open={props.openDialog}
             onClose={handleShowDialog}
             aria-labelledby="max-width-dialog-title"
@@ -109,10 +107,12 @@ export default function DialogTransferList(props) {
                                    label="Buscar"
                                    value={search}
                                    name="search"
+                                   size={"small"}
                         />
                     </Grid>
                     <Grid item xs={1}>
-                        <Button onClick={handleSearch} color="primary" variant={"contained"} fullWidth>
+                        <Button onClick={handleSearch} color="primary" variant={"contained"} fullWidth
+                                style={{fontSize: '.9em'}}>
                             Buscar
                         </Button>
                     </Grid>
@@ -125,10 +125,11 @@ export default function DialogTransferList(props) {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleShowDialog} color="primary">
+                <Button onClick={handleShowDialog} color="primary" style={{fontSize: '.9em'}}>
                     Cancelar
                 </Button>
-                <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}>
+                <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}
+                        style={{fontSize: '.9em'}}>
                     Aceptar
                 </Button>
 
@@ -155,7 +156,6 @@ function TransferList(props) {
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(props.leftList);
     const [right, setRight] = React.useState(props.rightList);
-
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
 
@@ -168,7 +168,6 @@ function TransferList(props) {
         } else {
             newChecked.splice(currentIndex, 1);
         }
-
         setChecked(newChecked);
     };
 
@@ -203,7 +202,7 @@ function TransferList(props) {
     }, [props.leftList])
 
     const customList = (title, items) => (
-        <Card>
+        <Card style={{display: 'block', height: '30vw', overflow: 'auto'}} fullHeight={true}>
             <CardHeader
                 className={classes.cardHeader}
                 avatar={
@@ -224,7 +223,8 @@ function TransferList(props) {
                     const labelId = `transfer-list-all-item-${value}-label`;
 
                     return (
-                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={props.disabled}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)}
+                                  disabled={props.disabled}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
