@@ -232,8 +232,7 @@ function ZonaOperativa() {
                         </li>
 
                         <li>
-                            <a className= {validarDerecho(9101397)? "":classes.disabled} data-toggle="tab"
-                               onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101397)? "":"hide"} data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

@@ -380,7 +380,7 @@ function Productos() {
                             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101388)? "":classes.disabled} onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101388)? "":"hide"} onClick={handleShowAgregar}>
                                 <i className={"fa fa-plus-circle"} /> {state.agregar}
                             </a>
                         </li>

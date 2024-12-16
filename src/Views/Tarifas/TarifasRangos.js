@@ -411,8 +411,7 @@ export default function TarifasRangos(props) {
                         </a>
                     </li>
                     <li >
-                        <a className= {(validarDerecho(9101347) && !props.convenio) || (validarDerecho(9101395) && props.convenio)? "":classes.disabled}
-                           onClick={(event) => handleShowAgregar()}>
+                        <a className= {(validarDerecho(9101347) && !props.convenio) || (validarDerecho(9101395) && props.convenio)? "":"hide"} onClick={(event) => handleShowAgregar()}>
                             <i className="fa fa-plus-circle"/> {state.agregar}
                         </a>
                     </li>

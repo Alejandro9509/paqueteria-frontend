@@ -351,7 +351,7 @@ function Embalaje() {
             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101318)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101318)? "":"hide"} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

@@ -3493,7 +3493,7 @@ function Recoleccion() {
                         </li>
 
                         <li>
-                            <a className={validarDerecho(9101414)?"":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101414)?"":"hide"} data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
