@@ -48,10 +48,10 @@ import {Clear, ExpandLess} from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from '@mui/material/Autocomplete';
 import Tooltip from "@mui/material/Tooltip";
-import {fil} from "date-fns/locale";
-import {StyledEngineProvider, ThemeProvider} from "@mui/material/styles";
+import {StyledEngineProvider} from "@mui/material/styles";
 import {DataGrid} from "@mui/x-data-grid";
 import {confirmAlert} from "react-confirm-alert";
+import {dataGridLocaleText} from "../../Constants";
 
 function showSuccess(mensaje) {
     new Noty({
