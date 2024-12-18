@@ -18,12 +18,12 @@ import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConf
 export default function ViajeForaneo(props) {
     const [mostrarPorcentaje, setMostrarPorcentaje] = useState(true)
     const [state, setState] = useState({
-        idViaje: props.viaje.idViaje || getRandomId(),
-        idOrigen: props.viaje.idOrigen || null,
-        idTipoMedida: props.viaje.idTipoMedida || null,
-        idDestino: props.viaje.idDestino || null,
-        fleteMinimo: props.viaje.fleteMinimo || 0,
-        grupos: props.viaje.grupos || [],
+        idViaje: 0,
+        idOrigen: null,
+        idTipoMedida: null,
+        idDestino: null,
+        fleteMinimo: 0,
+        grupos: [],
     })
     const [dialogGrupo, setDialogGrupo] = useState({
         showDialog: false,
@@ -102,7 +102,21 @@ export default function ViajeForaneo(props) {
     }
 
     const handleOnGrupoDataChange = (grupo) => {
-        state.grupos.forEach(i => {
+        /*state.grupos.forEach(i => {
+            if (i.idGrupo === grupo.idGrupo){
+                i.idGrupo = grupo.idGrupo
+                i.zonas = grupo.zonas
+                i.rangos = grupo.rangos
+                i.productos = grupo.productos
+            }
+        })*/
+
+        const anterior =  [...state.grupos];
+        var nuevo = anterior.map((i) => ({
+            ...i
+        }));
+
+        nuevo.map(i => {
             if (i.idGrupo === grupo.idGrupo){
                 i.idGrupo = grupo.idGrupo
                 i.zonas = grupo.zonas
@@ -110,9 +124,12 @@ export default function ViajeForaneo(props) {
                 i.productos = grupo.productos
             }
         })
+        // console.log("UPDATE GRUPO")
+        // console.log(anterior)
+        // console.log(nuevo)
         setState({
             ...state,
-            grupos: state.grupos
+            grupos: nuevo
         })
     }
 
@@ -120,10 +137,29 @@ export default function ViajeForaneo(props) {
         props.handleChangeViajeForaneo(state)
     }, [state])
 
+    const handleChange = (event) => {
+        setState(data => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value,
+            }
+        });
+    }
+
     useEffect(value => {
         obtenerParametrosConfiguracion().then(({data}) => {
             setMostrarPorcentaje(data.CobroPorcentual)
         })
+        if(props.viaje.idViaje !== 0){
+            setState({
+                idViaje: props.viaje.idViaje,
+                idOrigen: props.viaje.idOrigen,
+                idTipoMedida: props.viaje.idTipoMedida,
+                idDestino: props.viaje.idDestino,
+                fleteMinimo: props.viaje.fleteMinimo,
+                grupos: props.viaje.grupos
+            })
+        }
     }, [])
 
     const filtrarTiposCalculoViajeForaneo =
@@ -155,7 +191,7 @@ export default function ViajeForaneo(props) {
 
     return(
         <div>
-            <Paper variant={"outlined"} style={{padding: '10px', marginTop: '10px'}}>
+            <Paper variant={"outlined"} style={{padding: '5px', marginTop: '10px'}}>
                 {
                     dialogGrupo.showDialog &&
                     <DialogTextView
@@ -171,8 +207,9 @@ export default function ViajeForaneo(props) {
                             id="idOrigen"
                             select
                             label="Origen"
-                            value={props.viaje.idOrigen}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.idOrigen}
+                            InputLabelProps={{shrink: true}}
+                            onChange={(event) => (handleChange(event))}
                             name="idOrigen"
                             variant="outlined"
                             size="small"
@@ -191,8 +228,9 @@ export default function ViajeForaneo(props) {
                             id="idTipoMedida"
                             select
                             label="Tipo medida"
-                            value={props.viaje.idTipoMedida}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.idTipoMedida}
+                            InputLabelProps={{shrink: true}}
+                            onChange={(event) => (handleChange(event))}
                             name="idTipoMedida"
                             variant="outlined"
                             size="small"
@@ -212,8 +250,9 @@ export default function ViajeForaneo(props) {
                             id="idDestino"
                             select
                             label="Destino"
-                            value={props.viaje.idDestino}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.idDestino}
+                            InputLabelProps={{shrink: true}}
+                            onChange={(event) => (handleChange(event))}
                             name="idDestino"
                             variant="outlined"
                             size="small"
@@ -227,7 +266,7 @@ export default function ViajeForaneo(props) {
                             ))}
                         </TextField>
                     </Grid>
-                    <Grid item xs={2}>
+                    {/*<Grid item xs={2}>
                         <Button fullWidth style={{fontSize:"1em"}} variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo}
                                 disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
                             <AddIcon fontSize={'large'} />
@@ -240,14 +279,15 @@ export default function ViajeForaneo(props) {
                                 variant={"contained"} startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
                             Eliminar viaje
                         </Button>
-                    </Grid>
+                    </Grid>*/}
                     <Grid item xs={2}>
                         <TextField
                             id="fleteMinimo"
                             inputMode={"decimal"}
                             label="Flete Mínimo"
-                            value={props.viaje.fleteMinimo}
-                            onChange={handleChangeViajeForaneo}
+                            value={state.fleteMinimo}
+                            InputLabelProps={{shrink: true}}
+                            onChange={(event) => (handleChange(event))}
                             name="fleteMinimo"
                             variant="outlined"
                             size="small"
@@ -255,11 +295,25 @@ export default function ViajeForaneo(props) {
                             disabled={props.disabled}
                         />
                     </Grid>
+                    <Grid item xs={2}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo}
+                                disabled={!state.idDestino || !state.idOrigen || !state.idTipoMedida || props.disabled}>
+                            <AddIcon fontSize={'large'} />
+                            &nbsp;&nbsp;Agregar grupo
+                        </Button>
+                    </Grid>
+                    {/*<Grid item xs={2}>*/}
+                    {/*    <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}*/}
+                    {/*            disabled={props.disabled} style={{backgroundColor: '#FFD7D7'}} variant={"contained"}*/}
+                    {/*            startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>*/}
+                    {/*        Eliminar viaje*/}
+                    {/*    </Button>*/}
+                    {/*</Grid>*/}
                     <Grid item xs={3}>
                         <Typography variant={"h5"} color={"error"}>*La validación de flete mínimo no se aplicará si se deja en 0.</Typography>
                     </Grid>
                 </Grid>
-                <div style={{height: '200px', overflow: 'scroll'}}>
+                <div style={{height: '200px', overflow: 'scroll', minHeight: '500px'}}>
                     {
                         state.grupos.map((grupo) =>
                             <GrupoViajeForaneo
