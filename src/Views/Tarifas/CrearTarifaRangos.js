@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     Button,
     Dialog,
@@ -80,6 +80,7 @@ export default function CrearTarifaRangos(props) {
     const [filtroMM,setFiltroMM]=useState({activo:false,origen:-1,destino:-1,producto:null})
     const [showMM,setShowMM]=useState(false)
     const [showManiobras,setShowManiobras]=useState(false)
+    const navegacion = useRef(null);
 
     const getAllSucursales = () => {
         if (sucursalesListado.length > 0){
@@ -247,7 +248,8 @@ export default function CrearTarifaRangos(props) {
             rangos: [],
             productos: []
         })
-        setViajesLocalesListado(viajeLocal)
+        setViajesLocalesListado(viajeLocal);
+        navegacion.current.scrollIntoView();
     }
 
     const handleDeleteViajeLocal = (viaje) => {
@@ -850,7 +852,7 @@ export default function CrearTarifaRangos(props) {
                     }
                     </div>
                 </Paper>
-                <Paper style={{padding: '20px', marginBottom: '10px'}}>
+                <Paper style={{padding: '20px', marginBottom: '10px'}} ref={navegacion}>
                     <Grid container spacing={1}>
                         <Grid item xs={2}>
                             <Typography variant="h3" component="h2" >
