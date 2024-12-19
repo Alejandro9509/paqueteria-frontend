@@ -103,6 +103,7 @@ function ParametrosConfiguracion() {
         cobrarConceptoCarga: false,
         cobrarConceptoDescarga: false,
         cobrarCargaDescargaDisabled: false,
+        cobrarConceptoManiobras: false,
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
@@ -113,6 +114,7 @@ function ParametrosConfiguracion() {
         idConceptoFlete: 0,
         idConceptoCarga: 0,
         idConceptoDescarga: 0,
+        idConceptoManiobras: 0,
         idConceptoRecoleccion: 0,
         idConceptoEntrega: 0,
         idConceptoSeguro: 0,
@@ -143,7 +145,8 @@ function ParametrosConfiguracion() {
                         ...config,
                         cobrarConceptoCarga: false,
                         cobrarConceptoDescarga: false,
-                        cobrarCargaDescargaDisabled: false
+                        cobrarCargaDescargaDisabled: false,
+                        cobrarConceptoManiobras: false
                     }
                 })
             }
@@ -169,7 +172,8 @@ function ParametrosConfiguracion() {
                 ...config,
                 cobrarConceptoCarga: false,
                 cobrarConceptoDescarga: false,
-                cobrarCargaDescargaDisabled: true
+                cobrarCargaDescargaDisabled: true,
+                cobrarConceptoManiobras: false,
             }
         })
     }
@@ -194,6 +198,7 @@ function ParametrosConfiguracion() {
             costoCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
             cobrarConceptoCarga: configuraciones.cobrarConceptoCarga,
             cobrarConceptoDescarga: configuraciones.cobrarConceptoDescarga,
+            cobrarConceptoManiobras: configuraciones.cobrarConceptoManiobras,
             cobrarCita: configuraciones.cobrarCita,
             detectarTipoCobro: configuraciones.detectarTipoCobro,
             limpiarProducto: configuraciones.limpiarProducto,
@@ -204,6 +209,7 @@ function ParametrosConfiguracion() {
             idConceptoFlete: configuraciones.idConceptoFlete,
             idConceptoCarga: configuraciones.idConceptoCarga,
             idConceptoDescarga: configuraciones.idConceptoDescarga,
+            idConceptoManiobras: configuraciones.idConceptoManiobras,
             idConceptoRecoleccion: configuraciones.idConceptoRecoleccion,
             idConceptoEntrega: configuraciones.idConceptoEntrega,
             idConceptoSeguro: configuraciones.idConceptoSeguro,
@@ -246,6 +252,7 @@ function ParametrosConfiguracion() {
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
                     cobrarConceptoCarga: respuesta.data.CobrarConceptoCarga,
                     cobrarConceptoDescargaa: respuesta.data.CobrarConceptoDescarga,
+                    cobrarConceptoManiobras: respuesta.data.CobrarConceptoManiobras,////////////////
                     cobroPorcentual: respuesta.data.CobroPorcentual,
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
@@ -261,6 +268,7 @@ function ParametrosConfiguracion() {
                     idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                     idConceptoCarga: respuesta.data.IdConceptoCarga || 0,
                     idConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
+                    idConceptoManiobras: respuesta.data.IdConceptoManiobras || 0,
                     idConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
                     idConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
                     idConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
@@ -403,6 +411,14 @@ function ParametrosConfiguracion() {
                     && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
                     && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
                     && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+            case 'idConceptoManiobras':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
             default:
                 return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
                     && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
@@ -1055,6 +1071,22 @@ function ParametrosConfiguracion() {
                                             />
                                         </Box>
                                     </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Cobrar concepto Maniobras generales</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.cobrarConceptoManiobras}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="cobrarConceptoManiobras"
+                                                //disabled={configuraciones.cobrarCargaDescargaDisabled}
+                                            />
+                                        </Box>
+                                    </Box>
                                     {/*Conceptos*/}
                                     <Box width="40%" display="flex">
                                         <Box width="40%" p={1} my={0.5}>
@@ -1128,6 +1160,32 @@ function ParametrosConfiguracion() {
                                                     {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoDescarga')).map(i => (
                                                         <MenuItem key={i.m_nIdConceptosFacturacion}
                                                                 value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box width="40%" display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Concepto de Maniobras generales</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" size="small"
+                                                         required={configuraciones.cobrarConceptoManiobras}>
+                                                <InputLabel
+                                                    htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                <Select
+                                                    name="idConceptoManiobras"
+                                                    read="true"
+                                                    label="Seleccionar"
+                                                    onChange={handleChange}
+                                                    value={configuraciones.idConceptoManiobras}
+                                                    InputLabelProps={{shrink: true}}
+                                                >
+                                                    <MenuItem aria-label="None" value=""/>
+                                                    {dataConceptos.filter(c => esConceptoDisponible(c, 'idConceptoManiobras')).map(i => (
+                                                        <MenuItem key={i.m_nIdConceptosFacturacion}
+                                                                  value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
