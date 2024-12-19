@@ -304,6 +304,7 @@ export default function CrearTarifaRangos(props) {
     const esConceptoManiobra = (concepto) => {
         return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoCarga
         || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoDescarga
+        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoManiobras
     }
 
     /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/

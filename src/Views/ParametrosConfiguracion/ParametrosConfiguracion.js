@@ -252,7 +252,7 @@ function ParametrosConfiguracion() {
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
                     cobrarConceptoCarga: respuesta.data.CobrarConceptoCarga,
                     cobrarConceptoDescargaa: respuesta.data.CobrarConceptoDescarga,
-                    cobrarConceptoManiobras: respuesta.data.CobrarConceptoManiobras,////////////////
+                    cobrarConceptoManiobras: respuesta.data.CobrarConceptoManiobras,
                     cobroPorcentual: respuesta.data.CobroPorcentual,
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
@@ -426,7 +426,7 @@ function ParametrosConfiguracion() {
                     && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
                     && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
                     && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoManiobras
         }
 
     }
