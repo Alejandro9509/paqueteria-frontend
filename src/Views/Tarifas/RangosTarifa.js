@@ -1,6 +1,7 @@
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InventoryIcon from "@mui/icons-material/Inventory";
 import React from "react";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
@@ -28,6 +29,12 @@ export default function RangosTarifa(props) {
             handleDeleteConcepto(row);
         };
 
+        const handleShowDialogProductos = (event) => {
+            event.stopPropagation();
+            let row = props.rows.filter((p) => p.id === id)[0];
+            showDialogProductos(row);
+        };
+
         return (
             <div>
                 <IconButton color="inherit" size="small" aria-label="delete" onClick={handleEditClick}>
@@ -35,6 +42,9 @@ export default function RangosTarifa(props) {
                 </IconButton>
                 <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
                     <DeleteIcon fontSize="large" />
+                </IconButton>
+                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleShowDialogProductos} disabled={(props.conceptoConfiguradoManiobras !== propss.row.idConcepto)}>
+                    <InventoryIcon fontSize="large" />
                 </IconButton>
             </div>
         );
@@ -80,12 +90,12 @@ export default function RangosTarifa(props) {
                     headerName: "Mínimo",
                     field: "minimo",
                     type: 'number',
-                    width: 150,
+                    width: 120,
                 }, {
                     headerName: "Máximo",
                     field: "maximo",
                     type: 'number',
-                    width: 150,
+                    width: 120,
                 }, {
                     headerName: "Importe",
                     field: "importe",
@@ -95,7 +105,7 @@ export default function RangosTarifa(props) {
                 }, {
                     headerName: "Cálculo",
                     field: "tipoCalculo",
-                    width: 150,
+                    width: 120,
                 },
                 !props.disabled &&
                 {
@@ -131,6 +141,12 @@ export default function RangosTarifa(props) {
     const handleDeleteConcepto = (data) =>{
         if(!props.disabled){
             props.onDeleteRow(data)
+        }
+    }
+
+    const showDialogProductos = (data) =>{
+        if(!props.disabled){
+            props.handleShowDialogProductos(data)
         }
     }
 

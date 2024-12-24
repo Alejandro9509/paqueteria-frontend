@@ -256,6 +256,7 @@ export default function TarifasRangos(props) {
                 idUnidadMedida: rango.IdUnidadMedida || null,
                 tipoCalculo: rango.TipoCalculo || '',
                 unidadMedida: rango.UnidadMedida || '',
+                productos: getProductos(rango.Productos)
             }))
 
         let viajesForaneos = data.ViajesForaneos.map(viaje => ({
@@ -395,7 +396,19 @@ export default function TarifasRangos(props) {
             tarifas: nuevasTarifas
         }));
     }
-    
+
+    const getProductos = (productos) => {
+        productos = productos.map((i) => ({
+            idTarifa: i.IdTarifa,
+            idConceptoFacturacion: i.IdConceptoFacturacion,
+            idProducto: i.IdProducto,
+            m_nIdProducto: i.IdProducto,
+            numeroDescripcion: i.numeroDescripcion,
+            m_sDescripcion: i.m_sDescripcion
+        }))
+        return (productos || []);
+    }
+
     const filtrarTarifas =
         props.convenio ?
             state.tarifas.filter(i => i.IdCliente !== state.clienteGenerico.m_nIdCliente)

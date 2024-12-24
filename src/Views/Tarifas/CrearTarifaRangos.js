@@ -506,7 +506,8 @@ export default function CrearTarifaRangos(props) {
                 minimo: rango.minimo,
                 maximo: rango.maximo,
                 idTipoCalculo: rango.idTipoCalculo,
-                idUnidadMedida: rango.idUnidadMedida
+                idUnidadMedida: rango.idUnidadMedida,
+                productos: rango.productos
             })
         )
 
@@ -585,6 +586,7 @@ export default function CrearTarifaRangos(props) {
             idUnidadMedida: rango.IdUnidadMedida || null,
             tipoCalculo: rango.TipoCalculo || '',
             unidadMedida: rango.UnidadMedida || '',
+            productos: rango.Productos || []
         }))
 
         let viajesForaneos = data.ViajesForaneos.map(viaje => ({
@@ -883,6 +885,8 @@ export default function CrearTarifaRangos(props) {
                             unidadesMedidaListado={filtrarUnidadesMedidaManiobras}
                             rangos={maniobrasTarifa}
                             disabled={props.disabled}
+                            conceptoConfiguradoManiobras={props.configuraciones.IdConceptoManiobras}
+                            productosListado={productosListado}
                         />
                     </div>
                 </Paper>
