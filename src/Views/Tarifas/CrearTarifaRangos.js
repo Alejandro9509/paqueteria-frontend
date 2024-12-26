@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     Button,
     createFilterOptions,
@@ -174,6 +174,7 @@ export default function CrearTarifaRangos(props) {
             },
         }
     ]);
+    const navegacion = useRef(null);
 
     const getAllSucursales = () => {
         obtenerSucursales().then(respuesta => {
@@ -356,6 +357,7 @@ export default function CrearTarifaRangos(props) {
         viajes.push(idGenerated);
         setViajesNuevos(viajes);
         setViajesLocalesListado(viajeLocal);
+        navegacion.current.scrollIntoView();
     }
 
     const handleDeleteViajeLocal = (viaje) => {
@@ -1074,7 +1076,7 @@ export default function CrearTarifaRangos(props) {
                     }
                     </div>
                 </Paper>
-                <Paper style={{padding: '20px', marginBottom: '10px'}}>
+                <Paper style={{padding: '20px', marginBottom: '10px'}} ref={navegacion}>
                     <Grid container spacing={1}>
                         <Grid item xs={2}>
                             <Typography variant="h3" component="h2" >
