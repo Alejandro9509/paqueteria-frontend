@@ -431,6 +431,7 @@ export default function CrearTarifaRangos(props) {
     const esConceptoManiobra = (concepto) => {
         return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoCarga
         || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoDescarga
+        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoManiobras
     }
 
     /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/
@@ -632,7 +633,8 @@ export default function CrearTarifaRangos(props) {
                 minimo: rango.minimo,
                 maximo: rango.maximo,
                 idTipoCalculo: rango.idTipoCalculo,
-                idUnidadMedida: rango.idUnidadMedida
+                idUnidadMedida: rango.idUnidadMedida,
+                productos: rango.productos
             })
         )
 
@@ -711,6 +713,7 @@ export default function CrearTarifaRangos(props) {
             idUnidadMedida: rango.IdUnidadMedida || null,
             tipoCalculo: rango.TipoCalculo || '',
             unidadMedida: rango.UnidadMedida || '',
+            productos: rango.Productos || []
         }))
 
         let viajesForaneos = data.ViajesForaneos.map(viaje => ({
@@ -1103,6 +1106,8 @@ export default function CrearTarifaRangos(props) {
                             unidadesMedidaListado={filtrarUnidadesMedidaManiobras}
                             rangos={maniobrasTarifa}
                             disabled={props.disabled}
+                            conceptoConfiguradoManiobras={props.configuraciones.IdConceptoManiobras}
+                            productosListado={productosListado}
                         />
                     </div>
                 </Paper>

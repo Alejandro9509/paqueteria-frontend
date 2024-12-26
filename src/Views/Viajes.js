@@ -187,6 +187,7 @@ function Viajes() {
                             eliminarViaje(id,idEstatus).then(respuesta => {
                                 showSuccess(respuesta.data)
                                 getAllData();
+                                setViajeSeleccionado(null);
                             }).catch(err => {
                                 showSuccess(err)
                             })
@@ -282,7 +283,8 @@ function Viajes() {
             event.stopPropagation();
         }
         $(window).unbind()
-        getAllData()
+        getAllData();
+        setViajeSeleccionado(null);
         clearData()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -506,7 +508,6 @@ function Viajes() {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
                     setData(respuesta.data)
-                    setViajeSeleccionado(null)
                 })
             })
         })

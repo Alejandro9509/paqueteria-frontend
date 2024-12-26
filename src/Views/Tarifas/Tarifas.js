@@ -42,6 +42,7 @@ function Tarifa(){
                         IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
                         IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
                         IdConceptoCita: respuesta.data.IdConceptoCita || 0,
+                        IdConceptoManiobras: respuesta.data.IdConceptoManiobras,
                         CobrarConceptoCarga: respuesta.data.CobrarConceptoCarga || false,
                         CobrarConceptoDescarga: respuesta.data.CobrarConceptoDescarga || false
                     },

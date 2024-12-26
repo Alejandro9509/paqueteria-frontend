@@ -10,6 +10,7 @@ import LogoPaqueteria from "../iconos/LogoPaqueteria.png"
 import { API_HEADERS } from "../Constants";
 
 import Noty from 'noty';
+import {showError} from "../Util/GlobalFunctions";
 const headers = API_HEADERS
 function showSuccess(mensaje) {
     new Noty({
@@ -35,32 +36,43 @@ function Login() {
         //const pass = sha512($("#password").val());
         const pass = $("#password").val();
 
-        const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${user}'/'${pass}' `;
-        axios.get(url, { headers: {...headers, RFC: rfc} }).then(respuesta => {
-            try {
-                //debugger;
-                if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
-                    localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
-                    localStorage.setItem("accessToken", true);
-                    localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
-                    localStorage.setItem("RFC",rfc);
-                    localStorage.setItem("Sucursal", respuesta.data.m_nIdSucursal);
-                    localStorage.setItem("SucursalNombre", respuesta.data.m_sSucursal);
-                    localStorage.setItem("TipoUsuario", respuesta.data.m_nTipoUsuario);
-                    localStorage.setItem("Email", respuesta.data.m_sCorreoElectronico);
-                    localStorage.setItem("Usuario", respuesta.data.m_sUsuario);
-                    localStorage.setItem("Nombre", respuesta.data.m_sNombre);
-                    window.location.replace("indicadores");
-                }
-                else {
-                    showSuccess("Usuario/Contraseña inválida");
-                }
-            } catch {
-                showSuccess(respuesta.data);
-            }
-        });
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${user}'/'${pass}' `;
+    try {
+      axios.get(url, { headers: {...headers, RFC: rfc} }).then(respuesta => {
+        if(respuesta.status === 201){
+          showSuccess(respuesta.data);
+          return;
+        }
 
+        if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
+          localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
+          localStorage.setItem("accessToken", true);
+          localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
+          localStorage.setItem("RFC",rfc);
+          localStorage.setItem("Sucursal", respuesta.data.m_nIdSucursal);
+          localStorage.setItem("SucursalNombre", respuesta.data.m_sSucursal);
+          localStorage.setItem("TipoUsuario", respuesta.data.m_nTipoUsuario);
+          localStorage.setItem("Email", respuesta.data.m_sCorreoElectronico);
+          localStorage.setItem("Usuario", respuesta.data.m_sUsuario);
+          localStorage.setItem("Nombre", respuesta.data.m_sNombre);
+          window.location.replace("indicadores");
+        }
+        else {
+          showSuccess("Usuario/Contraseña inválida");
+        }
+      }).catch(function (error) {
+        if (error.response) {
+          showError(error.response.data);
+        } else if (error.request) {
+          showError(error.request);
+        } else {
+          showError(error.message);
+        }
+      });
+    } catch (error){
+      console.log(error);
     }
+  }
 
     return (
         <section className="login-container" >
