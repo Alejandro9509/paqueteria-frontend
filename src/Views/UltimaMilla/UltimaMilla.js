@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Cabecera from "../../Components/Template/Cabecera";
-import {MapContainer, TileLayer, Marker} from "react-leaflet";
+import {MapContainer, TileLayer, Marker, Popup} from "react-leaflet";
 import {
     Dialog,
     DialogContent,
@@ -59,11 +59,12 @@ const MarkerIcon = new L.Icon({
     iconUrl: MarkerImage,
     iconRetinaUrl: MarkerImage,
     iconAnchor: null,
-    popupAnchor: null,
+    popupAnchor: [-3, -76],
     shadowUrl: null,
     shadowSize: null,
     shadowAnchor: null,
     iconSize: new L.Point(20, 20),
+    width: "100px"
 });
 
 var actualizar = true
@@ -93,6 +94,7 @@ class UltimaMilla extends Component {
             openDialogGenerarRutaError: false,
             showConfirmarUbicacion: false,
             showListaUbicaciones: false,
+            tiempo: 0,
             operadores: [],
             unidad: null,
             paquetesSinCoord: [],
@@ -262,7 +264,7 @@ class UltimaMilla extends Component {
                 agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros,hora).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
-                    this.setState({tour: null})
+                    this.setState({tour: null, tiempo: 0})
                     this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
                 })
             }
@@ -271,7 +273,7 @@ class UltimaMilla extends Component {
                   agregarRuta(0, this.state.tour, this.state.filtros,hora).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
-                    this.setState({tour: null})
+                    this.setState({tour: null, tiempo: 0})
                     this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
                 })
             }
@@ -330,6 +332,7 @@ class UltimaMilla extends Component {
                 })
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
                     if (results) {
+                        //console.log(results.statistic)
                         if (results.unassigned?.length > 0){
                             results.unassigned?.forEach(i => {
                                 let index = i.jobId.substring(4);
@@ -347,7 +350,11 @@ class UltimaMilla extends Component {
                         }else{
                             results.tours.map(t => t.color = randomColor(10))
                         }
-                        this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+                        this.setState({
+                            tour: {tour: results, paquetes: guias, unidades: unidades},
+                            filtros: data,
+                            tiempo: (results.statistic.duration / 60)
+                        })
                     }
                 }).catch((err) => {
                     showSuccess("Hubo un error al generar la ruta. Intente más tarde.")
@@ -583,7 +590,11 @@ class UltimaMilla extends Component {
                                 {
                                     this.state.tour &&
                                     <Marker key={"sucursal"} icon={MarkerIcon}
-                                            position={[this.state.lat, this.state.lng]}></Marker>
+                                            position={[this.state.lat, this.state.lng]}>
+                                        <Popup>
+                                            {`Tiempo total estimado:\n ${this.state.tiempo.toFixed(0)} minutos, o ${(this.state.tiempo/60).toFixed(2)} horas`}
+                                        </Popup>
+                                    </Marker>
                                 }
                                 {
                                     this.state.ultimaMilla && this.state.mostrarRuta && this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map(t =>
