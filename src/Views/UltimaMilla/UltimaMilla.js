@@ -592,7 +592,9 @@ class UltimaMilla extends Component {
                                     <Marker key={"sucursal"} icon={MarkerIcon}
                                             position={[this.state.lat, this.state.lng]}>
                                         <Popup>
-                                            {`Tiempo total estimado:\n ${this.state.tiempo.toFixed(0)} minutos, o ${(this.state.tiempo/60).toFixed(2)} horas`}
+                                            Tiempo total estimado: <br/>
+                                            {this.state.tiempo.toFixed(0)} minutos, ó <br/>
+                                            {(this.state.tiempo / 60).toFixed(2)} horas
                                         </Popup>
                                     </Marker>
                                 }
