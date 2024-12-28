@@ -35,7 +35,7 @@ import {ReactComponent as ProductosIcon} from './iconos/Catalogos/Icono Producto
 import ZonaOperativa from "./Views/ZonasOperativas/ZonaOperativa";
 import {validarDerecho} from "./Util/Util";
 import PlantillasImportacionMain from "./Views/PlantillasImportacion/PlantillasImportacionMain";
-
+import PlantillasImportacionTarifas from "./Views/PlantillasImportacionTarifas/PlantillasImportacionTarifas";
 
 const catalogRoutes = [
     {
@@ -156,6 +156,13 @@ const catalogRoutes = [
         name: "Plantillas de importacion embarques",
         icon: <EDocumentosIcon/>,
         component: PlantillasImportacionMain,
+        visible: validarDerecho(9101387)
+    },
+    {
+        path: "/PlantillasImportacionTarifas",
+        name: "Plantillas de importacion tarifas",
+        icon: <TarifasIcon/>,
+        component: PlantillasImportacionTarifas,
         visible: validarDerecho(9101387)
     },
 ];
