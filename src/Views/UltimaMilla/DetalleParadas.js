@@ -100,13 +100,14 @@ class DetalleParadas extends Component {
             openParciales: false,
             openOrdenarParadas: false,
             openDialog:false,
+            openTimbradoMasivo: false,
             dataReportes:[],
             dataReportesCFDIPrimeraMilla:[],
             dataReportesCFDIUltimaMilla:[],
             seleccion:null,
             tipoReporte:0,
-            mensajeTitulo:""
-
+            mensajeTitulo:"",
+            timbradoRespuesta: []
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
         this.openDetail = this.openDetail.bind(this)
@@ -651,6 +652,19 @@ class DetalleParadas extends Component {
         })
     }
 
+    handleTimbradoMasivo(tour){
+        console.log("TIMBRADO MASIVO");
+        console.log(tour.m_arrClsProGuia);
+        /*this.setState({
+            paquetes: tour.m_arrClsProGuia,
+            tour: tour
+        })*/
+        /*tour.m_arrClsProGuia.forEach(g => {
+            this.generarCFDI(g.m_nId, g.m_bEsRecoleccion, g.m_sFolio)
+        })*/
+        this.setState({openTimbradoMasivo: true})
+    }
+
     validarRutasCompletadas(tour){
         return tour.m_arrClsProGuia.some(g=> g.m_nEstatusUlimaMilla === 3)
     }
@@ -860,6 +874,27 @@ class DetalleParadas extends Component {
                         size="large">
                         <ParadasIcono style={{fill: "white"}}/>
                     </IconButton>
+                }
+                {
+                    this.state.openTimbradoMasivo &&
+                    <Dialog open={this.state.openTimbradoMasivo}>
+                        <DialogTitle>
+                            <Typography variant={"h3"}>Timbrado masivo</Typography>
+                        </DialogTitle>
+                        <DialogContent>
+                            <Typography variant={"h4"}>
+                                Detalles
+                            </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => this.setState({openTimbradoMasivo: false})}>
+                                Cerrar
+                            </Button>
+                            {/*<Button type={"submit"} onClick={() => props.close()} color={"primary"}>
+                                Asignar
+                            </Button>*/}
+                        </DialogActions>
+                    </Dialog>
                 }
                 {
                     this.state.openDetail &&
@@ -1100,6 +1135,18 @@ class DetalleParadas extends Component {
                                                                     tour: tour,
                                                                     openOrdenarParadas: true
                                                                 })}>Ordenar Paradas</Button>
+                                                        }
+                                                        {
+                                                            <Button
+                                                                disabled={!validarDerecho(9101447)}
+                                                                variant={"contained"}
+                                                                color={"primary"}
+                                                                onClick={() => {
+                                                                    this.handleTimbradoMasivo(tour);
+                                                                    //(tour.m_bActiva && !r.m_bUnidadPermisionario && !g.m_bTimbrado)
+                                                                }}>
+                                                                Generar CFDI Traslado masivo
+                                                            </Button>
                                                         }
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",
