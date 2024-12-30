@@ -22,10 +22,11 @@ import {
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
+    obtenerByIdZonaOperativa,
     obtenerListadoZonaOperativaByOrigenDestino,
     obtenerListadoZonaOperativaBySucursal
 } from "../../Util/Contexts/ZonaOperativaContext";
-import {getCurrentDate, getRandomId} from "../../Util/Util";
+import {getCurrentDate, getRandomId, validarDerecho} from "../../Util/Util";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
 import IconButton from "@mui/material/IconButton";
 import ViajeLocal from "./ViajeLocal";
@@ -46,6 +47,10 @@ import {Clear, ExpandLess} from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from '@mui/material/Autocomplete';
 import Tooltip from "@mui/material/Tooltip";
+import * as XLSX from "xlsx";
+import * as FileSaver from 'file-saver';
+import Print from "@mui/icons-material/Print";
+import ImportExport from '@mui/icons-material/ImportExport';
 
 function showSuccess(mensaje) {
     new Noty({
@@ -530,6 +535,50 @@ export default function CrearTarifaRangos(props) {
         setState({...state, showDialogTarifas: true})
     }
 
+    const getExportData = () => {
+        const data = [];
+        viajesForaneosListado.forEach(viaje => {
+            const origen = origenesDestinosListado.find((i) => i.m_nIdCiudad == viaje.idOrigen);
+            const destino = origenesDestinosListado.find((i) => i.m_nIdCiudad == viaje.idDestino);
+            viaje.grupos.forEach(grupo => {
+                grupo.zonas.forEach(zona => {
+                    let zonaAplica;
+                    obtenerByIdZonaOperativa(zona.m_nIdZona).then(respuesta => {
+                        zonaAplica = respuesta.data.m_bAplicaEntrega;
+                    })
+                    grupo.rangos.forEach(rango => {
+                        grupo.productos.forEach(prod => {
+                            data.push({
+                                Origen: origen?.m_sCiudad,
+                                Destino: destino?.m_sCiudad,
+                                Producto: prod.m_sDescripcion,
+                                Zona_Destino: zona.m_sCodigoZona,
+                                Aplica: zonaAplica ? "Si" : "No",
+                                Minimo: rango.minimo,
+                                Maximo: rango.maximo,
+                                Unidad_de_medida: rango.unidadMedida,
+                                Precio: rango.importe
+                            })
+                        })
+                    })
+                })
+            })
+        })
+        return data;
+    }
+
+    const exportToCSV = (csvData, fileName) => {
+        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const fileExtension = '.xls';
+        const ws = XLSX.utils.json_to_sheet(csvData);
+        const wb = {
+            Sheets: { 'Tarifa - Milla intermedia': ws }, SheetNames: ['Tarifa - Milla intermedia']
+        };
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], {type: fileType});
+        FileSaver.saveAs(data, fileName + ' Tarifa' + fileExtension);
+    }
+
     const handleCloseDialogTarifas = (value) => {
         setState(state => {
             return {...state, showDialogTarifas: false}
@@ -715,10 +764,19 @@ export default function CrearTarifaRangos(props) {
                         }
                         <Grid item xs={2}>
                             <Button size={"large"} style={{fontSize:".9em"}} fullWidth onClick={handleShowDialogTarifas}
-                                    variant={"outlined"} disabled={props.disabled} color={"primary"}
-                            >Importar tarifa existente</Button>
+                                    variant={"outlined"} disabled={props.disabled} color={"primary"}>
+                                <ImportExport fontSize={"large"} style={{marginRight: '10px'}}/>
+                                Importar tarifa existente
+                            </Button>
                         </Grid>
-
+                        <Grid item xs={2}>
+                            <Button size={"large"} style={{fontSize: ".9em"}} fullWidth
+                                    disabled={!validarDerecho(9101428)} variant={"outlined"}
+                                    onClick={(e) => exportToCSV(getExportData(), state.cliente.m_sNombreFiscal)}>
+                                <Print fontSize={"large"} style={{marginRight: '10px'}}/>
+                                Exportar Milla intermedia
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>

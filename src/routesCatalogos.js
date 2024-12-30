@@ -158,13 +158,13 @@ const catalogRoutes = [
         component: PlantillasImportacionMain,
         visible: validarDerecho(9101387)
     },
-    {
+    /*{
         path: "/PlantillasImportacionTarifas",
         name: "Plantillas de importacion tarifas",
         icon: <TarifasIcon/>,
         component: PlantillasImportacionTarifas,
         visible: validarDerecho(9101387)
-    },
+    },*/
 ];
 
 export default catalogRoutes;
