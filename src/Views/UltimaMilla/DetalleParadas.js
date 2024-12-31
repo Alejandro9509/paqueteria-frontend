@@ -60,6 +60,8 @@ import {
     imprimirFormatosIdIdTipoReporte,
     obtenerFormatosImpresionProceso
 } from "../../Util/Contexts/FormatosImpresionContext";
+import {DataGrid, gridClasses } from "@mui/x-data-grid";
+import {dataGridLocaleText} from "../../Constants";
 
 function showError(mensaje) {
     new Noty({
@@ -329,7 +331,6 @@ class DetalleParadas extends Component {
                             let fechaHoraActual=new Date()
                             let paramFecha=fechaHoraActual.toISOString().split('T')[0];
                             let paramHora=(fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'+fechaHoraActual.getSeconds().toString().padStart(2,'0'))
-
                             obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal,paramFecha,paramHora).then((result) => {
                                 this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
                             }).catch((error) => {
@@ -653,20 +654,78 @@ class DetalleParadas extends Component {
     }
 
     handleTimbradoMasivo(tour){
-        console.log("TIMBRADO MASIVO");
-        console.log(tour.m_arrClsProGuia);
-        /*this.setState({
-            paquetes: tour.m_arrClsProGuia,
-            tour: tour
-        })*/
-        /*tour.m_arrClsProGuia.forEach(g => {
-            this.generarCFDI(g.m_nId, g.m_bEsRecoleccion, g.m_sFolio)
-        })*/
-        this.setState({openTimbradoMasivo: true})
+        // console.log("TIMBRADO MASIVO");
+        // console.log(tour.m_arrClsProGuia);
+        const filtrado = tour.m_arrClsProGuia.filter(g => (g.m_bTimbrado === false));
+        // console.log(filtrado);
+        let errores = this.state.timbradoRespuesta;
+        let fechaHoraActual = new Date();
+        let paramFecha = fechaHoraActual.toISOString().split('T')[0];
+        let paramHora = (fechaHoraActual.getHours().toString().padStart(2,'0')+':'+
+            fechaHoraActual.getMinutes().toString().padStart(2,'0')+':'
+            +fechaHoraActual.getSeconds().toString().padStart(2,'0'));
+
+        obtenerParametrosConfiguracion().then(respuesta => {
+            let titulo;
+            let mensaje;
+            if (respuesta.data.TimbradoPruebaGuia){
+                titulo = 'Confirmar timbrado de prueba'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará en modo prueba? ' +
+                    'Para timbrar ante el SAT desactive el timbrado de prueba en parametros de configuración.'
+            }else{
+                titulo = 'Confirmar timbrado ante el SAT'
+                mensaje = '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?'
+            }
+            confirmAlert({
+                title: titulo,
+                message: mensaje,
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: () => {
+                            filtrado.forEach(g => {
+                                obtenerCFDI(g.m_nId, g.m_bEsRecoleccion, this.props.filtros.idSucursal, paramFecha, paramHora).then((result) => {
+                                    /*console.log(result);
+                                    console.log("Se timbró " + g.m_sFolio);*/
+                                    errores.push({
+                                        folio: g.m_sFolio,
+                                        mensaje: "Timbrado correctamente",
+                                        estatus: "SÍ"
+                                    })
+                                    this.setState({
+                                        openTimbradoMasivo: true,
+                                        timbradoRespuesta: errores
+                                    })
+                                }).catch((error) => {
+                                    if (error.response){
+                                        errores.push({
+                                            folio: g.m_sFolio,
+                                            mensaje: error.response.data,
+                                            estatus: "NO"
+                                        })
+                                        this.setState({
+                                            openTimbradoMasivo: true,
+                                            timbradoRespuesta: errores
+                                        })
+                                    }
+                                })
+                            })
+                        }
+                    },
+                    {
+                        label: 'No',
+                    }
+                ]
+            })
+        })
     }
 
     validarRutasCompletadas(tour){
         return tour.m_arrClsProGuia.some(g=> g.m_nEstatusUlimaMilla === 3)
+    }
+
+    validarRutasTimbradas(tour){
+        return tour.m_arrClsProGuia.every(g => (g.m_bTimbrado === true || g.m_bUnidadPermisionario === true))
     }
 
     cancelarRutaAccion(e, id) {
@@ -877,22 +936,118 @@ class DetalleParadas extends Component {
                 }
                 {
                     this.state.openTimbradoMasivo &&
-                    <Dialog open={this.state.openTimbradoMasivo}>
+                    <Dialog open={this.state.openTimbradoMasivo} maxWidth={"xl"}>
                         <DialogTitle>
-                            <Typography variant={"h3"}>Timbrado masivo</Typography>
+                            <Typography variant={"h3"}>Guías no que no se pudieron timbrar masivamente</Typography>
                         </DialogTitle>
                         <DialogContent>
-                            <Typography variant={"h4"}>
-                                Detalles
-                            </Typography>
+                            <div style={{display: 'flex',  width: '100%', height: '600px'}}>
+                                {/*<DataGrid
+                                    localeText={dataGridLocaleText}
+                                    rows={this.state.timbradoRespuesta}
+                                    columns={[
+                                        {
+                                            headerName: "Folio Carta Porte",
+                                            field: "folio",
+                                            width: 200,
+                                        },
+                                        {
+                                            headerName: "Respuesta Timbrado SAT",
+                                            field: "mensaje",
+                                            width: 800,
+                                        },
+                                    ]}
+                                    density="compact"
+                                    getRowHeight={() => 'auto'}
+                                    sx={{
+                                        "& .MuiDataGrid-cellContent": {
+                                            minHeight: 100
+                                        }
+                                    }}
+                                    //getEstimatedRowHeight={() => 800}
+                                    pageSize={Math.floor((window.innerHeight - 310) / 30)}
+                                    getRowId={(row) => row.folio}
+                                />*/}
+                                <Table size="small" stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell
+                                                align="left"
+                                                >
+                                                Folio Carta Porte
+                                            </TableCell>
+                                            <TableCell
+                                                align="left"
+                                            >
+                                                Estatus
+                                            </TableCell>
+                                            <TableCell
+                                                align="left"
+                                                >
+                                                Respuesta Timbrado SAT
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {
+                                            this.state.timbradoRespuesta.map((respuesta, index) => {
+                                                return (
+                                                    <TableRow key={index} sx={{
+                                                        '& .MuiTableCell-root': {
+                                                            height: 'auto',
+                                                            padding: '0'
+                                                        },
+                                                        '&:last-child td, &:last-child th': {
+                                                            border: 0
+                                                        }
+                                                    }}>
+                                                        <TableCell
+                                                            align="top" sx={{
+                                                                justifyContent: 'left',
+                                                                textAlign: 'top',
+                                                                verticalAlign: 'top',
+                                                                minWidth: "200px"
+                                                        }}>
+                                                            {respuesta.folio}
+                                                        </TableCell>
+                                                        <TableCell
+                                                            align="top" sx={{
+                                                            justifyContent: 'left',
+                                                            textAlign: 'top',
+                                                            verticalAlign: 'top',
+                                                            minWidth: "100px"
+                                                        }}>
+                                                            <Chip size="small" style={{
+                                                                backgroundColor:(respuesta.estatus=="NO") ? '#ffc9bb' : '#cefad0',
+                                                                padding: "1px"
+                                                            }} label={respuesta.estatus}/>
+                                                        </TableCell>
+                                                        <TableCell
+                                                            align="top" sx={{
+                                                            justifyContent: 'left',
+                                                            textAlign: 'top',
+                                                            verticalAlign: 'top',
+                                                            whiteSpace: 'normal',
+                                                            wordWrap: 'break-word',
+                                                            display: "inline-block"
+                                                        }}>
+                                                            {respuesta.mensaje}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                );
+                                            })
+                                        }
+                                    </TableBody>
+                                </Table>
+                            </div>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => this.setState({openTimbradoMasivo: false})}>
+                            <Button style={{fontSize: '1em'}} onClick={() => this.setState({
+                                openTimbradoMasivo: false,
+                                timbradoRespuesta: []
+                            })}>
                                 Cerrar
                             </Button>
-                            {/*<Button type={"submit"} onClick={() => props.close()} color={"primary"}>
-                                Asignar
-                            </Button>*/}
                         </DialogActions>
                     </Dialog>
                 }
@@ -1137,10 +1292,12 @@ class DetalleParadas extends Component {
                                                                 })}>Ordenar Paradas</Button>
                                                         }
                                                         {
+                                                            tour.m_bActiva &&
                                                             <Button
-                                                                disabled={!validarDerecho(9101447)}
+                                                                disabled={!validarDerecho(9101447) || this.validarRutasTimbradas(tour)}
                                                                 variant={"contained"}
                                                                 color={"primary"}
+                                                                style={{marginLeft: "5%"}}
                                                                 onClick={() => {
                                                                     this.handleTimbradoMasivo(tour);
                                                                     //(tour.m_bActiva && !r.m_bUnidadPermisionario && !g.m_bTimbrado)
