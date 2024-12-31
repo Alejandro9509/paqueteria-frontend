@@ -434,6 +434,11 @@ function Guia(props) {
             }
         },
         {
+            headerName: "Cliente",
+            field: "m_sCliente",
+            width: 300,
+        },
+        {
             headerName: "Origen",
             field: "m_sCiudadOrigen",
             width: 150,
@@ -447,6 +452,12 @@ function Guia(props) {
             headerName: "Tipo cobro",
             field: "m_sTipoCobro",
             width: 200,
+        },
+        {
+            headerName: "Tipo de entrega",
+            field: "m_bEntregaEnSucursal",
+            width: 200,
+            valueFormatter: ({value}) => value ? "Ocurre" : "Domicilio",
         },
         {
             headerName: "Tracking",
@@ -471,11 +482,6 @@ function Guia(props) {
             width: 125,
             valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
 
-        },
-        {
-            headerName: "Cliente",
-            field: "m_sCliente",
-            width: 300,
         },
         {
             headerName: "Sucursal",
@@ -561,9 +567,13 @@ function Guia(props) {
             width: 150,
             renderCell: (row) => {
                 return (
-                    <Typography style={{fontSize:'.8vw', backgroundColor:row.row.isFacturaTimbrada?'#cefad0':'#ffc9bb'}}>
-                        {row.row.m_sFactura!=''? row.row.isFacturaTimbrada?'SÍ':'NO':''}
-                    </Typography>
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            fontSize:'.8vw',
+                            backgroundColor: `${row.row.isFacturaTimbrada?'#cefad0':'transparent'}`,
+                            padding: "1px"
+                        }} label={row.row.m_sFactura!=''? row.row.isFacturaTimbrada?'SÍ':'NO':''}/>
+                    </div>
                 )
             }
         },
