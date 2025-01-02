@@ -67,8 +67,16 @@ render(){
             {/*</div>*/}
               <div className="app-body">
                 <Switch>
-                  <Route exact path="/" component={Login} />
-                  <Route path="/login" component={Login} />
+                  {/*<Route exact path="/" component={Login} />
+                  <Route path="/login" component={Login} />*/}
+                  <Route exact path="/" component={() => {
+                    window.location.href = "http://190.9.53.4:9898/GMTERPV8_WEB/ES/PAGE_CatUsuariosLoginAWP.awp";
+                    return null;
+                  }}/>
+                  <Route path="/login" component={() => {
+                    window.location.href = "http://190.9.53.4:9898/GMTERPV8_WEB/ES/PAGE_CatUsuariosLoginAWP.awp";
+                    return null;
+                  }}/>
                   <Route exact path="/app/applications/:rfc/:id/tracking" component={Tracking} />
                   <Route path="/loginERP" component={LoginExterno} />
                   <Redirect from="/**" to="/login"/>

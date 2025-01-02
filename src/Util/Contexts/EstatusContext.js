@@ -15,7 +15,7 @@ function obtenerEstatusDocumentos(){
 }
 
 function obtenerEstatusEmbarque(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/GetListadoEmbarque`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SisEstatus/GetListadoEmbarque`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -24,7 +24,7 @@ function obtenerEstatusEmbarque(){
 }
 
 function obtenerEstatusGuia(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/EstatusGuia/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/EstatusGuia/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerEstatusGuia(){
 }
 
 function obtenerEstatusViaje(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoViajes`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoViajes`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -42,7 +42,7 @@ function obtenerEstatusViaje(){
 }
 
 function obtenerEstatusInforme(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoInformes`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoInformes`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -51,7 +51,7 @@ function obtenerEstatusInforme(){
 }
 
 function obtenerEstatusRecoleccion(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoRecoleccion`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoRecoleccion`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

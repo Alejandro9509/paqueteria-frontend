@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerMensajes(id,fecha){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/Chat/Operador`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/Chat/Operador`;
     let result;
     var dateString =  moment(fecha).format("yyyy-MM-DD")
     trackPromise(
@@ -16,7 +16,7 @@ function obtenerMensajes(id,fecha){
 }
 
 function agregarMensajes(message, id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/Chat`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/Chat`;
     let result;
     const now = new Date();
     var dateString =  now.getFullYear() + "-" + ((now.getMonth()+1) <= 9 ? "0" + (now.getMonth()+1) : (now.getMonth()+1) )  + "-" + (now.getDate() <= 9 ? '0' + now.getDate() : now.getDate()) + " " +

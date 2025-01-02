@@ -15,7 +15,7 @@ function validarPermisos(state){
 }
 
 function getListado(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Usuarios/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Usuarios/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

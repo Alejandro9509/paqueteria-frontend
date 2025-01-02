@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarMonedas(id, params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/Modificar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Moneda/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarMonedas(id, params){
 }
 
 function agregarMonedas( params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Moneda/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function agregarMonedas( params){
 }
 
 function eliminarMonedas(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/Eliminar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Moneda/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -33,7 +33,7 @@ function eliminarMonedas(id){
 }
 
 function obtenerMonedas(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Moneda/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -42,7 +42,7 @@ function obtenerMonedas(){
 }
 
 function obtenerMonedasId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Moneda/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerCliente(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Clientes/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerCliente(){
 }
 
 function obtenerClientePaginado(pagina,registros,busqueda){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {busqueda: busqueda}), { headers })
@@ -24,7 +24,7 @@ function obtenerClientePaginado(pagina,registros,busqueda){
 }
 
 function obtenerClienteId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Clientes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerClienteId(id){
 }
 
 function obtenerClientePublicoGeneral(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetPublicoGeneral`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Clientes/GetPublicoGeneral`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -42,7 +42,7 @@ function obtenerClientePublicoGeneral(){
 }
 
 function obtenerClienteTieneConvenio(idCliente, idTipoTarifa){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/ValidarTieneConvenio/${idCliente}/${idTipoTarifa}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Clientes/ValidarTieneConvenio/${idCliente}/${idTipoTarifa}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

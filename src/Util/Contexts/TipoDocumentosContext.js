@@ -5,7 +5,7 @@ const headers = API_HEADERS
 
 
 function obtenerTiposDocumentoSucursal(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoDocumento/GetListado/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoDocumento/GetListado/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -14,7 +14,7 @@ function obtenerTiposDocumentoSucursal(id) {
 }
 
 function obtenerTiposDocumento() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoDocumento/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoDocumento/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
