@@ -187,6 +187,15 @@ function CorteCaja() {
                 })
             })
         }
+        if (action === 'PAGAR') {
+            console.log(selectedItem.guias);
+            const guiasAPagar = selectedItem.guias.filter((g) => g?.idFactura && g?.estatusFactura === "Pendiente");
+            if(guiasAPagar.length > 0) {
+                console.log(guiasAPagar);
+            }else{
+                showSuccess("En el corte seleccionado no hay facturas que se puedan pagar");
+            }
+        }
     }
 
     const handleOnSaveSuccess = () => {

@@ -20,6 +20,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import Receipt from '@mui/icons-material/Receipt';
 
 const PREFIX = 'TableCortesCaja';
 
@@ -47,7 +48,8 @@ const TableCortesCaja = ({ data, onRowClick }) => {
     const ACTIONS = {
         MODIFICAR: 'MODIFICAR',
         CONSULTAR: 'CONSULTAR',
-        REPORTE_CORTE: 'REPORTE_CORTE'
+        REPORTE_CORTE: 'REPORTE_CORTE',
+        PAGAR: 'PAGAR'
     }
 
     const handleRowClick = (selectedItem, action) => {
@@ -111,6 +113,14 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                                 <InsertDriveFileIcon />
                             </IconButton>
                         </Tooltip>
+                        {
+                            row.guias.length > 0 &&
+                            <Tooltip title="Generar pago de factura">
+                                <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.PAGAR)}>
+                                    <Receipt />
+                                </IconButton>
+                            </Tooltip>
+                        }
                     </TableCell>
                     <TableCell component="th" scope="row">
                         {row.folioCorte}
@@ -130,6 +140,8 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>FOLIO GUIA</TableCell>
+                                            <TableCell>FACTURA</TableCell>
+                                            <TableCell>ESTATUS FACTURA</TableCell>
                                             <TableCell>FECHA ENTREGA</TableCell>
                                             <TableCell>OPERADOR/USUARIO</TableCell>
                                             <TableCell>FORMA DE PAGO</TableCell>
@@ -142,6 +154,8 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                                                 <TableCell component="th" scope="row">
                                                     {historyRow.folioGuia}
                                                 </TableCell>
+                                                <TableCell>{historyRow.factura}</TableCell>
+                                                <TableCell>{historyRow.estatusFactura}</TableCell>
                                                 <TableCell>{historyRow.fechaEntrega}</TableCell>
                                                 <TableCell>{historyRow.nombrePersona}</TableCell>
                                                 <TableCell>{historyRow.metodoPago}</TableCell>
