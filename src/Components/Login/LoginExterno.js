@@ -31,13 +31,14 @@ class MyComponent extends Component {
         let rfc = this.getUrlParameter('RFC');
         let usuario = ''
         let contrasena = ''
-        const backend = this.getUrlParameter('URL_Back');
-        const url_back = (backend != null && backend !== "") ? backend : process.env.REACT_APP_REPORT_URL
+        let backend = '';
+
         if (desencriptar) {
             try {
                 usuario = atob(this.getUrlParameter('usuario')); //DESENCRIPTA LAS CREDENCIALES RECIBIDAS POR EL ERP
                 contrasena = atob(this.getUrlParameter('pass'));
                 rfc = atob(this.getUrlParameter('RFC'));
+                backend = atob(this.getUrlParameter('URL_Back'));
             } catch (e) {
                 usuario = this.getUrlParameter('usuario'); //SI NO PUEDE DESENCRIPTAR ES PORQUE NO ESTAN ENCRIPTADAS...
                 contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
@@ -46,7 +47,7 @@ class MyComponent extends Component {
             usuario = this.getUrlParameter('usuario'); //SI NO PUEDE DESENCRIPTAR ES PORQUE NO ESTAN ENCRIPTADAS...
             contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
         }
-
+        const url_back = (backend != null && backend !== "") ? backend : process.env.REACT_APP_REPORT_URL
         const url = `${url_back}/api/ValidarLogin/'${usuario}'/'${contrasena}' `;
         axios.get(url, { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
             try {
