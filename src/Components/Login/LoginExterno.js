@@ -31,7 +31,8 @@ class MyComponent extends Component {
         let rfc = this.getUrlParameter('RFC');
         let usuario = ''
         let contrasena = ''
-        const backend = this.getUrlParameter('URL_BACK') ?? process.env.REACT_APP_REPORT_URL;
+        const backend = this.getUrlParameter('URL_Back');
+        const url_back = (backend != null && backend !== "") ? backend : process.env.REACT_APP_REPORT_URL
         if (desencriptar) {
             try {
                 usuario = atob(this.getUrlParameter('usuario')); //DESENCRIPTA LAS CREDENCIALES RECIBIDAS POR EL ERP
@@ -46,11 +47,11 @@ class MyComponent extends Component {
             contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
         }
 
-        const url = `${backend ?? process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${usuario}'/'${contrasena}' `;
+        const url = `${url_back}/api/ValidarLogin/'${usuario}'/'${contrasena}' `;
         axios.get(url, { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
             try {
                 if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
-                    localStorage.setItem("Back", backend);
+                    localStorage.setItem("Back", url_back);
                     localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
                     localStorage.setItem("accessToken", true);
                     localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
