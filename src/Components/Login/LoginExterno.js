@@ -31,7 +31,7 @@ class MyComponent extends Component {
         let rfc = this.getUrlParameter('RFC');
         let usuario = ''
         let contrasena = ''
-        const backend = "http://paqueteria.desarrollo.gmtransport.co:8081/reportes";
+        const backend = this.getUrlParameter('URL_BACK') ?? process.env.REACT_APP_REPORT_URL;
         if (desencriptar) {
             try {
                 usuario = atob(this.getUrlParameter('usuario')); //DESENCRIPTA LAS CREDENCIALES RECIBIDAS POR EL ERP
