@@ -31,6 +31,7 @@ class MyComponent extends Component {
         let rfc = this.getUrlParameter('RFC');
         let usuario = ''
         let contrasena = ''
+        const backend = "http://paqueteria.desarrollo.gmtransport.co:8081/reportes";
         if (desencriptar) {
             try {
                 usuario = atob(this.getUrlParameter('usuario')); //DESENCRIPTA LAS CREDENCIALES RECIBIDAS POR EL ERP
@@ -45,11 +46,11 @@ class MyComponent extends Component {
             contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
         }
 
-        const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${usuario}'/'${contrasena}' `;
+        const url = `${backend ?? process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${usuario}'/'${contrasena}' `;
         axios.get(url, { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
             try {
                 if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
-
+                    localStorage.setItem("Back", backend);
                     localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
                     localStorage.setItem("accessToken", true);
                     localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);

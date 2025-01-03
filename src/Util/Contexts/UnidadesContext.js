@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerUnidades() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerUnidades() {
 }
 
 function obtenerRemolques() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoRemolques`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoRemolques`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -24,7 +24,7 @@ function obtenerRemolques() {
 }
 
 function obtenerUnidadesInforme() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoInformes`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoInformes`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerUnidadesInforme() {
 }
 
 function obtenerUnidadesUltimaMilla(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoUltimaMilla/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoUltimaMilla/${id}`;
     let result;
     trackPromise(
         result =  axios.post(url, params, { headers })
@@ -51,7 +51,7 @@ function obtenerUnidadesId(id) {
 }
 
 function obtenerEstatusUnidadeId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/InventarioUnidades/GetByIdUnidad/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/InventarioUnidades/GetByIdUnidad/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -69,7 +69,7 @@ function cambiarOperadorUnidad(idOperador, idUnidad) {
 }
 
 function obtenerUnidadesTipo(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ByTipoUnidad/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/ByTipoUnidad/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -78,7 +78,7 @@ function obtenerUnidadesTipo(id) {
 }
 
 function obtenerUnidadesOperador(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ByOperador/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/ByOperador/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -87,7 +87,7 @@ function obtenerUnidadesOperador(id) {
 }
 
 function obtenerUnidadesConvoy(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/ByConvoy/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/ByConvoy/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

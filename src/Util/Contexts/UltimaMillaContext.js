@@ -309,7 +309,7 @@ async function searchLocation(city, address) {
 }
 
 function agregarRuta(idUltimaMilla, tour, data,hora) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GuardarUltimaMilla`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GuardarUltimaMilla`;
     let result;
     var ultimaMillaObject = {
         idUltimaMilla: idUltimaMilla,
@@ -360,7 +360,7 @@ function agregarRuta(idUltimaMilla, tour, data,hora) {
 }
 
 function validarUnidadesSeleccionadas(unidades) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidades`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidades`;
     let result;
     var config = {
         method: 'post',
@@ -380,7 +380,7 @@ function validarUnidadesSeleccionadas(unidades) {
 }
 
 async function ordenarParada(idParada, guias, guiasDescartadas) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/OrdenarParada`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/OrdenarParada`;
     let result;
 
     guias = await obtenerGuiasUbicacion(guias)
@@ -413,7 +413,7 @@ async function ordenarParada(idParada, guias, guiasDescartadas) {
 
 /**Se usará sólo para traer todos los datos de ultima milla sin imagenes*/
 function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GetUltimaMillaFecha/` + moment(date).format("YYYY-MM-DD") + "/" + idSucursal;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GetUltimaMillaFecha/` + moment(date).format("YYYY-MM-DD") + "/" + idSucursal;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {zonas: zonas.join(",")}), {headers})
@@ -432,7 +432,7 @@ function obtenerUltimaMillaFechaImagenes(date, idSucursal, zonas) {
 }
 
 function obtenerPaquetesInforme(idInforme, zonasIds) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetListadoPaquetesByInforme/` + idInforme;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetListadoPaquetesByInforme/` + idInforme;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
@@ -441,7 +441,7 @@ function obtenerPaquetesInforme(idInforme, zonasIds) {
 }
 
 function obtenerPaquetesViaje(idViaje, zonasIds) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetListadoPaquetesByViaje/` + idViaje;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetListadoPaquetesByViaje/` + idViaje;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
@@ -450,7 +450,7 @@ function obtenerPaquetesViaje(idViaje, zonasIds) {
 }
 
 function obtenerPaquetesUnidadOperador(idUnidad, idOperador, zonasIds) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetListadoPaquetesByUnidadOperador/${idUnidad}/${idOperador}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetListadoPaquetesByUnidadOperador/${idUnidad}/${idOperador}`;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
@@ -459,7 +459,7 @@ function obtenerPaquetesUnidadOperador(idUnidad, idOperador, zonasIds) {
 }
 
 async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/RemplazarParada/${idParada}/${paqueteViejo.m_nId}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/RemplazarParada/${idParada}/${paqueteViejo.m_nId}`;
     let result;
     var guia = await obtenerGuiasUbicacion([paqueteNuevo])
     trackPromise(
@@ -475,7 +475,7 @@ async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo)
 }
 
 function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/EliminarParadaOperador`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/EliminarParadaOperador`;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign({}, {
@@ -501,7 +501,7 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
 }*/
 
 function obtenerUltimaMillaReporte(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/UltimaMilla/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/UltimaMilla/${id}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})
@@ -510,7 +510,7 @@ function obtenerUltimaMillaReporte(id) {
 }
 
 function cancelarRuta(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/EliminarRuta/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/EliminarRuta/${id}`;
     let result;
     trackPromise(
         result = axios.delete(url, {headers})
@@ -546,7 +546,7 @@ function obtenerXMLPermisionario(id, esRecolecion, IdSucursal) {
 }
 
 function obtenerReporteCFDIGuia(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIGuia/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIGuia/${id}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})
@@ -555,7 +555,7 @@ function obtenerReporteCFDIGuia(id) {
 }
 
 function obtenerReporteCFDIRecoleccion(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIRecoleccion/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIRecoleccion/${id}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})
@@ -564,7 +564,7 @@ function obtenerReporteCFDIRecoleccion(id) {
 }
 
 async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidad/${idUnidad}/${fecha}/${idSucursal}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidad/${idUnidad}/${fecha}/${idSucursal}`;
     let result;
     trackPromise(
         result = axios.get(url, {headers})
@@ -573,7 +573,7 @@ async function validarUnidadOcupada(idUnidad, fecha, idSucursal) {
 }
 
 function obtenerImagenEvidencia(idGuia,esRecoleccion){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetImagenEvidencia/${idGuia}/${esRecoleccion}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -583,7 +583,7 @@ function obtenerImagenEvidencia(idGuia,esRecoleccion){
 
 //Cambiar a Local para pruebas
 function obtenerPaquetesPorParada(idGuia){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-por-parada/consultar/${idGuia}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-por-parada/consultar/${idGuia}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -592,7 +592,7 @@ function obtenerPaquetesPorParada(idGuia){
 }
 
 function obtenerPaquetesParciales(idParada, idGuia){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-parciales/consultar/${idParada}/${idGuia}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-parciales/consultar/${idParada}/${idGuia}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -602,7 +602,7 @@ function obtenerPaquetesParciales(idParada, idGuia){
 
 //Cambiar a Local para pruebas
 function agregarPaquetesParciales(idParada, idGuia,params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-parciales/agregar/${idParada}/${idGuia}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/paquetes-parciales/agregar/${idParada}/${idGuia}`;
     let result;
     trackPromise(
         result = axios.post(url, Object.assign([],params), {headers})
@@ -611,7 +611,7 @@ function agregarPaquetesParciales(idParada, idGuia,params) {
 }
 
 function obtenerGuiaRecoleccionPorFolio(folio){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetGuiaRecoleccionPorFolio/${folio}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/GetGuiaRecoleccionPorFolio/${folio}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

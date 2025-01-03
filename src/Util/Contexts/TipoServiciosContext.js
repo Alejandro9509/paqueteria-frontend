@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarTipoServicio(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoServicio/Modificar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoServicio/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarTipoServicio(id, params) {
 }
 
 function agregarTipoServicio(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoServicio/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoServicio/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function agregarTipoServicio(params) {
 }
 
 function eliminarTipoServicio(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoServicio/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoServicio/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -33,7 +33,7 @@ function eliminarTipoServicio(id, idEliminadoPor) {
 }
 
 function obtenerTipoServicio() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoServicio/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoServicio/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -42,7 +42,7 @@ function obtenerTipoServicio() {
 }
 
 function obtenerTipoServicioId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoServicio/GetById/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoServicio/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

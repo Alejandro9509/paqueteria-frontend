@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerCodigoPostalCiudad(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetListadoCP/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetListadoCP/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerCodigoPostalCiudad(id){
 }
 
 function obtenerCodigoPostal(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetListado` ;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetListado` ;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerCodigoPostalEstado(idEstado){
 }
 
 function obtenerCodigoPostalId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -42,7 +42,7 @@ function obtenerCodigoPostalId(id){
 }
 
 function obtenerCodigoPostalPorCodigo(code){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByCode/${code}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByCode/${code}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -60,7 +60,7 @@ function obtenerCodigosPostalesPorCiudad(id){
 }
 
 function obtenerCodigosPostalesPorEstadoMunicipio(estado, municipio){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByEstadoMunicipio/${estado}/${municipio}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByEstadoMunicipio/${estado}/${municipio}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -69,7 +69,7 @@ function obtenerCodigosPostalesPorEstadoMunicipio(estado, municipio){
 }
 
 function obtenerCodigosPostalesPorEstadoMunicipioDisponibles(estado, municipio){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByEstadoMunicipioDisponible/${estado}/${municipio}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByEstadoMunicipioDisponible/${estado}/${municipio}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

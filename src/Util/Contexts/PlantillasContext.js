@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerPlantillasImportacion() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerPlantillasImportacion() {
 }
 
 function obtenerPlantillasImportacionById(idPlantilla) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetById/${idPlantilla}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetById/${idPlantilla}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -24,7 +24,7 @@ function obtenerPlantillasImportacionById(idPlantilla) {
 }
 
 function obtenerPlantillaImportacionByIdCliente(idCliente) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetByIdCliente/${idCliente}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetByIdCliente/${idCliente}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerPlantillaImportacionByIdCliente(idCliente) {
 }
 
 function agregarPlantillaImportacion(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -42,7 +42,7 @@ function agregarPlantillaImportacion(params){
 }
 
 function modificarPlantillaImportacion(idPlantilla, params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Modificar/${idPlantilla}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Modificar/${idPlantilla}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -51,7 +51,7 @@ function modificarPlantillaImportacion(idPlantilla, params){
 }
 
 function eliminarPlantillaImportacion(idPlantilla){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Eliminar/${idPlantilla}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/Eliminar/${idPlantilla}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -61,7 +61,7 @@ function eliminarPlantillaImportacion(idPlantilla){
 
 
 function obtenerNombrePlantillaImportacionByIdCliente(idCliente) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetNombrePlantilla/${idCliente}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/PlantillasImportacion/GetNombrePlantilla/${idCliente}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

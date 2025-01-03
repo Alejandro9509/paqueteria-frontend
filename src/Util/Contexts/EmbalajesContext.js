@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarEmbalajes(id, params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalaje/Modificar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embalaje/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarEmbalajes(id, params){
 }
 
 function agregarEmbalajes( params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalaje/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embalaje/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function agregarEmbalajes( params){
 }
 
 function eliminarEmbalajes(id, idEliminadoPor){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalaje/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embalaje/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -33,7 +33,7 @@ function eliminarEmbalajes(id, idEliminadoPor){
 }
 
 function validarEliminarEmbalajes(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/ValidarEliminar/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embalajes/ValidarEliminar/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -42,7 +42,7 @@ function validarEliminarEmbalajes(id){
 }
 
 function obtenerEmbalajes(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embalajes/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -51,7 +51,7 @@ function obtenerEmbalajes(){
 }
 
 function obtenerEmbalajesId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embalajes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

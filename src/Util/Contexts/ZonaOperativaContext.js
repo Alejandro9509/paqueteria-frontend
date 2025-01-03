@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarZonaOperativa(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Modificar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarZonaOperativa(id, params) {
 }
 
 function agregarZonaOperativa(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function agregarZonaOperativa(params) {
 }
 
 function eliminarZonaOperativa(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Eliminar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -33,7 +33,7 @@ function eliminarZonaOperativa(id, idEliminadoPor) {
 }
 
 function obtenerListadoZonaOperativa() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -42,7 +42,7 @@ function obtenerListadoZonaOperativa() {
 }
 
 function obtenerListadoZonaOperativaBySucursal(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListadoBySucursal/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListadoBySucursal/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -51,7 +51,7 @@ function obtenerListadoZonaOperativaBySucursal(id) {
 }
 
 function obtenerListadoZonaOperativaByOrigenDestino(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdOrigenDestino/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdOrigenDestino/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -60,7 +60,7 @@ function obtenerListadoZonaOperativaByOrigenDestino(id) {
 }
 
 function obtenerByIdZonaOperativa(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetById/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -70,7 +70,7 @@ function obtenerByIdZonaOperativa(id) {
 
 //Se va mandar el codigo postal porque surgio la necesidad
 function obtenerZonaOperativaByIdCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdCodigoPostal/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdCodigoPostal/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -79,7 +79,7 @@ function obtenerZonaOperativaByIdCodigoPostal(id) {
 }
 
 function obtenerParametrosDestino(idGuia) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetDatosUbicacionDestinatario/` + idGuia;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetDatosUbicacionDestinatario/` + idGuia;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -88,7 +88,7 @@ function obtenerParametrosDestino(idGuia) {
 }
 
 function obtenerColoniasCPs() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetColoniasCPs`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetColoniasCPs`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -97,7 +97,7 @@ function obtenerColoniasCPs() {
 }
 
 function obtenerZonaOperativaByCodigoPostal(cp) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByCodigoPostal/` + cp;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByCodigoPostal/` + cp;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

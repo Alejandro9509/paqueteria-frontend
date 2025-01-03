@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerParametrosConfiguracion() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerParametrosConfiguracion() {
 }
 
 function modificarParametrosConfiguracion(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/Modificar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function modificarParametrosConfiguracion(params){
 }
 
 function asignarTipoDocumento(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/AgregarTipoDocumento`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/AgregarTipoDocumento`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -42,7 +42,7 @@ function asignarTipoDocumento(params){
 }*/
 
 function validarRequiereDocumentoTimbrado(idSucursal) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/ValidarRequiereDocumentoTimbrado/`+idSucursal;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/ValidarRequiereDocumentoTimbrado/`+idSucursal;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

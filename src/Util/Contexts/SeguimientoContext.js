@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerInformeFolioTipo(folio, tipo, headersAux ) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Seguimeinto/folio/${folio}/tipo/${tipo}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Seguimeinto/folio/${folio}/tipo/${tipo}`;
     let result;
 
     trackPromise(
@@ -16,7 +16,7 @@ function obtenerInformeFolioTipo(folio, tipo, headersAux ) {
 }
 
 function obtenerFoliosSeguimiento() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Seguimiento/folios`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Seguimiento/folios`;
     let result;
 
     trackPromise(

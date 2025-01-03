@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerTipoSeguro() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

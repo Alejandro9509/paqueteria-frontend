@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 async function obtenerFechaInicio(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Utilerias/GetFechaInicio`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Utilerias/GetFechaInicio`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ async function obtenerFechaInicio(){
 }
 
 async function obtenerFechaFinal(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Utilerias/GetFechaFinal`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Utilerias/GetFechaFinal`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -24,7 +24,7 @@ async function obtenerFechaFinal(){
 }
 
 function validarDerecho(idUsuario,idPrivilegio,idTipo){
-    const url = `${process.env.REACT_APP_REPORT_URL}/Utilerias/ValidaDerechos/${idUsuario}/${idPrivilegio}/${idTipo}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/Utilerias/ValidaDerechos/${idUsuario}/${idPrivilegio}/${idTipo}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function validarDerecho(idUsuario,idPrivilegio,idTipo){
 }
 
 function descargarPlantillaImportarEmbarque(idCliente){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Utilerias/descargar-plantilla-importacion-embarques/${idCliente}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Utilerias/descargar-plantilla-importacion-embarques/${idCliente}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers: headers, responseType: 'blob' })

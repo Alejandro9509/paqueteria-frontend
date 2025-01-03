@@ -2242,7 +2242,7 @@ function Recoleccion() {
     }
 
     async function getAllTiposSeguro() {
-        axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+        axios.get(`${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
     }

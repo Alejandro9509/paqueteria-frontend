@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarCorte(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Modificar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarCorte(id, params) {
 }
 
 function agregarCorte(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function agregarCorte(params) {
 }
 
 function eliminarCorte(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Eliminar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -34,7 +34,7 @@ function eliminarCorte(id, idEliminadoPor) {
 
 
 function obtenerCortes() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -43,7 +43,7 @@ function obtenerCortes() {
 }
 
 function obtenerCorteId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetById/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -52,7 +52,7 @@ function obtenerCorteId(id) {
 }
 
 function obtenerCortesByFiltros(fecha, idOperador, idUsuario) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListadoByFiltros/` + fecha +`/` + idOperador +`/` + idUsuario;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListadoByFiltros/` + fecha +`/` + idOperador +`/` + idUsuario;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -60,7 +60,7 @@ function obtenerCortesByFiltros(fecha, idOperador, idUsuario) {
     return result
 }
 function obtenerCorteReporte(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCaja/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCaja/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -68,7 +68,7 @@ function obtenerCorteReporte(id) {
     return result
 }
 function obtenerCortesGeneralReporte(fecha) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCaja/General/${fecha}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCaja/General/${fecha}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

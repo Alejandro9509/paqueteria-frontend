@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function agregarTarifaRangos(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function agregarTarifaRangos(params) {
 }
 
 function modificarTarifaRangos(id,params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Modificar/`+ id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Modificar/`+ id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function modificarTarifaRangos(id,params) {
 }
 
 function eliminarTarifaRangos(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Eliminar/`+ id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Eliminar/`+ id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -38,7 +38,7 @@ const obtenerTarifasRangosFiltro =(folioTarifas) =>{
 
         folioTarifas = 0
     }
-    const url =`${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetByFiltro/` +folioTarifas
+    const url =`${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetByFiltro/` +folioTarifas
 
     let result;
     trackPromise(
@@ -48,7 +48,7 @@ const obtenerTarifasRangosFiltro =(folioTarifas) =>{
 }
 
 function obtenerTarifasRangos() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -57,7 +57,7 @@ function obtenerTarifasRangos() {
 }
 
 function obtenerTarifaRangosById(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetById/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -66,7 +66,7 @@ function obtenerTarifaRangosById(id) {
 }
 
 function obtenerTarifaGeneral() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetGeneral`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetGeneral`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -75,7 +75,7 @@ function obtenerTarifaGeneral() {
 }
 
 function obtenerTarifasByTipo(idTipotarifa) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/GetByTipo/` + idTipotarifa;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/GetByTipo/` + idTipotarifa;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -84,7 +84,7 @@ function obtenerTarifasByTipo(idTipotarifa) {
 }
 
 function agregarTarifa(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -93,7 +93,7 @@ function agregarTarifa(params){
 }
 
 function eliminarTarifa(idTarifa, idModificarPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Eliminar/` + idTarifa + `/`+ idModificarPor;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Eliminar/` + idTarifa + `/`+ idModificarPor;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -102,7 +102,7 @@ function eliminarTarifa(idTarifa, idModificarPor) {
 }
 
 function modificarTarifa(id,params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Modificar/`+ id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/Modificar/`+ id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -111,7 +111,7 @@ function modificarTarifa(id,params) {
 }
 
 function obtenerTarifaBy(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/GetById/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Tarifas/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

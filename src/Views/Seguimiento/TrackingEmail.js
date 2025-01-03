@@ -84,7 +84,7 @@ class TrackingEmail extends Component {
             didSearch:false,
         }
         this.handleChangeTab = this.handleChangeTab.bind(this)
-        const url=`${process.env.REACT_APP_REPORT_URL}/api/GetLogo`
+        const url=`${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GetLogo`
         axios.get(url,{headers}).then((respuesta)=>{
             try{
                 this.setState({logo: respuesta.data.Logo})
