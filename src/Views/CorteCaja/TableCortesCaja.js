@@ -114,7 +114,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                             </IconButton>
                         </Tooltip>
                         {
-                            row.guias.length > 0 &&
+                            (row.guias.length > 0 && row.guias.some((g) => {return g?.Factura != null})) &&
                             <Tooltip title="Generar pago de factura">
                                 <IconButton aria-label="edit" size="small" onClick={() => onRowClick(row, ACTIONS.PAGAR)}>
                                     <Receipt />
@@ -154,7 +154,7 @@ const TableCortesCaja = ({ data, onRowClick }) => {
                                                 <TableCell component="th" scope="row">
                                                     {historyRow.folioGuia}
                                                 </TableCell>
-                                                <TableCell>{historyRow.factura}</TableCell>
+                                                <TableCell>{historyRow.Factura}</TableCell>
                                                 <TableCell>{historyRow.estatusFactura}</TableCell>
                                                 <TableCell>{historyRow.fechaEntrega}</TableCell>
                                                 <TableCell>{historyRow.nombrePersona}</TableCell>
