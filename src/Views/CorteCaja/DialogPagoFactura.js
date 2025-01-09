@@ -24,6 +24,7 @@ import FormControl from "@mui/material/FormControl";
 import {obtenerTiposPago} from "../../Util/Contexts/TipoPagoContext";
 import {obtenerConceptosCobranza} from "../../Util/Contexts/ConceptosCobranzaContext";
 import {obtenerCuentasBancarias} from "../../Util/Contexts/CuentasBancariasContext";
+import {obtenerParametrosConfiguracionCortes} from "../../Util/Contexts/ParametrosConfiguracionContext";
 
 export default function DialogPagoFactura({ open, handleClose, guias }) {
     const [listado, setListado] = useState(guias);
@@ -33,6 +34,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         idCliente: null,
         cliente: '',
         aplicarPago: "",
+        idAplicarPago: null,
         tipoCambio: 0.0,
         formaPago: null,
         cuentaBancaria: null,
@@ -41,15 +43,20 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         conceptoCobranza: null,
         idConceptoCobranza: null,
         saldoTotal: 0.0,
+        saldoTotalDLLS: 0.0,
         importe: 0.0,
+        importeDLLS: 0.0,
         importeSuma: 0.0,
-        saldoAFavor: 0.0
+        importeSumaDLLS: 0.0,
+        saldoAFavor: 0.0,
+        saldoAFavorDLLS: 0.0,
     });
     const [openDialogCliente, setOpenDialogCliente] = useState(false);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataTipoPago, setDataTipoPago] = React.useState([]);
     const [dataConceptos, setDataConceptos] = React.useState([]);
     const [dataCuentasBanco, setDataCuentasBanco] = React.useState([]);
+    const [dataCertificados, setDataCertificados] = React.useState([]);
     const columns = React.useMemo(() => [
         /*{
             headerName: "Acciones",
@@ -161,8 +168,8 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
             editable: true
         },
         {
-            headerName: "Referencia",
-            field: "ReferenciaFactura",
+            headerName: "Cliente",
+            field: "ClienteFactura",
             width: 200,
         },
         {
@@ -184,21 +191,12 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         },
     ]);
 
-    useEffect(() => {
-        /*let ids = [];
-        guias.forEach(guia => {
-            ids.push(guia.idFactura);
-        })
-        obtenerFacturasCorteByIds(ids).then(({data}) => {
-            console.log(data) //setListado(data)
-        })*/
-    },[guias])
-
     useEffect(()=>{
         getTipoCambio();
         getAllTipoPago();
         getAllConceptosCobranza();
         getAllCuentasBancarias();
+        getAllCertificados();
     },[])
 
     function getTipoCambio() {
@@ -225,26 +223,77 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         })
     }
 
+    const getAllCertificados = () => {
+        obtenerParametrosConfiguracionCortes().then(({data}) => {
+            setDataCertificados(data);
+        })
+    }
+
     const handleAcceptClick = () => {
-        //handleAccept(listadoSeleccion);
+        console.log(listado);
         console.log(guias);
+        console.log(form);
         handleCloseClick();
     };
 
     const handleCloseClick = () => {
-        setListado([])
+        setListado([]);
+        setForm({
+            fechaMovimiento: null,
+            fechaCobro: null,
+            idCliente: null,
+            cliente: '',
+            aplicarPago: "",
+            idAplicarPago: null,
+            tipoCambio: 0.0,
+            formaPago: null,
+            cuentaBancaria: null,
+            idCuentaBancaria: null,
+            referenciaBancaria: "",
+            conceptoCobranza: null,
+            idConceptoCobranza: null,
+            saldoTotal: 0.0,
+            saldoTotalDLLS: 0.0,
+            importe: 0.0,
+            importeSuma: 0.0,
+            importeSumaDLLS: 0.0,
+            importeDLLS: 0.0,
+            saldoAFavor: 0.0,
+            saldoAFavorDLLS: 0.0,
+        });
         handleClose();
     };
 
     const handleRowSelection = (selectedRows) => {
-        setListado(selectedRows)
+        setListado(selectedRows);
     };
 
     const handleChange = (event) => {
         event.preventDefault();
         setForm({
+            ...form,
             [event.target.name]: event.target.value,
         });
+    }
+
+    const handleChangeImporte = (event) => {
+        event.preventDefault();
+        const cambio = dataTipoCambio.find((item) => item.m_nIdTipoCambio === form.tipoCambio)?.m_cTipoCambio;
+        if(form.cuentaBancaria.IdMoneda === 2){//Dólares
+            setForm({
+                ...form,
+                saldoAFavorDLLS: (parseFloat(event.target.value) - form.importeSumaDLLS),
+                saldoAFavor: (parseFloat(event.target.value) - (form.importeSuma * cambio)),
+                importe: event.target.value,
+            });
+        }else{ //Pesos
+            setForm({
+                ...form,
+                saldoAFavorDLLS: (parseFloat(event.target.value) * cambio) - form.importeSumaDLLS,
+                saldoAFavor: (parseFloat(event.target.value) - form.importeSuma),
+                importe: event.target.value,
+            });
+        }
     }
 
     const dialogCliente = (isVisible) => {
@@ -253,10 +302,25 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
 
     const handlePatrocinadorSelected = (row) => {
         setForm({
+            ...form,
             cliente: row,
-            idCliente: row.id
+            idCliente: row.id,
+            saldoTotal: row.m_nSaldoCliente,
+            saldoTotalDLLS: row.m_nSaldoDLLSCliente,
         });
         setOpenDialogCliente(false);
+    }
+
+    const calcularImporte = () => {
+        let suma = 0.0;
+        guias.forEach((guia) => {
+            suma += parseFloat(guia.ImporteFactura);
+        })
+        setForm({
+            ...form,
+            importeSuma: suma,
+            saldoAFavor: parseFloat(form.importe) - suma
+        })
     }
 
     return (
@@ -326,7 +390,53 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
+                                <FormControl fullWidth variant="outlined"
+                                             required={(dataCertificados.length > 0)}
+                                             size="small">
+                                    <InputLabel id="aplicarPagoLabel">
+                                        Aplicar pago de
+                                    </InputLabel>
+                                    <Select
+                                        labelId="aplicarPagoLabel"
+                                        label="Aplicar pago de"
+                                        className="form-control"
+                                        value={form.idAplicarPago}
+                                        onChange={(event) => {
+                                            event.preventDefault();
+                                            if(event.target.value != 0){
+                                                setForm({
+                                                    ...form,
+                                                    aplicarPago: dataCertificados.find((item) => item.IdCertificado === event.target.value),
+                                                    idAplicarPago: event.target.value
+                                                });
+                                            }else{
+                                                setForm({
+                                                    ...form,
+                                                    aplicarPago: null,
+                                                    idAplicarPago: event.target.value
+                                                });
+                                            }
+                                        }}
+                                        disabled={(dataCertificados.length <= 0)}
+                                        id="aplicarPago"
+                                        InputLabelProps={{shrink: true}}
+                                    >
+                                        <MenuItem value="0">Seleccionar</MenuItem>
+                                        {
+                                            dataCertificados.map((cer) => (
+                                                <MenuItem
+                                                    key={cer.IdCertificado}
+                                                    value={cer.IdCertificado}
+                                                >
+                                                    {cer.RFC}
+                                                </MenuItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={2}>
                                 <FormControl fullWidth variant="outlined" required size="small">
                                     <InputLabel id="tipoCambioLabel">
                                         Tipo de Cambio
@@ -390,23 +500,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={1}>
-                                <TextField
-                                    variant="outlined"
-                                    margin="dense"
-                                    fullWidth
-                                    autoFocus
-                                    id="idMoneda"
-                                    name="moneda"
-                                    label="Moneda"
-                                    type="text"
-                                    disabled
-                                    value={form?.cuentaBancaria?.Moneda}
-                                    className={"form-control"}
-                                    InputLabelProps={{shrink: true,}}
-                                />
-                            </Grid>
-                            <Grid item xs={5}>
+                            <Grid item xs={6}>
                                 <FormControl fullWidth variant="outlined" required size="small">
                                     <InputLabel id="cuentaBancariaLabel">
                                         Cuenta bancaria
@@ -418,11 +512,19 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                         value={form.idCuentaBancaria}
                                         onChange={(event) => {
                                             event.preventDefault();
-                                            setForm({
-                                                ...form,
-                                                idCuentaBancaria: event.target.value,
-                                                cuentaBancaria: dataCuentasBanco.find((item) => item.IdCuentaBancaria === event.target.value)
-                                            });
+                                            if(event.target.value != 0){
+                                                setForm({
+                                                    ...form,
+                                                    idCuentaBancaria: event.target.value,
+                                                    cuentaBancaria: dataCuentasBanco.find((item) => item.IdCuentaBancaria === event.target.value)
+                                                });
+                                            }else {
+                                                setForm({
+                                                    ...form,
+                                                    idCuentaBancaria: event.target.value,
+                                                    cuentaBancaria: null
+                                                });
+                                            }
                                         }}
                                         id="cuentaBancaria"
                                         InputLabelProps={{shrink: true}}
@@ -448,12 +550,28 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     id="idImporte"
                                     name="importe"
                                     label="Importe Depositado"
-                                    type="money"
-                                    onChange={handleChange}
+                                    type="number"
+                                    onChange={handleChangeImporte}
                                     value={form.importe}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true,}}
                                     required
+                                />
+                            </Grid>
+                            <Grid item xs={1}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    fullWidth
+                                    autoFocus
+                                    id="idMoneda"
+                                    name="moneda"
+                                    label="Moneda"
+                                    type="text"
+                                    disabled
+                                    value={form?.cuentaBancaria?.Moneda}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true,}}
                                 />
                             </Grid>
                             <Grid item xs={3}>
@@ -485,11 +603,19 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                         value={form.idConceptoCobranza}
                                         onChange={(event) => {
                                             event.preventDefault();
-                                            setForm({
-                                                ...form,
-                                                conceptoCobranza: dataConceptos.find((item) => item.IdConceptoCobranza === event.target.value),
-                                                idConceptoCobranza: event.target.value,
-                                            });
+                                            if(event.target.value != 0){
+                                                setForm({
+                                                    ...form,
+                                                    conceptoCobranza: dataConceptos.find((item) => item.IdConceptoCobranza === event.target.value),
+                                                    idConceptoCobranza: event.target.value,
+                                                });
+                                            }else {
+                                                setForm({
+                                                    ...form,
+                                                    conceptoCobranza: null,
+                                                    idConceptoCobranza: event.target.value,
+                                                });
+                                            }
                                         }}
                                         id="conceptoCobranza"
                                         InputLabelProps={{shrink: true}}
@@ -514,20 +640,21 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     density="compact"
                                     pageSize={Math.floor((window.innerHeight - 300) / 30)}
                                     getRowId={(row) => row.idGuia}
-                                    // checkboxSelection
-                                    // onRowSelectionModelChange={(newModel) => {
-                                    //     setSelection(newModel)
-                                    // }}
-                                    //rowSelectionModel={selection}
-                                    //disableSelectionOnClick={props.disabled}
+                                    /*checkboxSelection
+                                    onRowSelectionModelChange={(newModel) => {
+                                        handleRowSelection(newModel);
+                                    }}
+                                    rowSelectionModel={listado}*/
                                     processRowUpdate={(updatedRow, originalRow) =>{
                                         if(updatedRow !== originalRow){
-                                            console.log(updatedRow);
+                                            const row = guias.find((item) => item.idGuia === updatedRow.idGuia);
+                                            row.ImporteFactura = updatedRow.ImporteFactura;
+                                            calcularImporte();
                                         }
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -536,14 +663,14 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     id="idSaldoTotal"
                                     name="saldoTotal"
                                     label="Saldo Total"
-                                    type="text"
+                                    type="number"
                                     disabled
                                     value={form.saldoTotal}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true}}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -551,15 +678,31 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     autoFocus
                                     id="idImporteSuma"
                                     name="importeSuma"
-                                    label="Importe a Pagar"
-                                    type="text"
+                                    label="Importe a Pagar (MXN)"
+                                    type="number"
                                     disabled
                                     value={form.importeSuma}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true}}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    fullWidth
+                                    autoFocus
+                                    id="idImporteSumaDLLS"
+                                    name="importeSumaDLLS"
+                                    label="Importe a Pagar (USD)"
+                                    type="number"
+                                    disabled
+                                    value={form.importeSumaDLLS}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true}}
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -567,18 +710,31 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     autoFocus
                                     id="idSaldoAFavor"
                                     name="saldoAFavor"
-                                    label="Saldo a Favor"
-                                    type="text"
+                                    label="Saldo a Favor (MXN)"
+                                    type="number"
                                     disabled
                                     value={form.saldoAFavor}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true}}
                                 />
                             </Grid>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    fullWidth
+                                    autoFocus
+                                    id="idSaldoAFavorDLLS"
+                                    name="saldoAFavorDLLS"
+                                    label="Saldo a Favor (USD)"
+                                    type="number"
+                                    disabled
+                                    value={form.saldoAFavorDLLS}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true}}
+                                />
+                            </Grid>
                         </Grid>
-                        {/*</div>
-                            </div>*/}
-                        {/*</div>*/}
                     </DialogContent>
                 </form>
             <DialogActions>

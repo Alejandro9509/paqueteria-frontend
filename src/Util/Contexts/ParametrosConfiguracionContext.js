@@ -49,9 +49,20 @@ function validarRequiereDocumentoTimbrado(idSucursal) {
     );
     return result
 }
+
+function obtenerParametrosConfiguracionCortes() {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/Parametros`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 export {
     obtenerParametrosConfiguracion,
     modificarParametrosConfiguracion,
     asignarTipoDocumento,
-    validarRequiereDocumentoTimbrado
+    validarRequiereDocumentoTimbrado,
+    obtenerParametrosConfiguracionCortes
 }
