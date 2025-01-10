@@ -31,25 +31,34 @@ class MyComponent extends Component {
         let rfc = this.getUrlParameter('RFC');
         let usuario = ''
         let contrasena = ''
+        let backend = '';
+
         if (desencriptar) {
             try {
                 usuario = atob(this.getUrlParameter('usuario')); //DESENCRIPTA LAS CREDENCIALES RECIBIDAS POR EL ERP
                 contrasena = atob(this.getUrlParameter('pass'));
                 rfc = atob(this.getUrlParameter('RFC'));
+                backend = atob(this.getUrlParameter('URL_Back'));
             } catch (e) {
                 usuario = this.getUrlParameter('usuario'); //SI NO PUEDE DESENCRIPTAR ES PORQUE NO ESTAN ENCRIPTADAS...
                 contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
+                backend = this.getUrlParameter('URL_Back');
             }
         } else {
             usuario = this.getUrlParameter('usuario'); //SI NO PUEDE DESENCRIPTAR ES PORQUE NO ESTAN ENCRIPTADAS...
             contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
         }
-
-        const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${usuario}'/'${contrasena}' `;
-        axios.get(url, { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
+        console.log(usuario);
+        console.log(contrasena);
+        console.log(rfc);
+        console.log(backend);
+        const url_back = (backend != null && backend !== "") ? backend : process.env.REACT_APP_REPORT_URL;
+        const url = `${url_back}/api/ValidarLogin/V2/'${usuario}'/'${contrasena}' `;
+        axios.post(url, Object.assign({}, {email: usuario, password: contrasena}),
+            { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
             try {
                 if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
-
+                    localStorage.setItem("Back", url_back);
                     localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
                     localStorage.setItem("accessToken", true);
                     localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
