@@ -191,15 +191,25 @@ function CorteCaja() {
             })
         }
         if (action === 'PAGAR') {
-            const guiasAPagar = selectedItem.guias.filter((g) => g?.idFactura && g?.estatusFactura === "Pendiente Pago");
+            const guiasAPagar = filterFacturasRepetidas(
+                selectedItem.guias.filter((g) => g?.idFactura && g?.estatusFactura === "Pendiente Pago")
+            );
             if(guiasAPagar.length > 0) {
-                console.log(guiasAPagar);
-                setGuiasPago(guiasAPagar)
+                //console.log(guiasAPagar);
+                setGuiasPago(guiasAPagar);
                 setOpenDialogPago(true);
             }else{
                 showSuccess("En el corte seleccionado no hay facturas que se puedan pagar");
             }
         }
+    }
+
+    const filterFacturasRepetidas = (guias) => {
+        return guias.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                t.place === value.place && t.idFactura === value.idFactura
+            ))
+        )
     }
 
     const handleOnSaveSuccess = () => {

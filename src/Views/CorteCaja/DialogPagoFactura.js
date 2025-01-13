@@ -1,20 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Checkbox, Chip,
+    Button,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
-    DialogTitle, FormControlLabel, Grid, MenuItem, Tooltip, Typography
+    DialogTitle, Grid, MenuItem
 } from '@mui/material';
-import {showSuccess, validarDerecho} from "../../Util/Util";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import {
-    obtenerFacturasCorteByIds
-} from "../../Util/Contexts/CorteCajaContext";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import TextField from "@mui/material/TextField";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerTipoCambio} from "../../Util/Contexts/TipoCambioContext";
@@ -25,6 +18,8 @@ import {obtenerTiposPago} from "../../Util/Contexts/TipoPagoContext";
 import {obtenerConceptosCobranza} from "../../Util/Contexts/ConceptosCobranzaContext";
 import {obtenerCuentasBancarias} from "../../Util/Contexts/CuentasBancariasContext";
 import {obtenerParametrosConfiguracionCortes} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {obtenerClienteId} from "../../Util/Contexts/ClientesContext";
+import guia from "../Guia";
 
 export default function DialogPagoFactura({ open, handleClose, guias }) {
     const [listado, setListado] = useState(guias);
@@ -130,12 +125,12 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         {
             headerName: "Documento",
             field: "Factura",
-            width: 200,
+            width: 220,
         },
         {
             headerName: "Viaje",
             field: "NumeroViajeFactura",
-            width: 200,
+            width: 270,
         },
         {
             headerName: "Fecha",
@@ -199,9 +194,28 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         getAllCertificados();
     },[])
 
+    useEffect(()=>{
+        setListado(guias);
+        if(guias.length > 0){
+            obtenerClienteId(guias[0]?.IdClienteFactura).then(({data}) => {
+                setForm({
+                    ...form,
+                    cliente: data,
+                    idCliente: data.m_nIdCliente,
+                    saldoTotal: data.m_nSaldoCliente,
+                    saldoTotalDLLS: data.m_nSaldoDLLSCliente,
+                });
+            })
+        }
+    }, [guias])
+
     function getTipoCambio() {
         obtenerTipoCambio().then(respuesta => {
-            setDataTipoCambio(respuesta.data)
+            setDataTipoCambio(respuesta.data);
+            setForm({
+                ...form,
+                tipoCambio: respuesta.data[0]?.m_nIdTipoCambio
+            });
         });
     }
 
@@ -231,8 +245,32 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
 
     const handleAcceptClick = () => {
         console.log(listado);
-        console.log(guias);
         console.log(form);
+        let params = {
+            fechaHora: form.fechaMovimiento,
+            idCuentaBancaria: form.idCuentaBancaria,
+            importe: form.importe,
+            tipoCambio: form.tipoCambio,
+            referenciaBancaria: form.referenciaBancaria,
+            idConceptoCobranza: form.idConceptoCobranza,
+            idCliente: form.idCliente,
+            importeSaldoFavor: form.saldoAFavor,
+            creadoPor: localStorage.getItem("UsuarioId"),
+            creadoEl: form.fechaMovimiento,
+            dsProFacturas: listado,
+            idPeticion: 0,
+            pagoConContraRecibo: 0,
+            cobranzaExterna: 0,
+            idCertificado: 0,
+            claveMetodoPago: form.formaPago,
+            rfcEmisorCtaOrd: 0,
+            nomBancoOrdExt: 0,
+            ctaOrdenante: 0,
+            tipoCodPago: 0,
+            certPago: 0,
+            cadPago: 0,
+            selloPago: 0
+        };
         handleCloseClick();
     };
 
@@ -274,24 +312,32 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
             ...form,
             [event.target.name]: event.target.value,
         });
+        if(event.target.name === "cambio" || event.target.name === "cuentaBancaria") {
+            calcularImporteAPagar(form.importe);
+        }
     }
 
     const handleChangeImporte = (event) => {
         event.preventDefault();
+        const aPagar = parseFloat(event.target.value);
+        calcularImporteAPagar(aPagar);
+    }
+
+    const calcularImporteAPagar = (aPagar) => {
         const cambio = dataTipoCambio.find((item) => item.m_nIdTipoCambio === form.tipoCambio)?.m_cTipoCambio;
         if(form.cuentaBancaria.IdMoneda === 2){//Dólares
             setForm({
                 ...form,
-                saldoAFavorDLLS: (parseFloat(event.target.value) - form.importeSumaDLLS),
-                saldoAFavor: (parseFloat(event.target.value) - (form.importeSuma * cambio)),
-                importe: event.target.value,
+                saldoAFavorDLLS: aPagar - form.importeSumaDLLS,
+                saldoAFavor: (aPagar * cambio) - form.importeSuma,
+                importe: aPagar,
             });
-        }else{ //Pesos
+        }else if(form.cuentaBancaria.IdMoneda === 1){ //Pesos
             setForm({
                 ...form,
-                saldoAFavorDLLS: (parseFloat(event.target.value) * cambio) - form.importeSumaDLLS,
-                saldoAFavor: (parseFloat(event.target.value) - form.importeSuma),
-                importe: event.target.value,
+                saldoAFavorDLLS: (aPagar / cambio) - form.importeSumaDLLS,
+                saldoAFavor: aPagar - form.importeSuma,
+                importe: aPagar,
             });
         }
     }
@@ -304,22 +350,44 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         setForm({
             ...form,
             cliente: row,
-            idCliente: row.id,
+            idCliente: row.m_nIdCliente,
             saldoTotal: row.m_nSaldoCliente,
             saldoTotalDLLS: row.m_nSaldoDLLSCliente,
         });
+        setListado(guias.filter((item) => (item.IdClienteFactura === row.m_nIdCliente)));
         setOpenDialogCliente(false);
     }
 
     const calcularImporte = () => {
         let suma = 0.0;
-        guias.forEach((guia) => {
-            suma += parseFloat(guia.ImporteFactura);
+        let sumaDLLS = 0.0;
+        let saldoRestante;
+        let saldoRestanteDLLS;
+        const importe = parseFloat(form.importe);
+        const cambio = dataTipoCambio.find((item) => item.m_nIdTipoCambio === form.tipoCambio)?.m_cTipoCambio;
+
+        listado.forEach((guia) => {
+            if(guia.MonedaFactura === "PESOS"){
+                suma += parseFloat(guia.ImporteFactura);
+            }else {
+                sumaDLLS += parseFloat(guia.ImporteFactura);
+            }
         })
+        suma = suma + (sumaDLLS * cambio);
+        sumaDLLS = sumaDLLS + (suma / cambio);
+        if(form.cuentaBancaria.IdMoneda === 2){//Dólares
+            saldoRestante = (importe * cambio) - suma;
+            saldoRestanteDLLS = importe - sumaDLLS;
+        }else {
+            saldoRestante = importe - suma;
+            saldoRestanteDLLS = (importe / cambio) - sumaDLLS;
+        }
         setForm({
             ...form,
             importeSuma: suma,
-            saldoAFavor: parseFloat(form.importe) - suma
+            importeSumaDLLS: sumaDLLS,
+            saldoAFavor: saldoRestante,
+            saldoAFavorDLLS: saldoRestanteDLLS
         })
     }
 
@@ -456,13 +524,12 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                         id="tipoCambio"
                                         InputLabelProps={{shrink: true}}
                                     >
-                                        <MenuItem value="0">Seleccionar</MenuItem>
                                         {dataTipoCambio.map((cambio) => (
                                             <MenuItem
                                                 key={cambio.m_nIdTipoCambio}
                                                 value={cambio.m_nIdTipoCambio}
                                             >
-                                                {cambio.m_cTipoCambio.toFixed(4)}
+                                                {cambio.m_cTipoCambio.toFixed(2)}
                                             </MenuItem>
                                         ))}
                                     </Select>
@@ -635,7 +702,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                             <Grid item xs={12} fullWidth>
                                 <DataGrid
                                     localeText={dataGridLocaleText}
-                                    rows={guias}
+                                    rows={listado}
                                     columns={columns}
                                     density="compact"
                                     pageSize={Math.floor((window.innerHeight - 300) / 30)}
@@ -676,12 +743,28 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     margin="dense"
                                     fullWidth
                                     autoFocus
+                                    id="idSaldoTotalDLLS"
+                                    name="saldoTotalDLLS"
+                                    label="Saldo Total (DLLS)"
+                                    type="number"
+                                    disabled
+                                    value={form.saldoTotalDLLS}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true}}
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    fullWidth
+                                    autoFocus
                                     id="idImporteSuma"
                                     name="importeSuma"
                                     label="Importe a Pagar (MXN)"
                                     type="number"
                                     disabled
-                                    value={form.importeSuma}
+                                    value={form.importeSuma.toFixed(2)}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true}}
                                 />
@@ -697,7 +780,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     label="Importe a Pagar (USD)"
                                     type="number"
                                     disabled
-                                    value={form.importeSumaDLLS}
+                                    value={form.importeSumaDLLS.toFixed(2)}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true}}
                                 />
@@ -713,7 +796,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     label="Saldo a Favor (MXN)"
                                     type="number"
                                     disabled
-                                    value={form.saldoAFavor}
+                                    value={form.saldoAFavor.toFixed(2)}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true}}
                                 />
@@ -729,7 +812,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     label="Saldo a Favor (USD)"
                                     type="number"
                                     disabled
-                                    value={form.saldoAFavorDLLS}
+                                    value={form.saldoAFavorDLLS.toFixed(2)}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true}}
                                 />
