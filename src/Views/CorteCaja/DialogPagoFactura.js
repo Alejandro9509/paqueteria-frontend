@@ -276,7 +276,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                 fechaHora: form.fechaMovimiento,
                 idCuentaBancaria: form.idCuentaBancaria,
                 importe: form.importe,
-                tipoCambio: form.tipoCambio,
+                tipoCambio: dataTipoCambio.find((item) => item.m_nIdTipoCambio === form.tipoCambio)?.m_cTipoCambio,
                 referenciaBancaria: form.referenciaBancaria,
                 idConceptoCobranza: form.idConceptoCobranza,
                 idCliente: form.idCliente,
