@@ -19,13 +19,17 @@ import {obtenerConceptosCobranza} from "../../Util/Contexts/ConceptosCobranzaCon
 import {obtenerCuentasBancarias} from "../../Util/Contexts/CuentasBancariasContext";
 import {obtenerParametrosConfiguracionCortes} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerClienteId} from "../../Util/Contexts/ClientesContext";
-import guia from "../Guia";
+import {agregarPagoCorte} from "../../Util/Contexts/CorteCajaContext";
+import {showSuccess} from "../../Util/Util";
+import moment from "moment/moment";
+import {showError} from "../../Util/GlobalFunctions";
+import {GridColumnHeaderParams} from "@mui/x-data-grid";
 
 export default function DialogPagoFactura({ open, handleClose, guias }) {
     const [listado, setListado] = useState(guias);
     const [form, setForm] = useState({
-        fechaMovimiento: null,
-        fechaCobro: null,
+        fechaMovimiento: moment(new Date()).format('YYYY-MM-DD'),
+        fechaCobro: moment(new Date()).format('YYYY-MM-DD'),
         idCliente: null,
         cliente: '',
         aplicarPago: "",
@@ -36,7 +40,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         idCuentaBancaria: null,
         referenciaBancaria: "",
         conceptoCobranza: null,
-        idConceptoCobranza: null,
+        idConceptoCobranza: 2,
         saldoTotal: 0.0,
         saldoTotalDLLS: 0.0,
         importe: 0.0,
@@ -160,7 +164,15 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                     minimumFractionDigits: 2,
                 }).format(params.value);
             },
-            editable: true
+            editable: true,
+            renderHeader: (params: GridColumnHeaderParams) => (
+                <strong>
+                    {'Importe '}
+                    <span role="img" aria-label="enjoy">
+                      💵
+                    </span>
+                </strong>
+            ),
         },
         {
             headerName: "Cliente",
@@ -244,34 +256,54 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
     }
 
     const handleAcceptClick = () => {
-        console.log(listado);
-        console.log(form);
-        let params = {
-            fechaHora: form.fechaMovimiento,
-            idCuentaBancaria: form.idCuentaBancaria,
-            importe: form.importe,
-            tipoCambio: form.tipoCambio,
-            referenciaBancaria: form.referenciaBancaria,
-            idConceptoCobranza: form.idConceptoCobranza,
-            idCliente: form.idCliente,
-            importeSaldoFavor: form.saldoAFavor,
-            creadoPor: localStorage.getItem("UsuarioId"),
-            creadoEl: form.fechaMovimiento,
-            dsProFacturas: listado,
-            idPeticion: 0,
-            pagoConContraRecibo: 0,
-            cobranzaExterna: 0,
-            idCertificado: 0,
-            claveMetodoPago: form.formaPago,
-            rfcEmisorCtaOrd: 0,
-            nomBancoOrdExt: 0,
-            ctaOrdenante: 0,
-            tipoCodPago: 0,
-            certPago: 0,
-            cadPago: 0,
-            selloPago: 0
-        };
-        handleCloseClick();
+        //console.log(listado);
+        //console.log(form);
+        if(validarFormulario()){
+            let listadoFacturas = listado.map((item) => ({
+                idFactura: item.idFactura,
+                importe: parseFloat(item.ImporteFactura),
+                idMoneda: item.IdMonedaFactura,
+                referencia: item.ReferenciaFactura,
+                idSucursal: item.IdSucursalFactura,
+                idContraReciboCliente: 0,
+                esFactoraje: 0,
+                importeCompensacion: 0.0,
+                documentoConFactoraje: 0,
+                idCliente: item.IdClienteFactura,
+                metodoPago: item.MetodoPagoFactura
+            }));
+            let params = {
+                fechaHora: form.fechaMovimiento,
+                idCuentaBancaria: form.idCuentaBancaria,
+                importe: form.importe,
+                tipoCambio: form.tipoCambio,
+                referenciaBancaria: form.referenciaBancaria,
+                idConceptoCobranza: form.idConceptoCobranza,
+                idCliente: form.idCliente,
+                importeSaldoFavor: form.saldoAFavor,
+                creadoPor: localStorage.getItem("UsuarioId"),
+                creadoEl: form.fechaMovimiento,
+                dsProFacturas: "",
+                facturas: listadoFacturas,
+                idPeticion: 0,
+                pagoConContraRecibo: 0,
+                cobranzaExterna: 0,
+                idCertificado: 0,
+                claveMetodoPago: form.formaPago,
+                rfcEmisorCtaOrd: 0,
+                nomBancoOrdExt: 0,
+                ctaOrdenante: 0,
+                tipoCodPago: 0,
+                certPago: 0,
+                cadPago: 0,
+                selloPago: 0
+            };
+            console.log(params)
+            agregarPagoCorte(params).then(({data}) => {
+                showSuccess(data);
+            })
+            handleCloseClick();
+        }
     };
 
     const handleCloseClick = () => {
@@ -389,6 +421,64 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
             saldoAFavor: saldoRestante,
             saldoAFavorDLLS: saldoRestanteDLLS
         })
+    }
+
+    const validarFormulario = () => {
+        let camposFaltantes = "Favor de completar el/los campo(s): ";
+        let valido = true;
+        if(form.fechaMovimiento == null){
+            camposFaltantes += "fecha de movimiento, ";
+            valido = false;
+        }
+        if(form.fechaCobro == null){
+            camposFaltantes += "fecha de cobro, ";
+            valido = false;
+        }
+        if(form.idCliente == null || form.idCliente == 0 || form.cliente == null || form.cliente == 0){
+            camposFaltantes += "cliente, ";
+            valido = false;
+        }
+        if(form.tipoCambio == null){
+            camposFaltantes += "tipo de cambio, ";
+            valido = false;
+        }
+        if(form.formaPago == null || form.formaPago == 0){
+            camposFaltantes += "forma de pago, ";
+            valido = false;
+        }
+        if(form.idCuentaBancaria == null || form.idCuentaBancaria == 0){
+            camposFaltantes += "cuenta bancaria, ";
+            valido = false;
+        }
+        if(form.referenciaBancaria == null || form.referenciaBancaria === ""){
+            camposFaltantes += "referencia bancaría, ";
+            valido = false;
+        }
+        if(form.idConceptoCobranza == null || form.idConceptoCobranza == 0){
+            camposFaltantes += "concepto cobranza, ";
+            valido = false;
+        }
+        if(form.importe == null || form.importe === 0.0){
+            camposFaltantes += "importe, ";
+            valido = false;
+        }
+        if(form.importeSuma == null || form.importeSuma === 0.0){
+            camposFaltantes += "importes en listado de facturas, ";
+            valido = false;
+        }
+        if(!valido){
+            camposFaltantes = camposFaltantes.substring(0, camposFaltantes.length - 2);
+            camposFaltantes += ". "
+        }
+        if(form.importeSuma > form.importe){
+            showError("No cuadra el importe del movimiento bancario con la suma de los importes a pagar.");
+            valido = false;
+        }
+
+        if(!valido){
+            showError(camposFaltantes);
+        }
+        return valido;
     }
 
     return (

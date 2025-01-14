@@ -76,6 +76,15 @@ function obtenerCortesGeneralReporte(fecha) {
     return result
 }
 
+function agregarPagoCorte(params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/CrearPago`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
+
 export {
     obtenerCorteReporte,
     obtenerCortesGeneralReporte,
@@ -84,5 +93,6 @@ export {
     obtenerCorteId,
     obtenerCortes,
     eliminarCorte,
-    agregarCorte
+    agregarCorte,
+    agregarPagoCorte
 }
