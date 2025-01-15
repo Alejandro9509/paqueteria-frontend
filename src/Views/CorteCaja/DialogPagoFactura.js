@@ -29,6 +29,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
     const [listado, setListado] = useState(guias);
     const [form, setForm] = useState({
         fechaMovimiento: moment(new Date()).format('YYYY-MM-DD'),
+        horaMovimiento: moment(new Date()).format('HH:mm:ss'),
         fechaCobro: moment(new Date()).format('YYYY-MM-DD'),
         idCliente: null,
         cliente: '',
@@ -181,7 +182,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         },
         {
             headerName: "Saldo",
-            field: "SaldoClienteFactura",
+            field: "AbonosFactura",
             width: 150,
             valueFormatter: (params) => {
                 return new Intl.NumberFormat('en-US', {
@@ -214,8 +215,8 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                     ...form,
                     cliente: data,
                     idCliente: data.m_nIdCliente,
-                    saldoTotal: data.m_nSaldoCliente,
-                    saldoTotalDLLS: data.m_nSaldoDLLSCliente,
+                    saldoTotal: data.m_cySaldoCredito,
+                    saldoTotalDLLS: data.m_cySaldoCreditoDLLS,
                 });
             })
         }
@@ -273,7 +274,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                 metodoPago: item.MetodoPagoFactura
             }));
             let params = {
-                fechaHora: form.fechaMovimiento,
+                fechaHora: form.fechaMovimiento + " " + form.horaMovimiento,
                 idCuentaBancaria: form.idCuentaBancaria,
                 importe: form.importe,
                 tipoCambio: dataTipoCambio.find((item) => item.m_nIdTipoCambio === form.tipoCambio)?.m_cTipoCambio,
@@ -282,7 +283,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                 idCliente: form.idCliente,
                 importeSaldoFavor: form.saldoAFavor,
                 creadoPor: localStorage.getItem("UsuarioId"),
-                creadoEl: form.fechaMovimiento,
+                creadoEl: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
                 dsProFacturas: "",
                 facturas: listadoFacturas,
                 idPeticion: 0,
@@ -290,13 +291,14 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                 cobranzaExterna: 0,
                 idCertificado: 0,
                 claveMetodoPago: form.formaPago,
-                rfcEmisorCtaOrd: 0,
-                nomBancoOrdExt: 0,
-                ctaOrdenante: 0,
-                tipoCodPago: 0,
-                certPago: 0,
-                cadPago: 0,
-                selloPago: 0
+                rfcEmisorCtaOrd: "",
+                nomBancoOrdExt: "",
+                ctaOrdenante: "",
+                tipoCodPago: "",
+                certPago: "",
+                cadPago: "",
+                selloPago: "",
+                fechaCobro: form.fechaCobro
             };
             console.log(params)
             agregarPagoCorte(params).then(({data}) => {
@@ -309,8 +311,9 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
     const handleCloseClick = () => {
         setListado([]);
         setForm({
-            fechaMovimiento: null,
-            fechaCobro: null,
+            fechaMovimiento: moment(new Date()).format('YYYY-MM-DD'),
+            horaMovimiento: moment(new Date()).format('HH:mm:ss'),
+            fechaCobro: moment(new Date()).format('YYYY-MM-DD'),
             idCliente: null,
             cliente: '',
             aplicarPago: "",
@@ -321,13 +324,13 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
             idCuentaBancaria: null,
             referenciaBancaria: "",
             conceptoCobranza: null,
-            idConceptoCobranza: null,
+            idConceptoCobranza: 2,
             saldoTotal: 0.0,
             saldoTotalDLLS: 0.0,
             importe: 0.0,
+            importeDLLS: 0.0,
             importeSuma: 0.0,
             importeSumaDLLS: 0.0,
-            importeDLLS: 0.0,
             saldoAFavor: 0.0,
             saldoAFavorDLLS: 0.0,
         });
@@ -357,17 +360,23 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
 
     const calcularImporteAPagar = (aPagar) => {
         const cambio = dataTipoCambio.find((item) => item.m_nIdTipoCambio === form.tipoCambio)?.m_cTipoCambio;
-        if(form.cuentaBancaria.IdMoneda === 2){//Dólares
+        if(form.cuentaBancaria?.IdMoneda === 2){//Dólares
             setForm({
                 ...form,
                 saldoAFavorDLLS: aPagar - form.importeSumaDLLS,
                 saldoAFavor: (aPagar * cambio) - form.importeSuma,
                 importe: aPagar,
             });
-        }else if(form.cuentaBancaria.IdMoneda === 1){ //Pesos
+        }else if(form.cuentaBancaria?.IdMoneda === 1){ //Pesos
             setForm({
                 ...form,
                 saldoAFavorDLLS: (aPagar / cambio) - form.importeSumaDLLS,
+                saldoAFavor: aPagar - form.importeSuma,
+                importe: aPagar,
+            });
+        }else{
+            setForm({
+                ...form,
                 saldoAFavor: aPagar - form.importeSuma,
                 importe: aPagar,
             });
@@ -428,6 +437,10 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
         let valido = true;
         if(form.fechaMovimiento == null){
             camposFaltantes += "fecha de movimiento, ";
+            valido = false;
+        }
+        if(form.horaMovimiento == null){
+            camposFaltantes += "hora de movimiento, ";
             valido = false;
         }
         if(form.fechaCobro == null){
@@ -501,7 +514,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                         {/*<div className="widget-content">
                                 <div className="row">*/}
                         <Grid container spacing={3}>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -513,6 +526,25 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                     type="date"
                                     onChange={handleChange}
                                     value={form.fechaMovimiento}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true,}}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    fullWidth
+                                    autoFocus
+                                    id="idHoraMovimiento"
+                                    name="horaMovimiento"
+                                    label="Hora movimiento"
+                                    type="time"
+                                    format="HH:mm:ss"
+                                    inputProps={{ step: 1 }}
+                                    onChange={handleChange}
+                                    value={form.horaMovimiento}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true,}}
                                     required
