@@ -271,7 +271,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                 importeCompensacion: 0.0,
                 documentoConFactoraje: 0,
                 idCliente: item.IdClienteFactura,
-                metodoPago: item.MetodoPagoFactura
+                metodoPago: form.formaPago
             }));
             let params = {
                 fechaHora: form.fechaMovimiento + " " + form.horaMovimiento,
