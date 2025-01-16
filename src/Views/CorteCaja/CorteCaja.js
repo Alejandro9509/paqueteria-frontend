@@ -14,6 +14,7 @@ import {
     imprimirFormatosIdIdTipoReporte,
     obtenerFormatosImpresionProceso
 } from "../../Util/Contexts/FormatosImpresionContext";
+import DialogPagoFactura from "./DialogPagoFactura";
 
 window.jQuery = window.$ = $;
 
@@ -55,6 +56,8 @@ function CorteCaja() {
         usuario: null,
         busquedaPorUsuario: false
     })
+    const [openDialogPago, setOpenDialogPago] = useState(false);
+    const [guiasPago, setGuiasPago] = useState([])
 
     const listado = 1
     const agregar = 2
@@ -187,14 +190,48 @@ function CorteCaja() {
                 })
             })
         }
+        if (action === 'PAGAR') {
+            const guiasAPagar = filterFacturasRepetidas(
+                selectedItem.guias.filter((g) => g?.idFactura && g?.estatusFactura === "Pendiente Pago")
+            );
+            if(guiasAPagar.length > 0) {
+                //console.log(guiasAPagar);
+                setGuiasPago(guiasAPagar);
+                setOpenDialogPago(true);
+            }else{
+                showSuccess("En el corte seleccionado no hay facturas que se puedan pagar");
+            }
+        }
+    }
+
+    const filterFacturasRepetidas = (guias) => {
+        return guias.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                t.place === value.place && t.idFactura === value.idFactura
+            ))
+        )
     }
 
     const handleOnSaveSuccess = () => {
         handleShowListado(null)
     }
 
+    const handleOpenDialogPago = () => {
+        setOpenDialogPago(true);
+    };
+
+    const handleCloseDialogPago = () => {
+        setGuiasPago([])
+        setOpenDialogPago(false);
+    };
+
     return (
         <div>
+            <DialogPagoFactura
+                open={openDialogPago}
+                handleClose={handleCloseDialogPago}
+                guias={guiasPago}
+            />
             <header className="topbar clearfix">
                 <Cabecera titulo="Corte Caja">
                     <div className="page-header">
