@@ -551,7 +551,6 @@ function RemitenteDestinatario(props) {
       }
       const promise = new Promise((resolve, reject) => {
           obtenerZonaOperativaByIdCodigoPostal(row.m_nIdCP).then((zonaOperativa) => {
-            console.log(zonaOperativa.data)
               setState((state) => ({
                 ...state,
                 id: row.m_nIdRemitenteDestinatario,

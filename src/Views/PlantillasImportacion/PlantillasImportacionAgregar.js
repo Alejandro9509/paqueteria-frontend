@@ -260,7 +260,6 @@ export default function PlantillasImportacionAgregar(props){
     }
 
     const handleOnSubmit = async () => {
-        console.log(state)
         if((state.idTipoPlantilla === "1" && !checkFormSegmentada()) || (state.idTipoPlantilla === "2" && !checkFormLineal())) {
             showError("Faltan campos por llenar");
             return;

@@ -1093,7 +1093,6 @@ function Embarque(props) {
     }
 
     const validarCoordenadas = (coordenadas) => {
-        console.log("coordenadas" + coordenadas)
         /**Si es modificacion*/
         if (state.idEmbarque != 0) {
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
@@ -1522,8 +1521,6 @@ function Embarque(props) {
         params.m_nIdCotizacion = state.idCotizacion
 
         params.m_nIdRuta = state.idRuta
-        console.log(params)
-        console.log(Object.assign({}, params))
         if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
@@ -1544,8 +1541,6 @@ function Embarque(props) {
                         return
                     }
                     showSuccess("Embarque creado con folio: " + respuesta.data.m_sFolioEmbarque);
-
-                    console.log(respuesta.data);
                     // handleShowListado();
                     setState(state => {
                         return {
@@ -1847,7 +1842,6 @@ function Embarque(props) {
       return "show warning";
     }
     function handleShowModificar(filaEmbarque, id) {
-        console.log(JSON.stringify(filaEmbarque))
         if (filaEmbarque.m_nIdEstatusEmbarque == 21) {
             showSuccess("El embarque no puede ser modificado ya que se encuentra cancelado")
             return
@@ -2441,12 +2435,9 @@ function Embarque(props) {
                 [state.identificadorModal]: id,
             }
         });
-        console.log(id);
-        console.log(state.identificadorModal);
     }
 
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
         setDataSeguroClienteActual(seguroClienteActual=>{
             return {
                 ...seguroClienteActual,

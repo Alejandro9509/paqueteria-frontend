@@ -48,10 +48,6 @@ class MyComponent extends Component {
             usuario = this.getUrlParameter('usuario'); //SI NO PUEDE DESENCRIPTAR ES PORQUE NO ESTAN ENCRIPTADAS...
             contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
         }
-        console.log(usuario);
-        console.log(contrasena);
-        console.log(rfc);
-        console.log(backend);
         const url_back = (backend != null && backend !== "") ? backend : process.env.REACT_APP_REPORT_URL;
         const url = `${url_back}/api/ValidarLogin/V2/'${usuario}'/'${contrasena}' `;
         axios.post(url, Object.assign({}, {email: usuario, password: contrasena}),

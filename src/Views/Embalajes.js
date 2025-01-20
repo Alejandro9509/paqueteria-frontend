@@ -97,9 +97,7 @@ function Embalaje() {
                 showSuccess("err")
             });
         } else {
-            console.log('Entra a agregar')
             agregarEmbalajes(params).then(respuesta => {
-                console.log("agregar"+JSON.stringify(respuesta))
                 showSuccess(respuesta.data)
                 getAllData()
                 $('.nav-tabs li ').removeClass('active');
@@ -125,7 +123,6 @@ function Embalaje() {
                     onClick: () => {
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
-            console.log(respuesta.data)
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
@@ -205,7 +202,6 @@ function Embalaje() {
 
     const handleChange = event => {
         if(event.target.id === "CodigoEmbalaje"){
-            console.log(event.target.value.length)
             if(event.target.value.length>=10){
                 setCodigoError(true)
             }else{
@@ -297,9 +293,7 @@ function Embalaje() {
 
         var files = e.target.files, f = files[0];
         var reader = new FileReader();
-        console.log(e.target.files)
         reader.onload = function (e) {
-            console.log("Nothing Happened")
             var data = e.target.result;
             let readedData = XLSX.read(data, { type: 'binary' });
             const wsname = readedData.SheetNames[0];
@@ -307,7 +301,6 @@ function Embalaje() {
 
             /* Convert array to json*/
             const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
-            console.log("dataParse : " + dataParse)
             setFileUploaded(dataParse);
         };
         reader.readAsBinaryString(f)
