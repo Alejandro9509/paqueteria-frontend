@@ -155,6 +155,7 @@ function Filtros(props) {
             }else{
                 obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
                     props.listaResultado(respuesta.data)
+                    props.guardarFiltros(filtros);
                 })
             }
         }
