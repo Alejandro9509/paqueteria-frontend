@@ -70,7 +70,6 @@ function TiposServicio() {
 
 
     const handleAceptar = (e) => {
-        console.log(e)
         e.preventDefault()
         var params = {
             "m_sDescripcion": state.Descripcion,
@@ -80,7 +79,6 @@ function TiposServicio() {
             "m_nCreadoPor": state.CreadoPor,
             "m_nModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.IdTipoServicio != 0) {
             modificarTipoServicio(state.IdTipoServicio, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -113,7 +111,6 @@ function TiposServicio() {
             }
 
             eliminarTipoServicio(id, state.ModificadoPor).then(respuesta => {
-                console.log(respuesta)
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -125,9 +122,7 @@ function TiposServicio() {
     }
 
     function handleShowModificar(id) {
-        console.log(id)
         obtenerTipoServicioId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -145,9 +140,7 @@ function TiposServicio() {
         $('#Agregar').addClass('in show');
     }
     function handleShowConsultar(id) {
-        console.log(id)
         obtenerTipoServicioId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -166,7 +159,6 @@ function TiposServicio() {
     }
 
     const handleChange = event => {
-        console.log(event.target.id + " : " + event.target.value)
         setState({
             ...state,
             [event.target.id]: event.target.value
@@ -275,9 +267,7 @@ function TiposServicio() {
 
         var files = e.target.files, f = files[0];
         var reader = new FileReader();
-        console.log(e.target.files)
         reader.onload = function (e) {
-            console.log("Nothing Happened")
             var data = e.target.result;
             let readedData = XLSX.read(data, { type: 'binary' });
             const wsname = readedData.SheetNames[0];
@@ -285,7 +275,6 @@ function TiposServicio() {
 
             /* Convert array to json*/
             const dataParse = XLSX.utils.sheet_to_json(ws, { header: 1 });
-            console.log("dataParse : " + dataParse)
             setFileUploaded(dataParse);
         };
         reader.readAsBinaryString(f)

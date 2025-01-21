@@ -34,7 +34,6 @@ function EstatusDocumento() {
             field: "m_sAbreviacion",
             width: 125,
             renderCell: (row) => {
-                console.log(row.row.m_sColor)
                 return (
                     <div style={{ backgroundColor: row.row.m_sColor, width: "100%", textAlign: "center" }}>
                         {row.row.m_sAbreviacion}

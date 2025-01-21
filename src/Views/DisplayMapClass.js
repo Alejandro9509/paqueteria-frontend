@@ -73,7 +73,6 @@ export function LocationMarker(props) {
           dragend() {
             const marker = markerRef.current
             if (marker != null) {
-                console.log(marker._latlng)
                 props.cambiarUbicacion(marker._latlng)
             }
           },
