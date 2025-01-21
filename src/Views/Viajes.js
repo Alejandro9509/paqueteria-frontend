@@ -513,9 +513,18 @@ function Viajes() {
     }
 
     function getUpdatedData(){
-        if(filtros != null && filtros != []){
-            obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
-                setData(respuesta.data)
+        if(filtros == [] || filtros.length === 0){
+            obtenerFechaInicio().then((respuestaUno) => {
+                obtenerFechaFinal().then((respuestaDos) => {
+                    obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
+                        setData(respuesta.data)
+                    })
+                })
+            })
+        } else{
+            obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado, filtros.folio,
+                filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
+                    setData(respuesta.data)
             })
         }
     }
@@ -1152,8 +1161,8 @@ function Viajes() {
             obetenerViajeId(viajeActualizado.m_nIdViaje).then(response => {
                 viajeActualizado.m_arrTrayectos = response.data.m_arrTrayectos;
                 setViajeSeleccionado(viajeActualizado);
+                getUpdatedData();
             });
-            getUpdatedData();
             showSuccess("Se actualizó la información con éxito");
         }).catch((err) => {
             showSuccess(err.response?.data);
@@ -1193,8 +1202,8 @@ function Viajes() {
             obetenerViajeId(viajeActualizado.m_nIdViaje).then(response => {
                 viajeActualizado.m_arrTrayectos = response.data.m_arrTrayectos;
                 setViajeSeleccionado(viajeActualizado);
+                getUpdatedData();
             });
-            getUpdatedData();
             showSuccess("Se actualizó la información con éxito");
         }).catch((err) => {
             console.log(err);
