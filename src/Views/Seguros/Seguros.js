@@ -21,7 +21,6 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-let rowSelect
 const headers = API_HEADERS
 
 function Seguros() {
@@ -35,6 +34,7 @@ function Seguros() {
     })
     const [total, setTotal] = React.useState(0);
     const [pagina, setPagina] = React.useState(0);
+    const [cliente, setCliente] = React.useState(0);
     let registros=10
 
     const columns = React.useMemo(() => [
@@ -155,7 +155,7 @@ function Seguros() {
                         <DialogAsignarSeguros
                             dialogVisible={dialogVisible}
                             openDialog={state.openDialog}
-                            idCliente={rowSelect}
+                            idCliente={cliente}
                             select={state.select}
                             dataTiposSeguro={dataTiposSeguro}
                             recargarClientes={()=>cargarDesdeServidor(pagina, registros)}
@@ -250,14 +250,10 @@ function Seguros() {
                                                         localeText={dataGridLocaleText}
                                                         columns={columns}
                                                         rows={data}
-                                                        getRowId={((row) => row.m_nNumeroCliente)}
+                                                        getRowId={((row) => row.m_nIdCliente)}
                                                         onRowSelectionModelChange={(newModel)=>{
-                                                            if(newModel.length<1)
-                                                                return rowSelect=data.find(i=>i.m_nNumeroCliente==newModel[0])
+                                                            setCliente(newModel[0]);
                                                         }}
-                                                        /*onRowSelected={(row) => {
-                                                        rowSelect = row;
-                                                        }}*/
                                                         pagination
                                                         page={pagina}
                                                         rowsPerPageOptions={[]}
