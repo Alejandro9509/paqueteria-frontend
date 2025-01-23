@@ -186,7 +186,7 @@ function Viajes() {
                         onClick: () => {
                             eliminarViaje(id,idEstatus).then(respuesta => {
                                 showSuccess(respuesta.data)
-                                getAllData();
+                                getUpdatedData();
                                 setViajeSeleccionado(null);
                             }).catch(err => {
                                 showSuccess(err)
@@ -283,7 +283,7 @@ function Viajes() {
             event.stopPropagation();
         }
         $(window).unbind()
-        getAllData();
+        getUpdatedData();
         setViajeSeleccionado(null);
         clearData()
         $('.nav-tabs li ').removeClass('active');
@@ -1592,7 +1592,7 @@ function Viajes() {
                                             >
                                                 <List>
                                                     {
-                                                        viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
+                                                        viajeSeleccionado && viajeSeleccionado?.m_arrTrayectos?.map((p, index) => {
 
                                                             const informesFiltrados = paradasListado.filter((i, ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ((viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino))))
 
@@ -1713,7 +1713,7 @@ function Viajes() {
                             {
                                 state.open &&
                                 <AgregarViaje
-                                    reload={getAllData}
+                                    reload={getUpdatedData}
                                     consult={state.agregar === "Consultar"}
                                     modificar={state.agregar === "Modificar"}
                                     select={state.selectViaje}
