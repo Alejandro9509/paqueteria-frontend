@@ -1,12 +1,9 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import { DataGrid } from '@mui/x-data-grid';
 import $ from "jquery";
 import Noty from 'noty';
@@ -75,41 +72,37 @@ function Embalaje() {
             showSuccess("Error el codigo de embalaje debe ser mayor a 0")
          }
         else{
-        var params = {
-            "m_nIdEmbalaje": state.IdEmbalaje,
-            "m_sCodigo": state.CodigoEmbalaje,
-            "m_sNombre": state.NombreEmbalaje,
-            "m_sDescripcion": state.DescripcionEmbalaje,
-            "m_sCreadoPor": state.CreadoPor,
-            "m_nModificadoPor": state.ModificadoPor
+            var params = {
+                "m_nIdEmbalaje": state.IdEmbalaje,
+                "m_sCodigo": state.CodigoEmbalaje,
+                "m_sNombre": state.NombreEmbalaje,
+                "m_sDescripcion": state.DescripcionEmbalaje,
+                "m_sCreadoPor": state.CreadoPor,
+                "m_nModificadoPor": state.ModificadoPor
+            }
+
+            if (state.IdEmbalaje != 0) {
+                modificarEmbalajes(state.IdEmbalaje, params).then(respuesta => {
+                    showSuccess(respuesta.data)
+                }).catch(err => {
+                    console.log(err)
+                    showSuccess("err")
+                });
+            } else {
+                agregarEmbalajes(params).then(respuesta => {
+                    showSuccess(respuesta.data)
+                }).catch(err => {
+                    console.log(err)
+                    showSuccess(err)
+                });
+            }
+            getAllData()
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
+            setState({ ...state, agregar: "Agregar" });
         }
-      
-        if (state.IdEmbalaje != 0) {
-            modificarEmbalajes(state.IdEmbalaje, params).then(respuesta => {
-                showSuccess(respuesta.data)
-                getAllData()
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-            }).catch(err => {
-                console.log(err)
-                showSuccess("err")
-            });
-        } else {
-            agregarEmbalajes(params).then(respuesta => {
-                showSuccess(respuesta.data)
-                getAllData()
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-            }).catch(err => {
-                console.log(JSON.stringify(err))
-                showSuccess(err)
-            });
-        }
-}
     }
 
     function handleEliminar(id) {
@@ -121,30 +114,30 @@ function Embalaje() {
                 {
                     label: 'Si',
                     onClick: () => {
-        validarPermisos(state).then(respuesta => {
-            //showSuccess(respuesta.data)
-            derecho = respuesta.data;
-            if (derecho == false) {
-                showSuccess("El usuario no tiene derechos para realizar el proceso");
-                return;
-            }
-            validarEliminarEmbalajes(id).then(respuesta=>{
-                if(respuesta.data.sePuedeEliminar){
-                    eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
-                        showSuccess("Eliminacion de embalaje exitoso")
-                        getAllData()
-                    }).catch(err => {
-                        showSuccess(err)
-                    });                   
-                }else{
-                    showSuccess("El embalaje no puede ser eliminado ya que se encuentra relacionado a por lo menos una recoleccion o embarque")
-                }
-            })
+                        validarPermisos(state).then(respuesta => {
+                            //showSuccess(respuesta.data)
+                            derecho = respuesta.data;
+                            if (derecho == false) {
+                                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                                return;
+                            }
+                            validarEliminarEmbalajes(id).then(respuesta=>{
+                                if(respuesta.data.sePuedeEliminar){
+                                    eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
+                                        showSuccess("Eliminacion de embalaje exitoso")
+                                        getAllData()
+                                    }).catch(err => {
+                                        showSuccess(err)
+                                    });
+                                }else{
+                                    showSuccess("El embalaje no puede ser eliminado ya que se encuentra" +
+                                        " relacionado a por lo menos una recoleccion o embarque")
+                                }
+                            })
 
-        }).catch(err => {
-            showSuccess(err)
-        });
-
+                        }).catch(err => {
+                            showSuccess(err)
+                        });
                     }
                 },
                 {
@@ -156,7 +149,6 @@ function Embalaje() {
     }
 
     function handleShowModificar(id) {
-        console.log(id)
         obtenerEmbalajesId(id).then(respuesta => {
             setState({
                 ...state,
@@ -166,8 +158,10 @@ function Embalaje() {
                 NombreEmbalaje: respuesta.data.m_sNombre,
                 DescripcionEmbalaje: respuesta.data.m_sDescripcion
             })
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
     }
 
@@ -181,8 +175,10 @@ function Embalaje() {
                 NombreEmbalaje: respuesta.data.m_sNombre,
                 DescripcionEmbalaje: respuesta.data.m_sDescripcion
             })
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         });
     }
 
@@ -196,8 +192,10 @@ function Embalaje() {
             CodigoEmbalaje: undefined,
             DescripcionEmbalaje: ""
         })
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
     }
 
     const handleChange = event => {
@@ -224,17 +222,25 @@ function Embalaje() {
                 return (
                     <Root>
                         <Tooltip title="Modificar">
-                            <a  onClick={() => (handleShowModificar(row.row.m_nIdEmbalaje))} className="btn btn-default btn-xs"
-                            disabled={!validarDerecho(9101319)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => (handleShowModificar(row.row.m_nIdEmbalaje))}
+                            disabled={!validarDerecho(9101319)}>
+                                <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
+                            </a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a  className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdEmbalaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => (handleShowConsultar(row.row.m_nIdEmbalaje))}>
+                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                            </a>
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdEmbalaje))}
-                            disabled={!validarDerecho(9101320)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs"
+                               onClick={() => (handleEliminar(row.row.m_nIdEmbalaje))}
+                               disabled={!validarDerecho(9101320)}>
+                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                            </a>
 
                         </Tooltip>
                     </Root>
@@ -308,7 +314,6 @@ function Embalaje() {
 
     return (
         <div >
-
             <header className="topbar clearfix">
                 <Cabecera titulo="Embalajes" >
                     <div className="page-header">
@@ -323,7 +328,6 @@ function Embalaje() {
                     </div>
                 </Cabecera>
             </header>
-
             {/*Leftbar Start Here*/}
             <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
@@ -332,26 +336,25 @@ function Embalaje() {
 
             {/*Page Container Start Here*/}
             <section className="main-container">
-
                 <div className="container-fluid">
-
-
-
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                        <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
-                                <i className="fa fa-list" /> Listado
-            </a>
+                            <a onClick={(event) => {
+                                event.stopPropagation(); setState({ ...state, agregar: "Agregar" });
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(0).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Listado').addClass('in show');
+                            }}>
+                                    <i className="fa fa-list" /> Listado
+                            </a>
                         </li>
                         <li>
                             <a className= {validarDerecho(9101318)? "":"hide"} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
-
-
                     </ul>
-
                     <div className="row" className="tab-content">
                         <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
@@ -449,10 +452,28 @@ function Embalaje() {
                                                 <br></br>
                                                    <div className="form-footer" className="ol-md-12">
                                                    <Grid container spacing={1}>
-                                  
-                                    
-                                                      {  state.agregar != "Consultar" &&  <Grid item xs> <Button fullWidth type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</Button></Grid>}
-                                                      {  state.agregar != "Consultar" && <Grid item xs> <Button fullWidth type="submit" form="formEmbalaje" className="btn btn-primary primary-btn">Aceptar</Button></Grid>}
+                                                      {  state.agregar != "Consultar" &&
+                                                          <Grid item xs>
+                                                              <Button fullWidth type="button" onClick={(event) => {
+                                                                  event.stopPropagation();
+                                                                  setState({ ...state, agregar: "Agregar" });
+                                                                  $('.nav-tabs li ').removeClass('active');
+                                                                  $('.nav-tabs li').eq(0).addClass('active');
+                                                                  $('.tab-content div ').removeClass('in show');
+                                                                  $('#Listado').addClass('in show');
+                                                              }} className="btn btn-secondary secondary-btn">
+                                                                  Cancelar
+                                                              </Button>
+                                                          </Grid>
+                                                      }
+                                                      {  state.agregar != "Consultar" &&
+                                                          <Grid item xs>
+                                                              <Button fullWidth type="submit" form="formEmbalaje"
+                                                                      className="btn btn-primary primary-btn">
+                                                                  Guardar
+                                                              </Button>
+                                                          </Grid>
+                                                      }
                                                     </Grid> 
                                                     </div>
                                             </form>
@@ -490,7 +511,6 @@ function Embalaje() {
 
                     </div>
                 </div>
-
             </section>
             {/*Page Container End Here*/}
 
@@ -498,9 +518,7 @@ function Embalaje() {
             <aside className="rightbar">
                 <BarraLateralDerecha />
             </aside>
-
         </div>
-
     );
 }
 
