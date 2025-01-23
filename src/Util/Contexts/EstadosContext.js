@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerEstadosPais(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Estados/ByPais/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Estados/ByPais/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
