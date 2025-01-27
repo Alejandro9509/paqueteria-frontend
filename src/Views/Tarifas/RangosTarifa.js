@@ -136,7 +136,7 @@ export default function RangosTarifa(props) {
 
     return(
         <div>
-            <div className="row" style={{height: `${(props.rows.length * 20)+80}px` , width: "100%"}}>
+            <div className="row" style={{height: `${(props.rows.length * 40)+80}px` , width: "100%"}}>
                 <DataGrid
                     localeText={dataGridLocaleText}
                     density="compact"

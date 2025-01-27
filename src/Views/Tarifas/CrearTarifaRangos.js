@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
     Button,
+    createFilterOptions,
     Dialog,
     DialogContent,
     DialogTitle,
     FormControl,
+    FormControlLabel,
     Grid,
     InputLabel,
     List,
@@ -12,7 +14,7 @@ import {
     ListItemText,
     MenuItem,
     Paper,
-    Select,
+    Select, Switch,
     TextField,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -25,6 +27,7 @@ import {
     obtenerListadoZonaOperativaByOrigenDestino,
     obtenerListadoZonaOperativaBySucursal
 } from "../../Util/Contexts/ZonaOperativaContext";
+import {dataGridLocaleText} from "../../Constants";
 import {getCurrentDate, getRandomId} from "../../Util/Util";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
 import IconButton from "@mui/material/IconButton";
@@ -46,6 +49,10 @@ import {Clear, ExpandLess} from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from '@mui/material/Autocomplete';
 import Tooltip from "@mui/material/Tooltip";
+import {fil} from "date-fns/locale";
+import {StyledEngineProvider, ThemeProvider} from "@mui/material/styles";
+import {DataGrid} from "@mui/x-data-grid";
+import {confirmAlert} from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -56,6 +63,11 @@ function showSuccess(mensaje) {
     }).show()
 }
 
+const OPTIONS_LIMIT = 20;
+const filterOptions = createFilterOptions({
+    limit: OPTIONS_LIMIT
+});
+
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
         idTarifa: props.selection?.idTarifa || 0,
@@ -63,7 +75,8 @@ export default function CrearTarifaRangos(props) {
         cuotaMensual: props.selection?.cuotaMensual || null,
         cliente: props.selection?.cliente || null,
         showDialogClientes: false,
-        showDialogTarifas: false
+        showDialogTarifas: false,
+        idForaneo: 0
     })
     const [viajesLocalesListado, setViajesLocalesListado] = useState(props.selection?.viajesLocales || [])
     const [maniobrasTarifa,setManiobrasTarifa] = useState(props.selection?.maniobras || [])
@@ -80,56 +93,120 @@ export default function CrearTarifaRangos(props) {
     const [filtroMM,setFiltroMM]=useState({activo:false,origen:-1,destino:-1,producto:null})
     const [showMM,setShowMM]=useState(false)
     const [showManiobras,setShowManiobras]=useState(false)
+    const [viajesNuevos, setViajesNuevos] = useState([]);
+    const [showNuevos, setShowNuevos] = useState(true);
+    const [openForaneo, setOpenForaneo] = useState(false);
+    const [viajeForaneo, setViajeForaneo] = useState({});
+
+    const columnasForaneos = React.useMemo(() => [
+        {
+            headerName: "Origen",
+            field: "idOrigen",
+            width: 150,
+            flex: 1,
+            valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
+        },
+        {
+            headerName: "Destino",
+            field: "idDestino",
+            width: 150,
+            flex: 1,
+            valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
+        },
+        {
+            headerName: "Tipo Medida",
+            field: "idTipoMedida",
+            width: 100,
+            flex: 1,
+            valueFormatter: ({ value }) => {
+                switch (value){
+                    case 1: return "Peso";
+                    case 2: return "Pieza";
+                    case 3: return "Porcentaje";
+                    default: return "";
+                }
+            }
+        },
+        {
+            headerName: "Flete mínimo",
+            field: "fleteMinimo",
+            width: 100,
+            flex: 1,
+        },
+        {
+            headerName: "Acciones",
+            sortable: false,
+            filterable: false,
+            width: 100,
+            field: "",
+            align: 'center',
+            flex: 1,
+            renderCell: (row) => {
+                return (
+                    <div>
+                        <Tooltip title={props.disabled ? "Consultar" : "Modificar"}>
+                            <a onClick={() => {handleShowModificar()}} className="btn btn-default btn-xs">
+                                <i className="fa fa-external-link" style={{color: "#F9A03E"}}/>
+                            </a>
+                        </Tooltip>
+                        <Tooltip title="Eliminar" disabled={props.disabled}>
+                            <a
+                                href="#"
+                                className="btn btn-default btn-xs"
+                                onClick={() => confirmAlert({
+                                    title: 'Confirmar Eliminar',
+                                    message: '¿Está seguro de eliminar el registro?',
+                                    buttons: [
+                                        {
+                                            label: 'Si',
+                                            onClick: () => handleDeleteViajeForaneo(viajeForaneo)
+                                        },
+                                        {
+                                            label: 'No',
+                                        }
+                                    ]
+                                })}
+                            >
+                                <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
+                            </a>
+                        </Tooltip>
+                    </div>
+                );
+            },
+        }
+    ]);
 
     const getAllSucursales = () => {
-        if (sucursalesListado.length > 0){
-            return
-        }
         obtenerSucursales().then(respuesta => {
             setSucursalesListado(respuesta.data)
         })
     }
 
     const getAllConceptos = () => {
-        if (conceptosListado.length > 0){
-            return
-        }
         obtenerConceptosFacturacion().then(respuesta => {
             setConceptosListado(respuesta.data)
         })
     }
 
     const getAllTiposCalculo = () => {
-        if (tiposCalculoListado.length > 0){
-            return
-        }
         obtenerTiposCalculo().then(respuesta => {
             setTiposCalculoListado(respuesta.data)
         })
     }
 
     const getAllUnidadesMedida = () => {
-        if (unidadesMedidaListado.length > 0){
-            return
-        }
         obtenerUnidadesMedida().then(respuesta => {
             setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38 || i.IdUnidadMedida === 55))
         })
     }
 
     const getOrigenesDestinos = () => {
-        if (origenesDestinosListado.length > 0){
-            return
-        }
         obtenerCiudades().then(respuesta => {
             setOrigenesDestinosListado(respuesta.data)
         })
     }
 
     const getAllProductos = () => {
-        if (productosListado.length > 0){
-            return
-        }
         obtenerProductos().then(respuestas => {
             let productosList = respuestas.data.map(p => ({
                 m_nIdProducto: p.m_nIdProducto,
@@ -218,8 +295,13 @@ export default function CrearTarifaRangos(props) {
         setManiobrasTarifa(maniobras)
     }
 
+    /**
+     * Debido a que la ventana de visualización de viaje foráneo se encuentra de forma exterior se guardan los datos
+     * del viaje modificado en la ventana en este componente en paralelo, esto para que cuando este componente quiera
+     * guardar los datos modificados ya se tengan estos viajes en el state 'viajeForaneo'
+     * */
     const handleChangeViajeForaneo = (viaje) => {
-        let newViajes = []
+        /*let newViajes = []
         viajesForaneosListado.forEach(i => {
             newViajes.push(i)
         })
@@ -232,38 +314,80 @@ export default function CrearTarifaRangos(props) {
                 i.grupos = viaje.grupos
             }
         })
-        setViajesForaneosListado(newViajes)
+        setViajesForaneosListado(newViajes)*/
+        console.log(viaje);
+        console.log(viajeForaneo)
+        console.log(viajesForaneosListado)
+        setViajeForaneo(viaje);
+    }
+
+    const submmitViajeForaneo = () => {
+        let newViajes = []
+        viajesForaneosListado.forEach(i => {
+            newViajes.push(i)
+        })
+        newViajes.forEach(i => {
+            if (i.idViaje === viajeForaneo.idViaje ){
+                i.idOrigen = viajeForaneo.idOrigen
+                i.idTipoMedida = viajeForaneo.idTipoMedida
+                i.fleteMinimo = viajeForaneo.fleteMinimo
+                i.idDestino = viajeForaneo.idDestino
+                i.grupos = viajeForaneo.grupos
+            }
+        })
+        setViajesForaneosListado(newViajes);
+        setOpenForaneo(false);
     }
 
     const handleOnAgregarViajeLocal = (e) => {
         e.preventDefault()
 
+        const idGenerated = getRandomId();
         var viajeLocal = [...viajesLocalesListado]
+        var viajes = [...viajesNuevos]
+
         viajeLocal.push({
-            idViaje: getRandomId(),
+            idViaje: idGenerated,
             idSucursal: null,
             zonas: [],
             idConcepto: null,
             rangos: [],
             productos: []
         })
-        setViajesLocalesListado(viajeLocal)
+        viajes.push(idGenerated);
+        setViajesNuevos(viajes);
+        setViajesLocalesListado(viajeLocal);
     }
 
     const handleDeleteViajeLocal = (viaje) => {
         setViajesLocalesListado(viajesLocalesListado.filter(i => i.idViaje !== viaje.idViaje))
+        setViajesNuevos(viajesNuevos.filter(i => i !== viaje.idViaje))
     }
 
     const handleOnAgregarViajeForaneo = () => {
+        const idGenerated = getRandomId();
         var viajeForaneo = [...viajesForaneosListado]
+        var viajes = [...viajesNuevos]
         viajeForaneo.push({
-            idViaje: getRandomId(),
+            idViaje: idGenerated,
             idOrigen: null,
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
         })
+        viajes.push(idGenerated);
+        setViajesNuevos(viajes);
         setViajesForaneosListado(viajeForaneo)
+
+        setState({...state, idForaneo: idGenerated});
+        setViajeForaneo({
+            idViaje: idGenerated,
+            idOrigen: null,
+            idTipoMedida: null,
+            idDestino: null,
+            grupos: [],
+        });
+        setOpenForaneo(true);
     }
 
     const handleDeleteViajeForaneo = (viaje) => {
@@ -293,6 +417,10 @@ export default function CrearTarifaRangos(props) {
             setZonasListado(respuesta.data)
             setShowDialogZonas(true)
         })
+    }
+
+    const handleShowModificar = () => {
+        setOpenForaneo(true)
     }
 
     /**Valida que el concepto recibido sea uno de los configurados(en parametros de configuracion) como recoleccion o entrega*/
@@ -634,6 +762,22 @@ export default function CrearTarifaRangos(props) {
         return tarifa
     }
 
+    const getRows = () => {
+        if(filtroMM.activo){
+            return viajesForaneosListado.filter(v => (
+                        (filtroMM.origen!=-1 ? v.idOrigen==filtroMM.origen : true) &&
+                        (filtroMM.destino!=-1 ? v.idDestino==filtroMM.destino : true) &&
+                        (filtroMM.producto!=null ?
+                            (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto ).length > 0).length > 0)
+                            :
+                            true
+                        )
+                    ) || (showNuevos && viajesNuevos.includes(v.idViaje)) )
+        }else{
+            return viajesForaneosListado;
+        }
+    }
+
     return (
         <div>
             <Dialog
@@ -652,6 +796,40 @@ export default function CrearTarifaRangos(props) {
                 onClose={handleCloseDialogTarifas}
                 rows={props.tarifasListado}
             />
+            <Dialog open={openForaneo} onClose={() => setOpenForaneo(false)} fullWidth maxWidth="100%">
+                <DialogTitle>
+                    Viaje Milla Intermedia
+                </DialogTitle>
+                <DialogContent style={{minHeight: '500px'}}>
+                    <ViajeForaneo
+                        key={state.idForaneo}
+                        viaje={viajeForaneo}
+                        origenesDestinosListado={origenesDestinosListado}
+                        handleChangeViajeForaneo={handleChangeViajeForaneo}
+                        tiposCalculoListado={tiposCalculoListado}
+                        unidadesMedidaListado={unidadesMedidaListado}
+                        handleDeleteViajeForaneo={handleDeleteViajeForaneo}
+                        zonasListado={zonasListado}
+                        onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                        productosListado={productosListado}
+                        disabled={props.disabled}
+                        showDialogZonas={showDialogZonas}
+                        handleShowDialogZonas={handleShowDialogZonas}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {
+                        setOpenForaneo(false);
+                        setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === state.idForaneo));
+                    }} style={{fontSize: '1em'}}>
+                        Cerrar
+                    </Button>
+                    <Button onClick={() => submmitViajeForaneo()}
+                            color={"primary"} style={{fontSize: '1em'}}>
+                        Guardar
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <div>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
@@ -718,6 +896,24 @@ export default function CrearTarifaRangos(props) {
                                     variant={"outlined"} disabled={props.disabled} color={"primary"}
                             >Importar tarifa existente</Button>
                         </Grid>
+                        <Grid item xs>
+                            <label className="input select">
+                                <StyledEngineProvider injectFirst>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={showNuevos}
+                                                onChange={(e) => setShowNuevos(e.target.checked)}
+                                                disabled={props.disabled}
+                                                name="mostrarNuevos"
+                                                color="primary"
+                                            />
+                                        }
+                                        label="Mostrar siempre viajes recién creados"
+                                    />
+                                </StyledEngineProvider>
+                            </label>
+                        </Grid>
 
                     </Grid>
                 </Paper>
@@ -746,30 +942,46 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                         <Grid item xs={2}>
                             <FormControl fullWidth variant='outlined' size="small">
-                                <InputLabel id="sucLabel">
-                                    Sucursal
+                                <InputLabel
+                                    id="sucLabel">Sucursal
                                 </InputLabel>
                                 <Select value={filtroPMUM.sucursal}
-                                        onChange={(e)=>setFiltroPMUM({...filtroPMUM,sucursal: e.target.value})}
+                                    onChange={(e)=>{
+                                        //setSucursalesListado(sucursalesListado.filter(i => i.m_nIdSucursal === e.target.value))
+                                        setFiltroPMUM({...filtroPMUM, sucursal: e.target.value})
+                                    }}
+                                    //onClick={(e) => getAllSucursales()}
+                                    labelId='sucLabel'
                                         label='Sucursal' InputLabelProps={{shrink: true}}>
-                                    <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
-                                    {sucursalesListado.map(suc=>{
+                                <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
+                                {
+                                    sucursalesListado &&
+                                    sucursalesListado.map(suc=>{
                                         return <MenuItem value={suc.m_nIdSucursal}>{suc.m_sSucursal}</MenuItem>
-                                    })}
-                                </Select>
+                                    })
+                                }
+                            </Select>
                             </FormControl>
                             </Grid>
                         <Grid item xs={2}>
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
-                                    id="conceptoLabel" >Concepto</InputLabel>
+                                    id="conceptoLabel">Concepto</InputLabel>
                                 <Select value={filtroPMUM.concepto}
-                                        onChange={(e)=>setFiltroPMUM({...filtroPMUM,concepto: e.target.value})}
+                                        onChange={(e)=>{
+                                            //setConceptosListado(conceptosListado.filter(i => i.m_nIdConceptosFacturacion === e.target.value));
+                                            setFiltroPMUM({...filtroPMUM,concepto: e.target.value})
+                                        }}
+                                        labelId='conceptoLabel'
+                                        //onClick={(e) => {getAllConceptos();}}
                                         label='Concepto' InputLabelProps={{shrink: true}}>
                                     <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
-                                    {filtrarConceptosViajeLocal.map(item=>{
-                                        return <MenuItem value={item.m_nIdConceptosFacturacion}>{item.m_sConcepto}</MenuItem>
-                                    })}
+                                    {
+                                        conceptosListado &&
+                                        filtrarConceptosViajeLocal.map(item=>{
+                                            return <MenuItem value={item.m_nIdConceptosFacturacion}>{item.m_sConcepto}</MenuItem>
+                                        })
+                                    }
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -778,10 +990,15 @@ export default function CrearTarifaRangos(props) {
                                 freeSolo
                                 size="small"
                                 value={filtroPMUM.producto}
-                                onChange={(e,newValue)=>setFiltroPMUM({...filtroPMUM,producto: newValue})}
+                                onChange={(e,newValue)=>{
+                                    /*getAllProductos();
+                                    setProductosListado(productosListado.filter(i => i.m_nIdConceptosFacturacion === e.target.value));*/
+                                    setFiltroPMUM({...filtroPMUM,producto: newValue})
+                                }}
                                 id="PMUM_Productos"
                                 forcePopupIcon={false}
                                 options={productosListado}
+                                filterOptions={filterOptions}
                                 getOptionLabel={(option) =>
                                     option.numeroDescripcion
                                 }
@@ -805,7 +1022,9 @@ export default function CrearTarifaRangos(props) {
                             />
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={()=>setFiltroPMUM({...filtroPMUM,activo:true})} size="large">
+                            <IconButton onClick={()=> {
+                                setFiltroPMUM({...filtroPMUM, activo: true})
+                            }} size="large">
                                 <SearchIcon size="small" fontSize='large'/>
                             </IconButton>
                             /
@@ -826,26 +1045,30 @@ export default function CrearTarifaRangos(props) {
                     <div className='PMUM hide'>
                     {
                         (filtroPMUM.activo ?
-                            viajesLocalesListado.filter(v=>(filtroPMUM.sucursal!=-1?v.idSucursal==filtroPMUM.sucursal:true)
-                                && (filtroPMUM.concepto!=-1?v.idConcepto==filtroPMUM.concepto:true)
-                                && v.productos.filter(prod=>(filtroPMUM.producto!=null?prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto:true)).length>0)
+                            viajesLocalesListado.filter(v =>
+                                (
+                                (filtroPMUM.sucursal!=-1 ? v.idSucursal==filtroPMUM.sucursal : true)
+                                && (filtroPMUM.concepto!=-1 ? v.idConcepto==filtroPMUM.concepto : true)
+                                && v.productos.filter(prod=>(filtroPMUM.producto!=null ? prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto : true)).length > 0
+                                )
+                                || (showNuevos && viajesNuevos.includes(v.idViaje)) ) //No vamos a filtrar los viajes nuevos
                             : viajesLocalesListado).map((viaje) =>
-                                <ViajeLocal
-                                    key={viaje.idViaje}
-                                    viaje={viaje}
-                                    sucursalesListado={sucursalesListado}
-                                    handleChangeViajeLocal={handleChangeViajeLocal}
-                                    conceptosListado={filtrarConceptosViajeLocal}
-                                    tiposCalculoListado={tiposCalculoListado}
-                                    unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
-                                    handleDeleteViajeLocal={handleDeleteViajeLocal}
-                                    zonasListado={zonasListado}
-                                    onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
-                                    productosListado={filtrarProductosViajeLocal(viaje)}
-                                    disabled={props.disabled}
-                                    showDialogZonas={showDialogZonas}
-                                    handleShowDialogZonas={handleShowDialogZonas}
-                                />
+                            <ViajeLocal
+                                key={viaje.idViaje}
+                                viaje={viaje}
+                                sucursalesListado={sucursalesListado}
+                                handleChangeViajeLocal={handleChangeViajeLocal}
+                                conceptosListado={filtrarConceptosViajeLocal}
+                                tiposCalculoListado={tiposCalculoListado}
+                                unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
+                                handleDeleteViajeLocal={handleDeleteViajeLocal}
+                                zonasListado={zonasListado}
+                                onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
+                                productosListado={filtrarProductosViajeLocal(viaje)}
+                                disabled={props.disabled}
+                                showDialogZonas={showDialogZonas}
+                                handleShowDialogZonas={handleShowDialogZonas}
+                            />
                         )
                     }
                     </div>
@@ -987,29 +1210,70 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                     </Grid>
                     <div className='MM hide'>
-                    {
-                        (filtroMM.activo
-                            ? viajesForaneosListado.filter(v=>(filtroMM.origen!=-1?v.idOrigen==filtroMM.origen:true)
-                                && (filtroMM.destino!=-1?v.idDestino==filtroMM.destino:true)
-                                && (filtroMM.producto!=null? (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto  ).length>0 ).length>0 ) :true) )
-                            :
-                            viajesForaneosListado).map((viaje) =>
-                                <ViajeForaneo
-                                    key={viaje.idViaje}
-                                    viaje={viaje}
-                                    origenesDestinosListado={origenesDestinosListado}
-                                    handleChangeViajeForaneo={handleChangeViajeForaneo}
-                                    tiposCalculoListado={tiposCalculoListado}
-                                    unidadesMedidaListado={unidadesMedidaListado}
-                                    handleDeleteViajeForaneo={handleDeleteViajeForaneo}
-                                    zonasListado={zonasListado}
-                                    onRequestZonasByDestino={handleOnRequestZonasByDestino}
-                                    productosListado={productosListado}
-                                    disabled={props.disabled}
-                                    showDialogZonas={showDialogZonas}
-                                    handleShowDialogZonas={handleShowDialogZonas}
+                        <div align={"center"} style={{marginLeft: "15%", width:"60%"}} >
+                            {
+                                viajesForaneosListado &&
+                                <DataGrid
+                                    columns={columnasForaneos}
+                                    rows={getRows()}
+                                    locateText={dataGridLocaleText}
+                                    pagination
+                                    pageSize={20}
+                                    getRowId={(row) => row.idViaje}
+                                    autoHeight={true}
+                                    getRowClassName={(params) => {
+                                        return (params.row.idTipoMedida === null || params.row.idOrigen === null ||
+                                            params.row.idDestino === null) ? "highlight" : "";
+                                    }}
+                                    sx={{
+                                        ".highlight": {
+                                            bgcolor: "#87de9e"
+                                        },
+                                    }}
+                                    onRowSelectionModelChange={(newModel)=>{
+                                        if(newModel.length<1)
+                                            return;
+                                        setState({...state, idForaneo: newModel[0]});
+
+                                        const copia = [...viajesForaneosListado]
+                                        const modificable = copia.map((item) => ({...item}));
+                                        const target = modificable.find(i => i.idViaje === newModel[0]);
+                                        //console.log(target);//target.map((item) => ({...item}));
+                                        let viaje = (({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}) => ({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}))(target);
+                                        setViajeForaneo(viaje);
+                                    }}
                                 />
-                        )
+                            }
+                        </div>
+                    {/*
+                        (
+                            filtroMM.activo ?
+                                viajesForaneosListado.filter(v => (
+                                (filtroMM.origen!=-1 ? v.idOrigen==filtroMM.origen : true) &&
+                                (filtroMM.destino!=-1 ? v.idDestino==filtroMM.destino : true) &&
+                                (filtroMM.producto!=null ?
+                                    (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto ).length > 0).length > 0)
+                                    :
+                                    true
+                                )
+                                ) || (showNuevos && viajesNuevos.includes(v.idViaje)) )
+                            : viajesForaneosListado).map((viaje) =>
+                            <ViajeForaneo
+                                key={viaje.idViaje}
+                                viaje={viaje}
+                                origenesDestinosListado={origenesDestinosListado}
+                                handleChangeViajeForaneo={handleChangeViajeForaneo}
+                                tiposCalculoListado={tiposCalculoListado}
+                                unidadesMedidaListado={unidadesMedidaListado}
+                                handleDeleteViajeForaneo={handleDeleteViajeForaneo}
+                                zonasListado={zonasListado}
+                                onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                                productosListado={productosListado}
+                                disabled={props.disabled}
+                                showDialogZonas={showDialogZonas}
+                                handleShowDialogZonas={handleShowDialogZonas}
+                            />
+                        )*/
                     }
                     </div>
                 </Paper>
