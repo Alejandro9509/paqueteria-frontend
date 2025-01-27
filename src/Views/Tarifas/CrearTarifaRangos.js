@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {
     Button,
     createFilterOptions,
-    Dialog,
+    Dialog, DialogActions,
     DialogContent,
     DialogTitle,
     FormControl,
