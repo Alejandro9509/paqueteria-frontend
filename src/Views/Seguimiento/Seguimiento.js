@@ -25,6 +25,7 @@ import DialogoEvidenciasUltimaMilla from "../UltimaMilla/DialogoEvidenciasUltima
 import { Autocomplete } from '@mui/material';
 import { obtenerFoliosSeguimiento } from "../../Util/Contexts/SeguimientoContext";
 import {showSuccess} from "../../Util/Util";
+import InformacionViajes from "./InformacionViajes";
 const events = [
     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
     {ts: "2017-09-17T12:21:46.587Z", text: 'Clicked Home Page'},
@@ -284,6 +285,12 @@ class Seguimiento extends Component {
                                         dataPaquetes={this.state.data.paquetes}
                                         disabled={true}
                                     />
+                                </div>
+                            }
+                            {
+                                Object.keys(this.state.data).length !== 0 &&
+                                <div style={{marginTop:"4px", padding: "5px", borderStyle: "solid", borderWidth: "1px", borderRadius: "10px"}}>
+                                    <InformacionViajes data={this.state.data}/>
                                 </div>
                             }
                             {

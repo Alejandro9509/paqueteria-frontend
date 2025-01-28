@@ -21,33 +21,33 @@ class RemitenteDestinatario extends Component {
                             </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Nombre:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Nombre:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sNombreRemitente}
                                 </Typography>
                             </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Contacto:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Contacto:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sContactoRemitente}
                                 </Typography>
                             </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Dirección:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Dirección:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sDomicilioRemitente}
                                 </Typography>
                             </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Teléfono:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Teléfono:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sTelefonoRemitente}
                                 </Typography>
                             </Typography>
@@ -55,9 +55,9 @@ class RemitenteDestinatario extends Component {
                         {
                             data.m_bAplicaRecoleccion && data.m_bRecoleccionDiferenteDomicilio &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                    Recolección en:
-                                    <Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                    Recolección en:&nbsp;
+                                    <Typography style={{fontSize: "1em"}}>
                                         {data.m_sDomicilioDetalleRecoleccion }
                                     </Typography>
                                 </Typography>
@@ -66,9 +66,9 @@ class RemitenteDestinatario extends Component {
                         {
                             data.m_bRecoleccionConCita &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                    Cita:
-                                    <Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                    Cita:&nbsp;
+                                    <Typography style={{fontSize: "1em"}}>
                                         {data.m_sFechaRecoleccionCita} {data.m_sHoraCitarRecoleccionMinima}-{data.m_sHoraCitaRecoleccionMaxima}
                                     </Typography>
                                 </Typography>
@@ -84,33 +84,33 @@ class RemitenteDestinatario extends Component {
                             </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Nombre:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Nombre:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sNombreDestinatario}
                                 </Typography>
                             </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Contacto:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Contacto:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sContactoDestinatario}
                                 </Typography>
                             </Typography>
                         </Grid>
                         <Grid item md={8}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Dirección:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Dirección:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sDomicilioDestinatario}
                                 </Typography>
                             </Typography>
                         </Grid>
                         <Grid item md={4}>
-                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                Teléfono:
-                                <Typography>
+                            <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                Teléfono:&nbsp;
+                                <Typography style={{fontSize: "1em"}}>
                                     {data.m_sTelefonoDestinatario}
                                 </Typography>
                             </Typography>
@@ -118,9 +118,9 @@ class RemitenteDestinatario extends Component {
                         {
                             data.m_bEmbarqueConCita &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                    Cita:
-                                    <Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                    Cita:&nbsp;
+                                    <Typography style={{fontSize: "1em"}}>
                                         {data.m_sFechaEmbarqueCita} {data.m_sHoraEmbarqueCitaMinima}-{data.m_sHoraEmbarqueCitaMaxima}
                                     </Typography>
                                 </Typography>
@@ -129,9 +129,9 @@ class RemitenteDestinatario extends Component {
                         {
                             (data.m_bEntregaSucursal || !data.m_bEntregaMismoDomicilio) &&
                             <Grid item md={12}>
-                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>
-                                    Entrega:
-                                    <Typography>
+                                <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center", fontSize: "1.1em"}}>
+                                    Entrega:&nbsp;
+                                    <Typography style={{fontSize: "1em"}}>
                                         {data.m_bEntregaSucursal ? ("Sucursal " + data.m_sSucursalEntrega) : !data.m_bEntregaMismoDomicilio ? data.m_sDomicilioDetalleEntrega : "" }
                                     </Typography>
                                 </Typography>
