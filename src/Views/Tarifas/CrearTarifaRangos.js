@@ -397,6 +397,8 @@ export default function CrearTarifaRangos(props) {
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
+            fleteMinimo: 0,
+            nuevo: true
         })
         viajes.push(idGenerated);
         setViajesNuevos(viajes);
@@ -409,6 +411,8 @@ export default function CrearTarifaRangos(props) {
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
+            fleteMinimo: 0,
+            nuevo: true
         });
         setOpenForaneo(true);
     }
@@ -842,6 +846,27 @@ export default function CrearTarifaRangos(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {
+                        let viaje = viajesForaneosListado.find((i) => i.idViaje == viajeForaneo.idViaje);
+                        const esNuevo = viaje?.nuevo;
+                        if(esNuevo == true){
+                            viaje.idOrigen = null;
+                            viaje.idOrigen = null;
+                            viaje.idTipoMedida = null;
+                            viaje.idDestino = null;
+                            viaje.grupos = [];
+                            viaje.fleteMinimo = 0;
+                            viaje.nuevo = true;
+
+                            setViajeForaneo({
+                                idViaje: viajeForaneo.idViaje,
+                                idOrigen: null,
+                                idTipoMedida: null,
+                                idDestino: null,
+                                grupos: [],
+                                fleteMinimo: 0,
+                                nuevo: true
+                            });
+                        }
                         setOpenForaneo(false);
                         setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === state.idForaneo));
                     }} style={{fontSize: '1em'}}>
