@@ -180,12 +180,12 @@ export default function ViajeForaneo(props) {
         props.zonasListado.forEach(i => {
             zonasDisponibles.push(i)
         })
-        let otrosGrupos = state.grupos.filter(v => v.idGrupo !== grupo.idGrupo)
+        /*let otrosGrupos = state.grupos.filter(v => v.idGrupo !== grupo.idGrupo)
         otrosGrupos.forEach(v => {
             v.zonas.forEach(z => {
                 zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
             })
-        })
+        })*/
         return zonasDisponibles
     }
 

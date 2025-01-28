@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useMemo, useState} from 'react';
 import {
     Button,
     createFilterOptions,
@@ -57,6 +57,7 @@ import * as XLSX from "xlsx";
 import * as FileSaver from 'file-saver';
 import Print from "@mui/icons-material/Print";
 import ImportExport from '@mui/icons-material/ImportExport';
+import {fil} from "date-fns/locale";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -306,23 +307,6 @@ export default function CrearTarifaRangos(props) {
      * guardar los datos modificados ya se tengan estos viajes en el state 'viajeForaneo'
      * */
     const handleChangeViajeForaneo = (viaje) => {
-        /*let newViajes = []
-        viajesForaneosListado.forEach(i => {
-            newViajes.push(i)
-        })
-        newViajes.forEach(i => {
-            if (i.idViaje === viaje.idViaje ){
-                i.idOrigen = viaje.idOrigen
-                i.idTipoMedida = viaje.idTipoMedida
-                i.fleteMinimo = viaje.fleteMinimo
-                i.idDestino = viaje.idDestino
-                i.grupos = viaje.grupos
-            }
-        })
-        setViajesForaneosListado(newViajes)*/
-        console.log(viaje);
-        console.log(viajeForaneo)
-        console.log(viajesForaneosListado)
         setViajeForaneo(viaje);
     }
 
@@ -340,8 +324,48 @@ export default function CrearTarifaRangos(props) {
                 i.grupos = viajeForaneo.grupos
             }
         })
-        setViajesForaneosListado(newViajes);
-        setOpenForaneo(false);
+        // console.log(viajeForaneo)
+        // console.log(viajesForaneosListado)
+        let duplicado = false;
+        let zonasRepetidas = "Zonas duplicadas: ";
+        let productosDuplicados = "Productos duplicados: ";
+        viajesForaneosListado.forEach(viaje => {
+            if(viaje.idOrigen === viajeForaneo.idOrigen && viaje.idDestino == viajeForaneo.idDestino && viajeForaneo.idViaje != viaje.idViaje){
+                viajeForaneo.grupos.forEach(grupoViajeNuevo => {
+                    const zonasNuevas = grupoViajeNuevo.zonas.map(i => (i.m_nIdZona))
+                    const productosNuevos = grupoViajeNuevo.productos.map(i => (i.m_nIdProducto))
+
+                    viaje.grupos.forEach(grupoViaje => {
+                        const zonas = grupoViaje.zonas.map(i => (i.m_nIdZona))
+                        const productos = grupoViaje.productos.map(i => (i.m_nIdProducto))
+
+                        if(zonasNuevas.some(z => zonas.includes(z)) && productosNuevos.some(p => productos.includes(p))){
+                            duplicado = true;
+                            grupoViaje.zonas.forEach(item => {
+                                if(zonasNuevas.includes(item.m_nIdZona)){
+                                    zonasRepetidas += item.m_sCodigoZona + ", "
+                                }
+                            })
+                            grupoViaje.productos.forEach(item => {
+                                if(productosNuevos.includes(item.m_nIdProducto)){
+                                    productosDuplicados += item.m_sDescripcion + ", "
+                                }
+                            })
+                        }
+                    })
+                })
+            }
+        })
+        zonasRepetidas = zonasRepetidas.substring(0, zonasRepetidas.length - 2);
+        productosDuplicados = productosDuplicados.substring(0, productosDuplicados.length - 2);
+        if(duplicado){
+            showSuccess("En el listado de viajes ya existe un viaje con la misma relación de origen-destino, " +
+                "zonas y productos. Favor de revisar que la información no se repita. " + zonasRepetidas + ". " + productosDuplicados);
+        }else {
+            showSuccess("Guardado");
+            setViajesForaneosListado(newViajes);
+            setOpenForaneo(false);
+        }
     }
 
     const handleOnAgregarViajeLocal = (e) => {
@@ -977,6 +1001,24 @@ export default function CrearTarifaRangos(props) {
                                 </StyledEngineProvider>
                             </label>
                         </Grid>
+                        <Grid item xs>
+                            <label className="input select">
+                                <StyledEngineProvider injectFirst>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={showNuevos}
+                                                onChange={(e) => setShowNuevos(e.target.checked)}
+                                                disabled={props.disabled}
+                                                name="mostrarNuevos"
+                                                color="primary"
+                                            />
+                                        }
+                                        label="Mostrar siempre viajes recién creados"
+                                    />
+                                </StyledEngineProvider>
+                            </label>
+                        </Grid>
 
                     </Grid>
                 </Paper>
@@ -1006,15 +1048,16 @@ export default function CrearTarifaRangos(props) {
                         <Grid item xs={2}>
                             <FormControl fullWidth variant='outlined' size="small">
                                 <InputLabel
-                                    id="sucLabel">Sucursal</InputLabel>
-                            <Select value={filtroPMUM.sucursal}
+                                    id="sucLabel">Sucursal
+                                </InputLabel>
+                                <Select value={filtroPMUM.sucursal}
                                     onChange={(e)=>{
                                         //setSucursalesListado(sucursalesListado.filter(i => i.m_nIdSucursal === e.target.value))
                                         setFiltroPMUM({...filtroPMUM, sucursal: e.target.value})
                                     }}
                                     //onClick={(e) => getAllSucursales()}
                                     labelId='sucLabel'
-                                    label='Sucursal' InputLabelProps={{shrink: true}}>
+                                        label='Sucursal' InputLabelProps={{shrink: true}}>
                                 <MenuItem value={-1}>{'Sin Filtro'}</MenuItem>
                                 {
                                     sucursalesListado &&
@@ -1302,7 +1345,6 @@ export default function CrearTarifaRangos(props) {
                                         const copia = [...viajesForaneosListado]
                                         const modificable = copia.map((item) => ({...item}));
                                         const target = modificable.find(i => i.idViaje === newModel[0]);
-                                        //console.log(target);//target.map((item) => ({...item}));
                                         let viaje = (({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}) => ({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}))(target);
                                         setViajeForaneo(viaje);
                                     }}
