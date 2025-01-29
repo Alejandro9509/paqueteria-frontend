@@ -318,8 +318,6 @@ export default function CrearTarifaRangos(props) {
                 i.grupos = viajeForaneo.grupos
             }
         })
-        console.log(viajeForaneo)
-        console.log(viajesForaneosListado)
         let duplicado = false;
         let duplicadoInterno = false;
         let zonasRepetidas = "Zonas duplicadas: ";
@@ -369,16 +367,15 @@ export default function CrearTarifaRangos(props) {
         viajeForaneo.grupos.forEach(grupo => {
             const zonas = grupo.zonas.map(i => (i.m_nIdZona))
             const productos = grupo.productos.map(i => (i.m_nIdProducto))
-            console.log("Comparamos desde " + grupo.nombre)
-            console.log(zonas);
-            console.log(productos);
-            //console.log(listadoFiltrado)
+            // console.log("Comparamos desde " + grupo.nombre)
+            // console.log(zonas);
+            // console.log(productos);
             gruposBusqueda.filter(i => (i.idGrupo !== grupo.idGrupo)).forEach(g => {
-                console.log("Con el grupo " + g.nombre);
+                // console.log("Con el grupo " + g.nombre);
                 const z = g.zonas.map(i => (i.m_nIdZona))
                 const p = g.productos.map(i => (i.m_nIdProducto))
-                console.log(z);
-                console.log(p);
+                // console.log(z);
+                // console.log(p);
                 if(z.some(zona => zonas.includes(zona)) && p.some(prod => productos.includes(prod))){
                     duplicadoInterno = true;
                     gruposRepetidos += g.nombre + "-" + grupo.nombre + ", ";
@@ -400,8 +397,8 @@ export default function CrearTarifaRangos(props) {
         }
         if(!duplicado && !duplicadoInterno) {
             showSuccess("Guardado");
-            // setViajesForaneosListado(newViajes);
-            // setOpenForaneo(false);
+            setViajesForaneosListado(newViajes);
+            setOpenForaneo(false);
         }
     }
 
