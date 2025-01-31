@@ -1066,25 +1066,6 @@ export default function CrearTarifaRangos(props) {
                                 </StyledEngineProvider>
                             </label>
                         </Grid>
-                        <Grid item xs>
-                            <label className="input select">
-                                <StyledEngineProvider injectFirst>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={showNuevos}
-                                                onChange={(e) => setShowNuevos(e.target.checked)}
-                                                disabled={props.disabled}
-                                                name="mostrarNuevos"
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Mostrar siempre viajes recién creados"
-                                    />
-                                </StyledEngineProvider>
-                            </label>
-                        </Grid>
-
                     </Grid>
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
