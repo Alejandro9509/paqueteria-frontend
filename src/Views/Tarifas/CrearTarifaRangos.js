@@ -752,7 +752,7 @@ export default function CrearTarifaRangos(props) {
                                 Destino: destino?.m_sCiudad,
                                 Producto: prod.m_sDescripcion,
                                 Zona_Destino: zona.m_sCodigoZona,
-                                Aplica: zonaAplica ? "Si" : "No",
+                                Aplica: zonaAplica ? "No" : "Si",
                                 Minimo: rango.minimo,
                                 Maximo: rango.maximo,
                                 Unidad_de_medida: rango.unidadMedida,
