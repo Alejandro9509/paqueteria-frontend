@@ -24,7 +24,7 @@ function cancelarUltimaMillaCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado
 }
 
 function obtenerClavesCancelacionSAT( ) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesCancelacion`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesCancelacion`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerClavesCancelacionSAT( ) {
 }
 
 function enviarCorreoCFDIViaje(id, correos, correoDefault, idViaje){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/${idViaje}/Informe/${id}/EnviarCorreoFactura`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/${idViaje}/Informe/${id}/EnviarCorreoFactura`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
@@ -42,7 +42,7 @@ function enviarCorreoCFDIViaje(id, correos, correoDefault, idViaje){
 }
 
 function enviarCorreoCFDIUltimaMilla(id, correos, correoDefault, esRecoleccion){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/UltimaMilla/${id}/${esRecoleccion ? 1 : 0}/EnviarCorreoFactura`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/UltimaMilla/${id}/${esRecoleccion ? 1 : 0}/EnviarCorreoFactura`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
@@ -51,7 +51,7 @@ function enviarCorreoCFDIUltimaMilla(id, correos, correoDefault, esRecoleccion){
 }
 
 function obtenerClavesByInforme(idInforme) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesByInforme/${idInforme}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesByInforme/${idInforme}`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })
@@ -60,7 +60,7 @@ function obtenerClavesByInforme(idInforme) {
 }
 
 function validarComplementoSat(catalogoSat, claveSat) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ValidarComplemento/${catalogoSat}/${claveSat}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/ValidarComplemento/${catalogoSat}/${claveSat}`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })

@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerConceptosFacturacion(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ConceptosFacturacion/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ConceptosFacturacion/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -24,7 +24,7 @@ function obtenerImpuestosByConceptosFacturacion(id){
 }
 
 function obtenerConceptosFacturacionManiobra(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ConceptosFacturacion/GetListado/Maniobra`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ConceptosFacturacion/GetListado/Maniobra`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -79,7 +79,7 @@ function obtenerSATServicios(){
 
 function obtenerSATPaginado(registros, pagina, catalogo, busqueda){
 
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/GetListadoPaginado/${registros}/${pagina}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/GetListadoPaginado/${registros}/${pagina}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {busqueda: busqueda, catalogo: catalogo}), { headers })
@@ -98,7 +98,7 @@ function obtenerConceptosDefectoListado(){
 
 function obtenerSATListado(catalogo,busqueda){
 
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/GetListado/${catalogo}/${busqueda}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/GetListado/${catalogo}/${busqueda}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -108,7 +108,7 @@ function obtenerSATListado(catalogo,busqueda){
 
 function obtenerSATBusqueda(catalogo,busqueda){
 
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/Busqueda/${catalogo}/${busqueda}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SAT/Busqueda/${catalogo}/${busqueda}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

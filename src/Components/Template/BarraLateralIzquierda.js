@@ -60,7 +60,10 @@ function BarraLateralDerecha() {
                 )
             })}
         </ul>
-        <Route exact path="/" component={Login} />
+        <Route exact path="/" component={() => {
+            window.location.href = "http://190.9.53.4:9898/GMTERPV8_WEB/ES/PAGE_CatUsuariosLoginAWP.awp";
+            return null;
+        }}/>
         <Route path="/AM" component={AM} />
     </div>
     );

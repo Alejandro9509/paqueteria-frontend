@@ -15,7 +15,7 @@ function obtenerRutas() {
 }
 
 function obtenerRutasId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Rutas/GetById/${id}`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })
@@ -24,7 +24,7 @@ function obtenerRutasId(id) {
 }
 
 function obtenerRutasByOrigenDestinoCliente(idCliente, idOrigen, idDestino) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetByIdClienteOrigenDestino/${idCliente}/${idOrigen}/${idDestino}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Rutas/GetByIdClienteOrigenDestino/${idCliente}/${idOrigen}/${idDestino}`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerRutasByOrigenDestinoCliente(idCliente, idOrigen, idDestino) {
 }
 
 function obtenerRutasByOrigenDestinoPublicoGeneral(idOrigen, idDestino) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetByOrigenDestino/${idOrigen}/${idDestino}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Rutas/GetByOrigenDestino/${idOrigen}/${idDestino}`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })
@@ -42,7 +42,7 @@ function obtenerRutasByOrigenDestinoPublicoGeneral(idOrigen, idDestino) {
 }
 
 function obtenerTrayectosByRuta(idRuta) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetTrayectosRuta/${idRuta}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Rutas/GetTrayectosRuta/${idRuta}`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })

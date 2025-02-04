@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerCiudades(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerCiudades(){
 }
 
 function obtenerCiudadId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

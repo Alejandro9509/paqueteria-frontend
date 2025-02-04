@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion, entregaDD, recoleccionDD) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Cotizador/Agregar`;
     let result;
     let params = {
         idOrigen: remitente.origenRemitente.m_nIdCiudad,
@@ -52,7 +52,7 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
 }
 
 function obtenerCotizacionTarifario(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador/Busqueda`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Cotizador/Busqueda`;
     let result;
 
     trackPromise(

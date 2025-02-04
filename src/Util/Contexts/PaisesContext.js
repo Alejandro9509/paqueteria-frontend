@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerPaises() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Pais/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Pais/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

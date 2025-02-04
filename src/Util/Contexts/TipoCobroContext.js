@@ -5,7 +5,7 @@ const headers = API_HEADERS
 
 
 function modificarTipoCobro(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCobro/Modificar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoCobro/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -14,7 +14,7 @@ function modificarTipoCobro(id, params) {
 }
 
 function agregarTipoCobro(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCobro/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoCobro/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -23,7 +23,7 @@ function agregarTipoCobro(params) {
 }
 
 function eliminarTipoCobro(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCobro/Eliminar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoCobro/Eliminar/` + id;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -32,7 +32,7 @@ function eliminarTipoCobro(id, idEliminadoPor) {
 }
 
 function obtenerTipoCobro() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCobro/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoCobro/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -41,7 +41,7 @@ function obtenerTipoCobro() {
 }
 
 function obtenerTipoCobroId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCobro/GetTipoCobro/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/TipoCobro/GetTipoCobro/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

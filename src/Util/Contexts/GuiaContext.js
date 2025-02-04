@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarGuia(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Modificar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -15,7 +15,7 @@ function modificarGuia(id, params) {
 }
 
 function entregaOcurreGuia(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/EntregaOcurre/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/EntregaOcurre/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function entregaOcurreGuia(id, params) {
 }
 
 function agregarGuia(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -33,7 +33,7 @@ function agregarGuia(params) {
 }
 
 function cubicarGuia(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Cubicar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -42,7 +42,7 @@ function cubicarGuia(params) {
 }
 
 function cubicarGuiaInforme(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Cubicar/Informe`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Cubicar/Informe`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -51,7 +51,7 @@ function cubicarGuiaInforme(params) {
 }
 
 function eliminarGuia(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Eliminar/${id}/${idEliminadoPor}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/Eliminar/${id}/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -60,7 +60,7 @@ function eliminarGuia(id, idEliminadoPor) {
 }
 
 function validarEliminarGuia(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarEliminar/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarEliminar/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -69,7 +69,7 @@ function validarEliminarGuia(id){
 }
 
 function cancelarGuia(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/Cancelar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/Cancelar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -78,7 +78,7 @@ function cancelarGuia(params) {
 }
 
 function validarCancelarGuia(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarCancelar/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarCancelar/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -96,7 +96,7 @@ function obtenerGuia() {
 }
 
 function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetUltimaMilla`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/GetUltimaMilla`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {zonas: zonasIds.join(","), tipoServicio: tipoServicio}), { headers })
@@ -105,7 +105,7 @@ function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
 }
 
 function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ReasignarGuia/${idParadaDestino}/${idParadaFuente}/${idGuia}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })
@@ -118,7 +118,7 @@ function cambiarTipoCobro(idGuia, tipoCobro) {
         m_nIdGuia: idGuia,
         m_nIdTIpoCobro: tipoCobro
     }
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/CambiarTipoCobro`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/CambiarTipoCobro`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -127,7 +127,7 @@ function cambiarTipoCobro(idGuia, tipoCobro) {
 }
 
 function cambiarEstatusGuia(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/CambiarEstatusGuia`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/CambiarEstatusGuia`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -136,7 +136,7 @@ function cambiarEstatusGuia(params) {
 }
 
 function cambiarEstatusGuiaSAT(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/CambiarEstatusGuiaSAT`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/CambiarEstatusGuiaSAT`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -159,7 +159,7 @@ function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
         m_sLatitud: latitud,
         m_sLongitud: longitud
     }
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ActualizarCoordenadas`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/ActualizarCoordenadas`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -168,7 +168,7 @@ function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
 }
 
 function obtenerGuiaPendientes(idOrigen, idDestino, tipoTimbrado) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetListadoPendientes/` +
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/GetListadoPendientes/` +
         idOrigen +
         "/" +
         idDestino+
@@ -182,7 +182,7 @@ function obtenerGuiaPendientes(idOrigen, idDestino, tipoTimbrado) {
 }
 
 function obtenerGuiaReporte(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Guia/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Guia/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -191,7 +191,7 @@ function obtenerGuiaReporte(id) {
 }
 
 function obtenerGuiaReporteEtiqueta(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuia/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuia/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -200,7 +200,7 @@ function obtenerGuiaReporteEtiqueta(id) {
 }
 
 function validarRangosEtiqueta(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/ValidarRangosEtiqueta`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/ValidarRangosEtiqueta`;
     let result;
     trackPromise(
         // result =  axios.get(url, { headers })
@@ -210,7 +210,7 @@ function validarRangosEtiqueta(params) {
 }
 
 function obtenerGuiaReporteEtiquetaGuiaRangos(idImpresion) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuiaRangos/${idImpresion}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuiaRangos/${idImpresion}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -229,7 +229,7 @@ function ultimoFolioGuia() {
 }
 
 function obtenerGuiaId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetById/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -251,7 +251,7 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
         folioGuia = 0
     }
     const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetByFiltro/` +
+        `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
@@ -275,7 +275,7 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
 }
 
 function obtenerGuiasFiltroCorteCaja(busquedaPorUsuario, idOperador, idUsuario, fecha) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja`
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja`
     let result;
     let params = {
         "busquedaPorUsuario": busquedaPorUsuario, //boolean
@@ -291,7 +291,7 @@ function obtenerGuiasFiltroCorteCaja(busquedaPorUsuario, idOperador, idUsuario, 
 
 function obtenerGuiasFiltroCorteCajaVIEJO(fecha, destino, idMoneda, idTipoPago) {
     const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja/` +
+        `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja/` +
         fecha +
         "/" +
         destino +
@@ -308,7 +308,7 @@ function obtenerGuiasFiltroCorteCajaVIEJO(fecha, destino, idMoneda, idTipoPago) 
 
 function obtenerValidacionGuia(id){
     
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/ValidacionById/`+id
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/ValidacionById/`+id
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -317,7 +317,7 @@ function obtenerValidacionGuia(id){
 }
 
 function obtenerBancos() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetBancos`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/GetBancos`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -326,7 +326,7 @@ function obtenerBancos() {
 }
 
 function enviarCorreoGuia(idGuia, correos, correoDefault){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ReenviarCorreoCartaPorte/${idGuia}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/ReenviarCorreoCartaPorte/${idGuia}`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
@@ -335,7 +335,7 @@ function enviarCorreoGuia(idGuia, correos, correoDefault){
 }
 
 function obtenerPaquetesGuia(idGuia) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetPaquetes/`+idGuia;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/GetPaquetes/`+idGuia;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -344,7 +344,7 @@ function obtenerPaquetesGuia(idGuia) {
 }
 
 function subirImagenEvidencia(imagen,IdGuia,ImagenNombreArchivo,Descripcion,esRec,TipoArchivo) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/SubirImagen`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guia/SubirImagen`;
     let result;
     let config={
         headers:   {'Content-Type':headers["Content-Type"],'RFC':headers['RFC'],'EsRecoleccion':esRec,'IdGuia':IdGuia,'Descripcion':Descripcion,'ImagenNombreArchivo':ImagenNombreArchivo,'TipoArchivo':TipoArchivo}

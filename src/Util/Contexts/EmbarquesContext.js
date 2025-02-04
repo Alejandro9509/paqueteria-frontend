@@ -15,7 +15,7 @@ function modificarEmbarques(id, params){
 }
 
 function obtenerEmbarqueReporte(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Embarque/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Embarque/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -24,7 +24,7 @@ function obtenerEmbarqueReporte(id) {
 }
 
 function agregarEmbarques( params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarques/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, params, { headers })
@@ -33,7 +33,7 @@ function agregarEmbarques( params){
 }
 
 function eliminarEmbarques(id, idEliminadoPor){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarques/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -55,7 +55,7 @@ function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estat
         folioEmbarque = 0
     }
     const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Embarque/GetByFiltro/` +
+        `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarque/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
@@ -88,7 +88,7 @@ function obtenerUltimoFolioEmbarques(){
 }
 
 function cancelarEmbarque(state, params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Cancelar/${state.idEmbarque}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarques/Cancelar/${state.idEmbarque}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -106,7 +106,7 @@ function obtenerEmbarqueCancelado(state){
 }
 
 function obtenerEmbarquesId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarque/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarque/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -115,7 +115,7 @@ function obtenerEmbarquesId(id){
 }
 
 function obtenerEmbarqueMoneda(valor, idMoneda, idGuia){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/GetBySucursalMoneda/` + valor + "/" + idMoneda + "/" + idGuia;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarques/GetBySucursalMoneda/` + valor + "/" + idMoneda + "/" + idGuia;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -124,14 +124,14 @@ function obtenerEmbarqueMoneda(valor, idMoneda, idGuia){
 }
 
 function validarEmbarquesImportados(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/validar-importacion`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarques/validar-importacion`;
     let result;
     trackPromise(result = axios.post(url, Object.assign({}, params), { headers }))
     return result
 }
 
 function agregarEmbarquesImportados(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/agregar-importados`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarques/agregar-importados`;
     let result;
     trackPromise(result = axios.post(url, Object.assign({}, params), { headers }))
     return result

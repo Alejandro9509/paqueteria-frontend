@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerByIdZonaTarifa(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetById/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerByIdZonaTarifa(id) {
 }
 
 function obtenerZonaTarifaByIdCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetByIdCodigoPostal/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetByIdCodigoPostal/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

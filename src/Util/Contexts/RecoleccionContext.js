@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarRecoleccion(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Modificar/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Modificar/${id}`;
     let result;
     trackPromise(
         result =  axios.put(url, params, { headers })
@@ -15,7 +15,7 @@ function modificarRecoleccion(id, params) {
 }
 
 function modificarRecoleccionSAT(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ModificarSAT`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ModificarSAT`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function modificarRecoleccionSAT(params) {
 }
 
 function obtenerRecoleccionReporte(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Recoleccion/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Recoleccion/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerRecoleccionReporte(id) {
 }
 
 function agregarRecoleccion(params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, params, { headers })
@@ -42,7 +42,7 @@ function agregarRecoleccion(params) {
 }
 
 function cancelarRecoleccion(id, params) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Cancelar/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Cancelar/${id}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -51,7 +51,7 @@ function cancelarRecoleccion(id, params) {
 }
 
 function actualizarCoordenadasRecoleccion(idRecoleccion, latitud, longitud) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ActualizarCoordenadas/${idRecoleccion}/${latitud}/${longitud}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/ActualizarCoordenadas/${idRecoleccion}/${latitud}/${longitud}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })
@@ -60,7 +60,7 @@ function actualizarCoordenadasRecoleccion(idRecoleccion, latitud, longitud) {
 }
 
 function eliminarRecoleccion(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
@@ -78,7 +78,7 @@ function obtenerRecoleccion() {
 }
 
 function obtenerRecoleccionCancelada(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetCancelarById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetCancelarById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -87,7 +87,7 @@ function obtenerRecoleccionCancelada(id) {
 }
 
 function obtenerRecoleccionId(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -100,7 +100,7 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         folioRecoleccion = 0
     }
     const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetByFiltro/` +
+        `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +

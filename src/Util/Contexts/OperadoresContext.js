@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerOperadores() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Operadores/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Operadores/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerOperadores() {
 }
 
 function reasignarOperador(idParadaFuente, idOperador) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/ReasignarOperador/${idParadaFuente}/${idOperador}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ReasignarOperador/${idParadaFuente}/${idOperador}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })
@@ -35,7 +35,7 @@ function obtenerOperadoresId(id) {
 }
 
 function obtenerOperadoresPorSucursal(idSucursal) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Operadores/GetListado/PorSucursal/${idSucursal}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Operadores/GetListado/PorSucursal/${idSucursal}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function obtenerProductoById(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Productos/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -15,7 +15,7 @@ function obtenerProductoById(id){
 }
 
 function obtenerProductos(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Productos/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -24,7 +24,7 @@ function obtenerProductos(){
 }
 
 function obtenerProductosByConvenioCliente(idCliente){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/GetByConvenioCliente/${idCliente}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Productos/GetByConvenioCliente/${idCliente}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -33,7 +33,7 @@ function obtenerProductosByConvenioCliente(idCliente){
 }
 
 function modificarProducto(idProducto,params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Modificar/${idProducto}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Productos/Modificar/${idProducto}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -42,7 +42,7 @@ function modificarProducto(idProducto,params){
 }
 
 function  agregarProducto(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Productos/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -51,7 +51,7 @@ function  agregarProducto(params){
 }
 
 function eliminarProducto(idProducto){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/Eliminar/${idProducto}`
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Productos/Eliminar/${idProducto}`
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {}), { headers })

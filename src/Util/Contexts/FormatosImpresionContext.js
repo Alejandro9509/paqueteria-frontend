@@ -9,7 +9,7 @@ const headersMultipart = API_MULTIPART_HEADERS;
 function agregarFormatosImpresion( params, file, image){
     var bodyFormData = new FormData();
 
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Formato/Agregar`;
     let result;
     var json = JSON.stringify({...params});
     var blob = new Blob([json] , { type: 'application/json' });
@@ -27,7 +27,7 @@ function agregarFormatosImpresion( params, file, image){
 function modificarFormatosImpresion( id, params,image){
     var bodyFormData = new FormData();
 
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Modificar/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Formato/Modificar/${id}`;
     let result;
     var json = JSON.stringify({...params});
     var blob = new Blob([json] , { type: 'application/json' });
@@ -51,7 +51,7 @@ function obtenerFormatosImpresion(){
 }
 
 function obtenerFormatosImpresionProceso(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Proceso/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Formato/Proceso/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -60,7 +60,7 @@ function obtenerFormatosImpresionProceso(id){
 }
 
 function obtenerFormatosImpresionId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Formato/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

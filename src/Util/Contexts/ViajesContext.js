@@ -7,7 +7,7 @@ const headers = API_HEADERS
 
 
 function agregarViaje( params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -16,7 +16,7 @@ function agregarViaje( params){
 }
 
 function modificarViaje( id,params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Modificar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -25,7 +25,7 @@ function modificarViaje( id,params){
 }
 
 function agregarViajeSalida( params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarSalida`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarSalida`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -34,7 +34,7 @@ function agregarViajeSalida( params){
 }
     
 function agregarViajeLlegada( params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarLlegada`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/AgregarLlegada`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -55,7 +55,7 @@ function obtenerViajesByFiltro(fechaInicial, fechaFinal, estatusListado, folio,O
     if (folio == '') {
         folio = 0
     }
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/GetByFiltro`
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/GetByFiltro`
         + "/"+ fechaInicial
         + "/" + fechaFinal
         + "/" + estatusListado
@@ -90,7 +90,7 @@ function obtenerCFDI(id,sustituir){
 }
 
 function validarCFDI(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetValidacionCFDITraslada/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Guias/GetValidacionCFDITraslada/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
@@ -99,7 +99,7 @@ function validarCFDI(id){
 }
 
 function obtenerReporteCFDI(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDI/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDI/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
@@ -117,7 +117,7 @@ function obtenerReporteCFDI(id){
 }*/
 
 function obtenerReporteCFDIViaje(id, idInforme){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}/${idInforme}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}/${idInforme}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
@@ -126,7 +126,7 @@ function obtenerReporteCFDIViaje(id, idInforme){
 }
 
 function obtenerViajesEstatus(idEstatus){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/GetListadoEstatus/${idEstatus}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/GetListadoEstatus/${idEstatus}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
@@ -136,7 +136,7 @@ function obtenerViajesEstatus(idEstatus){
 
 
 function obetenerViajeId( id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
@@ -145,7 +145,7 @@ function obetenerViajeId( id){
 }
 
 function cancelarTrayecto(id, params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/cancelarTrayecto/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/cancelarTrayecto/${id}`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {
@@ -160,7 +160,7 @@ function cancelarTrayecto(id, params){
 }
 
 function cancelarViaje(id, params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/CancelarViaje/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/CancelarViaje/${id}`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -169,7 +169,7 @@ function cancelarViaje(id, params){
 }
 
 function validarSalidaParada(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/paradasTimbradas/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/paradasTimbradas/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
@@ -178,7 +178,7 @@ function validarSalidaParada(id){
 }
 
 function eliminarViaje(idViaje,idEstatus){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/Eliminar/${idViaje}/${idEstatus}`
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/Eliminar/${idViaje}/${idEstatus}`
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({},{}), { headers })

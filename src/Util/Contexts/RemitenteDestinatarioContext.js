@@ -33,7 +33,7 @@ function obtenerUbicacion(city, address, subdistrict, number, code) {
 }
 
 function obtenerRemitentesDestinatarios(){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -51,7 +51,7 @@ function actualizarRemitentesDestinatarios(){
 }
 
 function agregarRemitenteDestinatario(params){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/Agregar`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -60,7 +60,7 @@ function agregarRemitenteDestinatario(params){
 }
 
 function obtenerRemitentesDestinatariosId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetById/${id}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -69,7 +69,7 @@ function obtenerRemitentesDestinatariosId(id){
 }
 
 function obtenerRemitentesDestinatariosNombre(nombre){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetByName/${nombre}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/GetByName/${nombre}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -78,7 +78,7 @@ function obtenerRemitentesDestinatariosNombre(nombre){
 }
 
 function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Remitentes/GetListadoPaginado/${pagina}/${registros}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Remitentes/GetListadoPaginado/${pagina}/${registros}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {busqueda: busqueda}), { headers })
@@ -87,7 +87,7 @@ function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
 }
 
 function actualizarCoordenadasRemitentesDestinatarios(rfc, nombre, latitud, longitud, idRecoleccion){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/ConfirmarCoordenadas`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/RemitentesDestinatarios/ConfirmarCoordenadas`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {
@@ -98,7 +98,7 @@ function actualizarCoordenadasRemitentesDestinatarios(rfc, nombre, latitud, long
 }
 
 function obtenerClientesPaginado(pagina,registros, busqueda){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {busqueda: busqueda}), { headers })
