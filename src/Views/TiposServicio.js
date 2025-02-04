@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
+import { useTable, useFilters, useSortBy } from 'react-table'
 import { styled } from "@mui/material/styles";
-import makeStyles from '@mui/styles/makeStyles';
 import { DataGrid } from '@mui/x-data-grid';
 
 import Noty from 'noty';
@@ -49,9 +47,6 @@ function showSuccess(mensaje) {
 }
 
 function TiposServicio() {
-
-
-
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -68,9 +63,7 @@ function TiposServicio() {
     })
     const [fileUploaded, setFileUploaded] = React.useState([])
 
-
     const handleAceptar = (e) => {
-        console.log(e)
         e.preventDefault()
         var params = {
             "m_sDescripcion": state.Descripcion,
@@ -80,7 +73,6 @@ function TiposServicio() {
             "m_nCreadoPor": state.CreadoPor,
             "m_nModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.IdTipoServicio != 0) {
             modificarTipoServicio(state.IdTipoServicio, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -105,15 +97,12 @@ function TiposServicio() {
         var derecho;
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
-
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
             eliminarTipoServicio(id, state.ModificadoPor).then(respuesta => {
-                console.log(respuesta)
                 showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
@@ -125,9 +114,7 @@ function TiposServicio() {
     }
 
     function handleShowModificar(id) {
-        console.log(id)
         obtenerTipoServicioId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -144,10 +131,9 @@ function TiposServicio() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
     }
+
     function handleShowConsultar(id) {
-        console.log(id)
         obtenerTipoServicioId(id).then(respuesta => {
-            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -166,7 +152,6 @@ function TiposServicio() {
     }
 
     const handleChange = event => {
-        console.log(event.target.id + " : " + event.target.value)
         setState({
             ...state,
             [event.target.id]: event.target.value
@@ -275,7 +260,6 @@ function TiposServicio() {
 
         var files = e.target.files, f = files[0];
         var reader = new FileReader();
-        console.log(e.target.files)
         reader.onload = function (e) {
             console.log("Nothing Happened")
             var data = e.target.result;
@@ -290,9 +274,6 @@ function TiposServicio() {
         };
         reader.readAsBinaryString(f)
     }
-
-
-
 
     function DefaultColumnFilter({
         column: { filterValue, preFilteredRows, setFilter },
@@ -425,7 +406,9 @@ function TiposServicio() {
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
+        setState({ ...state, agregar: "Agregar" });
     }
+
     const handleShowAgregar = () => {
         setState({
             ...state,
@@ -445,7 +428,6 @@ function TiposServicio() {
 
     return (
         <div >
-
             <header className="topbar clearfix">
                 <Cabecera titulo="Tipo de Servicio" >
                     <div className="page-header">
@@ -482,8 +464,6 @@ function TiposServicio() {
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
-
-
                     </ul>
 
                     <div className="row" className="tab-content">
@@ -600,21 +580,23 @@ function TiposServicio() {
                                                 
                                             </form> 
                      
-                                                <div className="form-footer ol-md-12">
-                                    <Grid container spacing={1}>
-                                        <Grid item xs>
-                                        <Button fullWidth className="btn btn-secondary secondary-btn" style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"} onClick={handleShowListado}>
-                                                        CANCELAR
-                                        </Button>
-                                        </Grid>
-                                        <Grid item xs>
-                                        <Button fullWidth type="submit" form="formulario" disabled={state.agregar == "Consultar"}
-                                                            className="btn btn-primary primary-btn">AGREGAR TIPO DE SERVICIO
-                                        </Button>
-                                        </Grid>
-                                    </Grid>
-                                </div>
-
+                                            <div className="form-footer ol-md-12">
+                                                <Grid container spacing={1}>
+                                                    <Grid item xs>
+                                                        <Button fullWidth className="btn btn-secondary secondary-btn"
+                                                                style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"}
+                                                                onClick={handleShowListado}>
+                                                            Cancelar
+                                                        </Button>
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        <Button fullWidth className="btn btn-primary primary-btn" type="submit"
+                                                                form="formulario" disabled={state.agregar == "Consultar"}>
+                                                            Guardar
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
