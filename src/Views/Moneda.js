@@ -98,6 +98,15 @@ function Moneda() {
                 showSuccess(err.response?.data)
             });
         }
+        setState({
+            ...state,
+            agregar: "Agregar",
+            idMoneda: 0,
+            codigo: "",
+            moneda: "",
+            simbolo: "",
+            abreviacion: "",
+        })
     }
 
     function handleEliminar(id) {
@@ -159,7 +168,6 @@ function Moneda() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         $('#Listado').removeClass('in show');
-
     }
 
     function handleShowAgregar() {
@@ -432,12 +440,14 @@ function Moneda() {
                                                         <Grid item xs>
                                                             <Button fullWidth onClick={(event) => {limpiarCampos(event)}}
                                                                     role="tab" data-toggle="tab"
+                                                                    disabled={state.agregar=="Consultar"}
                                                                     className="btn btn-secondary secondary-btn">
                                                                 CANCELAR
                                                             </Button>
                                                         </Grid>
                                                         <Grid item xs>
                                                             <Button fullWidth type="submit"
+                                                                    disabled={state.agregar=="Consultar"}
                                                                     className="btn btn-primary primary-btn">
                                                                 GUARDAR MONEDA
                                                             </Button>
