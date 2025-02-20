@@ -1011,7 +1011,6 @@ function Guia(props) {
 
     const setDataGuiaParaConsultarModificar = (respuesta, label) => {
         getDataParaEditar()
-        console.log('Guia datos:', respuesta.data)
 
         let totalCantidad = 0
         respuesta.data.m_arrClsDetalle.forEach((p) => {
@@ -1198,9 +1197,7 @@ function Guia(props) {
                     idUsuario: localStorage.getItem("UsuarioId"),
                     fechaCancelacion: getCurrentDateTime()
                 }
-                console.log(JSON.stringify(params))
                 cancelarGuia(params).then((respuesta) => {
-                    console.log(respuesta.data)
                     handleShowListado()
                 }).catch(err => {
                     console.log(err)
@@ -2035,7 +2032,6 @@ function Guia(props) {
         let ivaTraslada = []
         let ivaRetiene = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}/${idTipoTarifa}`, {headers}).then(respuesta => {
-            console.log('tarifas by embarque ', respuesta.data)
             let conceptosCast = []
             respuesta.data.forEach((element) => {
                 conceptosCast.push({

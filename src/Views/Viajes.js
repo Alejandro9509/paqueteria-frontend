@@ -1018,7 +1018,6 @@ function Viajes() {
             field: "m_nIdOrigen",
             width: 300,
             renderCell: row => {
-                console.log(row)
                 return row.row.m_sFolioFiscalUUIDSustituido == "" ?  row.row.m_sUltimoFolioFiscalUUIDSustituido : (row.row.m_sFolioFiscalUUIDSustituido || "")
             }
         },
@@ -1184,7 +1183,6 @@ function Viajes() {
         agregarViajeLlegada(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
-                console.log(respuesta.data);
                 //getParadasListado(paradaData)
                 getAllData()
 

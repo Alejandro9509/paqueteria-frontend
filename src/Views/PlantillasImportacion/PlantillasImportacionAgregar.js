@@ -14,7 +14,7 @@ import {showSuccess} from "../../Util/Util";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {FilePond} from "react-filepond";
 import {agregarPlantillaImportacion, modificarPlantillaImportacion} from "../../Util/Contexts/PlantillasContext";
-import {toBase64} from "../../Util/GlobalFunctions";
+import {showError, toBase64} from "../../Util/GlobalFunctions";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 
 export default function PlantillasImportacionAgregar(props){
@@ -39,184 +39,184 @@ export default function PlantillasImportacionAgregar(props){
     const [files, setFiles] = useState([])
     const [openDialog, setOpenDialog] = useState(false)
     const [state,setState] = useState({
-        "idPlantilla": 0,
+        idPlantilla: 0,
         idTipoPlantilla: "1",
         cliente: null,
-        "responsablePago": "",
-        "archivoBase64": "",
-        "archivoNombre": "",
-        "hojaEmbarques": "",
-        "hojaPaquetes": "",
-        "hojaComplementos": "",
-        "numeroEmbarque": "",
-        "moneda": "",
-        "tipoCambio": "",
-        "tipoCobro": "",
-        "tipoSeguro": "",
-        "porcentajeSeguro": "",
-        "valorDeclarado": "",
-        "observacionesEmbarque": "",
-        "validarTimbradoFactura": "",
-        "tipoServicio": "",
-        "numeroRemitente": "",
-        "correoRemitente": "",
-        "telefonoRemitente": "",
-        "contactoRemitente": "",
-        "numeroDestinatario": "",
-        "correoDestinatario": "",
-        "telefonoDestinatario": "",
-        "contactoDestinatario": "",
-        "entregaEnSucursal": "",
-        "sucursalEntrega": "",
-        "entregaDiferenteDomicilio": "",
-        "codigoPostalDiferenteDomicilio": "",
-        "coloniaDiferenteDomicilio": "",
-        "calleNumeroDiferenteDomicilio": "",
-        "entregarEn": "",
-        "datosAdicionales": "",
-        "recoleccionDiferenteDomicilio": "",
-        "codigoPostalDiferenteDomicilioRecoleccion": "",
-        "coloniaDiferenteDomicilioRecoleccion": "",
-        "calleNumeroDiferenteDomicilioRecoleccion": "",
-        "recogerEn": "",
-        "datosAdicionalesRecoleccion": "",
-        "latitud": "",
-        "longitud": "",
-        "conCita": "",
-        "citaPendiente": "",
-        "fechaCita": "",
-        "horaMinimaCita": "",
-        "horaMaximaCita": "",
-        "cantidadPaquete": "",
-        "numeroProducto": "",
-        "embalajePaquete": "",
-        "largo": "",
-        "alto": "",
-        "ancho": "",
-        "pesoPaquete": "",
-        "observacionesPaquete": "",
-        "descripcionPaquete": "",
-        "cantidadComplemento": "",
-        "pesoComplemento": "",
-        "claveProductoServicio": "",
-        "claveUnidadMedida": "",
-        "esMaterialPeligroso": "",
-        "claveMaterialPeligroso": "",
-        "claveEmbalaje": "",
-        "descripcionEmbalajeComplemento": "",
-        "claveFraccionArancelaria": "",
-        "usarNumeroEquivalenciaDestinatario": false,
-        "usarNumeroEquivalenciaResponsablePago": false,
-        "referencia": '',
-        "esFarmaco":'',
-        "claveSectorCofepris":'',
-        "nombreIngredienteActivo":'',
-        "nombreQuimico":'',
-        "denominacionGenericaProd":'',
-        "denominacionDistintivaProd":'',
-        "fabricante":'',
-        "fechaCaducidad":'',
-        "loteMedicamento":'',
-        "formaFarmaceutica":'',
-        "condicionesEspTransp":'',
-        "registroSanitarioFolioAutorizacion":'',
-        "numeroCAS":'',
-        "numRegSanPlagCOFEPRIS":'',
-        "datosFabricante":'',
-        "datosFormulador":'',
-        "datosMaquilador":'',
-        "usoAutorizado":'',
+        responsablePago: "",
+        archivoBase64: "",
+        archivoNombre: "",
+        hojaEmbarques: "",
+        hojaPaquetes: "",
+        hojaComplementos: "",
+        numeroEmbarque: "",
+        moneda: "",
+        tipoCambio: "",
+        tipoCobro: "",
+        tipoSeguro: "",
+        porcentajeSeguro: "",
+        valorDeclarado: "",
+        observacionesEmbarque: "",
+        validarTimbradoFactura: "",
+        tipoServicio: "",
+        numeroRemitente: "",
+        correoRemitente: "",
+        telefonoRemitente: "",
+        contactoRemitente: "",
+        numeroDestinatario: "",
+        correoDestinatario: "",
+        telefonoDestinatario: "",
+        contactoDestinatario: "",
+        entregaEnSucursal: "",
+        sucursalEntrega: "",
+        entregaDiferenteDomicilio: "",
+        codigoPostalDiferenteDomicilio: "",
+        coloniaDiferenteDomicilio: "",
+        calleNumeroDiferenteDomicilio: "",
+        entregarEn: "",
+        datosAdicionales: "",
+        recoleccionDiferenteDomicilio: "",
+        codigoPostalDiferenteDomicilioRecoleccion: "",
+        coloniaDiferenteDomicilioRecoleccion: "",
+        calleNumeroDiferenteDomicilioRecoleccion: "",
+        recogerEn: "",
+        datosAdicionalesRecoleccion: "",
+        latitud: "",
+        longitud: "",
+        conCita: "",
+        citaPendiente: "",
+        fechaCita: "",
+        horaMinimaCita: "",
+        horaMaximaCita: "",
+        cantidadPaquete: "",
+        numeroProducto: "",
+        embalajePaquete: "",
+        largo: "",
+        alto: "",
+        ancho: "",
+        pesoPaquete: "",
+        observacionesPaquete: "",
+        descripcionPaquete: "",
+        cantidadComplemento: "",
+        pesoComplemento: "",
+        claveProductoServicio: "",
+        claveUnidadMedida: "",
+        esMaterialPeligroso: "",
+        claveMaterialPeligroso: "",
+        claveEmbalaje: "",
+        descripcionEmbalajeComplemento: "",
+        claveFraccionArancelaria: "",
+        usarNumeroEquivalenciaDestinatario: false,
+        usarNumeroEquivalenciaResponsablePago: false,
+        referencia: '',
+        esFarmaco:'',
+        claveSectorCofepris:'',
+        nombreIngredienteActivo:'',
+        nombreQuimico:'',
+        denominacionGenericaProd:'',
+        denominacionDistintivaProd:'',
+        fabricante:'',
+        fechaCaducidad:'',
+        loteMedicamento:'',
+        formaFarmaceutica:'',
+        condicionesEspTransp:'',
+        registroSanitarioFolioAutorizacion:'',
+        numeroCAS:'',
+        numRegSanPlagCOFEPRIS:'',
+        datosFabricante:'',
+        datosFormulador:'',
+        datosMaquilador:'',
+        usoAutorizado:'',
     })
     const restartState = () => {
         setState({
-            "idPlantilla": 0,
+            idPlantilla: 0,
             idTipoPlantilla: "1",
             cliente: null,
-            "responsablePago": "",
-            "archivoBase64": "",
-            "archivoNombre": "",
-            "hojaEmbarques": "",
-            "hojaPaquetes": "",
-            "hojaComplementos": "",
-            "numeroEmbarque": "",
-            "esRecoleccion": "",
-            "moneda": "",
-            "tipoCambio": "",
-            "tipoCobro": "",
-            "tipoSeguro": "",
-            "porcentajeSeguro": "",
-            "valorDeclarado": "",
-            "observacionesEmbarque": "",
-            "validarTimbradoFactura": "",
-            "tipoServicio": "",
-            "numeroRemitente": "",
-            "correoRemitente": "",
-            "telefonoRemitente": "",
-            "contactoRemitente": "",
-            "numeroDestinatario": "",
-            "correoDestinatario": "",
-            "telefonoDestinatario": "",
-            "contactoDestinatario": "",
-            "entregaEnSucursal": "",
-            "sucursalEntrega": "",
-            "entregaDiferenteDomicilio": "",
-            "codigoPostalDiferenteDomicilio": "",
-            "coloniaDiferenteDomicilio": "",
-            "calleNumeroDiferenteDomicilio": "",
-            "entregarEn": "",
-            "datosAdicionales": "",
-            "recoleccionDiferenteDomicilio": "",
-            "codigoPostalDiferenteDomicilioRecoleccion": "",
-            "coloniaDiferenteDomicilioRecoleccion": "",
-            "calleNumeroDiferenteDomicilioRecoleccion": "",
-            "recogerEn": "",
-            "datosAdicionalesRecoleccion": "",
-            "latitud": "",
-            "longitud": "",
-            "conCita": "",
-            "citaPendiente": "",
-            "fechaCita": "",
-            "horaMinimaCita": "",
-            "horaMaximaCita": "",
-            "cantidadPaquete": "",
-            "numeroProducto": "",
-            "embalajePaquete": "",
-            "largo": "",
-            "alto": "",
-            "ancho": "",
-            "pesoPaquete": "",
-            "observacionesPaquete": "",
-            "descripcionPaquete": "",
-            "cantidadComplemento": "",
-            "pesoComplemento": "",
-            "claveProductoServicio": "",
-            "claveUnidadMedida": "",
-            "esMaterialPeligroso": "",
-            "claveMaterialPeligroso": "",
-            "claveEmbalaje": "",
-            "descripcionEmbalajeComplemento": "",
-            "claveFraccionArancelaria": "",
-            "usarNumeroEquivalenciaDestinatario": false,
-            "usarNumeroEquivalenciaResponsablePago": false,
-            "referencia": '',
-            "esFarmaco":'',
-            "claveSectorCofepris":'',
-            "nombreIngredienteActivo":'',
-            "nombreQuimico":'',
-            "denominacionGenericaProd":'',
-            "denominacionDistintivaProd":'',
-            "fabricante":'',
-            "fechaCaducidad":'',
-            "loteMedicamento":'',
-            "formaFarmaceutica":'',
-            "condicionesEspTransp":'',
-            "registroSanitarioFolioAutorizacion":'',
-            "numeroCAS":'',
-            "numRegSanPlagCOFEPRIS":'',
-            "datosFabricante":'',
-            "datosFormulador":'',
-            "datosMaquilador":'',
-            "usoAutorizado":'',
+            responsablePago: "",
+            archivoBase64: "",
+            archivoNombre: "",
+            hojaEmbarques: "",
+            hojaPaquetes: "",
+            hojaComplementos: "",
+            numeroEmbarque: "",
+            esRecoleccion: "",
+            moneda: "",
+            tipoCambio: "",
+            tipoCobro: "",
+            tipoSeguro: "",
+            porcentajeSeguro: "",
+            valorDeclarado: "",
+            observacionesEmbarque: "",
+            validarTimbradoFactura: "",
+            tipoServicio: "",
+            numeroRemitente: "",
+            correoRemitente: "",
+            telefonoRemitente: "",
+            contactoRemitente: "",
+            numeroDestinatario: "",
+            correoDestinatario: "",
+            telefonoDestinatario: "",
+            contactoDestinatario: "",
+            entregaEnSucursal: "",
+            sucursalEntrega: "",
+            entregaDiferenteDomicilio: "",
+            codigoPostalDiferenteDomicilio: "",
+            coloniaDiferenteDomicilio: "",
+            calleNumeroDiferenteDomicilio: "",
+            entregarEn: "",
+            datosAdicionales: "",
+            recoleccionDiferenteDomicilio: "",
+            codigoPostalDiferenteDomicilioRecoleccion: "",
+            coloniaDiferenteDomicilioRecoleccion: "",
+            calleNumeroDiferenteDomicilioRecoleccion: "",
+            recogerEn: "",
+            datosAdicionalesRecoleccion: "",
+            latitud: "",
+            longitud: "",
+            conCita: "",
+            citaPendiente: "",
+            fechaCita: "",
+            horaMinimaCita: "",
+            horaMaximaCita: "",
+            cantidadPaquete: "",
+            numeroProducto: "",
+            embalajePaquete: "",
+            largo: "",
+            alto: "",
+            ancho: "",
+            pesoPaquete: "",
+            observacionesPaquete: "",
+            descripcionPaquete: "",
+            cantidadComplemento: "",
+            pesoComplemento: "",
+            claveProductoServicio: "",
+            claveUnidadMedida: "",
+            esMaterialPeligroso: "",
+            claveMaterialPeligroso: "",
+            claveEmbalaje: "",
+            descripcionEmbalajeComplemento: "",
+            claveFraccionArancelaria: "",
+            usarNumeroEquivalenciaDestinatario: false,
+            usarNumeroEquivalenciaResponsablePago: false,
+            referencia: '',
+            esFarmaco:'',
+            claveSectorCofepris:'',
+            nombreIngredienteActivo:'',
+            nombreQuimico:'',
+            denominacionGenericaProd:'',
+            denominacionDistintivaProd:'',
+            fabricante:'',
+            fechaCaducidad:'',
+            loteMedicamento:'',
+            formaFarmaceutica:'',
+            condicionesEspTransp:'',
+            registroSanitarioFolioAutorizacion:'',
+            numeroCAS:'',
+            numRegSanPlagCOFEPRIS:'',
+            datosFabricante:'',
+            datosFormulador:'',
+            datosMaquilador:'',
+            usoAutorizado:'',
         })
         setFiles([])
     }
@@ -228,6 +228,22 @@ export default function PlantillasImportacionAgregar(props){
             restartState()
         }
     },[props.value])
+
+    useEffect(() => {
+        if(files.length > 0 && files !== []){
+            setState({
+                ...state,
+                archivoBase64: files[0],
+                archivoNombre: files[0]?.filenameWithoutExtension
+            });
+        }else{
+            setState({
+                ...state,
+                archivoBase64: "",
+                archivoNombre: ""
+            });
+        }
+    },[files])
 
     const handlePatrocinadorSelected = (row) => {
         setState(state => {
@@ -244,96 +260,100 @@ export default function PlantillasImportacionAgregar(props){
     }
 
     const handleOnSubmit = async () => {
+        if((state.idTipoPlantilla === "1" && !checkFormSegmentada()) || (state.idTipoPlantilla === "2" && !checkFormLineal())) {
+            showError("Faltan campos por llenar");
+            return;
+        }
         try {
             let params = {
-                "idPlantilla": state.idPlantilla,
-                "idCliente": state.cliente.idCliente,
-                "idTipoPlantilla": state.idTipoPlantilla,
-                // "archivoBase64": "",
-                // "archivoNombre": files[0].filenameWithoutExtension,
-                "hojaEmbarques": state.hojaEmbarques,
-                "hojaPaquetes": state.hojaPaquetes,
-                "hojaComplementos": state.hojaComplementos,
-                "numeroEmbarque": state.numeroEmbarque,
-                // "esRecoleccion": state.esRecoleccion,
-                "moneda": state.moneda,
-                "tipoCambio": state.tipoCambio,
-                "tipoCobro": state.tipoCobro,
-                "tipoSeguro": state.tipoSeguro,
-                "porcentajeSeguro": state.porcentajeSeguro,
-                "valorDeclarado": state.valorDeclarado,
-                "observacionesEmbarque": state.observacionesEmbarque,
-                "validarTimbradoFactura": state.validarTimbradoFactura,
-                "tipoServicio": state.tipoServicio,
-                "numeroRemitente": state.numeroRemitente,
-                "correoRemitente": state.correoRemitente,
-                "telefonoRemitente": state.telefonoRemitente,
-                "contactoRemitente": state.contactoRemitente,
-                "numeroDestinatario": state.numeroDestinatario,
-                "correoDestinatario": state.correoDestinatario,
-                "telefonoDestinatario": state.telefonoDestinatario,
-                "contactoDestinatario": state.contactoDestinatario,
-                "entregaEnSucursal": state.entregaEnSucursal,
-                "sucursalEntrega": state.sucursalEntrega,
-                "entregaDiferenteDomicilio": state.entregaDiferenteDomicilio,
-                "codigoPostalDiferenteDomicilio": state.codigoPostalDiferenteDomicilio,
-                "coloniaDiferenteDomicilio": state.coloniaDiferenteDomicilio,
-                "calleNumeroDiferenteDomicilio": state.calleNumeroDiferenteDomicilio,
-                "entregarEn": state.entregarEn,
-                "datosAdicionales": state.datosAdicionales,
-                "recoleccionDiferenteDomicilio": state.recoleccionDiferenteDomicilio,
-                "codigoPostalDiferenteDomicilioRecoleccion": state.codigoPostalDiferenteDomicilioRecoleccion,
-                "coloniaDiferenteDomicilioRecoleccion": state.coloniaDiferenteDomicilioRecoleccion,
-                "calleNumeroDiferenteDomicilioRecoleccion": state.calleNumeroDiferenteDomicilioRecoleccion,
-                "recogerEn": state.recogerEn,
-                "datosAdicionalesRecoleccion": state.datosAdicionalesRecoleccion,
-                "latitud": state.latitud,
-                "longitud": state.longitud,
-                "conCita": state.conCita,
-                "citaPendiente": state.citaPendiente,
-                "fechaCita": state.fechaCita,
-                "horaMinimaCita": state.horaMinimaCita,
-                "horaMaximaCita": state.horaMaximaCita,
-                "cantidadPaquete": state.cantidadPaquete,
-                "numeroProducto": state.numeroProducto,
-                "embalajePaquete": state.embalajePaquete,
-                "largo": state.largo,
-                "alto": state.alto,
-                "ancho": state.ancho,
-                "pesoPaquete": state.pesoPaquete,
-                "observacionesPaquete": state.observacionesPaquete,
-                "descripcionPaquete": state.descripcionPaquete,
-                "cantidadComplemento": state.cantidadComplemento,
-                "pesoComplemento": state.pesoComplemento,
-                "claveProductoServicio": state.claveProductoServicio,
-                "claveUnidadMedida": state.claveUnidadMedida,
-                "esMaterialPeligroso": state.esMaterialPeligroso,
-                "claveMaterialPeligroso": state.claveMaterialPeligroso,
-                "claveEmbalaje": state.claveEmbalaje,
-                "descripcionEmbalajeComplemento": state.descripcionEmbalajeComplemento,
-                "claveFraccionArancelaria": state.claveFraccionArancelaria,
-                "usarNumeroEquivalenciaDestinatario": state.usarNumeroEquivalenciaDestinatario,
-                "responsablePago": state.responsablePago,
-                "usarNumeroEquivalenciaResponsablePago": state.usarNumeroEquivalenciaResponsablePago,
-                "referencia": state.referencia,
-                "esFarmaco":state.esFarmaco,
-                "claveSectorCofepris":state.claveSectorCofepris,
-                "nombreIngredienteActivo":state.nombreIngredienteActivo,
-                "nombreQuimico":state.nombreQuimico,
-                "denominacionGenericaProd":state.denominacionGenericaProd,
-                "denominacionDistintivaProd":state.denominacionDistintivaProd,
-                "fabricante":state.fabricante,
-                "fechaCaducidad":state.fechaCaducidad,
-                "loteMedicamento":state.loteMedicamento,
-                "formaFarmaceutica":state.formaFarmaceutica,
-                "condicionesEspTransp":state.condicionesEspTransp,
-                "registroSanitarioFolioAutorizacion":state.registroSanitarioFolioAutorizacion,
-                "numeroCAS":state.numeroCAS,
-                "numRegSanPlagCOFEPRIS":state.numRegSanPlagCOFEPRIS,
-                "datosFabricante":state.datosFabricante,
-                "datosFormulador":state.datosFormulador,
-                "datosMaquilador":state.datosMaquilador,
-                "usoAutorizado":state.usoAutorizado,
+                idPlantilla: state.idPlantilla,
+                idCliente: state.cliente.idCliente,
+                idTipoPlantilla: state.idTipoPlantilla,
+                // archivoBase64: "",
+                // archivoNombre: files[0].filenameWithoutExtension,
+                hojaEmbarques: state.hojaEmbarques,
+                hojaPaquetes: state.hojaPaquetes,
+                hojaComplementos: state.hojaComplementos,
+                numeroEmbarque: state.numeroEmbarque,
+                // esRecoleccion: state.esRecoleccion,
+                moneda: state.moneda,
+                tipoCambio: state.tipoCambio,
+                tipoCobro: state.tipoCobro,
+                tipoSeguro: state.tipoSeguro,
+                porcentajeSeguro: state.porcentajeSeguro,
+                valorDeclarado: state.valorDeclarado,
+                observacionesEmbarque: state.observacionesEmbarque,
+                validarTimbradoFactura: state.validarTimbradoFactura,
+                tipoServicio: state.tipoServicio,
+                numeroRemitente: state.numeroRemitente,
+                correoRemitente: state.correoRemitente,
+                telefonoRemitente: state.telefonoRemitente,
+                contactoRemitente: state.contactoRemitente,
+                numeroDestinatario: state.numeroDestinatario,
+                correoDestinatario: state.correoDestinatario,
+                telefonoDestinatario: state.telefonoDestinatario,
+                contactoDestinatario: state.contactoDestinatario,
+                entregaEnSucursal: state.entregaEnSucursal,
+                sucursalEntrega: state.sucursalEntrega,
+                entregaDiferenteDomicilio: state.entregaDiferenteDomicilio,
+                codigoPostalDiferenteDomicilio: state.codigoPostalDiferenteDomicilio,
+                coloniaDiferenteDomicilio: state.coloniaDiferenteDomicilio,
+                calleNumeroDiferenteDomicilio: state.calleNumeroDiferenteDomicilio,
+                entregarEn: state.entregarEn,
+                datosAdicionales: state.datosAdicionales,
+                recoleccionDiferenteDomicilio: state.recoleccionDiferenteDomicilio,
+                codigoPostalDiferenteDomicilioRecoleccion: state.codigoPostalDiferenteDomicilioRecoleccion,
+                coloniaDiferenteDomicilioRecoleccion: state.coloniaDiferenteDomicilioRecoleccion,
+                calleNumeroDiferenteDomicilioRecoleccion: state.calleNumeroDiferenteDomicilioRecoleccion,
+                recogerEn: state.recogerEn,
+                datosAdicionalesRecoleccion: state.datosAdicionalesRecoleccion,
+                latitud: state.latitud,
+                longitud: state.longitud,
+                conCita: state.conCita,
+                citaPendiente: state.citaPendiente,
+                fechaCita: state.fechaCita,
+                horaMinimaCita: state.horaMinimaCita,
+                horaMaximaCita: state.horaMaximaCita,
+                cantidadPaquete: state.cantidadPaquete,
+                numeroProducto: state.numeroProducto,
+                embalajePaquete: state.embalajePaquete,
+                largo: state.largo,
+                alto: state.alto,
+                ancho: state.ancho,
+                pesoPaquete: state.pesoPaquete,
+                observacionesPaquete: state.observacionesPaquete,
+                descripcionPaquete: state.descripcionPaquete,
+                cantidadComplemento: state.cantidadComplemento,
+                pesoComplemento: state.pesoComplemento,
+                claveProductoServicio: state.claveProductoServicio,
+                claveUnidadMedida: state.claveUnidadMedida,
+                esMaterialPeligroso: state.esMaterialPeligroso,
+                claveMaterialPeligroso: state.claveMaterialPeligroso,
+                claveEmbalaje: state.claveEmbalaje,
+                descripcionEmbalajeComplemento: state.descripcionEmbalajeComplemento,
+                claveFraccionArancelaria: state.claveFraccionArancelaria,
+                usarNumeroEquivalenciaDestinatario: state.usarNumeroEquivalenciaDestinatario,
+                responsablePago: state.responsablePago,
+                usarNumeroEquivalenciaResponsablePago: state.usarNumeroEquivalenciaResponsablePago,
+                referencia: state.referencia,
+                esFarmaco:state.esFarmaco,
+                claveSectorCofepris:state.claveSectorCofepris,
+                nombreIngredienteActivo:state.nombreIngredienteActivo,
+                nombreQuimico:state.nombreQuimico,
+                denominacionGenericaProd:state.denominacionGenericaProd,
+                denominacionDistintivaProd:state.denominacionDistintivaProd,
+                fabricante:state.fabricante,
+                fechaCaducidad:state.fechaCaducidad,
+                loteMedicamento:state.loteMedicamento,
+                formaFarmaceutica:state.formaFarmaceutica,
+                condicionesEspTransp:state.condicionesEspTransp,
+                registroSanitarioFolioAutorizacion:state.registroSanitarioFolioAutorizacion,
+                numeroCAS:state.numeroCAS,
+                numRegSanPlagCOFEPRIS:state.numRegSanPlagCOFEPRIS,
+                datosFabricante:state.datosFabricante,
+                datosFormulador:state.datosFormulador,
+                datosMaquilador:state.datosMaquilador,
+                usoAutorizado:state.usoAutorizado,
             }
             if (state.idPlantilla > 0){
                 if (files.length === 0){
@@ -387,6 +407,163 @@ export default function PlantillasImportacionAgregar(props){
                 [event.target.name]: event.target.value
             })
         }
+    }
+
+    const checkFormSegmentada = () => {
+        let valid = true;
+        if(state.cliente == null){
+            valid = false;
+        }
+        if(state.hojaEmbarques == ""){
+            valid = false;
+        }
+        if(state.hojaPaquetes == ""){
+            valid = false;
+        }
+        if(state.hojaComplementos == ""){
+            valid = false;
+        }
+        if(files === [] || files == null){
+            valid = false;
+        }
+        if(state.numeroEmbarque == ""){
+            valid = false;
+        }
+        if(state.moneda == ""){
+            valid = false;
+        }
+        if(state.tipoCambio == ""){
+            valid = false;
+        }
+        if(state.tipoCobro == ""){
+            valid = false;
+        }
+        if(state.tipoSeguro == ""){
+            valid = false;
+        }
+        if(state.validarTimbradoFactura == ""){
+            valid = false;
+        }
+        if(state.tipoServicio == ""){
+            valid = false;
+        }
+        if(state.numeroRemitente == ""){
+            valid = false;
+        }
+        if(state.correoRemitente == ""){
+            valid = false;
+        }
+        if(state.numeroDestinatario == null){
+            valid = false;
+        }
+        if(state.correoDestinatario == null){
+            valid = false;
+        }
+        if(state.latitud == ""){
+            valid = false;
+        }
+        if(state.longitud == ""){
+            valid = false;
+        }
+        if(state.cantidadPaquete == ""){
+            valid = false;
+        }
+        if(state.numeroProducto == ""){
+            valid = false;
+        }
+        if(state.descripcionPaquete == ""){
+            valid = false;
+        }
+        if(state.largo == ""){
+            valid = false;
+        }
+        if(state.alto == ""){
+            valid = false;
+        }
+        if(state.ancho == ""){
+            valid = false;
+        }
+        if(state.embalajePaquete == ""){
+            valid = false;
+        }
+        if(state.pesoPaquete == ""){
+            valid = false;
+        }
+        if(state.cantidadComplemento == ""){
+            valid = false;
+        }
+        if(state.pesoComplemento == ""){
+            valid = false;
+        }
+        if(state.claveProductoServicio == ""){
+            valid = false;
+        }
+        if(state.claveUnidadMedida == ""){
+            valid = false;
+        }
+        return valid;
+    }
+
+    const checkFormLineal = () => {
+        let valid = true;
+        if(state.cliente == null){
+            valid = false;
+        }
+        if(state.hojaEmbarques == ""){
+            valid = false;
+        }
+        if(files === [] || files == null){
+            valid = false;
+        }
+        if(state.numeroEmbarque == ""){
+            valid = false;
+        }
+        if(state.referencia == ""){
+            valid = false;
+        }
+        if(state.responsablePago == ""){
+            valid = false;
+        }
+        if(state.valorDeclarado == ""){
+            valid = false;
+        }
+        if(state.numeroRemitente == ""){
+            valid = false;
+        }
+        if(state.numeroDestinatario == null){
+            valid = false;
+        }
+        if(state.cantidadPaquete == ""){
+            valid = false;
+        }
+        if(state.numeroProducto == ""){
+            valid = false;
+        }
+        if(state.cantidadComplemento == ""){
+            valid = false;
+        }
+        if(state.claveProductoServicio == ""){
+            valid = false;
+        }
+        if(state.claveUnidadMedida == ""){
+            valid = false;
+        }
+        if(state.esMaterialPeligroso == ""){
+            valid = false;
+        }
+        if(state.claveMaterialPeligroso == ""){
+            valid = false;
+        }
+        if(state.claveEmbalaje == ""){
+            valid = false;
+        }
+        if(state.descripcionEmbalajeComplemento == ""){
+            valid = false;
+        }
+        if(state.claveFraccionArancelaria == ""){
+            valid = false;
+        }
+        return valid;
     }
 
     return(
