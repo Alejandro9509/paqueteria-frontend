@@ -62,7 +62,11 @@ function EstatusDocumento() {
 
     function getAllData() {
         obtenerEstatusDocumentos().then(respuesta => {
-            setData(respuesta.data)
+            if(typeof(respuesta.data) === "string"){
+                showSuccess(respuesta.data)
+            }else{
+                setData(respuesta.data)
+            }
         });
     };
 
