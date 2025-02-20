@@ -316,7 +316,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                                 name="idEstado"
                                 disabled={consult}
                             >
-                                {dataEstados.map((estado) => (
+                                {dataEstados?.map((estado) => (
                                     <MenuItem
                                         key={estado.m_nIdEstado}
                                         value={estado.m_nIdEstado}
