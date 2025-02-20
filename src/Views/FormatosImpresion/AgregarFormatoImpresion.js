@@ -17,6 +17,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
     obtenerFormatosImpresionId,
 } from "../../Util/Contexts/FormatosImpresionContext";
+import DownloadIcon from "@mui/icons-material/GetAppRounded";
 
 window.jQuery = window.$ = $;
 const headers = {
@@ -58,7 +59,8 @@ class AgregarFormatoImpresion extends Component {
                     file: {
                         length:1,
                         [0]:{
-                            name:respuesta.data[0].m_sNombreArchivo
+                            name:respuesta.data[0].m_sNombreArchivo,
+                            file:respuesta.data[0].m_sFormatoWDE
                         }
                     },
                     modificadoEl:respuesta.data[0].m_sModificadoEl
@@ -67,6 +69,7 @@ class AgregarFormatoImpresion extends Component {
         }
         this.getAllTipoDocumento()
     }
+
 
     getAllTipoDocumento() {
         const url = `${process.env.REACT_APP_API_URL}/TipoDocumento/GetListado`;
@@ -87,6 +90,20 @@ class AgregarFormatoImpresion extends Component {
         });
     };
 
+    handleDownloadWDE = (file) => {
+        let a = document.createElement("a");
+        a.href = "data:application/pdf;base64," + file.file;
+        a.download = file.name;
+        a.click();
+    }
+
+    handleDownloadImage = (file) => {
+        let a = document.createElement("a");
+        a.href = "data:image/png;base64," + file.file;
+        a.download = file.name;
+        a.click();
+    }
+
     render() {
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
@@ -96,7 +113,7 @@ class AgregarFormatoImpresion extends Component {
                             <div className="row">
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <label className="input">
-                                    <TextField variant="outlined" size="small"
+                                        <TextField variant="outlined" size="small"
                                                    onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
@@ -146,7 +163,7 @@ class AgregarFormatoImpresion extends Component {
                                                     key={210}
                                                     value={210}
                                                 >
-                                                   Recolección
+                                                    Recolección
                                                 </MenuItem>
                                                 <MenuItem
                                                     key={211}
@@ -167,7 +184,7 @@ class AgregarFormatoImpresion extends Component {
                                                     Guía Etiqueta
                                                 </MenuItem>
                                                 {
-                                                    localStorage.getItem("RFC")==="ECC9510049KA" &&
+                                                    localStorage.getItem("RFC") === "ECC9510049KA" &&
                                                     <MenuItem
                                                         key={222}
                                                         value={222}
@@ -176,7 +193,7 @@ class AgregarFormatoImpresion extends Component {
                                                     </MenuItem>
                                                 }
                                                 {
-                                                    localStorage.getItem("RFC")!=="ECC9510049KA" &&
+                                                    localStorage.getItem("RFC") !== "ECC9510049KA" &&
                                                     <MenuItem
                                                         key={214}
                                                         value={214}
@@ -257,17 +274,24 @@ class AgregarFormatoImpresion extends Component {
                                                    InputProps={{
                                                        endAdornment:
                                                            <InputAdornment position="end">
-                                                                {
-                                                                    this.props.id===0 &&
-                                                                    <IconButton
-                                                                        onClick={() => document.getElementById("file").click()}
-                                                                        edge="end"
-                                                                        size="large">
-                                                                        <CloudUploadIcon color="primary" fontSize="large" />
-                                                                    </IconButton>
-                                                                }
+                                                               {
+                                                                   this.props.id === 0 ?
+                                                                   <IconButton
+                                                                       onClick={() => document.getElementById("file").click()}
+                                                                       edge="end"
+                                                                       size="large">
+                                                                       <CloudUploadIcon color="primary" fontSize="large"/>
+                                                                   </IconButton> :
+                                                                   <IconButton
+                                                                       onClick={() => this.handleDownloadWDE(this.state.file[0])}
+                                                                       edge="end"
+                                                                       size="large">
+                                                                       <DownloadIcon color="primary" fontSize="large"/>
+                                                                   </IconButton>
+                                                               }
+
                                                            </InputAdornment>
-                                                       }}
+                                                   }}
                                         />
                                     </label>
                                 </div>
@@ -291,20 +315,22 @@ class AgregarFormatoImpresion extends Component {
                                                    value={this.state.image.length !== 0 ? this.state.image[0].name : ""}
                                                    name={"nombreImagen"}
                                                    InputProps={{
-                                                    endAdornment:
-                                                 <InputAdornment position="end">
-                                                     {
-                                                         this.props.id===0 &&
-                                                         <IconButton
-                                                             disabled={this.props.id>0}
-                                                             onClick={() => document.getElementById("image").click()}
-                                                             edge="end"
-                                                             size="large">
-                                                             <CloudUploadIcon color="primary" fontSize="large" />
-                                                         </IconButton>
-                                                     }
-                                                 </InputAdornment>
-                                             }}
+                                                       endAdornment:
+                                                           <InputAdornment position="end">
+                                                               {
+                                                                   this.props.id === 0 &&
+                                                                   <IconButton
+                                                                       disabled={this.props.id > 0}
+                                                                       onClick={() => document.getElementById("image").click()}
+                                                                       edge="end"
+                                                                       size="large">
+                                                                       <CloudUploadIcon color="primary" fontSize="large"/>
+                                                                   </IconButton>
+                                                               }
+
+                                                           </InputAdornment>
+
+                                                   }}
                                         />
                                     </div>
                                 </div>
@@ -314,19 +340,21 @@ class AgregarFormatoImpresion extends Component {
                             {/*<div className="row" >*/}
                             {/*    <InputLabel> *Estos folios son internos para llevar una administración de los comprobantes fiscales, ya que el folio digital se obtiene al momento de hacer un timbre y son 36 dígitos" </InputLabel>*/}
                             {/*</div>*/}
-          
+
                             <div className="form-footer ol-md-12">
                                 <Grid container spacing={1}>
                                     <Grid item xs>
-                                    <Button fullWidth className="btn btn-secondary secondary-btn"
-                                        onClick={this.props.onClose}>Cancelar
-                                    </Button>
+                                        <Button fullWidth className="btn btn-secondary secondary-btn"
+                                                onClick={this.props.onClose}>Cancelar
+                                        </Button>
                                     </Grid>
                                     <Grid item xs>
-                                    <Button fullWidth className="btn btn-primary primary-btn" type={"submit"}>Aceptar</Button>
+                                        <Button fullWidth className="btn btn-primary primary-btn"
+                                                type={"submit"}>Aceptar</Button>
                                     </Grid>
                                 </Grid>
                             </div>
+
                         </div>
                     </div>
                 </div>
