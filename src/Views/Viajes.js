@@ -141,6 +141,7 @@ function Viajes() {
     const [openDialog, setOpenDialog] = useState(false)
     const [dataReportes, setDataReportes] = useState([])
     const [seleccion, setSeleccion] = useState(null)
+    const [filtros, setFiltros] = React.useState([]);
 
     useEffect(()=>{
 
@@ -148,7 +149,6 @@ function Viajes() {
             setDataReportes(data)
         })
     }, [])
-
 
     function getAllEstatusDocumento() {
         obtenerEstatusDocumentos().then((respuesta) => {
@@ -186,7 +186,7 @@ function Viajes() {
                         onClick: () => {
                             eliminarViaje(id,idEstatus).then(respuesta => {
                                 showSuccess(respuesta.data)
-                                getAllData();
+                                getUpdatedData();
                                 setViajeSeleccionado(null);
                             }).catch(err => {
                                 showSuccess(err)
@@ -283,7 +283,7 @@ function Viajes() {
             event.stopPropagation();
         }
         $(window).unbind()
-        getAllData();
+        getUpdatedData();
         setViajeSeleccionado(null);
         clearData()
         $('.nav-tabs li ').removeClass('active');
@@ -478,7 +478,6 @@ function Viajes() {
         //getInventarioUnidades()
     }, []);
 
-
     useEffect(value => {
         if(viajeSeleccionado){
             let rutaActiva = true;
@@ -513,6 +512,23 @@ function Viajes() {
         })
     }
 
+    function getUpdatedData(){
+        if(filtros == [] || filtros.length === 0){
+            obtenerFechaInicio().then((respuestaUno) => {
+                obtenerFechaFinal().then((respuestaDos) => {
+                    obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
+                        setData(respuesta.data)
+                    })
+                })
+            })
+        } else{
+            obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado, filtros.folio,
+                filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
+                    setData(respuesta.data)
+            })
+        }
+    }
+
     function descargarXML(id, folio) {
         obtenerXML(id).then(({data}) => {
             var filename = folio+".xml";
@@ -529,6 +545,7 @@ function Viajes() {
         })
 
     }
+
     function descargarXMLCFDI(id, folio) {
         obtenerXMLCFDI(id).then(({data}) => {
             var filename = folio+".xml";
@@ -550,6 +567,7 @@ function Viajes() {
         })
 
     }
+
     function descargarXMLCFDITimbrado(id, folio,xml) {
         var filename = folio+".xml";
         var pom = document.createElement('a');
@@ -562,6 +580,7 @@ function Viajes() {
         pom.classList.add('dragout');
         pom.click();
     }
+
     function descargarPDFOpcion1(id,idInforme,folio) {
         obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
             try{
@@ -579,7 +598,6 @@ function Viajes() {
     }
 
     function descargarPDF(idViaje,idInforme,folio) {
-
         setSeleccion({
             m_nIdViaje:idViaje,
             m_nIdInforme:idInforme,
@@ -758,7 +776,6 @@ function Viajes() {
             })
         })
     }
-
 
     /**DISPONIBILIDAD DE EQUIPO*/
 
@@ -1046,10 +1063,9 @@ function Viajes() {
     const showCancelarDialog = (data) => {
         setParadaData(data);
         setEventOptions({...eventOptions, showCancelarParadasDialog: true});
-
     }
 
-    const showSalidaDialog = (e,data) => {
+    const showSalidaDialog = (e, data) => {
         e.preventDefault()
         obtenerParametrosConfiguracion().then(parametros => {
             if (parametros.data.ValidarTimbrado) {
@@ -1093,24 +1109,24 @@ function Viajes() {
         //     if(encontrado){//si encontro valor falso en timbrado
         //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
         //     }else{
-            obtenerTrayectosByRuta(data.m_nIdRuta).then((resp) => {
-                var a=resp.data.find((element)=>element.IdOrigen===data.m_nIdOrigen)
-                setKms(a.Kilometros)
-            })
-                setParadaData(data);
-                setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
+        obtenerTrayectosByRuta(data.m_nIdRuta).then((resp) => {
+            var a=resp.data.find((element)=>element.IdOrigen===data.m_nIdOrigen)
+            setKms(a.Kilometros)
+        })
+            setParadaData(data);
+            setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
         //    }
        //  }).catch((err)=>{
        //     showSuccess(err)
        // })
 
     }
+
     const closeLlegadaDialog = () => {
         setEventOptions({...eventOptions, showLlegadaParadasDialog: false});
     }
 
     function updateSalida(data) {
-        //e.preventDefault();
         var params = {
             //m_dFecha: state.fechaHoraRegistro.split("T")[0],
             //m_tHora: state.fechaHoraRegistro.split("T")[1],
@@ -1139,21 +1155,22 @@ function Viajes() {
             // CreadoPor : this.state.CreadoPor,
             // m_arrInformes : this.state.dataInformes
         }
-
-        agregarViajeSalida(params)
-            .then((respuesta) => {
-                showSuccess(respuesta.data);
-                //getParadasListado(paradaData)
-                getAllData()
-            })
-            .catch((err) => {
-                showSuccess(err.response?.data);
+        agregarViajeSalida(params).then((respuesta) => {
+            let viajeActualizado = viajeSeleccionado;
+            viajeActualizado.m_nIdSalida = respuesta.data.m_nIdViajeSalida;
+            obetenerViajeId(viajeActualizado.m_nIdViaje).then(response => {
+                viajeActualizado.m_arrTrayectos = response.data.m_arrTrayectos;
+                setViajeSeleccionado(viajeActualizado);
+                getUpdatedData();
             });
+            showSuccess("Se actualizó la información con éxito");
+        }).catch((err) => {
+            showSuccess(err.response?.data);
+        });
 
     }
 
     function updateLlegada(data) {
-
         var params = {
             //m_dFecha: state.fechaHoraRegistro.split("T")[0],
             //m_tHora: state.fechaHoraRegistro.split("T")[1],
@@ -1179,19 +1196,19 @@ function Viajes() {
             m_tHoraLlegada: data.horaLlegada,
             m_nTipoCambio: data.tipoDeCambioOrigen
         }
-
-        agregarViajeLlegada(params)
-            .then((respuesta) => {
-                showSuccess(respuesta.data);
-                //getParadasListado(paradaData)
-                getAllData()
-
-            })
-            .catch((err) => {
-                console.log(err);
-                showSuccess(err.response?.data);
+        agregarViajeLlegada(params).then((respuesta) => {
+            let viajeActualizado = viajeSeleccionado;
+            viajeActualizado.m_nIdViajeLlegada = respuesta.data.m_nIdViajeLlegada;
+            obetenerViajeId(viajeActualizado.m_nIdViaje).then(response => {
+                viajeActualizado.m_arrTrayectos = response.data.m_arrTrayectos;
+                setViajeSeleccionado(viajeActualizado);
+                getUpdatedData();
             });
-
+            showSuccess("Se actualizó la información con éxito");
+        }).catch((err) => {
+            console.log(err);
+            showSuccess(err.response?.data);
+        });
     }
 
     const showAsignarOperadorDialog = (data) => {
@@ -1211,6 +1228,10 @@ function Viajes() {
 
     const setDataListado = (listado) => {
         setData(listado)
+    }
+
+    const guardarFiltros = (data) => {
+        setFiltros(data)
     }
 
     const handleCancelar = (e) => {
@@ -1241,6 +1262,7 @@ function Viajes() {
 
         })
     }
+
     function cancelarTrayectos(params){
         cancelarTrayecto(params.id, params).then(({data}) => {
             closeCancelarDialog()
@@ -1522,6 +1544,7 @@ function Viajes() {
                                     <Filtros
                                         listaResultado={setDataListado}
                                         viajes={true}
+                                        guardarFiltros={guardarFiltros}
                                     />
 
                                     <div style={{height: "300px", width: '100%'}}>
@@ -1569,7 +1592,7 @@ function Viajes() {
                                             >
                                                 <List>
                                                     {
-                                                        viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
+                                                        viajeSeleccionado && viajeSeleccionado?.m_arrTrayectos?.map((p, index) => {
 
                                                             const informesFiltrados = paradasListado.filter((i, ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ((viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino))))
 
@@ -1690,7 +1713,7 @@ function Viajes() {
                             {
                                 state.open &&
                                 <AgregarViaje
-                                    reload={getAllData}
+                                    reload={getUpdatedData}
                                     consult={state.agregar === "Consultar"}
                                     modificar={state.agregar === "Modificar"}
                                     select={state.selectViaje}
