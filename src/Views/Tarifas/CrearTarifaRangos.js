@@ -739,20 +739,21 @@ export default function CrearTarifaRangos(props) {
         viajesForaneosListado.forEach(viaje => {
             const origen = origenesDestinosListado.find((i) => i.m_nIdCiudad == viaje.idOrigen);
             const destino = origenesDestinosListado.find((i) => i.m_nIdCiudad == viaje.idDestino);
+            //console.log("viaje: " + viaje.idViaje)
             viaje.grupos.forEach(grupo => {
+                //console.log("\t" + "grupo: " + grupo.nombre);
                 grupo.zonas.forEach(zona => {
-                    let zonaAplica;
-                    obtenerByIdZonaOperativa(zona.m_nIdZona).then(respuesta => {
-                        zonaAplica = respuesta.data.m_bAplicaEntrega;
-                    })
+                    //console.log("\t\t" + "zona: "+ zona.m_sCodigoZona)
                     grupo.rangos.forEach(rango => {
+                        //console.log("\t\t\t" + "rango: " + rango.unidadMedida)
                         grupo.productos.forEach(prod => {
+                            //console.log("\t\t\t\t" + prod.m_sDescripcion)
                             data.push({
                                 Origen: origen?.m_sCiudad,
                                 Destino: destino?.m_sCiudad,
                                 Producto: prod.m_sDescripcion,
                                 Zona_Destino: zona.m_sCodigoZona,
-                                Aplica: zonaAplica ? "No" : "Si",
+                                Aplica: zona.m_bAplicaEntrega ? "No" : "Si",
                                 Minimo: rango.minimo,
                                 Maximo: rango.maximo,
                                 Unidad_de_medida: rango.unidadMedida,
@@ -799,7 +800,8 @@ export default function CrearTarifaRangos(props) {
             idTipoMedida: viaje.IdTipoMedida,
             zonas: data.Zonas.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
                 m_nIdZona: j.IdZonaOperativa,
-                m_sCodigoZona: j.CodigoZona
+                m_sCodigoZona: j.CodigoZona,
+                m_bAplicaEntrega: j?.AplicaEntrega
             })),
             idConcepto: viaje.IdConcepto,
             rangos: data.Conceptos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(rango => ({
@@ -845,7 +847,8 @@ export default function CrearTarifaRangos(props) {
                 nombre: grupo.Referencia || '',
                 zonas: data.Zonas.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
                     m_nIdZona: j.IdZonaOperativa,
-                    m_sCodigoZona: j.CodigoZona
+                    m_sCodigoZona: j.CodigoZona,
+                    m_bAplicaEntrega: j?.AplicaEntrega
                 })),
                 rangos: data.Conceptos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(rango => ({
                     id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),

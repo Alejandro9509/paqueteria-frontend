@@ -223,7 +223,8 @@ export default function TarifasRangos(props) {
             idTipoMedida: viaje.IdTipoMedida,
             zonas: data.Zonas.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
                 m_nIdZona: j.IdZonaOperativa,
-                m_sCodigoZona: j.CodigoZona
+                m_sCodigoZona: j.CodigoZona,
+                m_bAplicaEntrega: j?.AplicaEntrega
             })),
             idConcepto: viaje.IdConcepto,
             rangos: data.Conceptos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(rango => ({
@@ -270,7 +271,8 @@ export default function TarifasRangos(props) {
                 nombre: grupo.Referencia || '',
                 zonas: data.Zonas.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
                     m_nIdZona: j.IdZonaOperativa,
-                    m_sCodigoZona: j.CodigoZona
+                    m_sCodigoZona: j.CodigoZona,
+                    m_bAplicaEntrega: j?.AplicaEntrega
                 })),
                 rangos: data.Conceptos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(rango => ({
                     id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
