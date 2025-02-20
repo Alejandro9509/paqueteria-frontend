@@ -59,6 +59,15 @@ export class AplicationProvider extends Component{
 
     handleLogout() {
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("Back");
+        localStorage.removeItem("Permisos")
+        localStorage.removeItem("UsuarioId");
+        localStorage.removeItem("Sucursal");
+        localStorage.removeItem("RFC");
+        localStorage.removeItem("TipoUsuario");
+        localStorage.removeItem("Email");
+        localStorage.removeItem("Usuario");
+        localStorage.removeItem("Nombre");
         this.setState({showModal: false})
         // this.props.history.push('/')
     }
@@ -71,6 +80,15 @@ export class AplicationProvider extends Component{
         const isTimedOut = this.state.isTimedOut
         if (isTimedOut) {
             localStorage.removeItem("accessToken");
+            localStorage.removeItem("Back");
+            localStorage.removeItem("Permisos")
+            localStorage.removeItem("UsuarioId");
+            localStorage.removeItem("Sucursal");
+            localStorage.removeItem("RFC");
+            localStorage.removeItem("TipoUsuario");
+            localStorage.removeItem("Email");
+            localStorage.removeItem("Usuario");
+            localStorage.removeItem("Nombre");
             window.location.replace("/");
         } else {
             this.setState({showModal: true})
