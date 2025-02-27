@@ -303,23 +303,6 @@ export default function CrearTarifaRangos(props) {
      * guardar los datos modificados ya se tengan estos viajes en el state 'viajeForaneo'
      * */
     const handleChangeViajeForaneo = (viaje) => {
-        /*let newViajes = []
-        viajesForaneosListado.forEach(i => {
-            newViajes.push(i)
-        })
-        newViajes.forEach(i => {
-            if (i.idViaje === viaje.idViaje ){
-                i.idOrigen = viaje.idOrigen
-                i.idTipoMedida = viaje.idTipoMedida
-                i.fleteMinimo = viaje.fleteMinimo
-                i.idDestino = viaje.idDestino
-                i.grupos = viaje.grupos
-            }
-        })
-        setViajesForaneosListado(newViajes)*/
-        console.log(viaje);
-        console.log(viajeForaneo)
-        console.log(viajesForaneosListado)
         setViajeForaneo(viaje);
     }
 
@@ -337,8 +320,88 @@ export default function CrearTarifaRangos(props) {
                 i.grupos = viajeForaneo.grupos
             }
         })
-        setViajesForaneosListado(newViajes);
-        setOpenForaneo(false);
+        let duplicado = false;
+        let duplicadoInterno = false;
+        let zonasRepetidas = "Zonas duplicadas: ";
+        let productosDuplicados = "Productos duplicados: ";
+        let gruposRepetidos = "";
+        /*
+        * Revisamos si en el listado de viajes de la tarifa hay alguno con el mismo origen-destino (sin tomar en cuenta
+        * el viaje que estamos modificando) y checamos si en sus zonas y productos hay coincidencias con el viaje
+        * que estamos modificando
+        * */
+        viajesForaneosListado.forEach(viaje => {
+            if(viaje.idOrigen === viajeForaneo.idOrigen && viaje.idDestino == viajeForaneo.idDestino && viajeForaneo.idViaje != viaje.idViaje){
+                viajeForaneo.grupos.forEach(grupoViajeNuevo => {
+                    const zonasNuevas = grupoViajeNuevo.zonas.map(i => (i.m_nIdZona))
+                    const productosNuevos = grupoViajeNuevo.productos.map(i => (i.m_nIdProducto))
+                    // console.log(zonasNuevas);
+                    // console.log(productosNuevos);
+
+                    viaje.grupos.forEach(grupoViaje => {
+                        const zonas = grupoViaje.zonas.map(i => (i.m_nIdZona))
+                        const productos = grupoViaje.productos.map(i => (i.m_nIdProducto))
+                        // console.log(zonas);
+                        // console.log(productos);
+
+                        if(zonasNuevas.some(z => zonas.includes(z)) && productosNuevos.some(p => productos.includes(p))){
+                            duplicado = true;
+                            grupoViaje.zonas.forEach(item => {
+                                if(zonasNuevas.includes(item.m_nIdZona)){
+                                    zonasRepetidas += item.m_sCodigoZona + ", "
+                                }
+                            })
+                            grupoViaje.productos.forEach(item => {
+                                if(productosNuevos.includes(item.m_nIdProducto)){
+                                    productosDuplicados += item.m_sDescripcion + ", "
+                                }
+                            })
+                        }
+                    })
+                })
+            }
+        })
+        /*
+        * Ahora después de revisar la lista de viajes, debemos verificar si en los grupos del viaje que modificamos hay
+        * repeticiones
+        * */
+        let gruposBusqueda = viajeForaneo.grupos.map(i => (i));
+        viajeForaneo.grupos.forEach(grupo => {
+            const zonas = grupo.zonas.map(i => (i.m_nIdZona))
+            const productos = grupo.productos.map(i => (i.m_nIdProducto))
+            // console.log("Comparamos desde " + grupo.nombre)
+            // console.log(zonas);
+            // console.log(productos);
+            gruposBusqueda.filter(i => (i.idGrupo !== grupo.idGrupo)).forEach(g => {
+                // console.log("Con el grupo " + g.nombre);
+                const z = g.zonas.map(i => (i.m_nIdZona))
+                const p = g.productos.map(i => (i.m_nIdProducto))
+                // console.log(z);
+                // console.log(p);
+                if(z.some(zona => zonas.includes(zona)) && p.some(prod => productos.includes(prod))){
+                    duplicadoInterno = true;
+                    gruposRepetidos += g.nombre + "-" + grupo.nombre + ", ";
+                }
+            })
+            gruposBusqueda = gruposBusqueda.filter(j => (j.idGrupo !== grupo.idGrupo));
+        })
+
+        zonasRepetidas = zonasRepetidas.substring(0, zonasRepetidas.length - 2);
+        productosDuplicados = productosDuplicados.substring(0, productosDuplicados.length - 2);
+        if(duplicado){
+            showSuccess("En el listado de viajes ya existe un viaje con un grupo con la misma relación de " +
+                "origen-destino, zonas y productos. Favor de revisar que la información no se repita. "
+                + zonasRepetidas + ". " + productosDuplicados);
+        }
+        if(duplicadoInterno){
+            showSuccess("Dentro de este mismo viaje hay grupos que tienen la misma relación zona-producto. " +
+                "Favor de revisar los grupos: " + gruposRepetidos);
+        }
+        if(!duplicado && !duplicadoInterno) {
+            showSuccess("Guardado");
+            setViajesForaneosListado(newViajes);
+            setOpenForaneo(false);
+        }
     }
 
     const handleOnAgregarViajeLocal = (e) => {
@@ -377,6 +440,8 @@ export default function CrearTarifaRangos(props) {
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
+            fleteMinimo: 0,
+            nuevo: true
         })
         viajes.push(idGenerated);
         setViajesNuevos(viajes);
@@ -389,6 +454,8 @@ export default function CrearTarifaRangos(props) {
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
+            fleteMinimo: 0,
+            nuevo: true
         });
         setOpenForaneo(true);
     }
@@ -822,6 +889,27 @@ export default function CrearTarifaRangos(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {
+                        let viaje = viajesForaneosListado.find((i) => i.idViaje == viajeForaneo.idViaje);
+                        const esNuevo = viaje?.nuevo;
+                        if(esNuevo == true){
+                            viaje.idOrigen = null;
+                            viaje.idOrigen = null;
+                            viaje.idTipoMedida = null;
+                            viaje.idDestino = null;
+                            viaje.grupos = [];
+                            viaje.fleteMinimo = 0;
+                            viaje.nuevo = true;
+
+                            setViajeForaneo({
+                                idViaje: viajeForaneo.idViaje,
+                                idOrigen: null,
+                                idTipoMedida: null,
+                                idDestino: null,
+                                grupos: [],
+                                fleteMinimo: 0,
+                                nuevo: true
+                            });
+                        }
                         setOpenForaneo(false);
                         setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === state.idForaneo));
                     }} style={{fontSize: '1em'}}>
@@ -1241,7 +1329,6 @@ export default function CrearTarifaRangos(props) {
                                         const copia = [...viajesForaneosListado]
                                         const modificable = copia.map((item) => ({...item}));
                                         const target = modificable.find(i => i.idViaje === newModel[0]);
-                                        //console.log(target);//target.map((item) => ({...item}));
                                         let viaje = (({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}) => ({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}))(target);
                                         setViajeForaneo(viaje);
                                     }}
