@@ -49,6 +49,7 @@ import {
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
+    obtenerInformesId,
     obtenerXMLCFDI
 } from "../Util/Contexts/InformesContext";
 import DetalleInforme from "./Viajes/DetalleInforme";
@@ -526,6 +527,23 @@ function Viajes() {
                 filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
                     setData(respuesta.data)
             })
+        }
+    }
+
+    function getUpdatedData(){
+        if(filtros == [] || filtros.length === 0){
+            obtenerFechaInicio().then((respuestaUno) => {
+                obtenerFechaFinal().then((respuestaDos) => {
+                    obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
+                        setData(respuesta.data)
+                    })
+                })
+            })
+        } else{
+            obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado, filtros.folio,
+                filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
+                    setData(respuesta.data)
+                })
         }
     }
 
@@ -1007,7 +1025,7 @@ function Viajes() {
             renderCell: (row:GridRenderCellParams<any,any>) => {
                 return (
                     <Link style={{cursor: "pointer"}} onClick={() => {
-                        setInformeSeleccionado(row.row);
+                        getDataInforme(row.row);
                         setEventOptions({...eventOptions, showDetalleGuias: true})
                     }}>
                         Ver Guías
@@ -1058,6 +1076,12 @@ function Viajes() {
             //setViajeSeleccionado(row)
             setParadasListado(respuesta.data);
         });
+    }
+
+    function getDataInforme(informe){
+        obtenerInformesId(informe.m_nIdInforme).then((respuesta) => {
+            setInformeSeleccionado(respuesta.data);
+        })
     }
 
     const showCancelarDialog = (data) => {
@@ -1162,6 +1186,24 @@ function Viajes() {
                 viajeActualizado.m_arrTrayectos = response.data.m_arrTrayectos;
                 setViajeSeleccionado(viajeActualizado);
                 getUpdatedData();
+                let rutaActiva = true;
+                viajeActualizado.m_arrTrayectos.map((p, index) => {
+                    if(viajeActualizado.m_sEstatus === "Cancelado" || viajeActualizado.m_nIdEstatusViaje == 10){
+                        p.deshabilitado = true;
+                    }else{
+                        if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {
+                            p.deshabilitado = false
+                        } else if ((!p.m_nIdSalida || p.m_bSalidaCancelada) && rutaActiva) {
+                            p.deshabilitado = false
+                            rutaActiva = false
+                        } else if (p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva) {
+                            p.deshabilitado = false
+                            rutaActiva = false
+                        } else {
+                            p.deshabilitado = true
+                        }
+                    }
+                })
             });
             showSuccess("Se actualizó la información con éxito");
         }).catch((err) => {
@@ -1203,6 +1245,24 @@ function Viajes() {
                 viajeActualizado.m_arrTrayectos = response.data.m_arrTrayectos;
                 setViajeSeleccionado(viajeActualizado);
                 getUpdatedData();
+                let rutaActiva = true;
+                viajeActualizado.m_arrTrayectos.map((p, index) => {
+                    if(viajeActualizado.m_sEstatus === "Cancelado" || viajeActualizado.m_nIdEstatusViaje == 10){
+                        p.deshabilitado = true;
+                    }else{
+                        if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {
+                            p.deshabilitado = false
+                        } else if ((!p.m_nIdSalida || p.m_bSalidaCancelada) && rutaActiva) {
+                            p.deshabilitado = false
+                            rutaActiva = false
+                        } else if (p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva) {
+                            p.deshabilitado = false
+                            rutaActiva = false
+                        } else {
+                            p.deshabilitado = true
+                        }
+                    }
+                })
             });
             showSuccess("Se actualizó la información con éxito");
         }).catch((err) => {

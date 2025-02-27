@@ -70,8 +70,7 @@ function Embalaje() {
                 showSuccess("Error el codigo debe ser menor a 10 digitos")
          }else if(state.CodigoEmbalaje <= 0){
             showSuccess("Error el codigo de embalaje debe ser mayor a 0")
-         }
-        else{
+         } else{
             var params = {
                 "m_nIdEmbalaje": state.IdEmbalaje,
                 "m_sCodigo": state.CodigoEmbalaje,

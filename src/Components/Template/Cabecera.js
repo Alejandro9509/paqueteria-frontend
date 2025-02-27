@@ -44,6 +44,15 @@ function Cabecera({ titulo, children }) {
 
     function logout() {
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("Back");
+        localStorage.removeItem("Permisos")
+        localStorage.removeItem("UsuarioId");
+        localStorage.removeItem("Sucursal");
+        localStorage.removeItem("RFC");
+        localStorage.removeItem("TipoUsuario");
+        localStorage.removeItem("Email");
+        localStorage.removeItem("Usuario");
+        localStorage.removeItem("Nombre");
     }
     const [atajos, setAtajos] = React.useState([])
     const [shortcutsVisible, setShortcutsVisible] = React.useState(false);
