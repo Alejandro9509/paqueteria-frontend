@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useMemo, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     Button,
     createFilterOptions,
@@ -98,6 +98,7 @@ export default function CrearTarifaRangos(props) {
     const [filtroMM,setFiltroMM]=useState({activo:false,origen:-1,destino:-1,producto:null})
     const [showMM,setShowMM]=useState(false)
     const [showManiobras,setShowManiobras]=useState(false)
+    const navegacion = useRef(null);
     const [viajesNuevos, setViajesNuevos] = useState([]);
     const [showNuevos, setShowNuevos] = useState(true);
     const [openForaneo, setOpenForaneo] = useState(false);
@@ -180,7 +181,6 @@ export default function CrearTarifaRangos(props) {
             },
         }
     ]);
-    const navegacion = useRef(null);
 
     const getAllSucursales = () => {
         obtenerSucursales().then(respuesta => {
