@@ -1,13 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import React, {useEffect, useMemo, useState} from 'react';
 import {
     Button,
     createFilterOptions,
-    Dialog, DialogActions,
+    Dialog,
     DialogContent,
     DialogTitle,
     FormControl,
-    FormControlLabel,
     Grid,
     InputLabel,
     List,
@@ -15,7 +13,7 @@ import {
     ListItemText,
     MenuItem,
     Paper,
-    Select, Switch,
+    Select,
     TextField,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -28,7 +26,6 @@ import {
     obtenerListadoZonaOperativaByOrigenDestino,
     obtenerListadoZonaOperativaBySucursal
 } from "../../Util/Contexts/ZonaOperativaContext";
-import {dataGridLocaleText} from "../../Constants";
 import {getCurrentDate, getRandomId} from "../../Util/Util";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
 import IconButton from "@mui/material/IconButton";
@@ -50,10 +47,6 @@ import {Clear, ExpandLess} from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from '@mui/material/Autocomplete';
 import Tooltip from "@mui/material/Tooltip";
-import {fil} from "date-fns/locale";
-import {StyledEngineProvider, ThemeProvider} from "@mui/material/styles";
-import {DataGrid} from "@mui/x-data-grid";
-import {confirmAlert} from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -95,88 +88,6 @@ export default function CrearTarifaRangos(props) {
     const [showMM,setShowMM]=useState(false)
     const [showManiobras,setShowManiobras]=useState(false)
     const navegacion = useRef(null);
-    const [viajesNuevos, setViajesNuevos] = useState([]);
-    const [showNuevos, setShowNuevos] = useState(true);
-    const [openForaneo, setOpenForaneo] = useState(false);
-    const [viajeForaneo, setViajeForaneo] = useState({});
-
-    const columnasForaneos = React.useMemo(() => [
-        {
-            headerName: "Origen",
-            field: "idOrigen",
-            width: 150,
-            flex: 1,
-            valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
-        },
-        {
-            headerName: "Destino",
-            field: "idDestino",
-            width: 150,
-            flex: 1,
-            valueFormatter: ({ value }) => origenesDestinosListado.find((i) => i.m_nIdCiudad === value)?.m_sCiudad
-        },
-        {
-            headerName: "Tipo Medida",
-            field: "idTipoMedida",
-            width: 100,
-            flex: 1,
-            valueFormatter: ({ value }) => {
-                switch (value){
-                    case 1: return "Peso";
-                    case 2: return "Pieza";
-                    case 3: return "Porcentaje";
-                    default: return "";
-                }
-            }
-        },
-        {
-            headerName: "Flete mínimo",
-            field: "fleteMinimo",
-            width: 100,
-            flex: 1,
-        },
-        {
-            headerName: "Acciones",
-            sortable: false,
-            filterable: false,
-            width: 100,
-            field: "",
-            align: 'center',
-            flex: 1,
-            renderCell: (row) => {
-                return (
-                    <div>
-                        <Tooltip title={props.disabled ? "Consultar" : "Modificar"}>
-                            <a onClick={() => {handleShowModificar()}} className="btn btn-default btn-xs">
-                                <i className="fa fa-external-link" style={{color: "#F9A03E"}}/>
-                            </a>
-                        </Tooltip>
-                        <Tooltip title="Eliminar" disabled={props.disabled}>
-                            <a
-                                href="#"
-                                className="btn btn-default btn-xs"
-                                onClick={() => confirmAlert({
-                                    title: 'Confirmar Eliminar',
-                                    message: '¿Está seguro de eliminar el registro?',
-                                    buttons: [
-                                        {
-                                            label: 'Si',
-                                            onClick: () => handleDeleteViajeForaneo(viajeForaneo)
-                                        },
-                                        {
-                                            label: 'No',
-                                        }
-                                    ]
-                                })}
-                            >
-                                <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
-                            </a>
-                        </Tooltip>
-                    </div>
-                );
-            },
-        }
-    ]);
 
     const getAllSucursales = () => {
         obtenerSucursales().then(respuesta => {
@@ -297,167 +208,53 @@ export default function CrearTarifaRangos(props) {
         setManiobrasTarifa(maniobras)
     }
 
-    /**
-     * Debido a que la ventana de visualización de viaje foráneo se encuentra de forma exterior se guardan los datos
-     * del viaje modificado en la ventana en este componente en paralelo, esto para que cuando este componente quiera
-     * guardar los datos modificados ya se tengan estos viajes en el state 'viajeForaneo'
-     * */
     const handleChangeViajeForaneo = (viaje) => {
-        setViajeForaneo(viaje);
-    }
-
-    const submmitViajeForaneo = () => {
         let newViajes = []
         viajesForaneosListado.forEach(i => {
             newViajes.push(i)
         })
         newViajes.forEach(i => {
-            if (i.idViaje === viajeForaneo.idViaje ){
-                i.idOrigen = viajeForaneo.idOrigen
-                i.idTipoMedida = viajeForaneo.idTipoMedida
-                i.fleteMinimo = viajeForaneo.fleteMinimo
-                i.idDestino = viajeForaneo.idDestino
-                i.grupos = viajeForaneo.grupos
+            if (i.idViaje === viaje.idViaje ){
+                i.idOrigen = viaje.idOrigen
+                i.idTipoMedida = viaje.idTipoMedida
+                i.fleteMinimo = viaje.fleteMinimo
+                i.idDestino = viaje.idDestino
+                i.grupos = viaje.grupos
             }
         })
-        let duplicado = false;
-        let duplicadoInterno = false;
-        let zonasRepetidas = "Zonas duplicadas: ";
-        let productosDuplicados = "Productos duplicados: ";
-        let gruposRepetidos = "";
-        /*
-        * Revisamos si en el listado de viajes de la tarifa hay alguno con el mismo origen-destino (sin tomar en cuenta
-        * el viaje que estamos modificando) y checamos si en sus zonas y productos hay coincidencias con el viaje
-        * que estamos modificando
-        * */
-        viajesForaneosListado.forEach(viaje => {
-            if(viaje.idOrigen === viajeForaneo.idOrigen && viaje.idDestino == viajeForaneo.idDestino && viajeForaneo.idViaje != viaje.idViaje){
-                viajeForaneo.grupos.forEach(grupoViajeNuevo => {
-                    const zonasNuevas = grupoViajeNuevo.zonas.map(i => (i.m_nIdZona))
-                    const productosNuevos = grupoViajeNuevo.productos.map(i => (i.m_nIdProducto))
-                    // console.log(zonasNuevas);
-                    // console.log(productosNuevos);
-
-                    viaje.grupos.forEach(grupoViaje => {
-                        const zonas = grupoViaje.zonas.map(i => (i.m_nIdZona))
-                        const productos = grupoViaje.productos.map(i => (i.m_nIdProducto))
-                        // console.log(zonas);
-                        // console.log(productos);
-
-                        if(zonasNuevas.some(z => zonas.includes(z)) && productosNuevos.some(p => productos.includes(p))){
-                            duplicado = true;
-                            grupoViaje.zonas.forEach(item => {
-                                if(zonasNuevas.includes(item.m_nIdZona)){
-                                    zonasRepetidas += item.m_sCodigoZona + ", "
-                                }
-                            })
-                            grupoViaje.productos.forEach(item => {
-                                if(productosNuevos.includes(item.m_nIdProducto)){
-                                    productosDuplicados += item.m_sDescripcion + ", "
-                                }
-                            })
-                        }
-                    })
-                })
-            }
-        })
-        /*
-        * Ahora después de revisar la lista de viajes, debemos verificar si en los grupos del viaje que modificamos hay
-        * repeticiones
-        * */
-        let gruposBusqueda = viajeForaneo.grupos.map(i => (i));
-        viajeForaneo.grupos.forEach(grupo => {
-            const zonas = grupo.zonas.map(i => (i.m_nIdZona))
-            const productos = grupo.productos.map(i => (i.m_nIdProducto))
-            // console.log("Comparamos desde " + grupo.nombre)
-            // console.log(zonas);
-            // console.log(productos);
-            gruposBusqueda.filter(i => (i.idGrupo !== grupo.idGrupo)).forEach(g => {
-                // console.log("Con el grupo " + g.nombre);
-                const z = g.zonas.map(i => (i.m_nIdZona))
-                const p = g.productos.map(i => (i.m_nIdProducto))
-                // console.log(z);
-                // console.log(p);
-                if(z.some(zona => zonas.includes(zona)) && p.some(prod => productos.includes(prod))){
-                    duplicadoInterno = true;
-                    gruposRepetidos += g.nombre + "-" + grupo.nombre + ", ";
-                }
-            })
-            gruposBusqueda = gruposBusqueda.filter(j => (j.idGrupo !== grupo.idGrupo));
-        })
-
-        zonasRepetidas = zonasRepetidas.substring(0, zonasRepetidas.length - 2);
-        productosDuplicados = productosDuplicados.substring(0, productosDuplicados.length - 2);
-        if(duplicado){
-            showSuccess("En el listado de viajes ya existe un viaje con un grupo con la misma relación de " +
-                "origen-destino, zonas y productos. Favor de revisar que la información no se repita. "
-                + zonasRepetidas + ". " + productosDuplicados);
-        }
-        if(duplicadoInterno){
-            showSuccess("Dentro de este mismo viaje hay grupos que tienen la misma relación zona-producto. " +
-                "Favor de revisar los grupos: " + gruposRepetidos);
-        }
-        if(!duplicado && !duplicadoInterno) {
-            showSuccess("Guardado");
-            setViajesForaneosListado(newViajes);
-            setOpenForaneo(false);
-        }
+        setViajesForaneosListado(newViajes)
     }
 
     const handleOnAgregarViajeLocal = (e) => {
         e.preventDefault()
 
-        const idGenerated = getRandomId();
         var viajeLocal = [...viajesLocalesListado]
-        var viajes = [...viajesNuevos]
-
+        console.log(viajeLocal)
         viajeLocal.push({
-            idViaje: idGenerated,
+            idViaje: getRandomId(),
             idSucursal: null,
             zonas: [],
             idConcepto: null,
             rangos: [],
             productos: []
         })
-        viajes.push(idGenerated);
-        setViajesNuevos(viajes);
-        setViajesLocalesListado(viajeLocal);
-        navegacion.current.scrollIntoView();
+        setViajesLocalesListado(viajeLocal)
     }
 
     const handleDeleteViajeLocal = (viaje) => {
         setViajesLocalesListado(viajesLocalesListado.filter(i => i.idViaje !== viaje.idViaje))
-        setViajesNuevos(viajesNuevos.filter(i => i !== viaje.idViaje))
     }
 
     const handleOnAgregarViajeForaneo = () => {
-        const idGenerated = getRandomId();
         var viajeForaneo = [...viajesForaneosListado]
-        var viajes = [...viajesNuevos]
         viajeForaneo.push({
-            idViaje: idGenerated,
+            idViaje: getRandomId(),
             idOrigen: null,
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
-            fleteMinimo: 0,
-            nuevo: true
         })
-        viajes.push(idGenerated);
-        setViajesNuevos(viajes);
         setViajesForaneosListado(viajeForaneo)
-
-        setState({...state, idForaneo: idGenerated});
-        setViajeForaneo({
-            idViaje: idGenerated,
-            idOrigen: null,
-            idTipoMedida: null,
-            idDestino: null,
-            grupos: [],
-            fleteMinimo: 0,
-            nuevo: true
-        });
-        setOpenForaneo(true);
     }
 
     const handleDeleteViajeForaneo = (viaje) => {
@@ -487,10 +284,6 @@ export default function CrearTarifaRangos(props) {
             setZonasListado(respuesta.data)
             setShowDialogZonas(true)
         })
-    }
-
-    const handleShowModificar = () => {
-        setOpenForaneo(true)
     }
 
     /**Valida que el concepto recibido sea uno de los configurados(en parametros de configuracion) como recoleccion o entrega*/
@@ -832,22 +625,6 @@ export default function CrearTarifaRangos(props) {
         return tarifa
     }
 
-    const getRows = () => {
-        if(filtroMM.activo){
-            return viajesForaneosListado.filter(v => (
-                        (filtroMM.origen!=-1 ? v.idOrigen==filtroMM.origen : true) &&
-                        (filtroMM.destino!=-1 ? v.idDestino==filtroMM.destino : true) &&
-                        (filtroMM.producto!=null ?
-                            (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto ).length > 0).length > 0)
-                            :
-                            true
-                        )
-                    ) || (showNuevos && viajesNuevos.includes(v.idViaje)) )
-        }else{
-            return viajesForaneosListado;
-        }
-    }
-
     return (
         <div>
             <Dialog
@@ -866,61 +643,6 @@ export default function CrearTarifaRangos(props) {
                 onClose={handleCloseDialogTarifas}
                 rows={props.tarifasListado}
             />
-            <Dialog open={openForaneo} onClose={() => setOpenForaneo(false)} fullWidth maxWidth="100%">
-                <DialogTitle>
-                    Viaje Milla Intermedia
-                </DialogTitle>
-                <DialogContent style={{minHeight: '500px'}}>
-                    <ViajeForaneo
-                        key={state.idForaneo}
-                        viaje={viajeForaneo}
-                        origenesDestinosListado={origenesDestinosListado}
-                        handleChangeViajeForaneo={handleChangeViajeForaneo}
-                        tiposCalculoListado={tiposCalculoListado}
-                        unidadesMedidaListado={unidadesMedidaListado}
-                        handleDeleteViajeForaneo={handleDeleteViajeForaneo}
-                        zonasListado={zonasListado}
-                        onRequestZonasByDestino={handleOnRequestZonasByDestino}
-                        productosListado={productosListado}
-                        disabled={props.disabled}
-                        showDialogZonas={showDialogZonas}
-                        handleShowDialogZonas={handleShowDialogZonas}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => {
-                        let viaje = viajesForaneosListado.find((i) => i.idViaje == viajeForaneo.idViaje);
-                        const esNuevo = viaje?.nuevo;
-                        if(esNuevo == true){
-                            viaje.idOrigen = null;
-                            viaje.idOrigen = null;
-                            viaje.idTipoMedida = null;
-                            viaje.idDestino = null;
-                            viaje.grupos = [];
-                            viaje.fleteMinimo = 0;
-                            viaje.nuevo = true;
-
-                            setViajeForaneo({
-                                idViaje: viajeForaneo.idViaje,
-                                idOrigen: null,
-                                idTipoMedida: null,
-                                idDestino: null,
-                                grupos: [],
-                                fleteMinimo: 0,
-                                nuevo: true
-                            });
-                        }
-                        setOpenForaneo(false);
-                        setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === state.idForaneo));
-                    }} style={{fontSize: '1em'}}>
-                        Cerrar
-                    </Button>
-                    <Button onClick={() => submmitViajeForaneo()}
-                            color={"primary"} style={{fontSize: '1em'}}>
-                        Guardar
-                    </Button>
-                </DialogActions>
-            </Dialog>
             <div>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
@@ -986,24 +708,6 @@ export default function CrearTarifaRangos(props) {
                             <Button size={"large"} style={{fontSize:".9em"}} fullWidth onClick={handleShowDialogTarifas}
                                     variant={"outlined"} disabled={props.disabled} color={"primary"}
                             >Importar tarifa existente</Button>
-                        </Grid>
-                        <Grid item xs>
-                            <label className="input select">
-                                <StyledEngineProvider injectFirst>
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={showNuevos}
-                                                onChange={(e) => setShowNuevos(e.target.checked)}
-                                                disabled={props.disabled}
-                                                name="mostrarNuevos"
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Mostrar siempre viajes recién creados"
-                                    />
-                                </StyledEngineProvider>
-                            </label>
                         </Grid>
 
                     </Grid>
@@ -1142,7 +846,7 @@ export default function CrearTarifaRangos(props) {
                                 && (filtroPMUM.concepto!=-1 ? v.idConcepto==filtroPMUM.concepto : true)
                                 && v.productos.filter(prod=>(filtroPMUM.producto!=null ? prod.m_nIdProducto==filtroPMUM.producto.m_nIdProducto : true)).length > 0
                                 )
-                                || (showNuevos && viajesNuevos.includes(v.idViaje)) ) //No vamos a filtrar los viajes nuevos
+                            )
                             : viajesLocalesListado).map((viaje) =>
                             <ViajeLocal
                                 key={viaje.idViaje}
@@ -1301,53 +1005,8 @@ export default function CrearTarifaRangos(props) {
                         </Grid>
                     </Grid>
                     <div className='MM hide'>
-                        <div align={"center"} style={{marginLeft: "15%", width:"60%"}} >
-                            {
-                                viajesForaneosListado &&
-                                <DataGrid
-                                    columns={columnasForaneos}
-                                    rows={getRows()}
-                                    locateText={dataGridLocaleText}
-                                    pagination
-                                    pageSize={20}
-                                    getRowId={(row) => row.idViaje}
-                                    autoHeight={true}
-                                    getRowClassName={(params) => {
-                                        return (params.row.idTipoMedida === null || params.row.idOrigen === null ||
-                                            params.row.idDestino === null) ? "highlight" : "";
-                                    }}
-                                    sx={{
-                                        ".highlight": {
-                                            bgcolor: "#87de9e"
-                                        },
-                                    }}
-                                    onRowSelectionModelChange={(newModel)=>{
-                                        if(newModel.length<1)
-                                            return;
-                                        setState({...state, idForaneo: newModel[0]});
-
-                                        const copia = [...viajesForaneosListado]
-                                        const modificable = copia.map((item) => ({...item}));
-                                        const target = modificable.find(i => i.idViaje === newModel[0]);
-                                        let viaje = (({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}) => ({fleteMinimo, grupos, idOrigen, idDestino, idTipoMedida, idViaje}))(target);
-                                        setViajeForaneo(viaje);
-                                    }}
-                                />
-                            }
-                        </div>
-                    {/*
-                        (
-                            filtroMM.activo ?
-                                viajesForaneosListado.filter(v => (
-                                (filtroMM.origen!=-1 ? v.idOrigen==filtroMM.origen : true) &&
-                                (filtroMM.destino!=-1 ? v.idDestino==filtroMM.destino : true) &&
-                                (filtroMM.producto!=null ?
-                                    (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto ).length > 0).length > 0)
-                                    :
-                                    true
-                                )
-                                ) || (showNuevos && viajesNuevos.includes(v.idViaje)) )
-                            : viajesForaneosListado).map((viaje) =>
+                    {
+                        (filtroMM.activo? viajesForaneosListado.filter(v=>(filtroMM.origen!=-1?v.idOrigen==filtroMM.origen:true) && (filtroMM.destino!=-1?v.idDestino==filtroMM.destino:true) && (filtroMM.producto!=null? (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto  ).length>0 ).length>0 ) :true) ) :viajesForaneosListado).map((viaje) =>
                             <ViajeForaneo
                                 key={viaje.idViaje}
                                 viaje={viaje}
@@ -1363,7 +1022,7 @@ export default function CrearTarifaRangos(props) {
                                 showDialogZonas={showDialogZonas}
                                 handleShowDialogZonas={handleShowDialogZonas}
                             />
-                        )*/
+                        )
                     }
                     </div>
                 </Paper>
