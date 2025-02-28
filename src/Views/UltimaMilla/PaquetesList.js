@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
+import {withStyles} from "@mui/styles";
 
 const PREFIX = 'PaquetesList';
 
@@ -33,6 +34,20 @@ const Root = styled('div')(({theme}) => ({
         width: 1,
     }
 }));
+
+const useStyles = theme => ({
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    }
+});
 
 class PaquetesList extends Component {
     constructor(props) {
@@ -326,4 +341,4 @@ class PaquetesList extends Component {
 
 PaquetesList.propTypes = {};
 
-export default (PaquetesList);
+export default withStyles(useStyles) (PaquetesList);
