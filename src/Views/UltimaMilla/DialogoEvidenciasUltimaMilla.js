@@ -62,7 +62,8 @@ export default function DialogoEvidenciasUltimaMilla(props) {
                                                 style={{position: "absolute"}}>
                                             <DownloadIcon fontSize={'large'} />
                                         </Button>
-                                        <img style={{width: "560px", height: "380px",paddingBottom:"20px",paddingRight:"15px" ,display: "block"}}
+                                        <img style={{width: "auto", height: "auto", minHeight: "500px",
+                                            paddingBottom:"20px", paddingRight:"15px", display: "block"}}
                                              src={`data:image/jpeg;base64,${item.m_sImagen}`} alt={''}/>
                                     </div>
                                 </Grid>
