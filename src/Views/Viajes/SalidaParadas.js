@@ -174,232 +174,241 @@ export default function SalidaParadas(props){
 
     return (
         <Root onSubmit={onSubmit}>
-            <Grid container spacing={2}>
-                <Grid item xs={2}>
-                    <TextField
-                        id="sucursal-text"
-                        margin="dense"
-                        disabled
-                        label="Sucursal"
-                        variant="outlined"
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={data.sucursal}/>
+            <ul style={{
+                width: "100%",
+                display: "flex",
+                flexWrap: "wrap",
+                listStyle: "none",
+                padding: "5px",
+                marginTop: "5px"
+            }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={2}>
+                        <TextField
+                            id="sucursal-text"
+                            margin="dense"
+                            disabled
+                            label="Sucursal"
+                            variant="outlined"
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            value={data.sucursal}/>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            id={'recorrido-text'}
+                            margin="dense"
+                            disabled
+                            label={"Viaje"}
+                            variant={"outlined"}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                            value={data.recorrido}/>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            id="fecha"
+                            margin="dense"
+                            disabled
+                            label="Fecha"
+                            variant="outlined"
+                            className="form-control"
+                            InputProps={{readOnly: true,}}
+                            value={data.fecha}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            id={"hora"}
+                            InputProps={{readOnly: true,}}
+                            margin={"dense"}
+                            disabled
+                            label={"Hora"}
+                            variant={"outlined"}
+                            value={data.hora}
+                        />
+                    </Grid>
+                    <Grid item xs={4}/>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"remolqueUno"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"Remolque 1"}
+                            variant={"outlined"}
+                            value={data.remolqueUno}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            id="estatusRemolqueUno"
+                            select
+                            margin={"dense"}
+                            value={data.idEstatusRemolqueUno}
+                            onChange={handleChangeEstatusRemolqueUno}
+                            variant="outlined"
+                        >
+                            {estatusRemolqueListado.map((estatus) => (
+                                <MenuItem key={estatus.id} value={estatus.id}>{estatus.name}</MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={1}/>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"remolqueDos"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"Remolque 2"}
+                            variant={"outlined"}
+                            value={data.remolqueDos}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            id="estatusRemolqueDos"
+                            select
+                            margin={"dense"}
+                            value={data.idEstatusRemolqueDos}
+                            onChange={handleChangeEstatusRemolqueDos}
+                            variant="outlined"
+                        >
+                            {estatusRemolqueListado.map((estatus) => (
+                                <MenuItem key={estatus.id} value={estatus.id}>{estatus.name}</MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={1}/>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"dolly"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"Dolly"}
+                            variant={"outlined"}
+                            value={data.dolly}
+                        />
+                    </Grid>
+                    <Grid item xs={7}/>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"origen"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"Origen"}
+                            variant={"outlined"}
+                            value={data.origen}
+                        />
+                    </Grid>
+                    <Grid item xs={7}/>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"destino"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"destino"}
+                            variant={"outlined"}
+                            value={data.destino}
+                        />
+                    </Grid>
+                    <Grid item xs={7}/>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"operador"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"Operador"}
+                            variant={"outlined"}
+                            value={data.operador}
+                        />
+                    </Grid>
+                    <Grid item xs={7}/>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"unidad"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"Unidad"}
+                            variant={"outlined"}
+                            value={data.unidad}
+                        />
+                    </Grid>
+                    <Grid item xs={3}>
+                        <TextField
+                            id={"placas"}
+                            InputProps={{readOnly: true}}
+                            margin={"dense"}
+                            disabled
+                            label={"Placas"}
+                            variant={"outlined"}
+                            value={data.placasUnidad}
+                        />
+                    </Grid>
+                    <Grid item xs={4}/>
+                    <Grid item xs={3}>
+                        <TextField
+                            id={"fechaSalida"}
+                            type={"date"}
+                            margin={"dense"}
+                            label={"Fecha Salida"}
+                            variant={"outlined"}
+                            InputLabelProps={{shrink: true}}
+                            InputProps={{inputProps: {min: data.fecha}}}
+                            value={data.fechaSalida}
+                            onChange={handleChangeFechaSalida}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            id={"horaSalida"}
+                            InputLabelProps={{shrink: true,}}
+                            margin={"dense"}
+                            label={"Hora"}
+                            type={"time"}
+                            variant={"outlined"}
+                            value={data.horaSalida}
+                            onChange={handleChangeHoraSalida}
+                        />
+                    </Grid>
+                    <Grid item xs={7}/>
+                    <Grid item xs={4}>
+                        <TextField
+                            id={"estatus"}
+                            margin={"dense"}
+                            select
+                            label={"Estatus"}
+                            variant={"outlined"}
+                            value={data.idEstatus}
+                            onChange={handleChangeEstatus}
+                        >
+                            {estatusListado.map((estatus) => (
+                                <MenuItem key={estatus.id} value={estatus.id}>{estatus.name}</MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <TextField
+                            id={"motivoRetraso"}
+                            margin={"dense"}
+                            label={"Motivo de retraso"}
+                            variant={"outlined"}
+                            value={data.motivoRetraso}
+                            onChange={handleChangeMotivoRetraso}
+                        />
+                    </Grid>
+                    <Grid item xs={3}/>
                 </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id={'recorrido-text'}
-                        margin="dense"
-                        disabled
-                        label={"Viaje"}
-                        variant={"outlined"}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                        value={data.recorrido}/>
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id="fecha"
-                        margin="dense"
-                        disabled
-                        label="Fecha"
-                        variant="outlined"
-                        className="form-control"
-                        InputProps={{readOnly: true,}}
-                        value={data.fecha}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id={"hora"}
-                        InputProps={{readOnly: true,}}
-                        margin={"dense"}
-                        disabled
-                        label={"Hora"}
-                        variant={"outlined"}
-                        value={data.hora}
-                    />
-                </Grid>
-                <Grid item xs={4}/>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"remolqueUno"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Remolque 1"}
-                        variant={"outlined"}
-                        value={data.remolqueUno}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id="estatusRemolqueUno"
-                        select
-                        margin={"dense"}
-                        value={data.idEstatusRemolqueUno}
-                        onChange={handleChangeEstatusRemolqueUno}
-                        variant="outlined"
-                    >
-                        {estatusRemolqueListado.map((estatus) => (
-                            <MenuItem key={estatus.id} value={estatus.id}>{estatus.name}</MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
-                <Grid item xs={1}/>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"remolqueDos"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Remolque 2"}
-                        variant={"outlined"}
-                        value={data.remolqueDos}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id="estatusRemolqueDos"
-                        select
-                        margin={"dense"}
-                        value={data.idEstatusRemolqueDos}
-                        onChange={handleChangeEstatusRemolqueDos}
-                        variant="outlined"
-                    >
-                        {estatusRemolqueListado.map((estatus) => (
-                            <MenuItem key={estatus.id} value={estatus.id}>{estatus.name}</MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
-                <Grid item xs={1}/>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"dolly"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Dolly"}
-                        variant={"outlined"}
-                        value={data.dolly}
-                    />
-                </Grid>
-                <Grid item xs={7}/>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"origen"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Origen"}
-                        variant={"outlined"}
-                        value={data.origen}
-                    />
-                </Grid>
-                <Grid item xs={7}/>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"destino"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"destino"}
-                        variant={"outlined"}
-                        value={data.destino}
-                    />
-                </Grid>
-                <Grid item xs={7}/>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"operador"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Operador"}
-                        variant={"outlined"}
-                        value={data.operador}
-                    />
-                </Grid>
-                <Grid item xs={7}/>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"unidad"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Unidad"}
-                        variant={"outlined"}
-                        value={ data.unidad}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <TextField
-                        id={"placas"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Placas"}
-                        variant={"outlined"}
-                        value={data.placasUnidad}
-                    />
-                </Grid>
-                <Grid item xs={4}/>
-                <Grid item xs={3}>
-                    <TextField
-                        id={"fechaSalida"}
-                        type={"date"}
-                        margin={"dense"}
-                        label={"Fecha Salida"}
-                        variant={"outlined"}
-                        InputLabelProps={{shrink: true}}
-                        InputProps={{inputProps: { min: data.fecha}}}
-                        value={data.fechaSalida}
-                        onChange={handleChangeFechaSalida}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id={"horaSalida"}
-                        InputLabelProps={{shrink: true,}}
-                        margin={"dense"}
-                        label={"Hora"}
-                        type={"time"}
-                        variant={"outlined"}
-                        value={data.horaSalida}
-                        onChange={handleChangeHoraSalida}
-                    />
-                </Grid>
-                <Grid item xs={7}/>
-                <Grid item xs={4}>
-                    <TextField
-                        id={"estatus"}
-                        margin={"dense"}
-                        select
-                        label={"Estatus"}
-                        variant={"outlined"}
-                        value={data.idEstatus}
-                        onChange={handleChangeEstatus}
-                    >
-                        {estatusListado.map((estatus) => (
-                            <MenuItem key={estatus.id} value={estatus.id}>{estatus.name}</MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
-                <Grid item xs={5}>
-                    <TextField
-                        id={"motivoRetraso"}
-                        margin={"dense"}
-                        label={"Motivo de retraso"}
-                        variant={"outlined"}
-                        value={data.motivoRetraso}
-                        onChange={handleChangeMotivoRetraso}
-                    />
-                </Grid>
-                <Grid item xs={3}/>
-            </Grid>
+            </ul>
             {props.children}
         </Root>
-    );
+);
 }
