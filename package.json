@@ -3,7 +3,7 @@
   "name": "proyecto-paqueteria",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://paqueteria.desarrollo.gmtransport.co:8081",
+  "proxy": "http://paqueteria.desarrollo.gmtransport.co:8181",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",

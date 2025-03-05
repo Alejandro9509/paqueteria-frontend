@@ -77,12 +77,9 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
     return result
 }
 
-async function imprimirFormatosIdIdTipoReporte(id, idTipoReporte) {
-    const url = `/ImprimirFormato/${id}`;//${process.env.REACT_APP_API_URL}
+function imprimirFormatosIdIdTipoReporte(id, idTipoReporte) {
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
     const body = Object.assign({}, {idTipoReporte: idTipoReporte});
-    console.log(url)
-    console.log(body)
-    console.log(headers)
     let result;
     trackPromise(
         result = axios.post(url, body, {headers: headers})
