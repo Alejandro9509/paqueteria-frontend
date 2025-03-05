@@ -311,19 +311,29 @@ export default function CrearTarifaRangos(props) {
     }
 
     const submmitViajeForaneo = () => {
-        let newViajes = []
-        viajesForaneosListado.forEach(i => {
-            newViajes.push(i)
-        })
-        newViajes.forEach(i => {
-            if (i.idViaje === viajeForaneo.idViaje ){
-                i.idOrigen = viajeForaneo.idOrigen
-                i.idTipoMedida = viajeForaneo.idTipoMedida
-                i.fleteMinimo = viajeForaneo.fleteMinimo
-                i.idDestino = viajeForaneo.idDestino
-                i.grupos = viajeForaneo.grupos
-            }
-        })
+        const valido = validarGuardadoViajeForaneo();
+
+        if(valido) {
+            let newViajes = []
+            viajesForaneosListado.forEach(i => {
+                newViajes.push(i)
+            })
+            newViajes.forEach(i => {
+                if (i.idViaje === viajeForaneo.idViaje ){
+                    i.idOrigen = viajeForaneo.idOrigen
+                    i.idTipoMedida = viajeForaneo.idTipoMedida
+                    i.fleteMinimo = viajeForaneo.fleteMinimo
+                    i.idDestino = viajeForaneo.idDestino
+                    i.grupos = viajeForaneo.grupos
+                }
+            })
+            showSuccess("Guardado");
+            setViajesForaneosListado(newViajes);
+            setOpenForaneo(false);
+        }
+    }
+
+    const validarGuardadoViajeForaneo = () => {
         let duplicado = false;
         let duplicadoInterno = false;
         let zonasRepetidas = "Zonas duplicadas: ";
@@ -401,11 +411,7 @@ export default function CrearTarifaRangos(props) {
             showSuccess("Dentro de este mismo viaje hay grupos que tienen la misma relación zona-producto. " +
                 "Favor de revisar los grupos: " + gruposRepetidos);
         }
-        if(!duplicado && !duplicadoInterno) {
-            showSuccess("Guardado");
-            setViajesForaneosListado(newViajes);
-            setOpenForaneo(false);
-        }
+        return (!duplicado && !duplicadoInterno);
     }
 
     const handleOnAgregarViajeLocal = (e) => {
@@ -943,33 +949,36 @@ export default function CrearTarifaRangos(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => {
-                        let viaje = viajesForaneosListado.find((i) => i.idViaje == viajeForaneo.idViaje);
-                        const esNuevo = viaje?.nuevo;
-                        if(esNuevo == true){
-                            viaje.idOrigen = null;
-                            viaje.idOrigen = null;
-                            viaje.idTipoMedida = null;
-                            viaje.idDestino = null;
-                            viaje.grupos = [];
-                            viaje.fleteMinimo = 0;
-                            viaje.nuevo = true;
+                        if(!props.disabled){
+                            let viaje = viajesForaneosListado.find((i) => i.idViaje == viajeForaneo.idViaje);
+                            const esNuevo = viaje?.nuevo;
+                            if(esNuevo == true){
+                                viaje.idOrigen = null;
+                                viaje.idOrigen = null;
+                                viaje.idTipoMedida = null;
+                                viaje.idDestino = null;
+                                viaje.grupos = [];
+                                viaje.fleteMinimo = 0;
+                                viaje.nuevo = true;
 
-                            setViajeForaneo({
-                                idViaje: viajeForaneo.idViaje,
-                                idOrigen: null,
-                                idTipoMedida: null,
-                                idDestino: null,
-                                grupos: [],
-                                fleteMinimo: 0,
-                                nuevo: true
-                            });
+                                setViajeForaneo({
+                                    idViaje: viajeForaneo.idViaje,
+                                    idOrigen: null,
+                                    idTipoMedida: null,
+                                    idDestino: null,
+                                    grupos: [],
+                                    fleteMinimo: 0,
+                                    nuevo: true
+                                });
+                            }
+                            //setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === state.idForaneo));
                         }
                         setOpenForaneo(false);
-                        setViajeForaneo(viajesForaneosListado.find(i => i.idViaje === state.idForaneo));
                     }} style={{fontSize: '1em'}}>
                         Cerrar
                     </Button>
                     <Button onClick={() => submmitViajeForaneo()}
+                            disabled={props.disabled}
                             color={"primary"} style={{fontSize: '1em'}}>
                         Guardar
                     </Button>
@@ -1400,36 +1409,6 @@ export default function CrearTarifaRangos(props) {
                                 />
                             }
                         </div>
-                    {/*
-                        (
-                            filtroMM.activo ?
-                                viajesForaneosListado.filter(v => (
-                                (filtroMM.origen!=-1 ? v.idOrigen==filtroMM.origen : true) &&
-                                (filtroMM.destino!=-1 ? v.idDestino==filtroMM.destino : true) &&
-                                (filtroMM.producto!=null ?
-                                    (v.grupos.filter(g=> g.productos.filter(p=>p.m_nIdProducto==filtroMM.producto.m_nIdProducto ).length > 0).length > 0)
-                                    :
-                                    true
-                                )
-                                ) || (showNuevos && viajesNuevos.includes(v.idViaje)) )
-                            : viajesForaneosListado).map((viaje) =>
-                            <ViajeForaneo
-                                key={viaje.idViaje}
-                                viaje={viaje}
-                                origenesDestinosListado={origenesDestinosListado}
-                                handleChangeViajeForaneo={handleChangeViajeForaneo}
-                                tiposCalculoListado={tiposCalculoListado}
-                                unidadesMedidaListado={unidadesMedidaListado}
-                                handleDeleteViajeForaneo={handleDeleteViajeForaneo}
-                                zonasListado={zonasListado}
-                                onRequestZonasByDestino={handleOnRequestZonasByDestino}
-                                productosListado={productosListado}
-                                disabled={props.disabled}
-                                showDialogZonas={showDialogZonas}
-                                handleShowDialogZonas={handleShowDialogZonas}
-                            />
-                        )*/
-                    }
                     </div>
                 </Paper>
                 <br/>
