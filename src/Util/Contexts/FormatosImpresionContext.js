@@ -77,12 +77,29 @@ function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
     return result
 }
 
-function imprimirFormatosIdIdTipoReporte(id,idTipoReporte){
-    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+async function imprimirFormatosIdIdTipoReporte(id, idTipoReporte) {
+    const url = `/ImprimirFormato/${id}`;//${process.env.REACT_APP_API_URL}
+    const body = Object.assign({}, {idTipoReporte: idTipoReporte});
+    console.log(url)
+    console.log(body)
+    console.log(headers)
     let result;
     trackPromise(
-        result =  axios.post(url,Object.assign({}, {idTipoReporte:idTipoReporte}), { headers})
+        result = axios.post(url, body, {headers: headers})
     );
+
+    /*try {
+        const response = await axios.post(url, body, {
+            headers: headers
+        });
+        result = response;
+        console.log('Respuesta:', response);
+    } catch (error) {
+        console.error('Error:', error.message);
+        if (error.response) {
+            console.error('Detalles del error:', error.response.data);
+        }
+    }*/
     return result
 }
 

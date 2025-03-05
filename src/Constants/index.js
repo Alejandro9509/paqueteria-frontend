@@ -12,7 +12,9 @@ export const OAUTH2_REDIRECT_URI = 'http://192.168.1.185:8080/sierra/oauth2/redi
 export const API_HEADERS = {
     //'Accept': 'application/vnd.certuit-' + API_VERSION + '+json',
     'Content-Type': 'application/json',
-    'RFC': `${localStorage.getItem("RFC")}`
+    'RFC': `${localStorage.getItem("RFC")}`,
+    'Content-Encoding': 'gzip',
+    'Authorization': 'Bearer token',
 };
 
 export const API_AUTENTICATION_HEADERS = {
