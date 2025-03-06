@@ -455,7 +455,7 @@ class AgregarViaje extends Component {
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
                 $('#Listado').addClass('in show');
-                this.props.cancel()
+                this.props.cancel(e)
                 this.handleClearData()
             }).catch((err) => {
                 showSuccess(err.response?.data);
@@ -2005,7 +2005,7 @@ class AgregarViaje extends Component {
                                     {
                                         (!this.props.consult && this.props.modificar) &&
                                         <Button variant="contained" color="primary" style={{fontSize: "1em"}}
-                                                disabled={this.props.viajeSeleccionado.m_arrTrayectos.some(p=>
+                                                disabled={this.props?.viajeSeleccionado?.m_arrTrayectos.some(p=>
                                                     (p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado))}
                                                 fullWidth onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
