@@ -134,7 +134,7 @@ const Filtros = ({value, onChange, onFiltrarClick, onReportClick, onExcelClick})
                         <TextField
                             variant={"outlined"}
                             size="small"
-                            label="Fecha"
+                            label="Fecha de registro"
                             type="date"
                             value={value.fecha}
                             onChange={(e) => handleChange('fecha', e.target.value)}
