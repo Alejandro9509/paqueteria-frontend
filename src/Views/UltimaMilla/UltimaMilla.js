@@ -384,7 +384,7 @@ class UltimaMilla extends Component {
     }
 
     selectGuiaReasignar(idParadaFuente, idOperador,listadoOperadores) {
-        this.setState({openDialog: true, paradaFuente: idParadaFuente, idOperador: idOperador,listadoOperadores:listadoOperadores})
+        this.setState({openDialog: true, paradaFuente: idParadaFuente, idOperador: idOperador, listadoOperadores:listadoOperadores})
     }
 
     reasignarParada(event) {

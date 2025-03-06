@@ -60,7 +60,7 @@ function obtenerEstatusUnidadeId(id) {
 }
 
 function cambiarOperadorUnidad(idOperador, idUnidad) {
-    const url = `${process.env.REACT_APP_API_URL}/Unidad/AsignarOperador/${idUnidad}/${idOperador}`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Unidades/AsignarOperador/${idUnidad}/${idOperador}`;
     let result;
     trackPromise(
         result =  axios.put(url, {}, { headers })
