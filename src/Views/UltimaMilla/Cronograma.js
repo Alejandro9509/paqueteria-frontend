@@ -133,7 +133,7 @@ class Cronograma extends Component {
                                                         <TableCell style={{borderBottom: "none"}} align="left"><Box
                                                             fontWeight="fontWeightBold">Repartidor</Box></TableCell>
                                                         <TableCell style={{borderBottom: "none"}} align="left"><Box
-                                                            fontWeight="fontWeightBold">Remplazar Operador</Box></TableCell>
+                                                            fontWeight="fontWeightBold">Reemplazar Operador</Box></TableCell>
                                                         <TableCell style={{borderBottom: "none"}} align="left"><Box
                                                             fontWeight="fontWeightBold">Unidad</Box></TableCell>
                                                         {/*<TableCell style={{borderBottom: "none"}} align="left"><Box
@@ -171,7 +171,7 @@ class Cronograma extends Component {
                                                                                align="left">{u.m_snNombreOperador}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
-                                                                                <Tooltip title="Remplazar Operador">                                           
+                                                                                <Tooltip title="Reemplazar Operador">
                                                                                     <AutorenewIcon color={"primary"} align="center" fontSize={"large"} onClick={()=> {
                                                                                         if (moment(this.props.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) {
                                                                                             showSuccess("No se pueden modificar rutas de días anteriores.")
@@ -180,7 +180,7 @@ class Cronograma extends Component {
                                                                                         if (filterEstatus.length > 0 ){
                                                                                             if (parseInt(filterEstatus[0].m_nEstatusUlimaMilla) === 1 ) {
                                                                                                 obtenerOperadores().then((operadoresListado)=>{
-                                                                                                    this.props.selectGuiaReasignar(u.m_nIdParadaUltimaMilla, u.m_nIdOperador,operadoresListado.data.filter(op=>op.idSucursal==this.props.tour.m_nIdSucursalReceptora))
+                                                                                                    this.props.selectGuiaReasignar(u.m_nIdParadaUltimaMilla, u.m_nIdOperador, operadoresListado.data.filter(op=>op.idSucursal==this.props.tour.m_nIdSucursalReceptora))
                                                                                                 })
                                                                                             }else{
                                                                                                 showSuccess("Sólo se pueden reasignar registros con estatus pendiente.")
