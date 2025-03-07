@@ -37,8 +37,8 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
         busquedaPorUsuario: false,
         usuario: null,
         operador: null,
-        fechaRegistro: null,
-        horaRegistro: null
+        fechaRegistro: getCurrentDate(),
+        horaRegistro: getCurrentTime(),
     })
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -92,8 +92,8 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
                 busquedaPorUsuario: false,
                 usuario: null,
                 operador: null,
-                fechaRegistro: null,
-                horaRegistro: null
+                fechaRegistro: getCurrentDate(),
+                horaRegistro: getCurrentTime(),
             })
             setGuias([])
         }
@@ -104,8 +104,8 @@ function CorteCajaAgregar({value, disaled, setDisabled, onSaveSuccess}){
             busquedaPorUsuario: false,
             usuario: null,
             operador: null,
-            fechaRegistro: null,
-            horaRegistro: null
+            fechaRegistro: getCurrentDate(),
+            horaRegistro: getCurrentTime(),
         })
         setGuiasSeleccionadas([])
         setGuias([])
