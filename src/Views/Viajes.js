@@ -1252,9 +1252,9 @@ function Viajes() {
     };
 
     function envioCorreoAction(data) {
-        enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault,viajeSeleccionado.id).then(({data}) => {
+        enviarCorreoCFDIViaje(state.idInforme, data.correos, data.correoDefault,viajeSeleccionado.m_nIdViaje).then(({data}) => {
             showSuccess(data);
-            descargarPDF(viajeSeleccionado.id,state.idInforme, state.folio)
+            descargarPDF(viajeSeleccionado.m_nIdViaje,state.idInforme, state.folio)
             setState(state => {
                 return {...state, openEnvioCorreo: false}
             })
@@ -1345,7 +1345,7 @@ function Viajes() {
                 state.openEnvioCorreo &&
                 <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={() => {
                     setState({...state, openEnvioCorreo: false});
-                    descargarPDF(viajeSeleccionado.id,state.idInforme, state.folio);
+                    descargarPDF(viajeSeleccionado.m_nIdViaje,state.idInforme, state.folio);
                     getParadasListado({m_nIdViaje: state.idViaje})
                 }}/>
             }
