@@ -29,7 +29,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
                 }, {
                     headerName: "Cliente",
                     field: "m_sNombreRemitente",
-                    valueFormatter: (params) => `${params.row.m_bEsRecoleccion ? params.row.m_sNombreRemitente : params.row.m_sNombreDestinatario}`,
+                    valueFormatter: (params) => `${params.row?.m_bEsRecoleccion ? params.row?.m_sNombreRemitente : params.row?.m_sNombreDestinatario}`,
                     width: 300,
                 }, /*{
                     headerName: "Estatus cliente",
@@ -39,20 +39,20 @@ class RemplazarPaqueteUltimaMilla extends Component {
                 },*/ {
                     headerName: "Domicilio",
                     field: "m_sDomicilioRemitente",
-                    valueFormatter: (params) => `${params.row.m_bEsRecoleccion? params.row.m_sDomicilioRemitente : params.row.m_sDomicilioDestinatario}`,
+                    valueFormatter: (params) => `${params.row?.m_bEsRecoleccion? params.row?.m_sDomicilioRemitente : params.row?.m_sDomicilioDestinatario}`,
                     width: 300,
                 }, {
                     headerName: "Ventana de entrega",
                     field: "m_sFechaRecoleccionCita",
                     width: 150,
                     valueFormatter: (params) =>
-                        `${params.row.m_bCitaPendiente ? "Cita pendiente" : 
-                            (params.row.m_bEsRecoleccion ? 
-                                (!params.row.m_bRecoleccionConCita ? "Sin cita" : 
-                                        (params.row.m_sFechaRecoleccionCita + " " + params.row.m_sHoraCitarRecoleccionMinima + " a " + params.row.m_sHoraCitaRecoleccionMaxima)
+                        `${params.row?.m_bCitaPendiente ? "Cita pendiente" : 
+                            (params.row?.m_bEsRecoleccion ? 
+                                (!params.row?.m_bRecoleccionConCita ? "Sin cita" : 
+                                        (params.row?.m_sFechaRecoleccionCita + " " + params.row?.m_sHoraCitarRecoleccionMinima + " a " + params.row?.m_sHoraCitaRecoleccionMaxima)
                                 ) : 
-                                (!params.row.m_bEmbarqueConCita ? "Sin Cita" : 
-                                    (params.row.m_sFechaEmbarqueCita + " " + params.row.m_sHoraEmbarqueCitaMinima + " a " + params.row.m_sHoraEmbarqueCitaMaxima)
+                                (!params.row?.m_bEmbarqueConCita ? "Sin Cita" : 
+                                    (params.row?.m_sFechaEmbarqueCita + " " + params.row?.m_sHoraEmbarqueCitaMinima + " a " + params.row?.m_sHoraEmbarqueCitaMaxima)
                                 )
                             )}`,
 
