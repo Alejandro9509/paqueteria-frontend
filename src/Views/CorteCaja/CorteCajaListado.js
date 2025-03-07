@@ -41,7 +41,7 @@ const FORMATOS_IMPRESION = {
 function CorteCajaListado({onRowClick, value}){
     const [listaCortes, setListaCortes] = useState([])
     const [filtros, setFiltros] = useState({
-        fecha: null,
+        fecha: getCurrentDate(),
         operador: null,
         usuario: null,
         busquedaPorUsuario: false
