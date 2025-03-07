@@ -467,7 +467,7 @@ class AgregarViaje extends Component {
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
                 $('#Listado').addClass('in show');
-                this.props.cancel()
+                this.props.cancel(e)
                 this.handleClearData()
             }).catch((err) => {
                 showSuccess(err.response?.data);
