@@ -29,8 +29,12 @@ class RemplazarPaqueteUltimaMilla extends Component {
                     width: 150,
                 }, {
                     headerName: "Cliente",
-                    field: "m_sNombreRemitente",
-                    valueFormatter: (params) => `${params.row?.m_bEsRecoleccion ? params.row?.m_sNombreRemitente : params.row?.m_sNombreDestinatario}`,
+                    field: "m_bEsRecoleccion",
+                    valueFormatter: (params) => {
+                        const row = this.props.data.find((i) => i.m_sFolio = params.id);
+                        return `${row?.m_bEsRecoleccion ? row?.m_sNombreRemitente : row?.m_sNombreDestinatario}`;
+                    },
+                    //`${params?.row?.m_bEsRecoleccion ? params?.row?.m_sNombreRemitente : params?.row?.m_sNombreDestinatario}`,
                     width: 300,
                 }, /*{
                     headerName: "Estatus cliente",
@@ -40,7 +44,11 @@ class RemplazarPaqueteUltimaMilla extends Component {
                 },*/ {
                     headerName: "Domicilio",
                     field: "m_sDomicilioRemitente",
-                    valueFormatter: (params) => `${params.row?.m_bEsRecoleccion? params.row?.m_sDomicilioRemitente : params.row?.m_sDomicilioDestinatario}`,
+                    valueFormatter: (params) => {
+                        const row = this.props.data.find((i) => i.m_sFolio = params.id);
+                        return `${row?.m_bEsRecoleccion ? row?.m_sDomicilioRemitente : row?.m_sDomicilioDestinatario}`;
+                    },
+                    //valueFormatter: (params) => `${params.row?.m_bEsRecoleccion? params.row?.m_sDomicilioRemitente : params.row?.m_sDomicilioDestinatario}`,
                     width: 300,
                 }, {
                     headerName: "Ventana de entrega",
@@ -78,6 +86,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props.data.filter((i) => !i.m_bClienteBloqueado))
     }
 
     onSubmitData(e){
