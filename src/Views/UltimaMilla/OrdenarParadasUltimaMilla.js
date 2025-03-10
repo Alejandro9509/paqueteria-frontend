@@ -61,7 +61,6 @@ class OrdenarParadasUltimaMilla extends Component {
 
     openSeleccionarPaquetes() {
         obtenerGuiaUltimaMilla(this.props.zonasIds, this.props.tipoServicio).then(({data}) => {
-
             this.setState({paquetes: data, openRemplazar: true})
         })
     }
