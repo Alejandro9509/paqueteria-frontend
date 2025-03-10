@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
+import {showError} from "../../Util/GlobalFunctions";
 
 class RemplazarPaqueteUltimaMilla extends Component {
     constructor(props) {
@@ -72,7 +73,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
 
     handlePaquetesSeleccionadas = (e) => {
         this.setState({
-            idsPaquetesSeleccionadas: e.selectionModel,
+            idsPaquetesSeleccionadas: e
         })
     }
 
@@ -80,8 +81,12 @@ class RemplazarPaqueteUltimaMilla extends Component {
     }
 
     onSubmitData(e){
-        e.preventDefault()
-        this.props.onSubmit(this.props.data.filter(g => this.state.idsPaquetesSeleccionadas.includes(g.m_sFolio) ))
+        e.preventDefault();
+        if(this.state.idsPaquetesSeleccionadas.length == 0 || this.state.idsPaquetesSeleccionadas == null || this.state.idsPaquetesSeleccionadas == undefined){
+            showError("Por favor eliga al menos un paquete");
+            return;
+        }
+        this.props.onSubmit(this.props.data.filter(g => this.state.idsPaquetesSeleccionadas.includes(g.m_sFolio)))
     }
 
     render() {
@@ -103,12 +108,12 @@ class RemplazarPaqueteUltimaMilla extends Component {
                             rows={this.props.data.filter((i) => !i.m_bClienteBloqueado)}
                             columns={this.state.columns}
                             density="compact"
-                            isRowSelectable={(params) => false}
                             pageSize={Math.floor((this.state.height - 310) / 30)}
                             getRowId={(row) => row.m_sFolio}
                             checkboxSelection
-                            disableSelectionOnClick={true}
-                            onSelectionModelChange={(e) => this.handlePaquetesSeleccionadas(e)}
+                            onRowSelectionModelChange={(e) => {
+                                this.handlePaquetesSeleccionadas(e)
+                            }}
                         />
                     </div>
                 </DialogContent>

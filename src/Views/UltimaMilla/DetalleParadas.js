@@ -1282,7 +1282,9 @@ class DetalleParadas extends Component {
                                                     }}>
                                                         {
                                                             <Button
-                                                                disabled={!validarDerecho(9101447)}
+                                                                disabled={!validarDerecho(9101447)
+                                                                    || !tour?.m_bActiva
+                                                                    || tour.m_arrClsProGuia.every((i) => i.m_nEstatusUlimaMilla == 3)}
                                                                 variant={"contained"}
                                                                 color={"primary"}
                                                                 onClick={() => this.setState({
