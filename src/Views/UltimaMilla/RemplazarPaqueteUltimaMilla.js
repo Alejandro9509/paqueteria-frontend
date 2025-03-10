@@ -1,5 +1,15 @@
 import React, {Component} from 'react';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography} from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Table, TableBody, TableCell, TableContainer,
+    TableHead,
+    TableRow, TextField,
+    Typography
+} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {showError} from "../../Util/GlobalFunctions";
@@ -29,9 +39,9 @@ class RemplazarPaqueteUltimaMilla extends Component {
                     width: 150,
                 }, {
                     headerName: "Cliente",
-                    field: "m_bEsRecoleccion",
+                    field: "m_sNombreRemitente",
                     valueFormatter: (params) => {
-                        const row = this.props.data.find((i) => i.m_sFolio = params.id);
+                        let row = this.props.data.find((i) => i.m_sFolio === params.id);
                         return `${row?.m_bEsRecoleccion ? row?.m_sNombreRemitente : row?.m_sNombreDestinatario}`;
                     },
                     //`${params?.row?.m_bEsRecoleccion ? params?.row?.m_sNombreRemitente : params?.row?.m_sNombreDestinatario}`,
@@ -45,7 +55,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
                     headerName: "Domicilio",
                     field: "m_sDomicilioRemitente",
                     valueFormatter: (params) => {
-                        const row = this.props.data.find((i) => i.m_sFolio = params.id);
+                        let row = this.props.data.find((i) => i.m_sFolio === params.id);
                         return `${row?.m_bEsRecoleccion ? row?.m_sDomicilioRemitente : row?.m_sDomicilioDestinatario}`;
                     },
                     //valueFormatter: (params) => `${params.row?.m_bEsRecoleccion? params.row?.m_sDomicilioRemitente : params.row?.m_sDomicilioDestinatario}`,
@@ -86,7 +96,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.data.filter((i) => !i.m_bClienteBloqueado))
+        //console.log(this.props.data.filter((i) => !i.m_bClienteBloqueado))
     }
 
     onSubmitData(e){
