@@ -6,7 +6,7 @@ import CorteCajaAgregar from "./CorteCajaAgregar";
 import Noty from "noty";
 import {
     obtenerCorteId,
-    obtenerCortes
+    obtenerCortes, obtenerCortesByFiltros
 } from "../../Util/Contexts/CorteCajaContext";
 import {getCurrentDate} from "../../Util/Util";
 import CorteCajaListado from "./CorteCajaListado";
@@ -63,15 +63,18 @@ function CorteCaja() {
     const agregar = 2
 
     useEffect(value => {
+        getAllCortes();
     }, [])
 
     const getAllCortes = () => {
-        obtenerCortes().then(({data}) => {
-            setListaCortes(data)
+        obtenerCortesByFiltros(getCurrentDate(), 0, 0).then(({data}) => {
+            setListaCortes(data);
             setFiltros({
                 ...filtros,
-                fechaRegistro: (new Date().toISOString().split('T')[0]),
-            })
+                fechaRegistro: getCurrentDate(),
+            });
+        }).catch(err => {
+            showSuccess(err.toString())
         })
     }
 

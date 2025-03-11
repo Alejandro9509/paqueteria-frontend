@@ -48,11 +48,7 @@ function CorteCajaListado({onRowClick, value}){
     })
 
     useEffect(value => {
-        obtenerCortesByFiltros(getCurrentDate(), 0, 0).then(({data}) => {
-            setListaCortes(data)
-        }).catch(err => {
-            showSuccess(err.toString())
-        })
+
     }, [])
 
     useEffect(() => {
