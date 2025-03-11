@@ -79,7 +79,8 @@ function CorteCaja() {
         if (event){
             event.stopPropagation();
         }
-        resetFiltros()
+        resetFiltros();
+        getAllCortes();
         // limpiarInputsAgregar()
         setPantallaActiva(listado)
         setCorteSeleccionado(0)
