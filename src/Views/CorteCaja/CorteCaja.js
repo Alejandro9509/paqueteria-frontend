@@ -63,7 +63,6 @@ function CorteCaja() {
     const agregar = 2
 
     useEffect(value => {
-        getAllCortes()
     }, [])
 
     const getAllCortes = () => {
@@ -81,7 +80,6 @@ function CorteCaja() {
             event.stopPropagation();
         }
         resetFiltros()
-        getAllCortes()
         // limpiarInputsAgregar()
         setPantallaActiva(listado)
         setCorteSeleccionado(0)
