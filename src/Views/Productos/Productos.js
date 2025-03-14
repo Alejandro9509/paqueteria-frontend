@@ -9,6 +9,7 @@ import {
     FormControl,
     Grid,
     InputLabel,
+    MenuItem,
     Select,
     TextField,
     Tooltip,
@@ -426,6 +427,7 @@ function Productos() {
                                             placeholder="Descripcion"
                                             id="Descripcion"
                                             name="Descripcion"
+                                            InputLabelProps={{shrink: true}}
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
@@ -440,6 +442,7 @@ function Productos() {
                                             placeholder="cms"
                                             name="Largo"
                                             id="Largo"
+                                            InputLabelProps={{shrink: true}}
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
@@ -454,6 +457,7 @@ function Productos() {
                                             placeholder="cms"
                                             name="Ancho"
                                             id="Ancho"
+                                            InputLabelProps={{shrink: true}}
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
@@ -468,6 +472,7 @@ function Productos() {
                                             placeholder="cms"
                                             name="Alto"
                                             id="Alto"
+                                            InputLabelProps={{shrink: true}}
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
@@ -482,6 +487,7 @@ function Productos() {
                                             placeholder="kg"
                                             name="Peso"
                                             id="Peso"
+                                            InputLabelProps={{shrink: true}}
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
@@ -496,6 +502,7 @@ function Productos() {
                                             placeholder="cm3"
                                             name="Volumen"
                                             id="Volumen"
+                                            InputLabelProps={{shrink: true}}
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
@@ -505,6 +512,7 @@ function Productos() {
                                                 variant="outlined"
                                                 margin="dense"
                                                 required
+                                                size="small"
                                             >
                                                 <InputLabel id="m_nIdTipoEmbalajeLabel">
                                                     Embalaje
@@ -518,14 +526,17 @@ function Productos() {
                                                     onChange={handleChange}
                                                     readOnly={state.agregar == "Consultar"}
                                                     required
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
                                                 >
                                                     {dataEmbalaje.map((embalaje) => (
-                                                        <option
+                                                        <MenuItem
                                                             key={embalaje.m_nIdEmbalaje}
                                                             value={embalaje.m_nIdEmbalaje}
                                                         >
                                                             {embalaje.m_sNombre}
-                                                        </option>
+                                                        </MenuItem>
                                                     ))}
                                                 </Select>
                                             </FormControl>
