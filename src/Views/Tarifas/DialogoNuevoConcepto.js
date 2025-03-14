@@ -75,7 +75,16 @@ export default function DialogoNuevoConcepto(props) {
 
     useEffect(() => {
         if (props.concepto.idConcepto !== 0){
-            setConcepto(props.concepto)
+            const copia = [...props.dataPaquetes];
+            const modificable = copia.map((item) => ({...item}))
+            const target = modificable.find((i) => i.id === props.concepto.id);
+            target.concepto = props.conceptosBase.find((item) => item.m_nIdConceptosFacturacion == target.idConcepto);
+            target.rangoMinimo = 0;
+            target.rangoMaximo = 0;
+            target.tipoCalculo = 0;
+            target.tipoMedida = 0;
+            target.agregadoDesde = props.keys;
+            setConcepto(target);
             setOpen(true);
         }
         let filtered = props.conceptosBase.filter(function (item){
