@@ -5,12 +5,13 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextFi
 export default function TableRemolques({ data, handleSelection }) {
     const [selectedRows, setSelectedRows] = useState([]);
     const textFieldRef = useRef(null);
-    const filteredData = data.filter(item => item.m_sDescripcion.toLowerCase().includes(filtro.toLowerCase()));
+    const [filteredData, setFilteredData] = useState([]);
     const [filtro, setFiltro] = useState('');
 
     useEffect(() => {
         if (data.length > 0) {
             textFieldRef.current.focus();
+            setFilteredData(data.filter(item => item.m_sDescripcion.toLowerCase().includes(filtro.toLowerCase())));
         }
     }, [data]);
 
