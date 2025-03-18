@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarEmbarques(id, params){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Embarques/Modificar/` + id;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Embarques/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url,  params, { headers })
