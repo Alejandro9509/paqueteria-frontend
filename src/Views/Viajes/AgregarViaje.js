@@ -1302,10 +1302,17 @@ class AgregarViaje extends Component {
                         </DialogContent>
                     </Dialog>
                 }*/}
-                <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades} handleAccept={this.handleAcceptDataUnidades} idOperador={this.state.operador?.m_nIdOperador} />
-                {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />*/}
-                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques} handleAccept={this.handleAcceptDataRemolques} idConvoy={this.state.identificadorConvoyUnidad} isTorton={this.state.isTorton} />
-                <DialogDollys open={this.state.openDialogDollys} handleClose={this.handleCloseDialogDollys} handleAccept={this.handleAcceptDataDollys} idConvoy={this.state.identificadorConvoyUnidad} />
+                <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades}
+                                handleAccept={this.handleAcceptDataUnidades}
+                                idOperador={this.state.operador?.m_nIdOperador} />
+                {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques}
+                handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />*/}
+                <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques}
+                                 handleAccept={this.handleAcceptDataRemolques}
+                                 idConvoy={this.state.identificadorConvoyUnidad} isTorton={this.state.isTorton} />
+                <DialogDollys open={this.state.openDialogDollys} handleClose={this.handleCloseDialogDollys}
+                              handleAccept={this.handleAcceptDataDollys}
+                              idConvoy={this.state.identificadorConvoyUnidad} />
                 <Dialog
                     fullWidth={true}
                     maxWidth={'xl'}

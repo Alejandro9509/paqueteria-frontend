@@ -28,7 +28,7 @@ function DialogRemolques({ open, handleClose, handleAccept, idConvoy, isTorton }
                         showSuccess('No hay remolques que pertenezcan al mismo Convoy')
                         handleClose()
                     }
-                    const remolques = respuesta.data.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28);
+                    const remolques = respuesta?.data?.filter(i => i?.m_bActivo && i?.m_nIdTipoUnidad !== 28);
                     setListadoRemolques(remolques)
                 }).catch((e) => {
                     console.log(e.toString())
