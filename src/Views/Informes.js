@@ -496,7 +496,7 @@ function Informes({history}) {
         FolioInforme: '',
         fechaHora: '',
         DerechoBorrar: 151,
-        EstatusInforme: 5,
+        EstatusInforme: 0,
         IdViaje: {},
         sucursalEmisora: localStorage.getItem("Sucursal"),
         sucursalReceptora: '',
@@ -555,7 +555,7 @@ function Informes({history}) {
                 IdInforme: 0,
                 FolioInforme: '',
                 DerechoBorrar: 151,
-                EstatusInforme: 5,
+                EstatusInforme: 0,
                 IdViaje: {},
                 sucursalEmisora: localStorage.getItem("Sucursal"),
                 sucursalReceptora: '',
@@ -986,6 +986,10 @@ function Informes({history}) {
         }
         obtenerEstatusIncialInforme().then((respuesta) => {
             setEstatusInformes(respuesta.data);
+            setState({
+                ...state,
+                EstatusInforme: respuesta?.data[0]?.m_nIdEstatusInforme
+            });
         });
     }
 
