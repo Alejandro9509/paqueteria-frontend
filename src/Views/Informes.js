@@ -51,7 +51,7 @@ import {DataGrid} from "@mui/x-data-grid";
 import Noty from "noty";
 import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
-import {obtenerEstatusIncialInforme} from "../Util/Contexts/EstatusContext";
+import {obtenerEstatusInforme, obtenerEstatusIncialInforme} from "../Util/Contexts/EstatusContext";
 import {
     cubicarGuiaInforme,
     obtenerGuia,
@@ -185,6 +185,7 @@ function Informes({history}) {
 
         setOrdenAscendente(!ordenAscendente)
     };
+
     const handleFiltroFolio = () => {
 
         let filtro=document.getElementById('filtroFolio').value
@@ -199,6 +200,7 @@ function Informes({history}) {
             setFiltroFolio(true)
         }
     };
+
     function handleSelectCP(id, dobleClick, e) {
         clearTimeout(timer);
         if (e.detail === 1) {
@@ -359,6 +361,7 @@ function Informes({history}) {
     async function handleOnReporteClick(row) {
         setOpenDialogReportes(true)
     }
+
     const handleGenerarReporte=(data)=>{
         if (data === null) {
             return
@@ -608,6 +611,15 @@ function Informes({history}) {
         if (e) {
             e.preventDefault();
         }
+
+        let idEstatusInforme = 0;
+        if (state.IdInforme !== 0) {
+            idEstatusInforme = state.EstatusInforme
+        }else{
+            idEstatusInforme = dataEstatusInformes.find((i) => i?.m_sEstatus == "Pendiente")?.m_nIdEstatusInforme;
+            idEstatusInforme = (idEstatusInforme !== undefined ? idEstatusInforme : state.EstatusInforme);
+        }
+
         var params = {
             m_nIdInforme: state.IdInforme,
             m_nFolioInforme: state.FolioInforme,
@@ -615,7 +627,7 @@ function Informes({history}) {
             m_tHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCiudadDestino: state.IdCiudadDestino.m_nIdCiudad,
             m_nIdCiudadOrigen: state.IdCiudadOrigen.m_nIdCiudad,
-            m_nIdEstatusInforme: state.EstatusInforme,
+            m_nIdEstatusInforme: idEstatusInforme,
             //m_nIdOperador: state.IdOperador.m_nIdOperador,
             m_nIdRemolque1: state.IdRemolque1.m_nIdUnidad,
             m_nIdRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_nIdUnidad : 0,
@@ -690,6 +702,7 @@ function Informes({history}) {
         });
 
     }
+
     const handleSelectSucursalReceptora = event => {
         event.preventDefault()
         setState({
@@ -698,6 +711,7 @@ function Informes({history}) {
         });
 
     }
+
     const handleSelectTipoTimbrado = event => {
         event.preventDefault()
         setState({
@@ -713,7 +727,6 @@ function Informes({history}) {
             ...state,
             EstatusInforme: event.target.value
         });
-
     }
 
     useEffect(value => {
@@ -728,7 +741,6 @@ function Informes({history}) {
             document.getElementById("IdRemolque1").value=""
             document.getElementById("IdRemolque1").inputValue=""
         }
-            console.dir(document.getElementById("IdRemolque1"))
 
 
         //cubicarInforme(dataGuias);
@@ -943,7 +955,6 @@ function Informes({history}) {
 
     const getDataParaListado = () => {
         getAllData();
-
     }
 
     const getDataParaEditar = () => {
@@ -984,12 +995,8 @@ function Informes({history}) {
         if (dataEstatusInformes > 0) {
             return
         }
-        obtenerEstatusIncialInforme().then((respuesta) => {
+        obtenerEstatusInforme().then((respuesta) => {
             setEstatusInformes(respuesta.data);
-            setState({
-                ...state,
-                EstatusInforme: respuesta?.data[0]?.m_nIdEstatusInforme
-            });
         });
     }
 
@@ -1003,16 +1010,17 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        console.dir(document.getElementById("IdCiudadOrigen"))
         if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
             setFiltroFolio(false)
         }
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar, state.tipoTimbrado])
+
     const clickCancelar=()=>{
         $.mostrarMensaje=false
         handleShowListado()
     }
+
     const handleShowListado = () => {
         if($.mostrarMensaje===true) {
             if (window.onbeforeunload) {
@@ -1046,14 +1054,14 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
 
     }
+
     useEffect(() => {
-        if( detectarModificaciones){
-           $.mostrarMensaje=true
+        if(detectarModificaciones){
+           $.mostrarMensaje = true
             window.onbeforeunload = confirmExit
-
-
         }
     }, [state])
+
     const handleShowCubicar = () => {
         if($.mostrarMensaje===true){
             if (window.onbeforeunload) {
@@ -1086,7 +1094,6 @@ function Informes({history}) {
             setDataParaModificarConsultar(data, "Modificar")
         });
     }
-
 
     function handleShowConsultar(id) {
         handleShowAgregar()
@@ -1181,7 +1188,6 @@ function Informes({history}) {
             })
         })
     }
-
 
     const setDataListado = (listado) => {
         setData(listado)
@@ -1456,7 +1462,7 @@ function Informes({history}) {
                                                                                     disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
                                                                                 >
                                                                                     <MenuItem
-                                                                                        value="">Seleccionar
+                                                                                        value={0}>{state.IdInforme !== 0 ? "Seleccionar" : "Pendiente"}
                                                                                     </MenuItem>
                                                                                     {dataEstatusInformes.map(
                                                                                         (EstatusInforme) => (
