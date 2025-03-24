@@ -51,7 +51,7 @@ import {DataGrid} from "@mui/x-data-grid";
 import Noty from "noty";
 import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
-import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
+import {obtenerEstatusIncialInforme} from "../Util/Contexts/EstatusContext";
 import {
     cubicarGuiaInforme,
     obtenerGuia,
@@ -984,7 +984,7 @@ function Informes({history}) {
         if (dataEstatusInformes > 0) {
             return
         }
-        obtenerEstatusInforme().then((respuesta) => {
+        obtenerEstatusIncialInforme().then((respuesta) => {
             setEstatusInformes(respuesta.data);
         });
     }

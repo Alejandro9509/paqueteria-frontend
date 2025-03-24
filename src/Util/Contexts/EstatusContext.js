@@ -50,6 +50,15 @@ function obtenerEstatusInforme(){
     return result
 }
 
+function obtenerEstatusIncialInforme(){
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getEstatusDefaultInformes`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function obtenerEstatusRecoleccion(){
     const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoRecoleccion`;
     let result;
@@ -65,5 +74,6 @@ export {
     obtenerEstatusEmbarque,
     obtenerEstatusGuia,
     obtenerEstatusInforme,
-    obtenerEstatusRecoleccion
+    obtenerEstatusRecoleccion,
+    obtenerEstatusIncialInforme
 }
