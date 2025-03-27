@@ -42,7 +42,7 @@ function modificarFormatosImpresion( id, params,image){
 }
 
 function obtenerFormatosImpresion(){
-    const url = `${process.env.REACT_APP_API_URL}/api/Formato/GetListado`;
+    const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Formato/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

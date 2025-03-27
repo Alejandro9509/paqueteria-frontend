@@ -54,16 +54,16 @@ class AgregarFormatoImpresion extends Component {
         if(this.props.id>0){
             obtenerFormatosImpresionId(this.props.id).then(respuesta => {
                 this.setState({
-                    formato:respuesta.data[0].m_sFormato,
-                    idTipoProcesoAgregar:respuesta.data[0].m_nTipoProceso,
+                    formato: respuesta?.data[0]?.m_sFormato,
+                    idTipoProcesoAgregar: respuesta?.data[0]?.m_nTipoProceso,
                     file: {
-                        length:1,
+                        length: 1,
                         [0]:{
-                            name:respuesta.data[0].m_sNombreArchivo,
-                            file:respuesta.data[0].m_sFormatoWDE
+                            name: respuesta?.data[0]?.m_sNombreArchivo,
+                            file: respuesta?.data[0]?.m_sFormatoWDE
                         }
                     },
-                    modificadoEl:respuesta.data[0].m_sModificadoEl
+                    modificadoEl: respuesta?.data[0]?.m_sModificadoEl
                 })
             })
         }
@@ -80,7 +80,7 @@ class AgregarFormatoImpresion extends Component {
 
     onSubmit(event) {
         event.preventDefault()
-        this.props.onSubmit(this.props.id,this.state)
+        this.props.onSubmit(this.props.id, this.state)
     }
 
     handleChange = (event) => {
@@ -97,11 +97,13 @@ class AgregarFormatoImpresion extends Component {
         a.click();
     }
 
-    handleDownloadImage = (file) => {
-        let a = document.createElement("a");
-        a.href = "data:image/png;base64," + file.file;
-        a.download = file.name;
-        a.click();
+    handleDownloadImage = (image) => {
+        if(this.state.image.length > 0){
+            let a = document.createElement("a");
+            a.href = "data:image/png;base64," + image.file;
+            a.download = image.name;
+            a.click();
+        }
     }
 
     render() {
@@ -274,20 +276,22 @@ class AgregarFormatoImpresion extends Component {
                                                    InputProps={{
                                                        endAdornment:
                                                            <InputAdornment position="end">
+                                                               <IconButton
+                                                                   onClick={() => document.getElementById("file").click()}
+                                                                   edge="end"
+                                                                   size="large">
+                                                                   <CloudUploadIcon color="primary" fontSize="large"/>
+                                                               </IconButton>
                                                                {
-                                                                   this.props.id === 0 ?
-                                                                   <IconButton
-                                                                       onClick={() => document.getElementById("file").click()}
-                                                                       edge="end"
-                                                                       size="large">
-                                                                       <CloudUploadIcon color="primary" fontSize="large"/>
-                                                                   </IconButton> :
+                                                                   (this.props.id !== 0) && (this.state.file != []) ?
                                                                    <IconButton
                                                                        onClick={() => this.handleDownloadWDE(this.state.file[0])}
                                                                        edge="end"
                                                                        size="large">
                                                                        <DownloadIcon color="primary" fontSize="large"/>
                                                                    </IconButton>
+                                                                   :
+                                                                   ""
                                                                }
 
                                                            </InputAdornment>
@@ -307,25 +311,34 @@ class AgregarFormatoImpresion extends Component {
                                         }
                                     }}  style={{display: "none"}} />
                                         <TextField variant="outlined" size="small"
+                                                   onChange={this.handleChange}
                                                    className="form-control"
                                                    type="text"
                                                    disabled={true}
                                                    label="Archivo Imagen"
                                                    fullWidth
                                                    value={this.state.image.length !== 0 ? this.state.image[0].name : ""}
-                                                   name={"nombreImagen"}
+                                                   name={"image"}
                                                    InputProps={{
                                                        endAdornment:
                                                            <InputAdornment position="end">
+                                                               <IconButton
+                                                                   onClick={() => document.getElementById("image").click()}
+                                                                   edge="end"
+                                                                   size="large">
+                                                                   <CloudUploadIcon color="primary" fontSize="large"/>
+                                                               </IconButton>
                                                                {
-                                                                   this.props.id === 0 &&
-                                                                   <IconButton
-                                                                       disabled={this.props.id > 0}
-                                                                       onClick={() => document.getElementById("image").click()}
-                                                                       edge="end"
-                                                                       size="large">
-                                                                       <CloudUploadIcon color="primary" fontSize="large"/>
-                                                                   </IconButton>
+                                                                   (this.props.id !== 0) && (this.state.image.length > 0) ?
+                                                                       <IconButton
+                                                                           onClick={() => this.handleDownloadImage(this.state.image[0])}
+                                                                           edge="end"
+                                                                           disabled={(this.state.image.length == 0)}
+                                                                           size="large">
+                                                                           <DownloadIcon color="primary" fontSize="large"/>
+                                                                       </IconButton>
+                                                                       :
+                                                                       ""
                                                                }
 
                                                            </InputAdornment>
