@@ -54,11 +54,6 @@ class FormatoImpresion extends Component {
                         )
                     }
                 },
-                // {
-                //     headerName: "Folio",
-                //     field: "m_nFolio",
-                //     width: 300,
-                // },
                 {
                     headerName: "Formato",
                     field: "m_sFormato",
@@ -200,7 +195,7 @@ class FormatoImpresion extends Component {
             if(typeof(respuesta.data) === "string"){
                 showSuccess(respuesta.data)
             }else{
-                formatos=respuesta.data.filter(d=> d.m_sNombreTipoProceso!=='');
+                formatos = respuesta.data.filter(d => d.m_sNombreTipoProceso !== '');
             }
             this.setState({ data: formatos, agregar: "Agregar" })
         });
