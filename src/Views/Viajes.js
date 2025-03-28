@@ -295,34 +295,45 @@ function Viajes() {
 
     function handleShowCancelar(event) {
         event.preventDefault()
-        obetenerViajeId(state.idViaje).then((respuesta) => {
-            setState({
-                ...state,
-                FolioViaje: respuesta.data.m_sFolioViaje,
-                sucursalCancelacion: respuesta.data.m_sSucursal,
-                fechaCancelacion: respuesta.data.m_dtFechaCancelacion ? respuesta.data.m_dtFechaCancelacion.replace(' ', 'T') : getCurrentDateTime(),
-                motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
-                usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
-                estatusCancelacion: respuesta.data.m_sEstatusViaje,
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar === 1,
-            });
+        if((viajeSeleccionado == null || viajeSeleccionado == 0 || state.idViaje == 0)){
+            showSuccess("Seleccione primero un viaje")
+            $(window).unbind();
+            clearData()
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
+        }
+        else{
+            obetenerViajeId(state.idViaje).then((respuesta) => {
+                setState({
+                    ...state,
+                    FolioViaje: respuesta.data.m_sFolioViaje,
+                    sucursalCancelacion: respuesta.data.m_sSucursal,
+                    fechaCancelacion: respuesta.data.m_dtFechaCancelacion ? respuesta.data.m_dtFechaCancelacion.replace(' ', 'T') : getCurrentDateTime(),
+                    motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
+                    usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
+                    estatusCancelacion: respuesta.data.m_sEstatusViaje,
+                    sePuedeCancelar: respuesta.data.m_bSePuedeCancelar === 1,
+                });
 
-            if (respuesta.data.m_bSePuedeCancelar === 0) {
-                showSuccess("Este viaje no se puede cancelar.");
-                $(window).unbind();
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-                $('#Cancelar').removeClass('in show');
-                $('#Cancelar').removeClass('active');
-            }else{
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(3).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Cancelar').addClass('in show');
-            }
-        });
+                if (respuesta.data.m_bSePuedeCancelar === 0) {
+                    showSuccess("Este viaje no se puede cancelar.");
+                    $(window).unbind();
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
+                    $('#Cancelar').removeClass('in show');
+                    $('#Cancelar').removeClass('active');
+                }else{
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(3).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Cancelar').addClass('in show');
+                }
+            });
+        }
     }
 
     const clearData = () => {
@@ -1585,8 +1596,6 @@ function Viajes() {
                             <a
 
                                 className={(state.idViaje === 0 || !validarDerecho(9101443)) ? classes.disabled : ""}
-                                data-toggle="tab"
-                                href="#Cancelar"
                                 onClick={handleShowCancelar}
 
                             >
@@ -1615,11 +1624,18 @@ function Viajes() {
                                             density="compact"
                                             getRowId={(row) => row.m_nIdViaje}
                                             rowsPerPageOptions={[]}
+                                            rowSelectionModel={state.idViaje}
                                             onRowSelectionModelChange={(newModel)=>{
                                                 if(newModel.length<1)
                                                     return
                                                 let row=data.find(i=>i.m_nIdViaje==newModel[0])
                                                 setViajeSeleccionado(row)
+                                                setState(state => {
+                                                    return {
+                                                        ...state,
+                                                        idViaje: newModel[0].m_nIdViaje
+                                                    }
+                                                })
                                                 getParadasListado(row)
                                             }}
                                             /*onRowSelected={(row) => {
