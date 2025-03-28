@@ -333,8 +333,9 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 // `)
 
 export const TICKET_ZEBRA_TEMPLATE = (guia, paquete, indexPartida,paquetesTotales, indexQR) => {
-    return localStorage.getItem("RFC") === 'PLG090716IA7' ?
-        (`CT~~CD,~CC^~CT~
+    const rfc = localStorage.getItem("RFC");
+    if(rfc === 'PLG090716IA7') {
+        return (`CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
 ^MMT
@@ -378,8 +379,11 @@ ${guia.m_sDomicilioDestinatario.length > 40 ?
 ^FT427,390^A0N,28,28^FH\\^FD${guia.m_sSucursalDestino}^FS
 ^FT53,390^A0N,28,28^FH\\^FDDESTINATARIO^FS
 ^PQ1,0,1,Y^XZ`)
-        :
-        (`CT~~CD,~CC^~CT~
+    }else if(rfc === 'TOCA920128HR3') {
+        return ``;
+    }
+    else{
+        return (`CT~~CD,~CC^~CT~
 ^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4~SD15^JUS^LRN^CI0^XZ
 ^XA
 ^MMT
@@ -440,7 +444,7 @@ ${guia.m_sDomicilioDestinatario.length > 30 ?
 ^FH\\^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${indexQR}^FS
 ^FT411,30^A0I,28,40^FH\\^FDPARTIDA:^FS
 ^FT553,588^A0I,35,33^FH\\^FD${guia.m_sSucursalDestino}^FS
-^PQ1,0,1,Y^XZ`)
+^PQ1,0,1,Y^XZ`)}
 }
 
 export const TOOLBAR_OPTIONS = {
