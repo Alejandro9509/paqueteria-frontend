@@ -454,7 +454,7 @@ ${guia.m_sDomicilioDestinatario.length > 40 ?
 
 ^FX Tipo de reparto
 ^FT300,150^A0I,30,30^FH\\^FD TIPO DE REPARTO:^FS
-^FT320,100^A0I,45,38^FB315,1,0,C^FH^FD${guia.tipoEntrega}\\&^FS
+^FT320,100^A0I,45,38^FB315,1,0,C^FH^FD${guia.tipoEntrega == "OCURRE" ? guia.tipoEntrega : "DOMICILIO"}\\&^FS
 
 ^FX Numero de pagina
 ^FT320,60^A0I,30,30^FH\\^FD PARTIDA: ${indexPartida + 1} DE ${paquetesTotales}^FS
