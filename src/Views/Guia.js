@@ -1651,8 +1651,6 @@ function Guia(props) {
     }, [])
 
     const handleOnClickImprimirEtiquetas = (idGuia) => {
-        console.log("aaaa")
-        console.log(state.imprimirEtiquetasIndividuales)
         if (state.imprimirEtiquetasIndividuales) {
         // if (false) {
         //     logica para etiquetas individuales
