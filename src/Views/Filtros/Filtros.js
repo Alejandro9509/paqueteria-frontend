@@ -22,6 +22,7 @@ import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 import {obtenerInformeFiltro} from "../../Util/Contexts/InformesContext";
 import {obtenerViajesByFiltro} from "../../Util/Contexts/ViajesContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
+import {showError} from "../../Util/GlobalFunctions";
 
 function Filtros(props) {
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -106,13 +107,20 @@ function Filtros(props) {
     }
 
     const filtrar = () => {
+        if((filtros.fechaInicial == '' || filtros.fechaFinal == '') && filtros.folio.length == 0){
+            showError("Debe ingresar un rango de fechas");
+            return;
+        }
+
         if (props.embarque){
             if (filtros.folio.length > 0){
                 obtenerEmbarquesFiltro(0, 0,0, 0,filtros.folio,0,0, 0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else {
-                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then(respuesta => {
+                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado,
+                    filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado,
+                    filtros.clientePaga.m_nIdCliente || 0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -123,7 +131,9 @@ function Filtros(props) {
                     
                 })
             }else{
-                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then((respuesta) => {
+                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado,
+                    filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado,
+                    filtros.clientePaga.m_nIdCliente || 0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -133,7 +143,9 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado,filtros.clientePaga.id||0).then((respuesta) => {
+                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado,
+                    filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado,
+                    filtros.clientePaga.m_nIdCliente || 0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -143,7 +155,8 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.folio,filtros.sucursalEmisora, filtros.sucursalReceptora).then((respuesta) => {
+                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.folio, filtros.sucursalEmisora,
+                    filtros.sucursalReceptora).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -153,7 +166,8 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
+                obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado, filtros.folio,
+                    filtros.OrigenListado, filtros.DestinoListado, filtros.operador).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                     props.guardarFiltros(filtros);
                 })
