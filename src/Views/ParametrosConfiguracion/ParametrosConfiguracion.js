@@ -1450,7 +1450,7 @@ function DataGridTiposDocumentoSucursal(props) {
         },
     ];
     return (
-        <div style={{height: 400, width: '35%',marginLeft:"20px",marginBottom:"30px"}}>
+        <div style={{height: 400, width: 'flex', marginLeft:"20px", marginBottom:"30px"}}>
             <DataGrid
                 rows={props.rows}
                 columns={columns}
