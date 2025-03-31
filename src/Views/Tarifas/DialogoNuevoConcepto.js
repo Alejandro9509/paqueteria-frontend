@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {FormControl, Grid, InputLabel, Select} from "@mui/material";
+import {FormControl, Grid, InputLabel, MenuItem, Select} from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
 import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
@@ -340,14 +340,14 @@ export default function DialogoNuevoConcepto(props) {
                                             onChange={handleChangePaquetev2}
                                             name="traslada"
                                         >
-                                            <option key={0} value={0}>Selecciona</option>
+                                            <MenuItem key={0} value={0}>Selecciona</MenuItem>
                                             {state.impuestos.filter(i => i.m_nTIpoCalculo === 1).map((impuesto) => (
-                                                <option
+                                                <MenuItem
                                                     key={impuesto.m_nIdImpuesto}
                                                     value={impuesto.m_nIdImpuesto}
                                                 >
                                                     {impuesto.m_sImpuesto}
-                                                </option>
+                                                </MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -380,14 +380,14 @@ export default function DialogoNuevoConcepto(props) {
                                             size="small"
                                             value={concepto.retiene}
                                         >
-                                            <option key={0} value={0}>Selecciona</option>
+                                            <MenuItem key={0} value={0}>Selecciona</MenuItem>
                                             {state.impuestos.filter(i => i.m_nTIpoCalculo === 2).map((impuesto) => (
-                                                <option
+                                                <MenuItem
                                                     key={impuesto.m_nIdImpuesto}
                                                     value={impuesto.m_nIdImpuesto}
                                                 >
                                                     {impuesto.m_sImpuesto}
-                                                </option>
+                                                </MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
