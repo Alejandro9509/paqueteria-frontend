@@ -2423,6 +2423,10 @@ function Embarque(props) {
             }
         });
         const {fechaInicial, fechaFinal, estatusListado, folioEmbarque} = state
+        if((fechaInicial == '') || (fechaFinal == '')){
+            showError("Debe ingresar un rango de fechas");
+            return;
+        }
         obtenerEmbarquesFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
