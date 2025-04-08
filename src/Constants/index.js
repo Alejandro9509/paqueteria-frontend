@@ -494,14 +494,14 @@ ${guia.m_sDomicilioDestinatario.length > 40 ?
 ^FX Encabezado
 ^FT750,470^A0R,35,45^FH\\^FDEXPRESS MG^FS
 ^FT710,420^A0R,25,25^FH\\^FDSERVICIO PUBLICO FEDERAL DE CARGA REGULAR^FS
-^FT680,420^ANR,25,25^FH\\^FDAVENIDA TRANSPORTISTAS NO. 414 COL.^FS
-^FT650,420^ANR,25,25^FH\\^FDFRACCION DE LOS GOMEZ CP. 37140^FS
-^FT620,420^ANR,25,25^FH\\^FDTEL: 4774704000.^FS
-^FT620,650^ANR,25,25^FH\\^FDRFC: EMG910926HN6^FS
+^FT680,420^A0R,25,25^FH\\^FDAVENIDA TRANSPORTISTAS NO. 414 COL.^FS
+^FT650,420^A0R,25,25^FH\\^FDFRACCION DE LOS GOMEZ CP. 37140^FS
+^FT620,420^A0R,25,25^FH\\^FDTEL: 4774704000.^FS
+^FT620,650^A0R,25,25^FH\\^FDRFC: EMG910926HN6^FS
 
 ^FX Seccion documentador
 ^FT645,1020^A0R,25,25^FH\\^FDDocumentador:^FS
-^FT620,1020^ANR,20,20^FH\\^FD${guia.m_sCreadoPor}^FS
+^FT620,1020^A0R,20,20^FH\\^FD${guia.m_sCreadoPor}^FS
 
 ^FX Seccion cuadro Folio
 ^FT730,1000^A0R,35,35^FH\\^FDSERIE Y FOLIO:^FS
@@ -509,45 +509,45 @@ ${guia.m_sDomicilioDestinatario.length > 40 ?
 
 ^FX Fecha y tipo
 ^FT570,100^A0R,30,30^FH\\^FDLugar y Fecha:^FS
-^FT540,80^ANR,25,25^FH\\^FD${fechaGuia.toLocaleDateString('es-MX', opciones)}^FS
+^FT540,80^A0R,25,25^FH\\^FD${fechaGuia.toLocaleDateString('es-MX', opciones)}^FS
 ^FT570,400^A0R,25,25^FH\\^FDTipo Cobro:^FS
 ^FT540,400^A0R,25,25^FH\\^FD${guia.m_sTipoCobro}^FS
 
 ^FX Remitente Destinatario +150, 0
 ^FT500,60^A0R,25,25^FH\\^FDRemitente:^FS
-^FT500,230^ANR,20,20^FH\\^FD${guia.m_sNOmbreRemitente}^FS
+^FT500,230^A0R,20,20^FH\\^FD${guia.m_sNOmbreRemitente}^FS
 ^FT470,60^A0R,25,25^FH\\^FDRFC:^FS
-^FT470,230^ANR,20,20^FH\\^FD${guia.m_sRFCRemitente}^FS
+^FT470,230^A0R,20,20^FH\\^FD${guia.m_sRFCRemitente}^FS
 ^FT440,60^A0R,25,25^FH\\^FDDestinatario:^FS
-^FT440,230^ANR,20,20^FH\\^FD${guia.m_sNombreDestinatario}^FS
+^FT440,230^A0R,20,20^FH\\^FD${guia.m_sNombreDestinatario}^FS
 ^FT410,60^A0R,25,25^FH\\^FDRFC:^FS
-^FT410,230^ANR,20,20^FH\\^FD${guia.m_sRFCDestinatario}^FS
+^FT410,230^A0R,20,20^FH\\^FD${guia.m_sRFCDestinatario}^FS
 ^FT380,60^A0R,25,25^FH\\^FDDirección:^FS
-^FT380,230^ANR,20,20^FH\\^FD${guia.m_sCalleDestinatario}^FS
+^FT380,230^A0R,20,20^FH\\^FD${guia.m_sCalleDestinatario}^FS
 ^FT350,60^A0R,25,25^FH\\^FDColonia:^FS
-^FT350,230^ANR,20,20^FH\\^FD${guia.m_sColoniaDestinatario}^FS
+^FT350,230^A0R,20,20^FH\\^FD${guia.m_sColoniaDestinatario}^FS
 ^FT320,60^A0R,25,25^FH\\^FDCiudad y Edo.:^FS
-^FT320,230^ANR,20,20^FH\\^FD${guia.m_sCiudadDestino}, ${guia.m_sEstadoDestinatario}^FS
+^FT320,230^A0R,20,20^FH\\^FD${guia.m_sCiudadDestino}, ${guia.m_sEstadoDestinatario}^FS
 ^FT290,60^A0R,25,25^FH\\^FDTel. y C.P:^FS
-^FT290,230^ANR,20,20^FH\\^FD${guia.m_sTelefonoDestinatario} cp.${guia.m_sCodigoPostalDestinatario}^FS
+^FT290,230^A0R,20,20^FH\\^FD${guia.m_sTelefonoDestinatario} cp.${guia.m_sCodigoPostalDestinatario}^FS
 
 ^FX Entregar en
 ^FT255,70^A0R,25,25^FH\\^FDEntregar en:^FS
 
 ^FX Cantidad
 ^FT210,70^A0R,20,20^FH\\^FDCANTIDAD^FS
-^FT180,70^ANR,20,20^FH\\^FD${paquetesTotales} ${paquete.m_sEmbalaje}^FS
+^FT180,70^A0R,20,20^FH\\^FD${paquetesTotales} ${paquete.m_sEmbalaje}^FS
 
 ^FX Descripción
 ^FT210,350^A0R,20,20^FH\\^FDDESCRIPCION^FS
-^FT180,350^ANR,20,20^FH\\^FD${paquete.m_sDescripcion}^FS
+^FT180,350^A0R,20,20^FH\\^FD${paquete.m_sDescripcion}^FS
 
 ^FX Folio Rastreo
-^FT75,60^ANR,20,20^FH\\^FDFolio Rastreo:^FS
+^FT75,60^A0R,20,20^FH\\^FDFolio Rastreo:^FS
 ^FT75,190^A0R,18,18^FH\\^FD${guia.m_nTracking}^FS
 
 ^FX Tipo de entrega
-^FT75,350^ANR,20,20^FH\\^FDTipo de entrega:^FS
+^FT75,350^A0R,20,20^FH\\^FDTipo de entrega:^FS
 ^FT75,520^A0R,20,20^FH\\^FD${guia.tipoEntrega == "OCURRE" ? guia.tipoEntrega : "DOMICILIO CLIENTE"}^FS
 
 ^FX Encabezado QR
