@@ -156,7 +156,7 @@ export default function LlegadaParadas(props){
 
     return (
         <Root onSubmit={onSubmit}>
-            {/*<div className={classes.root}></div>*/}
+            
             <ul style={{
                 width: "100%",
                 display: "flex",

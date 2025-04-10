@@ -114,7 +114,6 @@ function Embalaje() {
                     label: 'Si',
                     onClick: () => {
                         validarPermisos(state).then(respuesta => {
-                            //showSuccess(respuesta.data)
                             derecho = respuesta.data;
                             if (derecho === false) {
                                 showSuccess("El usuario no tiene derechos para realizar el proceso");
@@ -327,13 +326,11 @@ function Embalaje() {
                     </div>
                 </Cabecera>
             </header>
-            {/*Leftbar Start Here*/}
+
             <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
-            {/*Leftbar End Here*/}
 
-            {/*Page Container Start Here*/}
             <section className="main-container">
                 <div className="container-fluid">
                     <ul className="nav navStatica nav-tabs">
@@ -354,8 +351,8 @@ function Embalaje() {
                             </a>
                         </li>
                     </ul>
-                    <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
+                    <div className="row tab-content" >
+                        <div className="widget-wrap tab-pane fade in show" id="Listado" >
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
@@ -385,7 +382,7 @@ function Embalaje() {
                             </div>
                         </div>
 
-                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+                        <div className="widget-wrap tab-pane fade" id="Agregar" >
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row">
@@ -449,7 +446,7 @@ function Embalaje() {
 
                                                 </div>
                                                 <br></br>
-                                                   <div className="form-footer" className="ol-md-12">
+                                                   <div className="form-footer ol-md-12" >
                                                    <Grid container spacing={1}>
                                                       {  state.agregar !== "Consultar" &&
                                                           <Grid item xs>
@@ -482,7 +479,7 @@ function Embalaje() {
                             </div>
                         </div>
 
-                        <div className="widget-wrap" id="Importar" className="tab-pane fade">
+                        <div className="widget-wrap tab-pane fade" id="Importar" >
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row">
@@ -511,9 +508,6 @@ function Embalaje() {
                     </div>
                 </div>
             </section>
-            {/*Page Container End Here*/}
-
-            {/*Rightbar Start Here*/}
             <aside className="rightbar">
                 <BarraLateralDerecha />
             </aside>

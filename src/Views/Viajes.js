@@ -468,7 +468,7 @@ function Viajes() {
             window.location.replace("login");
             return;
         }
-        //getInventarioUnidades()
+       
     }, []);
 
     useEffect(() => {

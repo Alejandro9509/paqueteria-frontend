@@ -48,7 +48,7 @@ export default function DialogFormatosImpresion({idProceso = 0, idRegistro = 0, 
         if (idProceso === INFORMES) {
             let reporte = listadoFormatos.find( i => i.m_nIdFormato === selection)
             if (reporte === undefined) {
-                // showError("Es necesario seleccionar un reporte")
+              
                 return
             }
             if (reporte.m_sNombreArchivo.toUpperCase().includes('EXCEL')) {

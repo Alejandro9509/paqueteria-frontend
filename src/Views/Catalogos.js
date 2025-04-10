@@ -11,9 +11,6 @@ window.jQuery = window.$ = $;
 
 function Catalogo() {
 
-    const [state, setState] = React.useState({
-        height: window.innerHeight
-    })
 
     return (
         <div >
@@ -28,13 +25,10 @@ function Catalogo() {
                 </Cabecera>
             </header>
 
-            {/*Leftbar Start Here*/}
             <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
-            {/*Leftbar End Here*/}
 
-            {/*Page Container Start Here*/}
             <section className="main-container">
 
                 <div className="container-fluid" style={{ paddingLeft: "-5px", paddingRight: "-15px", justifyContent: "flex-start" }}>
@@ -66,8 +60,6 @@ function Catalogo() {
                     </div>
                 </div>
             </section>
-            {/*Page Container End Here*/}
-
         </div>
     );
 }

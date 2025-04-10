@@ -3,12 +3,11 @@ import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import configurationRoutes from '../routesConfiguraciones';
-import SvgIcon from "@mui/material/SvgIcon";
 import {
     Link,
 } from 'react-router-dom';
 import $ from 'jquery';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import CuentasCorreo from "./CuentasCorreo/CuentasCorreo";
 window.jQuery = window.$ = $;
 
@@ -44,16 +43,10 @@ function Configuracion() {
                     </div>
                 </Cabecera>
             </header>
-
-
-
-            {/*Leftbar Start Here*/}
             <aside className="iconic-leftbar">
                 <BarraLateralIzquierda />
             </aside>
-            {/*Leftbar End Here*/}
 
-            {/*Page Container Start Here*/}
             <section className="main-container">
 
                 <div className="container-fluid">
@@ -101,9 +94,7 @@ function Configuracion() {
                 </div>
 
             </section>
-            {/*Page Container End Here*/}
 
-            {/*Rightbar Start Here*/}
             <aside className="rightbar">
                 <BarraLateralDerecha />
             </aside>

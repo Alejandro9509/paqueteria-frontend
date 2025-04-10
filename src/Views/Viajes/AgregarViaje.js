@@ -40,7 +40,6 @@ import DialogDollys from "./DialogDollys";
 import ProgressBarCubicaje from "./ProgressBarCubicaje";
 import {showError} from "../../Util/GlobalFunctions";
 
-const headers = API_HEADERS
 
 function showSuccess(mensaje) {
     new Noty({
@@ -53,13 +52,6 @@ function showSuccess(mensaje) {
 
 window.jQuery = window.$ = $;
 
-/**Props
- * reload FUNCION recarga el listado de viajes del tab Listado.
- * consult BOOLEAN inidica si es consulta.
- * modificar BOOLEAN indica si es modificacion.
- * select OBJECT contiene el viaje si es consulta o modificación
- * idViaje INT contiene el identificador del Viaje
- * */
 class AgregarViaje extends Component {
 
     constructor(props) {
@@ -194,8 +186,6 @@ class AgregarViaje extends Component {
 
     componentWillMount() {
        this.getAllCiudades()
-        //this.getAllRutas()
-        //this.getAllCodigosPostales()
         this.getAllSucursales()
         this.getAllEstatusViaje();
         this.getAllUnidades();
@@ -822,7 +812,6 @@ class AgregarViaje extends Component {
         showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
     }
 
-    //Funcion para reaccionar al seleccionar una tarifa del LISTADO DE DIALOGO
     handleTarifasSeleccionadas = (e) => {
         if (this.state.dataRequerida === "Tarifas"){
             this.setState({idsTarifasSeleccionadas: e.selectionModel})
@@ -854,7 +843,6 @@ class AgregarViaje extends Component {
 
     handleCloseDialogUnidades(){
         this.setState({ openDialogUnidades: false })
-        /** Para evitar que se quite la barra de navegacion */
         document.body.style.overflow = 'auto';
     }
 
@@ -868,7 +856,6 @@ class AgregarViaje extends Component {
             kms: data.m_nOdometro,
             identificadorConvoyUnidad: data.IdentificadorConvoy,
             isTorton: data.m_nIdTipoUnidad === 1,
-            // horas: newValue.m_nHorasTrabajadasMotorNoGPS,
             aplicaRemolque: data.m_bAplicaRemolque
         })
         this.setState({ openDialogRemolques: true })
@@ -1041,123 +1028,11 @@ class AgregarViaje extends Component {
 
         return (
             <div onClick={()=>$.primerClick=true}>
-                {/*<Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
-                    <DialogContent>
-                        {this.state.tipoModal === 1 &&
-                        <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                            <div align="right">
-                                <button onClick={() => {
-                                    this.props.history.push("/Ciudades")
-                                }} className="btn btn-primary primary-btn">Agregar
-                                </button>
-                            </div>
-
-                            {this.state.dataCiudad.length !== 0 ? <TableCiudadesViajes object={this.state}
-                                                                                       select={this.state[this.state.identificadorModal]
-                                                                                       && this.state[this.state.identificadorModal].m_nIdCiudad}
-                                                                                       data={this.state.dataCiudad}
-                                                                                       identificadorModal={this.state.identificadorModal}
-                                                                                       func={() => this.handleSelectCP}/>
-                                : <div>No se encontró ningún registro</div>}
-
-
-                            <DialogActions style={{justifyContent: "left"}}>
-
-                                <button onClick={() => this.setState({openDialog: false})}
-                                        className="btn btn-primary primary-btn">Aceptar
-                                </button>
-                                <button onClick={() => this.setState({openDialog: false})}
-                                        className="btn btn-secondary secondary-btn">Cerrar
-                                </button>
-
-                            </DialogActions>
-                        </div>
-                        }
-                        {this.state.tipoModal === 4 && (
-                            <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                                <div align="right">
-                                    <button
-                                        onClick={() => {
-                                            this.props.history.push("/Unidades");
-                                        }}
-                                        className="btn btn-primary primary-btn"
-                                    >
-                                        Agregar
-                                    </button>
-                                </div>
-
-                                {this.state.dataUnidades.length !== 0 ? (
-                                    <TableUnidadViajes
-                                        select={
-                                            this.state[this.state.identificadorModal] &&
-                                            this.state[this.state.identificadorModal].m_nIdUnidad
-                                        }
-                                        data={this.state.dataUnidades}
-                                        identificadorModal={this.state.identificadorModal}
-                                        func={() => this.handleSelectCP}
-                                    />
-                                ) : (
-                                    <div>No se encontró ningún registro</div>
-                                )}
-                                <DialogActions style={{justifyContent: "left"}}>
-                                    <button
-                                        onClick={() => this.setState({openDialog: false})}
-                                        className="btn btn-secondary secondary-btn"
-                                    >
-                                        Cerrar
-                                    </button>
-                                    <button
-                                        onClick={() => this.setState({openDialog: false})}
-                                        className="btn btn-primary primary-btn"
-                                    >
-                                        Aceptar
-                                    </button>
-                                </DialogActions>
-                            </div>
-                        )}
-                    </DialogContent>
-                </Dialog>
-                <Dialog
-                    fullWidth={true}
-                    maxWidth={"md"}
-                    open={this.state.openHistoryDialog}
-                    onClose={() => this.setState({openHistoryDialog: false})}>
-                    <Historial/>
-                </Dialog>*/}
-                {/*{
-                    this.state.showAsignarOperadorDialog &&
-                    <Dialog open={this.state.showAsignarOperadorDialog}
-                            fullWidth={true}
-                            maxWidth={"md"}
-                            onClose={() => this.setState({showAsignarOperadorDialog: false})}>
-                        <DialogContent>
-                            <AsignarOperadorUnidad unidadAsignada={this.state.asignacionEquipo}
-                                                   rutaSeleccionada={this.state}
-
-                                                   onSubmit={(data) => this.setState({
-                                                       showAsignarOperadorDialog: false,
-                                                       asignacionEquipo: data
-                                                   })}>
-                                <DialogActions>
-                                    <Button
-                                        variant={"contained"}
-                                        color={"primary"}
-                                        type={"submit"}
-                                    >Aceptar</Button>
-                                    <Button
-                                        variant={"outlined"}
-                                        color={"primary"}
-                                        onClick={() => this.setState({showAsignarOperadorDialog: false})}>Cancelar</Button>
-                                </DialogActions>
-                            </AsignarOperadorUnidad>
-                        </DialogContent>
-                    </Dialog>
-                }*/}
+              
                 <DialogUnidades open={this.state.openDialogUnidades} handleClose={this.handleCloseDialogUnidades}
                                 handleAccept={this.handleAcceptDataUnidades}
                                 idOperador={this.state.operador?.m_nIdOperador} />
-                {/*<DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques}
-                handleAccept={this.handleAcceptDataRemolques} idConvoy={'BLANCA'} />*/}
+              
                 <DialogRemolques open={this.state.openDialogRemolques} handleClose={this.handleCloseDialogRemolques}
                                  handleAccept={this.handleAcceptDataRemolques}
                                  idConvoy={this.state.identificadorConvoyUnidad} isTorton={this.state.isTorton} />
@@ -1180,7 +1055,7 @@ class AgregarViaje extends Component {
                                     size={"small"}
                                     onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
                                     value={this.state.destinoSeleccionado}
-                                    //disabled={state.agregar === "Consultar"}
+                                 
                                     id="origenRemitente"
                                     disableClearable
                                     forcePopupIcon={false}
@@ -1230,7 +1105,6 @@ class AgregarViaje extends Component {
                                                 size={"small"}
                                                 onChange={this.handleOrigenFiltro}
                                                 value={this.state.origen}
-                                                //disabled={state.agregar === "Consultar"}
                                                 id="origenRemitente"
                                                 disableClearable
                                                 forcePopupIcon={false}
@@ -1259,7 +1133,6 @@ class AgregarViaje extends Component {
                                                 onChange={this.handleDestinoFiltro}
                                                 size={"small"}
                                                 value={this.state.destino}
-                                                //disabled={state.agregar === "Consultar"}
                                                 id="destino"
                                                 disableClearable
                                                 forcePopupIcon={false}
@@ -1304,23 +1177,14 @@ class AgregarViaje extends Component {
                                 />
                             </div>
                         </div>
-                        {/*<DataGrid
-                                localeText={dataGridLocaleText}
-                                rows={this.state.dataInformesPorAsignar}
-                                columns={columnspRorAsignar}
-                                density="compact"
-                                pageSize={Math.floor((this.state.height - 310) / 30)}
-                                getRowId={(row) => row.m_nIdInforme}
-                                checkboxSelection
-                                onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
-                            />*/}
+                       
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleShowDialog} color="primary" autoFocus>
                             Aceptar
                         </Button>
                     </DialogActions>
-                    {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
+                
                 </Dialog>
                 <div className="widget-wrap">
                     <div className="widget-content">
@@ -1577,16 +1441,12 @@ class AgregarViaje extends Component {
                                                 size={"small"}
                                                 onChange={(e, value) => this.handleUnidadFiltro(e, value)}
                                                 value={this.state.unidad}
-                                                // inputValue={this.state.unidad ? this.state.unidad.m_sDescripcion : ""}
                                                 id="unidad"
-                                                // disableClearable
-                                                // forcePopupIcon={false}
                                                 options={this.state.dataUnidades.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 34 && (i.m_nIdentificador === 1 || i.m_nIdentificador === 2) && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                 }
                                                 getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
-                                                // style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                                 disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
                                                 renderInput={(params) => (
                                                     <div>
@@ -1698,12 +1558,8 @@ class AgregarViaje extends Component {
                                                         size={"small"}
                                                         onChange={this.handleRemolqueUnoFiltro}
                                                         value={this.state.IdRemolque1}
-                                                        // inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
-                                                        //disabled={state.agregar === "Consultar"}
                                                         id="IdRemolque1"
-                                                        // disableClearable
                                                         disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
-                                                        // forcePopupIcon={false}
                                                         options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28 && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                         getOptionLabel={(option) =>
                                                             `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
@@ -1759,12 +1615,8 @@ class AgregarViaje extends Component {
                                                         size={"small"}
                                                         onChange={this.handleRemolqueDosFiltro}
                                                         value={this.state.IdRemolque2}
-                                                        // inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
-                                                        //disabled={state.agregar === "Consultar"}
                                                         id="IdRemolque2"
-                                                        // disableClearable
                                                         disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
-                                                        // forcePopupIcon={false}
                                                         options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28 && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                         getOptionLabel={(option) =>
                                                             `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
@@ -1817,12 +1669,11 @@ class AgregarViaje extends Component {
                                                         size={"small"}
                                                         onChange={this.handleDollyFiltro}
                                                         value={this.state.IdDolly}
-                                                        // inputValue={this.state.IdDolly ? this.state.IdDolly.m_sDescripcion : ""}
-                                                        //disabled={state.agregar === "Consultar"}
+                                                        
                                                         id="IdDolly"
-                                                        // disableClearable
+                                                        
                                                         disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
-                                                        // forcePopupIcon={false}
+                                                        
                                                         options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28)}
                                                         getOptionLabel={(option) =>
                                                             option ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
@@ -1887,41 +1738,6 @@ class AgregarViaje extends Component {
                                         Espacio de carga usado: {this.state.utilizacion}%
                                     </ProgressBarCubicaje>
                                 </div>
-
-                                {/*<div className={"row"}>
-
-                                    {
-                                        Object.keys(this.state.asignacionEquipo).length !== 0 &&
-                                        <div className="row" style={{display: "flex"}}>
-                                            <div className="col-sm-6 col-md-4 unit">
-                                                <div className="input">
-                                                    <TextField variant="outlined" size="small"
-                                                               className="form-control"
-                                                               type="text"
-                                                               disabled
-                                                               label="Operador"
-                                                               value={this.state.asignacionEquipo.operador ? this.state.asignacionEquipo.operador.m_sNombreCompleto : ""}
-                                                               name="placasDolly"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-6 col-md-4 unit">
-                                                <div className="input">
-                                                    <TextField variant="outlined" size="small"
-                                                               className="form-control"
-                                                               type="text"
-                                                               disabled
-                                                               label="Unidad"
-                                                               value={`${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sCodigo : ""} - ${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sDescripcion : ""}`}
-                                                               name="placasDolly"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-
-                                </div>*/}
-
                                 <div className="form-footer col-md-12" style={{marginTop:'30px'}}>
                                     <Grid container spacing={1}>
                                         <Grid item xs>
@@ -1956,36 +1772,7 @@ class AgregarViaje extends Component {
 
                     </div>
                 </div>
-                {/*
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="widget-wrap">
-                            <div className="widget-header">
-                                <h2 color={'#717171'} >Detalle de paradas</h2>
-                            </div>
-
-                            <div className="row" style={{ height: this.state.height - 650, width: '100%' }}>
-                                {this.state.dataInformesSeleccionados.length !== 0 ? (
-                                    <DataGrid
-                                        localeText={dataGridLocaleText}
-                                        rows={this.state.dataInformesSeleccionados}
-                                        columns={columns2}
-                                        density="compact"
-                                        pageSize={Math.floor((this.state.height - 310) / 30)}
-                                        getRowId={(row) => row.m_nIdInforme}
-                                        onRowSelected={(row) => {
-                                            this.setState({
-                                                idInforme: row.data.m_nIdInforme
-                                            })
-                                        }}
-                                    />
-                                ) : (
-                                    <div>No se encontró ningún registro</div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>  */}
+             
             </div>
 
         );

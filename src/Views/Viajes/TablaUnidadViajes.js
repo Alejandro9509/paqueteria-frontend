@@ -5,7 +5,6 @@ import DefaultColumnFilter from "./DefaultColumnFilter";
 export default function TableUnidadViajes({ data, select, func }) {
     const defaultColumn = React.useMemo(
         () => ({
-            // Default Filter UI
             Filter: DefaultColumnFilter,
         }),
         []
@@ -58,11 +57,9 @@ export default function TableUnidadViajes({ data, select, func }) {
                 {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map((column) => (
-                            // Add the sorting props to control sorting. For this example
-                            // we can add them into the header props
+
                             <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                 {column.render("Name")}
-                                {/* Add a sort direction indicator */}
                                 <span>
                                     {column.isSorted ? (
                                         column.isSortedDesc ? (
