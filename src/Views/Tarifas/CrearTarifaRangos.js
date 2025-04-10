@@ -345,7 +345,7 @@ export default function CrearTarifaRangos(props) {
         * que estamos modificando
         * */
         viajesForaneosListado.forEach(viaje => {
-            if(viaje.idOrigen === viajeForaneo.idOrigen && viaje.idDestino == viajeForaneo.idDestino && viajeForaneo.idViaje != viaje.idViaje){
+            if(viaje.idOrigen === viajeForaneo.idOrigen && viaje.idDestino === viajeForaneo.idDestino && viajeForaneo.idViaje !== viaje.idViaje){
                 viajeForaneo.grupos.forEach(grupoViajeNuevo => {
                     const zonasNuevas = grupoViajeNuevo.zonas.map(i => (i.m_nIdZona))
                     const productosNuevos = grupoViajeNuevo.productos.map(i => (i.m_nIdProducto))
@@ -743,8 +743,8 @@ export default function CrearTarifaRangos(props) {
     const getExportData = () => {
         const data = [];
         viajesForaneosListado.forEach(viaje => {
-            const origen = origenesDestinosListado.find((i) => i.m_nIdCiudad == viaje.idOrigen);
-            const destino = origenesDestinosListado.find((i) => i.m_nIdCiudad == viaje.idDestino);
+            const origen = origenesDestinosListado.find((i) => i.m_nIdCiudad === viaje.idOrigen);
+            const destino = origenesDestinosListado.find((i) => i.m_nIdCiudad === viaje.idDestino);
             //console.log("viaje: " + viaje.idViaje)
             viaje.grupos.forEach(grupo => {
                 //console.log("\t" + "grupo: " + grupo.nombre);
@@ -950,9 +950,9 @@ export default function CrearTarifaRangos(props) {
                 <DialogActions>
                     <Button onClick={() => {
                         if(!props.disabled){
-                            let viaje = viajesForaneosListado.find((i) => i.idViaje == viajeForaneo.idViaje);
+                            let viaje = viajesForaneosListado.find((i) => i.idViaje === viajeForaneo.idViaje);
                             const esNuevo = viaje?.nuevo;
-                            if(esNuevo == true){
+                            if(esNuevo === true){
                                 viaje.idOrigen = null;
                                 viaje.idOrigen = null;
                                 viaje.idTipoMedida = null;

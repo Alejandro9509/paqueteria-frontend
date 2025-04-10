@@ -101,7 +101,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
 
     onSubmitData(e){
         e.preventDefault();
-        if(this.state.idsPaquetesSeleccionadas.length == 0 || this.state.idsPaquetesSeleccionadas == null || this.state.idsPaquetesSeleccionadas == undefined){
+        if(this.state.idsPaquetesSeleccionadas.length === 0 || this.state.idsPaquetesSeleccionadas === null || this.state.idsPaquetesSeleccionadas === undefined){
             showError("Por favor eliga al menos un paquete");
             return;
         }

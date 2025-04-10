@@ -107,7 +107,7 @@ export default function Historial(){
     ];
 
     function conDatos() {
-        return data.length != 0;
+        return data.length !== 0;
     }
 
     return (

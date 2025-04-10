@@ -99,7 +99,7 @@ class TrackingEmail extends Component {
         if(!this.state.didSearch)
             obtenerInformeFolioTipo(props.data.m_sFolio,"3").then(({data}) => {
                 this.setState({didSearch:true})
-                if(data.Estatus == true){
+                if(data.Estatus === true){
 
                     obtenerImagenEvidencia(data.m_nIdRecoleccion?data.m_nIdRecoleccion:-1,1).then(respuestaRec=>{
                         obtenerImagenEvidencia(data.m_nIdGuia?data.m_nIdGuia:-1,0).then(respuestaEmb=>{

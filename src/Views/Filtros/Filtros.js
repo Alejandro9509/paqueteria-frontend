@@ -77,10 +77,10 @@ function Filtros(props) {
                 [target.name]: target.value
             }
         })
-        if (target.name && event.keyCode == 13){
+        if (target.name && event.keyCode === 13){
             if (props.embarque){
                 obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0,0).then(respuesta => {
-                    if (respuesta.data == "Vacio") {
+                    if (respuesta.data === "Vacio") {
                         props.listaResultado([])
                     } else {
                         props.listaResultado(respuesta.data)
@@ -107,7 +107,7 @@ function Filtros(props) {
     }
 
     const filtrar = () => {
-        if((filtros.fechaInicial == '' || filtros.fechaFinal == '') && filtros.folio.length == 0){
+        if((filtros.fechaInicial === '' || filtros.fechaFinal === '') && filtros.folio.length === 0){
             showError("Debe ingresar un rango de fechas");
             return;
         }

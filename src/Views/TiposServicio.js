@@ -73,7 +73,7 @@ function TiposServicio() {
             "m_nCreadoPor": state.CreadoPor,
             "m_nModificadoPor": state.ModificadoPor
         }
-        if (state.IdTipoServicio != 0) {
+        if (state.IdTipoServicio !== 0) {
             modificarTipoServicio(state.IdTipoServicio, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
@@ -98,7 +98,7 @@ function TiposServicio() {
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
             derecho = respuesta.data;
-            if (derecho == false) {
+            if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
@@ -510,7 +510,7 @@ function TiposServicio() {
                                                                        required
                                                                        value={state.Descripcion}
                                                                        id="Descripcion"
-                                                                       disabled={state.agregar == "Consultar"}
+                                                                       disabled={state.agregar === "Consultar"}
                                                             />
                                                         </div>
                                                     </div>
@@ -526,7 +526,7 @@ function TiposServicio() {
                                                                        step="1"
                                                                        value={state.DiasHabiles}
                                                                        id="DiasHabiles"
-                                                                       disabled={state.agregar == "Consultar"}
+                                                                       disabled={state.agregar === "Consultar"}
                                                             />
                                                         </div>
                                                     </div>
@@ -546,7 +546,7 @@ function TiposServicio() {
                                                                     name="activo"
                                                                     type="checkbox"
                                                                     id="activo"
-                                                                    disabled={state.agregar == "Consultar"}
+                                                                    disabled={state.agregar === "Consultar"}
                                                                 />
                                                                 <i/>
                                                                 Activo
@@ -567,7 +567,7 @@ function TiposServicio() {
                                                                        required
                                                                        value={state.Costo}
                                                                        id="Costo"
-                                                                       disabled={state.agregar == "Consultar"}
+                                                                       disabled={state.agregar === "Consultar"}
                                                             />
                                                         </div>
                                                     </div>
@@ -582,14 +582,14 @@ function TiposServicio() {
                                                 <Grid container spacing={1}>
                                                     <Grid item xs>
                                                         <Button fullWidth className="btn btn-secondary secondary-btn"
-                                                                style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"}
+                                                                style={{marginRight:'5px'}} disabled={state.agregar === "Consultar"}
                                                                 onClick={handleShowListado}>
                                                             Cancelar
                                                         </Button>
                                                     </Grid>
                                                     <Grid item xs>
                                                         <Button fullWidth className="btn btn-primary primary-btn" type="submit"
-                                                                form="formulario" disabled={state.agregar == "Consultar"}>
+                                                                form="formulario" disabled={state.agregar === "Consultar"}>
                                                             Guardar
                                                         </Button>
                                                     </Grid>
@@ -617,8 +617,8 @@ function TiposServicio() {
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
                                                     <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                    <button className="btn btn-secondary secondary-btn"  disabled={state.agregar == "Consultar"}>Cancelar</button>
-                                                    <button onClick={handleAceptar} className="btn btn-primary primary-btn"  disabled={state.agregar == "Consultar"}>Aceptar</button>
+                                                    <button className="btn btn-secondary secondary-btn"  disabled={state.agregar === "Consultar"}>Cancelar</button>
+                                                    <button onClick={handleAceptar} className="btn btn-primary primary-btn"  disabled={state.agregar === "Consultar"}>Aceptar</button>
                                                 </div>
                                             </form>
                                         </div>

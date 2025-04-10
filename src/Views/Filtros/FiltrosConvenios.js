@@ -30,9 +30,9 @@ function Filtros(props) {
                 [target.name]: target.value
             }
         })
-        if (target.name && event.keyCode == 13){
+        if (target.name && event.keyCode === 13){
             obtenerTarifasRangosFiltro(target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
+                if (respuesta.data === "Vacio") {
 
                     props.actualizarTarifas([]);
                 } else {

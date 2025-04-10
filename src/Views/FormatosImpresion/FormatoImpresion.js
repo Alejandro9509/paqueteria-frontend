@@ -137,7 +137,7 @@ class FormatoImpresion extends Component {
 
     async handleAceptar(id,data) {
         var image = null
-        if (data.image.length != 0) {
+        if (data.image.length !== 0) {
             image = data.image[0]
         }
         var today = new Date();

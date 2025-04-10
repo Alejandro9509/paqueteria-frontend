@@ -129,11 +129,11 @@ class ConceptosAdicionales extends Component {
 
     calcularImpuestos(traslada, retiene, importe) {
         this.setState({ retiene: retiene, importe: importe, traslada: traslada })
-        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
+        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) !== null) {
             const impuesto = this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
             this.setState({ importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2), retiene: retiene, importe: importe, traslada: traslada })
         }
-        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
+        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) !== null) {
             const impuesto = this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
             this.setState({ importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2), retiene: retiene, importe: importe, traslada: traslada })
         }
@@ -167,7 +167,7 @@ class ConceptosAdicionales extends Component {
             if (!this.props.consult) {
                 const {removeConcepto} = this.props
                 removeConcepto(concepto)
-                const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+                const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion === concepto.idConcepto)
                 conceptoSelect.arClsDetalle = respuesta.data
                 this.setState({
                     concepto: conceptoSelect,
@@ -207,14 +207,14 @@ class ConceptosAdicionales extends Component {
             <div>
                 <Dialog open={this.state.openDialog} onClose={() => this.setState({ openDialog: false })}>
                     <DialogContent>
-                        {this.state.tipoModal == 1 &&
+                        {this.state.tipoModal === 1 &&
                             <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
                                 <div align="right">
                                     <button onClick={() => { this.props.history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
 
                                 </div>
 
-                                {this.state.conceptos.length != 0 ?
+                                {this.state.conceptos.length !== 0 ?
                                     <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state}
                                                     select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion}
                                                     columns={this.state.columnsConceptos} data={this.state.conceptos}
@@ -249,7 +249,7 @@ class ConceptosAdicionales extends Component {
                                     id="concepto"
                                     disableClearable
                                     forcePopupIcon={false}
-                                    disabled={this.state.agregar == "Consultar"}
+                                    disabled={this.state.agregar === "Consultar"}
                                     options={this.state.conceptos}
                                     getOptionLabel={(option) =>
                                         option.m_sConcepto
@@ -278,7 +278,7 @@ class ConceptosAdicionales extends Component {
                                                                 style={{
                                                                     paddingRight: "0px",
                                                                 }}
-                                                                disabled={this.state.agregar == "Consultar"}
+                                                                disabled={this.state.agregar === "Consultar"}
                                                                 onClick={() => {
                                                                     this.setState({
                                                                         identificadorModal:
@@ -479,7 +479,7 @@ class ConceptosAdicionales extends Component {
                                     >
                                         <option key={0} value={0}>Selecciona</option>
                                         {this.state.tiposCalculo.map((t) =>
-                                            (t.m_nIdTarifaTipoCalculo == 3 ? this.state.tipoMedida == 3 &&
+                                            (t.m_nIdTarifaTipoCalculo === 3 ? this.state.tipoMedida === 3 &&
                                                 <option key={t.m_nIdTarifaTipoCalculo} value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
                                                 : <option key={t.m_nIdTarifaTipoCalculo} value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
                                         }
@@ -519,13 +519,13 @@ class ConceptosAdicionales extends Component {
                                                 {c.nombreConcepto}
                                             </td>
                                             <td style={{ textAlign: "left" }}>
-                                                {c.tipoMedida == 1 ? "Kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "Piezas" : ""}
+                                                {c.tipoMedida === 1 ? "Kg" : c.tipoMedida === 2 ? "Tons" : c.tipoMedida === 3 ? "Piezas" : ""}
                                             </td>
                                             <td style={{ textAlign: "left" }}>
-                                                {c.rangoMinimo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}
+                                                {c.rangoMinimo} {c.tipoMedida === 1 ? "kg" : c.tipoMedida === 2 ? "Tons" : c.tipoMedida === 3 ? "pzs": ""}
                                             </td>
                                             <td style={{ textAlign: "left" }}>
-                                                {c.rangoMaximo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}
+                                                {c.rangoMaximo} {c.tipoMedida === 1 ? "kg" : c.tipoMedida === 2 ? "Tons" : c.tipoMedida === 3 ? "pzs": ""}
                                             </td>
                                             <td style={{ textAlign: "left" }}>
                                                 ${parseFloat(c.importe).toFixed(2)}
@@ -543,7 +543,7 @@ class ConceptosAdicionales extends Component {
                                                 ${parseFloat(c.importeRet).toFixed(2)}
                                             </td>
                                             <td style={{ textAlign: "left" }}>
-                                                {c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : c.tipoCalculo == 3 ? "Producto" : ""}
+                                                {c.tipoCalculo === 1 ? "Fijo" : c.tipoCalculo === 2 ? "Factor" : c.tipoCalculo === 3 ? "Producto" : ""}
                                             </td>
                                             {
                                                 !this.props.consult &&
@@ -598,7 +598,7 @@ class ConceptosAdicionales extends Component {
                             </div>
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
-                            <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                            <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) !== null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) !== null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
                         </div>
                     </div>
                 </div>

@@ -20,7 +20,7 @@ class Tour extends Component {
 
     getRoute() {
         var polygon = []
-        var guias = this.props.paquetes.filter((p, index) => this.props.tour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").find((s, i) => parseInt(s.activities[0].jobId.replace('job_','')) === index) != null)
+        var guias = this.props.paquetes.filter((p, index) => this.props.tour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").find((s, i) => parseInt(s.activities[0].jobId.replace('job_','')) === index) !== null)
 
         var result = []
         this.props.tour.stops.filter(j => j.activities[0].type === "delivery" || j.activities[0].type === "pickup").forEach((item, index) => {

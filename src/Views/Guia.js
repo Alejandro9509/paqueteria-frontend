@@ -504,7 +504,7 @@ function Guia(props) {
             width: 200,
             renderCell: (row) => {
                 <div>
-                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                    {row.row.m_sUsuarioDocumento === "0" ? "N/A" : row.row.m_sUsuarioDocumento}
                 </div>
             }
         },
@@ -658,7 +658,7 @@ function Guia(props) {
                 for(var j = range.s.r + 1; j <= range.e.r; ++j) {
                     var ref = XLSX.utils.encode_cell({r:j, c:i});
                     if(!ws[ref]) continue;
-                    if(ws[ref].t != 'n') continue;
+                    if(ws[ref].t !== 'n') continue;
                     ws[ref].z = fmt;
                   }
             }
@@ -743,7 +743,7 @@ function Guia(props) {
         // SE REVISA QUE HAYA DOCUMENTO POR DEFECTO DEFINIDO PARA LA SUCURSAL
         /*await consultarDocumentoTimbradoSucursal(state.idSucursalAgregar).then(async ({data}) => {
             if (data.idTipoDocumento > 0) {
-                if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+                if (state.idGuia === 0 || state.idGuia === '' || state.idGuia === undefined) {
                     agregarGuia(params).then(respuesta => {
                         showSuccess(respuesta.data)
                         handleShowListado()
@@ -809,7 +809,7 @@ function Guia(props) {
         validarRequiereDocumentoTimbrado(state.idSucursalAgregar).then(({data}) => {
             showSuccess(data.message)
             if (data.tieneDocumentoAsignado){
-                if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+                if (state.idGuia === 0 || state.idGuia === '' || state.idGuia === undefined) {
                     agregarGuia(params).then(respuesta => {
                         showSuccess(respuesta.data)
                         handleShowListado()
@@ -918,7 +918,7 @@ function Guia(props) {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
-            if (derecho == false) {
+            if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
@@ -962,7 +962,7 @@ function Guia(props) {
 
     function handleShowModificar(fila,id,folioGuia) {
       if(fila.m_nIdEstatusGuia){
-              if(fila.m_nIdEstatusGuia == 8){
+              if(fila.m_nIdEstatusGuia === 8){
                 showSuccess(`No es posible modificar la Guia ya que esta cancelada`)
                 return
             }
@@ -1036,7 +1036,7 @@ function Guia(props) {
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
+            p.m_sTipo = p.m_nIdTipo === 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrClsDetalle)
 
@@ -1158,7 +1158,7 @@ function Guia(props) {
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
                 ...state,
-                usuarioCancela: respuesta.data.m_nUsuarioCancelacion != 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
+                usuarioCancela: respuesta.data.m_nUsuarioCancelacion !== 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
                 folioGuia: respuesta.data.m_nFolioGuia,
                 sucursalCancelacion: respuesta.data.m_sSucursal,
                 fechaCancelado: today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate(),
@@ -1579,7 +1579,7 @@ function Guia(props) {
             window.location.replace("login");
             return;
         }
-        if (props.location.idEmbarque != undefined) {//viene de un embarque
+        if (props.location.idEmbarque !== undefined) {//viene de un embarque
             obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
                 console.log('Embarque datos:')
                 console.log(respuesta.data)
@@ -1636,7 +1636,7 @@ function Guia(props) {
                 for (var i = 0; i < device_list.length; i++) {
                     //Add device to list of devices and to html select element
                     var device = device_list[i];
-                    if (!selected_device || device.uid != selected_device.uid) {
+                    if (!selected_device || device.uid !== selected_device.uid) {
                         devices.push(device);
                     }
                 }
@@ -1922,7 +1922,7 @@ function Guia(props) {
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
+            p.m_sTipo = p.m_nIdTipo === 1 ? 'Sobre' : 'Paquete'
         })
 
         setDataPaquetes(respuesta.data.m_arrPaquetes)
@@ -2558,11 +2558,11 @@ function Guia(props) {
         getAllDataTipoPago()
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
-            if (guia.m_nIdEstatusGuia == 7) {
+            if (guia.m_nIdEstatusGuia === 7) {
                 if (!guia.m_nClienteBloqueado) {
                     let importeTotal = 0
                     guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
-                    let tipoCobro = dataTipoCobro.find(i => i.m_nIdTipoCobro == guia.m_nIdTIpoCobro)
+                    let tipoCobro = dataTipoCobro.find(i => i.m_nIdTipoCobro === guia.m_nIdTIpoCobro)
                     let tipoPago = tipoCobro.m_nIdTipoPago || dataTipoPago[0]?.m_nIdTipoPago
                     setDataOcurre({
                         idGuia: guia.m_nIdGuia,
@@ -2977,7 +2977,7 @@ function Guia(props) {
 
                         <li>
                             <a onClick={handleShowCancelar}
-                               className={(state.idGuia === 0 || !validarDerecho(9101461) ||  state.estatusGuia == 8)? classes.disabled : ""}>
+                               className={(state.idGuia === 0 || !validarDerecho(9101461) ||  state.estatusGuia === 8)? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
@@ -3130,7 +3130,7 @@ function Guia(props) {
                                                                            type="text"
                                                                            label="Folio Guía"
                                                                            placeholder={state.folioGuia}
-                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           readOnly={state.agregar === "Consultar"}
                                                                            id="folioGuia"
                                                                            name="folioGuia"
                                                                            fullWidth
@@ -3143,7 +3143,7 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="label">
-                                                             {state.agregar == "Agregar" &&
+                                                             {state.agregar === "Agregar" &&
                                                               <FormControl fullWidth variant="outlined"
                                                                              size="small">
                                                                     <InputLabel id="idEmbarqueLabel">Folio
@@ -3158,7 +3158,7 @@ function Guia(props) {
                                                                         id="idEmbarque"
                                                                         read="true"
                                                                         value={state.idEmbarque}
-                                                                        disabled={state.agregar == "Consultar" || state.validarEmbarqueGuia || state.agregar == "Modificar" }
+                                                                        disabled={state.agregar === "Consultar" || state.validarEmbarqueGuia || state.agregar === "Modificar" }
 
                                                                     >
                                                                         <MenuItem value="0">
@@ -3177,7 +3177,7 @@ function Guia(props) {
                                                                     </Select>
                                                                 </FormControl>
                                                                 }
-                                                                {state.agregar != "Agregar" &&
+                                                                {state.agregar !== "Agregar" &&
                                                                     <TextField variant="outlined" size="small" fullWidth
                                                                     labelId="idEmbarqueLabel"
                                                                     label="Folio Embarque"
@@ -3219,7 +3219,7 @@ function Guia(props) {
                                                                            label="Folio Informe"
                                                                            //placeholder={state.folioInforme}
                                                                            value={state.folioInforme}
-                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           readOnly={state.agregar === "Consultar"}
                                                                            id="folioInforme"
                                                                            name="folioInforme"
                                                                            disabled="disabled"
@@ -3237,7 +3237,7 @@ function Guia(props) {
                                                                            fullWidth
                                                                            label="Tracking"
                                                                            placeholder={state.tracking}
-                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           readOnly={state.agregar === "Consultar"}
                                                                            id="tracking"
                                                                            name="tracking"
                                                                            disabled="disabled"
@@ -3257,7 +3257,7 @@ function Guia(props) {
                                                                            InputLabelProps={{shrink: true,}}
                                                                            label="Fecha / Hora"
                                                                            value={state.fecha}
-                                                                           readOnly={state.agregar == "Consultar"}
+                                                                           readOnly={state.agregar === "Consultar"}
                                                                            id="fecha"
                                                                            name="fecha"
                                                                            disabled="disabled"
@@ -3346,7 +3346,7 @@ function Guia(props) {
                                                                         required
                                                                         value={state.tipoCambio}
                                                                         onChange={handleChange}
-                                                                        // disabled={state.agregar == "Consultar"}
+                                                                        // disabled={state.agregar === "Consultar"}
                                                                         disabled
                                                                         id="tipoCambio"
                                                                         name="tipoCambio"
@@ -3475,7 +3475,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Nombre"
                                                                                            value={state.nombreRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="nombreRemitente"
                                                                                            name="nombreRemitente"
                                                                                            disabled="disabled"
@@ -3497,7 +3497,7 @@ function Guia(props) {
                                                                                                shrink: true,
                                                                                            }}
                                                                                            value={state.RFCRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="RFCRemitente"
                                                                                            name="RFCRemitente"
                                                                                            disabled="disabled"
@@ -3519,7 +3519,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Domicilio"
                                                                                            value={state.domicilioRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="domicilioRemitente"
                                                                                            name="domicilioRemitente"
                                                                                            disabled="disabled"
@@ -3541,7 +3541,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Código Postal"
                                                                                            value={state.codigoPostalRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="codigoPostalRemitente"
                                                                                            name="codigoPostalRemitente"
                                                                                            disabled="disabled"
@@ -3563,7 +3563,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Correo Electrónico"
                                                                                            value={state.correoRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="correoRemitente"
                                                                                            name="correoRemitente"
                                                                                            disabled="disabled"
@@ -3585,7 +3585,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Teléfono"
                                                                                            value={state.telefonoRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="telefonoRemitente"
                                                                                            name="telefonoRemitente"
                                                                                            disabled="disabled"
@@ -3607,7 +3607,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Contacto"
                                                                                            value={state.contactoRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="contactoRemitente"
                                                                                            name="contactoRemitente"
                                                                                            disabled="disabled"
@@ -3629,7 +3629,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Zona Tarifa"
                                                                                            value={state.zonaTarifaRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="zonaTarifaRemitente"
                                                                                            name="zonaTarifaRemitente"
                                                                                            disabled="disabled"
@@ -3652,7 +3652,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Origen"
                                                                                            value={state.origenRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="origenRemitente"
                                                                                            name="origenRemitente"
                                                                                            disabled="disabled"
@@ -3689,7 +3689,7 @@ function Guia(props) {
                                                                                            label="Nombre"
                                                                                            fullWidth
                                                                                            value={state.sNombreDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="sNombreDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3709,7 +3709,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="RFC"
                                                                                            value={state.sRFCDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="sRFCDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3729,7 +3729,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Domicilio"
                                                                                            value={state.sDomicilioDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="sDomicilioDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3749,7 +3749,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Código Postal"
                                                                                            value={state.codigoPostalDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="idCodigoPostalDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3769,7 +3769,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Correo Electrónico"
                                                                                            value={state.sCorreoDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="sCorreoDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3789,7 +3789,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Teléfono"
                                                                                            value={state.sTelefonoDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="sTelefonoDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3809,7 +3809,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Contacto"
                                                                                            value={state.sContactoDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="sContactoDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3829,7 +3829,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Zona Tarifa"
                                                                                            value={state.zonaTarifaDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="zonaTarifaDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3850,7 +3850,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Destino"
                                                                                            value={state.CiudadDestino}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            id="CiudadDestino"
                                                                                            disabled="disabled"
                                                                                 />
@@ -3968,7 +3968,7 @@ function Guia(props) {
                                                                                         name="idTipoCobro"
                                                                                         read="true"
                                                                                         value={state.idTipoCobro}
-                                                                                        // disabled={state.agregar == "Consultar"}
+                                                                                        // disabled={state.agregar === "Consultar"}
                                                                                         disabled="disabled">
 
                                                                                         <MenuItem value="0">
@@ -4040,7 +4040,7 @@ function Guia(props) {
                                                                                            }}
                                                                                            label="Valor Declarado"
                                                                                            placeholder={state.ValorDeclarado}
-                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           readOnly={state.agregar === "Consultar"}
                                                                                            value={state.ValorDeclarado}
                                                                                            disabled
                                                                                            id="ValorDeclarado"
@@ -4181,7 +4181,7 @@ function Guia(props) {
 
                                 </div>
                                 {
-                                    state.agregar != "Agregar" &&
+                                    state.agregar !== "Agregar" &&
                                     <div className="row">
                                         <div className="widget-wrap">
                                             <div className="widget-container">

@@ -67,7 +67,7 @@ function TipoCobro() {
             "creadoPor": state.CreadoPor,
             "modificadoPor": state.ModificadoPor
         }
-        if (state.idTipoCobro != 0) {
+        if (state.idTipoCobro !== 0) {
             modificarTipoCobro(state.idTipoCobro, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado();
@@ -92,7 +92,7 @@ function TipoCobro() {
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
             derecho = respuesta.data;
-            if (derecho == false) {
+            if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }

@@ -13,22 +13,7 @@ const classes = {
 };
 
 const Root = styled('form')(() => ({
-    /*root: {
-        '& .MuiTextField-root': {
-            width: 200,
-            marginLeft: 10
-        },
-        '& .MuiFormControl-marginDense': {
-            margin: '10px !important',
-        },
-        margin: {
-        },
-        withoutLabel: {
-        },
-        textField: {
-            width: '25ch',
-        },
-    },*/
+
     [`& .${classes.root}`]: {
         flexGrow: 1,
     }
@@ -98,19 +83,7 @@ export default function LlegadaParadas(props){
         }
     ]
 
-    const handleTipoDeCambio = (e) => {
-        setData({
-            ...data,
-            tipoDeCambioOrigen: e.target.value
-        });
-    }
 
-    const handleChangeMillas = (e) => {
-        setData({
-            ...data,
-            millas: e.target.value
-        });
-    }
 
     const handleLiquidacion = (e) => {
         setData({
@@ -126,32 +99,6 @@ export default function LlegadaParadas(props){
         });
     }
 
-    const handleChangeKmsRemolqueUno = (event) => {
-        setData({
-            ...data,
-            kmsRemolqueUno: event.target.value});
-    }
-
-    const handleChangeMillasRemolqueUno = (e) => {
-        setData({
-            ...data,
-            millasRemolqueUno: e.target.value
-        });
-    }
-
-    const handleChangeKmsRemolqueDos = (e) => {
-        setData({
-            ...data,
-            kmsRemolqueDos: e.target.value
-        });
-    }
-
-    const handleChangeMillasRemolqueDos = (e) => {
-        setData({
-            ...data,
-            millasRemolqueDos: e.target.value
-        });
-    }
 
     const handleChangeFechaSalida = (e) => {
         setData({

@@ -72,7 +72,7 @@ function Moneda() {
             "m_nCreadoPor": parseInt(state.CreadoPor),
             "m_nModificadoPor": parseInt(state.ModificadoPor)
         }
-        if (state.idMoneda != 0) {
+        if (state.idMoneda !== 0) {
             modificarMonedas(state.idMoneda, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
@@ -115,7 +115,7 @@ function Moneda() {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
-            if (derecho == false) {
+            if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
@@ -337,7 +337,7 @@ function Moneda() {
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                        {data.length != 0 ? (
+                                        {data.length !== 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
                                                 rows={data}

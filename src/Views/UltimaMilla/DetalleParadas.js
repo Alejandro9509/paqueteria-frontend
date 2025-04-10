@@ -760,7 +760,7 @@ class DetalleParadas extends Component {
 
     validarPaquetes(paquetes){
         return this.stableSort(this.state.paquetes, this.getComparator("asc", "m_sDescripcion")).map((u, index) =>{
-            u.isItemSelected = this.props.paquetesSeleccionadas.find(a => a.m_nId === u.m_nId) != null;
+            u.isItemSelected = this.props.paquetesSeleccionadas.find(a => a.m_nId === u.m_nId) !== null;
             return u})
     }
 
@@ -1284,7 +1284,7 @@ class DetalleParadas extends Component {
                                                             <Button
                                                                 disabled={!validarDerecho(9101447)
                                                                     || !tour?.m_bActiva
-                                                                    || tour.m_arrClsProGuia.every((i) => i.m_nEstatusUlimaMilla == 3)}
+                                                                    || tour.m_arrClsProGuia.every((i) => i.m_nEstatusUlimaMilla === 3)}
                                                                 variant={"contained"}
                                                                 color={"primary"}
                                                                 onClick={() => this.setState({

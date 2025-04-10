@@ -91,7 +91,7 @@ export default function ConceptosFacturacion(props) {
         setConcepto(concepto => {
             return { ...concepto,retiene: retiene, importe: importe, traslada: traslada }
         })
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
+        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) !== null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
             setConcepto(concepto=>{
                 return {
@@ -103,7 +103,7 @@ export default function ConceptosFacturacion(props) {
                 }
             })
         }
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
+        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) !== null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
             setConcepto(concepto=>{
                 return {
@@ -118,7 +118,7 @@ export default function ConceptosFacturacion(props) {
     }
 
     const calcularDescuento = (event) => {
-        if (event.keyCode == 13){
+        if (event.keyCode === 13){
             calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
         }
     }
@@ -251,7 +251,7 @@ export default function ConceptosFacturacion(props) {
                     headerName: "Medida",
                     field: "tipoMedida",
                     width: 100,
-                    valueFormatter: ({ value }) => `${value == 1 ? "Kg" : value == 2 ? "Tons" : value == 3 ? "Piezas" : value == 4 ? "Rangos" : ""}`,
+                    valueFormatter: ({ value }) => `${value === 1 ? "Kg" : value === 2 ? "Tons" : value === 3 ? "Piezas" : value === 4 ? "Rangos" : ""}`,
                 },
             )
         }
@@ -300,7 +300,7 @@ export default function ConceptosFacturacion(props) {
                     field: "tipoCalculo",
                     width: 100,
                     valueFormatter: ({value}) =>
-                        `${value == 1 ? "Fijo" : value == 2 ? "Factor" : value == 3 ? "Producto" : ""} `,
+                        `${value === 1 ? "Fijo" : value === 2 ? "Factor" : value === 3 ? "Producto" : ""} `,
 
                 },
             )
@@ -571,7 +571,7 @@ export default function ConceptosFacturacion(props) {
                                 >
                                     <option key={0} value={0}>Selecciona</option>
                                     {state.tiposCalculo.map((t) =>
-                                        (t.m_nIdTarifaTipoCalculo == 3 ? (concepto.tipoMedida == 3 || concepto.tipoMedida == 4) &&
+                                        (t.m_nIdTarifaTipoCalculo === 3 ? (concepto.tipoMedida === 3 || concepto.tipoMedida === 4) &&
                                             <option key={t.m_nIdTarifaTipoCalculo}
                                                     value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
                                             : <option key={t.m_nIdTarifaTipoCalculo}

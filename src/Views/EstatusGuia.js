@@ -109,7 +109,7 @@ function EstatusGuia() {
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                        {data.length != 0 ? (
+                                        {data.length !== 0 ? (
                                             <DataGrid
                                             localeText={dataGridLocaleText}
                                                 rows={data}

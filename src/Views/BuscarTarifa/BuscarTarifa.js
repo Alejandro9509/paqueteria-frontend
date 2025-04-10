@@ -594,7 +594,7 @@ function BuscarTarifa() {
 
                                                 //conceptosResult.filter((c)=>c.IdConceptoRecoleccion==conceptosParamsConfig.IdConceptoRecoleccion).map((c,index)=>{
                                                 conceptosResult.sort(function(a, b){return a.index - b.index}).map((c, index) => {
-                                                    let concepto = c.find((c) => c.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion)
+                                                    let concepto = c.find((c) => c.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoRecoleccion)
                                                     let pesoVol=(productosCotizados[index].desc.m_xLargo*productosCotizados[index].desc.m_xAncho*productosCotizados[index].desc.m_xAlto*conceptosParamsConfig.FactorConversion)
                                                     if (concepto.m_bError)
                                                         return (
@@ -662,7 +662,7 @@ function BuscarTarifa() {
                                                                     ${agregarComasNumero(concepto.m_cImporteRetiene.toFixed(2))}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                    {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
+                                                                    {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo === concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                                 </Grid>
                                                                 <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                     ${agregarComasNumero((concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva).toFixed(2))}
@@ -682,7 +682,7 @@ function BuscarTarifa() {
                                                     <Grid item sm={2}>Total Final</Grid>
                                                     <Grid item sm={10}></Grid>
                                                     <Grid item sm={2}>${agregarComasNumero((conceptosResult.reduce((acum,a)=>{
-                                                        let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoRecoleccion)
+                                                        let val = a.find((comp) => comp.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoRecoleccion)
                                                         if(val.m_cImporte)
                                                             return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                         else
@@ -738,7 +738,7 @@ function BuscarTarifa() {
                                             conceptosResult.length > 0 && conceptosActivos.ultimaMilla &&
 
                                             conceptosResult.sort(function(a, b){return a.index - b.index}).map((c, index) => {
-                                                let concepto = c.find((c) => c.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoEntrega)
+                                                let concepto = c.find((c) => c.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoEntrega)
                                                 let pesoVol=(productosCotizados[index].desc.m_xLargo*productosCotizados[index].desc.m_xAncho*productosCotizados[index].desc.m_xAlto*conceptosParamsConfig.FactorConversion)
                                                 if (concepto.m_bError)
                                                     return (
@@ -806,7 +806,7 @@ function BuscarTarifa() {
                                                                 ${agregarComasNumero(concepto.m_cImporteRetiene.toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
+                                                                {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo === concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 ${agregarComasNumero((concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva).toFixed(2))}
@@ -826,7 +826,7 @@ function BuscarTarifa() {
                                                 <Grid item sm={2}>Total Final</Grid>
                                                 <Grid item sm={10}></Grid>
                                                 <Grid item sm={2}>${agregarComasNumero((conceptosResult.reduce((acum,a)=>{
-                                                    let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoEntrega)
+                                                    let val = a.find((comp) => comp.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoEntrega)
                                                     if(val.m_cImporte)
                                                         return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                     else
@@ -881,7 +881,7 @@ function BuscarTarifa() {
                                             conceptosResult.length > 0 && conceptosActivos.millaIntermedia &&
 
                                             conceptosResult.sort(function(a, b){return a.index - b.index}).map((c, index) => {
-                                                let concepto = c.find((c) => c.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoFlete)
+                                                let concepto = c.find((c) => c.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoFlete)
                                                 let pesoVol=(productosCotizados[index].desc.m_xLargo*productosCotizados[index].desc.m_xAncho*productosCotizados[index].desc.m_xAlto*conceptosParamsConfig.FactorConversion)
                                                 if (concepto.m_bError)
                                                     return (
@@ -949,7 +949,7 @@ function BuscarTarifa() {
                                                                 ${agregarComasNumero(concepto.m_cImporteRetiene.toFixed(2))}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={1}>
-                                                                {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo == concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
+                                                                {tiposCalculoListado.find((t) => t.m_nIdTarifaTipoCalculo === concepto.m_nIdTipoCalculo).m_sTarifaTipoCalculo}
                                                             </Grid>
                                                             <Grid item style={{"font-weight":"normal"}} sm={2}>
                                                                 ${agregarComasNumero((concepto.m_cImporte - concepto.m_cImporteRetiene + concepto.m_cImporteIva).toFixed(2))}
@@ -969,7 +969,7 @@ function BuscarTarifa() {
                                                 <Grid item sm={2}>Total Final</Grid>
                                                 <Grid item sm={10}></Grid>
                                                 <Grid item sm={2}>${agregarComasNumero((conceptosResult.reduce((acum,a)=>{
-                                                    let val = a.find((comp) => comp.m_nIdConceptosFacturacion == conceptosParamsConfig.IdConceptoFlete)
+                                                    let val = a.find((comp) => comp.m_nIdConceptosFacturacion === conceptosParamsConfig.IdConceptoFlete)
                                                     if(val.m_cImporte)
                                                         return acum + (val.m_cImporte - val.m_cImporteRetiene + val.m_cImporteIva)
                                                     else

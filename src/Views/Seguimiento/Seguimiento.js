@@ -90,7 +90,7 @@ class Seguimiento extends Component {
             data: {},
         })
         obtenerInformeFolioTipo(this.state.folioBusqueda,this.state.tipoBusqueda).then(({data}) => {
-            if(data.Estatus == true){
+            if(data.Estatus === true){
                 obtenerImagenEvidencia(data.m_nIdRecoleccion ? data.m_nIdRecoleccion : -1,1).then(respuestaRec=>{
                     obtenerImagenEvidencia(data.m_nIdGuia ? data.m_nIdGuia : 0,0).then(respuestaEmb=>{
                         this.setState({

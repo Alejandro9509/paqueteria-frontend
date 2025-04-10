@@ -616,7 +616,7 @@ function Informes({history}) {
         if (state.IdInforme !== 0) {
             idEstatusInforme = state.EstatusInforme
         }else{
-            idEstatusInforme = dataEstatusInformes.find((i) => i?.m_sEstatus == "Pendiente")?.m_nIdEstatusInforme;
+            idEstatusInforme = dataEstatusInformes.find((i) => i?.m_sEstatus === "Pendiente")?.m_nIdEstatusInforme;
             idEstatusInforme = (idEstatusInforme !== undefined ? idEstatusInforme : state.EstatusInforme);
         }
 
@@ -1147,7 +1147,7 @@ function Informes({history}) {
     }
 
     const setDataParaAgregar = () => {
-        setDataUnidades(dataUnidades.filter(m => m.m_nIdentificador == 1 || m.m_nIdentificador == 4))
+        setDataUnidades(dataUnidades.filter(m => m.m_nIdentificador === 1 || m.m_nIdentificador === 4))
         //    setDataUnidades()
     }
 
@@ -1158,7 +1158,7 @@ function Informes({history}) {
                 //showSuccess(respuesta.data)
 
                 derecho = respuesta.data;
-                if (derecho == false) {
+                if (derecho === false) {
                     showSuccess("El usuario no tiene derechos para realizar el proceso");
                     return;
                 }
@@ -1311,7 +1311,7 @@ function Informes({history}) {
                         </li>
 
                         <li>
-                            <a className={state.IdInforme == 0 && !validarDerecho(9101436) ? classes.disabled : ""}
+                            <a className={state.IdInforme === 0 && !validarDerecho(9101436) ? classes.disabled : ""}
                                href={()=>document.getElementById('Agregar').classList.contains('show')?null:'#Cancelar'}
                                onClick={()=>document.getElementById('Agregar').classList.contains('show') && state.agregar=='Agregar'?null:handleShowCancelar()}>
                                 <i className="fa fa-ban"/> Cancelar
@@ -2133,7 +2133,7 @@ function Informes({history}) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length === 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length !== 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>*/}
                                                                                     {/*<Grid
                                                                                     item
@@ -2155,7 +2155,7 @@ function Informes({history}) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length === 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length !== 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>*/}
                                                                                     {/*<Grid*/}
                                                                                     {/*    item*/}
@@ -2177,7 +2177,7 @@ function Informes({history}) {
                                                                                     {/*        textAlign: "right",*/}
                                                                                     {/*    }}*/}
                                                                                     {/*>*/}
-                                                                                    {/*    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}*/}
+                                                                                    {/*    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length === 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length !== 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}*/}
                                                                                     {/*</Grid>*/}
 
                                                                                     {/*    <Grid
@@ -2200,7 +2200,7 @@ function Informes({history}) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length === 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length !== 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>*/}
                                                                                     <Grid
                                                                                         item
@@ -2213,7 +2213,7 @@ function Informes({history}) {
                                                                                     >
                                                                                         <b style={{fontWeight: "bold"}}>
                                                                                             Total Flete:
-                                                                                            ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0)).toFixed(2)}`}
+                                                                                            ${dataGuias.filter((g) => g.select).length === 0 && 0}{dataGuias.filter((g) => g.select).length !== 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0)).toFixed(2)}`}
                                                                                         </b>
                                                                                     </Grid>
                                                                                     <Grid
@@ -2244,7 +2244,7 @@ function Informes({history}) {
                                                                                 }}
                                                                             >
                                                                                 Peso total : {" "}
-                                                                                {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xPeso), 0))).toFixed(2)}`} kg
+                                                                                {dataGuias.filter((g) => g.select).length === 0 && 0}{dataGuias.filter((g) => g.select).length !== 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xPeso), 0))).toFixed(2)}`} kg
                                                                             </Grid>
 
                                                                         </Grid>
@@ -2278,7 +2278,7 @@ function Informes({history}) {
                                                 fullWidth
                                                 type="submit"
                                                 className="btn btn-primary primary-btn"
-                                                disabled={state.agregar == "Consultar"}
+                                                disabled={state.agregar === "Consultar"}
                                             >
                                                 Guardar informe
                                             </Button>

@@ -804,7 +804,7 @@ export function RecoleccionResumen(props) {
                             name={"idTipoCobro"}
                             onChange={handleChange}
                         >
-                            {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
+                            {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i === item.m_nCodigo)).map((tipoCobro) => (
                                 <MenuItem
                                     key={tipoCobro.m_nIdTipoCobro}
                                     value={tipoCobro.m_nIdTipoCobro}

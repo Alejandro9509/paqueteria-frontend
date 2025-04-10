@@ -205,7 +205,7 @@ class TipoServicio extends Component {
                                     <label className="checkbox">
                                         <input disabled={this.props.consult} type="checkbox"
                                                onChange={(event) => this.props.handleChange(event, index, this.state.tiposServicio, false)}
-                                               checked={this.props.tiposServicioSeleccionado.find(t => t.m_nIdTipoServicio === i.m_nIdTipoServicio) != null} />
+                                               checked={this.props.tiposServicioSeleccionado.find(t => t.m_nIdTipoServicio === i.m_nIdTipoServicio) !== null} />
                                         <i />
                                     </label>
                                 </td>

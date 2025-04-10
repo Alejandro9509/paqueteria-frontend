@@ -387,7 +387,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
 
     const handleEliminarGuia = (event) => {
         let guiasNuevas = []
-        guiasNuevas = dataGuias.filter((i) => i.m_nIdGuia != guiaSelect.m_nIdGuia)
+        guiasNuevas = dataGuias.filter((i) => i.m_nIdGuia !== guiaSelect.m_nIdGuia)
         let totalTotal = 0.0
         guiasNuevas.forEach((i) => {
             totalTotal += parseFloat(i.m_cTotal)
@@ -477,9 +477,9 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
 
     //Maneja filtrado de listado guia
     const handleFolioGuiaFiltro = async (event) => {
-        if(event.keyCode == 13) {
+        if(event.keyCode === 13) {
             let value = event.target.value
-            if (event.target.value == '') {
+            if (event.target.value === '') {
                 value = 0
             }
             setState({

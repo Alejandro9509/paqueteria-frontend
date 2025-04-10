@@ -34,7 +34,7 @@ function eliminarTarifaRangos(id) {
 
 const obtenerTarifasRangosFiltro =(folioTarifas) =>{
 
-    if (typeof folioTarifas == "undefined" || folioTarifas == ''){
+    if (typeof folioTarifas === "undefined" || folioTarifas === ''){
 
         folioTarifas = 0
     }

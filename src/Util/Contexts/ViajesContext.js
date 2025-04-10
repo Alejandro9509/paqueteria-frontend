@@ -52,7 +52,7 @@ function obtenerViajes(){
 }
 
 function obtenerViajesByFiltro(fechaInicial, fechaFinal, estatusListado, folio,Origen,Destino, operador) {
-    if (folio == '') {
+    if (folio === '') {
         folio = 0
     }
     const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/Viajes/GetByFiltro`

@@ -161,19 +161,19 @@ function Recoleccion() {
     const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
     const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
-    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
-    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
+    const [dataFechaFinal, ] = React.useState([]);
+    const [dataFechaInicial, ] = React.useState([]);
     const [dataComplementosSAT, setDataComplementosSAT] = React.useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-    const [dataCiudadF, setDataCiudadF] = React.useState([]);
+    const [, setDataCiudadF] = React.useState([]);
     const [seguroClienteActual,setDataSeguroClienteActual]=useState({
         idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
         porcentajeSeguro: 0,
         aplicaSeguro: false,
     })
     const [dataConceptos, setDataConceptos] = useState([])
-    const [dataZona, setDataZona] = React.useState([]);
+    const [, setDataZona] = React.useState([]);
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
@@ -181,69 +181,39 @@ function Recoleccion() {
     const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
 
-    const [dataClientes, setDataClientes] = useState([])
+
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
-    const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
+    const [, setDataEmbalaje] = React.useState([]);
     const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
     //error en zona operativa y zona tarifa
-    const [errorZonas, setErrorZonas] = React.useState(false)
-    const [controlErrores, setControlErrores] = useState({
-        correo:false
-    })
     const [repetirConceptos,setRepetirConceptos] = React.useState(false)
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado: 0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
-    })
-    const [sortModel, setSortModel] = React.useState([
+
+    const [, setSortModel] = React.useState([
         {
             field: 'm_sFechaHora',
             sort: 'asc',
         },
     ]);
-    const resetFiltros = () => {
-        setFiltros({
-            fechaInicial: 0,
-            fechaFinal: 0,
-            estatusListado: 0,
-            sucursalListado: 0,
-            folio: '',
-            OrigenListado:0,
-            DestinoListado:0,
-        })
-    }
-    const [fileUploaded, setFileUploaded] = React.useState([]);
+
+    const [, setFileUploaded] = React.useState([]);
     const [selectedFile, setSelectedFile] = useState();
-    const [isFilePicked, setIsFilePicked] = useState(false);
-    const [stepActive, setStepActive] = React.useState(1);
-    // const [Modal, open, close, isOpen] = useModal("root", {
-    //     preventScroll: true,
-    // });
+    const [, setIsFilePicked] = useState(false);
+    const [, setStepActive] = React.useState(1);
+
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataEstados, setDataEstados] = useState([])
-    const [dataMunicipiosRecoleccionDD, setDataMunicipiosRecoleccionDD] = useState([])
-    const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
-    const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
-    const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
-    const [dataZonasOperativasRecoleccionDD, setDataZonasOperativasRecoleccionDD] = useState([])
-    const [dataZonasTarifaRecoleccionDD, setDataZonasTarifaRecoleccionDD] = useState([])
+    const [, setDataMunicipiosRecoleccionDD] = useState([])
+    const [, setDataMunicipiosEntregaDD] = useState([])
+    const [, setDataZonasOperativasEntregaDD] = useState([])
     const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
     const [tabActiva, setTabActiva] = useState(0);
-    const [isAgregar, setIsAgregar] = useState(false);
-    const [isModificar, setIsModificar] = useState(false);
+    const [, setIsAgregar] = useState(false);
+    const [, setIsModificar] = useState(false);
     const [pagina, setPagina] = useState(0);
     const [errores,setErrores] = React.useState([])
-    const [openDialog, setOpenDialog] = useState(false)
-    const [dataReportes, setDataReportes] = useState([])
-    const [seleccion, setSeleccion] = useState(null)
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
         estatusEmbarque: 0,
@@ -270,8 +240,6 @@ function Recoleccion() {
         idTipoSeguro:5,
         porcentajeSeguro: 0,
         // ===VARIABLES DE CANCELAR===
-        // folioRecoleccion: '', Se usa en agregar tambien
-        // folioRecoleccion:'', se usa en agregar tambien
         sucursalCancelacion: '',
         mostrarFechaCancelacion: '',
         usuario: localStorage.getItem("Usuario"),
@@ -279,15 +247,8 @@ function Recoleccion() {
         motivoCancelacion: '',
         mostrarCotizador:false,
         // ==VARIABLES DE LLEGADA/SALIDA===
-        // sucursalCancelacion: '', Se usa en cancelar tambien
-        // folioRecoleccion: '', Se usa en agregar tambien
         fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-        // fechaRecoleccion: '', se usa en agregar tambien
-        // zonaRecoleccion: '', se usa en agregar tambien
-        // recogerEn: '', se usa en agregar tambien
-        // operador: '', se usa en agregar tambien
-        // motivoCancelacion: '', se usa en cancelar tambien
-        // unidad: se usa en agregar tambien
+   
 
         // ===VARIABLES DE AGREGAR===
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -406,28 +367,7 @@ function Recoleccion() {
         })
     };
 
-    const handleClickCodigosPostalesInput = (input) => {
-        if (input === "codigoPostalRemitente"){
-            obtenerCodigosPostalesPorEstadoMunicipio(remitente.estadoRemitente, remitente.municipioRemitente).then(({data}) => {
-                setDataCodigosPostalesRemitente(data)
-            })
-        }
-        if (input === "codigoPostalDestinatario"){
-            obtenerCodigosPostalesPorEstadoMunicipio(destinatario.estadoDestinatario, destinatario.municipioDestinatario).then(({data}) => {
-                setDataCodigosPostalesDestinatario(data)
-            })
-        }
-        if (input === "codigoPostalEnt"){
-            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, entregaDD.municipioEnt).then(({data}) => {
-                setDataCodigosPostalesEntregaDD(data)
-            })
-        }
-        if (input === "codigoPostalRec"){
-            obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, recoleccionDD.municipioRec).then(({data}) => {
-                setDataCodigosPostalesRecoleccionDD(data)
-            })
-        }
-    }
+
 
     const [destinatario, setDestinatario] = useState({
         idDestinatario: '',
@@ -505,56 +445,6 @@ function Recoleccion() {
         })
     }
 
-    const handleChangeEntregaDD = (event) => {
-        event.preventDefault();
-        setEntregaDD(entregaDD => {
-            return {
-                ...entregaDD,
-                [event.target.name]: event.target.value,
-            }
-        });
-        if (event.target.name === "estadoEnt") {
-            setRepetirConceptos(true)
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
-                setDataMunicipiosEntregaDD(data)
-            })
-        }
-        if (event.target.name === "municipioEnt") {
-            setRepetirConceptos(true)
-        }
-    };
-
-    const handleChangeAutocompleteEntregaDD = (input, newValue) => {
-        setEntregaDD(entregaDD => {
-            return {
-                ...entregaDD,
-                [input]: newValue
-            }
-        })
-        if (input === "codigoPostalEnt") {
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                if (data.length > 0){
-                    if (data.length === 1){
-                        setEntregaDD(entregaDD => {
-                            return {
-                                ...entregaDD,
-                                zonaOperativaEnt: data[0]
-                            }
-                        })
-                    }
-                    setDataZonasOperativasEntregaDD(data)
-                }else{
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaOperativaEnt: {}
-                        }
-                    })
-                }
-
-            })
-        }
-    }
 
     const [recoleccionDD, setRecoleccionDD] = useState({
         idPais: '',
@@ -598,13 +488,13 @@ function Recoleccion() {
 
     const history = useHistory()
 
-    useEffect(value => {
-        if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
+    useEffect(() => {
+        if (state.tipoUnidad !== 0 && state.tipoUnidad !== '') {
             getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
         }
     }, [state.tipoUnidad])
     
-    useEffect((value) => {
+    useEffect(() => {
         if (
             localStorage.getItem("UsuarioId") === null ||
             localStorage.getItem("UsuarioId") <= 0
@@ -635,7 +525,7 @@ function Recoleccion() {
 
     async function getParametrosConfiguracion(operacion) {
         obtenerParametrosConfiguracion().then(respuesta => {
-            if (operacion == "Agregar"){
+            if (operacion === "Agregar"){
                 setState((config) => {
                     return {
                         ...config,
@@ -680,12 +570,12 @@ function Recoleccion() {
     }
 
     const isValidText = (data) => {
-        return !(data.length === 0 || data == '0')
+        return !(data.length === 0 || data === '0')
     }
 
     const validarCoordenadas = (coordenadas) => {
         /**Si es modificacion*/
-        if (state.idRecoleccion != 0){
+        if (state.idRecoleccion !== 0){
             /**Si es recoleccion diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteRecoleccion
                 && coordenadas==undefined)
@@ -693,7 +583,6 @@ function Recoleccion() {
                 mostrarDialogoMapa(true)
 
                 return false
-                /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteRecoleccion
                 && !isValidText(remitente.latitudR)
                 && !isValidText(remitente.longitudR)
@@ -931,17 +820,13 @@ function Recoleccion() {
             dataComplementosSAT.forEach(item => {
                 item.m_nCantidad = item.cantidad
                 item.m_sClaveProductoServicio = item.claveProducto
-                // item.m_sProductoServicio = item.ProductoSAT
                 item.m_sClaveUnidad = item.claveUnidad
-                // item.m_sUnidad = item.UnidadSAT
                 item.m_sClaveFraccionArancelaria = item.claveFraccion
-                // item.m_sFraccionArancelaria = item.fraccionSAT
                 item.m_sUUIDComercioExterior = item.comercioExterior
                 item.m_sClaveMaterialPeligroso = item.claveMaterialPeligroso
                 item.m_sMaterialPeligroso = item.materialPeligrosoSAT
                 item.m_bEsMaterialPeligroso = item.esPeligroso
                 item.m_sClaveEmbalaje = item.claveEmbalaje
-                // item.m_sTipoEmbalaje = item.embalajeSAT
                 item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
                 item.m_xPeso = parseFloat(parseFloat(item.peso).toFixed(3))
                 item.nombreQuimico=item.nomQuimico
@@ -980,7 +865,6 @@ function Recoleccion() {
             params.m_sTelefonoRemitente = remitente.telefonoRemitente
             params.m_sContactoRemitente = remitente.contactoRemitente
             params.m_nIdCiudadOrigen = remitente.origenRemitente.m_nIdCiudad
-            // m_nIdZonaRemitente: remitente.zonaRemitente.m_nIdZona,
             params.m_nIdRemitente = remitente.idRemitente
             params.m_sAliasRemitente = remitente.aliasRemitente
             params.m_sCalleRemitente = remitente.calleRemitente
@@ -1000,7 +884,6 @@ function Recoleccion() {
             params.m_sTelefonoDestinatario = destinatario.telefonoDestinatario
             params.m_sContactoDestinatario = destinatario.contactoDestinatario
             params.m_nIdCiudadDestino = destinatario.destinoDestinatario.m_nIdCiudad
-            // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
             params.m_nIdDestinatario = destinatario.idDestinatario
             params.m_sAliasDestinatario = destinatario.aliasDestinatario
             params.m_sCalleDestinatario = destinatario.calleDestinatario
@@ -1090,7 +973,7 @@ function Recoleccion() {
                 m_c_Descuento: item.descuento
             }))
             params.m_nIdCotizacion = state.idCotizacion
-            if (state.idRecoleccion != 0) {
+            if (state.idRecoleccion !== 0) {
                 modificarRecoleccion(state.idRecoleccion, params)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
@@ -1100,7 +983,7 @@ function Recoleccion() {
                     })
                     .catch((err) => {
                         console.log(err);
-                        // debugger
+                       
                         showSuccess(err.response.data);
                     });
             } else {
@@ -1125,7 +1008,6 @@ function Recoleccion() {
                                                         setLimpiarRemDes(e)
                                                         mostrarCotizadorRec(false)
                                                         limpiarInputsAgregar()
-                                                      //  setDetectar(false)
                                                     }
                                                 },
                                                 {
@@ -1158,7 +1040,7 @@ function Recoleccion() {
         });
     };
 
-    function handleSelectCP(id, dobleClick, e) {
+    function handleSelectCP(id, _dobleClick, e) {
         clearTimeout(timer);
         if (e.detail === 1) {
             timer = setTimeout(() => {
@@ -1207,31 +1089,14 @@ function Recoleccion() {
         });
     }
 
-    const changeHandler = (event) => {
-        event.preventDefault();
-        setSelectedFile(event.target.files[0]);
-        setIsFilePicked(true);
-    };
 
-    function handleSubmission() {
-        var reader = new FileReader();
-        reader.onload = function () {
-        }.bind(this);
-        reader.readAsText(selectedFile);
-        setState(state => {
-            return {
-            ...setState,
-                uploadedFileContent: "reader.result"
-            }
-        })
-    };
 
     function handleEliminar(id) {
         var derecho;
         validarPermisos(state)
             .then((respuesta) => {
                 derecho = respuesta.data;
-                if (derecho == false) {
+                if (derecho === false) {
                     showSuccess("El usuario no tiene derechos para realizar el proceso");
                     return;
                 }
@@ -1360,7 +1225,6 @@ function Recoleccion() {
     }
 
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
-        /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
         setDataRecoleccionConsulta(respuesta)
         getDataParaEditar(operacion)
@@ -1380,27 +1244,10 @@ function Recoleccion() {
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
+            p.m_sTipo = p.m_nIdTipo === 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
-        /*respuesta.data.m_arrClsComplementoSAT.forEach(item => {
-            item.id = item.m_nIdComplementoSAT
-            item.cantidad = item.m_nCantidad
-            item.claveProducto = item.m_sClaveProductoServicio
-            item.ProductoSAT = item.m_sProductoServicio
-            item.claveUnidad = item.m_sClaveUnidad
-            item.UnidadSAT = item.m_sUnidad
-            item.claveFraccion = item.m_sClaveFraccionArancelaria
-            item.fraccionSAT = item.m_sFraccionArancelaria
-            item.comercioExterior = item.m_sUUIDComercioExterior
-            item.claveMaterialPeligroso = item.m_sClaveMaterialPeligroso
-            item.materialPeligrosoSAT = item.m_sMaterialPeligroso
-            item.esPeligroso = item.m_bEsMaterialPeligroso
-            item.claveEmbalaje = item.m_sClaveEmbalaje
-            item.embalajeSAT = item.m_sTipoEmbalaje
-            item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
-            item.peso = item.m_xPeso
-        })*/
+       
         respuesta.data.m_arrClsComplementoSAT.forEach(item => {
             item.sectorCOFEPRIS=item.ClaveSectorCofepris
             item.claveCondicionesEspeciales=item.CondicionesEspTransp
@@ -1451,9 +1298,6 @@ function Recoleccion() {
                 return {
                     ...state,
                     clientePaga: data,
-                    /*  idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
-                      porcentajeSeguro: data.m_bTieneSeguro ? data.m_cPorcentajeSeguro : 0,
-                      aplicaSeguro: data.m_bTieneSeguro*/
                 }
             })
         })
@@ -1502,17 +1346,16 @@ function Recoleccion() {
                 //Cita de recoleccion
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
-                // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
+              
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 receptorRecoleccion: respuesta.data.m_sReceptorRecoleccion,
                 referencia: respuesta.data.m_sReferencia,
 
             }
         });
-        // mostrarCotizadorRec(true)
     }
 
-    useEffect(value => {
+    useEffect(() => {
         let newTiposCobro = []
         if (state.entregaEnSucursal) {
             if (state.tipoCobro === 5) {
@@ -1537,30 +1380,7 @@ function Recoleccion() {
         setDataTipoCobro(newTiposCobro)
     }, [state.entregaEnSucursal])
 
-    function handleShowSalidaLlegada(type) {
-        obtenerRecoleccionId(state.idRecoleccion).then((respuesta) => {
-            setState({
-                ...state,
-                sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
-                folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
-                unidad: dataUnidad.find(
-                    (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
-                ),
-                operador: dataOperador.find(
-                    (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
-                ),
-                recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion
-            });
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(type).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Salida-Llegada').addClass('in show');
-            setTabActiva(3)
-        });
-    }
+
 
     function handleShowAgregar(event) {
         setIsAgregar(false);
@@ -1671,7 +1491,6 @@ function Recoleccion() {
 
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
-       // setDetectar(false)
         setState(state => {
             return {
                 ...state,
@@ -1716,15 +1535,7 @@ function Recoleccion() {
 
                 //Recoleccion
                 diferenteRecoleccion: false,
-                /*fechaRecoleccion: '',
-                ciudadRecoleccion: '',
-                codigoPostalRecoleccion: '',
-                zonaRecoleccion: '',
-                domicilioRecoleccion: '',
-                recogerEn: '',
-                datosAdicionalesRecoleccion: '',*/
                 aplicaEntrega:false,
-                // deshabilitarDiferenteDomicilio:false,
                 //Operador
                 operador: '',
                 tipoUnidad: '',
@@ -1744,12 +1555,11 @@ function Recoleccion() {
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
         setRepetirConceptos(false)
-       // setDetectar(true)
     }
 
     const handleChange = (event) => {
         event.preventDefault();
-        if(event.target.id == "porcentajeSeguro"){
+        if(event.target.id === "porcentajeSeguro"){
             setRepetirConceptos(true)
         }
         setState(state => {
@@ -1760,15 +1570,6 @@ function Recoleccion() {
         });
     };
 
-    const handleImprimir = () => {
-        imprimirFormatosId(state.formatoSeleccionado).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Archivo" ;
-        })
-
-    }
 
     const handleChangeSucursalEntrega = (event) => {
         setState(state => {
@@ -1777,7 +1578,7 @@ function Recoleccion() {
                 [event.target.name]: event.target.value
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal === event.target.value).m_nIdCodigoPostal)
     };
 
     const getZonaOperativaByCodigoPostal = (codigoPostal) => {
@@ -1826,7 +1627,7 @@ function Recoleccion() {
             showSuccess("Se requiere seleccionar Destinatario")
             return
         }
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == destinatario.zonaOperativaDestinatario.m_nIdSucursal).m_nIdCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal === destinatario.zonaOperativaDestinatario.m_nIdSucursal).m_nIdCodigoPostal)
         setState(state => {
             return{
                 ...state,
@@ -1961,7 +1762,7 @@ function Recoleccion() {
             width: 200,
             renderCell: (row) => {
                 <div>
-                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                    {row.row.m_sUsuarioDocumento === "0" ? "N/A" : row.row.m_sUsuarioDocumento}
                 </div>
             }
         },
@@ -2044,7 +1845,7 @@ function Recoleccion() {
                         style={{
                             width: "100%",
                             textAlign: "center",
-                            color: row.row.m_bActivo == 'true' ? "green" : "red",
+                            color: row.row.m_bActivo === true  ? "green" : "red",
                         }}
                     >
                         {row.row.m_bActivo ? (
@@ -2069,26 +1870,11 @@ function Recoleccion() {
         }
     ]);
 
-    // function generarReporteOpcion1(row){
-    //     obtenerRecoleccionReporte(row.m_nIdRecoleccion).then(({data}) => {
-    //         let pdfWindow = window.open("");
-    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-    //         pdfWindow.document.body.style.margin = "0px";
-    //         pdfWindow.document.title = "Recolección " + row.m_sFolioRecoleccion;
-    //     })
-    // }
 
     function generarReporte(row){
-        // setSeleccion(row)
-        // setOpenDialog(true)
-       /* obtenerRecoleccionReporte(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Recolección " + folio;
-        })*/
+
         obtenerFormatosImpresionProceso(FORMATOS_IMPRESION.RECOLECCION).then((respuesta) => {
-            // setDataReportes(data)
+          
             imprimirFormatosIdIdTipoReporte(respuesta.data[respuesta.data.length - 1]?.m_nIdFormato, row.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
                 let pdfWindow = window.open("");
                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
@@ -2097,33 +1883,6 @@ function Recoleccion() {
             })
         })
     }
-
-    // const handleOnChangeReporte = (data) => {
-    //     setState({
-    //         ...state,
-    //         reporteSeleccionado: data
-    //     })
-    // }
-    // const handleGenerarReporte=(e)=>{
-    //     e.preventDefault()
-    //
-    //     if (state.reporteSeleccionado.length === 0) {
-    //         showError("Es necesario seleccionar al menos un reporte")
-    //         return
-    //     }
-    //
-    //     imprimirFormatosIdIdTipoReporte(state.reporteSeleccionado, seleccion.m_nIdRecoleccion).then(({data}) => { //poner aqui el id de Embarque
-    //         let pdfWindow = window.open("");
-    //         pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data.m_sArchivo) + "'/>");
-    //         pdfWindow.document.body.style.margin = "0px";
-    //         pdfWindow.document.title = "Recolección" + seleccion.m_sFolioRecoleccion;
-    //     })
-    //     setState({
-    //         ...state,
-    //         reporteSeleccionado: null
-    //     })
-    //     setOpenDialog(false)
-    // }
 
     const columnsUnidades = React.useMemo(() => [
         {
@@ -2228,12 +1987,6 @@ function Recoleccion() {
         });
     }
 
-    function getAllCiudadesFiltro() {
-        obtenerCiudades().then((respuesta) => {
-            setDataCiudadF(respuesta.data);
-        });
-    }
-
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
@@ -2247,33 +2000,11 @@ function Recoleccion() {
         })
     }
 
-    function getUltimoFolioRecoleccion() {
-        const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetUltimoFolio`;
-        axios.get(url, {headers}).then((respuesta) => {
-            SetDataFolioRecoleccion(respuesta.data);
-        });
-    }
+
 
     function getAllRemitentesDestinatarios() {
         obtenerRemitentesDestinatarios().then((respuesta) => {
             setDataRemitenteDestinatario(respuesta.data);
-        });
-    }
-
-    function getAllOperadores() {
-        obtenerOperadores().then((respuesta) => {
-            setDataOperador(respuesta.data);
-        });
-    }
-
-    function getAllTipoUnidad() {
-        obtenerTipoUnidades().then((respuesta) => {
-            if (respuesta.data == "Vacio") {
-                setDataTipoUnidad([])
-            } else {
-                setDataTipoUnidad(respuesta.data)
-            }
-            // getAllUnidades(1);
         });
     }
 
@@ -2288,24 +2019,7 @@ function Recoleccion() {
         setRepetirConceptos(true)
     }
 
-    const handleUpload = (e) => {
-        e.preventDefault();
 
-        var files = e.target.files,
-            f = files[0];
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var data = e.target.result;
-            let readedData = XLSX.read(data, {type: "binary"});
-            const wsname = readedData.SheetNames[0];
-            const ws = readedData.Sheets[wsname];
-
-            /* Convert array to json*/
-            const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
-            setFileUploaded(dataParse);
-        };
-        reader.readAsBinaryString(f);
-    };
 
     const headers = API_HEADERS
 
@@ -2620,8 +2334,7 @@ function Recoleccion() {
                     {headerGroups.map((headerGroup) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
+                               
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
                                     {/* Add a sort direction indicator */}
@@ -2833,43 +2546,6 @@ function Recoleccion() {
         );
     }
 
-    function openSection(index) {
-        // closeSeccions()
-        var $section;
-        switch (index) {
-            case 1:
-                setStepActive(1);
-                $section = $("#informacionGeneral");
-                break;
-            case 2:
-                setStepActive(2);
-                $section = $("#remitenteDestinatario");
-
-                break;
-            case 3:
-                setStepActive(3);
-                $section = $("#paquetesSobres");
-
-                break;
-            case 4:
-                setStepActive(4);
-                $section = $("#detallesRecoleccion");
-                break;
-            case 5:
-                setStepActive(5);
-                $section = $("#detallesOperacion");
-                break;
-
-            default:
-        }
-
-        $("html, body").animate(
-            {
-                scrollTop: parseInt($section.offset().top - 150),
-            },
-            200
-        );
-    }
 
     if (redirect) {
         if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_sFolioEmbarque) {
@@ -2883,27 +2559,6 @@ function Recoleccion() {
                 />
             )
         }
-    }
-
-    const handleFechaCita = (event) => {
-        setState({
-            ...state,
-            fechaCita: event.target.value,
-        })
-    }
-
-    const handleHoraCitaMinima = (event) => {
-        setState({
-            ...state,
-            horaCitaMinima: event.target.value,
-        })
-    }
-
-    const handleHoraCitaMaxima = (event) => {
-        setState({
-            ...state,
-            horaCitaMaxima: event.target.value,
-        })
     }
 
     const handleClickCiudad = (event) => {
@@ -2929,18 +2584,6 @@ function Recoleccion() {
         setDataPaquetes(newList)
     }
 
-    const filtrarTipoCobro = (tipoCobro) => {
-        // if (!state.clientePaga) {
-        if (localStorage.getItem("RFC") === "ADI880815DA7") {
-            return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
-        }else {
-            return true
-        }
-        // }else {
-        //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
-        //
-        // }
-    }
     const dialogVisible = (isVisible) => {
         setState(state => {
             return {
@@ -2972,7 +2615,6 @@ function Recoleccion() {
                 ...state,
                 idTipoSeguro: event.target.value,
                 porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value)?(event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO)?((state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO)  && (event.target.value===TIPOS_SEGURO.SEGUN_SOLICITA || event.target.value===TIPOS_SEGURO.OBLIGATORIO))?state.porcentajeSeguro:configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
-                //porcentajeSeguro: !(seguroClienteActual.idTipoSeguro===event.target.value && ((event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)))? (state.idTipoSeguro===TIPOS_SEGURO.SEGUN_SOLICITA || state.idTipoSeguro===TIPOS_SEGURO.OBLIGATORIO) && (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?state.porcentajeSeguro:(event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO)?configuraciones.porcentualSeguroDefecto:0:seguroClienteActual.porcentajeSeguro,
                 aplicaSeguro: (event.target.value === TIPOS_SEGURO.SEGUN_SOLICITA) || (event.target.value === TIPOS_SEGURO.OBLIGATORIO),
                 valorDeclarado: 0
             }
@@ -3033,7 +2675,7 @@ function Recoleccion() {
                 }
             })
             try{
-                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == idSucursalDestinatario).m_nIdCodigoPostal)
+                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal === idSucursalDestinatario).m_nIdCodigoPostal)
                 setState(state => {
                     return {
                         ...state,
@@ -3124,70 +2766,7 @@ function Recoleccion() {
 
     return (
         <div>
-            {/*{*/}
-            {/*    openDialog &&*/}
-            {/*    <Dialog*/}
-            {/*        open={openDialog}*/}
-            {/*        onClose={() => setOpenDialog(false)}*/}
-            {/*        fullWidth maxWidth="md"*/}
-            {/*    >*/}
-            {/*        <DialogTitle>*/}
-            {/*            Reporte de Recolección*/}
-            {/*        </DialogTitle>*/}
-            {/*        <DialogContent>*/}
-            {/*            <div className="row" style={{backgroundColor: '#FFFFFF'}}>*/}
-            {/*                <form onSubmit={handleGenerarReporte}>*/}
-            {/*                    <Grid container spacing={1}>*/}
-            {/*                        <Grid item sm={6}>*/}
-            {/*                            <FormControl*/}
-            {/*                                className="input select"*/}
-            {/*                                fullWidth variant="outlined"*/}
-            {/*                                required*/}
-            {/*                                size="small">*/}
-            {/*                                <InputLabel*/}
-            {/*                                    id="idReporteLabel">Formato de Reporte</InputLabel>*/}
-            {/*                                <Select*/}
-            {/*                                    fullWidth*/}
-            {/*                                    labelId="idReporteLabel"*/}
-            {/*                                    label="Reporte"*/}
-            {/*                                    className="form-control"*/}
-            {/*                                    value={state.reporteSeleccionado ?? ''}*/}
-            {/*                                    onChange={(e) => handleOnChangeReporte(e.target.value)}*/}
-            {/*                                    name="reporteSeleccionado"*/}
-            {/*                                >*/}
-            {/*                                    {dataReportes.map((reporte) => (*/}
-            {/*                                        <MenuItem*/}
-            {/*                                            key={reporte.m_nIdFormato}*/}
-            {/*                                            value={reporte.m_nIdFormato}*/}
-            {/*                                        >*/}
-            {/*                                            {reporte.m_sFormato}*/}
-            {/*                                        </MenuItem>*/}
-            {/*                                    ))}*/}
-            {/*                                </Select>*/}
-            {/*                            </FormControl>*/}
-            {/*                        </Grid>*/}
-            {/*                    </Grid>*/}
-            {/*                    <DialogActions>*/}
-
-            {/*                        <button className="btn btn-secondary secondary-btn" onClick={() => {*/}
-            {/*                            setOpenDialog(false)*/}
-            {/*                            setState({*/}
-            {/*                                ...state,*/}
-            {/*                                reporteSeleccionado: null*/}
-            {/*                            })*/}
-            {/*                        }*/}
-            {/*                        }>*/}
-            {/*                            Cancelar*/}
-            {/*                        </button>*/}
-            {/*                        <button className="btn btn-primary primary-btn" color={"primary"} type={"submit"}>*/}
-            {/*                            Aceptar*/}
-            {/*                        </button>*/}
-            {/*                    </DialogActions>*/}
-            {/*                </form>*/}
-            {/*            </div>*/}
-            {/*        </DialogContent>*/}
-            {/*    </Dialog>*/}
-            {/*}/!*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*!/*/}
+            
 
             {state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
@@ -3213,7 +2792,7 @@ function Recoleccion() {
                             {dataCodigosPostalesRemitente.length !== 0 ? <TableCodigoPostal object={state}
                                                                                             select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
                                                                                             columns={columnsCP}
-                                                                                            data={dataCodigosPostalesRemitente.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)}
+                                                                                            data={dataCodigosPostalesRemitente.filter((cp) => cp.m_nIdCiudad === state.ciudadRemitente)}
                                                                                             identificadorModal={state.identificadorModal}/> :
                                 <div>No se encontró ningún registro</div>}
 
@@ -3242,7 +2821,7 @@ function Recoleccion() {
                             {dataCodigosPostalesDestinatario.length !== 0 ? <TableCodigoPostal object={state}
                                                                                                select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
                                                                                                columns={columnsCP}
-                                                                                               data={dataCodigosPostalesDestinatario.filter((cp) => cp.m_nIdCiudad == state.ciudadDestinatario)}
+                                                                                               data={dataCodigosPostalesDestinatario.filter((cp) => cp.m_nIdCiudad === state.ciudadDestinatario)}
                                                                                                identificadorModal={state.identificadorModal}/> :
                                 <div>No se encontró ningún registro</div>}
 
@@ -3271,7 +2850,7 @@ function Recoleccion() {
                             {dataCodigosPostalesRecoleccionDD.length !== 0 ? <TableCodigoPostal object={state}
                                                                                                 select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
                                                                                                 columns={columnsCP}
-                                                                                                data={dataCodigosPostalesRecoleccionDD.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
+                                                                                                data={dataCodigosPostalesRecoleccionDD.filter((cp) => cp.m_nIdCiudad === state.ciudadRecoleccion)}
                                                                                                 identificadorModal={state.identificadorModal}/> :
                                 <div>No se encontró ningún registro</div>}
 
@@ -3300,7 +2879,7 @@ function Recoleccion() {
                             {dataCodigosPostalesEntregaDD.length !== 0 ? <TableCodigoPostal object={state}
                                                                                             select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
                                                                                             columns={columnsCP}
-                                                                                            data={dataCodigosPostalesEntregaDD.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                                            data={dataCodigosPostalesEntregaDD.filter((cp) => cp.m_nIdCiudad === state.ciudadEntrega)}
                                                                                             identificadorModal={state.identificadorModal}/> :
                                 <div>No se encontró ningún registro</div>}
 
@@ -3498,21 +3077,6 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        {/*<li >
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({
-                                    ...state,
-                                    identificadorModal:
-                                        "imprimir",
-                                    tipoModal: 6,
-                                    openDialog: true
-                                });
-                            }}>
-                                <i className="fa fa-print"/> Imprimir
-                            </a>
-                        </li>*/}
-
                         <li>
                             <a className={(state.idRecoleccion === 0 || !validarDerecho(9101420)) ? classes.disabled : ""} onClick={handleShowCancelar}>
                                 <i className="fa fa-ban"/> Cancelar
@@ -3525,19 +3089,6 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        {/*<li className="hide">
-                            <a onClick={() => handleShowSalidaLlegada(4)}
-                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
-                                <i className="fa fa-times-circle"/> Salida
-                            </a>
-                        </li>
-
-                        <li className="hide">
-                            <a onClick={() => handleShowSalidaLlegada(5)}
-                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
-                                <i className="fa fa-times-circle"/> Llegada
-                            </a>
-                        </li>*/}
 
                         <li style={{float: "right"}}>
                         <Button className={ state.idRecoleccion === 0 || (!validarDerecho(9101417) ) ? classes.disabled :""}
@@ -3603,30 +3154,7 @@ function Recoleccion() {
                         <div onClick={()=>setDetectar(true)} id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
                                 <div className="form-content" >
-                                    {/*<div
-                                        className="wizard-breadcrumb number-style"
-                                        style={{
-                                            position: "sticky",
-                                            top: "60px",
-                                            padding: "1px",
-                                            backgroundColor: "white",
-                                            zIndex: 100,
-                                            marginBottom: "10px",
-                                        }}
-                                    >
-                                        <div className="row ">
-                                            <Stepper activeStep={stepActive - 1}>
-                                                {
-                                                    ["Información General", "Remitente/Destinatario", "Paquetes y Sobres", "Información Adicional del Pago", "Detalles de Operación"].map((s, index) => (
-                                                        <Step key={s} completed={false}
-                                                              onClick={() => openSection(index + 1)}>
-                                                            <StepLabel>{s}</StepLabel>
-                                                        </Step>
-                                                    ))
-                                                }
-                                            </Stepper>
-                                        </div>
-                                    </div>*/}
+                                   
 
                                     <div className="widget-wrap" id="informacionGeneral">
                                         <div className="widget-header">
@@ -3882,7 +3410,7 @@ function Recoleccion() {
                                                                         name: "tipoCobro"
                                                                     }}
                                                                 >
-                                                                    {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
+                                                                    {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i === item.m_nCodigo)).map((tipoCobro) => (
                                                                         <MenuItem
                                                                             key={tipoCobro.m_nIdTipoCobro}
                                                                             value={tipoCobro.m_nIdTipoCobro}
@@ -3923,15 +3451,6 @@ function Recoleccion() {
                                                                     required
                                                                     label="Tipo seguro"
                                                                     value={state.idTipoSeguro}
-                                                                    /*onChange={(event) => {
-                                                                        event.preventDefault();
-                                                                        setState({
-                                                                            ...state,
-                                                                            idTipoSeguro: event.target.value,
-                                                                            porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
-                                                                            aplicaSeguro: (event.target.value === 3) || (event.target.value === 4)
-                                                                        });
-                                                                    }}*/
                                                                     onChange={handleChangeTipoSeguro}
                                                                     variant="outlined"
                                                                     disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
@@ -4428,33 +3947,13 @@ function Recoleccion() {
 
                                 </div>
                                 {
-                                    state.agregar != "Agregar" &&
+                                    state.agregar !== "Agregar" &&
                                     <div className="row">
                                         <div className="widget-wrap">
                                             <div className="widget-container">
                                                 <Evidencias esRecoleccion={1}
                                                             idGuia={state.idRecoleccion} data={state}/>
-                                                {/*<div className="widget-content">
-                                                    <div className="row">
-                                                        <div className="widget-header">
-                                                            <Accordion>
-                                                                <AccordionSummary
-                                                                    expandIcon={<ExpandMoreIcon/>}
-                                                                    aria-controls="panel1a-content"
-                                                                    id="panel1a-header">
-                                                                    <Typography className={classes.heading}>
-                                                                        <h2>Evidencias última milla</h2>
-                                                                    </Typography>
-                                                                </AccordionSummary>
-
-                                                                <AccordionDetails>
-                                                                    <Evidencias esRecoleccion={1}
-                                                                                idGuia={state.idRecoleccion} data={state}/>
-                                                                </AccordionDetails>
-                                                            </Accordion>
-                                                        </div>
-                                                    </div>
-                                                </div>*/}
+                                           
                                             </div>
                                         </div>
                                     </div>
@@ -4516,13 +4015,6 @@ function Recoleccion() {
                                                     </div>
 
                                                     <div className="form-footer col-md-12">
-                                                        {/*<button
-                                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
-
-                                                            className="btn btn-secondary secondary-btn"
-                                                        >
-                                                            Cancelar
-                                                        </button>*/}
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"
@@ -4544,256 +4036,6 @@ function Recoleccion() {
                                 esRecoleccion={true}
                             />
                         </div>
-
-                        {/*<div id="Salida-Llegada" className="tab-pane fade">
-                            <div className="widget-wrap">
-                                <div className="widget-container">
-                                    <div className="widget-content">
-                                        <div className="row">
-                                            <form className="j-forms" onSubmit={handleCancelar}>
-                                                <div className="form-content">
-
-                                                    <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Sucursal"
-                                                                       value={state.sucursalCancelacion}
-                                                                       id="sucursalCancelacion"
-                                                                       name="sucursalCancelacion"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Folio Recolección"
-                                                                       value={state.folioRecoleccion}
-                                                                       id="folioRecoleccion"
-                                                                       name="folioRecoleccion"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Fecha Elaboracion"
-                                                                       value={state.fechaHoraCreacion}
-                                                                       id="fechaHoraCreacion"
-                                                                       name="fechaHoraCreacion"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-3 col-lg-3 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Fecha Recoleccion"
-                                                                       value={state.fechaRecoleccion}
-                                                                       id="fechaRecoleccion"
-                                                                       name="fechaRecoleccion"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Zona"
-                                                                       value={state.zonaRecoleccion}
-                                                                       id="zonaRecoleccion"
-                                                                       name="zonaRecoleccion"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Recoger En"
-                                                                       value={state.recogerEn}
-                                                                       id="recogerEn"
-                                                                       name="recogerEn"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Operador"
-                                                                       value={state.operador ? state.operador.m_sNombreCompleto : ""}
-                                                                       id="operador"
-                                                                       name="operador"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Estatus"
-                                                                       value={''}
-                                                                       id="estatusOperador"
-                                                                       name="estatusOperador"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Unidad"
-                                                                       value={state.unidad ? state.unidad.m_sDescripcion : ""}
-                                                                       id="unidad"
-                                                                       name="unidad"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Estatus"
-                                                                       value={''}
-                                                                       id="estatusUnidad"
-                                                                       name="estatusUnidad"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-6 col-lg-6 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Remolque"
-                                                                       value={''}
-                                                                       id="remolqueSalida"
-                                                                       name="remolqueSalida"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-3 col-lg-3 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Estatus"
-                                                                       value={''}
-                                                                       id="estatusRemolque"
-                                                                       name="estatusRemolque"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-3 col-lg-3 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Cargado"
-                                                                       value={''}
-                                                                       id="cargado"
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-4 col-lg-4 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" size="small"
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       label="Fecha Salida"
-                                                                       value={''}
-                                                                       id="fechaSalida"
-                                                                       name="fechaSalida"
-                                                                       disabled={true}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="form-footer" className="col-md-12">
-                                                        <button
-                                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
-
-                                                            className="btn btn-secondary secondary-btn"
-                                                        >
-                                                            Cancelar
-                                                        </button>
-                                                        <button
-                                                            type="submit"
-                                                            className="btn btn-primary primary-btn"
-                                                        >
-                                                            Aceptar
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*/}
-
-                        {/*<div id="Prueba" className="tab-pane fade">
-                            <div className="widget-wrap">
-                                <div className="widget-container">
-                                    <div className="widget-content">
-                                        <div className="row">
-                                            <div className="form-content" style={{display: "flex"}}>
-                                                <input type="file" id="archivoFormato" onChange={changeHandler}/>
-                                                <div>
-                                                    <button onClick={handleSubmission} disabled={!isFilePicked}>Submit
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <article>
-                                                <h2><a>Hello World</a></h2>
-                                                <div
-                                                    dangerouslySetInnerHTML={{__html: state.uploadedFileContent}}></div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*/}
                     </div>
                 </div>
             </section>

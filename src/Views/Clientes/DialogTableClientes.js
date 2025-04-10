@@ -126,7 +126,7 @@ function DialogTableClientes(props) {
                     </button>
                     <button
                         onClick={() => {
-                            if (rowSelect != null) {
+                            if (rowSelect !== null) {
                                 handlePatrocinadorSelected(rowSelect)
                             }
                         }}

@@ -11,19 +11,13 @@ export default function AsignarOperador(props){
     const [unidadesListado, setUnidadesListado] = React.useState([]);
 
     function getUnidadesListado(){
-        /*setUnidadesListado([
-            {
-                id: 0,
-                tipoUnidad: "bonita"
-            }
-        ]);*/
         const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             setUnidadesListado(respuesta.data);
         });
     }
 
-    useEffect( value => {
+    useEffect( () => {
         getUnidadesListado();
     }, []);
 

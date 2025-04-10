@@ -77,7 +77,7 @@ function ComplementosSAT(props) {
     }
 
     const resetDataComplemento = (catalogo) => {
-        if(catalogo == 1){
+        if(catalogo === 1){
             setDataComplemento(dataComplemento =>{
                 return{
                     ...dataComplemento,
@@ -85,7 +85,7 @@ function ComplementosSAT(props) {
                     ProductoSAT: '',
                 }
             })
-        }else if(catalogo == 2){
+        }else if(catalogo === 2){
             setDataComplemento(dataComplemento => {
                 return{
                     ...dataComplemento,
@@ -93,7 +93,7 @@ function ComplementosSAT(props) {
                     UnidadSAT: '',
                 }
             })
-        }else if(catalogo == 3){
+        }else if(catalogo === 3){
             setDataComplemento(dataComplemento => {
                 return{
                     ...dataComplemento,
@@ -101,7 +101,7 @@ function ComplementosSAT(props) {
                     materialPeligrosoSAT:'',
                 }
             })
-        }else if(catalogo == 4){
+        }else if(catalogo === 4){
             setDataComplemento(dataComplemento =>{
                 return{
                     ...dataComplemento,
@@ -110,7 +110,7 @@ function ComplementosSAT(props) {
                     descripcionEmbalajeSAT:''
                 }
             })
-        }else if(catalogo == 5){
+        }else if(catalogo === 5){
             setDataComplemento(dataComplemento =>{
                 return{
                     ...dataComplemento,
@@ -118,7 +118,7 @@ function ComplementosSAT(props) {
                     fraccionSAT:'',
                 }
             })
-        }else if(catalogo == 6){
+        }else if(catalogo === 6){
             setDataComplemento(dataComplemento =>{
                 return{
                     ...dataComplemento,
@@ -127,7 +127,7 @@ function ComplementosSAT(props) {
                 }
             })
         }
-        else if(catalogo == 8){
+        else if(catalogo === 8){
             setDataComplemento(dataComplemento =>{
                 return{
                     ...dataComplemento,

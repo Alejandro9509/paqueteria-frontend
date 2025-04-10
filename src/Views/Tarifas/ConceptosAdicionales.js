@@ -110,7 +110,7 @@ class ConceptosAdicionales extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         /*const {customConceptos, listadoConceptosAlternativos} = this.props
-        if (listadoConceptosAlternativos != prevProps.listadoConceptosAlternativos){
+        if (listadoConceptosAlternativos !== prevProps.listadoConceptosAlternativos){
             if (customConceptos){
                 this.setState({ conceptos: listadoConceptosAlternativos })
             }
@@ -139,18 +139,18 @@ class ConceptosAdicionales extends Component {
 
     calcularImpuestos(traslada, retiene, importe) {
         this.setState({ retiene: retiene, importe: importe, traslada: traslada})
-        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
+        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) !== null) {
             const impuesto = this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
             this.setState({ importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2), retiene: retiene, importe: importe, traslada: traslada})
         }
-        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
+        if (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) !== null) {
             const impuesto = this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
             this.setState({ importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2), retiene: retiene, importe: importe, traslada: traslada})
         }
     }
 
     calcularDescuento(event){
-        if (event.keyCode == 13){
+        if (event.keyCode === 13){
             this.calcularImpuestos(this.state.traslada, this.state.retiene, this.state.importe - (this.state.importe * (this.state.descuento/100)))
         }
     }
@@ -180,7 +180,7 @@ class ConceptosAdicionales extends Component {
             if (!this.props.consult) {
                 const {removeConcepto} = this.props
                 removeConcepto(concepto)
-                const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+                const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion === concepto.idConcepto)
                 conceptoSelect.arClsDetalle = respuesta.data
                 this.setState({
                     concepto: conceptoSelect,
@@ -218,14 +218,14 @@ class ConceptosAdicionales extends Component {
             <div>
                 <Dialog open={this.state.openDialog} onClose={() => this.setState({ openDialog: false })}>
                     <DialogContent>
-                        {this.state.tipoModal == 1 &&
+                        {this.state.tipoModal === 1 &&
                             <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
                                 <div align="right">
                                     <button onClick={() => { this.props.history.push("/Ciudades") }} className="btn btn-primary primary-btn">Agregar</button>
 
                                 </div>
 
-                                {this.state.conceptos.length != 0 ?
+                                {this.state.conceptos.length !== 0 ?
                                     <TableConceptos handleSelectCP={this.handleSelectCP} object={this.state}
                                                     select={this.state[this.state.identificadorModal] && this.state[this.state.identificadorModal].m_nIdConceptosFacturacion}
                                                     columns={this.state.columnsConceptos} data={this.state.conceptos}
@@ -259,7 +259,7 @@ class ConceptosAdicionales extends Component {
                                         id="concepto"
                                         disableClearable
                                         forcePopupIcon={false}
-                                        disabled={this.state.agregar == "Consultar"}
+                                        disabled={this.state.agregar === "Consultar"}
                                         options={this.state.conceptos}
                                         getOptionLabel={(option) =>
                                             option.m_sConcepto
@@ -288,7 +288,7 @@ class ConceptosAdicionales extends Component {
                                                                     style={{
                                                                         paddingRight: "0px",
                                                                     }}
-                                                                    disabled={this.state.agregar == "Consultar"}
+                                                                    disabled={this.state.agregar === "Consultar"}
                                                                     onClick={() => {
                                                                         this.setState({
                                                                             identificadorModal:
@@ -521,7 +521,7 @@ class ConceptosAdicionales extends Component {
                             <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}>  {this.props.ivaTraslada.map(t => (<div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br /></div>))} {this.props.ivaRetiene.map(t => (<div>{`${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br /></div>))} </div>
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
-                            <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                            <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) !== null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) !== null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
                         </div>
                     </div>
                     }

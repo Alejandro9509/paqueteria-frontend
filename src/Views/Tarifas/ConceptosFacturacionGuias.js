@@ -213,7 +213,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     /**Reacciona al hacer clic en editar concepto*/
     const handleEditConcepto = (data) =>{
         if(!disabled){
-            // onChangeList(dataPaquetes.filter((i) => i.id != data.id))
+            // onChangeList(dataPaquetes.filter((i) => i.id !== data.id))
             setConcepto(data)
         }
     }
@@ -221,7 +221,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     /**Reacciona al hacer clic en eliminar concepto*/
     const handleDeleteConcepto = (data) =>{
         if(!disabled){
-            onChangeList(dataPaquetes.filter((i) => i.id != data.id))
+            onChangeList(dataPaquetes.filter((i) => i.id !== data.id))
         }
     }
 
@@ -247,7 +247,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         setConcepto(concepto => {
             return { ...concepto,retiene: retiene, importe: parseFloat(importe).toFixed(2), traslada: traslada }
         })
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
+        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) !== null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
             setConcepto(concepto=>{
                 return {
@@ -259,7 +259,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                 }
             })
         }
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
+        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) !== null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
             setConcepto(concepto=>{
                 return {

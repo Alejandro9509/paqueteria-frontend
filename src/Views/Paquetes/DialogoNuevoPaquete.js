@@ -228,7 +228,7 @@ export default function DialogoNuevoPaquete(props) {
 
     const handleChangePaquetev2 = (event) => {
 
-        if(event.target.name == "m_nCantidad"){
+        if(event.target.name === "m_nCantidad"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                     setErrores(errores=>{
@@ -264,7 +264,7 @@ export default function DialogoNuevoPaquete(props) {
             }
         }
 
-        if(event.target.name == "m_rLargo"){
+        if(event.target.name === "m_rLargo"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                     setErrores(errores=>{
@@ -299,7 +299,7 @@ export default function DialogoNuevoPaquete(props) {
             }
         }
 
-        if(event.target.name == "m_rAlto"){
+        if(event.target.name === "m_rAlto"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                     setErrores(errores=>{
@@ -335,7 +335,7 @@ export default function DialogoNuevoPaquete(props) {
             }
         }
 
-        if(event.target.name == "m_rAncho"){
+        if(event.target.name === "m_rAncho"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                     setErrores(errores=>{
@@ -371,7 +371,7 @@ export default function DialogoNuevoPaquete(props) {
             }
         }
 
-        if(event.target.name == "m_rPeso"){
+        if(event.target.name === "m_rPeso"){
             if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
                 if(Number(event.target.value)<=0){
                     setErrores(errores=>{
@@ -420,19 +420,19 @@ export default function DialogoNuevoPaquete(props) {
             }
         })
 
-        if (event.target.name == "m_nIdTipoEmbalaje"){
+        if (event.target.name === "m_nIdTipoEmbalaje"){
             setPaquete(paquete => {
                 return {
                     ...paquete,
-                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == event.target.value).m_sNombre
+                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje === event.target.value).m_sNombre
                 }
             })
         }
-        if (event.target.name == "m_nIdTipo"){
+        if (event.target.name === "m_nIdTipo"){
             setPaquete(paquete => {
                 return {
                     ...paquete,
-                    m_sTipo: event.target.value == 1 ? "Sobre" : "Paquete"
+                    m_sTipo: event.target.value === 1 ? "Sobre" : "Paquete"
                 }
             })
         }
@@ -601,8 +601,8 @@ export default function DialogoNuevoPaquete(props) {
                     m_rAncho: newValue.m_xAncho || 0,
                     m_rPeso: newValue.m_xPeso || 0,
                     m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
-                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
-                    m_sDescripcion: newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion,
+                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje === newValue.m_nIdEmbalaje).m_sNombre,
+                    m_sDescripcion: newValue.m_nIdProducto === 1 ? "" : newValue.m_sDescripcion,
                     m_sProducto: newValue.m_sDescripcion
                 }
             })

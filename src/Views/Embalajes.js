@@ -80,7 +80,7 @@ function Embalaje() {
                 "m_nModificadoPor": state.ModificadoPor
             }
 
-            if (state.IdEmbalaje != 0) {
+            if (state.IdEmbalaje !== 0) {
                 modificarEmbalajes(state.IdEmbalaje, params).then(respuesta => {
                     showSuccess(respuesta.data)
                 }).catch(err => {
@@ -116,7 +116,7 @@ function Embalaje() {
                         validarPermisos(state).then(respuesta => {
                             //showSuccess(respuesta.data)
                             derecho = respuesta.data;
-                            if (derecho == false) {
+                            if (derecho === false) {
                                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                                 return;
                             }
@@ -359,7 +359,7 @@ function Embalaje() {
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                        {data.length != 0 ? (
+                                        {data.length !== 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
                                                 rows={data}
@@ -404,8 +404,8 @@ function Embalaje() {
                                                                 maxlength="10"
                                                                 required
                                                                 value={state.CodigoEmbalaje}
-                                                                readOnly={state.agregar == "Consultar"}
-                                                                disabled={state.agregar == "Consultar"}
+                                                                readOnly={state.agregar === "Consultar"}
+                                                                disabled={state.agregar === "Consultar"}
                                                                 id="CodigoEmbalaje"
                                                                 error={codigoError}
                                                                 helperText={codigoError?"Menos de 10 digitos":""}
@@ -422,9 +422,9 @@ function Embalaje() {
                                                                 className="form-control"
                                                                 type="text"
                                                                 required
-                                                                disabled={state.agregar == "Consultar"}
+                                                                disabled={state.agregar === "Consultar"}
                                                                 value={state.NombreEmbalaje}
-                                                                readOnly={state.agregar == "Consultar"}
+                                                                readOnly={state.agregar === "Consultar"}
                                                                 id="NombreEmbalaje"
                                                             />
                                                         </div>
@@ -438,9 +438,9 @@ function Embalaje() {
                                                                 className="form-control"
                                                                 type="text"
                                                                 required
-                                                                disabled={state.agregar == "Consultar"}
+                                                                disabled={state.agregar === "Consultar"}
                                                                 value={state.DescripcionEmbalaje}
-                                                                readOnly={state.agregar == "Consultar"}
+                                                                readOnly={state.agregar === "Consultar"}
                                                                 id="DescripcionEmbalaje"
                                                             />
                                                         </div>
@@ -451,7 +451,7 @@ function Embalaje() {
                                                 <br></br>
                                                    <div className="form-footer" className="ol-md-12">
                                                    <Grid container spacing={1}>
-                                                      {  state.agregar != "Consultar" &&
+                                                      {  state.agregar !== "Consultar" &&
                                                           <Grid item xs>
                                                               <Button fullWidth type="button" onClick={(event) => {
                                                                   event.stopPropagation();
@@ -465,7 +465,7 @@ function Embalaje() {
                                                               </Button>
                                                           </Grid>
                                                       }
-                                                      {  state.agregar != "Consultar" &&
+                                                      {  state.agregar !== "Consultar" &&
                                                           <Grid item xs>
                                                               <Button fullWidth type="submit" form="formEmbalaje"
                                                                       className="btn btn-primary primary-btn">

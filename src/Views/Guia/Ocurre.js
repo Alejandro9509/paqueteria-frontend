@@ -314,7 +314,7 @@ class MyComponent extends Component {
                         </Grid>
                         </>
                         }
-                        {/*{(this.state.tipoPago == 1) &&
+                        {/*{(this.state.tipoPago === 1) &&
                         <Grid item xs={6}>
                             <TextField variant="outlined" size="small" label="Importe recibido"
                                        onChange={(event) => this.handleChangeDataOcurre(event)}
@@ -325,7 +325,7 @@ class MyComponent extends Component {
                                        value={this.state.importeOcurre}
                                        placeholder="Importe"
                                        name="importeOcurre"
-                                       required={this.props.showDialogOcurre && (this.state.tipoPago == 1)}
+                                       required={this.props.showDialogOcurre && (this.state.tipoPago === 1)}
                             />
                             <p style={{
                                 marginLeft: '10px',

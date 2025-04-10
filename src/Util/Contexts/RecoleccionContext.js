@@ -96,7 +96,7 @@ function obtenerRecoleccionId(id) {
 }
 
 function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion,Origen,Destino, idCliente) {
-    if (folioRecoleccion == ''){
+    if (folioRecoleccion === ''){
         folioRecoleccion = 0
     }
     const url =

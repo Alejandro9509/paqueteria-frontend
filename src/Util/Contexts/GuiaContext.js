@@ -247,7 +247,7 @@ function imprimirGuia(id) {
 }
 
 function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado,folioGuia,Origen,Destino,idCliente) {
-    if (folioGuia == ''){
+    if (folioGuia === ''){
         folioGuia = 0
     }
     const url =

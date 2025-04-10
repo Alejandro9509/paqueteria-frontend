@@ -152,28 +152,28 @@ class ClavesCFDI extends Component {
     }
 
     cancelar = () => {
-        if(this.props.catalogo == "c_ClaveProdServCP"){
+        if(this.props.catalogo === "c_ClaveProdServCP"){
             this.props.cancel(1)
         }
-        else if (this.props.catalogo == "c_ClaveUnidad"){
+        else if (this.props.catalogo === "c_ClaveUnidad"){
             this.props.cancel(2)
         }
-        else if (this.props.catalogo == "c_MaterialPeligroso"){
+        else if (this.props.catalogo === "c_MaterialPeligroso"){
             this.props.cancel(3)
         }
-        else if (this.props.catalogo == "c_TipoEmbalaje"){
+        else if (this.props.catalogo === "c_TipoEmbalaje"){
             this.props.cancel(4)
         }
-        else if(this.props.catalogo == "c_FraccionArancelaria"){
+        else if(this.props.catalogo === "c_FraccionArancelaria"){
             this.props.cancel(5)
         }
-        else if(this.props.catalogo == "c_FormaFarmaceutica"){
+        else if(this.props.catalogo === "c_FormaFarmaceutica"){
             this.props.cancel(6)
         }
-        else if(this.props.catalogo == "c_CondicionesEspeciales"){
+        else if(this.props.catalogo === "c_CondicionesEspeciales"){
             this.props.cancel(8)
         }
-        else if(this.props.catalogo == "c_SectorCOFEPRIS"){
+        else if(this.props.catalogo === "c_SectorCOFEPRIS"){
             this.props.cancel(9)
         }
         this.props.closeDialog()

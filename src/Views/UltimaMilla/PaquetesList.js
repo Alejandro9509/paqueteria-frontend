@@ -148,7 +148,7 @@ class PaquetesList extends Component {
 
     render() {
         const {classes} = this.props;
-        const isSelected = (row, esRecoleccion) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row && u.m_bEsRecoleccion === esRecoleccion) != null;
+        const isSelected = (row, esRecoleccion) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row && u.m_bEsRecoleccion === esRecoleccion) !== null;
         const datosFiltrados = this.stableSort(this.state.paquetes, this.getComparator(this.state.order, this.state.orderBy)).filter((objeto) => {
             return (objeto.m_sFolio).toLowerCase().includes(this.state.filtro.toLowerCase());
         });

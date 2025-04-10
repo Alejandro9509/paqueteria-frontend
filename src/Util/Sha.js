@@ -149,7 +149,7 @@
             this.blocks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         }
 
-        if (bits == 384) {
+        if (bits === 384) {
             this.h0h = 0xCBBB9D5D;
             this.h0l = 0xC1059ED8;
             this.h1h = 0x629A292A;
@@ -166,7 +166,7 @@
             this.h6l = 0x64F98FA7;
             this.h7h = 0x47B5481D;
             this.h7l = 0xBEFA4FA4;
-        } else if (bits == 256) {
+        } else if (bits === 256) {
             this.h0h = 0x22312194;
             this.h0l = 0xFC2BF72C;
             this.h1h = 0x9F555FA3;
@@ -183,7 +183,7 @@
             this.h6l = 0x2C85B8AA;
             this.h7h = 0x0EB72DDC;
             this.h7l = 0x81C52CA2;
-        } else if (bits == 224) {
+        } else if (bits === 224) {
             this.h0h = 0x8C3D37C8;
             this.h0l = 0x19544DA2;
             this.h1h = 0x73E19966;
@@ -702,7 +702,7 @@
                 HEX_CHARS[(h5l >> 12) & 0x0F] + HEX_CHARS[(h5l >> 8) & 0x0F] +
                 HEX_CHARS[(h5l >> 4) & 0x0F] + HEX_CHARS[h5l & 0x0F];
         }
-        if (bits == 512) {
+        if (bits === 512) {
             hex += HEX_CHARS[(h6h >> 28) & 0x0F] + HEX_CHARS[(h6h >> 24) & 0x0F] +
                 HEX_CHARS[(h6h >> 20) & 0x0F] + HEX_CHARS[(h6h >> 16) & 0x0F] +
                 HEX_CHARS[(h6h >> 12) & 0x0F] + HEX_CHARS[(h6h >> 8) & 0x0F] +
@@ -755,7 +755,7 @@
                 (h5l >> 24) & 0xFF, (h5l >> 16) & 0xFF, (h5l >> 8) & 0xFF, h5l & 0xFF
             );
         }
-        if (bits == 512) {
+        if (bits === 512) {
             arr.push(
                 (h6h >> 24) & 0xFF, (h6h >> 16) & 0xFF, (h6h >> 8) & 0xFF, h6h & 0xFF,
                 (h6l >> 24) & 0xFF, (h6l >> 16) & 0xFF, (h6l >> 8) & 0xFF, h6l & 0xFF,
@@ -791,7 +791,7 @@
             dataView.setUint32(40, this.h5h);
             dataView.setUint32(44, this.h5l);
         }
-        if (bits == 512) {
+        if (bits === 512) {
             dataView.setUint32(48, this.h6h);
             dataView.setUint32(52, this.h6l);
             dataView.setUint32(56, this.h7h);

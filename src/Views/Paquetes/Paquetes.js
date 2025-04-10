@@ -79,7 +79,7 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
 
     const handleDelete = (data) =>{
         if(!disabled){
-            onChangeList(dataPaquetes.filter((i) => i.m_nIdPaquete != data.m_nIdPaquete))
+            onChangeList(dataPaquetes.filter((i) => i.m_nIdPaquete !== data.m_nIdPaquete))
         }
     }
 
@@ -213,7 +213,7 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
     const addPaquetev2 = (data) => {
         let paq = data
         /*if (validarPaquetes(paq)){
-            paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
+            paq.m_nIdPaquete = paq.m_nIdPaquete !== 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
             /!*paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
             if (paq.m_cyValorDeclarado === 0 && tieneSeguro){
                 showSuccess("El campo de valor declarado es necesario para el seguro.")
@@ -226,15 +226,15 @@ function Paquetes({dataPaquetes = [],setDataPaquetes,onChangeList, disabled, cli
         if (dataPaquetes.find(item => item.m_nIdPaquete === data.m_nIdPaquete)){//aqui entra en la modificacion
             dataPaquetes.forEach(item => {
                 if (item.m_nIdPaquete === data.m_nIdPaquete){//verifica que tengan el mismo id
-                     if(item.m_nCantidad != data.m_nCantidad ||
-                    item.m_nIdProducto != data.m_nIdProducto ||
-                    item.m_nIdTipo != data.m_nIdTipo ||
-                    item.m_nIdTipoEmbalaje != data.m_nIdTipoEmbalaje ||
-                    item.m_rAlto != data.m_rAlto ||
-                    item.m_rAncho != data.m_rAncho ||
-                    item.m_rLargo != data.m_rLargo ||
-                    item.m_rPeso != data.m_rPeso ||
-                    item.m_rVolumen != data.m_rVolumen){
+                     if(item.m_nCantidad !== data.m_nCantidad ||
+                    item.m_nIdProducto !== data.m_nIdProducto ||
+                    item.m_nIdTipo !== data.m_nIdTipo ||
+                    item.m_nIdTipoEmbalaje !== data.m_nIdTipoEmbalaje ||
+                    item.m_rAlto !== data.m_rAlto ||
+                    item.m_rAncho !== data.m_rAncho ||
+                    item.m_rLargo !== data.m_rLargo ||
+                    item.m_rPeso !== data.m_rPeso ||
+                    item.m_rVolumen !== data.m_rVolumen){
 
                         entra = true
                     }

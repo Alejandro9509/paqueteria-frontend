@@ -435,47 +435,47 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
     const validarFormulario = () => {
         let camposFaltantes = "Favor de completar el/los campo(s): ";
         let valido = true;
-        if(form.fechaMovimiento == null){
+        if(form.fechaMovimiento === null){
             camposFaltantes += "fecha de movimiento, ";
             valido = false;
         }
-        if(form.horaMovimiento == null){
+        if(form.horaMovimiento === null){
             camposFaltantes += "hora de movimiento, ";
             valido = false;
         }
-        if(form.fechaCobro == null){
+        if(form.fechaCobro === null){
             camposFaltantes += "fecha de cobro, ";
             valido = false;
         }
-        if(form.idCliente == null || form.idCliente == 0 || form.cliente == null || form.cliente == 0){
+        if(form.idCliente === null || form.idCliente === 0 || form.cliente === null || form.cliente === 0){
             camposFaltantes += "cliente, ";
             valido = false;
         }
-        if(form.tipoCambio == null){
+        if(form.tipoCambio === null){
             camposFaltantes += "tipo de cambio, ";
             valido = false;
         }
-        if(form.formaPago == null || form.formaPago == 0){
+        if(form.formaPago === null || form.formaPago === 0){
             camposFaltantes += "forma de pago, ";
             valido = false;
         }
-        if(form.idCuentaBancaria == null || form.idCuentaBancaria == 0){
+        if(form.idCuentaBancaria === null || form.idCuentaBancaria === 0){
             camposFaltantes += "cuenta bancaria, ";
             valido = false;
         }
-        if(form.referenciaBancaria == null || form.referenciaBancaria === ""){
+        if(form.referenciaBancaria === null || form.referenciaBancaria === ""){
             camposFaltantes += "referencia bancaría, ";
             valido = false;
         }
-        if(form.idConceptoCobranza == null || form.idConceptoCobranza == 0){
+        if(form.idConceptoCobranza === null || form.idConceptoCobranza === 0){
             camposFaltantes += "concepto cobranza, ";
             valido = false;
         }
-        if(form.importe == null || form.importe === 0.0){
+        if(form.importe === null || form.importe === 0.0){
             camposFaltantes += "importe, ";
             valido = false;
         }
-        if(form.importeSuma == null || form.importeSuma === 0.0){
+        if(form.importeSuma === null || form.importeSuma === 0.0){
             camposFaltantes += "importes en listado de facturas, ";
             valido = false;
         }
@@ -594,7 +594,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                         value={form.idAplicarPago}
                                         onChange={(event) => {
                                             event.preventDefault();
-                                            if(event.target.value != 0){
+                                            if(event.target.value !== 0){
                                                 setForm({
                                                     ...form,
                                                     aplicarPago: dataCertificados.find((item) => item.IdCertificado === event.target.value),
@@ -701,7 +701,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                         value={form.idCuentaBancaria}
                                         onChange={(event) => {
                                             event.preventDefault();
-                                            if(event.target.value != 0){
+                                            if(event.target.value !== 0){
                                                 setForm({
                                                     ...form,
                                                     idCuentaBancaria: event.target.value,
@@ -792,7 +792,7 @@ export default function DialogPagoFactura({ open, handleClose, guias }) {
                                         value={form.idConceptoCobranza}
                                         onChange={(event) => {
                                             event.preventDefault();
-                                            if(event.target.value != 0){
+                                            if(event.target.value !== 0){
                                                 setForm({
                                                     ...form,
                                                     conceptoCobranza: dataConceptos.find((item) => item.IdConceptoCobranza === event.target.value),

@@ -22,7 +22,7 @@ class Rutas extends Component {
 
     getRoute(){
         var polygon = []
-        calcularRuta(this.props.paquetes.filter((p, index) =>  this.props.tour.trips[0].stops.map((s,i) =>   parseInt(s.tasks[0].orderId) === index) != null )).then((result) => {
+        calcularRuta(this.props.paquetes.filter((p, index) =>  this.props.tour.trips[0].stops.map((s,i) =>   parseInt(s.tasks[0].orderId) === index) !== null )).then((result) => {
             result.polyline.plain.polyline.map(c => {
                 polygon.push([c.y, c.x])
             })

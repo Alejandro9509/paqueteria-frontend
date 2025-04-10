@@ -487,7 +487,7 @@ function RemitenteDestinatario(props) {
         ( zonaOperativa ) => {
           obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
             ( zonaTarifa ) => {
-              if(zonaOperativa.data.length == 0){
+              if(zonaOperativa.data.length === 0){
                 showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
               }
               setState((state) => ({

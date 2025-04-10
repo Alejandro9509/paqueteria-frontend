@@ -84,32 +84,7 @@ export default function SalidaParadas(props){
         }
     ]
 
-    const handleChangeKmsRemolqueUno = (event) => {
-        setData({
-            ...data,
-            kmsRemolqueUno: event.target.value});
-    }
-
-    const handleChangeMillasRemolqueUno = (e) => {
-        setData({
-            ...data,
-            millasRemolqueUno: e.target.value
-        });
-    }
-
-    const handleChangeKmsRemolqueDos = (e) => {
-        setData({
-            ...data,
-            kmsRemolqueDos: e.target.value
-        });
-    }
-
-    const handleChangeMillasRemolqueDos = (e) => {
-        setData({
-            ...data,
-            millasRemolqueDos: e.target.value
-        });
-    }
+   
 
     const handleChangeEstatusRemolqueUno = (e) => {
         setData({
@@ -153,19 +128,7 @@ export default function SalidaParadas(props){
         });
     }
 
-    const handleChangeKms = (e) => {
-        setData({
-            ...data,
-            kms: e.target.value
-        });
-    }
 
-    const handleChangeMillas = (e) => {
-        setData({
-            ...data,
-            millas: e.target.value
-        });
-    }
 
     function onSubmit(event) {
         event.preventDefault();

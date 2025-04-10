@@ -43,7 +43,7 @@ export default function NavigationList(props) {
                         <ListItem >
                             <ListItemIcon>
                                 {
-                                    (i.maneuverType == "KEEP_LEFT" || i.maneuverType == "ENTER_LEFT" || i.maneuverType == "EXIT_LEFT") &&
+                                    (i.maneuverType === "KEEP_LEFT" || i.maneuverType === "ENTER_LEFT" || i.maneuverType === "EXIT_LEFT") &&
                                     <SvgIcon
                                         style={{ width: "50px", height: "50px", padding: "10px" }}
                                         component={KeepLeftArrow}
@@ -51,7 +51,7 @@ export default function NavigationList(props) {
                                     />
                                 }
                                 {
-                                    (i.maneuverType == "CHANGE" || i.maneuverType == "CHANGE_LEFT" || i.maneuverType == "CHANGE_RIGHT") &&
+                                    (i.maneuverType === "CHANGE" || i.maneuverType === "CHANGE_LEFT" || i.maneuverType === "CHANGE_RIGHT") &&
                                     <SvgIcon
                                         style={{ width: "50px", height: "50px", padding: "10px" }}
                                         component={ChangeArrow}
@@ -59,7 +59,7 @@ export default function NavigationList(props) {
                                     />
                                 }
                                 {
-                                    (i.maneuverType == "TURN_LEFT" || i.maneuverType == "TURN_SHARP_LEFT" || i.maneuverType == "START_LEFT" || i.maneuverType == "TURN_HALF_LEFT") &&
+                                    (i.maneuverType === "TURN_LEFT" || i.maneuverType === "TURN_SHARP_LEFT" || i.maneuverType === "START_LEFT" || i.maneuverType === "TURN_HALF_LEFT") &&
                                     <SvgIcon
                                         style={{ width: "50px", height: "50px", padding: "10px" }}
                                         component={TurnLeftArrow}
@@ -67,7 +67,7 @@ export default function NavigationList(props) {
                                     />
                                 }
                                 {
-                                    (i.maneuverType == "CONTINUE" || i.maneuverType == "KEEP_STRAIGHT" || i.maneuverType == "START" || i.maneuverType == "ENTER" || i.maneuverType == "EXIT") &&
+                                    (i.maneuverType === "CONTINUE" || i.maneuverType === "KEEP_STRAIGHT" || i.maneuverType === "START" || i.maneuverType === "ENTER" || i.maneuverType === "EXIT") &&
                                     <SvgIcon
                                         style={{ width: "50px", height: "50px", padding: "10px" }}
                                         component={UpArrow}
@@ -75,7 +75,7 @@ export default function NavigationList(props) {
                                     />
                                 }
                                 {
-                                    (i.maneuverType == "TURN_RIGHT" || i.maneuverType == "TURN_SHARP_RIGHT" || i.maneuverType == "START_RIGHT" || i.maneuverType == "KEEP_RIGHT" || i.maneuverType == "ENTER_RIGHT" || i.maneuverType == "EXIT_RIGHT" || i.maneuverType == "TURN_HALF_RIGHT") &&
+                                    (i.maneuverType === "TURN_RIGHT" || i.maneuverType === "TURN_SHARP_RIGHT" || i.maneuverType === "START_RIGHT" || i.maneuverType === "KEEP_RIGHT" || i.maneuverType === "ENTER_RIGHT" || i.maneuverType === "EXIT_RIGHT" || i.maneuverType === "TURN_HALF_RIGHT") &&
                                     <SvgIcon
                                         style={{ width: "50px", height: "50px", padding: "10px" }}
                                         component={TurnRightArrow}
@@ -83,7 +83,7 @@ export default function NavigationList(props) {
                                     />
                                 }
                                 {
-                                    (i.maneuverType == "TAKE_ROUNDABOUT_LEFT" || i.maneuverType == "TAKE_ROUNDABOUT_RIGHT") &&
+                                    (i.maneuverType === "TAKE_ROUNDABOUT_LEFT" || i.maneuverType === "TAKE_ROUNDABOUT_RIGHT") &&
                                     <SvgIcon
                                         style={{ width: "50px", height: "50px", padding: "10px" }}
                                         component={RoundaboutArrow}
@@ -91,7 +91,7 @@ export default function NavigationList(props) {
                                     />
                                 }
                                 {
-                                    (i.maneuverType == "MAKE_U_TURN") &&
+                                    (i.maneuverType === "MAKE_U_TURN") &&
                                     <SvgIcon
                                         style={{ width: "50px", height: "50px", padding: "10px" }}
                                         component={TurnUArrow}

@@ -163,7 +163,7 @@ class PaquetesPlaneacion extends Component {
 
     render() {
         const {classes} = this.props;
-        const isSelected = (row) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row) != null;
+        const isSelected = (row) => this.props.paquetesSeleccionadas.find(u => u.m_nId === row) !== null;
 
         return (
             <Dialog open={this.props.open} fullWidth maxWidth={"lg"} onClose={this.props.close}>

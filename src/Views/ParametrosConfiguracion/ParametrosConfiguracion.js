@@ -363,70 +363,70 @@ function ParametrosConfiguracion() {
         /**No se usa !== para que convierta string a int y pueda comparar.*/
         switch (parent) {
             case 'idConceptoFlete':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCita
             case 'idConceptoCarga':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCita
             case 'idConceptoDescarga':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCita
             case 'idConceptoRecoleccion':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCita
             case 'idConceptoEntrega':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCita
             case 'idConceptoSeguro':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCita
             case 'idConceptoCita':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
             case 'idConceptoManiobras':
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCita
             default:
-                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
-                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoManiobras
+                return c.m_nIdConceptosFacturacion !== configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion !== configuraciones.idConceptoManiobras
         }
 
     }
@@ -680,7 +680,7 @@ function ParametrosConfiguracion() {
                                                 onChange={handleChange}
                                                 InputLabelProps={{shrink: true}}
                                             >
-                                                {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((cambio) => (
+                                                {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i === item.m_nCodigo)).map((cambio) => (
                                                     <MenuItem
                                                         key={cambio.m_nIdTipoCobro}
                                                         value={cambio.m_nIdTipoCobro}
@@ -1000,7 +1000,7 @@ function ParametrosConfiguracion() {
                                             />
                                         </Box>
                                     </Box>
-                                    { configuraciones.tipoTarifa == 2 &&
+                                    { configuraciones.tipoTarifa === 2 &&
                                         <Box width="40%" display="flex">
                                             <Box width="40%" p={1} my={0.5}>
                                                 <div className={classes.subtitulo}>Factor de conversión</div>

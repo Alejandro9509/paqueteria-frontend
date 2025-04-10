@@ -112,7 +112,7 @@ class UnidadesList extends Component {
         if (selectedIndex === -1) {
             this.props.cerrarDialogos()
             if (row.m_bAplicaRemolques) {
-                if (row.m_sTipoUnidad == "TRACTOCAMION") {//Si la unidad es tractocamion el remolque es obligatorio
+                if (row.m_sTipoUnidad === "TRACTOCAMION") {//Si la unidad es tractocamion el remolque es obligatorio
                     this.props.asignarRemolques(row)
                 } else {
                     confirmAlert({
@@ -149,7 +149,7 @@ class UnidadesList extends Component {
 
     render() {
         //const {classes} = this.props;
-        const isSelected = (row) => this.props.unidadesSeleccionadas.find(u => u.m_nIdUnidad === row) != null;
+        const isSelected = (row) => this.props.unidadesSeleccionadas.find(u => u.m_nIdUnidad === row) !== null;
 
         return (
             <Root style={{height: "400px", overflow: "auto"}}>

@@ -131,7 +131,7 @@ class AgregarRemolques extends Component {
                                                     freeSolo
                                                     onChange={this.handleRemolqueUnoFiltro}
                                                     value={this.state.IdRemolque1}
-                                                    //disabled={state.agregar == "Consultar"}
+                                                    //disabled={state.agregar === "Consultar"}
                                                     id="IdRemolque1"
                                                     disableClearable
                                                     getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
@@ -201,7 +201,7 @@ class AgregarRemolques extends Component {
                                                     freeSolo
                                                     onChange={this.handleRemolqueDosFiltro}
                                                     value={this.state.IdRemolque2}
-                                                    //disabled={state.agregar == "Consultar"}
+                                                    //disabled={state.agregar === "Consultar"}
                                                     id="IdRemolque2"
                                                     disableClearable
                                                     getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
@@ -273,7 +273,7 @@ class AgregarRemolques extends Component {
                                                 freeSolo
                                                 onChange={this.handleDollyFiltro}
                                                 value={this.state.IdDolly}
-                                                //disabled={state.agregar == "Consultar"}
+                                                //disabled={state.agregar === "Consultar"}
                                                 id="IdDolly"
                                                 disableClearable
                                                 getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}

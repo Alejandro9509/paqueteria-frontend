@@ -51,7 +51,7 @@ function obtenerEmbarques(){
 }
 
 function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque,Origen,Destino, idCliente) {
-    if (folioEmbarque == ''){
+    if (folioEmbarque === ''){
         folioEmbarque = 0
     }
     const url =

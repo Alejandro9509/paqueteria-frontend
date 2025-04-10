@@ -461,7 +461,7 @@ ${guia.m_sDomicilioDestinatario.length > 40 ?
 
 ^FX Tipo de reparto
 ^FT300,150^A0I,30,30^FH\\^FD TIPO DE REPARTO:^FS
-^FT320,100^A0I,45,38^FB315,1,0,C^FH^FD${guia.tipoEntrega == "OCURRE" ? guia.tipoEntrega : "DOMICILIO"}\\&^FS
+^FT320,100^A0I,45,38^FB315,1,0,C^FH^FD${guia.tipoEntrega === "OCURRE" ? guia.tipoEntrega : "DOMICILIO"}\\&^FS
 
 ^FX Numero de pagina
 ^FT320,60^A0I,30,30^FH\\^FD PARTIDA: ${indexPartida + 1} DE ${paquetesTotales}^FS
@@ -550,7 +550,7 @@ ${guia.m_sDomicilioDestinatario.length > 40 ?
 
 ^FX Tipo de entrega
 ^FT75,320^A0R,20,20^FH\\^FDTipo de entrega:^FS
-^FT75,490^A0R,20,20^FH\\^FD${guia.tipoEntrega == "OCURRE" ? guia.tipoEntrega : "DOMICILIO CLIENTE"}^FS
+^FT75,490^A0R,20,20^FH\\^FD${guia.tipoEntrega === "OCURRE" ? guia.tipoEntrega : "DOMICILIO CLIENTE"}^FS
 
 ^FX Encabezado QR
 ${origen.length > 17 ? (

@@ -237,8 +237,8 @@ function Productos() {
             m_bPredeterminado: form.predeterminado
         };
 
-        if (form.IdProducto != 0) {
-            if(params.m_nIdEmbalaje == ""){
+        if (form.IdProducto !== 0) {
+            if(params.m_nIdEmbalaje === ""){
                 showSuccess("Seleccionar Embalaje")
                 return
             }
@@ -274,11 +274,11 @@ function Productos() {
             ...form,
             [e.target.id]: e.target.value,
         });
-        if (e.target.name == "IdTipoEmbalaje") {
+        if (e.target.name === "IdTipoEmbalaje") {
             setForm((embalaje) => {
                 return {
                     ...embalaje,
-                    Embalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == e.target.value)
+                    Embalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje === e.target.value)
                         .m_sNombre,
                     IdTipoEmbalaje: e.target.value,
                 };
@@ -353,7 +353,7 @@ function Productos() {
         }  else{
             getAllEmbalajes();
         }
-        if (productos.length != 0) {
+        if (productos.length !== 0) {
             return;
         } else {
             getAllProductos();
@@ -422,7 +422,7 @@ function Productos() {
                                             type="text"
                                             maxLength="50"
                                             required
-                                            readOnly={state.agregar == "Consultar"}
+                                            readOnly={state.agregar === "Consultar"}
                                             value={form.Descripcion}
                                             placeholder="Descripcion"
                                             id="Descripcion"
@@ -438,7 +438,7 @@ function Productos() {
                                             onChange={handleChange}
                                             value={form.Largo}
                                             label="Largo"
-                                            readOnly={state.agregar == "Consultar"}
+                                            readOnly={state.agregar === "Consultar"}
                                             placeholder="cms"
                                             name="Largo"
                                             id="Largo"
@@ -452,7 +452,7 @@ function Productos() {
                                             type="text"
                                             onChange={handleChange}
                                             label="Ancho"
-                                            readOnly={state.agregar == "Consultar"}
+                                            readOnly={state.agregar === "Consultar"}
                                             value={form.Ancho}
                                             placeholder="cms"
                                             name="Ancho"
@@ -468,7 +468,7 @@ function Productos() {
                                             onChange={handleChange}
                                             value={form.Alto}
                                             label="Alto"
-                                            readOnly={state.agregar == "Consultar"}
+                                            readOnly={state.agregar === "Consultar"}
                                             placeholder="cms"
                                             name="Alto"
                                             id="Alto"
@@ -482,7 +482,7 @@ function Productos() {
                                             type="text"
                                             onChange={handleChange}
                                             label="Peso"
-                                            readOnly={state.agregar == "Consultar"}
+                                            readOnly={state.agregar === "Consultar"}
                                             value={form.Peso}
                                             placeholder="kg"
                                             name="Peso"
@@ -498,7 +498,7 @@ function Productos() {
                                             type="text"
                                             value={form.Volumen}
                                             label="Volumen"
-                                            readOnly={state.agregar == "Consultar"}
+                                            readOnly={state.agregar === "Consultar"}
                                             placeholder="cm3"
                                             name="Volumen"
                                             id="Volumen"
@@ -524,7 +524,7 @@ function Productos() {
                                                     id="IdTipoEmbalaje"
                                                     name="IdTipoEmbalaje"
                                                     onChange={handleChange}
-                                                    readOnly={state.agregar == "Consultar"}
+                                                    readOnly={state.agregar === "Consultar"}
                                                     required
                                                     InputLabelProps={{
                                                         shrink: true,
@@ -557,7 +557,7 @@ function Productos() {
                                                     color="primary"
                                                     id="Activo"
                                                     name="Activo"
-                                                    disabled={state.agregar == "Consultar"}
+                                                    disabled={state.agregar === "Consultar"}
                                                 />
                                                 <i />
                                             </Grid>
@@ -579,7 +579,7 @@ function Productos() {
                                                         fullWidth
                                                         onClick={handleShowListado}
                                                         className="btn btn-secondary secondary-btn"
-                                                        disabled={state.agregar == "Consultar"}
+                                                        disabled={state.agregar === "Consultar"}
                                                     >
                                                         CANCELAR
                                                     </Button>
@@ -589,7 +589,7 @@ function Productos() {
                                                         fullWidth
                                                         type="submit"
                                                         className="btn btn-primary primary-btn"
-                                                        disabled={state.agregar == "Consultar"}
+                                                        disabled={state.agregar === "Consultar"}
                                                     >
                                                         AGREGAR PRODUCTO
                                                     </Button>

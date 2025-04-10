@@ -131,17 +131,17 @@ export default function DialogoNuevoRango(props) {
         }
         if (props.seccionPadre === 'MANIOBRAS'){
             props.rows.forEach(i => {
-                if (i.id != rango.id
-                    && i.idConcepto == rango.idConcepto
-                    && i.minimo == rango.minimo
-                    && i.maximo == rango.maximo
+                if (i.id !== rango.id
+                    && i.idConcepto === rango.idConcepto
+                    && i.minimo === rango.minimo
+                    && i.maximo === rango.maximo
                 ){
                     valid = false
                     showSuccess("Ese rango ya existe.")
                 }
             })
             props.rows.forEach(i => {
-                if (i.id != rango.id && i.idConcepto == rango.idConcepto){
+                if (i.id !== rango.id && i.idConcepto === rango.idConcepto){
                     if(isRangoOcupado(i, rango)){
                         valid = false
                         showSuccess("El concepto tiene un rango ya ocupado.")
@@ -152,16 +152,16 @@ export default function DialogoNuevoRango(props) {
             })
         }else{
             props.rows.forEach(i => {
-                if (i.id != rango.id
-                    && i.minimo == rango.minimo
-                    && i.maximo == rango.maximo
+                if (i.id !== rango.id
+                    && i.minimo === rango.minimo
+                    && i.maximo === rango.maximo
                 ){
                     valid = false
                     showSuccess("Ese rango ya existe.")
                 }
             })
             props.rows.forEach(i => {
-                if (i.id != rango.id){
+                if (i.id !== rango.id){
                     if(isRangoOcupado(i, rango)){
                         valid = false
                         showSuccess("El concepto tiene un rango ya ocupado.")
@@ -221,19 +221,19 @@ export default function DialogoNuevoRango(props) {
             setRango({
                 ...rango,
                 [event.target.name]: event.target.value,
-                unidadMedida: props.unidadesMedidaListado.find(i => i.IdUnidadMedida == event.target.value).UnidadMedida
+                unidadMedida: props.unidadesMedidaListado.find(i => i.IdUnidadMedida === event.target.value).UnidadMedida
             })
         }else if (event.target.name === 'idTipoCalculo'){
             setRango({
                 ...rango,
                 [event.target.name]: event.target.value,
-                tipoCalculo: props.tiposCalculoListado.find(i => i.m_nIdTarifaTipoCalculo == event.target.value).m_sTarifaTipoCalculo
+                tipoCalculo: props.tiposCalculoListado.find(i => i.m_nIdTarifaTipoCalculo === event.target.value).m_sTarifaTipoCalculo
             })
         }else if (event.target.name === 'idConcepto'){
             setRango({
                 ...rango,
                 [event.target.name]: event.target.value,
-                concepto: props.conceptosListado.find(i => i.m_nIdConceptosFacturacion == event.target.value).m_sConcepto
+                concepto: props.conceptosListado.find(i => i.m_nIdConceptosFacturacion === event.target.value).m_sConcepto
             })
         }else if (event.target.name === 'minimo' || event.target.name === 'maximo'){
             setRango({

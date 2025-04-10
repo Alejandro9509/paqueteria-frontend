@@ -48,12 +48,12 @@ class MyComponent extends Component {
             usuario = this.getUrlParameter('usuario'); //SI NO PUEDE DESENCRIPTAR ES PORQUE NO ESTAN ENCRIPTADAS...
             contrasena = this.getUrlParameter('pass'); //ASI QUE SE TOMAN EN CRUDO LOS VALORES
         }
-        const url_back = (backend != null && backend !== "") ? backend : process.env.REACT_APP_REPORT_URL;
+        const url_back = (backend !== null && backend !== "") ? backend : process.env.REACT_APP_REPORT_URL;
         const url = `${url_back}/api/ValidarLogin/V2/'${usuario}'/'${contrasena}' `;
         axios.post(url, Object.assign({}, {email: usuario, password: contrasena}),
             { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
             try {
-                if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
+                if (respuesta.data !== undefined && respuesta.data.m_sUsuario !== undefined && respuesta.data.m_sUsuario !== "") {
                     localStorage.setItem("Back", url_back);
                     localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
                     localStorage.setItem("accessToken", true);

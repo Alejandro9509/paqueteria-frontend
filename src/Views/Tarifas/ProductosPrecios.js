@@ -280,7 +280,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                 minWidth: "230px",
                                 textAlign: "right"
                             }}>
-                                ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}
+                                ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) !== null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) !== null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}
                             </div>
                         </div>
                     </div>

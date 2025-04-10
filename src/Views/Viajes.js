@@ -169,7 +169,7 @@ function Viajes() {
             //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
-            if (derecho == false) {
+            if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
@@ -295,7 +295,7 @@ function Viajes() {
 
     function handleShowCancelar(event) {
         event.preventDefault()
-        if((viajeSeleccionado == null || viajeSeleccionado == 0 || state.idViaje == 0)){
+        if((viajeSeleccionado === null || viajeSeleccionado === 0 || state.idViaje === 0)){
             showSuccess("Seleccione primero un viaje")
             $(window).unbind();
             clearData()
@@ -494,7 +494,7 @@ function Viajes() {
         if(viajeSeleccionado){
             let rutaActiva = true;
             viajeSeleccionado.m_arrTrayectos.map((p, index) => {
-                if(viajeSeleccionado.m_sEstatus === "Cancelado" || viajeSeleccionado.m_nIdEstatusViaje == 10){
+                if(viajeSeleccionado.m_sEstatus === "Cancelado" || viajeSeleccionado.m_nIdEstatusViaje === 10){
                     p.deshabilitado = true;
                 }else{
                     if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {
@@ -525,7 +525,7 @@ function Viajes() {
     }
 
     function getUpdatedData(){
-        if(filtros == [] || filtros.length === 0){
+        if(filtros === [] || filtros.length === 0){
             obtenerFechaInicio().then((respuestaUno) => {
                 obtenerFechaFinal().then((respuestaDos) => {
                     obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
@@ -542,7 +542,7 @@ function Viajes() {
     }
 
     function getUpdatedData(){
-        if(filtros == [] || filtros.length === 0){
+        if(filtros === [] || filtros.length === 0){
             obtenerFechaInicio().then((respuestaUno) => {
                 obtenerFechaFinal().then((respuestaDos) => {
                     obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
@@ -1064,7 +1064,7 @@ function Viajes() {
             field: "m_nIdOrigen",
             width: 300,
             renderCell: row => {
-                return row.row.m_sFolioFiscalUUIDSustituido == "" ?  row.row.m_sUltimoFolioFiscalUUIDSustituido : (row.row.m_sFolioFiscalUUIDSustituido || "")
+                return row.row.m_sFolioFiscalUUIDSustituido === "" ?  row.row.m_sUltimoFolioFiscalUUIDSustituido : (row.row.m_sFolioFiscalUUIDSustituido || "")
             }
         },
         // {
@@ -1199,7 +1199,7 @@ function Viajes() {
                 getUpdatedData();
                 let rutaActiva = true;
                 viajeActualizado.m_arrTrayectos.map((p, index) => {
-                    if(viajeActualizado.m_sEstatus === "Cancelado" || viajeActualizado.m_nIdEstatusViaje == 10){
+                    if(viajeActualizado.m_sEstatus === "Cancelado" || viajeActualizado.m_nIdEstatusViaje === 10){
                         p.deshabilitado = true;
                     }else{
                         if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {
@@ -1258,7 +1258,7 @@ function Viajes() {
                 getUpdatedData();
                 let rutaActiva = true;
                 viajeActualizado.m_arrTrayectos.map((p, index) => {
-                    if(viajeActualizado.m_sEstatus === "Cancelado" || viajeActualizado.m_nIdEstatusViaje == 10){
+                    if(viajeActualizado.m_sEstatus === "Cancelado" || viajeActualizado.m_nIdEstatusViaje === 10){
                         p.deshabilitado = true;
                     }else{
                         if (p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada) {

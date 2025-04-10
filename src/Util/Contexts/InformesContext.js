@@ -107,7 +107,7 @@ function obtenerInformeFiltro(
     sucursarEmisora,
     sucursalReceptora
 ) {
-    if (folioInforme == "") {
+    if (folioInforme === "") {
         folioInforme = 0;
     }
     const url =

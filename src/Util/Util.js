@@ -359,12 +359,12 @@ export function readExcel(FORMAT,file, esRecoleccion){
             const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
             const wsPaquetes = (wb.Sheets[FORMAT.hojaPaquetes]);
             const wsComplementosSat = (wb.Sheets[FORMAT.hojaComplementos]);
-            if(wsGuias == undefined || wsComplementosSat == undefined || wsPaquetes == undefined){
+            if(wsGuias === undefined || wsComplementosSat === undefined || wsPaquetes === undefined){
                 resolve([]);
                 let mensaje = ("En el documento no se encontraron la(s) hoja(s): " +
-                    (wsComplementosSat == undefined ? FORMAT.hojaEmbarques+", " : "") +
-                    (wsGuias == undefined ? FORMAT.hojaComplementos+", " : "") +
-                    (wsPaquetes == undefined ? FORMAT.hojaPaquetes+", " : "")).slice(0, -2)
+                    (wsComplementosSat === undefined ? FORMAT.hojaEmbarques+", " : "") +
+                    (wsGuias === undefined ? FORMAT.hojaComplementos+", " : "") +
+                    (wsPaquetes === undefined ? FORMAT.hojaPaquetes+", " : "")).slice(0, -2)
                     + "; el nombre de la hoja en el documento debe ser igual al configurado."
                 showSuccess(mensaje)
                 return;
@@ -517,7 +517,7 @@ export function readExcelPlantillaLineal(FORMAT,file, esRecoleccion){
 
             //SE OBTIENEN LAS HOJAS DEL EXCEL
             const wsGuias = (wb.Sheets[FORMAT.hojaEmbarques]);
-            if(wsGuias == undefined){
+            if(wsGuias === undefined){
                 resolve([]);
                 showSuccess("No se encontró la hoja " + FORMAT.hojaEmbarques
                     +  ", el nombre de la hoja en el documento debe ser igual al configurado")

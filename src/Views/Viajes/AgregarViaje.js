@@ -291,91 +291,10 @@ class AgregarViaje extends Component {
                     }
                 })
             })
-            /* this.setState(state => {
-                return {
-                    ...state,
-                    id: this.props.select.m_nIdViaje,
-                    idRuta: this.props.select.m_nIdRuta,
-                    idCiudadOrigen: {
-                        "m_sCiudad": this.props.select.m_sOrigen,
-                        "m_nIdCiudad": this.props.select.m_nIdOrigen
-                    },
-                    idCiudadDestino: {
-                        "m_sCiudad": this.props.select.m_sDestino,
-                        "m_nIdCiudad": this.props.select.m_nIdDestino
-                    },
-                    IdRemolque1: this.props.select.m_nIdRemolque1 ? {
-                        m_nIdUnidad: this.props.select.m_nIdRemolque1,
-                        m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
-                        m_sCodigo: this.props.select.m_sCodigoRemolque1,
-                        EstatusUnidad: this.props.select.m_sEstatusRemolque1,
 
-                    } : null,
-                    placasRemolque1: this.props.select.m_sPlacasRemolque1,
-                    colorRemolque1: this.props.select.m_sColorRemolque1,
-                    estatusRemolque1: this.props.select.m_sEstatusRemolque1,
-                    IdRemolque2: this.props.select.m_nIdRemolque2 ? {
-                        m_nIdUnidad: this.props.select.m_nIdRemolque2,
-                        m_sDescripcion: this.props.select.m_sDescripcionRemolque2,
-                        m_sCodigo: this.props.select.m_sCodigoRemolque2,
-                        EstatusUnidad: this.props.select.m_sEstatusRemolque2,
-                    } : null,
-                    placasRemolque2: this.props.select.m_sPlacasRemolque2,
-                    colorRemolque2: this.props.select.m_sColorRemolque2,
-                    estatusRemolque2: this.props.select.m_sEstatusRemolque2,
-                    IdDolly: this.props.select.m_nIdDolly ? {
-                        m_nIdUnidad: this.props.select.m_nIdDolly,
-                        m_sDescripcion: this.props.select.m_sDescripcionDolly,
-                        m_sCodigo: this.props.select.m_sCodigoDolly,
-                    } : null,
-                    placasDolly: this.props.select.m_sPlacasDolly,
-                    operador: {
-                        m_nIdOperador: this.props.select.m_nIdOperador,
-                        m_sNombreCompleto: this.props.select.m_sNombreOperador,
-                    },
-                    unidad: {
-                        m_nIdUnidad: this.props.select.m_nIdUnidad,
-                        m_sCodigo: this.props.select.m_sCodigoUnidad,
-                        m_sDescripcion: this.props.select.m_sDescripcionUnidad,
-                        EstatusUnidad: this.props.select.m_sEstatusUnidad,
-
-                    },
-                    placaIntUnidad: this.props.select.m_sPlacasUnidad,
-                    estatusUnidad: this.props.select.m_sEstatusUnidad,
-                    colorUnidad: this.props.select.m_sColorUnidad,
-                    kms: '',
-                    horas: '',
-                    fechaHoraRegistro: this.props.select.m_dFechaRegistro + "T" + this.props.select.m_tHoraRegistro.substr(0, 5),
-                    estatusListado: this.props.select.m_nIdEstatusViaje,
-                    idSucursalAgregar: this.props.select.m_nIdSucursal,
-                    candadoOficial: this.props.select.m_sCandadoOficial,
-                    folioViaje: this.props.select.m_sFolioViaje,
-                    identificadorViaje: this.props.select.m_sIdentificador,
-                    viajeCliente: this.props.select.m_sNumViajeCliente,
-                    CreadoPor: this.props.select.CreadoPor,
-                    dataInformesAsignados: this.props.select.m_arrInformes,
-                    estatusViaje:this.props.m_sEstatusViaje,
-                    esOperadorPermisionario: this.props.select.EsOperadorPermisionario,
-                    licenciaPermisionario: this.props.select.LicenciaPermisionario,
-                    nombrePermisionario: this.props.select.NombrePermisionario,
-                    fechaVigenciaPermisionario: this.props.select.FechaVigenciaPermisionario,
-                    dollySelect:this.props.select.m_nIdDolly?true:false,
-                    Remolque2Select:this.props.select.m_nIdRemolque2?true:false
-
-                }
-            })
-            obtenerTrayectosByRuta(this.props.select.m_nIdRuta).then(({data}) => {
-                this.setState( {
-                    trayectos: data
-                })
-            }) */
         }
     }
 
- /*   getCurrentDateTime = () => {
-        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
-        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }*/
 
     handleAceptar = (e) => {
         if (e){
@@ -414,21 +333,6 @@ class AgregarViaje extends Component {
             idRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
             idDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             m_nIdRuta: this.state.idRuta,
-            /*asignacionUnidad: {
-                idUnidad: this.state.unidad.m_nIdUnidad,
-                idOperador: this.state.operador.m_nIdOperador,
-                cvr1: this.state.cargadoVacioRemolqueUno,
-                cvr2: this.state.cargadoVacioRemolqueDos,
-                referencia: this.state.referencia,
-                kilometro: this.state.kms,
-                fechaCarga: this.state.fechaCarga,
-                horas: this.state.horas,
-                fechaEntrega: this.state.fechaEntregaGeneral,
-                fechaInforme: this.state.fechaInforme,
-                horaInforme: this.state.horaInforme,
-                estatus: this.state.estatusInforme,
-                horaEntrega: this.state.horaEntregaGeneral,
-            },*/
             idUnidad: this.state.unidad.m_nIdUnidad,
             idOperador: this.state.operador.m_nIdOperador,
             cvr1: this.state.cargadoVacioRemolqueUno,
@@ -552,20 +456,6 @@ class AgregarViaje extends Component {
 
     handleSelectCP(id, dobleClick, e) {
         debugger
-        /*clearTimeout(timer);
-        if (e.detail === 1) {
-            timer = setTimeout(() => {
-                this.setState({
-                    [this.state.identificadorModal]: id,
-                    openDialog: true
-                })
-            }, 200)
-        } else if (e.detail === 2) {
-            this.setState({
-                [this.state.identificadorModal]: id,
-                openDialog: false
-            })
-        }*/
     }
 
     getAllSucursales() {
@@ -578,12 +468,9 @@ class AgregarViaje extends Component {
         obtenerCiudades().then((respuesta) => {
             this.setState({
                 dataCiudad: respuesta.data,
-                /*idCiudadOrigen: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen) : null,
-                idCiudadDestino: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdDestino) : null*/
+                
             })
-            /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-             axios.get(url, { headers }).then((respuesta) => {
-                 this.setState({ dataCiudad: respuesta.data }) */
+
         });
     }
 
@@ -591,9 +478,6 @@ class AgregarViaje extends Component {
     getAllCodigosPostales() {
         obtenerCodigoPostal().then((respuesta) => {
             this.setState({dataCodigoPostal: respuesta.data})
-            /*   const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListado`;
-              axios.get(url, { headers }).then((respuesta) => {
-                  this.setState({ dataCodigoPostal: respuesta.data }) */
         });
     }
 
@@ -633,14 +517,6 @@ class AgregarViaje extends Component {
         })
     }
 
-    /*getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" + nIdRuta + "/" +
-            nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly;
-        axios.get(url, {headers}).then((respuesta) => {
-            this.setState({dataInformesAsignados: respuesta.data})
-        });
-    }*/
-
     handleChange = (event) => {
         event.preventDefault();
         this.setState({[event.target.name]: event.target.value});
@@ -666,19 +542,14 @@ class AgregarViaje extends Component {
         switch (origen) {
             case 'UNIDAD':
                 return !((idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
-                break;
             case 'REMOLQUE1':
                 return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
-                break;
             case 'REMOLQUE2':
                 return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
-                break;
             case 'DOLLY':
                 return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0));
-                break;
             default:
                 return true;
-                break;
         }
     }
 
@@ -714,11 +585,6 @@ class AgregarViaje extends Component {
                 }
 
             })
-            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-
-                this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                    newValue.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-            }*/
 
         }else{
             this.setState({
@@ -765,11 +631,6 @@ class AgregarViaje extends Component {
                 }
             })
 
-            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-
-                this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                    this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-            }*/
         }else{
             this.setState({
                 IdRemolque2: null,
@@ -830,11 +691,6 @@ class AgregarViaje extends Component {
             })
         }
 
-        /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-
-            this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-        }*/
     }
 
     handleDollyFiltro(event, newValue) {
@@ -845,11 +701,6 @@ class AgregarViaje extends Component {
                 return
             }
             this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
-            /*if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
-
-                this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                    this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
-            }*/
         }
         else{
             this.setState({IdDolly: null, placasDolly: "",dollySelect:false})
@@ -1329,7 +1180,7 @@ class AgregarViaje extends Component {
                                     size={"small"}
                                     onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
                                     value={this.state.destinoSeleccionado}
-                                    //disabled={state.agregar == "Consultar"}
+                                    //disabled={state.agregar === "Consultar"}
                                     id="origenRemitente"
                                     disableClearable
                                     forcePopupIcon={false}
@@ -1379,7 +1230,7 @@ class AgregarViaje extends Component {
                                                 size={"small"}
                                                 onChange={this.handleOrigenFiltro}
                                                 value={this.state.origen}
-                                                //disabled={state.agregar == "Consultar"}
+                                                //disabled={state.agregar === "Consultar"}
                                                 id="origenRemitente"
                                                 disableClearable
                                                 forcePopupIcon={false}
@@ -1408,7 +1259,7 @@ class AgregarViaje extends Component {
                                                 onChange={this.handleDestinoFiltro}
                                                 size={"small"}
                                                 value={this.state.destino}
-                                                //disabled={state.agregar == "Consultar"}
+                                                //disabled={state.agregar === "Consultar"}
                                                 id="destino"
                                                 disableClearable
                                                 forcePopupIcon={false}
@@ -1617,7 +1468,7 @@ class AgregarViaje extends Component {
                                                 freeSolo
                                                 onChange={(e, newValue) => this.setState({idCiudadOrigen: newValue})}
                                                 value={this.state.idCiudadOrigen}
-                                                //disabled={state.agregar == "Consultar"}
+                                                //disabled={state.agregar === "Consultar"}
                                                 id="idCiudadOrigen"
                                                 size={"small"}
                                                 forcePopupIcon={false}
@@ -1647,7 +1498,7 @@ class AgregarViaje extends Component {
                                                 size={"small"}
                                                 onChange={(e, newValue) => this.setState({idCiudadDestino: newValue})}
                                                 value={this.state.idCiudadDestino}
-                                                //disabled={state.agregar == "Consultar"}
+                                                //disabled={state.agregar === "Consultar"}
                                                 id="idCiudadDestino"
                                                 disableClearable
                                                 forcePopupIcon={false}
@@ -1693,7 +1544,7 @@ class AgregarViaje extends Component {
                                                 size={"small"}
                                                 onChange={(e, value) => this.handleChangeAutocomplete("operador", value)}
                                                 value={this.state.operador=={}?"":this.state.operador}
-                                                //disabled={state.agregar == "Consultar"}
+                                                //disabled={state.agregar === "Consultar"}
                                                 id="dataOperador"
                                                 forcePopupIcon={false}
                                                 options={this.state.dataOperadores}
@@ -1848,7 +1699,7 @@ class AgregarViaje extends Component {
                                                         onChange={this.handleRemolqueUnoFiltro}
                                                         value={this.state.IdRemolque1}
                                                         // inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
-                                                        //disabled={state.agregar == "Consultar"}
+                                                        //disabled={state.agregar === "Consultar"}
                                                         id="IdRemolque1"
                                                         // disableClearable
                                                         disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
@@ -1909,7 +1760,7 @@ class AgregarViaje extends Component {
                                                         onChange={this.handleRemolqueDosFiltro}
                                                         value={this.state.IdRemolque2}
                                                         // inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
-                                                        //disabled={state.agregar == "Consultar"}
+                                                        //disabled={state.agregar === "Consultar"}
                                                         id="IdRemolque2"
                                                         // disableClearable
                                                         disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
@@ -1967,7 +1818,7 @@ class AgregarViaje extends Component {
                                                         onChange={this.handleDollyFiltro}
                                                         value={this.state.IdDolly}
                                                         // inputValue={this.state.IdDolly ? this.state.IdDolly.m_sDescripcion : ""}
-                                                        //disabled={state.agregar == "Consultar"}
+                                                        //disabled={state.agregar === "Consultar"}
                                                         id="IdDolly"
                                                         // disableClearable
                                                         disabled={this.props.consult || this.state.estatusListado === 5 || this.state.estatusListado === 6 || this.state.estatusListado === 10}
@@ -2114,7 +1965,7 @@ class AgregarViaje extends Component {
                             </div>
 
                             <div className="row" style={{ height: this.state.height - 650, width: '100%' }}>
-                                {this.state.dataInformesSeleccionados.length != 0 ? (
+                                {this.state.dataInformesSeleccionados.length !== 0 ? (
                                     <DataGrid
                                         localeText={dataGridLocaleText}
                                         rows={this.state.dataInformesSeleccionados}

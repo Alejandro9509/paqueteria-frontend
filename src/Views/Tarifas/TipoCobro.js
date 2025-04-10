@@ -178,7 +178,7 @@ class TipoCobro extends Component {
                             <tr key={i.m_nIdTipoCobro}>
                                 <td style={{ width: "50px" }}>
                                     <label className="checkbox">
-                                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposCobro, false)} checked={this.props.tiposCobroSeleccionado.find(t => t.m_nIdTipoCobro === i.m_nIdTipoCobro) != null} />
+                                        <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.props.handleChange(event, index, this.state.tiposCobro, false)} checked={this.props.tiposCobroSeleccionado.find(t => t.m_nIdTipoCobro === i.m_nIdTipoCobro) !== null} />
                                         <i/>
                                     </label>
                                 </td>

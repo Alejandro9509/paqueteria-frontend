@@ -186,7 +186,7 @@ class ZonasList extends Component {
 
     render() {
        // const {classes} = this.props;
-        const isSelected = (row) => this.props.zonasSeleccionadas.find(u => u.m_nIdZona === row) != null;
+        const isSelected = (row) => this.props.zonasSeleccionadas.find(u => u.m_nIdZona === row) !== null;
 
 
         return (

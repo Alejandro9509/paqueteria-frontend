@@ -283,7 +283,7 @@ class AgregarFormatoImpresion extends Component {
                                                                    <CloudUploadIcon color="primary" fontSize="large"/>
                                                                </IconButton>
                                                                {
-                                                                   (this.props.id !== 0) && (this.state.file != []) ?
+                                                                   (this.props.id !== 0) && (this.state.file !== []) ?
                                                                    <IconButton
                                                                        onClick={() => this.handleDownloadWDE(this.state.file[0])}
                                                                        edge="end"
@@ -333,7 +333,7 @@ class AgregarFormatoImpresion extends Component {
                                                                        <IconButton
                                                                            onClick={() => this.handleDownloadImage(this.state.image[0])}
                                                                            edge="end"
-                                                                           disabled={(this.state.image.length == 0)}
+                                                                           disabled={(this.state.image.length === 0)}
                                                                            size="large">
                                                                            <DownloadIcon color="primary" fontSize="large"/>
                                                                        </IconButton>

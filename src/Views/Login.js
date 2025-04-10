@@ -44,7 +44,7 @@ function Login() {
           return;
         }
 
-        if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
+        if (respuesta.data !== undefined && respuesta.data.m_sUsuario !== undefined && respuesta.data.m_sUsuario !== "") {
           localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
           localStorage.setItem("accessToken", true);
           localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);

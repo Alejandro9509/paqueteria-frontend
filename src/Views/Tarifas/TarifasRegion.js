@@ -128,7 +128,7 @@ function TarifasRegion(props){
         let derecho;
         validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
-            if (derecho == false) {
+            if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
@@ -229,7 +229,7 @@ function TarifasRegion(props){
     }
 
     const getTarifas = (idTipoTarifa) => {
-        if (state.clienteGenerico == null){
+        if (state.clienteGenerico === null){
             obtenerClientePublicoGeneral().then(respuestaCliente => {
                 obtenerTarifasByTipo(idTipoTarifa).then(respuesta => {
                     setState(state =>{
@@ -398,7 +398,7 @@ function TarifasRegion(props){
                     </div>
                     <div id="Agregar" className="tab-pane fade">
                         {
-                            state.pantalla == 2 &&
+                            state.pantalla === 2 &&
                             <CrearTarifaRegion edit={state.edit} consult={state.consult} select={state.selected}
                                                onSubmit={handleAceptar}
                                                listaCiudades={state.dataCiudades}

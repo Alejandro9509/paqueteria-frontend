@@ -70,7 +70,7 @@ function randomColor(brightness) {
         var r = 255 - brightness;
         var n = 0 | ((Math.random() * r) + brightness);
         var s = n.toString(16);
-        return (s.length == 1) ? '0' + s : s;
+        return (s.length === 1) ? '0' + s : s;
     }
 
     return '#' + randomChannel(brightness) + randomChannel(brightness) + randomChannel(brightness);
@@ -624,7 +624,7 @@ function ordenarGuiasPorRuta(tour, guias) {
     tour.stops.map(a => a.activities).reduce((a,b) => a.concat(b)).filter(f => f.type === "pickup" || f.type === "delivery").forEach((item, index) => {
         var found = false;
         guias = guias.filter(function (guia, index) {
-            if (!found && guia.index == parseInt(item.jobId.replace('job_',''))) {
+            if (!found && guia.index === parseInt(item.jobId.replace('job_',''))) {
                 guia.orden = index + 1
                 result.push(guia);
                 found = true;

@@ -557,7 +557,7 @@ class FiltersMap extends Component {
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
                                 label={this.state.zonasSeleccionada.length !== 0 ? this.state.zonasSeleccionada.map(z => z.m_sCodigoZona).join(", ") : "Zona"}
-                                disabled={this.state.sucursalSeleccionada == null}
+                                disabled={this.state.sucursalSeleccionada === null}
                                 onDelete={(e) =>{
                                     this.setState({
                                         openZona: !this.state.openZona, openSucursales: false,
@@ -604,7 +604,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null}
+                                disabled={this.state.sucursalSeleccionada === null}
                                 label={moment(this.state.fecha).format('MMMM DD')}
                                 onClick={(e) =>{
                                     this.setState({
@@ -742,7 +742,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
+                                disabled={this.state.sucursalSeleccionada === null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                 icon={<UnidadesIcon
                                     style={{fill: "#F9A03E", paddingTop: "10px", paddingBottom: "10px"}}/>}
                                 onClick={(e) => {this.setState({
@@ -767,7 +767,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={(this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))) && !validarDerecho(9101447)}
+                                disabled={(this.state.sucursalSeleccionada === null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))) && !validarDerecho(9101447)}
                                 onClick={() => {
                                     if(this.state.unidadesSeleccionadas.length>0 && this.state.unidadesSeleccionadas.at(0).ocupado) {
                                         showSuccess(" La unidad seleccionada cuenta con un chofer en ruta, favor de cambiar operador")

@@ -55,7 +55,7 @@ function CrearTarifaRegion(props) {
             if (props.consult) {
                 let dataDestinosTemp = respuesta.data
                 props.select?.m_arrArDestinos?.forEach((p) => {
-                    dataDestinosTemp = dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdCiudad)
+                    dataDestinosTemp = dataDestinosTemp.filter((f) => f.m_nIdCiudad !== p.m_nIdCiudad)
                 })
                 setState(state => {
                     return {
@@ -79,7 +79,7 @@ function CrearTarifaRegion(props) {
             if (props.consult) {
                 let dataProductosTemp = respuesta.data
                 props.select?.m_arrArProductos?.forEach((p) => {
-                    dataProductosTemp = dataProductosTemp.filter((f) => f.m_nIdProducto != p.m_nIdProducto)
+                    dataProductosTemp = dataProductosTemp.filter((f) => f.m_nIdProducto !== p.m_nIdProducto)
                 })
                 setState(state => {
                     return {

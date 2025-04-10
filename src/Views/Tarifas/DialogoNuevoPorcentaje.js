@@ -104,7 +104,7 @@ export default function DialogoNuevoPorcentaje(props) {
             setRango({
                 ...rango,
                 [event.target.name]: event.target.value,
-                unidadMedida: props.unidadesMedidaListado.find(i => i.IdUnidadMedida == event.target.value).UnidadMedida
+                unidadMedida: props.unidadesMedidaListado.find(i => i.IdUnidadMedida === event.target.value).UnidadMedida
             })
         }else if (event.target.name === 'porcentaje'){
             setRango({

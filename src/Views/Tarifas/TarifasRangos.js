@@ -136,7 +136,7 @@ export default function TarifasRangos(props) {
                             style={{
                                 width: "100%",
                                 textAlign: "center",
-                                color: row.row.Activo == 'true' ? "green" : "red",
+                                color: row.row.Activo === 'true' ? "green" : "red",
                             }}
                         >
                             {row.row.Activo ? (
@@ -317,7 +317,7 @@ export default function TarifasRangos(props) {
         var derecho;
         validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
-            if (derecho == false) {
+            if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }

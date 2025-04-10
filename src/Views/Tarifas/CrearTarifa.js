@@ -155,13 +155,13 @@ class CrearTarifa extends Component {
                     tipoMedida: element.m_nIdTipoMedida
                 }
                 todosConceptos.push(concept)
-                if (element.m_nIdAgregadoDesde == 0){
+                if (element.m_nIdAgregadoDesde === 0){
                     conceptosAdicionales.push(concept)
-                }else if (element.m_nIdAgregadoDesde == 1){
+                }else if (element.m_nIdAgregadoDesde === 1){
                     conceptosManiobra.push(concept)
-                }else if (element.m_nIdAgregadoDesde == 2){
+                }else if (element.m_nIdAgregadoDesde === 2){
                     conceptosEntrega.push(concept)
-                }else if (element.m_nIdAgregadoDesde == 3){
+                }else if (element.m_nIdAgregadoDesde === 3){
                     conceptosRecoleccion.push(concept)
                 }
 
@@ -218,29 +218,29 @@ class CrearTarifa extends Component {
         this.setState({
             [event.target.name]: event.target.value,
         });
-        if (event.target.name == "destino"){
+        if (event.target.name === "destino"){
             let destino = []
-            if (event.target.value != 0){
-                destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad == event.target.value))
+            if (event.target.value !== 0){
+                destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad === event.target.value))
             }
             this.setState({
                 dataDestinosSeleccionados: destino
             })
         }
-        if (event.target.name == "sucursal"){
-            if (event.target.name == 0 || this.state.destino == 0 || this.origen == 0){
+        if (event.target.name === "sucursal"){
+            if (event.target.name === 0 || this.state.destino === 0 || this.origen === 0){
                 this.setState({disabled: true})
             }else{
                 this.setState({disabled: false})
             }
-        }else if (event.target.name == "destino"){
-            if (event.target.name == 0 || this.state.sucursal == 0 || this.state.origen == 0){
+        }else if (event.target.name === "destino"){
+            if (event.target.name === 0 || this.state.sucursal === 0 || this.state.origen === 0){
                 this.setState({disabled: true})
             }else{
                 this.setState({disabled: false})
             }
-        }else if (event.target.name == "origen"){
-            if (event.target.name == 0 || this.state.sucursal == 0 || this.state.destino == 0){
+        }else if (event.target.name === "origen"){
+            if (event.target.name === 0 || this.state.sucursal === 0 || this.state.destino === 0){
                 this.setState({disabled: true})
             }else{
                 this.setState({disabled: false})
@@ -302,41 +302,41 @@ class CrearTarifa extends Component {
         todosConceptos.push(concept)
         ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
-        if (data.agregadoDesde == 0){
+        if (data.agregadoDesde === 0){
             conceptosAdicionales.push(concept)
             this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 1){
+        }else if (data.agregadoDesde === 1){
             conceptosManiobra.push(concept)
             this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 2){
+        }else if (data.agregadoDesde === 2){
             conceptosEntrega.push(concept)
             this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 3){
+        }else if (data.agregadoDesde === 3){
             conceptosRecoleccion.push(concept)
             this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }
     }
 
     filtrarConceptoAdicional(c, item){
-        let valid =  c.idConcepto == item.idConcepto
-            && c.importe == item.importe
-            && c.importeRet == item.importeRet
-            && c.retiene == item.retiene
-            && c.traslada == item.traslada
-            && c.importeIVA == item.importeIVA
+        let valid =  c.idConcepto === item.idConcepto
+            && c.importe === item.importe
+            && c.importeRet === item.importeRet
+            && c.retiene === item.retiene
+            && c.traslada === item.traslada
+            && c.importeIVA === item.importeIVA
         return !valid
     }
 
     filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item){
-        let valid =  c.idConcepto == item.idConcepto
-            && c.importe == item.importe
-            && c.importeRet == item.importeRet
-            && c.retiene == item.retiene
-            && c.traslada == item.traslada
-            && c.importeIVA == item.importeIVA
-            && c.rangoMinimo == item.rangoMinimo
-            && c.rangoMaximo == item.rangoMaximo
-            && c.tipoCalculo == item.tipoCalculo
+        let valid =  c.idConcepto === item.idConcepto
+            && c.importe === item.importe
+            && c.importeRet === item.importeRet
+            && c.retiene === item.retiene
+            && c.traslada === item.traslada
+            && c.importeIVA === item.importeIVA
+            && c.rangoMinimo === item.rangoMinimo
+            && c.rangoMaximo === item.rangoMaximo
+            && c.tipoCalculo === item.tipoCalculo
         return !valid
     }
 
@@ -382,7 +382,7 @@ class CrearTarifa extends Component {
                 const { select } = this.props
                 this.state.dataDestinosTemp = respuesta.data
                 select.m_arrArDestinos.forEach((p) => {
-                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdCiudad)
+                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nIdCiudad !== p.m_nIdCiudad)
                 })
                 this.setState({
                     dataDestinosSeleccionados: select.m_arrArDestinos || [],
@@ -456,7 +456,7 @@ class CrearTarifa extends Component {
                 const { select } = this.props
                 this.state.dataProductosTemp = respuesta.data
                 select.m_arrArProductos.forEach((p) => {
-                    this.state.dataProductosTemp = this.state.dataProductosTemp.filter((f) => f.m_nIdProducto != p.m_nIdProducto)
+                    this.state.dataProductosTemp = this.state.dataProductosTemp.filter((f) => f.m_nIdProducto !== p.m_nIdProducto)
                 })
                 this.setState({
                     dataProductosSeleccionados: select.m_arrArProductos,
@@ -948,7 +948,7 @@ class CrearTarifa extends Component {
                                                     keys={1}
                                                     agregarConcepto={this.addConcepto}
                                                     eliminarConcepto={this.removeConceptoManiobra}
-                                                    // conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
+                                                    // conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion === 1)}
                                                 />
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
@@ -965,7 +965,7 @@ class CrearTarifa extends Component {
                                                     keys={2}
                                                     agregarConcepto={this.addConcepto}
                                                     eliminarConcepto={this.removeConceptoEntrega}
-                                                    conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
+                                                    conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion === 1)}
                                                 />
                                             </TabPanel>
                                             {/*<TabPanel value={this.state.tab} index={3}>
@@ -1142,7 +1142,7 @@ function CrearTarifav2(props) {
             if (props.consult) {
                 let dataDestinosTemp = respuesta.data
                 props.select?.m_arrArDestinos?.forEach((p) => {
-                    dataDestinosTemp = dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdCiudad)
+                    dataDestinosTemp = dataDestinosTemp.filter((f) => f.m_nIdCiudad !== p.m_nIdCiudad)
                 })
                 setState(state => {
                     return {
@@ -1166,7 +1166,7 @@ function CrearTarifav2(props) {
             if (props.consult) {
                 let dataProductosTemp = respuesta.data
                 props.select?.m_arrArProductos?.forEach((p) => {
-                    dataProductosTemp = dataProductosTemp.filter((f) => f.m_nIdProducto != p.m_nIdProducto)
+                    dataProductosTemp = dataProductosTemp.filter((f) => f.m_nIdProducto !== p.m_nIdProducto)
                 })
                 setState(state => {
                     return {

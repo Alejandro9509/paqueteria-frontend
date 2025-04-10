@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import { showSuccess } from "../../Util/Util";
 
 function not(a, b) {
-    return a.filter((value) => b.find(v => v.m_nIdCP == value.m_nIdCP) === undefined);
+    return a.filter((value) => b.find(v => v.m_nIdCP === value.m_nIdCP) === undefined);
 }
 
 
@@ -34,7 +34,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     const [dataMunicipio, setDataMunicipios] = useState([])
     const [dataCiudades, setDataCiudades] = useState([])
 
-    useEffect(value => {
+    useEffect(() => {
         getAllSucursales()
         getAllCiudades()
     }, [])
@@ -107,8 +107,8 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     const handleChangeState = (event) => {
         event.preventDefault()
         const {target} = event
-        if (target.name == 'idEstado'){
-            let estado = dataEstados.find((i) => i.m_nIdEstado == target.value).m_sEstado
+        if (target.name === 'idEstado'){
+            let estado = dataEstados.find((i) => i.m_nIdEstado === target.value).m_sEstado
             setState(state => {
                 return {
                     ...state,
@@ -116,12 +116,12 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
                     estado: estado
                 }
             })
-        }else if (target.name == 'idMunicipio'){
+        }else if (target.name === 'idMunicipio'){
             setState(state => {
                 return {
                     ...state,
                     [target.name]: target.value,
-                    municipio: dataMunicipio.find((i) => i.m_sCodigoMunicipio == target.value).m_sMunicipio
+                    municipio: dataMunicipio.find((i) => i.m_sCodigoMunicipio === target.value).m_sMunicipio
                 }
             })
         }else {
@@ -160,20 +160,14 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false,nuevo
     }
 
     const getAllCPByEstadoMunicipio = () =>{
-/*         if(nuevo){
- */            obtenerCodigosPostalesPorEstadoMunicipioDisponibles(state.idEstado, state.idMunicipio).then(({data}) => {
+
+            obtenerCodigosPostalesPorEstadoMunicipioDisponibles(state.idEstado, state.idMunicipio).then(({data}) => {
                 setAllCP(not(data,state.selectedCP))
-                if (data.length==0){
+                if (data.length===0){
                     showSuccess("No hay codigos postales disponibles.")
                 }
-                // setAllCP(data)
             })
-/*         }else{
-            obtenerCodigosPostalesPorEstadoMunicipio(state.idEstado, state.idMunicipio).then(({data}) => {
-                setAllCP(not(data,state.selectedCP))
-                // setAllCP(data)
-            })
-        } */
+
 
     }
 

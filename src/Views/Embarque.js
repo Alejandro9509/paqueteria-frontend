@@ -535,11 +535,11 @@ function Embarque(props) {
                         style={{
                             width: "100%",
                             textAlign: "center",
-                            color: (row.row.m_bEsRecolecta != 0 ? "green" : "red"),
+                            color: (row.row.m_bEsRecolecta !== 0 ? "green" : "red"),
                         }}
                     >
                         {
-                            (row.row.m_bEsRecolecta != 0 ? (
+                            (row.row.m_bEsRecolecta !== 0 ? (
                                 <SvgIcon component={Activo}/>
                             ) : (
                                 <SvgIcon component={NoActivo}/>
@@ -575,7 +575,7 @@ function Embarque(props) {
             width: 200,
             renderCell: (row) => {
                 <div>
-                    {row.row.m_sUsuarioDocumento == "0" ? "N/A" : row.row.m_sUsuarioDocumento}
+                    {row.row.m_sUsuarioDocumento === "0" ? "N/A" : row.row.m_sUsuarioDocumento}
                 </div>
             }
         },
@@ -590,7 +590,7 @@ function Embarque(props) {
             width: 200,
             renderCell: (row) => {
                 <div>
-                    {row.row.m_sUsuarioCancelacion == "0" ? "N/A" : row.row.m_sUsuarioCancelacion}
+                    {row.row.m_sUsuarioCancelacion === "0" ? "N/A" : row.row.m_sUsuarioCancelacion}
                 </div>
             }
         },
@@ -1089,15 +1089,15 @@ function Embarque(props) {
     }
 
     const isValidText = (data) => {
-        return !(data.length === 0 || data == '0')
+        return !(data.length === 0 || data === '0')
     }
 
     const validarCoordenadas = (coordenadas) => {
         /**Si es modificacion*/
-        if (state.idEmbarque != 0) {
+        if (state.idEmbarque !== 0) {
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if (state.diferenteEntrega
-                && coordenadas == undefined) {
+                && coordenadas === undefined) {
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
@@ -1112,7 +1112,7 @@ function Embarque(props) {
             /**Si es agregar*/
         } else {
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if (state.diferenteEntrega && coordenadas == undefined) {
+            if (state.diferenteEntrega && coordenadas === undefined) {
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
@@ -1521,11 +1521,11 @@ function Embarque(props) {
         params.m_nIdCotizacion = state.idCotizacion
 
         params.m_nIdRuta = state.idRuta
-        if (state.idEmbarque != 0) {
+        if (state.idEmbarque !== 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    if (respuesta.data != "Modificado Exitosamente") {
+                    if (respuesta.data !== "Modificado Exitosamente") {
                         return
                     }
                     handleShowListado();
@@ -1573,7 +1573,7 @@ function Embarque(props) {
     };
 
     function handleSelectCP(id, cp) {
-        if (state.identificadorModal == "nombreRemitente") {
+        if (state.identificadorModal === "nombreRemitente") {
             setState(state => {
                 return {
                     ...state,
@@ -1582,7 +1582,7 @@ function Embarque(props) {
                     domicilioRemitente: id.m_sDomicilio,
 
                     ciudadRemitente: dataCiudad.find(
-                        (o) => o.m_nIdCiudad == dataCodigosPostalesRemitente.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                        (o) => o.m_nIdCiudad === dataCodigosPostalesRemitente.find((o) => o.m_nIdCP === id.m_nIdCP).m_nIdCiudad
                     ),
 
                     correoRemitente: id.m_sCorreoElectronico,
@@ -1600,7 +1600,7 @@ function Embarque(props) {
 
                     ciudadDestinatario: dataCiudad.find(
                         (o) => o.m_nIdCiudad ==
-                            dataCodigosPostalesDestinatario.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
+                            dataCodigosPostalesDestinatario.find((o) => o.m_nIdCP === id.m_nIdCP).m_nIdCiudad
                     ),
 
                     correoDestinatario: id.m_sCorreoElectronico,
@@ -1672,7 +1672,7 @@ function Embarque(props) {
     };
 
     /*useEffect((value) => {
-        if (props.location.idRecoleccion != undefined) {
+        if (props.location.idRecoleccion !== undefined) {
             if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataClientes.length > 0) {
                 obtenerRecoleccionId(props.location.idRecoleccion)
                     .then((respuesta) => {
@@ -1842,12 +1842,12 @@ function Embarque(props) {
       return "show warning";
     }
     function handleShowModificar(filaEmbarque, id) {
-        if (filaEmbarque.m_nIdEstatusEmbarque == 21) {
+        if (filaEmbarque.m_nIdEstatusEmbarque === 21) {
             showSuccess("El embarque no puede ser modificado ya que se encuentra cancelado")
             return
         }
         if (filaEmbarque.m_sFolioGuia) {
-            if (filaEmbarque.m_sFolioGuia.length != 0) {
+            if (filaEmbarque.m_sFolioGuia.length !== 0) {
                 showSuccess("No es posible modificar el embarque ya que pertenece a una guia")
                 return
             }
@@ -1863,7 +1863,7 @@ function Embarque(props) {
                 return {
                     ...state,
                     agregar: "Modificar",
-                    embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
+                    embarqueConGuia: data.find((o) => o.m_nIdEmbarque === id).m_sFolioGuia !== null,
                 }
             });
             setDataParaConsultarModificar(respuesta, false, "Modificar")
@@ -1895,7 +1895,7 @@ function Embarque(props) {
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
+            p.m_sTipo = p.m_nIdTipo === 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
 
@@ -2188,7 +2188,7 @@ function Embarque(props) {
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
+            p.m_sTipo = p.m_nIdTipo === 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
 
@@ -2276,7 +2276,7 @@ function Embarque(props) {
                 idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
-                // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
+                // clientePaga: dataClientes.find((c) => c.m_nIdCliente === respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
                 //Entrega
 
@@ -2347,7 +2347,7 @@ function Embarque(props) {
     }
 
     const handleChange = (event) => {
-        if (event.target.name == "porcentajeSeguro") {
+        if (event.target.name === "porcentajeSeguro") {
             setRepetirConceptos(true)
         }
         setState(state => {
@@ -2366,7 +2366,7 @@ function Embarque(props) {
                 [event.target.name]: event.target.value,
             }
         });
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal === event.target.value).m_nIdCodigoPostal)
     };
 
     const handleEntregaCheckboxChange = (event) => {
@@ -2382,7 +2382,7 @@ function Embarque(props) {
 
     const handleEntregaEnSucursalCheckbox = (event) => {
         setRepetirConceptos(true)
-        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == destinatario.zonaOperativaDestinatario.m_nIdSucursal).m_nIdCodigoPostal)
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal === destinatario.zonaOperativaDestinatario.m_nIdSucursal).m_nIdCodigoPostal)
         setState(state => {
             return {
                 ...state,
@@ -2423,7 +2423,7 @@ function Embarque(props) {
             }
         });
         const {fechaInicial, fechaFinal, estatusListado, folioEmbarque} = state
-        if((fechaInicial == '') || (fechaFinal == '')){
+        if((fechaInicial === '') || (fechaFinal === '')){
             showError("Debe ingresar un rango de fechas");
             return;
         }
@@ -2933,7 +2933,7 @@ function Embarque(props) {
 
     if (redirect) {
         if (
-            data.find((o) => o.m_nIdEmbarque == state.idEmbarque).m_sFolioGuia != null
+            data.find((o) => o.m_nIdEmbarque === state.idEmbarque).m_sFolioGuia !== null
         ) {
             showSuccess("Embarque ya tiene Guía");
             setRedirect(false)
@@ -3107,7 +3107,7 @@ function Embarque(props) {
                 }
             })
             try{
-                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == idSucursalDestinatario).m_nIdCodigoPostal)
+                getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal === idSucursalDestinatario).m_nIdCodigoPostal)
                 setState(state => {
                     return {
                         ...state,
@@ -3317,7 +3317,7 @@ function Embarque(props) {
                                 </button>
                             </div>
 
-                            {dataCodigosPostalesRemitente.length != 0 ? (
+                            {dataCodigosPostalesRemitente.length !== 0 ? (
                                 <TableCodigoPostal
                                     object={state}
                                     select={
@@ -3361,7 +3361,7 @@ function Embarque(props) {
                                 </button>
                             </div>
 
-                            {dataCodigosPostalesDestinatario.length != 0 ? (
+                            {dataCodigosPostalesDestinatario.length !== 0 ? (
                                 <TableCodigoPostal
                                     object={state}
                                     select={
@@ -3405,7 +3405,7 @@ function Embarque(props) {
                                 </button>
                             </div>
 
-                            {dataCodigosPostalesEntregaDD.length != 0 ? (
+                            {dataCodigosPostalesEntregaDD.length !== 0 ? (
                                 <TableCodigoPostal
                                     object={state}
                                     select={
@@ -3449,7 +3449,7 @@ function Embarque(props) {
                                 </button>
                             </div>
 
-                            {dataCiudad.length != 0 ? (
+                            {dataCiudad.length !== 0 ? (
                                 <TableCiudades
                                     object={state}
                                     select={
@@ -3492,7 +3492,7 @@ function Embarque(props) {
                                 </button>
                             </div>
 
-                            {dataRemitenteDestinatario.length != 0 ? (
+                            {dataRemitenteDestinatario.length !== 0 ? (
                                 <TableRemitentesDestinatarios
                                     object={state}
                                     select={
@@ -3599,7 +3599,7 @@ function Embarque(props) {
 
 
                     <ul className="nav navStatica nav-tabs">
-                        <li className={props.location.idRecoleccion != undefined ? "" : "active"}>
+                        <li className={props.location.idRecoleccion !== undefined ? "" : "active"}>
 
                             <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list"/> Listado
@@ -3607,7 +3607,7 @@ function Embarque(props) {
                         </li>
 
 
-                        <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
+                        <li className={props.location.idRecoleccion !== undefined ? "active" : ""}>
                             <a className={validarDerecho(9101422) ? "" : classes.disabled}
                                onClick={() => $.ajax({
                                 url:handleShowAgregar(),
@@ -3640,7 +3640,7 @@ function Embarque(props) {
                         </li>
 
                         <li style={{float: "right"}}>
-                        <Button className={ state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque == 21) ? classes.disabled :""}  fullWidth color={"primary"} variant={"contained"} onClick={() => setRedirect(true)} >
+                        <Button className={ state.idEmbarque === 0 || (!validarDerecho(9101429) || state.estatusEmbarque === 21) ? classes.disabled :""}  fullWidth color={"primary"} variant={"contained"} onClick={() => setRedirect(true)} >
                                             Generar Guia
                                         </Button>
 
@@ -3650,7 +3650,7 @@ function Embarque(props) {
 
                     <div className="row tab-content">
                         <div id="Listado"
-                             className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
+                             className={props.location.idRecoleccion !== undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
                                 <Filtros
@@ -3691,7 +3691,7 @@ function Embarque(props) {
                         </div>
 
                         <div onClick={monitorearCambios} id="Agregar"
-                             className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
+                             className={props.location.idRecoleccion !== undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 {/*  */}
                             <form className="j-forms row" onSubmit={handleAceptar}  onKeyDown={e => {
                                 if (e.code === 13) {
@@ -3979,7 +3979,7 @@ function Embarque(props) {
                                                                         name: "tipoCobro"
                                                                     }}
                                                                 >
-                                                                    {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
+                                                                    {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i === item.m_nCodigo)).map((tipoCobro) => (
                                                                         <MenuItem
                                                                             key={tipoCobro.m_nIdTipoCobro}
                                                                             value={tipoCobro.m_nIdTipoCobro}

@@ -411,94 +411,94 @@ export default function PlantillasImportacionAgregar(props){
 
     const checkFormSegmentada = () => {
         let valid = true;
-        if(state.cliente == null){
+        if(state.cliente === null){
             valid = false;
         }
-        if(state.hojaEmbarques == ""){
+        if(state.hojaEmbarques === ""){
             valid = false;
         }
-        if(state.hojaPaquetes == ""){
+        if(state.hojaPaquetes === ""){
             valid = false;
         }
-        if(state.hojaComplementos == ""){
+        if(state.hojaComplementos === ""){
             valid = false;
         }
-        if(files === [] || files == null){
+        if(files === [] || files === null){
             valid = false;
         }
-        if(state.numeroEmbarque == ""){
+        if(state.numeroEmbarque === ""){
             valid = false;
         }
-        if(state.moneda == ""){
+        if(state.moneda === ""){
             valid = false;
         }
-        if(state.tipoCambio == ""){
+        if(state.tipoCambio === ""){
             valid = false;
         }
-        if(state.tipoCobro == ""){
+        if(state.tipoCobro === ""){
             valid = false;
         }
-        if(state.tipoSeguro == ""){
+        if(state.tipoSeguro === ""){
             valid = false;
         }
-        if(state.validarTimbradoFactura == ""){
+        if(state.validarTimbradoFactura === ""){
             valid = false;
         }
-        if(state.tipoServicio == ""){
+        if(state.tipoServicio === ""){
             valid = false;
         }
-        if(state.numeroRemitente == ""){
+        if(state.numeroRemitente === ""){
             valid = false;
         }
-        if(state.correoRemitente == ""){
+        if(state.correoRemitente === ""){
             valid = false;
         }
-        if(state.numeroDestinatario == null){
+        if(state.numeroDestinatario === null){
             valid = false;
         }
-        if(state.correoDestinatario == null){
+        if(state.correoDestinatario === null){
             valid = false;
         }
-        if(state.latitud == ""){
+        if(state.latitud === ""){
             valid = false;
         }
-        if(state.longitud == ""){
+        if(state.longitud === ""){
             valid = false;
         }
-        if(state.cantidadPaquete == ""){
+        if(state.cantidadPaquete === ""){
             valid = false;
         }
-        if(state.numeroProducto == ""){
+        if(state.numeroProducto === ""){
             valid = false;
         }
-        if(state.descripcionPaquete == ""){
+        if(state.descripcionPaquete === ""){
             valid = false;
         }
-        if(state.largo == ""){
+        if(state.largo === ""){
             valid = false;
         }
-        if(state.alto == ""){
+        if(state.alto === ""){
             valid = false;
         }
-        if(state.ancho == ""){
+        if(state.ancho === ""){
             valid = false;
         }
-        if(state.embalajePaquete == ""){
+        if(state.embalajePaquete === ""){
             valid = false;
         }
-        if(state.pesoPaquete == ""){
+        if(state.pesoPaquete === ""){
             valid = false;
         }
-        if(state.cantidadComplemento == ""){
+        if(state.cantidadComplemento === ""){
             valid = false;
         }
-        if(state.pesoComplemento == ""){
+        if(state.pesoComplemento === ""){
             valid = false;
         }
-        if(state.claveProductoServicio == ""){
+        if(state.claveProductoServicio === ""){
             valid = false;
         }
-        if(state.claveUnidadMedida == ""){
+        if(state.claveUnidadMedida === ""){
             valid = false;
         }
         return valid;
@@ -506,61 +506,61 @@ export default function PlantillasImportacionAgregar(props){
 
     const checkFormLineal = () => {
         let valid = true;
-        if(state.cliente == null){
+        if(state.cliente === null){
             valid = false;
         }
-        if(state.hojaEmbarques == ""){
+        if(state.hojaEmbarques === ""){
             valid = false;
         }
-        if(files === [] || files == null){
+        if(files === [] || files === null){
             valid = false;
         }
-        if(state.numeroEmbarque == ""){
+        if(state.numeroEmbarque === ""){
             valid = false;
         }
-        if(state.referencia == ""){
+        if(state.referencia === ""){
             valid = false;
         }
-        if(state.responsablePago == ""){
+        if(state.responsablePago === ""){
             valid = false;
         }
-        if(state.valorDeclarado == ""){
+        if(state.valorDeclarado === ""){
             valid = false;
         }
-        if(state.numeroRemitente == ""){
+        if(state.numeroRemitente === ""){
             valid = false;
         }
-        if(state.numeroDestinatario == null){
+        if(state.numeroDestinatario === null){
             valid = false;
         }
-        if(state.cantidadPaquete == ""){
+        if(state.cantidadPaquete === ""){
             valid = false;
         }
-        if(state.numeroProducto == ""){
+        if(state.numeroProducto === ""){
             valid = false;
         }
-        if(state.cantidadComplemento == ""){
+        if(state.cantidadComplemento === ""){
             valid = false;
         }
-        if(state.claveProductoServicio == ""){
+        if(state.claveProductoServicio === ""){
             valid = false;
         }
-        if(state.claveUnidadMedida == ""){
+        if(state.claveUnidadMedida === ""){
             valid = false;
         }
-        if(state.esMaterialPeligroso == ""){
+        if(state.esMaterialPeligroso === ""){
             valid = false;
         }
-        if(state.claveMaterialPeligroso == ""){
+        if(state.claveMaterialPeligroso === ""){
             valid = false;
         }
-        if(state.claveEmbalaje == ""){
+        if(state.claveEmbalaje === ""){
             valid = false;
         }
-        if(state.descripcionEmbalajeComplemento == ""){
+        if(state.descripcionEmbalajeComplemento === ""){
             valid = false;
         }
-        if(state.claveFraccionArancelaria == ""){
+        if(state.claveFraccionArancelaria === ""){
             valid = false;
         }
         return valid;

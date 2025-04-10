@@ -78,7 +78,7 @@ export default function DialogoNuevoConcepto(props) {
             const copia = [...props.dataPaquetes];
             const modificable = copia.map((item) => ({...item}))
             const target = modificable.find((i) => i.id === props.concepto.id);
-            target.concepto = props.conceptosBase.find((item) => item.m_nIdConceptosFacturacion == target.idConcepto);
+            target.concepto = props.conceptosBase.find((item) => item.m_nIdConceptosFacturacion === target.idConcepto);
             target.rangoMinimo = 0;
             target.rangoMaximo = 0;
             target.tipoCalculo = 0;
@@ -121,7 +121,7 @@ export default function DialogoNuevoConcepto(props) {
     const handleAceptar = (e) => {
         e.preventDefault()
         
-        if(concepto.concepto == null){
+        if(concepto.concepto === null){
             setErrores(errores=>{return{...errores, errorConcepto:true, errorTexto:'Falta elegir concepto'}})
         }else{
             setErrores(errores=>{return {...errores, errorConcepto:false}})
@@ -236,7 +236,7 @@ export default function DialogoNuevoConcepto(props) {
         setConcepto(concepto => {
             return { ...concepto,retiene: retiene, importe: importe, traslada: traslada }
         })
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
+        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) !== null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
             setConcepto(concepto=>{
                 return {
@@ -248,7 +248,7 @@ export default function DialogoNuevoConcepto(props) {
                 }
             })
         }
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
+        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) !== null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
             setConcepto(concepto=>{
                 return {

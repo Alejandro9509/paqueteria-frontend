@@ -96,7 +96,7 @@ export default class ListaUbicaciones extends Component {
     }
 
     isValidText = (data) => {
-        return !(data.length === 0 || data == '0')
+        return !(data.length === 0 || data === '0')
     }
 
     validarCoordenadas = (coordenadas) => {
@@ -178,7 +178,7 @@ export default class ListaUbicaciones extends Component {
     }
 
     async confirmarUbicacion (coordenadas, e) {
-        if (coordenadas.length === 0 || coordenadas == '0' ) {
+        if (coordenadas.length === 0 || coordenadas === '0' ) {
             return;
         }
         let paqueteIndex = this.state.listado.findIndex(p => p.m_nId === this.state.destinatario.idDestinatario);
