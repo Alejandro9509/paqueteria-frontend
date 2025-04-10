@@ -3,7 +3,6 @@ import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import { styled } from "@mui/material/styles";
-import * as XLSX from "xlsx";
 import TextField from "@mui/material/TextField";
 import { DataGrid} from '@mui/x-data-grid';
 import InputAdornment from "@mui/material/InputAdornment";
@@ -36,16 +35,13 @@ import {
 } from "@mui/material";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
-import {
-    obtenerCodigosPostalesPorEstadoMunicipio
-} from "../Util/Contexts/CodigoPostalContext";
+
 import {
     obtenerRemitentesDestinatarios
 } from "../Util/Contexts/RemitenteDestinatarioContext";
 import {obtenerEmbalajes, obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import {obtenerEstatusRecoleccion} from "../Util/Contexts/EstatusContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
-import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
 import {
     agregarRecoleccion,
     modificarRecoleccion,
@@ -55,14 +51,13 @@ import {
     obtenerRecoleccionId,
     obtenerRecoleccionFiltro
 } from "../Util/Contexts/RecoleccionContext";
-import {obtenerTipoUnidades} from "../Util/Contexts/TipoUnidadContext";
 import {obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {
-    imprimirFormatosId,
+   
     obtenerFormatosImpresionProceso, imprimirFormatosIdIdTipoReporte
 } from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerClienteId} from "../Util/Contexts/ClientesContext";
@@ -166,7 +161,6 @@ function Recoleccion() {
     const [dataComplementosSAT, setDataComplementosSAT] = React.useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-    const [, setDataCiudadF] = React.useState([]);
     const [seguroClienteActual,setDataSeguroClienteActual]=useState({
         idTipoSeguro: TIPOS_SEGURO.SIN_ASIGNAR,
         porcentajeSeguro: 0,
@@ -174,18 +168,18 @@ function Recoleccion() {
     })
     const [dataConceptos, setDataConceptos] = useState([])
     const [, setDataZona] = React.useState([]);
-    const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
+    const [dataFolioRecoleccion, ] = React.useState([]);
 
-    const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
-    const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
-    const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
-    const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
+    const [dataCodigosPostalesRemitente, ] = React.useState([]);
+    const [dataCodigosPostalesDestinatario, ] = React.useState([]);
+    const [dataCodigosPostalesRecoleccionDD, ] = React.useState([]);
+    const [dataCodigosPostalesEntregaDD, ] = React.useState([]);
 
 
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
     const [, setDataEmbalaje] = React.useState([]);
-    const [dataOperador, setDataOperador] = React.useState([]);
-    const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
+    const [dataOperador, ] = React.useState([]);
+    const [dataTipoUnidad, ] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
     //error en zona operativa y zona tarifa
     const [repetirConceptos,setRepetirConceptos] = React.useState(false)
@@ -197,17 +191,12 @@ function Recoleccion() {
         },
     ]);
 
-    const [, setFileUploaded] = React.useState([]);
-    const [selectedFile, setSelectedFile] = useState();
-    const [, setIsFilePicked] = useState(false);
-    const [, setStepActive] = React.useState(1);
 
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [, setDataMunicipiosRecoleccionDD] = useState([])
     const [, setDataMunicipiosEntregaDD] = useState([])
-    const [, setDataZonasOperativasEntregaDD] = useState([])
     const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
     const [tabActiva, setTabActiva] = useState(0);
     const [, setIsAgregar] = useState(false);
@@ -1594,7 +1583,6 @@ function Recoleccion() {
 
     //setea si la recoleccion es en diferente direccion a la del remitente
     const handleRecoleccionCheckboxChange = (event) => {
-        // event.preventDefault();
         setState({
             ...state,
             diferenteRecoleccion: !state.diferenteRecoleccion,
@@ -1602,7 +1590,6 @@ function Recoleccion() {
     };
 
     const handleCitaCheckboxChange = (event) => {
-        // event.preventDefault();
         setRepetirConceptos(true)
         setState({
             ...state,
@@ -1612,7 +1599,6 @@ function Recoleccion() {
 
     //setea si la entrega es en diferente direccion a la del destinatario
     const handleEntregaCheckboxChange = (event) => {
-        // event.preventDefault();
         setRepetirConceptos(true)
         setState({
             ...state,
@@ -2066,8 +2052,7 @@ function Recoleccion() {
             getTableBodyProps,
             headerGroups,
             rows,
-            prepareRow,
-            state,
+            prepareRow
         } = useTable(
             {
                 columns,
@@ -2088,11 +2073,10 @@ function Recoleccion() {
                     {headerGroups.map((headerGroup) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
+
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                  
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
@@ -2171,11 +2155,10 @@ function Recoleccion() {
                     {headerGroups.map((headerGroup) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
+
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                    
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (

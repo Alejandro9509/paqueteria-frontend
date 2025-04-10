@@ -1,4 +1,4 @@
-import React, {Component, useMemo, useRef} from 'react';
+import React, {Component} from 'react';
 import {
     Box,
     Button,
@@ -13,7 +13,6 @@ import {
 import {MapContainer, TileLayer, useMapEvents} from "react-leaflet";
 import {LocationMarker} from "../../Views/DisplayMapClass";
 import L from "leaflet";
-import MarkerImage from "../../iconos/Mapa/marker.png";
 import SearchIcon from "@mui/icons-material/Search";
 import {
     searchLocationAddress,

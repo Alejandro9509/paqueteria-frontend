@@ -21,13 +21,11 @@ import {
     DialogContent,
     DialogTitle,
     Tooltip,
-    ButtonBase,
     List,
     ListItem,
     Collapse,
     ListItemText, Link, Chip, Grid, MenuItem
 } from "@mui/material";
-import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import {confirmAlert} from "react-confirm-alert";
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
@@ -39,7 +37,6 @@ import {
     obtenerXML,
     obtenerViajesByFiltro,
     obtenerCFDI,
-    obtenerReporteCFDIViaje,
     cancelarViaje,
     validarSalidaParada,
     cancelarTrayecto,
@@ -54,7 +51,6 @@ import {
 } from "../Util/Contexts/InformesContext";
 import DetalleInforme from "./Viajes/DetalleInforme";
 import {obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
-import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import Filtros from "./Filtros/Filtros";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasContext";
 import CancelarSAT from "./SAT/CancelarSAT";
@@ -113,12 +109,9 @@ window.jQuery = window.$ = $;
 function Viajes() {
 
     const [data, setData] = React.useState([])
-    const [dataSucursal, setDataSucursal] = React.useState([]);
     const [indexOpen, setIndexOpen] = React.useState(-1);
-    const [dataEstatusViaje, setEstatusViaje] = React.useState([]);
     const [informeSeleccionado, setInformeSeleccionado] = React.useState(null);
     const [viajeSeleccionado, setViajeSeleccionado] = React.useState(null);
-    const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
     const [state, setState] = React.useState({
         showPopUp: false,
         idViaje: 0,
@@ -151,29 +144,18 @@ function Viajes() {
         })
     }, [])
 
-    function getAllEstatusDocumento() {
-        obtenerEstatusDocumentos().then((respuesta) => {
-            setEstatusDocumento(respuesta.data);
-        });
-    }
 
-    function getAllSucursales() {
-        obtenerSucursales().then((respuesta) => {
-            setDataSucursal(respuesta.data);
-        });
-    }
 
     function handleEliminar(id,idEstatus) {
         var derecho;
         validarPermisos(state).then(respuesta => {
-            //showSuccess(respuesta.data)
 
             derecho = respuesta.data;
             if (derecho === false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-            if(idEstatus!=10){
+            if(idEstatus!==10){
                 showSuccess("Para eliminar debe estar cancelado");
                 return
             }
@@ -354,7 +336,7 @@ function Viajes() {
     const getCurrentDateTime = () => {
         let fechaHoraActual=new Date();
         return fechaHoraActual.toISOString().split('T')[0] + "T" + fechaHoraActual.getHours().toString().padStart(2,'0')+':'+fechaHoraActual.getMinutes().toString().padStart(2,'0');
-        //`${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+
     }
 
     const handleChange = (event) => {
@@ -414,7 +396,6 @@ function Viajes() {
                     <div align={"center"} style={{width: "100%"}}>
                         <Chip size="small" style={{
                             backgroundColor: `#${row.row.m_sColorEstatus}`,
-                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
                             padding: "1px"
                         }} label={row.row.m_sEstatus}/>
                     </div>
@@ -481,7 +462,7 @@ function Viajes() {
         currency: 'USD',
     });
 
-    useEffect(value => {
+    useEffect(() => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
             showSuccess("Es necesario iniciar sesion para acceder a este proceso");
             window.location.replace("login");
@@ -490,7 +471,7 @@ function Viajes() {
         //getInventarioUnidades()
     }, []);
 
-    useEffect(value => {
+    useEffect(() => {
         if(viajeSeleccionado){
             let rutaActiva = true;
             viajeSeleccionado.m_arrTrayectos.map((p, index) => {
@@ -509,23 +490,14 @@ function Viajes() {
                         p.deshabilitado = true
                     }
                 }
-                //console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
+                
             })
         }
     }, [viajeSeleccionado]);
 
-    function getAllData() {
-        obtenerFechaInicio().then((respuestaUno) => {
-            obtenerFechaFinal().then((respuestaDos) => {
-                obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
-                    setData(respuesta.data)
-                })
-            })
-        })
-    }
 
     function getUpdatedData(){
-        if(filtros === [] || filtros.length === 0){
+        if(filtros == [] || filtros.length === 0){
             obtenerFechaInicio().then((respuestaUno) => {
                 obtenerFechaFinal().then((respuestaDos) => {
                     obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
@@ -541,22 +513,6 @@ function Viajes() {
         }
     }
 
-    function getUpdatedData(){
-        if(filtros === [] || filtros.length === 0){
-            obtenerFechaInicio().then((respuestaUno) => {
-                obtenerFechaFinal().then((respuestaDos) => {
-                    obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0, 0, 0).then((respuesta) => {
-                        setData(respuesta.data)
-                    })
-                })
-            })
-        } else{
-            obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado, filtros.folio,
-                filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
-                    setData(respuesta.data)
-                })
-        }
-    }
 
     function descargarXML(id, folio) {
         obtenerXML(id).then(({data}) => {
@@ -610,21 +566,7 @@ function Viajes() {
         pom.click();
     }
 
-    function descargarPDFOpcion1(id,idInforme,folio) {
-        obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "CFDI_ " + folio);
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo abrir el pdf")
-            }
-         })
-
-    }
+ 
 
     function descargarPDF(idViaje,idInforme,folio) {
         setSeleccion({
@@ -633,47 +575,7 @@ function Viajes() {
             m_sFolioInforme:folio
         })
         setOpenDialog(true)
-        /*obtenerReporteCFDIViaje(id, idInforme).then(({data}) => {
-            try{
-                const link = document.createElement('a');
-                link.href = "data:application/pdf;base64," + data;
-                link.setAttribute('download', "CFDI_ " + folio);
-                document.body.appendChild(link);
-                link.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo abrir el pdf")
-            }*/
-            /*try {
-                var filename = folio+".pdf";
-                var pom = document.createElement('a');
-                var bb = new Blob([data], {type: 'application/pdf;base64'});
-                pom.setAttribute('href', window.URL.createObjectURL(bb));
-                pom.setAttribute('download', filename);
-
-                pom.dataset.downloadurl = ['application/pdf;base64', pom.download, pom.href].join(':');
-                pom.draggable = true;
-                pom.classList.add('dragout');
-
-                pom.click();
-            }catch (e) {
-                console.log(e)
-                showSuccess("No se pudo abrir el pdf")
-            }*/
-
-            /*try {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "CFDI_ " + folio;
-
-
-            } catch (e) {
-                console.log(e)
-                showSuccess("No se pudo abrir el pdf")
-            }*/
-       /* })*/
-
+    
     }
 
     const handleOnChangeReporte = (data) => {
@@ -769,8 +671,8 @@ function Viajes() {
                         label: 'Sí',
                         onClick: () => {
                             if (parseInt(data.idCancelacionSAT) === 1){
-                                cancelarInformeCFDI(state.informe.m_nIdParada,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
-                                    obtenerCFDI(state.informe.m_nIdParada,true).then((result) => {
+                                cancelarInformeCFDI(state.informe.m_nIdParada,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then(() => {
+                                    obtenerCFDI(state.informe.m_nIdParada,true).then(() => {
                                         setState(state => {
                                             return {...state, openEnvioCorreo: true, idInforme: state.informe.m_nIdInforme, folio: state.informe.m_sFolioInforme, idViaje: state.informe.m_nIdViaje}
                                         })
@@ -808,68 +710,6 @@ function Viajes() {
 
     /**DISPONIBILIDAD DE EQUIPO*/
 
-    const columnsEquipo = [
-        /*{
-            headerName: "Acciones",
-            sortable: false, filterable: false,
-            field: "",
-            renderCell: (row) => {
-                return (
-                    <div>
-                        <Tooltip title="Modificar">
-                            <a
-                                onClick={() => showActualizarDispEquipo(row.row)}
-                                className="btn btn-default btn-xs">
-                                <i className="fa fa-pencil-square-o"
-                                    style={{ color: "#F9A03E" }}/>
-                            </a>
-                        </Tooltip>
-                    </div>
-                );
-            },
-            width: 100,
-        },*/
-        {
-            headerName: "Unidad",
-            field: "m_sCodigoUnidad",
-            width: 200,
-
-            valueFormatter: (params) => `${params.row.m_sCodigoUnidad}  ${params.row.m_sUnidad}`,
-        },
-        {
-            headerName: "Tipo unidad",
-            field: "m_sTipoUnidad",
-            width: 150,
-        }, {
-            headerName: "Estado",
-            field: "m_sEstatus",
-            width: 150,
-            align: "center",
-            renderCell: (row) => {
-                return (
-                    <div align={"center"} style={{width: "100%"}}>
-                    <Chip size="small" style={{backgroundColor: `#${row.row.m_sColor}`, color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white", padding:"1px"}}  label={row.row.m_sEstatus}/>
-                    </div>
-                )
-            }
-        }
-        /*, {
-            headerName: "Días",
-            field: "m_nDias",
-            width: 100,
-        }*/
-        , {
-            headerName: "Ubicación",
-            field: "m_sUbicacion",
-            width: 200,
-        }, {
-            headerName: "Desde",
-            field: "m_dDesde",
-            width: 150,
-        },
-    ]
-    const [equipoListado, setEquipoListado] = React.useState([]);
-    const [equipoSelected, setEquipoSelected] = React.useState();
     const [eventOptions, setEventOptions] = React.useState({
         showDispEquipoDialog: false,
         showSalidaParadasDialog: false,
@@ -878,17 +718,7 @@ function Viajes() {
         showDetalleGuias: false,
     });
 
-    const showActualizarDispEquipo = (equipo) => {
-        setEquipoSelected(equipo)
-        setEventOptions({...eventOptions, showDispEquipoDialog: true});
-    }
-
-    const closeActualizarDispEquipo = () => {
-        setEventOptions({...eventOptions, showDispEquipoDialog: false});
-    }
-
     const handleDescargarExcelComplementos = (idInforme, folioInforme) => {
-        // generarArchivoExcel(datos)
         obtenerClavesByInforme(idInforme)
             .then((respuesta) => {
                 exportarAExcel(respuesta.data.map((i) => ({
@@ -1067,11 +897,7 @@ function Viajes() {
                 return row.row.m_sFolioFiscalUUIDSustituido === "" ?  row.row.m_sUltimoFolioFiscalUUIDSustituido : (row.row.m_sFolioFiscalUUIDSustituido || "")
             }
         },
-        // {
-        //     headerName: "Liq",
-        //     field: "m_sNumeroNombreOperador",
-        //     width: 80,
-        // }, */
+
     ]
 
     const [paradasListado, setParadasListado] = React.useState([]);
@@ -1084,7 +910,6 @@ function Viajes() {
             return {...state, idViaje: row.m_nIdViaje}
         })
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
-            //setViajeSeleccionado(row)
             setParadasListado(respuesta.data);
         });
     }
@@ -1115,12 +940,6 @@ function Viajes() {
                         setParadaData(data);
                         setEventOptions({...eventOptions, showSalidaParadasDialog: true});
                     }
-
-                    //  if(qr){//si encontro valor falso en qr
-                    //    showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
-                    //}else{
-
-                    //}
                 })
             }else {
                 setParadaData(data);
@@ -1139,22 +958,12 @@ function Viajes() {
     }
 
     const showLlegadaDialog = (data) => {
-        // validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
-        //     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-        //     if(encontrado){//si encontro valor falso en timbrado
-        //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-        //     }else{
         obtenerTrayectosByRuta(data.m_nIdRuta).then((resp) => {
             var a=resp.data.find((element)=>element.IdOrigen===data.m_nIdOrigen)
             setKms(a.Kilometros)
         })
             setParadaData(data);
             setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
-        //    }
-       //  }).catch((err)=>{
-       //     showSuccess(err)
-       // })
-
     }
 
     const closeLlegadaDialog = () => {
@@ -1163,8 +972,7 @@ function Viajes() {
 
     function updateSalida(data) {
         var params = {
-            //m_dFecha: state.fechaHoraRegistro.split("T")[0],
-            //m_tHora: state.fechaHoraRegistro.split("T")[1],
+            
             m_nIdViaje: paradaData.m_nIdViaje,
             m_nCV1Km: data.kmsRemolqueUno,
             m_nCV2Km: data.kmsRemolqueDos,
@@ -1181,14 +989,6 @@ function Viajes() {
             m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
             m_nIdCiudadDestino: paradaData.m_nIdDestino,
             m_nIdRuta: paradaData.m_nIdViajeTrayecto,
-            // m_nIdEstatusViaje: this.state.estatusListado,
-            // m_nIdSucursal : this.state.idSucursalAgregar,
-            // m_sCandadoOficial : this.state.candadoOficial,
-            // m_sFolioViaje : this.state.folioViaje,
-            // m_sIdentificador : this.state.identificadorViaje,
-            // m_sNumViajeCliente : this.state.viajeCliente,
-            // CreadoPor : this.state.CreadoPor,
-            // m_arrInformes : this.state.dataInformes
         }
         agregarViajeSalida(params).then((respuesta) => {
             let viajeActualizado = viajeSeleccionado;
@@ -1225,8 +1025,7 @@ function Viajes() {
 
     function updateLlegada(data) {
         var params = {
-            //m_dFecha: state.fechaHoraRegistro.split("T")[0],
-            //m_tHora: state.fechaHoraRegistro.split("T")[1],
+       
             m_nCV1Km: data.kmsRemolqueUno,
             m_nCV2Km: data.kmsRemolqueDos,
             m_nCV1Millas: data.millasRemolqueUno,
@@ -1282,13 +1081,7 @@ function Viajes() {
         });
     }
 
-    const showAsignarOperadorDialog = (data) => {
-        setParadaData(data);
-        setEventOptions({
-            ...eventOptions,
-            showAsignarOperadorDialog: true
-        });
-    }
+   
 
     const closeAsignarOperadorDialog = () => {
         setEventOptions({
@@ -1456,23 +1249,7 @@ function Viajes() {
                 </Dialog>
             }
 
-            {/*<Dialog open={eventOptions.showDispEquipoDialog}
-                    onClose={closeActualizarDispEquipo}
-                    fullWidth={true}
-                    maxWidth={'sm'}>
-                <DialogContent>
-                    <ActualizarDiponibilidadEquipo onSubmit={updateEquipoData} equipo={equipoSelected}>
-                        <DialogActions>
-                            <Button
-                                variant={'contained'} color={'primary'}
-                                type="submit"
-                                onClick={closeActualizarDispEquipo}>Aceptar</Button>
-                            <Button variant={'outlined'} color={'primary'}
-                                    onClick={closeActualizarDispEquipo}>Cancelar</Button>
-                        </DialogActions>
-                    </ActualizarDiponibilidadEquipo>
-                </DialogContent>
-            </Dialog>*/}
+            
             {
                 eventOptions.showCancelarParadasDialog &&
                 <CancelarTrayecto onSubmit={cancelarTrayectos} open={eventOptions.showCancelarParadasDialog}
@@ -1533,7 +1310,7 @@ function Viajes() {
                     fullWidth={true}
                     maxWidth={'xl'}>
                 <DialogTitle style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-                    {/*<h3>Origen: {paradaData.m_sCiudadOrigen} Destino: {paradaData.m_sCiudadDestino}</h3>*/}
+                 
                     <h3>Origen: Destino: </h3>
 
                 </DialogTitle>
@@ -1638,14 +1415,7 @@ function Viajes() {
                                                 })
                                                 getParadasListado(row)
                                             }}
-                                            /*onRowSelected={(row) => {
-                                                /*  setState({
-                                                     ...state,
-                                                     idViaje: row.data.m_nIdViaje
-                                                 })
-                                                setViajeSeleccionado(row.data)
-                                                getParadasListado(row.data)
-                                            }}*/
+                                        
                                         />
 
                                     </div>
@@ -1692,11 +1462,7 @@ function Viajes() {
                                                                             </>
                                                                         }
 
-                                                                        {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
-                                                                        "/"
-                                                                        }*/}
-
-
+                                                                
                                                                         {
                                                                             p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado &&
 
@@ -1730,56 +1496,12 @@ function Viajes() {
 
                                                 </List>
 
-                                                {/*{equipoListado.length !== 0 ? (
-                                                        <DataGrid
-                                                            rows={paradasListado}
-                                                            columns={columnsParadas}
-                                                            density="compact"
-                                                            pageSize={Math.floor((state.height - 310) / 30)}
-                                                            getRowId={(row) => row.m_nIdInforme}
-                                                            onRowSelected={(row) => {
-                                                                setState({
-                                                                    ...state,
-                                                                    idEquipo: row.data.m_nIdInventarioUnidad
-                                                                })
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <div>No se encontró ningún registro</div>
-                                                    )}*/}
+                                             
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {/*
-                                <div className="col-md-6">
-                                    <div style={{
-                                        color: '#717171',
-                                        marginBottom: "10px",
-                                        fontSize: "18px"
-                                    }}>Disponibilidad del
-                                        Equipo
-                                    </div>
-                                    <div className="widget-wrap">
-                                        <div className="widget-content">
-                                            <div className="row" style={{height: "400px", width: '100%'}}>
-                                                {equipoListado.length !== 0 ? (
-                                                    <DataGrid
-                                                        rows={equipoListado}
-                                                        localeText={dataGridLocaleText}
-                                                        columns={columnsEquipo}
-                                                        density="compact"
-                                                        getRowId={(row) => row.m_nIdInventarioUnidad}
-
-                                                    />
-                                                ) : (
-                                                    <div>No se encontró ningún registro</div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-*/}
+                              
                             </div>
 
                         </div>
@@ -1907,7 +1629,7 @@ function Viajes() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="form-footer" className="col-md-12">
+                                                    <div className="form-footer col-md-12">
                                                         <Grid container spacing={2}>
                                                             <Grid item xs>
                                                                 <Button
@@ -1932,10 +1654,7 @@ function Viajes() {
                     </div>
                 </div>
 
-            </section>
-            {/*Page Container End Here*/}
-
-            {/*Rightbar Start Here*/}
+            </section> 
             <aside className="rightbar">
                 <BarraLateralDerecha/>
             </aside>

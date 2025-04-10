@@ -423,7 +423,7 @@ export default function PlantillasImportacionAgregar(props){
         if(state.hojaComplementos === ""){
             valid = false;
         }
-        if(files === [] || files === null){
+        if(files == [] || files === null){
             valid = false;
         }
         if(state.numeroEmbarque === ""){
@@ -512,7 +512,7 @@ export default function PlantillasImportacionAgregar(props){
         if(state.hojaEmbarques === ""){
             valid = false;
         }
-        if(files === [] || files === null){
+        if(files == [] || files === null){
             valid = false;
         }
         if(state.numeroEmbarque === ""){

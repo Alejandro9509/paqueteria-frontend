@@ -70,7 +70,7 @@ function BarraLateralIzquierda() {
                         <ul className="conversation-list">
                             <li>
                                 <p>
-                                    Ok sure :)
+                                    Ok sure :D 
                                 </p>
                             </li>
                         </ul>

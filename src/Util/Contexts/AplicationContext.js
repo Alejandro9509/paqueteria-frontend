@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import {ACCESS_TOKEN, USER_ID_SESSION, USER_ROLES} from '../../Constants';
+import {ACCESS_TOKEN} from '../../Constants';
 import IdleTimer from "react-idle-timer";
-import {IdleTimeOutModal} from "../../Components/Login/IdleTimeOutModal";
 
 export const AplicationContext = React.createContext();
 export const AplicationConsumer = AplicationContext.Consumer;
@@ -69,14 +68,13 @@ export class AplicationProvider extends Component{
         localStorage.removeItem("Usuario");
         localStorage.removeItem("Nombre");
         this.setState({showModal: false})
-        // this.props.history.push('/')
     }
 
-    handleOnActive (event) {
+    handleOnActive () {
         this.setState({isTimedOut: false})
     }
 
-    handleOnIdle (event) {
+    handleOnIdle () {
         const isTimedOut = this.state.isTimedOut
         if (isTimedOut) {
             localStorage.removeItem("accessToken");
