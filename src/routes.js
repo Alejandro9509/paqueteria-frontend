@@ -3,14 +3,11 @@ import EmbarquePage from './Views/Embarque';
 import GuiaPage from './Views/Guia';
 import InformesPage from './Views/Informes'
 import ViajesPage from './Views/Viajes'
-
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
 import CorteCajaPage from './Views/CorteCaja/CorteCaja';
-import Historial from './Views/Viajes/Historial';
 import UltimaMillaPage from './Views/UltimaMilla/UltimaMilla';
-
 
 import {ReactComponent as ConfiguracionIcon} from './iconos/Menu/IconoConfiguraciones/iconoConfiguraciones.svg';
 import {ReactComponent as IndicadoresIcon} from './iconos/Menu/IconoIndicadores/iconoIndicadores.svg';

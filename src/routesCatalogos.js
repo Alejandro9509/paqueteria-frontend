@@ -11,12 +11,10 @@ import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import TarifasPage from './Views/Tarifas/Tarifas';
 import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion';
-import PlantillaCorreo from './Views/PlantillaCorreo';
 import Productos from "./Views/Productos/Productos";
 import Convenios from "./Views/Convenios/Convenios";
 import Seguros from "./Views/Seguros/Seguros"
 import {ReactComponent as TServicioIcon} from './iconos/Catalogos/Icono Tipos Servicio/icono_tipo_servicio.svg';
-
 import {ReactComponent as EDocumentosIcon} from './iconos/Catalogos/Icono Estatus Documento/icono_estatus_documento.svg';
 import {ReactComponent as BancoIcon} from './iconos/Catalogos/Icono Banco/icono_banco.svg';
 import {ReactComponent as EmbalajeIcon} from './iconos/Catalogos/Icono Embalaje/icono_embalaje.svg';
@@ -30,12 +28,10 @@ import {ReactComponent as PConfiguracionIcon} from './iconos/Catalogos/Icono Par
 import {ReactComponent as TCobreIcon} from './iconos/Catalogos/Icono Tipos de Cobro/icono_tipo_cobro.svg';
 import {ReactComponent as TarifasIcon} from './iconos/Catalogos/Icono Tarifas/icono_tarifas.svg';
 import {ReactComponent as ConveniosIcon} from './iconos/Catalogos/Icono Convenios/icono_convenios.svg';
-//import {ReactComponent as PCorreosIcon} from './iconos/Catalogos/Icono Plantilla Correo/IconoPlantillaCorreoNaranja.svg';
 import {ReactComponent as ProductosIcon} from './iconos/Catalogos/Icono Productos/IconoProductos.svg';
 import ZonaOperativa from "./Views/ZonasOperativas/ZonaOperativa";
 import {validarDerecho} from "./Util/Util";
 import PlantillasImportacionMain from "./Views/PlantillasImportacion/PlantillasImportacionMain";
-import PlantillasImportacionTarifas from "./Views/PlantillasImportacionTarifas/PlantillasImportacionTarifas";
 
 const catalogRoutes = [
     {

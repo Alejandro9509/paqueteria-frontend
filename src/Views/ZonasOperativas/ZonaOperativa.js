@@ -244,7 +244,7 @@ function ZonaOperativa() {
                             </li>*/}
                     </ul>
 
-                    <div className={"row"} className={"tab-content"}>
+                    <div className={"row tab-content"}>
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
@@ -253,7 +253,7 @@ function ZonaOperativa() {
                                         <DataGrid columns={columns} rows={listadoZonas}                                               
                                                   locateText={dataGridLocaleText}
                                                   density={"compact"}
-                                                  autoPageSize={pantallaActiva==1?true:false}
+                                                  autoPageSize={pantallaActiva===1?true:false}
                                                   pageSize={Math.floor((state.height - 310) / 30)}
                                                   getRowId={(row => row.m_nIdZona)}
                                                   disableColumnSelector

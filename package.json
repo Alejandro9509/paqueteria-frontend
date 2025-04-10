@@ -36,7 +36,6 @@
     "jspdf-autotable": "^3.5.13",
     "leaflet": "^1.7.1",
     "moment": "^2.29.4",
-    "node-sass": "^5.0.0",
     "noty": "^3.2.0-beta-deprecated",
     "polyline-encoded": "0.0.9",
     "qrcode.react": "^1.0.1",
@@ -70,7 +69,8 @@
     "styled-components": "^5.2.1",
     "tinycolor2": "^1.4.2",
     "web-vitals": "^0.2.4",
-    "xlsx": "^0.17.4"
+    "xlsx": "^0.17.4", 
+    "sass": "^1.69.0"
   },
   "scripts": {
     "start": "react-scripts start",
