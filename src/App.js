@@ -5,7 +5,6 @@ import {
   Redirect
 } from 'react-router-dom';
 import Configuracion from './Views/Configuracion';
-import Login from './Views/Login';
 import {AplicationConsumer, AplicationProvider} from "./Util/Contexts/AplicationContext";
 import {ACCESS_TOKEN} from './Constants';
 import dashboardRoutes from './routes'
@@ -62,13 +61,8 @@ render(){
             </div>
         ) : (
           <div className="app">
-            {/*<div className="app-top-box">*/}
-            {/*    <AppHeader />*/}
-            {/*</div>*/}
               <div className="app-body">
                 <Switch>
-                  {/*<Route exact path="/" component={Login} />
-                  <Route path="/login" component={Login} />*/}
                   <Route exact path="/" component={() => {
                     window.location.href = "http://190.9.53.4:9898/GMTERPV8_WEB/ES/PAGE_CatUsuariosLoginAWP.awp";
                     return null;
