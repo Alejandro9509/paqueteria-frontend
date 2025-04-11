@@ -32,14 +32,6 @@ function asignarTipoDocumento(params){
     return result
 }
 
-/*function consultarDocumentoTimbradoSucursal(idSucursal) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ParametrosConfiguracion/GetDocumentoTimbradoSucursal/`+idSucursal;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-    );
-    return result
-}*/
 
 function validarRequiereDocumentoTimbrado(idSucursal) {
     const url = `${localStorage.getItem("Back") ?? process.env.REACT_APP_REPORT_URL}/api/ParametrosConfiguracion/ValidarRequiereDocumentoTimbrado/`+idSucursal;

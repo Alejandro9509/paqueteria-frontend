@@ -1,0 +1,3 @@
+window.RUNTIME_CONFIG = {
+    BACKEND_URL: "http://192.168.2.156:8091"
+};
